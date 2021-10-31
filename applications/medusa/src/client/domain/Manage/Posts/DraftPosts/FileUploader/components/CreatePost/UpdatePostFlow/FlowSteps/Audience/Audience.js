@@ -32,23 +32,17 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: {
-    post: AudienceFragment$key,
-    tag: AudienceTagFragment$key
-  }
+  query: AudienceFragment$key,
 }
 
 const AudienceFragmentGQL = graphql`
-  fragment AudienceFragment on Post {
-    audience {
-      id
-      title
+  fragment AudienceFragment on Query {
+    post (reference: $reference) {
+      audience {
+        id
+        title
+      }
     }
-  }
-`
-
-const AudienceTagFragmentGQL = graphql`
-  fragment AudienceTagFragment on Query {
     audiences {
       edges {
         node {
@@ -68,15 +62,13 @@ const AudienceTagFragmentGQL = graphql`
 `
 
 export default function Audience ({ uppy, state, dispatch, query }: Props): Node {
-  const data = useFragment(AudienceFragmentGQL, query.post)
-
-  const tagData = useFragment(AudienceTagFragmentGQL, query.tag)
+  const data = useFragment(AudienceFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
-  const audiences = tagData.audiences.edges
+  const audiences = data.audiences.edges
 
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data.audience?.id })
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data.post.audience?.id })
 
   useEffect(() => {
     dispatch({

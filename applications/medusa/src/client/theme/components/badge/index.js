@@ -22,7 +22,7 @@ function variantSubtle (props) {
 
   if (c === 'gray') {
     return {
-      bg: mode(`${c}.50`, `${c}.50`)(props),
+      bg: mode(`${c}.50`, `${c}.700`)(props),
       color: mode(`${c}.800`, `${c}.100`)(props)
     }
   }

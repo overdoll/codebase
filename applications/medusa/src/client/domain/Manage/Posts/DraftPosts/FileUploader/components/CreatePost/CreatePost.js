@@ -28,10 +28,8 @@ const RootCreatePostFlowQueryGQL = graphql`
   query CreatePostQuery ($reference: String!) {
     post (reference: $reference) {
       __typename
-      ...ArrangeFragment
-      ...UpdatePostFlowFragment
     }
-    ...UpdatePostFlowTagFragment
+    ...UpdatePostFlowFragment
   }
 `
 
@@ -135,10 +133,7 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   // When there is a valid post we load the post creator flow
   return (
     <UpdatePostFlow
-      uppy={uppy} state={state} dispatch={dispatch} query={{
-        post: postData,
-        tag: data
-      }}
+      uppy={uppy} state={state} dispatch={dispatch} query={data}
     />
   )
 }

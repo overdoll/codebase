@@ -68,11 +68,6 @@ export default function Search ({
   const onChange = e => {
     setSearch(e.target.value)
     refetch(e.target.value)
-    // Start transition -
-    // TODO: breaks inputs - fix it
-    // startTransition(() => {
-    //   refetch(e.target.value);
-    // });
   }
 
   const clearSearch = e => {

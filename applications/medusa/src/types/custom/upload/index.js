@@ -146,6 +146,9 @@ export type Action = {
 
   // Will remove the value if true
   remove?: boolean,
+
+  // Will remove all values if true
+  clear?: boolean
 };
 
 export type Dispatch = {

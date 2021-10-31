@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1ee591d31a8b0a0520e880788009f6b4
+ * @relayHash 420ae1eb6462ec8d789a96f8b21a499a
  */
 
 /* eslint-disable */
@@ -8,18 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { ArrangeFragment$ref } from "./ArrangeFragment.graphql";
 import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
-import type { UpdatePostFlowTagFragment$ref } from "./UpdatePostFlowTagFragment.graphql";
 export type CreatePostQueryVariables = {|
   reference: string
 |};
 export type CreatePostQueryResponse = {|
   +post: ?{|
-    +__typename: string,
-    +$fragmentRefs: ArrangeFragment$ref & UpdatePostFlowFragment$ref,
+    +__typename: string
   |},
-  +$fragmentRefs: UpdatePostFlowTagFragment$ref,
+  +$fragmentRefs: UpdatePostFlowFragment$ref,
 |};
 export type CreatePostQuery = {|
   variables: CreatePostQueryVariables,
@@ -33,23 +30,24 @@ query CreatePostQuery(
 ) {
   post(reference: $reference) {
     __typename
-    ...ArrangeFragment
-    ...UpdatePostFlowFragment
     id
   }
-  ...UpdatePostFlowTagFragment
+  ...UpdatePostFlowFragment
 }
 
-fragment ArrangeFragment on Post {
-  content {
-    id
-    urls {
-      url
-      mimeType
+fragment ArrangeFragment on Query {
+  post(reference: $reference) {
+    content {
+      id
+      urls {
+        url
+        mimeType
+      }
     }
+    ...ArrangeUploadsFragment
+    ...ProcessUploadsFragment
+    id
   }
-  ...ArrangeUploadsFragment
-  ...ProcessUploadsFragment
 }
 
 fragment ArrangeUploadsFragment on Post {
@@ -63,14 +61,14 @@ fragment ArrangeUploadsFragment on Post {
   }
 }
 
-fragment AudienceFragment on Post {
-  audience {
+fragment AudienceFragment on Query {
+  post(reference: $reference) {
+    audience {
+      id
+      title
+    }
     id
-    title
   }
-}
-
-fragment AudienceTagFragment on Query {
   audiences {
     edges {
       node {
@@ -88,14 +86,14 @@ fragment AudienceTagFragment on Query {
   }
 }
 
-fragment BrandFragment on Post {
-  brand {
+fragment BrandFragment on Query {
+  post(reference: $reference) {
+    brand {
+      id
+      name
+    }
     id
-    name
   }
-}
-
-fragment BrandTagFragment on Query {
   brands {
     edges {
       node {
@@ -114,34 +112,30 @@ fragment BrandTagFragment on Query {
   }
 }
 
-fragment CategoryFragment on Post {
-  categories {
-    id
-    title
-  }
-}
-
-fragment CategoryTagFragment on Query {
-  categories {
-    edges {
-      node {
-        id
-        title
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
+fragment CategoryFragment on Query {
+  post(reference: $reference) {
+    categories {
+      id
+      title
+      slug
+      thumbnail {
+        type
+        urls {
+          mimeType
+          url
         }
       }
     }
+    id
   }
+  ...SearchCategoriesFragment
 }
 
-fragment FlowFooterFragment on Post {
-  ...FlowForwardButtonFragment
+fragment FlowFooterFragment on Query {
+  post(reference: $reference) {
+    ...FlowForwardButtonFragment
+    id
+  }
 }
 
 fragment FlowForwardButtonFragment on Post {
@@ -160,17 +154,11 @@ fragment FlowForwardButtonFragment on Post {
   ...useUpdateBrandFragment
 }
 
-fragment FlowStepsFragment on Post {
+fragment FlowStepsFragment on Query {
   ...ArrangeFragment
   ...AudienceFragment
   ...BrandFragment
   ...CategoryFragment
-}
-
-fragment FlowStepsTagFragment on Query {
-  ...AudienceTagFragment
-  ...BrandTagFragment
-  ...CategoryTagFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -182,13 +170,34 @@ fragment ProcessUploadsFragment on Post {
   }
 }
 
-fragment UpdatePostFlowFragment on Post {
-  ...FlowStepsFragment
-  ...FlowFooterFragment
+fragment SearchCategoriesFragment on Query {
+  categories(first: 9) {
+    edges {
+      node {
+        id
+        title
+        slug
+        thumbnail {
+          type
+          urls {
+            mimeType
+            url
+          }
+        }
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
 }
 
-fragment UpdatePostFlowTagFragment on Query {
-  ...FlowStepsTagFragment
+fragment UpdatePostFlowFragment on Query {
+  ...FlowStepsFragment
+  ...FlowFooterFragment
 }
 
 fragment useUpdateAudienceFragment on Post {
@@ -261,15 +270,18 @@ v7 = {
   "name": "title",
   "storageKey": null
 },
-v8 = [
-  (v3/*: any*/),
-  (v7/*: any*/)
-],
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
   "storageKey": null
 },
 v10 = {
@@ -297,13 +309,13 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-};
+v11 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 9
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -319,24 +331,14 @@ return {
         "name": "post",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ArrangeFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "UpdatePostFlowFragment"
-          }
+          (v2/*: any*/)
         ],
         "storageKey": null
       },
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "UpdatePostFlowTagFragment"
+        "name": "UpdatePostFlowFragment"
       }
     ],
     "type": "Query",
@@ -357,6 +359,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -383,7 +386,6 @@ return {
             ],
             "storageKey": null
           },
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -391,7 +393,10 @@ return {
             "kind": "LinkedField",
             "name": "audience",
             "plural": false,
-            "selections": (v8/*: any*/),
+            "selections": [
+              (v3/*: any*/),
+              (v7/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -403,7 +408,7 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
-              (v9/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
@@ -414,7 +419,12 @@ return {
             "kind": "LinkedField",
             "name": "categories",
             "plural": true,
-            "selections": (v8/*: any*/),
+            "selections": [
+              (v3/*: any*/),
+              (v7/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -481,8 +491,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
+                  (v8/*: any*/),
                   (v9/*: any*/),
-                  (v11/*: any*/),
                   (v10/*: any*/)
                 ],
                 "storageKey": null
@@ -495,7 +505,7 @@ return {
       },
       {
         "alias": null,
-        "args": null,
+        "args": (v11/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -519,21 +529,65 @@ return {
                 "selections": [
                   (v3/*: any*/),
                   (v7/*: any*/),
-                  (v11/*: any*/),
-                  (v10/*: any*/)
+                  (v9/*: any*/),
+                  (v10/*: any*/),
+                  (v2/*: any*/)
                 ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
                 "storageKey": null
               }
             ],
             "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "categories(first:9)"
+      },
+      {
+        "alias": null,
+        "args": (v11/*: any*/),
+        "filters": [
+          "title"
+        ],
+        "handle": "connection",
+        "key": "SearchCategories_categories",
+        "kind": "LinkedHandle",
+        "name": "categories"
       }
     ]
   },
   "params": {
-    "id": "1ee591d31a8b0a0520e880788009f6b4",
+    "id": "420ae1eb6462ec8d789a96f8b21a499a",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
@@ -542,5 +596,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'daf866e7354660002319bc5db666248d';
+(node: any).hash = 'dbaf32af9039c5e8eb8565f55faadd5e';
 module.exports = node;

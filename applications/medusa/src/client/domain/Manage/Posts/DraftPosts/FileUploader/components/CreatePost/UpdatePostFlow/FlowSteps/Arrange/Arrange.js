@@ -31,16 +31,18 @@ type Props = {
 };
 
 const ArrangeFragmentGQL = graphql`
-  fragment ArrangeFragment on Post {
-    content {
-      id
-      urls {
-        url
-        mimeType
+  fragment ArrangeFragment on Query {
+    post (reference: $reference) {
+      content {
+        id
+        urls {
+          url
+          mimeType
+        }
       }
+      ...ArrangeUploadsFragment
+      ...ProcessUploadsFragment
     }
-    ...ArrangeUploadsFragment
-    ...ProcessUploadsFragment
   }
 `
 
@@ -51,14 +53,14 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
 
   const disableUploads = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
-  const contentData = state.content || data.content
+  const contentData = state.content || data.post.content
 
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
   useEffect(() => {
     if (state.files.length < 1 && state.urls.length < 1) {
       uppy.cancelAll()
-      data.content.forEach(file => {
+      data.post.content.forEach(file => {
         const resource = file.urls[0]
         const tempUrl = 'https://overdoll.test/api/upload/' + resource.url
         fetch(tempUrl)
@@ -102,8 +104,8 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
           </Flex>
         </FilePicker>
       </Flex>
-      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
-      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
+      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
+      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
     </>
   )
 }

@@ -41,9 +41,9 @@ const node: ReaderFragment = {
       "name": "FlowFooterFragment"
     }
   ],
-  "type": "Post",
+  "type": "Query",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '1c1c088c9034887f82a14c099cf3e355';
+(node: any).hash = 'a16d99c263e9212a1b7575161742a0c5';
 module.exports = node;

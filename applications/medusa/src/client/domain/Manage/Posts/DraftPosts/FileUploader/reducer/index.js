@@ -25,13 +25,16 @@ const reducer: {} = (state: State, action: Action): State => {
       return { ...state, [act]: { ...copy, [id]: action.value[id] } }
     }
     case EVENTS.TAG_CHARACTERS:
-    case EVENTS.TAG_CATEGORIES: {
+    case EVENTS.CATEGORIES: {
       const id: string = action.value.id
 
       if (action.remove) {
         delete copy[id]
 
         return { ...state, [act]: copy }
+      }
+      if (action.clear) {
+        return { ...state, [act]: {} }
       }
 
       return { ...state, [act]: { ...copy, [id]: action.value } }

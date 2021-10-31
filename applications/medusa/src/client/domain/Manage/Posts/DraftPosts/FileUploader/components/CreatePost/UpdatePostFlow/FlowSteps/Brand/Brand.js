@@ -30,23 +30,17 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: {
-    post: BrandFragment$key,
-    tag: BrandTagFragment$key
-  }
+  query: BrandFragment$key,
 }
 
 const BrandFragmentGQL = graphql`
-  fragment BrandFragment on Post {
-    brand {
-      id
-      name
+  fragment BrandFragment on Query {
+    post (reference: $reference) {
+      brand {
+        id
+        name
+      }
     }
-  }
-`
-
-const BrandTagFragmentGQL = graphql`
-  fragment BrandTagFragment on Query {
     brands {
       edges {
         node {
@@ -67,26 +61,25 @@ const BrandTagFragmentGQL = graphql`
 `
 
 export default function Brand ({ uppy, state, dispatch, query }: Props): Node {
-  const data = useFragment(BrandFragmentGQL, query.post)
-  const tagData = useFragment(BrandTagFragmentGQL, query.tag)
+  const data = useFragment(BrandFragmentGQL, query)
 
   const [t] = useTranslation('manage')
+
+  const brands = data.brands.edges
 
   // If there is only one brand and one wasn't already selected
   // Pre-select the first brand on the list for convenience
   const determineDefaultBrand = () => {
-    if (!data.brand?.id) {
-      if (tagData.brands.edges.length === 1) {
-        return tagData.brands.edges[0].node.id
+    if (!data.post.brand?.id) {
+      if (brands.length === 1) {
+        return brands[0].node.id
       }
       return null
     }
-    return data.brand.id
+    return data.post.brand.id
   }
 
   const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: determineDefaultBrand() })
-
-  const brands = tagData.brands.edges
 
   useEffect(() => {
     dispatch({

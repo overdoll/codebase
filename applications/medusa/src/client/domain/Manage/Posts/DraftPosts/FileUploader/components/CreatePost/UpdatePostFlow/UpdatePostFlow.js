@@ -23,29 +23,19 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: {
-    post: UpdatePostFlowFragment$key,
-    tag: UpdatePostFlowTagFragment$key
-  }
+  query: UpdatePostFlowFragment$key,
 };
 
 const UpdatePostFlowFragmentGQL = graphql`
-  fragment UpdatePostFlowFragment on Post {
+  fragment UpdatePostFlowFragment on Query {
     ...FlowStepsFragment
     ...FlowFooterFragment
   }
 `
 
-const UpdatePostFlowTagFragmentGQL = graphql`
-  fragment UpdatePostFlowTagFragment on Query {
-    ...FlowStepsTagFragment
-  }
-`
-
 // Stepper - handles all stepping functions
 export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
-  const data = useFragment(UpdatePostFlowFragmentGQL, query.post)
-  const tagData = useFragment(UpdatePostFlowTagFragmentGQL, query.tag)
+  const data = useFragment(UpdatePostFlowFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
@@ -55,7 +45,7 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
         <FlowHeader uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Box>
       <Stack spacing={2}>
-        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
+        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Stack>
       <Flex justify='center'>
         <FlowFooter uppy={uppy} dispatch={dispatch} state={state} query={data} />

@@ -53,9 +53,9 @@ const node: ReaderFragment = {
       "name": "CategoryFragment"
     }
   ],
-  "type": "Post",
+  "type": "Query",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'dd5cadc0d88640183a1920dbbeef38e1';
+(node: any).hash = '3bad4f2af6d6e3f392b8211f9ef2d6b2';
 module.exports = node;

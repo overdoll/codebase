@@ -9,14 +9,15 @@
 import type { ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type AudienceTagFragment$ref: FragmentReference;
-declare export opaque type AudienceTagFragment$fragmentType: AudienceTagFragment$ref;
-export type AudienceTagFragment = {|
-  +audiences: {|
+import type { SearchCategoriesFragment$ref, SearchCategoriesFragment$fragmentType } from "./SearchCategoriesPaginationFragment.graphql";
+export type { SearchCategoriesFragment$ref, SearchCategoriesFragment$fragmentType };
+export type SearchCategoriesFragment = {|
+  +categories: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
         +title: string,
+        +slug: string,
         +thumbnail: ?{|
           +type: ResourceType,
           +urls: $ReadOnlyArray<{|
@@ -27,34 +28,81 @@ export type AudienceTagFragment = {|
       |}
     |}>
   |},
-  +$refType: AudienceTagFragment$ref,
+  +$refType: SearchCategoriesFragment$ref,
 |};
-export type AudienceTagFragment$data = AudienceTagFragment;
-export type AudienceTagFragment$key = {
-  +$data?: AudienceTagFragment$data,
-  +$fragmentRefs: AudienceTagFragment$ref,
+export type SearchCategoriesFragment$data = SearchCategoriesFragment;
+export type SearchCategoriesFragment$key = {
+  +$data?: SearchCategoriesFragment$data,
+  +$fragmentRefs: SearchCategoriesFragment$ref,
   ...
 };
 
 
-const node: ReaderFragment = {
-  "argumentDefinitions": [],
+const node: ReaderFragment = (function(){
+var v0 = [
+  "categories"
+];
+return {
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "after"
+    },
+    {
+      "defaultValue": 9,
+      "kind": "LocalArgument",
+      "name": "first"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "title"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
-  "name": "AudienceTagFragment",
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": "after",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "first",
+          "cursor": "after"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [],
+      "operation": require('./SearchCategoriesPaginationFragment.graphql.js')
+    }
+  },
+  "name": "SearchCategoriesFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "AudienceConnection",
+      "alias": "categories",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "title",
+          "variableName": "title"
+        }
+      ],
+      "concreteType": "CategoryConnection",
       "kind": "LinkedField",
-      "name": "audiences",
+      "name": "__SearchCategories_categories_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "AudienceEdge",
+          "concreteType": "CategoryEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -62,7 +110,7 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Audience",
+              "concreteType": "Category",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -79,6 +127,13 @@ const node: ReaderFragment = {
                   "args": null,
                   "kind": "ScalarField",
                   "name": "title",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "slug",
                   "storageKey": null
                 },
                 {
@@ -123,8 +178,47 @@ const node: ReaderFragment = {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -137,6 +231,7 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 // prettier-ignore
-(node: any).hash = '023599c58ba6511034a8b0f7a932a023';
+(node: any).hash = '66918528af4eb1c21e7b9224352e9d87';
 module.exports = node;

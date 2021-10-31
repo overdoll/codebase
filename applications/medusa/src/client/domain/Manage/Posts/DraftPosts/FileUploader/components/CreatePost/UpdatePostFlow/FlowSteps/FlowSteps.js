@@ -25,14 +25,11 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: {
-    post: FlowStepsFragment$key,
-    tag: FlowStepsTagFragment$key
-  }
+  query: FlowStepsFragment$key,
 };
 
 const FlowStepsFragmentGQL = graphql`
-  fragment FlowStepsFragment on Post {
+  fragment FlowStepsFragment on Query {
     ...ArrangeFragment
     ...AudienceFragment
     ...BrandFragment
@@ -40,30 +37,21 @@ const FlowStepsFragmentGQL = graphql`
   }
 `
 
-const FlowStepsTagFragmentGQL = graphql`
-  fragment FlowStepsTagFragment on Query {
-    ...AudienceTagFragment
-    ...BrandTagFragment
-    ...CategoryTagFragment
-  }
-`
-
 export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Node {
-  const data = useFragment(FlowStepsFragmentGQL, query.post)
-  const tagData = useFragment(FlowStepsTagFragmentGQL, query.tag)
+  const data = useFragment(FlowStepsFragmentGQL, query)
 
   switch (state.step) {
     case STEPS.AUDIENCE:
 
-      return <Audience uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
+      return <Audience uppy={uppy} dispatch={dispatch} state={state} query={data} />
 
     case STEPS.BRAND:
 
-      return <Brand uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
+      return <Brand uppy={uppy} dispatch={dispatch} state={state} query={data} />
 
     case STEPS.CATEGORY:
 
-      return <Category uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
+      return <Category uppy={uppy} dispatch={dispatch} state={state} query={data} />
 
     case STEPS.CHARACTER:
 

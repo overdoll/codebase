@@ -32,8 +32,10 @@ type Props = {
 }
 
 const FlowFooterFragmentGQL = graphql`
-  fragment FlowFooterFragment on Post {
-    ...FlowForwardButtonFragment
+  fragment FlowFooterFragment on Query {
+    post (reference: $reference) {
+      ...FlowForwardButtonFragment
+    }
   }
 `
 
@@ -47,7 +49,7 @@ export default function FlowFooter ({ state, uppy, dispatch, query }: Props): No
       <Flex w='100%' bottom={0} position='sticky'>
         <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} />
         <Spacer />
-        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data} />
+        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data.post} />
       </Flex>
     )
   }
