@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
@@ -17,6 +16,22 @@ import (
 
 type AccountResolver struct {
 	App *app.Application
+}
+
+func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error) {
+
+	prin := principal.FromContext(ctx)
+
+	if prin != nil {
+
+		if err := prin.BelongsToAccount(obj.ID.GetID()); err != nil {
+			return nil, err
+		}
+
+		return obj.Lock, nil
+	}
+
+	return nil, principal.ErrNotAuthorized
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {

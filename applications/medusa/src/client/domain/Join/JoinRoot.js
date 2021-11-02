@@ -36,7 +36,9 @@ const JoinRootFragment = graphql`
     sameSession
     accountStatus {
       registered
-      multiFactor
+      multiFactor {
+        totp
+      }
       ...MultiFactorFragment
     }
   }
@@ -54,7 +56,7 @@ export default function JoinRoot (props: Props): Node {
 
   const data = useFragment(JoinRootFragment, tokenData)
 
-  const multiFactorEnabled = data?.accountStatus?.multiFactor?.length > 0
+  const multiFactorEnabled = data?.accountStatus?.multiFactor !== null
 
   const authenticationInitiated = !!tokenData
   const authenticationTokenVerified = data?.verified === true

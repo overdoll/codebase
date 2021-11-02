@@ -7,7 +7,9 @@ import TotpAuthentication from './TotpAuthentication/TotpAuthentication'
 
 const MultiFactorFragmentGQL = graphql`
   fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
-    multiFactor
+    multiFactor {
+      totp
+    }
   }
 `
 
@@ -18,7 +20,7 @@ type Props = {
 export default function MultiFactor (props: Props): Node {
   const data = useFragment(MultiFactorFragmentGQL, props.query)
 
-  if (data.multiFactor.includes('TOTP')) {
+  if (data.multiFactor) {
     return <TotpAuthentication />
   }
 
