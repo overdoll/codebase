@@ -125,19 +125,26 @@ async function createServerRouter (
   // Before going further and creating
   // our router, we pre-emptively resolve the RootQuery routes, so that the user object
   // can be available for permission checking & redirecting on the server
-  const root = routes[0].prepare({})
-  const rootKeys = Object.keys(root)
 
-  // Get all prepared statements, and wait for loadQuery to resolve
-  await Promise.all(rootKeys.map(
-    key =>
-      fetchQuery(
-        environment,
-        root[key].query,
-        root[key].variables,
-        root[key].options
-      ).toPromise()
-  ))
+  let targets = []
+
+  routes.forEach(route => {
+    const root = route.prepare({})
+    const rootKeys = Object.keys(root)
+
+    // Get all prepared statements, and wait for loadQuery to resolve
+    targets = targets.concat(rootKeys.map(
+      key =>
+        fetchQuery(
+          environment,
+          root[key].query,
+          root[key].variables,
+          root[key].options
+        ).toPromise()
+    ))
+  })
+
+  await Promise.all(targets)
 
   const data = {
     environment,
@@ -181,7 +188,11 @@ async function createServerRouter (
   }
 
   // Return both the context object and a cleanup function
-  return { context, cleanup: () => {} }
+  return {
+    context,
+    cleanup: () => {
+    }
+  }
 }
 
 /**
@@ -258,7 +269,10 @@ function createClientRouter (
   }
 
   // Return both the context object and a cleanup function
-  return { cleanup, context }
+  return {
+    cleanup,
+    context
+  }
 }
 
 /**
@@ -270,7 +284,11 @@ function matchRouteWithFilter (routes, history, location, data) {
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
   return unparsedRoutes.filter(route =>
-    isRouteValid({ ...data, history, location }, route.route)
+    isRouteValid({
+      ...data,
+      history,
+      location
+    }, route.route)
   )
 }
 
@@ -281,7 +299,10 @@ function matchRouteWithFilter (routes, history, location, data) {
  */
 function prepareMatches (matches, query, relayEnvironment) {
   return matches.map((match, index) => {
-    const { route, match: matchData } = match
+    const {
+      route,
+      match: matchData
+    } = match
 
     const prepared = convertPreparedToQueries(
       relayEnvironment,
@@ -322,7 +343,11 @@ function convertPreparedToQueries (environment, prepare, params, query, index) {
   for (let ii = 0; ii < queryKeys.length; ii++) {
     const key = queryKeys[ii]
 
-    const { query, variables, options } = queriesToPrepare[key]
+    const {
+      query,
+      variables,
+      options
+    } = queriesToPrepare[key]
 
     prepared[key] = loadQuery(environment, query, variables, options)
   }
