@@ -975,9 +975,9 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "schema/audit_logs/schema.graphql", Input: `enum PostAuditLogAction {
-  Approved
-  Denied
-  Removed
+  APPROVED
+  DENIED
+  REMOVED
 }
 
 """

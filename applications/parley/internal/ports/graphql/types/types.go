@@ -278,9 +278,9 @@ type ToggleModeratorSettingsInQueuePayload struct {
 type PostAuditLogAction string
 
 const (
-	PostAuditLogActionApproved PostAuditLogAction = "Approved"
-	PostAuditLogActionDenied   PostAuditLogAction = "Denied"
-	PostAuditLogActionRemoved  PostAuditLogAction = "Removed"
+	PostAuditLogActionApproved PostAuditLogAction = "APPROVED"
+	PostAuditLogActionDenied   PostAuditLogAction = "DENIED"
+	PostAuditLogActionRemoved  PostAuditLogAction = "REMOVED"
 )
 
 var AllPostAuditLogAction = []PostAuditLogAction{
