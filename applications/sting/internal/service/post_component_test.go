@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -54,6 +55,14 @@ type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified
 	} `graphql:"createPost()"`
+}
+
+type Posts struct {
+	Posts *struct {
+		Edges []*struct {
+			Node PostModified
+		}
+	} `graphql:"posts(brandSlugs: $brandSlugs, audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
 }
 
 type UpdatePostContent struct {
@@ -211,11 +220,24 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	require.NoError(t, env.GetWorkflowError())
 }
 
-type AccountPosts struct {
+type AccountModeratorPosts struct {
 	Entities []struct {
 		Account struct {
 			ID                  string
 			ModeratorPostsQueue *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID    string
+			Posts *struct {
 				Edges []*struct {
 					Node PostModified
 				}
@@ -249,9 +271,9 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			// grab all pending posts for our moderator
 			client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-			var accountPosts AccountPosts
+			var accountModeratorPosts AccountModeratorPosts
 
-			err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+			err = client.Query(context.Background(), &accountModeratorPosts, map[string]interface{}{
 				"representations": []_Any{
 					{
 						"__typename": "Account",
@@ -264,7 +286,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			exists := false
 
-			for _, post := range accountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
+			for _, post := range accountModeratorPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
 				if post.Node.Reference == postId {
 					exists = true
 				}
@@ -293,13 +315,16 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
+	cont := post.Post.Content[0]
+	split := strings.Split(cont.ID, "/")
+	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+split[len(split)-1], cont.Urls[0].URL)
 
 	// refresh index
 	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
 	require.NoError(t, err)
 
 	// query accountPosts once more, make sure post is no longer visible
-	var newAccountPosts AccountPosts
+	var newAccountPosts AccountModeratorPosts
 
 	err = client.Query(context.Background(), &newAccountPosts, map[string]interface{}{
 		"representations": []_Any{
@@ -322,6 +347,43 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	}
 
 	require.False(t, exists, "should no longer be in the moderator posts queue")
+
+	var posts Posts
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state": types.PostStatePublished,
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"brandSlugs": []graphql.String{"default_brand"},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"categorySlugs": []graphql.String{"alter"},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"characterSlugs": []graphql.String{"aarush_hills"},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"audienceSlugs": []graphql.String{"standard_audience"},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
 }
 
 // Test_CreatePost_Discard - discard post

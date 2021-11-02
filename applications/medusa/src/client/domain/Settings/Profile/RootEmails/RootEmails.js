@@ -4,7 +4,6 @@
 import { useQueryLoader } from 'react-relay/hooks'
 import Emails from './Emails/Emails'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { Divider, Heading } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
@@ -33,7 +32,10 @@ export default function RootEmails (props: Props): Node {
       </PageSectionWrap>
       <Suspense fallback={<SkeletonStack />}>
         <ErrorBoundary
-          fallback={({ error, reset }) => (
+          fallback={({
+            error,
+            reset
+          }) => (
             <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
           )}
         >
