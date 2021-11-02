@@ -13,6 +13,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/translations"
 	"sort"
+	"time"
 )
 
 func MarshalLanguageToGraphQL(result *translations.Language) *Language {
@@ -110,7 +111,7 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 		}
 
 		return &AccountLock{
-			Expires: result.LockedUntil(),
+			Expires: time.Unix(int64(result.LockedUntil()), 0),
 			Reason:  reason,
 		}
 	}

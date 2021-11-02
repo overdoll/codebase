@@ -8,6 +8,7 @@ import (
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
+	"time"
 )
 
 type Account struct {
@@ -97,7 +98,7 @@ type AccountEmailEdge struct {
 }
 
 type AccountLock struct {
-	Expires int               `json:"expires"`
+	Expires time.Time         `json:"expires"`
 	Reason  AccountLockReason `json:"reason"`
 }
 
@@ -570,7 +571,7 @@ func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
 type AccountLockReason string
 
 const (
-	AccountLockReasonPostInfraction AccountLockReason = "PostInfraction"
+	AccountLockReasonPostInfraction AccountLockReason = "POST_INFRACTION"
 )
 
 var AllAccountLockReason = []AccountLockReason{
