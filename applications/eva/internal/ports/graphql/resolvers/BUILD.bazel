@@ -15,7 +15,6 @@ go_library(
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/ports/graphql/types",
-        "//libraries/helpers",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

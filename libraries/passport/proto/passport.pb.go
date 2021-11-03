@@ -1,1 +1,0 @@
-../../../bazel-out/k8-fastbuild/bin/libraries/passport/proto/v1_go_proto_/overdoll/libraries/passport/proto/passport.pb.go

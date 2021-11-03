@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -21,8 +22,9 @@ import (
 type MutationType string
 
 const (
-	MutationHeader = "X-Modified-Passport"
-	MutationKey    = "PassportContextKey"
+	MutationHeader    = "X-Modified-Passport"
+	MutationKey       = "PassportContextKey"
+	sessionCookieName = "connect.sid"
 )
 
 var (
@@ -39,7 +41,8 @@ type Body struct {
 }
 
 type Passport struct {
-	passport *libraries_passport_v1.Passport
+	passport  *libraries_passport_v1.Passport
+	sessionId string
 }
 
 func (p *Passport) Authenticated() error {
@@ -54,6 +57,10 @@ func (p *Passport) AccountID() string {
 	return p.passport.Account.Id
 }
 
+func (p *Passport) SessionId() string {
+	return p.sessionId
+}
+
 // Revoke the currently authenticated user from the passport
 func (p *Passport) RevokeAccount() error {
 	p.passport = &libraries_passport_v1.Passport{Account: nil}
@@ -62,6 +69,10 @@ func (p *Passport) RevokeAccount() error {
 
 func (p *Passport) SetAccount(id string) {
 	p.passport.Account = &libraries_passport_v1.Account{Id: id}
+}
+
+func (p *Passport) setSessionId(id string) {
+	p.sessionId = id
 }
 
 func (p *Passport) SerializeToBaseString() string {
@@ -91,12 +102,12 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 }
 
 func FreshPassport() *Passport {
-	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
+	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: ""}
 }
 
 func FreshPassportWithAccount(id string) *Passport {
 
-	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
+	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: ""}
 
 	pass.SetAccount(id)
 
@@ -177,7 +188,7 @@ func FromString(raw string) *Passport {
 		return FreshPassport()
 	}
 
-	return &Passport{passport: &msg}
+	return &Passport{passport: &msg, sessionId: ""}
 
 }
 
@@ -186,11 +197,28 @@ func FromContext(ctx context.Context) *Passport {
 
 	pass := FromString(raw)
 
+	gc := helpers.GinContextFromContext(ctx)
+
+	sessionId := ""
+
+	currentCookie, err := gc.Request.Cookie(sessionCookieName)
+
+	if err == nil {
+		decodedValue, err := url.QueryUnescape(currentCookie.Value)
+
+		if err == nil {
+			start := strings.Split(decodedValue, ".")[0]
+			sessionId = strings.Replace(start, "s:", "session:", 1)
+		}
+	}
+
 	// If there's no passport in the body, we will use a fresh passport so that implementors have something to work with
 
 	if pass == nil {
 		return FreshPassport()
 	}
+
+	pass.setSessionId(sessionId)
 
 	return pass
 }

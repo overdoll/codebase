@@ -114,5 +114,4 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	}
 
 	return types.MarshalAccountToGraphQL(acc), nil
-
 }

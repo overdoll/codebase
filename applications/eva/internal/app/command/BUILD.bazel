@@ -36,6 +36,7 @@ go_library(
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
+        "//libraries/passport",
         "//libraries/principal",
         "//libraries/translations",
         "//libraries/uuid",

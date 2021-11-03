@@ -26,14 +26,14 @@ var (
 	ErrSessionsNotFound = errors.New("sessions not found")
 )
 
-func UnmarshalSessionFromDatabase(id, pass, userAgent, ip, created string) *Session {
+func UnmarshalSessionFromDatabase(id, pass, userAgent, ip, created string, current bool) *Session {
 
 	return &Session{
 		id:        id,
 		userAgent: userAgent,
 		ip:        ip,
 		created:   created,
-		current:   false,
+		current:   current,
 		passport:  passport.FromString(pass),
 	}
 }
@@ -75,10 +75,6 @@ func (s *Session) CanView(requester *principal.Principal) error {
 	}
 
 	return nil
-}
-
-func (s *Session) MakeCurrent() {
-	s.current = true
 }
 
 func (s *Session) IsCurrent() bool {

@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -106,22 +105,11 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	accountSession := ""
-
-	gc := helpers.GinContextFromContext(ctx)
-
-	// get current session from connect.sid cookie
-	currentCookie, err := gc.Request.Cookie("connect.sid")
-
-	if err == nil && currentCookie != nil {
-		accountSession = currentCookie.Value
-	}
-
 	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, query.AccountSessionsByAccount{
-		Cursor:           cursor,
-		CurrentSessionId: accountSession,
-		Principal:        principal.FromContext(ctx),
-		AccountId:        obj.ID.GetID(),
+		Cursor:    cursor,
+		Passport:  passport.FromContext(ctx),
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
 	})
 
 	if err != nil {
