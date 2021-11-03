@@ -42,6 +42,21 @@ func NewHTTPClientWithHeaders(pass *passport.Passport) (*http.Client, *ClientPas
 	}, clientPassport
 }
 
+func NewHTTPClientWithCustomHeaders(headers map[string]string) *http.Client {
+	jar, _ := cookiejar.New(nil)
+
+	transport := &headerTransport{
+		base:           http.DefaultTransport,
+		headers:        headers,
+		clientPassport: nil,
+	}
+
+	return &http.Client{
+		Transport: transport,
+		Jar:       jar,
+	}
+}
+
 func (h *ClientPassport) GetPassport() *passport.Passport {
 	return h.passport
 }

@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
+	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
@@ -39,7 +40,6 @@ require (
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
-	golang.org/x/net v0.0.0-20210716203947-853a461950ff // indirect
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
 	golang.org/x/text v0.3.6
 	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect

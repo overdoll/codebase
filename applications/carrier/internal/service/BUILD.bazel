@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
@@ -12,5 +12,25 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "@com_github_sendgrid_sendgrid_go//:sendgrid-go",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "component_test.go",
+        "mail_component_test.go",
+    ],
+    deps = [
+        ":service",
+        "//applications/carrier/internal/ports",
+        "//applications/carrier/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/testing_tools",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
