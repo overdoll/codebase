@@ -50,7 +50,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 9,
+      "defaultValue": null,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -233,5 +233,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '66918528af4eb1c21e7b9224352e9d87';
+(node: any).hash = '0376adc3e94c715af7e56c5051cb9499';
 module.exports = node;

@@ -12,7 +12,7 @@ import type {
   SearchCategoriesFragment
 } from '@//:artifacts/SearchCategoriesFragment.graphql'
 
-import { graphql } from 'react-relay/hooks'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Input, Flex, Tag, TagLabel, TagCloseButton, Wrap, WrapItem } from '@chakra-ui/react'
 import {
   GridItem,
@@ -26,6 +26,7 @@ import { EVENTS } from '../../../../../../constants/constants'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
 
 type Props = {
   query: SearchCategoriesFragment$key,
@@ -34,19 +35,25 @@ type Props = {
   onSelect: () => void
 }
 
+const SearchCategoriesQueryGQL = graphql`
+  query SearchCategoriesQuery($first: Int, $after: String, $title: String) {
+    ...SearchCategoriesFragment @arguments(first: $first, after: $after, title: $title)
+  }
+`
+
 const SearchCategoriesFragmentGQL = graphql`
   fragment SearchCategoriesFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9},
-    title: {type: String},
-    after: {type: String}
+    first: {type: Int}
+    after: {type: String},
+    title: {type: String}
   )
   @refetchable(queryName: "SearchCategoriesPaginationFragment" )
   {
     categories (
-      title: $title,
       first: $first,
-      after: $after
+      after: $after,
+      title: $title
     ) @connection(key: "SearchCategories_categories")
     {
       edges {
@@ -68,10 +75,16 @@ const SearchCategoriesFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ query, search, onSelect, selected }: Props): Node {
+  const queryData = useLazyLoadQuery<SearchCategoriesQuery>(
+    SearchCategoriesQueryGQL,
+    {}
+  )
+
   const { data, refetch } = usePaginationFragment<SearchCategoriesFragment>(
     SearchCategoriesFragmentGQL,
-    query
+    queryData
   )
+
   const categories = removeNode(data.categories.edges)
 
   const refetchQuery = useCallback(search => {

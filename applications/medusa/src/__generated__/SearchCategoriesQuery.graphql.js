@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash bcbc4da3d8debc4e0033f250a407f898
+ * @relayHash f4bec4e4fa514d9e11bfaec771ab730c
  */
 
 /* eslint-disable */
@@ -8,27 +8,25 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { FragmentReference } from "relay-runtime";
-declare export opaque type SearchCategoriesFragment$ref: FragmentReference;
-declare export opaque type SearchCategoriesFragment$fragmentType: SearchCategoriesFragment$ref;
-export type SearchCategoriesPaginationFragmentVariables = {|
-  after?: ?string,
+import type { SearchCategoriesFragment$ref } from "./SearchCategoriesFragment.graphql";
+export type SearchCategoriesQueryVariables = {|
   first?: ?number,
+  after?: ?string,
   title?: ?string,
 |};
-export type SearchCategoriesPaginationFragmentResponse = {|
+export type SearchCategoriesQueryResponse = {|
   +$fragmentRefs: SearchCategoriesFragment$ref
 |};
-export type SearchCategoriesPaginationFragment = {|
-  variables: SearchCategoriesPaginationFragmentVariables,
-  response: SearchCategoriesPaginationFragmentResponse,
+export type SearchCategoriesQuery = {|
+  variables: SearchCategoriesQueryVariables,
+  response: SearchCategoriesQueryResponse,
 |};
 
 
 /*
-query SearchCategoriesPaginationFragment(
-  $after: String
+query SearchCategoriesQuery(
   $first: Int
+  $after: String
   $title: String
 ) {
   ...SearchCategoriesFragment_2PG6LC
@@ -61,24 +59,22 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "first"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "title"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "title"
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -97,13 +93,17 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCategoriesQuery",
     "selections": [
       {
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "kind": "FragmentSpread",
         "name": "SearchCategoriesFragment"
       }
@@ -113,13 +113,17 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Operation",
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCategoriesQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -255,7 +259,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "filters": [
           "title"
         ],
@@ -267,14 +271,14 @@ return {
     ]
   },
   "params": {
-    "id": "bcbc4da3d8debc4e0033f250a407f898",
+    "id": "f4bec4e4fa514d9e11bfaec771ab730c",
     "metadata": {},
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCategoriesQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '0376adc3e94c715af7e56c5051cb9499';
+(node: any).hash = '86c2365c6012ec542415f11c4e51a77e';
 module.exports = node;

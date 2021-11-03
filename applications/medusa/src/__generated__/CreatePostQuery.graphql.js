@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 420ae1eb6462ec8d789a96f8b21a499a
+ * @relayHash 00e233310bcff3906bc30d7c8e485199
  */
 
 /* eslint-disable */
@@ -171,7 +171,7 @@ fragment ProcessUploadsFragment on Post {
 }
 
 fragment SearchCategoriesFragment on Query {
-  categories(first: 9) {
+  categories {
     edges {
       node {
         id
@@ -308,14 +308,7 @@ v10 = {
     }
   ],
   "storageKey": null
-},
-v11 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 9
-  }
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -505,7 +498,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v11/*: any*/),
+        "args": null,
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -571,11 +564,11 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "categories(first:9)"
+        "storageKey": null
       },
       {
         "alias": null,
-        "args": (v11/*: any*/),
+        "args": null,
         "filters": [
           "title"
         ],
@@ -587,7 +580,7 @@ return {
     ]
   },
   "params": {
-    "id": "420ae1eb6462ec8d789a96f8b21a499a",
+    "id": "00e233310bcff3906bc30d7c8e485199",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
