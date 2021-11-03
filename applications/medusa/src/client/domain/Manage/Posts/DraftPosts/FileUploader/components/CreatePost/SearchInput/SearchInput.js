@@ -18,11 +18,11 @@ import InterfaceDelete1
 import { useState } from 'react'
 
 type Props = {
+  children?: Node,
   placeholder?: string,
-  onChange: () => void
 };
 
-export default function SearchInput ({ placeholder, onChange }: Props): Node {
+export default function SearchInput ({ placeholder, children }: Props): Node {
   const [searchInput, setSearch] = useState('')
 
   const clearSearch = (e) => {
@@ -31,27 +31,29 @@ export default function SearchInput ({ placeholder, onChange }: Props): Node {
 
   const onChangeInput = (e) => {
     setSearch(e.target.value)
-    onChange(e.target.value)
   }
 
   const [t] = useTranslation('manage')
 
   return (
-    <InputGroup>
-      <Input
-        size='lg'
-        value={searchInput}
-        placeholder={placeholder || t('input.search')}
-        onChange={onChangeInput}
-        variant='filled'
-      />
-      <InputRightElement mr={2} h='100%'>
-        <CloseButton
-          color='gray.200'
-          hidden={!searchInput}
-          onClick={clearSearch}
+    <>
+      <InputGroup>
+        <Input
+          size='lg'
+          value={searchInput}
+          placeholder={placeholder || t('input.search')}
+          onChange={onChangeInput}
+          variant='filled'
         />
-      </InputRightElement>
-    </InputGroup>
+        <InputRightElement mr={2} h='100%'>
+          <CloseButton
+            color='gray.200'
+            hidden={!searchInput}
+            onClick={clearSearch}
+          />
+        </InputRightElement>
+      </InputGroup>
+      {children({ searchInput })}
+    </>
   )
 }

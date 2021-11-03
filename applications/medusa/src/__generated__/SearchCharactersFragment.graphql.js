@@ -9,14 +9,17 @@
 import type { ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-import type { SearchCategoriesFragment$ref, SearchCategoriesFragment$fragmentType } from "./SearchCategoriesPaginationFragment.graphql";
-export type { SearchCategoriesFragment$ref, SearchCategoriesFragment$fragmentType };
-export type SearchCategoriesFragment = {|
-  +categories: {|
+import type { SearchCharactersFragment$ref, SearchCharactersFragment$fragmentType } from "./SearchCharactersPaginationFragment.graphql";
+export type { SearchCharactersFragment$ref, SearchCharactersFragment$fragmentType };
+export type SearchCharactersFragment = {|
+  +characters: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
-        +title: string,
+        +name: string,
+        +series: {|
+          +title: string
+        |},
         +slug: string,
         +thumbnail: ?{|
           +type: ResourceType,
@@ -28,19 +31,19 @@ export type SearchCategoriesFragment = {|
       |}
     |}>
   |},
-  +$refType: SearchCategoriesFragment$ref,
+  +$refType: SearchCharactersFragment$ref,
 |};
-export type SearchCategoriesFragment$data = SearchCategoriesFragment;
-export type SearchCategoriesFragment$key = {
-  +$data?: SearchCategoriesFragment$data,
-  +$fragmentRefs: SearchCategoriesFragment$ref,
+export type SearchCharactersFragment$data = SearchCharactersFragment;
+export type SearchCharactersFragment$key = {
+  +$data?: SearchCharactersFragment$data,
+  +$fragmentRefs: SearchCharactersFragment$ref,
   ...
 };
 
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "categories"
+  "characters"
 ];
 return {
   "argumentDefinitions": [
@@ -50,14 +53,14 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 5,
+      "defaultValue": 3,
       "kind": "LocalArgument",
       "name": "first"
     },
     {
       "defaultValue": null,
       "kind": "LocalArgument",
-      "name": "title"
+      "name": "name"
     }
   ],
   "kind": "Fragment",
@@ -80,29 +83,29 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchCategoriesPaginationFragment.graphql.js')
+      "operation": require('./SearchCharactersPaginationFragment.graphql.js')
     }
   },
-  "name": "SearchCategoriesFragment",
+  "name": "SearchCharactersFragment",
   "selections": [
     {
-      "alias": "categories",
+      "alias": "characters",
       "args": [
         {
           "kind": "Variable",
-          "name": "title",
-          "variableName": "title"
+          "name": "name",
+          "variableName": "name"
         }
       ],
-      "concreteType": "CategoryConnection",
+      "concreteType": "CharacterConnection",
       "kind": "LinkedField",
-      "name": "__SearchCategories_categories_connection",
+      "name": "__SearchCharacters_characters_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "CategoryEdge",
+          "concreteType": "CharacterEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -110,7 +113,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Category",
+              "concreteType": "Character",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -126,7 +129,25 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "title",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Series",
+                  "kind": "LinkedField",
+                  "name": "series",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "title",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -233,5 +254,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '1a544fb577b799ed8f5b240efe789cf1';
+(node: any).hash = '3624a4dcc9b2aabd139ade2b2ad7cc52';
 module.exports = node;

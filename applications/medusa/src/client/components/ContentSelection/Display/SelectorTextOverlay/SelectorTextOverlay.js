@@ -7,9 +7,10 @@ import { Stack, Box, Heading, Text, Wrap, WrapItem, Flex } from '@chakra-ui/reac
 
 type Props = {
   label: string,
+  description?: string
 }
 
-export default function SelectorTextOverlay ({ label, children }: Props): Node {
+export default function SelectorTextOverlay ({ label, children, description }: Props): Node {
   return (
 
     <Flex
@@ -28,10 +29,15 @@ export default function SelectorTextOverlay ({ label, children }: Props): Node {
         position='absolute'
         align='center'
         justify='center'
+        direction='column'
+        whiteSpace='normal'
       >
         <Text fontSize='lg' color='gray.00'>
           {label}
         </Text>
+        {description && <Text fontSize='sm' color='gray.100'>
+          {description}
+        </Text>}
       </Flex>
     </Flex>
   )

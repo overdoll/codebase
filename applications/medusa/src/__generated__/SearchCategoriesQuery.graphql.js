@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f4bec4e4fa514d9e11bfaec771ab730c
+ * @relayHash 1f976447c77a3075b95d898a2e94b6cb
  */
 
 /* eslint-disable */
@@ -10,9 +10,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 import type { SearchCategoriesFragment$ref } from "./SearchCategoriesFragment.graphql";
 export type SearchCategoriesQueryVariables = {|
-  first?: ?number,
-  after?: ?string,
-  title?: ?string,
+  title?: ?string
 |};
 export type SearchCategoriesQueryResponse = {|
   +$fragmentRefs: SearchCategoriesFragment$ref
@@ -25,15 +23,13 @@ export type SearchCategoriesQuery = {|
 
 /*
 query SearchCategoriesQuery(
-  $first: Int
-  $after: String
   $title: String
 ) {
-  ...SearchCategoriesFragment_2PG6LC
+  ...SearchCategoriesFragment_3FzUSU
 }
 
-fragment SearchCategoriesFragment_2PG6LC on Query {
-  categories(first: $first, after: $after, title: $title) {
+fragment SearchCategoriesFragment_3FzUSU on Query {
+  categories(first: 5, title: $title) {
     edges {
       node {
         id
@@ -59,51 +55,37 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "after"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "first"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "title"
-},
-v3 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  },
-  {
-    "kind": "Variable",
-    "name": "title",
-    "variableName": "title"
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "title"
   }
+],
+v1 = {
+  "kind": "Variable",
+  "name": "title",
+  "variableName": "title"
+},
+v2 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  },
+  (v1/*: any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "SearchCategoriesQuery",
     "selections": [
       {
-        "args": (v3/*: any*/),
+        "args": [
+          (v1/*: any*/)
+        ],
         "kind": "FragmentSpread",
         "name": "SearchCategoriesFragment"
       }
@@ -113,17 +95,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "SearchCategoriesQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -259,7 +237,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v2/*: any*/),
         "filters": [
           "title"
         ],
@@ -271,7 +249,7 @@ return {
     ]
   },
   "params": {
-    "id": "f4bec4e4fa514d9e11bfaec771ab730c",
+    "id": "1f976447c77a3075b95d898a2e94b6cb",
     "metadata": {},
     "name": "SearchCategoriesQuery",
     "operationKind": "query",
@@ -280,5 +258,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '86c2365c6012ec542415f11c4e51a77e';
+(node: any).hash = '4f48576e48f3ef7919d14cf7d1dc2763';
 module.exports = node;

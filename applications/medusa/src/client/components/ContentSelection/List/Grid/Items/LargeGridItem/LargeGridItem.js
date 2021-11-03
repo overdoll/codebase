@@ -6,9 +6,9 @@ import { WrapItem } from '@chakra-ui/react'
 
 type Props = {}
 
-export default function GridItem ({ children }: Props): Node {
+export default function LargeGridItem ({ children, ...rest }: Props): Node {
   return (
-    <WrapItem h={150} w={120}>
+    <WrapItem h='45%' w='45%' {...rest}>
       {children}
     </WrapItem>
   )

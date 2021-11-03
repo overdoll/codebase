@@ -22,8 +22,7 @@ export default function Selector ({ id, selected, onSelect, children, ...rest }:
     <Button
       onClick={onClick} borderColor={isSelected ? 'green.500' : 'gray.900'} borderWidth={2} overflow='hidden'
       m={0} p={0}
-      h='inherit'
-      w='inherit'
+      w='100%' h='100%'
       variant='panel' {...rest}
     >
       {children}

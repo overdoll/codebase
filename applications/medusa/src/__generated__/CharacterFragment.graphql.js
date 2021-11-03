@@ -9,13 +9,16 @@
 import type { ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type CategoryFragment$ref: FragmentReference;
-declare export opaque type CategoryFragment$fragmentType: CategoryFragment$ref;
-export type CategoryFragment = {|
+declare export opaque type CharacterFragment$ref: FragmentReference;
+declare export opaque type CharacterFragment$fragmentType: CharacterFragment$ref;
+export type CharacterFragment = {|
   +post: ?{|
-    +categories: $ReadOnlyArray<{|
+    +characters: $ReadOnlyArray<{|
       +id: string,
-      +title: string,
+      +name: string,
+      +series: {|
+        +title: string
+      |},
       +slug: string,
       +thumbnail: ?{|
         +type: ResourceType,
@@ -26,12 +29,12 @@ export type CategoryFragment = {|
       |},
     |}>
   |},
-  +$refType: CategoryFragment$ref,
+  +$refType: CharacterFragment$ref,
 |};
-export type CategoryFragment$data = CategoryFragment;
-export type CategoryFragment$key = {
-  +$data?: CategoryFragment$data,
-  +$fragmentRefs: CategoryFragment$ref,
+export type CharacterFragment$data = CharacterFragment;
+export type CharacterFragment$key = {
+  +$data?: CharacterFragment$data,
+  +$fragmentRefs: CharacterFragment$ref,
   ...
 };
 
@@ -45,7 +48,7 @@ const node: ReaderFragment = {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "CategoryFragment",
+  "name": "CharacterFragment",
   "selections": [
     {
       "alias": null,
@@ -64,9 +67,9 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Category",
+          "concreteType": "Character",
           "kind": "LinkedField",
-          "name": "categories",
+          "name": "characters",
           "plural": true,
           "selections": [
             {
@@ -80,7 +83,25 @@ const node: ReaderFragment = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "title",
+              "name": "name",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Series",
+              "kind": "LinkedField",
+              "name": "series",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "title",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
@@ -144,5 +165,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'ad44029fa93644d546b7719996d4a935';
+(node: any).hash = '3bc15d0d5ea05aa4844ed6d17971894e';
 module.exports = node;

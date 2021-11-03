@@ -23,7 +23,7 @@ const EVENTS = {
   PROGRESS: 'progress',
   AUDIENCE: 'audience',
   BRAND: 'brand',
-  TAG_CHARACTERS: 'characters',
+  CHARACTERS: 'characters',
   CATEGORIES: 'categories',
   SUBMIT: 'submit',
   CLEANUP: 'cleanup'
@@ -34,12 +34,12 @@ const INITIAL_STATE: State = {
   urls: {},
   file_limit: 0,
   content: null,
-  step: STEPS.CATEGORY,
+  step: STEPS.ARRANGE,
   progress: {},
   audience: null,
-  brands: [],
-  characters: [],
-  categories: [],
+  brands: null,
+  characters: {},
+  categories: {},
   submit: {},
   cleanup: null
 }

@@ -13,35 +13,17 @@ import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
-import type { CategoryTagFragment$key } from '@//:artifacts/CategoryTagFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import {
-  Input,
-  Flex,
   Tag,
   TagLabel,
   TagCloseButton,
   Wrap,
-  WrapItem,
-  InputLeftElement,
-  InputRightElement, IconButton, InputGroup
+  WrapItem
 } from '@chakra-ui/react'
-import {
-  GridItem,
-  GridWrap,
-  Selector,
-  SelectorTextOverlay, useSingleSelector, useMultiSelector
-} from '../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '../../../../../../../../../../components/DataDisplay/ResourceItem/ResourceItem'
 import { EVENTS, STEPS } from '../../../../../constants/constants'
-import { removeNode } from '@//:modules/utilities/functions'
-import Icon from '@//:modules/content/Icon/Icon'
-import SearchCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/search/search-circle.svg'
-import InterfaceDelete1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-1.svg'
-import SearchCategories from './SearchCategories/SearchCategories'
 import SearchInput from '../../../SearchInput/SearchInput'
+import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
 
 type Props = {
   uppy: Uppy,
@@ -66,7 +48,6 @@ const CategoryFragmentGQL = graphql`
         }
       }
     }
-    ...SearchCategoriesFragment
   }
 `
 
@@ -76,8 +57,6 @@ export default function Category ({ uppy, state, dispatch, query }: Props): Node
   const [t] = useTranslation('manage')
 
   const currentCategories = data.post.categories.map((item) => item.id)
-
-  const [search, setSearch] = useState('')
 
   const [selected, setSelected] = useState(currentCategories)
 
@@ -96,30 +75,46 @@ export default function Category ({ uppy, state, dispatch, query }: Props): Node
     dispatch({ type: EVENTS.CATEGORIES, value: { id: id }, remove: true })
   }
 
+  // Initially add current categories to state on load
+  useEffect(() => {
+    data.post.categories.forEach((item) => {
+      dispatch({ type: EVENTS.CATEGORIES, value: item })
+    })
+  }, [])
+
   return (
     <>
       <PageSectionWrap>
+        <PageSectionTitle>
+          {t('posts.flow.steps.category.selector.title')}
+        </PageSectionTitle>
         <PageSectionDescription>
           {t('posts.flow.steps.category.selector.description')}
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput onChange={setSearch} />
-      <Wrap>
-        {Object.values(state.categories).map((item, index) =>
-          <WrapItem key={index}>
-            <Tag borderRadius='full' size='lg'>
-              <TagLabel>{item.title}</TagLabel>
-              <TagCloseButton color='gray.00' opacity={1} bg='orange.400' onClick={() => removeSelection(item.id)} />
-            </Tag>
-          </WrapItem>
-        )}
-      </Wrap>
-      <SearchCategories
-        query={data}
-        selected={selected}
-        onSelect={setCurrentSelection}
-        search={search}
-      />
+      <SearchInput placeholder={t('posts.flow.steps.category.selector.search.placeholder')}>
+        {({ searchInput }) =>
+          <>
+            <Wrap>
+              {Object.values(state.categories).map((item, index) =>
+                <WrapItem key={index}>
+                  <Tag borderRadius='full' size='lg'>
+                    <TagLabel>{item.title}</TagLabel>
+                    <TagCloseButton
+                      color='gray.00' opacity={1} bg='orange.400'
+                      onClick={() => removeSelection(item.id)}
+                    />
+                  </Tag>
+                </WrapItem>
+              )}
+            </Wrap>
+            <RootSearchCategories
+              selected={selected}
+              onSelect={setCurrentSelection}
+              search={searchInput}
+            />
+          </>}
+      </SearchInput>
     </>
   )
 }

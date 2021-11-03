@@ -9,6 +9,8 @@
 import type { ReaderFragment } from 'relay-runtime';
 import type { useUpdateAudienceFragment$ref } from "./useUpdateAudienceFragment.graphql";
 import type { useUpdateBrandFragment$ref } from "./useUpdateBrandFragment.graphql";
+import type { useUpdateCategoryFragment$ref } from "./useUpdateCategoryFragment.graphql";
+import type { useUpdateCharacterFragment$ref } from "./useUpdateCharacterFragment.graphql";
 import type { useUpdateContentFragment$ref } from "./useUpdateContentFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type FlowForwardButtonFragment$ref: FragmentReference;
@@ -24,7 +26,13 @@ export type FlowForwardButtonFragment = {|
   +brand: ?{|
     +id: string
   |},
-  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref & useUpdateBrandFragment$ref,
+  +categories: $ReadOnlyArray<{|
+    +id: string
+  |}>,
+  +characters: $ReadOnlyArray<{|
+    +id: string
+  |}>,
+  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref & useUpdateBrandFragment$ref & useUpdateCategoryFragment$ref & useUpdateCharacterFragment$ref,
   +$refType: FlowForwardButtonFragment$ref,
 |};
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -84,6 +92,26 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Category",
+      "kind": "LinkedField",
+      "name": "categories",
+      "plural": true,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Character",
+      "kind": "LinkedField",
+      "name": "characters",
+      "plural": true,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useUpdateContentFragment"
@@ -97,6 +125,16 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useUpdateBrandFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useUpdateCategoryFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useUpdateCharacterFragment"
     }
   ],
   "type": "Post",
@@ -104,5 +142,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '99603b08ad5f057fccf9beff45d7170c';
+(node: any).hash = '36539e22b472d10b543039c482958e7a';
 module.exports = node;

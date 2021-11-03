@@ -11,7 +11,8 @@ import { StringParam, useQueryParam } from 'use-query-params'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { FlowForwardButtonFragment$key } from '@//:artifacts/FlowForwardButtonFragment.graphql'
-import { useUpdateContent, useUpdateAudience, useUpdateBrand } from './queries'
+import { useUpdateContent, useUpdateAudience, useUpdateBrand, useUpdateCategory, useUpdateCharacter } from './queries'
+import { compareTwoArrays } from '@//:modules/utilities/functions'
 
 type Props = {
   uppy: Uppy,
@@ -32,9 +33,17 @@ const FlowForwardButtonFragmentGQL = graphql`
     brand {
       id
     }
+    categories {
+      id
+    }
+    characters {
+      id
+    }
     ...useUpdateContentFragment
     ...useUpdateAudienceFragment
     ...useUpdateBrandFragment
+    ...useUpdateCategoryFragment
+    ...useUpdateCharacterFragment
   }
 `
 
@@ -45,12 +54,20 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   const [onUpdateContent, isUpdatingContent] = useUpdateContent({ uppy, dispatch, state, query: data })
   const [onUpdateAudience, isUpdatingAudience] = useUpdateAudience({ uppy, dispatch, state, query: data })
   const [onUpdateBrand, isUpdatingBrand] = useUpdateBrand({ uppy, dispatch, state, query: data })
+  const [onUpdateCategory, isUpdatingCategory] = useUpdateCategory({ uppy, dispatch, state, query: data })
+  const [onUpdateCharacter, isUpdatingCharacter] = useUpdateCharacter({ uppy, dispatch, state, query: data })
 
   const contentData = state.content || data.content
 
   const [t] = useTranslation('manage')
 
   const goForward = (): void => {
+    const currentCategories = data.categories.map((item) => item.id)
+    const stateCategories = Object.keys(state.categories)
+
+    const currentCharacters = data.characters.map((item) => item.id)
+    const stateCharacters = Object.keys(state.characters)
+
     switch (state.step) {
       case STEPS.ARRANGE:
         // If the user has not rearranged or edited the post content, we skip the updating
@@ -75,9 +92,17 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
         dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
         break
       case STEPS.CATEGORY:
+        if (!compareTwoArrays(currentCategories, stateCategories)) {
+          onUpdateCategory()
+          break
+        }
         dispatch({ type: EVENTS.STEP, value: STEPS.CHARACTER })
         break
       case STEPS.CHARACTER:
+        if (!compareTwoArrays(currentCharacters, stateCharacters)) {
+          onUpdateCharacter()
+          break
+        }
         dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW })
         break
       default:
@@ -101,6 +126,12 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
       case STEPS.BRAND:
         // Check if there are no brand selections
         return (!state.brand)
+      case STEPS.CATEGORY:
+        // Check for at least 3 categories selected
+        return ((Object.keys(state.categories)).length < 3)
+      case STEPS.CHARACTER:
+        // Check for at least 1 character selected
+        return ((Object.keys(state.characters)).length < 1)
       default:
         return false
     }
@@ -115,7 +146,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   }
 
   const buttonLoading = () => {
-    return isUpdatingContent || isUpdatingAudience || isUpdatingBrand
+    return isUpdatingContent || isUpdatingAudience || isUpdatingBrand || isUpdatingCategory || isUpdatingCharacter
   }
 
   switch (state.step) {

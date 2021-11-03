@@ -34,6 +34,7 @@ const FlowStepsFragmentGQL = graphql`
     ...AudienceFragment
     ...BrandFragment
     ...CategoryFragment
+    ...CharacterFragment
   }
 `
 
@@ -55,7 +56,7 @@ export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Nod
 
     case STEPS.CHARACTER:
 
-      return <Character />
+      return <Character uppy={uppy} dispatch={dispatch} state={state} query={data} />
 
     case STEPS.REVIEW:
 

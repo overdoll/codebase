@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 00e233310bcff3906bc30d7c8e485199
+ * @relayHash 635ea29959b799c9655bff7917fc0a13
  */
 
 /* eslint-disable */
@@ -128,7 +128,28 @@ fragment CategoryFragment on Query {
     }
     id
   }
-  ...SearchCategoriesFragment
+}
+
+fragment CharacterFragment on Query {
+  post(reference: $reference) {
+    characters {
+      id
+      name
+      series {
+        title
+        id
+      }
+      slug
+      thumbnail {
+        type
+        urls {
+          mimeType
+          url
+        }
+      }
+    }
+    id
+  }
 }
 
 fragment FlowFooterFragment on Query {
@@ -149,9 +170,17 @@ fragment FlowForwardButtonFragment on Post {
   brand {
     id
   }
+  categories {
+    id
+  }
+  characters {
+    id
+  }
   ...useUpdateContentFragment
   ...useUpdateAudienceFragment
   ...useUpdateBrandFragment
+  ...useUpdateCategoryFragment
+  ...useUpdateCharacterFragment
 }
 
 fragment FlowStepsFragment on Query {
@@ -159,6 +188,7 @@ fragment FlowStepsFragment on Query {
   ...AudienceFragment
   ...BrandFragment
   ...CategoryFragment
+  ...CharacterFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -166,31 +196,6 @@ fragment ProcessUploadsFragment on Post {
   content {
     urls {
       url
-    }
-  }
-}
-
-fragment SearchCategoriesFragment on Query {
-  categories {
-    edges {
-      node {
-        id
-        title
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
-        }
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
     }
   }
 }
@@ -205,6 +210,14 @@ fragment useUpdateAudienceFragment on Post {
 }
 
 fragment useUpdateBrandFragment on Post {
+  id
+}
+
+fragment useUpdateCategoryFragment on Post {
+  id
+}
+
+fragment useUpdateCharacterFragment on Post {
   id
 }
 
@@ -419,6 +432,34 @@ return {
               (v10/*: any*/)
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Character",
+            "kind": "LinkedField",
+            "name": "characters",
+            "plural": true,
+            "selections": [
+              (v3/*: any*/),
+              (v8/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Series",
+                "kind": "LinkedField",
+                "name": "series",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v9/*: any*/),
+              (v10/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -495,92 +536,11 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CategoryConnection",
-        "kind": "LinkedField",
-        "name": "categories",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CategoryEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v7/*: any*/),
-                  (v9/*: any*/),
-                  (v10/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "filters": [
-          "title"
-        ],
-        "handle": "connection",
-        "key": "SearchCategories_categories",
-        "kind": "LinkedHandle",
-        "name": "categories"
       }
     ]
   },
   "params": {
-    "id": "00e233310bcff3906bc30d7c8e485199",
+    "id": "635ea29959b799c9655bff7917fc0a13",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

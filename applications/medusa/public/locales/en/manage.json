@@ -82,16 +82,33 @@
           "header": "Step 4",
           "subheader": "Add categories",
           "selector": {
-            "description": "Select the categories that would be most applicable to the content you have uploaded."
+            "title": "Add some categories",
+            "description": "Select the categories that would be most applicable to the content you have uploaded.",
+            "search": {
+              "placeholder": "Search for a category",
+              "empty": "No categories were found with the title '{{word}}'",
+              "load": "Load More Categories"
+            }
           },
           "query": {
             "error": "There was an error saving the post categories"
-          },
-          "required_prompt": "Categories allow us to implement discoverability and give your fans a chance to easily find your content."
+          }
         },
         "character": {
           "header": "Step 5",
-          "subheader": "Add characters"
+          "subheader": "Add characters",
+          "selector": {
+            "title": "What are the characters?",
+            "description": "Select the character(s) that are the primary focus in your content.",
+            "search": {
+              "placeholder": "Search for a character by name",
+              "empty": "No characters were found with the name '{{word}}'",
+              "load": "Load More Characters"
+            }
+          },
+          "query": {
+            "error": "There was an error saving the post characters"
+          }
         },
         "review": {
           "header": "Step 6",

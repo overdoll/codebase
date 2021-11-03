@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 10764c8374840d36bb1bb3ada28ebd03
+ * @relayHash 83fa2598a3804e4acfe50b5e92c4c85b
  */
 
 /* eslint-disable */
@@ -8,38 +8,36 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { FragmentReference } from "relay-runtime";
-declare export opaque type SearchCategoriesFragment$ref: FragmentReference;
-declare export opaque type SearchCategoriesFragment$fragmentType: SearchCategoriesFragment$ref;
-export type SearchCategoriesPaginationFragmentVariables = {|
-  after?: ?string,
-  first?: ?number,
-  title?: ?string,
+import type { SearchCharactersFragment$ref } from "./SearchCharactersFragment.graphql";
+export type SearchCharactersQueryVariables = {|
+  name?: ?string
 |};
-export type SearchCategoriesPaginationFragmentResponse = {|
-  +$fragmentRefs: SearchCategoriesFragment$ref
+export type SearchCharactersQueryResponse = {|
+  +$fragmentRefs: SearchCharactersFragment$ref
 |};
-export type SearchCategoriesPaginationFragment = {|
-  variables: SearchCategoriesPaginationFragmentVariables,
-  response: SearchCategoriesPaginationFragmentResponse,
+export type SearchCharactersQuery = {|
+  variables: SearchCharactersQueryVariables,
+  response: SearchCharactersQueryResponse,
 |};
 
 
 /*
-query SearchCategoriesPaginationFragment(
-  $after: String
-  $first: Int = 5
-  $title: String
+query SearchCharactersQuery(
+  $name: String
 ) {
-  ...SearchCategoriesFragment_2PG6LC
+  ...SearchCharactersFragment_2aiVTE
 }
 
-fragment SearchCategoriesFragment_2PG6LC on Query {
-  categories(first: $first, after: $after, title: $title) {
+fragment SearchCharactersFragment_2aiVTE on Query {
+  characters(first: 3, name: $name) {
     edges {
       node {
         id
-        title
+        name
+        series {
+          title
+          id
+        }
         slug
         thumbnail {
           type
@@ -65,47 +63,42 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": 5,
-    "kind": "LocalArgument",
-    "name": "first"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "title"
+    "name": "name"
   }
 ],
-v1 = [
+v1 = {
+  "kind": "Variable",
+  "name": "name",
+  "variableName": "name"
+},
+v2 = [
   {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
+    "kind": "Literal",
     "name": "first",
-    "variableName": "first"
+    "value": 3
   },
-  {
-    "kind": "Variable",
-    "name": "title",
-    "variableName": "title"
-  }
-];
+  (v1/*: any*/)
+],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCharactersQuery",
     "selections": [
       {
-        "args": (v1/*: any*/),
+        "args": [
+          (v1/*: any*/)
+        ],
         "kind": "FragmentSpread",
-        "name": "SearchCategoriesFragment"
+        "name": "SearchCharactersFragment"
       }
     ],
     "type": "Query",
@@ -115,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCharactersQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "CategoryConnection",
+        "args": (v2/*: any*/),
+        "concreteType": "CharacterConnection",
         "kind": "LinkedField",
-        "name": "categories",
+        "name": "characters",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "CategoryEdge",
+            "concreteType": "CharacterEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -136,23 +129,36 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Category",
+                "concreteType": "Character",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "name",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "title",
+                    "concreteType": "Series",
+                    "kind": "LinkedField",
+                    "name": "series",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -255,26 +261,26 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "filters": [
-          "title"
+          "name"
         ],
         "handle": "connection",
-        "key": "SearchCategories_categories",
+        "key": "SearchCharacters_characters",
         "kind": "LinkedHandle",
-        "name": "categories"
+        "name": "characters"
       }
     ]
   },
   "params": {
-    "id": "10764c8374840d36bb1bb3ada28ebd03",
+    "id": "83fa2598a3804e4acfe50b5e92c4c85b",
     "metadata": {},
-    "name": "SearchCategoriesPaginationFragment",
+    "name": "SearchCharactersQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '1a544fb577b799ed8f5b240efe789cf1';
+(node: any).hash = '7e0729de03e5cec1277e9e9bb5555859';
 module.exports = node;
