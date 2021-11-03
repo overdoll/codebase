@@ -76,7 +76,7 @@
           "query": {
             "error": "There was an error saving the post brand"
           },
-          "required_prompt": "Brands are an easy way to manage your content and allow you to have a unique link."
+          "required_prompt": "Brands are an easy way to manage your content and allow you to have a unique link that can be shared anywhere."
         },
         "category": {
           "header": "Step 4",

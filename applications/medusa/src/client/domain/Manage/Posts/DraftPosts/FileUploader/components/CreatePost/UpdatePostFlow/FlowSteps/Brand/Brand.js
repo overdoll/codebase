@@ -130,7 +130,7 @@ export default function Brand ({ uppy, state, dispatch, query }: Props): Node {
         )}
       </RowWrap>
       <Flex justify='center'>
-        <RequiredPrompt>{t('posts.flow.steps.brand.selector.required_prompt')}</RequiredPrompt>
+        <RequiredPrompt>{t('posts.flow.steps.brand.required_prompt')}</RequiredPrompt>
       </Flex>
     </>
   )

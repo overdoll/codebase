@@ -17,7 +17,6 @@ const EVENTS = {
   URLS: 'urls',
   FILES: 'files',
   CONTENT: 'content',
-  FILE_LIMIT: 'file_limit',
   CLEAR_CONTENT: 'clear_content',
   STEP: 'step',
   PROGRESS: 'progress',
@@ -32,7 +31,6 @@ const EVENTS = {
 const INITIAL_STATE: State = {
   files: [],
   urls: {},
-  file_limit: 0,
   content: null,
   step: STEPS.ARRANGE,
   progress: {},
