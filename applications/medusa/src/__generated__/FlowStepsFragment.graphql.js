@@ -12,11 +12,12 @@ import type { AudienceFragment$ref } from "./AudienceFragment.graphql";
 import type { BrandFragment$ref } from "./BrandFragment.graphql";
 import type { CategoryFragment$ref } from "./CategoryFragment.graphql";
 import type { CharacterFragment$ref } from "./CharacterFragment.graphql";
+import type { ReviewFragment$ref } from "./ReviewFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type FlowStepsFragment$ref: FragmentReference;
 declare export opaque type FlowStepsFragment$fragmentType: FlowStepsFragment$ref;
 export type FlowStepsFragment = {|
-  +$fragmentRefs: ArrangeFragment$ref & AudienceFragment$ref & BrandFragment$ref & CategoryFragment$ref & CharacterFragment$ref,
+  +$fragmentRefs: ArrangeFragment$ref & AudienceFragment$ref & BrandFragment$ref & CategoryFragment$ref & CharacterFragment$ref & ReviewFragment$ref,
   +$refType: FlowStepsFragment$ref,
 |};
 export type FlowStepsFragment$data = FlowStepsFragment;
@@ -57,11 +58,16 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "CharacterFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ReviewFragment"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '1d7bf933811d4b80795bf6be7f5f2aa4';
+(node: any).hash = 'a8ce0916045c594584851dc923b59245';
 module.exports = node;

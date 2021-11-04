@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 635ea29959b799c9655bff7917fc0a13
+ * @relayHash 54dfa9ab2fc97e5f8aa4faf4bde04533
  */
 
 /* eslint-disable */
@@ -189,6 +189,17 @@ fragment FlowStepsFragment on Query {
   ...BrandFragment
   ...CategoryFragment
   ...CharacterFragment
+  ...ReviewFragment
+}
+
+fragment PostGalleryContentFragment on Post {
+  content {
+    type
+    urls {
+      url
+      mimeType
+    }
+  }
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -197,6 +208,19 @@ fragment ProcessUploadsFragment on Post {
     urls {
       url
     }
+  }
+}
+
+fragment ReviewFragment on Query {
+  post(reference: $reference) {
+    id
+    content {
+      urls {
+        url
+        mimeType
+      }
+    }
+    ...PostGalleryContentFragment
   }
 }
 
@@ -540,7 +564,7 @@ return {
     ]
   },
   "params": {
-    "id": "635ea29959b799c9655bff7917fc0a13",
+    "id": "54dfa9ab2fc97e5f8aa4faf4bde04533",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

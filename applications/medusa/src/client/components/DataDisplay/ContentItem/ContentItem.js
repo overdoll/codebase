@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import type { Content as ContentType } from '@//:types/upload'
 import { useRef } from 'react'
 import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react'
-import ImageSnippet from './ImageSnippet/ImageSnippet'
+import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet'
 import InspectModal from '../../Posts/components/modal/InspectModal'
 import Icon from '@//:modules/content/Icon/Icon'
 
@@ -13,7 +13,7 @@ import InterfaceArrowsShrinkVertical
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-vertical.svg'
 import InterfaceArrowsVerticalExpand1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-vertical-expand-1.svg'
-import VideoSnippet from './VideoSnippet/VideoSnippet'
+import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet'
 
 type Props = {
   content: Array<ContentType>,

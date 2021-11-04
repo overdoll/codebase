@@ -112,7 +112,11 @@
         },
         "review": {
           "header": "Step 6",
-          "subheader": "Review your post"
+          "subheader": "Review your post",
+          "body": {
+            "title": "Review your selections",
+            "description": "Make sure you like what you see before you submit."
+          }
         }
       }
     }

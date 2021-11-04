@@ -25,7 +25,7 @@ export default function VideoSnippet ({ urls, innerRef, objectFit, ...rest }: Pr
       {urls.map((item, index) => (
         <source
           key={index}
-          src={item.url}
+          src={'https://overdoll.test/api/upload/' + item.url}
           type={item.mimeType}
         />)
       )}

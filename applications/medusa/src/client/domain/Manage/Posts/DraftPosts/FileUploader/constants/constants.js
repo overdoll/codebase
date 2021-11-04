@@ -32,7 +32,7 @@ const INITIAL_STATE: State = {
   files: [],
   urls: {},
   content: null,
-  step: STEPS.ARRANGE,
+  step: STEPS.REVIEW,
   progress: {},
   audience: null,
   brands: null,
