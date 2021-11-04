@@ -33,6 +33,7 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
   const data = useFragment(PostGalleryContentFragmentGQL, query)
 
   const [volume, setVolume] = useState(0.2)
+  const [muted, setMuted] = useState(true)
 
   const [swiper, setSwiper] = useState(null)
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -46,6 +47,7 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
       const videoElement = item.getElementsByTagName('video') || []
       for (const video of videoElement) {
         video.volume = volume
+        video.muted = muted
         if (swiper.activeIndex === index) {
           video.play()
           return
@@ -55,11 +57,18 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
     })
   }
 
+  const onVolumeChange = (e) => {
+    console.log(e.target.volume)
+    setVolume(e.target.volume)
+    setMuted(e.target.muted)
+  }
+
   return (
     <>
       <Swiper
         autoHeight
-        onSwiper={(swiper) => setSwiper(swiper)}
+        onSwiper={(swiper) =>
+          setSwiper(swiper)}
         onSlideChange={(swiper) =>
           onChangeSlides(swiper)}
       >
@@ -70,8 +79,9 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
                 <ImageSnippet h='100%' urls={item.urls} />}
               {item.type === 'VIDEO' &&
                 <VideoSnippet
+                  autoPlay={index === currentSlide}
                   onVolumeChange={(e) =>
-                    setVolume(e.target.volume)}
+                    onVolumeChange(e)}
                   controls urls={item.urls}
                 />}
             </Flex>

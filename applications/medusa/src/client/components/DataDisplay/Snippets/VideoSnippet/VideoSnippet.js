@@ -16,7 +16,7 @@ export default function VideoSnippet ({ urls, innerRef, objectFit, ...rest }: Pr
     <video
       ref={innerRef}
       disablePictureInPicture
-      controlsList='nodownload noremoteplayback nofullscreen noplaybackrate'
+      controlsList='nodownload noremoteplayback noplaybackrate'
       muted loop preload='auto' {...rest} style={{
         objectFit: objectFit || 'cover',
         height: '100%'
