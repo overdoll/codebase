@@ -25,6 +25,7 @@ type Repository interface {
 	GetAccountEmails(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Email, error)
 	GetAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) (*Email, error)
 	DeleteAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) error
+	DeleteAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, username string) error
 }
 
 type IndexRepository interface {

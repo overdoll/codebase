@@ -43,25 +43,40 @@ type UsernameByAccount struct {
 }
 
 // AddAccountEmail - add an email to the account
-func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *account.Account, username string) error {
+func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
 	stmt, _ := usernameByAccount.Delete()
 
-	batch.Query(stmt, instance.Username(), instance.ID())
+	batch.Query(stmt, username, accountId)
 
 	// delete from other table
 	stmt, _ = accountUsernameTable.Delete()
 
-	batch.Query(stmt, strings.ToLower(instance.Username()))
+	batch.Query(stmt, strings.ToLower(username))
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to delete account username: %v", err)
 	}
 
 	return nil
+}
+
+func (r AccountRepository) DeleteAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) error {
+
+	emails, err := r.GetAccountUsernames(ctx, requester, nil, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := account.CanDeleteAccountUsername(requester, accountId, emails, username); err != nil {
+		return err
+	}
+
+	return r.deleteAccountUsername(ctx, accountId, username)
 }
 
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)

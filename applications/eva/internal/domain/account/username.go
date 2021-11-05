@@ -1,6 +1,7 @@
 package account
 
 import (
+	"errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -37,6 +38,27 @@ func (c *Username) CanView(requester *principal.Principal) error {
 func CanViewUsernamesForAccount(requester *principal.Principal, accountId string) error {
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func CanDeleteAccountUsername(requester *principal.Principal, accountId string, usernames []*Username, targetUsername string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	foundUsername := false
+
+	for _, em := range usernames {
+		if em.Username() == targetUsername {
+			foundUsername = true
+			break
+		}
+	}
+
+	if !foundUsername {
+		return errors.New("username does not belong to account")
 	}
 
 	return nil

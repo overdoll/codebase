@@ -68,7 +68,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
 		Language:           usr.Language().Locale(),
-		LockedReason:       usr.LockedReason(),
+		LockedReason:       usr.LockedReason().String(),
 		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
 }

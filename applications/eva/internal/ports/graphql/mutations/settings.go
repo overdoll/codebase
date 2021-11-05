@@ -195,6 +195,22 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 	return &types.DeleteAccountEmailPayload{AccountEmailID: input.AccountEmailID}, nil
 }
 
+func (r *MutationResolver) DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.DeleteAccountUsername.Handle(ctx, command.DeleteAccountUsername{
+		Principal: principal.FromContext(ctx),
+		Username:  input.AccountUsernameID.GetID(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.DeleteAccountUsernamePayload{AccountUsernameID: input.AccountUsernameID}, nil
+}
+
 func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

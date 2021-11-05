@@ -280,6 +280,18 @@ type DeleteAccountEmailPayload struct {
 	AccountEmailID relay.ID `json:"accountEmailId"`
 }
 
+// Input for removing an email from an account
+type DeleteAccountUsernameInput struct {
+	// The username that should be removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
+}
+
+// Username to delete from account
+type DeleteAccountUsernamePayload struct {
+	// The ID of the account username that was removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
+}
+
 // Payload for disabling account multi factor
 type DisableAccountMultiFactorPayload struct {
 	// TOTP that was removed from this account, if it was removed

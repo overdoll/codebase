@@ -18,6 +18,7 @@ type Commands struct {
 	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
+	DeleteAccountUsername                   command.DeleteAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
 	RevokeAccountSession                    command.RevokeAccountSessionHandler
 	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler

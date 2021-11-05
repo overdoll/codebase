@@ -10,21 +10,6 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-type postState string
-
-const (
-	draft      postState = "draft"
-	publishing postState = "publishing"
-	review     postState = "review"
-	published  postState = "published"
-	discarding postState = "discarding"
-	discarded  postState = "discarded"
-	rejected   postState = "rejected"
-	processing postState = "processing"
-	removed    postState = "removed"
-	removing   postState = "removing"
-)
-
 var (
 	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
@@ -40,7 +25,7 @@ type Post struct {
 
 	id string
 
-	state postState
+	state State
 
 	moderatorId   *string
 	contributorId string
@@ -62,7 +47,7 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 
 	return &Post{
 		id:            id.String(),
-		state:         draft,
+		state:         Draft,
 		contributorId: contributor.AccountId(),
 		createdAt:     time.Now(),
 	}, nil
@@ -76,10 +61,12 @@ func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributo
 		resources = append(resources, resource.UnmarshalResourceFromDatabase(res))
 	}
 
+	ps, _ := StateFromString(state)
+
 	return &Post{
 		id:             id,
 		moderatorId:    moderatorId,
-		state:          postState(state),
+		state:          ps,
 		brand:          brand,
 		audience:       audience,
 		contributorId:  contributorId,
@@ -112,8 +99,8 @@ func (p *Post) Brand() *Brand {
 	return p.brand
 }
 
-func (p *Post) State() string {
-	return string(p.state)
+func (p *Post) State() State {
+	return p.state
 }
 
 func (p *Post) Content() []*resource.Resource {
@@ -122,7 +109,7 @@ func (p *Post) Content() []*resource.Resource {
 
 func (p *Post) UpdateModerator(moderatorId string) error {
 
-	if p.state != review {
+	if p.state != Review {
 		return ErrAlreadyModerated
 	}
 
@@ -179,33 +166,33 @@ func (p *Post) ReassignmentAt() *time.Time {
 func (p *Post) MakePublish() error {
 
 	// State of the post needs to be "publishing" before "published"
-	if p.state != publishing {
+	if p.state != Publishing {
 		return ErrNotPublishing
 	}
 
-	p.state = published
+	p.state = Published
 
 	return nil
 }
 
 func (p *Post) MakeDiscarding() error {
 
-	if p.state != review {
+	if p.state != Review {
 		return ErrNotReview
 	}
 
-	p.state = discarding
+	p.state = Discarding
 
 	return nil
 }
 
 func (p *Post) MakeDiscarded() error {
 
-	if p.state != discarding {
+	if p.state != Discarding {
 		return ErrNotReview
 	}
 
-	p.state = discarded
+	p.state = Discarded
 
 	p.content = []*resource.Resource{}
 
@@ -214,25 +201,25 @@ func (p *Post) MakeDiscarded() error {
 
 func (p *Post) MakeRejected() error {
 
-	p.state = rejected
+	p.state = Rejected
 
 	return nil
 }
 
 func (p *Post) MakeRemoving() error {
 
-	p.state = removing
+	p.state = Removing
 
 	return nil
 }
 
 func (p *Post) MakeRemoved() error {
 
-	if p.state != removing {
+	if p.state != Removing {
 		return ErrNotRemoving
 	}
 
-	p.state = removed
+	p.state = Removed
 
 	p.content = []*resource.Resource{}
 
@@ -241,7 +228,7 @@ func (p *Post) MakeRemoved() error {
 
 func (p *Post) MakeUndo() error {
 
-	if p.state == discarded || p.state == published {
+	if p.state == Discarded || p.state == Published {
 		return ErrNotComplete
 	}
 
@@ -249,54 +236,54 @@ func (p *Post) MakeUndo() error {
 }
 
 func (p *Post) MakePublishing() {
-	p.state = publishing
+	p.state = Publishing
 }
 
 func (p *Post) MakeProcessing() error {
 
-	p.state = processing
+	p.state = Processing
 
 	return nil
 }
 
 func (p *Post) InDraft() bool {
-	return p.state == draft
+	return p.state == Draft
 }
 
 func (p *Post) InReview() bool {
-	return p.state == review
+	return p.state == Review
 }
 
 func (p *Post) IsPublished() bool {
-	return p.state == published
+	return p.state == Published
 }
 
 func (p *Post) IsRemoving() bool {
-	return p.state == removing
+	return p.state == Removing
 }
 
 func (p *Post) IsRemoved() bool {
-	return p.state == removed
+	return p.state == Removed
 }
 
 func (p *Post) IsPublishing() bool {
-	return p.state == publishing
+	return p.state == Publishing
 }
 
 func (p *Post) IsProcessing() bool {
-	return p.state == processing
+	return p.state == Processing
 }
 
 func (p *Post) IsRejected() bool {
-	return p.state == rejected
+	return p.state == Rejected
 }
 
 func (p *Post) IsDiscarded() bool {
-	return p.state == discarded
+	return p.state == Discarded
 }
 
 func (p *Post) IsDiscarding() bool {
-	return p.state == discarding
+	return p.state == Discarding
 }
 
 func (p *Post) UpdateContent(resources []*resource.Resource) {
@@ -304,7 +291,7 @@ func (p *Post) UpdateContent(resources []*resource.Resource) {
 }
 
 func (p *Post) MakeReview() error {
-	p.state = review
+	p.state = Review
 
 	return nil
 }
@@ -315,7 +302,7 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 		return err
 	}
 
-	if p.state != draft {
+	if p.state != Draft {
 		return ErrNotDraft
 	}
 
@@ -325,7 +312,7 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	p.moderatorId = &moderatorId
 	p.postedAt = &postTime
 	p.reassignmentAt = &reassignmentAt
-	p.state = processing
+	p.state = Processing
 
 	return nil
 }
@@ -386,7 +373,7 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 		return err
 	}
 
-	if p.state != draft {
+	if p.state != Draft {
 		return errors.New("can only update post in draft")
 	}
 

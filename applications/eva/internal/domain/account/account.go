@@ -12,18 +12,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type AccountRole string
-type LockReason string
-
-const (
-	Staff     AccountRole = "staff"
-	Moderator AccountRole = "moderator"
-)
-
-const (
-	PostInfraction LockReason = "POST_INFRACTION"
-)
-
 type Account struct {
 	*paging.Node
 
@@ -31,7 +19,7 @@ type Account struct {
 
 	username string
 	email    string
-	roles    []AccountRole
+	roles    []Role
 	verified bool
 	avatar   string
 	language *translations.Language
@@ -58,11 +46,14 @@ var (
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
 
-	var newRoles []AccountRole
+	var newRoles []Role
 
 	for _, role := range roles {
-		newRoles = append(newRoles, AccountRole(role))
+		rl, _ := RoleFromString(role)
+		newRoles = append(newRoles, rl)
 	}
+
+	lr, _ := LockReasonFromString(lockedReason)
 
 	return &Account{
 		id:                 id,
@@ -74,7 +65,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		lockedUntil:        lockedUntil,
 		locked:             locked,
 		language:           translations.NewLanguage(locale),
-		lockedReason:       LockReason(lockedReason),
+		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
 	}
 }
@@ -139,8 +130,8 @@ func (a *Account) IsLocked() bool {
 	return a.locked
 }
 
-func (a *Account) LockedReason() string {
-	return string(a.lockedReason)
+func (a *Account) LockedReason() LockReason {
+	return a.lockedReason
 }
 
 func (a *Account) IsLockedDueToPostInfraction() bool {
@@ -164,13 +155,19 @@ func (a *Account) ToggleMultiFactor() error {
 func (a *Account) Lock(duration int, reason string) error {
 	if duration == 0 {
 		a.lockedUntil = 0
-		a.lockedReason = ""
+		a.lockedReason = Unlocked
 		a.locked = false
 		return nil
 	}
 
+	rs, err := LockReasonFromString(reason)
+
+	if err != nil {
+		return nil
+	}
+
 	a.lockedUntil = duration
-	a.lockedReason = LockReason(reason)
+	a.lockedReason = rs
 	a.locked = true
 
 	return nil
@@ -208,7 +205,7 @@ func (a *Account) IsModerator() bool {
 func (a *Account) hasRoles(roles []string) bool {
 	for _, role := range a.roles {
 		for _, requiredRole := range roles {
-			if string(role) == requiredRole {
+			if role.String() == requiredRole {
 				return true
 			}
 		}
@@ -233,7 +230,7 @@ func (a *Account) RolesAsString() []string {
 	var n []string
 
 	for _, role := range a.roles {
-		n = append(n, string(role))
+		n = append(n, role.String())
 	}
 
 	return n
@@ -340,7 +337,7 @@ func (a *Account) revokeRoleCheck(requester *principal.Principal) error {
 }
 
 // remove from list of roles
-func (a *Account) removeRole(role AccountRole) error {
+func (a *Account) removeRole(role Role) error {
 	var ind int
 	found := false
 
