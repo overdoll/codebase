@@ -10,12 +10,14 @@ type Username struct {
 	*paging.Node
 	username  string
 	accountId string
+	current   bool
 }
 
-func UnmarshalUsernameFromDatabase(username, accountId string) *Username {
+func UnmarshalUsernameFromDatabase(username, accountId string, current bool) *Username {
 	return &Username{
 		username:  username,
 		accountId: accountId,
+		current:   current,
 	}
 }
 
@@ -25,6 +27,10 @@ func (c *Username) Username() string {
 
 func (c *Username) AccountId() string {
 	return c.accountId
+}
+
+func (c *Username) IsCurrent() bool {
+	return c.current
 }
 
 func (c *Username) CanView(requester *principal.Principal) error {
@@ -53,6 +59,11 @@ func CanDeleteAccountUsername(requester *principal.Principal, accountId string, 
 	for _, em := range usernames {
 		if em.Username() == targetUsername {
 			foundUsername = true
+
+			if em.IsCurrent() {
+				return errors.New("cannot delete username that is your current one")
+			}
+
 			break
 		}
 	}

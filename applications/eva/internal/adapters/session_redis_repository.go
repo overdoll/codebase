@@ -92,7 +92,8 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 // GetSessionsByAccountId - Get sessions
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 
-	keys, err := r.client.Keys(ctx, sessionPrefix+"*:"+accountPrefix+accountId).Result()
+	// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
+	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+"*:"+accountPrefix+accountId, 100).Result()
 
 	if err != nil {
 
@@ -101,6 +102,11 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		}
 
 		return nil, fmt.Errorf("failed to get sessions for account: %v", err)
+	}
+
+	// sort keys - based on cursor
+	if cursor != nil {
+		keys = cursor.BuildRedis(keys)
 	}
 
 	var sessions []*session.Session

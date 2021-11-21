@@ -125,7 +125,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		return nil, nil, fmt.Errorf("failed to update account username: %v", err)
 	}
 
-	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID()), nil
+	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID(), instance.IsUsername(instance.Username())), nil
 }
 
 // GetAccountByUsername - Get user using the username
@@ -168,6 +168,12 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 		return nil, err
 	}
 
+	accInstance, err := r.GetAccountById(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var accountUsernames []*UsernameByAccount
 
 	builder := usernameByAccount.SelectBuilder()
@@ -197,7 +203,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 	var usernames []*account.Username
 
 	for _, username := range accountUsernames {
-		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId)
+		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId, accInstance.IsUsername(username.Username))
 		usern.Node = paging.NewNode(username.Username)
 		usernames = append(usernames, usern)
 	}
@@ -207,6 +213,12 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 
 // GetAccountEmails - get emails for account
 func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) (*account.Username, error) {
+
+	accInstance, err := r.GetAccountById(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var accountUsernames *UsernameByAccount
 
@@ -227,7 +239,7 @@ func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *pr
 		return nil, fmt.Errorf("failed to get account username: %v", err)
 	}
 
-	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId)
+	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId, accInstance.IsUsername(accountUsernames.Username))
 
 	if err := name.CanView(requester); err != nil {
 		return nil, err

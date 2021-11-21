@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"overdoll/libraries/translations"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -94,6 +95,10 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
+}
+
+func (a *Account) IsUsername(usr string) bool {
+	return strings.ToLower(a.username) == strings.ToLower(usr)
 }
 
 func (a *Account) Language() *translations.Language {
