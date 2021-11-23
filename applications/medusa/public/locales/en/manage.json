@@ -116,6 +116,9 @@
           "body": {
             "title": "Review your selections",
             "description": "Make sure you like what you see before you submit."
+          },
+          "query": {
+            "error": "There was an error submitting the post"
           }
         }
       }

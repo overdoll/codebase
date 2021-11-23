@@ -50,6 +50,10 @@ const reducer: {} = (state: State, action: Action): State => {
         return { ...state, [act]: content }
       }
 
+      if (action.clear) {
+        return { ...state, [act]: null }
+      }
+
       return {
         ...state,
         [act]: [...action.value]
@@ -81,8 +85,8 @@ const reducer: {} = (state: State, action: Action): State => {
         [act]: action.value
       }
     }
-    case EVENTS.CLEAR_CONTENT: {
-      return { ...state, content: null }
+    case EVENTS.IN_REVIEW: {
+      return { ...state, [act]: true }
     }
     case EVENTS.FILES: {
       let files = [...state.files]

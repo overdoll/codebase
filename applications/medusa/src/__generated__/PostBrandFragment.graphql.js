@@ -7,62 +7,50 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { PostBrandFragment$ref } from "./PostBrandFragment.graphql";
-import type { PostGalleryContentFragment$ref } from "./PostGalleryContentFragment.graphql";
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type ReviewFragment$ref: FragmentReference;
-declare export opaque type ReviewFragment$fragmentType: ReviewFragment$ref;
-export type ReviewFragment = {|
-  +post: ?{|
-    +id: string,
-    +content: $ReadOnlyArray<{|
+declare export opaque type PostBrandFragment$ref: FragmentReference;
+declare export opaque type PostBrandFragment$fragmentType: PostBrandFragment$ref;
+export type PostBrandFragment = {|
+  +brand: ?{|
+    +name: string,
+    +thumbnail: ?{|
+      +type: ResourceType,
       +urls: $ReadOnlyArray<{|
-        +url: any,
         +mimeType: string,
-      |}>
-    |}>,
-    +$fragmentRefs: PostGalleryContentFragment$ref & PostBrandFragment$ref,
+        +url: any,
+      |}>,
+    |},
   |},
-  +$refType: ReviewFragment$ref,
+  +$refType: PostBrandFragment$ref,
 |};
-export type ReviewFragment$data = ReviewFragment;
-export type ReviewFragment$key = {
-  +$data?: ReviewFragment$data,
-  +$fragmentRefs: ReviewFragment$ref,
+export type PostBrandFragment$data = PostBrandFragment;
+export type PostBrandFragment$key = {
+  +$data?: PostBrandFragment$data,
+  +$fragmentRefs: PostBrandFragment$ref,
   ...
 };
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "reference"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ReviewFragment",
+  "name": "PostBrandFragment",
   "selections": [
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "reference",
-          "variableName": "reference"
-        }
-      ],
-      "concreteType": "Post",
+      "args": null,
+      "concreteType": "Brand",
       "kind": "LinkedField",
-      "name": "post",
+      "name": "brand",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "id",
+          "name": "name",
           "storageKey": null
         },
         {
@@ -70,9 +58,16 @@ const node: ReaderFragment = {
           "args": null,
           "concreteType": "Resource",
           "kind": "LinkedField",
-          "name": "content",
-          "plural": true,
+          "name": "thumbnail",
+          "plural": false,
           "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -85,14 +80,14 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "url",
+                  "name": "mimeType",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "mimeType",
+                  "name": "url",
                   "storageKey": null
                 }
               ],
@@ -100,24 +95,14 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostGalleryContentFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostBrandFragment"
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'dd4eec181fabcd7ff2c0c0aa4d596d31';
+(node: any).hash = '3224316cbdb403b85c8ee5bfe988e051';
 module.exports = node;

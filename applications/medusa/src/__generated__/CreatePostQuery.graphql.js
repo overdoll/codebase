@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 54dfa9ab2fc97e5f8aa4faf4bde04533
+ * @relayHash ddfd0054876ef8b4e78fe8815dc75e9c
  */
 
 /* eslint-disable */
@@ -9,12 +9,14 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
+export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
 export type CreatePostQueryVariables = {|
   reference: string
 |};
 export type CreatePostQueryResponse = {|
   +post: ?{|
-    +__typename: string
+    +__typename: string,
+    +state: PostState,
   |},
   +$fragmentRefs: UpdatePostFlowFragment$ref,
 |};
@@ -30,6 +32,7 @@ query CreatePostQuery(
 ) {
   post(reference: $reference) {
     __typename
+    state
     id
   }
   ...UpdatePostFlowFragment
@@ -181,6 +184,7 @@ fragment FlowForwardButtonFragment on Post {
   ...useUpdateBrandFragment
   ...useUpdateCategoryFragment
   ...useUpdateCharacterFragment
+  ...useSubmitPostFragment
 }
 
 fragment FlowStepsFragment on Query {
@@ -190,6 +194,20 @@ fragment FlowStepsFragment on Query {
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
+}
+
+fragment PostBrandFragment on Post {
+  brand {
+    name
+    thumbnail {
+      type
+      urls {
+        mimeType
+        url
+      }
+    }
+    id
+  }
 }
 
 fragment PostGalleryContentFragment on Post {
@@ -221,12 +239,17 @@ fragment ReviewFragment on Query {
       }
     }
     ...PostGalleryContentFragment
+    ...PostBrandFragment
   }
 }
 
 fragment UpdatePostFlowFragment on Query {
   ...FlowStepsFragment
   ...FlowFooterFragment
+}
+
+fragment useSubmitPostFragment on Post {
+  id
 }
 
 fragment useUpdateAudienceFragment on Post {
@@ -276,49 +299,49 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "state",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "mimeType",
+  "name": "url",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "mimeType",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "type",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "name",
   "storageKey": null
 },
 v10 = {
@@ -329,7 +352,7 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/),
+    (v7/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -338,12 +361,19 @@ v10 = {
       "name": "urls",
       "plural": true,
       "selections": [
-        (v5/*: any*/),
-        (v4/*: any*/)
+        (v6/*: any*/),
+        (v5/*: any*/)
       ],
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
   "storageKey": null
 };
 return {
@@ -361,7 +391,8 @@ return {
         "name": "post",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/)
         ],
         "storageKey": null
       },
@@ -390,6 +421,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -398,7 +430,7 @@ return {
             "name": "content",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -407,12 +439,12 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/)
+                  (v5/*: any*/),
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
@@ -424,8 +456,8 @@ return {
             "name": "audience",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v7/*: any*/)
+              (v4/*: any*/),
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
@@ -437,8 +469,9 @@ return {
             "name": "brand",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v8/*: any*/)
+              (v4/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/)
             ],
             "storageKey": null
           },
@@ -450,9 +483,9 @@ return {
             "name": "categories",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
-              (v7/*: any*/),
-              (v9/*: any*/),
+              (v4/*: any*/),
+              (v8/*: any*/),
+              (v11/*: any*/),
               (v10/*: any*/)
             ],
             "storageKey": null
@@ -465,8 +498,8 @@ return {
             "name": "characters",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
-              (v8/*: any*/),
+              (v4/*: any*/),
+              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -475,12 +508,12 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v3/*: any*/)
+                  (v8/*: any*/),
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/),
+              (v11/*: any*/),
               (v10/*: any*/)
             ],
             "storageKey": null
@@ -512,8 +545,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v7/*: any*/),
+                  (v4/*: any*/),
+                  (v8/*: any*/),
                   (v10/*: any*/)
                 ],
                 "storageKey": null
@@ -548,9 +581,9 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v8/*: any*/),
+                  (v4/*: any*/),
                   (v9/*: any*/),
+                  (v11/*: any*/),
                   (v10/*: any*/)
                 ],
                 "storageKey": null
@@ -564,7 +597,7 @@ return {
     ]
   },
   "params": {
-    "id": "54dfa9ab2fc97e5f8aa4faf4bde04533",
+    "id": "ddfd0054876ef8b4e78fe8815dc75e9c",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
@@ -573,5 +606,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'dbaf32af9039c5e8eb8565f55faadd5e';
+(node: any).hash = '011d7590657e2ff4b72efe732b249ed9';
 module.exports = node;

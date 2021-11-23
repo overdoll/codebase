@@ -7,6 +7,7 @@ import {
   PageSectionTitle,
   PageSectionWrap
 } from '../../../../../../../../../../components/PageLayout'
+import { Stack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -15,6 +16,7 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import PostGalleryContent
   from '../../../../../../../../../../components/Posts/Post/PostGalleryContent/PostGalleryContent'
+import PostBrand from '../../../../../../../../../../components/Posts/Post/PostBrand/PostBrand'
 
 type Props = {
   uppy: Uppy,
@@ -34,6 +36,7 @@ const ReviewFragmentGQL = graphql`
         }
       }
       ...PostGalleryContentFragment
+      ...PostBrandFragment
     }
   }
 `
@@ -53,7 +56,10 @@ export default function Review ({ uppy, state, dispatch, query }: Props): Node {
           {t('posts.flow.steps.review.body.description')}
         </PageSectionDescription>
       </PageSectionWrap>
-      <PostGalleryContent query={data.post} />
+      <Stack spacing={2}>
+        <PostBrand query={data.post} />
+        <PostGalleryContent query={data.post} />
+      </Stack>
     </>
   )
 }

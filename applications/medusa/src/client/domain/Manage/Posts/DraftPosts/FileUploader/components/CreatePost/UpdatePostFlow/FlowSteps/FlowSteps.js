@@ -65,7 +65,7 @@ export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Nod
 
     case STEPS.SUBMIT:
 
-      return <Submit />
+      return <Submit uppy={uppy} dispatch={dispatch} state={state} />
 
     default:
       return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={data} />

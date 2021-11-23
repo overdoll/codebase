@@ -64,7 +64,7 @@ export default function useUpdateContent ({ uppy, dispatch, state, query }: Prop
         }
       },
       onCompleted (data) {
-        dispatch({ type: EVENTS.CLEAR_CONTENT })
+        dispatch({ type: EVENTS.CONTENT, clear: true })
         dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
       },
       onError (data) {

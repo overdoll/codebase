@@ -110,7 +110,6 @@ export type Event =
   | 'urls'
   | 'files'
   | 'step'
-  | 'clear_content'
   | 'content'
   | 'progress'
   | 'characters'
@@ -118,9 +117,8 @@ export type Event =
   | 'brand'
   | 'categories'
   | 'submit'
-  | 'file_limit'
   | 'cleanup'
-  | 'arrange_files';
+  | 'isInReview'
 
 export type State = {
   thumbnails: Thumbnails,
@@ -134,7 +132,7 @@ export type State = {
   characters: Characters,
   categories: Categories,
   submit: Submit,
-  file_limit: number,
+  isInReview: boolean,
   cleanup: () => void,
 };
 

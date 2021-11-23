@@ -11,7 +11,14 @@ import { StringParam, useQueryParam } from 'use-query-params'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { FlowForwardButtonFragment$key } from '@//:artifacts/FlowForwardButtonFragment.graphql'
-import { useUpdateContent, useUpdateAudience, useUpdateBrand, useUpdateCategory, useUpdateCharacter } from './queries'
+import {
+  useUpdateContent,
+  useUpdateAudience,
+  useUpdateBrand,
+  useUpdateCategory,
+  useUpdateCharacter,
+  useSubmitPost
+} from './queries'
 import { compareTwoArrays } from '@//:modules/utilities/functions'
 
 type Props = {
@@ -44,18 +51,19 @@ const FlowForwardButtonFragmentGQL = graphql`
     ...useUpdateBrandFragment
     ...useUpdateCategoryFragment
     ...useUpdateCharacterFragment
+    ...useSubmitPostFragment
   }
 `
 
 export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, query }: Props): Node {
   const data = useFragment(FlowForwardButtonFragmentGQL, query)
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
   const [onUpdateContent, isUpdatingContent] = useUpdateContent({ uppy, dispatch, state, query: data })
   const [onUpdateAudience, isUpdatingAudience] = useUpdateAudience({ uppy, dispatch, state, query: data })
   const [onUpdateBrand, isUpdatingBrand] = useUpdateBrand({ uppy, dispatch, state, query: data })
   const [onUpdateCategory, isUpdatingCategory] = useUpdateCategory({ uppy, dispatch, state, query: data })
   const [onUpdateCharacter, isUpdatingCharacter] = useUpdateCharacter({ uppy, dispatch, state, query: data })
+  const [onSubmitPost, isSubmittingPost] = useSubmitPost({ uppy, dispatch, state, query: data })
 
   const contentData = state.content || data.content
 
@@ -137,16 +145,8 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
     }
   }
 
-  const onSubmitPost = () => {
-    // query for submitting post. on success, runs the functions below
-    uppy.reset()
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
-    setPostReference(undefined)
-    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
-  }
-
   const buttonLoading = () => {
-    return isUpdatingContent || isUpdatingAudience || isUpdatingBrand || isUpdatingCategory || isUpdatingCharacter
+    return isUpdatingContent || isUpdatingAudience || isUpdatingBrand || isUpdatingCategory || isUpdatingCharacter || isSubmittingPost
   }
 
   switch (state.step) {

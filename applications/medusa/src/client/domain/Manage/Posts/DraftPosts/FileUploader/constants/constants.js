@@ -17,7 +17,6 @@ const EVENTS = {
   URLS: 'urls',
   FILES: 'files',
   CONTENT: 'content',
-  CLEAR_CONTENT: 'clear_content',
   STEP: 'step',
   PROGRESS: 'progress',
   AUDIENCE: 'audience',
@@ -25,21 +24,23 @@ const EVENTS = {
   CHARACTERS: 'characters',
   CATEGORIES: 'categories',
   SUBMIT: 'submit',
-  CLEANUP: 'cleanup'
+  CLEANUP: 'cleanup',
+  IN_REVIEW: 'isInReview'
 }
 
 const INITIAL_STATE: State = {
   files: [],
   urls: {},
   content: null,
-  step: STEPS.REVIEW,
+  step: STEPS.ARRANGE,
   progress: {},
   audience: null,
   brands: null,
   characters: {},
   categories: {},
   submit: {},
-  cleanup: null
+  cleanup: null,
+  isInReview: false
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

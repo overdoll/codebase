@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  Flex, Center, Box, Spinner, Heading, Text, useToast, Stack, ListItem, UnorderedList
+  Flex, Box, Spinner, Heading, Text, useToast, Stack
 } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import FilePicker from '../FilePicker/FilePicker'
@@ -28,6 +28,7 @@ const RootCreatePostFlowQueryGQL = graphql`
   query CreatePostQuery ($reference: String!) {
     post (reference: $reference) {
       __typename
+      state
     }
     ...UpdatePostFlowFragment
   }
@@ -80,6 +81,15 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
       }
     })
   }, [uppy])
+
+  // If the post was already submitted
+  if (data?.post?.state !== 'Draft' && state.step !== STEPS.SUBMIT) {
+    return (
+      <>
+        already submitted
+      </>
+    )
+  }
 
   // Show a loading placeholder for post being created
   if (isCreatingPost) {

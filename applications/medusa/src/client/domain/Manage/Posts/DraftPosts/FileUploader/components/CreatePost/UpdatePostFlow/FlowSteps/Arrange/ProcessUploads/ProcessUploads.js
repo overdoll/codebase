@@ -102,7 +102,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
               remove: true
             })
             dispatch({
-              type: EVENTS.CLEAR_CONTENT
+              type: EVENTS.CONTENT, clear: true
             })
           })
         },

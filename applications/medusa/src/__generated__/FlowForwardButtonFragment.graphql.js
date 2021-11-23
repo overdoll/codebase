@@ -7,6 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { useSubmitPostFragment$ref } from "./useSubmitPostFragment.graphql";
 import type { useUpdateAudienceFragment$ref } from "./useUpdateAudienceFragment.graphql";
 import type { useUpdateBrandFragment$ref } from "./useUpdateBrandFragment.graphql";
 import type { useUpdateCategoryFragment$ref } from "./useUpdateCategoryFragment.graphql";
@@ -32,7 +33,7 @@ export type FlowForwardButtonFragment = {|
   +characters: $ReadOnlyArray<{|
     +id: string
   |}>,
-  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref & useUpdateBrandFragment$ref & useUpdateCategoryFragment$ref & useUpdateCharacterFragment$ref,
+  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref & useUpdateBrandFragment$ref & useUpdateCategoryFragment$ref & useUpdateCharacterFragment$ref & useSubmitPostFragment$ref,
   +$refType: FlowForwardButtonFragment$ref,
 |};
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -135,6 +136,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useUpdateCharacterFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useSubmitPostFragment"
     }
   ],
   "type": "Post",
@@ -142,5 +148,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '36539e22b472d10b543039c482958e7a';
+(node: any).hash = 'dbf64aad155cc6f52b4ca96c03c2ddac';
 module.exports = node;
