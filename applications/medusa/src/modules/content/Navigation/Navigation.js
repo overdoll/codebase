@@ -3,9 +3,7 @@
  */
 import type { Node } from 'react'
 import { useMemo } from 'react'
-import {
-  Button
-} from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -18,29 +16,29 @@ import getBasePath from './helpers/getBasePath'
 import LockedAccountBanner from './components/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
 
 import {
-  NavigationContainer,
+  NavigationButton,
   NavigationCenterItems,
+  NavigationContainer,
+  NavigationContents,
   NavigationLeftBrand,
   NavigationRightItems,
-  SimplifiedNavigation,
-  NavigationButton,
-  NavigationContents,
-  PageContents
+  PageContents,
+  SimplifiedNavigation
 } from '@//:modules/content/Navigation/components'
 import {
-  SidebarButton,
   Sidebar,
+  SidebarButton,
   SidebarGrouping
 } from '@//:modules/content/Navigation/components/NavigationContents/Sidebar'
 
 import {
+  AvatarMenu,
   LoggedOutPlaceholder,
+  LoginMenu,
   LogoutButton,
   MenuItemButton,
-  ProfileButton,
   NavigationMenu,
-  LoginMenu,
-  AvatarMenu
+  ProfileButton
 } from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems'
 
 type Props = {

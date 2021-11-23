@@ -2,14 +2,7 @@
  * @flow
  */
 
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Center
-} from '@chakra-ui/react'
+import { Box, Button, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 
 type Props = {
   children: Node,

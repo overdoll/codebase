@@ -6,8 +6,7 @@ import defineAbility from '@//:modules/utilities/functions/defineAbility/defineA
 import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
-import LoginKeys
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
+import LoginKeys from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
 import ContentBrushPen
   from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
 import InterfaceSettingCog

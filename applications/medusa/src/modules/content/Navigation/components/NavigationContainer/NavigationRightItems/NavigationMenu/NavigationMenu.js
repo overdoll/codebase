@@ -2,13 +2,7 @@
  * @flow
  */
 import { useTranslation } from 'react-i18next'
-import {
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  Tooltip
-} from '@chakra-ui/react'
+import { IconButton, Menu, MenuButton, MenuList, Tooltip } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfacePageControllerSettings
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-settings.svg'

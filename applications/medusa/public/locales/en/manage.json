@@ -17,7 +17,7 @@
         },
         "not_draft": {
           "title": "This post was already submitted",
-          "button": "Go back",
+          "button": "Go back"
         },
         "query": {
           "success": "A draft post was created",

@@ -3,7 +3,7 @@
  */
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
-import type { RouterInstance, Route } from '@//:modules/routing/router'
+import type { Route, RouterInstance } from '@//:modules/routing/router'
 import { createClientRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../client/Bootstrap'
 import i18n from 'i18next'

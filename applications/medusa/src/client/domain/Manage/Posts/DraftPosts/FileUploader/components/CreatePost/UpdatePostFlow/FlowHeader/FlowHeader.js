@@ -10,23 +10,52 @@ import {
   Flex,
   Heading,
   Text,
-  CloseButton
+  CloseButton,
+  Progress,
+  Stack
 } from '@chakra-ui/react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type { Uppy } from '@uppy/core'
+import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import useCheckRequirements from './useCheckRequirements'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  query: FlowHeaderFragment$key,
 }
 
-export default function FlowHeader ({ state, uppy, dispatch }: Props): Node {
+const FlowHeaderFragmentGQL = graphql`
+  fragment FlowHeaderFragment on Query {
+    post (reference: $reference) {
+      id
+      ...useCheckRequirementsFragment
+    }
+  }
+`
+
+export default function FlowHeader ({ state, uppy, dispatch, query }: Props): Node {
+  const data = useFragment(FlowHeaderFragmentGQL, query)
+
   const [t] = useTranslation('manage')
 
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
+
+  const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data.post })
+
+  const progressScore = () => {
+    const scores = [content, audience, brand, categories, characters]
+    const calculated = scores.map((item) => item ? 1 : 0)
+    const reduced = calculated.reduce((a, b) => a + b, 0)
+    return (reduced / scores.length) * 100
+  }
+
+  const score = progressScore()
 
   const onCleanup = () => {
     uppy.reset()
@@ -54,24 +83,21 @@ export default function FlowHeader ({ state, uppy, dispatch }: Props): Node {
         return ['', '']
     }
   }
-  if (state.step === STEPS.SUBMIT) {
-    return <></>
-  }
 
   return (
-    <Flex align='center' justify='space-between'>
-      <Flex align='center'>
-        <CircularProgress capIsRound size='64px' color='primary.500' thickness='8px' value={20} />
-        <Box ml={4}>
-          <Heading color='gray.100' fontSize='2xl'>
+    <Box borderRadius='md' p={3} bg='gray.800'>
+      <Flex align='center' justify='space-between' mb={2}>
+        <Flex direction='column'>
+          <Heading color='gray.00' fontSize='2xl'>
             {findText()[0]}
           </Heading>
-          <Text color='gray.200' fontSize='md'>
+          <Text color='gray.100' fontSize='md'>
             {findText()[1]}
           </Text>
-        </Box>
+        </Flex>
+        <CloseButton size='lg' onClick={onCleanup} />
       </Flex>
-      <CloseButton size='lg' onClick={onCleanup} />
-    </Flex>
+      <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
+    </Box>
   )
 }

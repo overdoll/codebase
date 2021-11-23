@@ -20,11 +20,11 @@ export default function Submit ({ uppy, state, dispatch }: Props): Node {
 
   if (state.isInReview) {
     return (
-      <Flex direction='column' align='center'>
-        <Heading color='gray.00' fontSize='xl'>
+      <Flex justify='center' direction='column' align='center'>
+        <Heading textAlign='center' color='gray.00' fontSize='xl'>
           {t('posts.flow.steps.submit.in_review.title')}
         </Heading>
-        <Text color='gray.100' fontSize='md'>
+        <Text textAlign='center' color='gray.100' fontSize='md'>
           {t('posts.flow.steps.submit.in_review.description')}
         </Text>
       </Flex>
@@ -32,11 +32,11 @@ export default function Submit ({ uppy, state, dispatch }: Props): Node {
   }
 
   return (
-    <Flex direction='column' align='center'>
-      <Heading color='gray.00' fontSize='xl'>
+    <Flex justify='center' direction='column' align='center'>
+      <Heading textAlign='center' color='gray.00' fontSize='xl'>
         {t('posts.flow.steps.submit.not_in_review.title')}
       </Heading>
-      <Text color='gray.100' fontSize='md'>
+      <Text textAlign='center' color='gray.100' fontSize='md'>
         {t('posts.flow.steps.submit.not_in_review.description')}
       </Text>
     </Flex>

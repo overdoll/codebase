@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ddfd0054876ef8b4e78fe8815dc75e9c
+ * @relayHash 9dee855c545edc5605dfe691b2b5dfe0
  */
 
 /* eslint-disable */
@@ -187,6 +187,13 @@ fragment FlowForwardButtonFragment on Post {
   ...useSubmitPostFragment
 }
 
+fragment FlowHeaderFragment on Query {
+  post(reference: $reference) {
+    id
+    ...useCheckRequirementsFragment
+  }
+}
+
 fragment FlowStepsFragment on Query {
   ...ArrangeFragment
   ...AudienceFragment
@@ -246,6 +253,29 @@ fragment ReviewFragment on Query {
 fragment UpdatePostFlowFragment on Query {
   ...FlowStepsFragment
   ...FlowFooterFragment
+  ...FlowHeaderFragment
+}
+
+fragment useCheckRequirementsFragment on Post {
+  content {
+    __typename
+  }
+  audience {
+    __typename
+    id
+  }
+  brand {
+    __typename
+    id
+  }
+  categories {
+    __typename
+    id
+  }
+  characters {
+    __typename
+    id
+  }
 }
 
 fragment useSubmitPostFragment on Post {
@@ -444,7 +474,8 @@ return {
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v7/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -457,7 +488,8 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v8/*: any*/)
+              (v8/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -471,7 +503,8 @@ return {
             "selections": [
               (v4/*: any*/),
               (v9/*: any*/),
-              (v10/*: any*/)
+              (v10/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -486,7 +519,8 @@ return {
               (v4/*: any*/),
               (v8/*: any*/),
               (v11/*: any*/),
-              (v10/*: any*/)
+              (v10/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -514,7 +548,8 @@ return {
                 "storageKey": null
               },
               (v11/*: any*/),
-              (v10/*: any*/)
+              (v10/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -597,7 +632,7 @@ return {
     ]
   },
   "params": {
-    "id": "ddfd0054876ef8b4e78fe8815dc75e9c",
+    "id": "9dee855c545edc5605dfe691b2b5dfe0",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

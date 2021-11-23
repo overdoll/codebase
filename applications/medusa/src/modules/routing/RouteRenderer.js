@@ -6,7 +6,7 @@ import { Suspense, unstable_useTransition as useTransition, useContext, useEffec
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
-import { chakra, Progress, Fade } from '@chakra-ui/react'
+import { chakra, Fade, Progress, Slide } from '@chakra-ui/react'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
@@ -55,7 +55,7 @@ export default function RouterRenderer (): Node {
     // from the hook deps to avoid recomputing the effect after each change
     // triggered by the effect itself.
     // eslint-disable-next-line
-  }, [router, startTransition])
+  }, [router, startTransition]);
 
   // The current route value is an array of matching entries - one entry per
   // level of routes (to allow nested routes). We have to map each one to a
@@ -110,9 +110,9 @@ export default function RouterRenderer (): Node {
       <Suspense fallback={<CenteredSpinner />}>
         {routeComponent}
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
-          <Fade in={isPending}>
-            <Progress bg='transparent' colorScheme='primary' size='xs' isIndeterminate />
-          </Fade>
+          <Slide direction='top' in={isPending}>
+            <Progress borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
+          </Slide>
         </chakra.div>
       </Suspense>
     </ErrorBoundary>

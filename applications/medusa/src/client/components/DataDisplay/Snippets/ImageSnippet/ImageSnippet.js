@@ -12,7 +12,7 @@ type Props = {
 
 export default function ImageSnippet ({ urls, ...rest }: Props): Node {
   // TODO provide image fallbacks?
-  const url = 'https://overdoll.test/api/upload/' + urls[0].url
+  const url = urls[0].url
 
   return (
 

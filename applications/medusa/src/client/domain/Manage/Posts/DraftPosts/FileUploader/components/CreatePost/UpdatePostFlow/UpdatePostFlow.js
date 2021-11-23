@@ -12,10 +12,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import FlowHeader from './FlowHeader/FlowHeader'
 import FlowSteps from './FlowSteps/FlowSteps'
-import type UpdatePostFlowContentMutation from '@//:artifacts/UpdatePostFlowContentMutation.graphql'
 import { useFragment } from 'react-relay'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
-import type { UpdatePostFlowTagFragment$key } from '@//:artifacts/UpdatePostFlowTagFragment.graphql'
 
 import FlowFooter from './FlowFooter/FlowFooter'
 
@@ -30,6 +28,7 @@ const UpdatePostFlowFragmentGQL = graphql`
   fragment UpdatePostFlowFragment on Query {
     ...FlowStepsFragment
     ...FlowFooterFragment
+    ...FlowHeaderFragment
   }
 `
 
@@ -37,13 +36,12 @@ const UpdatePostFlowFragmentGQL = graphql`
 export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
   return (
     <Stack spacing={4}>
-      <Box>
-        <FlowHeader uppy={uppy} dispatch={dispatch} state={state} query={data} />
-      </Box>
+      {state.step !== STEPS.SUBMIT &&
+        <Box>
+          <FlowHeader uppy={uppy} dispatch={dispatch} state={state} query={data} />
+        </Box>}
       <Stack spacing={2}>
         <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Stack>

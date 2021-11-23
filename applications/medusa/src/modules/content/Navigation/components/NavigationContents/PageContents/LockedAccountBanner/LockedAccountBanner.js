@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Alert, AlertIcon, AlertDescription, Flex } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'

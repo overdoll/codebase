@@ -2,9 +2,7 @@
  * @flow
  */
 
-import {
-  Flex, Tooltip
-} from '@chakra-ui/react'
+import { Flex, Tooltip } from '@chakra-ui/react'
 import NavLink from '@//:modules/routing/NavLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import IconButton from '@//:modules/form/IconButton'
