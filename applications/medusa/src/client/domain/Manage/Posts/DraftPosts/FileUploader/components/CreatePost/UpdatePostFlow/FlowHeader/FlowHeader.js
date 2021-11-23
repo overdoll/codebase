@@ -2,14 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useState } from 'react'
 import type { Dispatch, State } from '@//:types/upload'
 import {
   Box,
   CircularProgress,
   CircularProgressLabel,
   Flex,
-  Progress,
   Heading,
   Text,
   CloseButton
@@ -18,7 +16,6 @@ import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type { Uppy } from '@uppy/core'
-import { graphql } from 'react-relay/hooks'
 
 type Props = {
   uppy: Uppy,
@@ -64,18 +61,14 @@ export default function FlowHeader ({ state, uppy, dispatch }: Props): Node {
   return (
     <Flex align='center' justify='space-between'>
       <Flex align='center'>
-        <CircularProgress capIsRound size='72px' color='primary.500' thickness='6px' value={20}>
-          <CircularProgressLabel>20%</CircularProgressLabel>
-        </CircularProgress>
+        <CircularProgress capIsRound size='64px' color='primary.500' thickness='8px' value={20} />
         <Box ml={4}>
-          <>
-            <Heading color='gray.100' fontSize='2xl'>
-              {findText()[0]}
-            </Heading>
-            <Text color='gray.200' fontSize='md'>
-              {findText()[1]}
-            </Text>
-          </>
+          <Heading color='gray.100' fontSize='2xl'>
+            {findText()[0]}
+          </Heading>
+          <Text color='gray.200' fontSize='md'>
+            {findText()[1]}
+          </Text>
         </Box>
       </Flex>
       <CloseButton size='lg' onClick={onCleanup} />

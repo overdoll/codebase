@@ -15,6 +15,10 @@
             "hint": "Upstanding netizens shall read all the rules before posting"
           }
         },
+        "not_draft": {
+          "title": "This post was already submitted",
+          "button": "Go back",
+        },
         "query": {
           "success": "A draft post was created",
           "error": "There was an error creating a draft post"
@@ -120,6 +124,17 @@
           "query": {
             "error": "There was an error submitting the post"
           }
+        },
+        "submit": {
+          "in_review": {
+            "title": "Your post has been submitted for review",
+            "description": "The post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."
+          },
+          "not_in_review": {
+            "title": "Your post has been submitted",
+            "description": "The post is now visible to the public"
+          },
+          "button": "Upload Again"
         }
       }
     }

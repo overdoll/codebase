@@ -14,9 +14,10 @@ import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
-import { STEPS } from '../../constants/constants'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   uppy: Uppy,
@@ -82,13 +83,10 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
     })
   }, [uppy])
 
-  // If the post was already submitted
-  if (data?.post?.state !== 'Draft' && state.step !== STEPS.SUBMIT) {
-    return (
-      <>
-        already submitted
-      </>
-    )
+  const onCleanup = () => {
+    uppy.reset()
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    setPostReference(undefined)
   }
 
   // Show a loading placeholder for post being created
@@ -121,7 +119,7 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
           </DragOverFileInput>
         </FilePicker>
         <Box>
-          <Heading mb={1} color='gray.100' fontSize='xl'>
+          <Heading color='gray.100' fontSize='xl'>
             {t('posts.flow.create.uploader.rules.heading')}
           </Heading>
           <Box ml={4}>
@@ -137,6 +135,20 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
           <CommunityGuidelines colorScheme='gray' size='md' />
         </Box>
       </Stack>
+    )
+  }
+
+  // If the post was already submitted
+  if (postData?.state !== 'Draft' && state.step !== STEPS.SUBMIT) {
+    return (
+      <Flex direction='column' align='center'>
+        <Heading mb={2} fontSize='2xl'>
+          {t('posts.flow.create.not_draft.title')}
+        </Heading>
+        <Button onClick={onCleanup} size='md'>
+          {t('posts.flow.create.not_draft.button')}
+        </Button>
+      </Flex>
     )
   }
 
