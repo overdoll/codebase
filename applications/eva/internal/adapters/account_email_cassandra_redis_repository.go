@@ -285,7 +285,6 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, requester *pr
 }
 
 // UpdateAccountMakeEmailPrimary - update the account and make the email primary
-// or just change the casings
 func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
 	acc, err := r.GetAccountById(ctx, accountId)

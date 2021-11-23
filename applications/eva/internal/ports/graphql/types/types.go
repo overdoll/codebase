@@ -33,8 +33,12 @@ type Account struct {
 	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
 	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
 	Language *Language `json:"language"`
+	// Maximum amount of usernames that this account can create
+	UsernamesLimit int `json:"usernamesLimit"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
+	// Maximum amount of emails that this account can create
+	EmailsLimit int `json:"emailsLimit"`
 	// Emails for account (multiple emails per account)
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account

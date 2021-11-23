@@ -51,6 +51,8 @@ type Queries struct {
 	AccountByUsername               query.AccountByUsernameHandler
 	AccountEmailByEmail             query.AccountEmailByEmailHandler
 	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
+	AccountEmailsLimit              query.AccountEmailsLimitHandler
+	AccountUsernamesLimit           query.AccountUsernamesLimitHandler
 	AccountUsernameByUsername       query.AccountUsernameByUsernameHandler
 	AccountUsernamesByAccount       query.AccountUsernamesByAccountHandler
 	AccountSessionById              query.AccountSessionByIdHandler

@@ -17,20 +17,41 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error) {
+func (r AccountResolver) UsernamesLimit(ctx context.Context, obj *types.Account) (int, error) {
 
-	prin := principal.FromContext(ctx)
-
-	if prin != nil {
-
-		if err := prin.BelongsToAccount(obj.ID.GetID()); err != nil {
-			return nil, err
-		}
-
-		return obj.Lock, nil
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
 	}
 
-	return nil, principal.ErrNotAuthorized
+	return r.App.Queries.AccountUsernamesLimit.Handle(ctx, query.AccountUsernamesLimit{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+}
+
+func (r AccountResolver) EmailsLimit(ctx context.Context, obj *types.Account) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	return r.App.Queries.AccountEmailsLimit.Handle(ctx, query.AccountEmailsLimit{
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+}
+
+func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return nil, err
+	}
+
+	return obj.Lock, nil
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
@@ -131,6 +152,10 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 	}
 
 	accountId := obj.ID.GetID()
+
+	if err := principal.FromContext(ctx).BelongsToAccount(accountId); err != nil {
+		return nil, err
+	}
 
 	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
 

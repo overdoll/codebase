@@ -81,9 +81,15 @@ func (r AccountRepository) DeleteAccountUsername(ctx context.Context, requester 
 
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)
 // or just change the casings
-func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usr *account.Account) error) (*account.Account, *account.Username, error) {
+func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usernames []*account.Username, usr *account.Account) error) (*account.Account, *account.Username, error) {
 
 	instance, err := r.GetAccountById(ctx, id)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	usernames, err := r.GetAccountUsernames(ctx, requester, nil, id)
 
 	if err != nil {
 		return nil, nil, err
@@ -95,20 +101,29 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 
 	oldUsername := instance.Username()
 
-	err = updateFn(instance)
+	err = updateFn(usernames, instance)
 
 	if err != nil {
 		return nil, nil, err
 	}
 
+	// if the username switch is a username that already belongs to the current user, then we dont do extra inserts
+	existingUsernameForAccount := instance.UsernameAlreadyBelongs(usernames, oldUsername)
+
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
-	if oldUsername != strings.ToLower(instance.Username()) {
+	if existingUsernameForAccount == nil {
 		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
 			return nil, nil, err
 		}
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	if existingUsernameForAccount != nil {
+		// remove old username from being case-sensitive
+		stmt, _ := usernameByAccount.Delete()
+		batch.Query(stmt, existingUsernameForAccount.AccountId(), existingUsernameForAccount.Username())
+	}
 
 	// add to usernames table
 	stmt, _ := usernameByAccount.Insert()

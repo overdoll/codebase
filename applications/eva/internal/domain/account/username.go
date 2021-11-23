@@ -13,6 +13,14 @@ type Username struct {
 	current   bool
 }
 
+var (
+	ErrMaxUsernamesLimitReached = errors.New("reached maximum usernames limit. delete a username to add more")
+)
+
+const (
+	MaxUsernamesLimit = 5
+)
+
 func UnmarshalUsernameFromDatabase(username, accountId string, current bool) *Username {
 	return &Username{
 		username:  username,
@@ -39,6 +47,14 @@ func (c *Username) CanView(requester *principal.Principal) error {
 	}
 
 	return nil
+}
+
+func ViewUsernamesLimit(requester *principal.Principal, accountId string) (int, error) {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return 0, err
+	}
+
+	return MaxUsernamesLimit, nil
 }
 
 func CanViewUsernamesForAccount(requester *principal.Principal, accountId string) error {

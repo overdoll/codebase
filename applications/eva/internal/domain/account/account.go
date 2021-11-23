@@ -219,10 +219,25 @@ func (a *Account) hasRoles(roles []string) bool {
 	return false
 }
 
-func (a *Account) EditUsername(username string) error {
+func (a *Account) UsernameAlreadyBelongs(usernames []*Username, username string) *Username {
+
+	for _, current := range usernames {
+		if strings.ToLower(current.Username()) == strings.ToLower(username) {
+			return current
+		}
+	}
+
+	return nil
+}
+
+func (a *Account) EditUsername(usernames []*Username, username string) error {
 
 	if err := validateUsername(username); err != nil {
 		return err
+	}
+
+	if len(usernames) >= MaxUsernamesLimit {
+		return ErrMaxUsernamesLimitReached
 	}
 
 	a.username = username
@@ -246,6 +261,11 @@ func (a *Account) UpdateLanguage(locale string) error {
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {
+
+	if len(emails) >= maxEmailsLimit {
+		return ErrMaxEmailsLimitReached
+	}
+
 	for _, current := range emails {
 		if current.Email() == email {
 			if current.IsConfirmed() {

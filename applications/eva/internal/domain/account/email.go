@@ -23,7 +23,12 @@ type Email struct {
 }
 
 var (
-	ErrEmailNotConfirmed = errors.New("email not confirmed")
+	ErrEmailNotConfirmed     = errors.New("email not confirmed")
+	ErrMaxEmailsLimitReached = errors.New("reached maximum emails limit. delete an email to add more")
+)
+
+const (
+	maxEmailsLimit = 5
 )
 
 func UnmarshalEmailFromDatabase(email, accountId string, status int) *Email {
@@ -94,12 +99,12 @@ func (c *Email) CanView(requester *principal.Principal) error {
 	return nil
 }
 
-func CanViewAccountEmails(requester *principal.Principal, accountId string) error {
+func ViewEmailsLimit(requester *principal.Principal, accountId string) (int, error) {
 	if err := requester.BelongsToAccount(accountId); err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return maxEmailsLimit, nil
 }
 
 func CanDeleteAccountEmail(requester *principal.Principal, accountId string, emails []*Email, targetEmail string) error {
@@ -123,6 +128,14 @@ func CanDeleteAccountEmail(requester *principal.Principal, accountId string, ema
 
 	if !foundEmail {
 		return errors.New("email does not belong to account")
+	}
+
+	return nil
+}
+
+func CanViewAccountEmails(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
 	}
 
 	return nil

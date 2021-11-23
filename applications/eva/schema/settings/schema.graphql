@@ -129,6 +129,12 @@ type AccountMultiFactorSettings {
 }
 
 extend type Account {
+
+  """
+  Maximum amount of usernames that this account can create
+  """
+  usernamesLimit: Int! @goField(forceResolver: true)
+
   """
   Usernames for account (history)
   """
@@ -147,6 +153,11 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountUsernameConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of emails that this account can create
+  """
+  emailsLimit: Int! @goField(forceResolver: true)
 
   """
   Emails for account (multiple emails per account)

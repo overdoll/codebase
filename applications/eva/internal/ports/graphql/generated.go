@@ -55,6 +55,7 @@ type ComplexityRoot struct {
 	Account struct {
 		Avatar              func(childComplexity int, size *int) int
 		Emails              func(childComplexity int, after *string, before *string, first *int, last *int) int
+		EmailsLimit         func(childComplexity int) int
 		ID                  func(childComplexity int) int
 		IsModerator         func(childComplexity int) int
 		IsStaff             func(childComplexity int) int
@@ -66,6 +67,7 @@ type ComplexityRoot struct {
 		Sessions            func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Username            func(childComplexity int) int
 		Usernames           func(childComplexity int, after *string, before *string, first *int, last *int) int
+		UsernamesLimit      func(childComplexity int) int
 	}
 
 	AccountConnection struct {
@@ -364,7 +366,9 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
 
+	UsernamesLimit(ctx context.Context, obj *types.Account) (int, error)
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
+	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
 	MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error)
@@ -460,6 +464,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Emails(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
+	case "Account.emailsLimit":
+		if e.complexity.Account.EmailsLimit == nil {
+			break
+		}
+
+		return e.complexity.Account.EmailsLimit(childComplexity), true
+
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
 			break
@@ -546,6 +557,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.Usernames(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "Account.usernamesLimit":
+		if e.complexity.Account.UsernamesLimit == nil {
+			break
+		}
+
+		return e.complexity.Account.UsernamesLimit(childComplexity), true
 
 	case "AccountConnection.edges":
 		if e.complexity.AccountConnection.Edges == nil {
@@ -2017,6 +2035,12 @@ type AccountMultiFactorSettings {
 }
 
 extend type Account {
+
+  """
+  Maximum amount of usernames that this account can create
+  """
+  usernamesLimit: Int! @goField(forceResolver: true)
+
   """
   Usernames for account (history)
   """
@@ -2035,6 +2059,11 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountUsernameConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of emails that this account can create
+  """
+  emailsLimit: Int! @goField(forceResolver: true)
 
   """
   Emails for account (multiple emails per account)
@@ -3694,6 +3723,41 @@ func (ec *executionContext) _Account_language(ctx context.Context, field graphql
 	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().UsernamesLimit(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_usernames(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3734,6 +3798,41 @@ func (ec *executionContext) _Account_usernames(ctx context.Context, field graphq
 	res := resTmp.(*types.AccountUsernameConnection)
 	fc.Result = res
 	return ec.marshalNAccountUsernameConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_emailsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().EmailsLimit(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_emails(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -10367,6 +10466,20 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "usernamesLimit":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_usernamesLimit(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "usernames":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10376,6 +10489,20 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_usernames(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "emailsLimit":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_emailsLimit(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -12932,6 +13059,21 @@ func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelay�
 
 func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v relay.ID) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNLanguage2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v types.Language) graphql.Marshaler {
