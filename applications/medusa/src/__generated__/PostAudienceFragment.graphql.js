@@ -8,18 +8,18 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type PostArtistFragment$ref: FragmentReference;
-declare export opaque type PostArtistFragment$fragmentType: PostArtistFragment$ref;
-export type PostArtistFragment = {|
-  +brand: ?{|
-    +name: string
+declare export opaque type PostAudienceFragment$ref: FragmentReference;
+declare export opaque type PostAudienceFragment$fragmentType: PostAudienceFragment$ref;
+export type PostAudienceFragment = {|
+  +audience: ?{|
+    +title: string
   |},
-  +$refType: PostArtistFragment$ref,
+  +$refType: PostAudienceFragment$ref,
 |};
-export type PostArtistFragment$data = PostArtistFragment;
-export type PostArtistFragment$key = {
-  +$data?: PostArtistFragment$data,
-  +$fragmentRefs: PostArtistFragment$ref,
+export type PostAudienceFragment$data = PostAudienceFragment;
+export type PostAudienceFragment$key = {
+  +$data?: PostAudienceFragment$data,
+  +$fragmentRefs: PostAudienceFragment$ref,
   ...
 };
 
@@ -28,21 +28,21 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostArtistFragment",
+  "name": "PostAudienceFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "Brand",
+      "concreteType": "Audience",
       "kind": "LinkedField",
-      "name": "brand",
+      "name": "audience",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "name",
+          "name": "title",
           "storageKey": null
         }
       ],
@@ -53,5 +53,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '36b353b6f4f7f7611dec324d49b9cae7';
+(node: any).hash = '97078cab8850539062b9dbab3b1ae074';
 module.exports = node;

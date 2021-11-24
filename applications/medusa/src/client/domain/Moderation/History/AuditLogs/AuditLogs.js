@@ -23,7 +23,7 @@ type Props = {
 }
 
 const AuditLogsQueryGQL = graphql`
-  query AuditLogsQuery {
+  query AuditLogsQuery ($from: Time!, $to: Time!) {
     viewer {
       ...AuditLogsFragment
     }
@@ -37,7 +37,7 @@ const AuditLogsGQL = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "AuditLogsPaginationQuery" ) {
-    moderatorPostAuditLogs (first: $first, after: $after, dateRange: {from: Time, to: Time})
+    moderatorPostAuditLogs (first: $first, after: $after, dateRange: {from: $from, to: $to})
     @connection(key: "AuditLogs_moderatorPostAuditLogs") {
       edges {
         node {

@@ -5,7 +5,7 @@
 import {
   Flex,
   Text,
-  IconButton, Box
+  IconButton, Box, Stack
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useState } from 'react'
@@ -32,36 +32,36 @@ type Props = {
 }
 
 const PostsQueryGQL = graphql`
-    query PostsQuery {
-        viewer {
-            ...PostsFragment
-        }
-        ...RejectionReasonsFragment
+  query PostsQuery {
+    viewer {
+      ...PostsFragment
     }
+    ...RejectionReasonsFragment
+  }
 `
 
 const PostsGQL = graphql`
-    fragment PostsFragment on Account
-    @argumentDefinitions(
-        first: {type: Int, defaultValue: 1}
-        after: {type: String}
-    )
-    @refetchable(queryName: "PostsPaginationQuery" ) {
-        ...NoPostsPlaceholderFragment
-        moderatorPostsQueue (first: $first, after: $after)
-        @connection(key: "Posts_moderatorPostsQueue") {
-            __id
-            edges {
-                node {
-                    id
-                    ...PostHeaderFragment
-                    ...PostPreviewFragment
-                    ...ModeratePostFragment
-                    postedAt
-                }
-            }
+  fragment PostsFragment on Account
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 1}
+    after: {type: String}
+  )
+  @refetchable(queryName: "PostsPaginationQuery" ) {
+    ...NoPostsPlaceholderFragment
+    moderatorPostsQueue (first: $first, after: $after)
+    @connection(key: "Posts_moderatorPostsQueue") {
+      __id
+      edges {
+        node {
+          id
+          ...PostHeaderFragment
+          ...PostPreviewFragment
+          ...ModeratePostFragment
+          postedAt
         }
+      }
     }
+  }
 `
 
 export default function Posts (props: Props): Node {
@@ -170,17 +170,15 @@ export default function Posts (props: Props): Node {
         borderRadius={10}
         position='relative'
         direction='column'
+        p={4}
       >
-        <Flex direction='column' p={6}>
-          <PostHeader contributor={currentPost} />
-          <PostPreview post={currentPost} />
+        <Stack spacing={4}>
+          <PostHeader query={currentPost} />
+          <PostPreview query={currentPost} />
+        </Stack>
+        <Flex justify='flex-end' mt={4}>
+          <ModeratePost connectionID={postsConnection} infractions={queryData} postID={currentPost} />
         </Flex>
-        <ModeratePost connectionID={postsConnection} infractions={queryData} postID={currentPost} />
-        <Box pl={1} pr={1}>
-          <Text fontSize='xs' color='gray.500'>
-            {currentPost.id}
-          </Text>
-        </Box>
       </Flex>
     </>
   )

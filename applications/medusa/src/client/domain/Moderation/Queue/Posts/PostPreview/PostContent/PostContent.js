@@ -6,30 +6,32 @@ import { Wrap, WrapItem } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostContentFragment$key } from '@//:artifacts/PostContentFragment.graphql'
-import ContentItem from '../../../../../../components/DataDisplay/ContentItem/ContentItem'
+import ResourceItem from '../../../../../../components/DataDisplay/ResourceItem/ResourceItem'
 
 type Props = {
-  content: PostContentFragment$key
+  query: PostContentFragment$key
 }
 
 const PostContentFragmentGQL = graphql`
-    fragment PostContentFragment on Post {
-        content {
-            urls {
-                url
-            }
-        }
+  fragment PostContentFragment on Post {
+    content {
+      type
+      urls {
+        url
+        mimeType
+      }
     }
+  }
 `
 
-export default function PostHeader (props: Props): Node {
-  const data = useFragment(PostContentFragmentGQL, props.content)
+export default function PostContent ({ query }: Props): Node {
+  const data = useFragment(PostContentFragmentGQL, query)
 
   return (
     <Wrap justify='center'>
-      {data?.content.urls.map((item, index) =>
-        <WrapItem key={index} spacing={4} h={200} w={160}>
-          <ContentItem src={item.url} />
+      {data?.content.map((item, index) =>
+        <WrapItem key={index} spacing={4}>
+          <ResourceItem type={item.type} urls={item.urls} />
         </WrapItem>
       )}
     </Wrap>

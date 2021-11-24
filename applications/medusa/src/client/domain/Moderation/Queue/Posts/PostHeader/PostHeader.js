@@ -9,23 +9,23 @@ import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.gr
 import { useTranslation } from 'react-i18next'
 
 type Props = {
-  contributor: PostHeaderFragment$key
+  query: PostHeaderFragment$key
 }
 
 const ContributorFragmentGQL = graphql`
-    fragment PostHeaderFragment on Post {
-        contributor {
-            username
-            avatar
-        }
-        reassignmentAt
+  fragment PostHeaderFragment on Post {
+    contributor {
+      username
+      avatar
     }
+    reassignmentAt
+  }
 `
 
-export default function PostHeader (props: Props): Node {
+export default function PostHeader ({ query }: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const data = useFragment(ContributorFragmentGQL, props.contributor)
+  const data = useFragment(ContributorFragmentGQL, query)
 
   // Get difference in hours so that the moderator can see the reassignment deadline
   const getHourDifference = (date) => {
@@ -56,7 +56,7 @@ export default function PostHeader (props: Props): Node {
   return (
     <Flex align='center' w='100%' justify='space-between'>
       <Flex align='center'>
-        <Avatar src={data?.contributor.avatar} w={10} h={10} mr={2} />
+        <Avatar borderRadius='25%' src={data?.contributor.avatar} w={10} h={10} mr={2} />
         <Text color='gray.100' fontWeight='medium' size='md'>{data?.contributor.username}</Text>
       </Flex>
       <Tooltip label={t('queue.post.reassignment')}>

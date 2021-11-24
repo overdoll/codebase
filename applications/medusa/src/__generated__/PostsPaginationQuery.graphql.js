@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1f8ff461ada603fc5628f74421fa91fb
+ * @relayHash 747c412d06d2df31d8f08242e95e3137
  */
 
 /* eslint-disable */
@@ -51,9 +51,9 @@ fragment NoPostsPlaceholderFragment on Account {
   }
 }
 
-fragment PostArtistFragment on Post {
-  brand {
-    name
+fragment PostAudienceFragment on Post {
+  audience {
+    title
     id
   }
 }
@@ -78,8 +78,10 @@ fragment PostCharactersFragment on Post {
 
 fragment PostContentFragment on Post {
   content {
+    type
     urls {
       url
+      mimeType
     }
   }
 }
@@ -95,7 +97,7 @@ fragment PostHeaderFragment on Post {
 
 fragment PostPreviewFragment on Post {
   ...PostContentFragment
-  ...PostArtistFragment
+  ...PostAudienceFragment
   ...PostCharactersFragment
   ...PostCategoriesFragment
 }
@@ -174,14 +176,7 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -319,6 +314,13 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
                                 "concreteType": "ResourceUrl",
                                 "kind": "LinkedField",
                                 "name": "urls",
@@ -330,6 +332,13 @@ return {
                                     "kind": "ScalarField",
                                     "name": "url",
                                     "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
                                   }
                                 ],
                                 "storageKey": null
@@ -340,14 +349,11 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Brand",
+                            "concreteType": "Audience",
                             "kind": "LinkedField",
-                            "name": "brand",
+                            "name": "audience",
                             "plural": false,
-                            "selections": [
-                              (v5/*: any*/),
-                              (v4/*: any*/)
-                            ],
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -358,7 +364,13 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
+                                "storageKey": null
+                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -366,7 +378,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v6/*: any*/),
+                                "selections": (v5/*: any*/),
                                 "storageKey": null
                               },
                               (v4/*: any*/)
@@ -380,7 +392,7 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v6/*: any*/),
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -463,7 +475,7 @@ return {
     ]
   },
   "params": {
-    "id": "1f8ff461ada603fc5628f74421fa91fb",
+    "id": "747c412d06d2df31d8f08242e95e3137",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

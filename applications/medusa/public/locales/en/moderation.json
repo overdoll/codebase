@@ -17,10 +17,9 @@
       "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
       "tags": {
         "title": "Post Tags",
-        "artist": "Artist",
+        "audience": "Audience",
         "characters": "Characters",
-        "categories": "Categories",
-        "new": "This is a new tag. If approved, it will be available for anyone to use."
+        "categories": "Categories"
       },
       "actions": {
         "notice": {

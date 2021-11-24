@@ -46,6 +46,14 @@ return {
       "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "from"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "to"
     }
   ],
   "kind": "Fragment",
@@ -80,12 +88,20 @@ return {
       "alias": "moderatorPostAuditLogs",
       "args": [
         {
-          "kind": "Literal",
-          "name": "dateRange",
-          "value": {
-            "from": "Time",
-            "to": "Time"
-          }
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "to",
+              "variableName": "to"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "dateRange"
         }
       ],
       "concreteType": "PostAuditLogConnection",
@@ -165,7 +181,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "__AuditLogs_moderatorPostAuditLogs_connection(dateRange:{\"from\":\"Time\",\"to\":\"Time\"})"
+      "storageKey": null
     },
     {
       "alias": null,
@@ -180,5 +196,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '80380685261fcbeb2397bc633eb329e5';
+(node: any).hash = '2a7defa328f720c02ce519209fd2ec32';
 module.exports = node;

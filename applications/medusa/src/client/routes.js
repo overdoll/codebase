@@ -207,34 +207,13 @@ const routes: Array<Route> = [
               return {
                 auditLogsQuery: {
                   query: AuditLogsQuery,
-                  variables: {},
+                  variables: { from: new Date(), to: new Date() },
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
                 }
               }
             }
-          }
-        ]
-      },
-      {
-        path: '/upload',
-        component: JSResource('UploadRoot', () =>
-          import(
-            /* webpackChunkName: "UploadRoot" */ './domain/Uploadold/Upload'
-          ),
-        module.hot
-        ),
-
-        middleware: [
-          ({ environment, history }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'uploads')) {
-              return true
-            }
-            history.push('/join')
-            return false
           }
         ]
       },

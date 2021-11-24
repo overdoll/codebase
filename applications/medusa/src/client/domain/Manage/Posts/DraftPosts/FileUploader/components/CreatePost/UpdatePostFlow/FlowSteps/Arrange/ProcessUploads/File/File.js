@@ -14,7 +14,7 @@ import {
   Spinner
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { EVENTS } from '../../../../../../../../../../../Uploadold/constants/constants'
+import { EVENTS } from '../../../../../../../constants/constants'
 
 type Props = {
   uppy: Uppy,

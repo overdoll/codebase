@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6ce7a4c61fb41cd336413e1537bb1afd
+ * @relayHash 20675aeb5ad2d56791ab16ea23a1e6be
  */
 
 /* eslint-disable */
@@ -11,25 +11,25 @@ import type { ConcreteRequest } from 'relay-runtime';
 export type ApprovePostInput = {|
   postId: string
 |};
-export type ModeratePostMutationVariables = {|
+export type ModeratePostApproveMutationVariables = {|
   input: ApprovePostInput,
   connections: $ReadOnlyArray<string>,
 |};
-export type ModeratePostMutationResponse = {|
+export type ModeratePostApproveMutationResponse = {|
   +approvePost: ?{|
     +postAuditLog: ?{|
       +id: string
     |}
   |}
 |};
-export type ModeratePostMutation = {|
-  variables: ModeratePostMutationVariables,
-  response: ModeratePostMutationResponse,
+export type ModeratePostApproveMutation = {|
+  variables: ModeratePostApproveMutationVariables,
+  response: ModeratePostApproveMutationResponse,
 |};
 
 
 /*
-mutation ModeratePostMutation(
+mutation ModeratePostApproveMutation(
   $input: ApprovePostInput!
 ) {
   approvePost(input: $input) {
@@ -73,7 +73,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "ModeratePostMutation",
+    "name": "ModeratePostApproveMutation",
     "selections": [
       {
         "alias": null,
@@ -109,7 +109,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "ModeratePostMutation",
+    "name": "ModeratePostApproveMutation",
     "selections": [
       {
         "alias": null,
@@ -153,14 +153,14 @@ return {
     ]
   },
   "params": {
-    "id": "6ce7a4c61fb41cd336413e1537bb1afd",
+    "id": "20675aeb5ad2d56791ab16ea23a1e6be",
     "metadata": {},
-    "name": "ModeratePostMutation",
+    "name": "ModeratePostApproveMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '43274ace47e1ec3ecfe138dd7b10d7cc';
+(node: any).hash = 'bf12cf98c7014081d18b6fede010f283';
 module.exports = node;

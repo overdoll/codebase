@@ -4,7 +4,6 @@ import themeSizes from '../../sizes'
 const baseStyleBadge = (props) => {
   return {
     transform: 'translate(25%, 25%)',
-    borderRadius: '25%',
     border: '0.2em solid',
     borderColor: mode('white', 'gray.800')(props)
   }

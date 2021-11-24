@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6c1e6d54553782732d29183152738867
+ * @relayHash aae9ec4b55276b1ea26eccdbbbba5d17
  */
 
 /* eslint-disable */
@@ -9,7 +9,10 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { AuditLogsFragment$ref } from "./AuditLogsFragment.graphql";
-export type AuditLogsQueryVariables = {||};
+export type AuditLogsQueryVariables = {|
+  from: any,
+  to: any,
+|};
 export type AuditLogsQueryResponse = {|
   +viewer: ?{|
     +$fragmentRefs: AuditLogsFragment$ref
@@ -22,7 +25,10 @@ export type AuditLogsQuery = {|
 
 
 /*
-query AuditLogsQuery {
+query AuditLogsQuery(
+  $from: Time!
+  $to: Time!
+) {
   viewer {
     ...AuditLogsFragment
     id
@@ -56,7 +62,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment on Account {
-  moderatorPostAuditLogs(first: 5, dateRange: {from: "Time", to: "Time"}) {
+  moderatorPostAuditLogs(first: 5, dateRange: {from: $from, to: $to}) {
     edges {
       node {
         ...AuditCardFragment
@@ -74,9 +80,9 @@ fragment AuditLogsFragment on Account {
   id
 }
 
-fragment PostArtistFragment on Post {
-  brand {
-    name
+fragment PostAudienceFragment on Post {
+  audience {
+    title
     id
   }
 }
@@ -101,15 +107,17 @@ fragment PostCharactersFragment on Post {
 
 fragment PostContentFragment on Post {
   content {
+    type
     urls {
       url
+      mimeType
     }
   }
 }
 
 fragment PostPreviewFragment on Post {
   ...PostContentFragment
-  ...PostArtistFragment
+  ...PostAudienceFragment
   ...PostCharactersFragment
   ...PostCategoriesFragment
 }
@@ -118,12 +126,32 @@ fragment PostPreviewFragment on Post {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "kind": "Literal",
-    "name": "dateRange",
-    "value": {
-      "from": "Time",
-      "to": "Time"
-    }
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "to"
+  }
+],
+v1 = [
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "from",
+        "variableName": "from"
+      },
+      {
+        "kind": "Variable",
+        "name": "to",
+        "variableName": "to"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "dateRange"
   },
   {
     "kind": "Literal",
@@ -131,18 +159,11 @@ var v0 = [
     "value": 5
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v3 = [
@@ -153,11 +174,11 @@ v3 = [
     "name": "title",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "AuditLogsQuery",
@@ -184,7 +205,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "AuditLogsQuery",
     "selections": [
@@ -198,7 +219,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "concreteType": "PostAuditLogConnection",
             "kind": "LinkedField",
             "name": "moderatorPostAuditLogs",
@@ -249,7 +270,7 @@ return {
                             "name": "username",
                             "storageKey": null
                           },
-                          (v1/*: any*/)
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -268,7 +289,7 @@ return {
                             "name": "postedAt",
                             "storageKey": null
                           },
-                          (v1/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -277,6 +298,13 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -291,6 +319,13 @@ return {
                                     "kind": "ScalarField",
                                     "name": "url",
                                     "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
                                   }
                                 ],
                                 "storageKey": null
@@ -301,14 +336,11 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Brand",
+                            "concreteType": "Audience",
                             "kind": "LinkedField",
-                            "name": "brand",
+                            "name": "audience",
                             "plural": false,
-                            "selections": [
-                              (v2/*: any*/),
-                              (v1/*: any*/)
-                            ],
+                            "selections": (v3/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -319,7 +351,13 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v2/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
+                                "storageKey": null
+                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -330,7 +368,7 @@ return {
                                 "selections": (v3/*: any*/),
                                 "storageKey": null
                               },
-                              (v1/*: any*/)
+                              (v2/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -354,7 +392,7 @@ return {
                         "name": "action",
                         "storageKey": null
                       },
-                      (v1/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -408,11 +446,11 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "moderatorPostAuditLogs(dateRange:{\"from\":\"Time\",\"to\":\"Time\"},first:5)"
+            "storageKey": null
           },
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "filters": [
               "dateRange"
             ],
@@ -421,14 +459,14 @@ return {
             "kind": "LinkedHandle",
             "name": "moderatorPostAuditLogs"
           },
-          (v1/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "6c1e6d54553782732d29183152738867",
+    "id": "aae9ec4b55276b1ea26eccdbbbba5d17",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",
@@ -437,5 +475,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '7b4778f211f688fcbbcdb4cd14bcee3b';
+(node: any).hash = '1de298e271d59f231bb8e9f60082640d';
 module.exports = node;
