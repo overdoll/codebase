@@ -4,7 +4,7 @@
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorTotpSettingsFragment$key } from '@//:artifacts/MultiFactorTotpSettingsFragment.graphql'
-import { PagePanelWrap, PagePanelTitle, PagePanelDescription } from '../../../../../../components/PageLayout'
+import { PagePanelWrap, PagePanelTitle, PagePanelDescription } from '../../../../../../../modules/content/PageLayout'
 
 type Props = {
   data: MultiFactorTotpSettingsFragment$key

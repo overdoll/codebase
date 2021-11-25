@@ -20,7 +20,7 @@ import {
   Selector,
   SelectorTextOverlay
 } from '../../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '../../../../../../../../../../../../components/DataDisplay/ResourceItem/ResourceItem'
+import ResourceItem from '../../../../../../../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { removeNode } from '@//:modules/utilities/functions'
 import { EVENTS } from '../../../../../../../constants/constants'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'

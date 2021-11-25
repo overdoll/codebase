@@ -14,7 +14,7 @@ import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery as MultiFactorTotpHeaderQueryType } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
-import { PageWrapper, PageSectionWrap, PageSectionTitle, PageSectionDescription } from '../../../components/PageLayout'
+import { PageWrapper, PageSectionWrap, PageSectionTitle, PageSectionDescription } from '@//:modules/content/PageLayout'
 import Button from '@//:modules/form/Button'
 
 type Props = {

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import Link from '@//:modules/routing/Link'
 
 export default function NotFound (): Node {

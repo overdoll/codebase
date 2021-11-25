@@ -10,7 +10,7 @@ import JoinForm from './JoinForm/JoinForm'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 type Props = {
   queryRef: JoinFragment$key,
@@ -19,21 +19,21 @@ type Props = {
 }
 
 const JoinAction = graphql`
-    mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
-        grantAuthenticationToken(input: $input) {
-            authenticationToken {
-                id
-                email
-                sameSession
-            }
-        }
+  mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
+    grantAuthenticationToken(input: $input) {
+      authenticationToken {
+        id
+        email
+        sameSession
+      }
     }
+  }
 `
 
 const JoinFragment = graphql`
-    fragment JoinFragment on AuthenticationToken {
-        email
-    }
+  fragment JoinFragment on AuthenticationToken {
+    email
+  }
 `
 
 export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {

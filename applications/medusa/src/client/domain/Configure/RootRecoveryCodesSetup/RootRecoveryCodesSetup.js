@@ -12,10 +12,15 @@ import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { useQueryLoader } from 'react-relay/hooks'
 import RecoveryCodesSetupQuery from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupQuery as RecoveryCodesSetupQueryType } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
-import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
 import Button from '@//:modules/form/Button'
 import Link from '@//:modules/routing/Link'
-import { PageSectionTitle, PageSectionDescription, PageSectionWrap, PageWrapper } from '../../../components/PageLayout'
+import {
+  PageSectionTitle,
+  PageSectionDescription,
+  PageSectionWrap,
+  PageWrapper
+} from '@//:modules/content/PageLayout'
+import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
 
 type Props = {
   prepared: {

@@ -15,14 +15,14 @@ type Props = {
 }
 
 const MultiFactorTotpHeaderQueryGQL = graphql`
-    query MultiFactorTotpHeaderQuery {
-        viewer {
-            multiFactorSettings {
-                multiFactorTotpConfigured
-                recoveryCodesGenerated
-            }
-        }
+  query MultiFactorTotpHeaderQuery {
+    viewer {
+      multiFactorSettings {
+        multiFactorTotpConfigured
+        recoveryCodesGenerated
+      }
     }
+  }
 `
 
 export default function MultiFactorTotpHeader (props: Props): Node {
@@ -56,16 +56,14 @@ export default function MultiFactorTotpHeader (props: Props): Node {
   return (
     <>
       {queryData?.viewer.multiFactorSettings.multiFactorTotpConfigured &&
-        <>
-          <Flex mb={3} direction='column' align='center'>
-            <Alert status='warning'>
-              <AlertIcon />
-              <AlertDescription lineHeight={5} fontSize='sm'>
-                {t('totp.configured.description')}
-              </AlertDescription>
-            </Alert>
-          </Flex>
-        </>}
+        <Flex mb={3} direction='column' align='center'>
+          <Alert status='warning'>
+            <AlertIcon />
+            <AlertDescription lineHeight={5} fontSize='sm'>
+              {t('totp.configured.description')}
+            </AlertDescription>
+          </Alert>
+        </Flex>}
       <MultiFactorTotpFlow />
     </>
   )

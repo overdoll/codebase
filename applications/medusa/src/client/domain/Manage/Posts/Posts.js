@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '../../../../modules/content/PageLayout'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'

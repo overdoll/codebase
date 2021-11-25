@@ -12,17 +12,17 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '../../../../modules/content/PageLayout'
 
 const RegisterMutationGQL = graphql`
-    mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
-        createAccountWithAuthenticationToken(input: $input) {
-            validation
-            account {
-                id
-            }
-        }
+  mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+    createAccountWithAuthenticationToken(input: $input) {
+      validation
+      account {
+        id
+      }
     }
+  }
 `
 
 export default function Register (): Node {

@@ -23,8 +23,8 @@ import {
   PageSectionWrap,
   PageSectionTitle,
   PageSectionDescription
-} from '../../../../../../../../../../components/PageLayout'
-import ResourceItem from '../../../../../../../../../../components/DataDisplay/ResourceItem/ResourceItem'
+} from '../../../../../../../../../../../modules/content/PageLayout'
+import ResourceItem from '../../../../../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 

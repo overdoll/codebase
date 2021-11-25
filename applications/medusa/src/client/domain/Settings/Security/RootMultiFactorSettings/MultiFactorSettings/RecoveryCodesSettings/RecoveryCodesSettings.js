@@ -5,7 +5,7 @@
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
-import { PagePanelWrap, PagePanelDescription, PagePanelTitle } from '../../../../../../components/PageLayout'
+import { PagePanelWrap, PagePanelDescription, PagePanelTitle } from '../../../../../../../modules/content/PageLayout'
 
 type Props = {
   data: RecoveryCodesSettingsFragment$key

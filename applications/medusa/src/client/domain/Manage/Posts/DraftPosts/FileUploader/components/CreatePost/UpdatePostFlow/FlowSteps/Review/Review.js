@@ -6,7 +6,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
-} from '../../../../../../../../../../components/PageLayout'
+} from '../../../../../../../../../../../modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
@@ -15,8 +15,8 @@ import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import PostGalleryContent
-  from '../../../../../../../../../../components/Posts/Post/PostGalleryContent/PostGalleryContent'
-import PostBrand from '../../../../../../../../../../components/Posts/Post/PostBrand/PostBrand'
+  from '../../../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostBrand from '../../../../../../../../../../components/Posts/PostBrand/PostBrand'
 
 type Props = {
   uppy: Uppy,

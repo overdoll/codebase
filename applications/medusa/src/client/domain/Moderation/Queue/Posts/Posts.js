@@ -8,7 +8,7 @@ import {
   IconButton, Box, Stack
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { usePaginationFragment, graphql } from 'react-relay'
 import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
@@ -164,22 +164,31 @@ export default function Posts (props: Props): Node {
             onClick={nextPage}
           />}
       </Flex>
-      <Flex
-        mt={2}
-        bg='gray.800'
-        borderRadius={10}
-        position='relative'
-        direction='column'
-        p={4}
-      >
-        <Stack spacing={2}>
-          <PostHeader query={currentPost} />
-          <PostPreview query={currentPost} />
-        </Stack>
-        <Flex justify='flex-end' mt={4}>
-          <ModeratePost connectionID={postsConnection} infractions={queryData} postID={currentPost} />
-        </Flex>
-      </Flex>
+      {data?.moderatorPostsQueue.edges.map((item, index) => {
+        if (index !== currentIndex) {
+          return <Fragment key={index} />
+        }
+        return (
+          <Flex
+            mt={2}
+            bg='gray.800'
+            borderRadius={10}
+            position='relative'
+            direction='column'
+            p={4}
+            key={index}
+          >
+            <Stack spacing={2}>
+              <PostHeader query={item.node} />
+              <PostPreview query={item.node} />
+            </Stack>
+            <Flex justify='flex-end' mt={4}>
+              <ModeratePost connectionID={postsConnection} infractions={queryData} postID={item.node} />
+            </Flex>
+          </Flex>
+        )
+      })}
+
     </>
   )
 }

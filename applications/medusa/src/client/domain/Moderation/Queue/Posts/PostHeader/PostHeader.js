@@ -7,7 +7,7 @@ import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
 import { useTranslation } from 'react-i18next'
-import PostBrand from '../../../../../components/Posts/Post/PostBrand/PostBrand'
+import PostBrand from '../../../../../components/Posts/PostBrand/PostBrand'
 
 type Props = {
   query: PostHeaderFragment$key

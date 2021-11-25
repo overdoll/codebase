@@ -12,7 +12,7 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
-import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
+import { PageSectionTitle, PageSectionWrap } from '../../../../../modules/content/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<QueueSettingsQueryType>,

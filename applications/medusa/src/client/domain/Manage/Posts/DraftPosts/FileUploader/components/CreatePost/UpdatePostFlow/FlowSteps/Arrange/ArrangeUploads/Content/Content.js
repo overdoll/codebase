@@ -16,7 +16,7 @@ import {
   CloseButton, Spacer, Skeleton
 } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
-import ContentItem from '../../../../../../../../../../../../components/DataDisplay/ContentItem/ContentItem'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import Icon from '@//:modules/content/Icon/Icon'
 
@@ -47,7 +47,7 @@ export default function Content ({ content, onRemove, index, dragDisabled }: Pro
             </Heading>
           </Flex>
           <Flex align='center' justify='center' w='38%'>
-            <ContentItem content={content} />
+            <ResourceItem type={content.type} urls={content.urls} />
           </Flex>
           <Flex w='38%' />
           <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>

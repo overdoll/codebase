@@ -14,7 +14,7 @@ import {
   Selector,
   SelectorTextOverlay
 } from '../../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '../../../../../../../../../../../../components/DataDisplay/ResourceItem/ResourceItem'
+import ResourceItem from '../../../../../../../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
 import Button from '@//:modules/form/Button'
 
 type Props = {

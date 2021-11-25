@@ -28,18 +28,18 @@ import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
 import RecoveryCodeForm from './RecoveryCodeForm/RecoveryCodeForm'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../../helpers/PrepareViewer'
-import { PageWrapper } from '../../../../components/PageLayout'
+import PrepareViewer from '../../../../../modules/utilities/functions/prepareViewer/prepareViewer'
+import { PageWrapper } from '../../../../../modules/content/PageLayout'
 
 const SubmitTotpMutationGQL = graphql`
-    mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
-        grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
-            validation
-            account {
-                id
-            }
-        }
+  mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
+    grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
+      validation
+      account {
+        id
+      }
     }
+  }
 `
 
 type Props = {}
@@ -170,7 +170,6 @@ export default function TotpAuthentication (props: Props): Node {
             <RecoveryCodeForm />
           </Box>
         </Collapse>
-
       </PageWrapper>
     </>
   )

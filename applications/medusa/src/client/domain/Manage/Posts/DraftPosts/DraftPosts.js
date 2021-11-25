@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import type DraftPostsQuery from '@//:artifacts/DraftPostsQuery.graphql'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
+import { PageSectionTitle, PageSectionWrap } from '../../../../../modules/content/PageLayout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { usePaginationFragment } from 'react-relay'

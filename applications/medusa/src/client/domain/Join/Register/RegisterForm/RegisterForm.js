@@ -9,19 +9,19 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputRightElement
+  InputRightElement,
+  FormErrorMessage
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
-import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
+import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 
 type RegisterValues = {
   username: string,
@@ -32,12 +32,12 @@ type Props = {
   loading: boolean
 }
 
-const schema = Joi.object({
-  username: usernameSchema
-})
-
 export default function RegisterForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
+
+  const schema = Joi.object({
+    username: useUsernameFormSchema()
+  })
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<RegisterValues>({
     resolver: joiResolver(
@@ -69,7 +69,6 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
             {...register('username')}
             variant='filled'
             placeholder={t('register.form.username.placeholder')}
-            isInvalid={errors.username}
           />
           {(errors.username || success) && (
             <InputRightElement>
@@ -83,10 +82,7 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && errors.username.type === 'string.empty' && t('register.form.validation.username.empty')}
-          {errors.username && errors.username.type === 'string.min' && t('register.form.validation.username.min')}
-          {errors.username && errors.username.type === 'string.max' && t('register.form.validation.username.max')}
-          {errors.username && errors.username.type === 'string.alphanum' && t('register.form.validation.username.alphanum')}
+          {errors.username && errors.username.message}
         </FormHelperText>
       </FormControl>
       <Button
@@ -96,6 +92,7 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
         loading={loading}
         colorScheme='green'
         w='100%'
+        mt={2}
       >
         {t('register.form.submit')}
       </Button>

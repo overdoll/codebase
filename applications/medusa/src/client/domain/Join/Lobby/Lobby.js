@@ -9,7 +9,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { useClickDelay } from '@//:modules/utilities/hooks'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
@@ -21,20 +21,20 @@ type Props = {
 };
 
 const LobbyEmail = graphql`
-    mutation LobbyMutation {
-        reissueAuthenticationToken {
-            validation
-            authenticationToken {
-                email
-            }
-        }
+  mutation LobbyMutation {
+    reissueAuthenticationToken {
+      validation
+      authenticationToken {
+        email
+      }
     }
+  }
 `
 
 const LobbyFragment = graphql`
-    fragment LobbyFragment on AuthenticationToken {
-        email
-    }
+  fragment LobbyFragment on AuthenticationToken {
+    email
+  }
 `
 
 export default function Lobby ({ queryRef, refresh }: Props): Node {

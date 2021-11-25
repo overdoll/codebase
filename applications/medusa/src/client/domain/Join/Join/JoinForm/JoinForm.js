@@ -3,7 +3,15 @@
  */
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
-import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement
+} from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import InterfaceValidationCheck
@@ -13,7 +21,7 @@ import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import { emailSchema } from '@//:modules/constants/schemas/FormSchemas'
+import { useEmailFormSchema } from '@//:modules/constants/schemas'
 
 type JoinValues = {
   email: string,
@@ -24,12 +32,12 @@ type Props = {
   loading: boolean
 }
 
-const schema = Joi.object({
-  email: emailSchema
-})
-
 export default function JoinForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
+
+  const schema = Joi.object({
+    email: useEmailFormSchema()
+  })
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<JoinValues>({
     resolver: joiResolver(
@@ -72,7 +80,7 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.email && t('authenticate.form.validation.email.pattern')}
+          {errors.email && errors.email.message}
         </FormHelperText>
       </FormControl>
       <Button

@@ -24,7 +24,7 @@ import Button from '@//:modules/form/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
-import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
+import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 
 type UsernameValues = {
   username: string,
@@ -52,14 +52,14 @@ const UsernameMutationGQL = graphql`
 
 // TODO look up custom messages for empty and invalid form errors
 
-const schema = Joi.object({
-  username: usernameSchema
-})
-
 export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): Node {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
+
+  const schema = Joi.object({
+    username: useUsernameFormSchema()
+  })
 
   const [t] = useTranslation('settings')
 
@@ -142,11 +142,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
           </Button>
         </Flex>
         <FormErrorMessage>
-          {errors.username && errors.username.type === 'mutation' && errors.username.message}
-          {errors.username && errors.username.type === 'string.empty' && t('profile.username.modal.form.validation.username.empty')}
-          {errors.username && errors.username.type === 'string.min' && t('profile.username.modal.form.validation.username.min')}
-          {errors.username && errors.username.type === 'string.max' && t('profile.username.modal.form.validation.username.max')}
-          {errors.username && errors.username.type === 'string.alphanum' && t('profile.username.modal.form.validation.username.alphanum')}
+          {errors.username && errors.username.message}
         </FormErrorMessage>
       </FormControl>
     </form>

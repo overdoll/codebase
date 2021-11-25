@@ -7,7 +7,7 @@ import { Center, Flex } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { QueueSettingsQuery } from '@//:artifacts/QueueSettingsQuery.graphql'
 import RootQueueSettings from './RootQueueSettings/RootQueueSettings'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '../../../../modules/content/PageLayout'
 
 type Props = {
   prepared: {

@@ -28,7 +28,7 @@ import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import IconButton from '@//:modules/form/IconButton'
-import { emailSchema } from '@//:modules/constants/schemas/FormSchemas'
+import { useEmailFormSchema } from '@//:modules/constants/schemas'
 
 type EmailValues = {
   email: string,
@@ -37,10 +37,6 @@ type EmailValues = {
 type Props = {
   connectionID: EmailsSettingsFragment$key,
 }
-
-const schema = Joi.object({
-  email: emailSchema
-})
 
 const AddEmailMutationGQL = graphql`
   mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
@@ -56,6 +52,10 @@ const AddEmailMutationGQL = graphql`
 
 export default function AddEmailForm ({ connectionID }: Props): Node {
   const [t] = useTranslation('settings')
+
+  const schema = Joi.object({
+    email: useEmailFormSchema()
+  })
 
   const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<EmailValues>({
     resolver: joiResolver(
@@ -141,8 +141,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
             />
           </Flex>
           <FormErrorMessage>
-            {errors.email && errors.email.type === 'string.empty' && t('profile.email.add.form.validation.email.empty')}
-            {errors.email && errors.email.type === 'string.email' && t('profile.email.add.form.validation.email.pattern')}
+            {errors.email && errors.email.message}
           </FormErrorMessage>
         </FormControl>
       </form>

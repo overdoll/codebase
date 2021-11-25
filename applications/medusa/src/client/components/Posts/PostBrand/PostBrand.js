@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostBrandFragment$key } from '@//:artifacts/PostBrandFragment.graphql'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 
 const PostBrandFragmentGQL = graphql`
   fragment PostBrandFragment on Post {

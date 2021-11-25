@@ -6,7 +6,7 @@ import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../helpers/PrepareViewer'
+import prepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
 
 const GrantAction = graphql`
   mutation GrantMutation {
@@ -51,7 +51,7 @@ export default function Grant (): Node {
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
-        PrepareViewer(store, payload)
+        prepareViewer(store, payload)
       },
       onError (data) {
         console.log(data)

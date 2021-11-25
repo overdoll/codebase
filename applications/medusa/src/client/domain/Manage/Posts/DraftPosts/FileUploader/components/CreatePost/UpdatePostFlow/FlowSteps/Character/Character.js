@@ -14,7 +14,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
-} from '../../../../../../../../../../components/PageLayout'
+} from '../../../../../../../../../../../modules/content/PageLayout'
 import SearchInput from '../../../SearchInput/SearchInput'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'

@@ -1,4 +1,4 @@
-export default function PrepareViewer (store, payload) {
+export default function prepareViewer (store, payload) {
   const root = store.getRoot()
 
   const viewer = store

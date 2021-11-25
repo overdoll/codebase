@@ -29,14 +29,14 @@ import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 type Props = {}
 
 const MultiFactorTotpFlowMutationGQL = graphql`
-    mutation MultiFactorTotpFlowMutation {
-        generateAccountMultiFactorTotp {
-            multiFactorTotp {
-                secret
-                imageSrc
-            }
-        }
+  mutation MultiFactorTotpFlowMutation {
+    generateAccountMultiFactorTotp {
+      multiFactorTotp {
+        secret
+        imageSrc
+      }
     }
+  }
 `
 
 export default function MultiFactorTotpFlow (props: Props): Node {

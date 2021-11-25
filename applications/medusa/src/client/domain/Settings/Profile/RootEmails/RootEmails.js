@@ -12,7 +12,7 @@ import { Suspense } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import EmailsQuery from '@//:artifacts/EmailsQuery.graphql'
 import type { EmailsQuery as EmailsQueryType } from '@//:artifacts/EmailsQuery.graphql'
-import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
+import { PageSectionTitle, PageSectionWrap } from '../../../../../modules/content/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<EmailsQueryType>,

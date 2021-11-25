@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b7326e750441d0b9f4799be4f284216a
+ * @relayHash f949eac0bb807076baf26b8240cba212
  */
 
 /* eslint-disable */
@@ -8,8 +8,8 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RecoveryCodesListMutationVariables = {||};
-export type RecoveryCodesListMutationResponse = {|
+export type RecoveryCodesSetupMutationVariables = {||};
+export type RecoveryCodesSetupMutationResponse = {|
   +generateAccountMultiFactorRecoveryCodes: ?{|
     +accountMultiFactorRecoveryCodes: $ReadOnlyArray<{|
       +__id: string,
@@ -17,14 +17,14 @@ export type RecoveryCodesListMutationResponse = {|
     |}>
   |}
 |};
-export type RecoveryCodesListMutation = {|
-  variables: RecoveryCodesListMutationVariables,
-  response: RecoveryCodesListMutationResponse,
+export type RecoveryCodesSetupMutation = {|
+  variables: RecoveryCodesSetupMutationVariables,
+  response: RecoveryCodesSetupMutationResponse,
 |};
 
 
 /*
-mutation RecoveryCodesListMutation {
+mutation RecoveryCodesSetupMutation {
   generateAccountMultiFactorRecoveryCodes {
     accountMultiFactorRecoveryCodes {
       code
@@ -82,7 +82,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "RecoveryCodesListMutation",
+    "name": "RecoveryCodesSetupMutation",
     "selections": (v0/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -91,18 +91,18 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "RecoveryCodesListMutation",
+    "name": "RecoveryCodesSetupMutation",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "b7326e750441d0b9f4799be4f284216a",
+    "id": "f949eac0bb807076baf26b8240cba212",
     "metadata": {},
-    "name": "RecoveryCodesListMutation",
+    "name": "RecoveryCodesSetupMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '0e330a44bcb5fdfe15dba82fd15957f2';
+(node: any).hash = '567a08fbc1bb394289fb0530d4cccabe';
 module.exports = node;

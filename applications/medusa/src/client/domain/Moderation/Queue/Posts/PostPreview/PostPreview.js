@@ -10,9 +10,9 @@ import PostCategories from './PostCategories/PostCategories'
 import { useTranslation } from 'react-i18next'
 import { useFragment, graphql } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
-import PostBrand from '../../../../../components/Posts/Post/PostBrand/PostBrand'
-import PostGalleryContent from '../../../../../components/Posts/Post/PostGalleryContent/PostGalleryContent'
-import PostIndexer from '../../../../../components/Posts/Post/PostIndexer/PostIndexer'
+import PostBrand from '../../../../../components/Posts/PostBrand/PostBrand'
+import PostGalleryContent from '../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostIndexer from '../../../../../components/Posts/PostIndexer/PostIndexer'
 
 type Props = {
   query: PostPreviewFragment$key,

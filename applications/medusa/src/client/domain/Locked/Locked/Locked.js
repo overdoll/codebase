@@ -11,15 +11,15 @@ type Props = {
   query: LockedQuery
 }
 const LockedQueryGQL = graphql`
-    query LockedQuery {
-        viewer {
-            avatar
-            lock {
-                reason
-                expires
-            }
-        }
+  query LockedQuery {
+    viewer {
+      avatar
+      lock {
+        reason
+        expires
+      }
     }
+  }
 `
 export default function Locked (props: Props): Node {
   const queryData = usePreloadedQuery<LockedQuery>(

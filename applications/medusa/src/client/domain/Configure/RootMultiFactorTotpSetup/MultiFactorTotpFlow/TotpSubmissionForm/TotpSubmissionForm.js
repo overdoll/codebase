@@ -28,21 +28,13 @@ type Props = {
 }
 
 const TotpSubmissionFormMutationGQL = graphql`
-    mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
-        enrollAccountMultiFactorTotp(input: $input) {
-            validation
-            accountMultiFactorTotpEnabled
-        }
+  mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
+    enrollAccountMultiFactorTotp(input: $input) {
+      validation
+      accountMultiFactorTotpEnabled
     }
+  }
 `
-
-const schema = Joi.object({
-  code: Joi
-    .string()
-    .regex(/^[0-9]+$/)
-    .length(6)
-    .required()
-})
 
 export default function TotpSubmissionForm (props: Props): Node {
   const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionFormMutation>(
@@ -50,6 +42,19 @@ export default function TotpSubmissionForm (props: Props): Node {
   )
 
   const [t] = useTranslation('configure')
+
+  const schema = Joi.object({
+    code: Joi
+      .string()
+      .regex(/^[0-9]+$/)
+      .length(6)
+      .required()
+      .messages({
+        'string.empty': t('totp.flow.code_step.form.validation.empty'),
+        'string.length': t('totp.flow.code_step.form.validation.length'),
+        'string.pattern.base': t('totp.flow.code_step.form.validation.pattern')
+      })
+  })
 
   const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
     resolver: joiResolver(
@@ -132,10 +137,7 @@ export default function TotpSubmissionForm (props: Props): Node {
           </Button>
         </Flex>
         <FormErrorMessage>
-          {errors.code && errors.code.type === 'mutation' && errors.code.message}
-          {errors.code && errors.code.type === 'string.empty' && t('totp.flow.code_step.form.validation.empty')}
-          {errors.code && errors.code.type === 'string.length' && t('totp.flow.code_step.form.validation.length')}
-          {errors.code && errors.code.type === 'string.pattern.base' && t('totp.flow.code_step.form.validation.pattern')}
+          {errors.code && errors.code.message}
         </FormErrorMessage>
       </FormControl>
     </form>

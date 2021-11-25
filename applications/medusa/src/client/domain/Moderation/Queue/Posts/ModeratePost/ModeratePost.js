@@ -58,8 +58,6 @@ const PostIDGQL = graphql`
 `
 
 export default function ModeratePost (props: Props): Node {
-  const [t] = useTranslation('moderation')
-
   const [approvePost, isApprovingPost] = useMutation<ModeratePostApproveMutation>(
     ModeratePostApproveGQL
   )
@@ -70,14 +68,11 @@ export default function ModeratePost (props: Props): Node {
 
   const data = useFragment(PostIDGQL, props.postID)
 
-  const notify = useToast()
+  const [t] = useTranslation('moderation')
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  // Close modal if user scrolls to a different post
-  useEffect(() => {
-    onClose()
-  }, [data.id])
+  const notify = useToast()
 
   const onApprovePost = () => {
     approvePost({

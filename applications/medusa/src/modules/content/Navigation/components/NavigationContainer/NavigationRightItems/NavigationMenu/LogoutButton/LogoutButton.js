@@ -34,9 +34,9 @@ export default function LogoutButton (): Node {
           title: t('logout.success'),
           isClosable: true
         })
-        history.push('/')
       },
       updater: (store, payload) => {
+        history.push('/')
         const viewer = store
           .getRoot()
           .getLinkedRecord('viewer')

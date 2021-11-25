@@ -23,7 +23,7 @@ import InterfaceAlertWarningTriangle
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../../../helpers/PrepareViewer'
+import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
 
 type CodeValues = {
   code: string,
@@ -42,20 +42,25 @@ const RecoveryCodeMutationGQL = graphql`
   }
 `
 
-const schema = Joi.object({
-  code: Joi
-    .string()
-    .alphanum()
-    .length(8)
-    .required()
-})
-
 export default function RecoveryCodeForm (props: Props): Node {
   const [submitCode, isSubmittingCode] = useMutation(
     RecoveryCodeMutationGQL
   )
 
   const [t] = useTranslation('auth')
+
+  const schema = Joi.object({
+    code: Joi
+      .string()
+      .alphanum()
+      .length(8)
+      .required()
+      .messages({
+        'string.empty': t('multi_factor.recovery.form.validation.code.empty'),
+        'string.length': t('multi_factor.recovery.form.validation.code.length'),
+        'string.alphanum': t('multi_factor.recovery.form.validation.code.alphanum')
+      })
+  })
 
   const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
     resolver: joiResolver(
@@ -144,10 +149,7 @@ export default function RecoveryCodeForm (props: Props): Node {
             </Button>
           </Flex>
           <FormErrorMessage>
-            {errors.code && errors.code.type === 'mutation' && errors.code.message}
-            {errors.code && errors.code.type === 'string.empty' && t('multi_factor.recovery.form.validation.code.empty')}
-            {errors.code && errors.code.type === 'string.length' && t('multi_factor.recovery.form.validation.code.length')}
-            {errors.code && errors.code.type === 'string.alphanum' && t('multi_factor.recovery.form.validation.code.alphanum')}
+            {errors.code && errors.code.message}
           </FormErrorMessage>
         </FormControl>
       </form>
