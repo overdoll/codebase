@@ -354,6 +354,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"state":          types.PostStatePublished,
 		"brandSlugs":     []graphql.String{},
 		"categorySlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
 		"characterSlugs": []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
 	})
@@ -366,6 +367,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"categorySlugs":  []graphql.String{},
 		"characterSlugs": []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
 	})
 
 	require.NoError(t, err)
@@ -376,6 +378,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"brandSlugs":     []graphql.String{},
 		"characterSlugs": []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
 	})
 
 	require.NoError(t, err)
@@ -386,6 +389,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"categorySlugs":  []graphql.String{},
 		"brandSlugs":     []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
 	})
 
 	require.NoError(t, err)
@@ -396,6 +400,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"characterSlugs": []graphql.String{},
 		"categorySlugs":  []graphql.String{},
 		"brandSlugs":     []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
 	})
 
 	require.NoError(t, err)
