@@ -112,6 +112,19 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
 	if existingUsernameForAccount == nil {
+
+		// username doesn't belong to the account, make sure it's not taken by someone else first
+		_, err := r.GetAccountByUsername(ctx, instance.Username())
+
+		if err != nil {
+			if err != account.ErrAccountNotFound {
+				return nil, nil, err
+			}
+		} else {
+			// username not unique to the site
+			return nil, nil, account.ErrUsernameNotUnique
+		}
+
 		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
 			return nil, nil, err
 		}

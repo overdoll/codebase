@@ -222,7 +222,7 @@ func (a *Account) hasRoles(roles []string) bool {
 func (a *Account) UsernameAlreadyBelongs(usernames []*Username, username string) *Username {
 
 	for _, current := range usernames {
-		if strings.ToLower(current.Username()) == strings.ToLower(username) {
+		if current.IsEqual(username) {
 			return current
 		}
 	}
@@ -236,7 +236,8 @@ func (a *Account) EditUsername(usernames []*Username, username string) error {
 		return err
 	}
 
-	if len(usernames) >= MaxUsernamesLimit {
+	// if limit is reached, and the username doesn't belong to the account already
+	if len(usernames) >= MaxUsernamesLimit && a.UsernameAlreadyBelongs(usernames, username) == nil {
 		return ErrMaxUsernamesLimitReached
 	}
 
@@ -267,7 +268,7 @@ func (a *Account) UpdateEmail(emails []*Email, email string) error {
 	}
 
 	for _, current := range emails {
-		if current.Email() == email {
+		if current.IsEqual(email) {
 			if current.IsConfirmed() {
 				current.MakePrimary()
 				a.email = email

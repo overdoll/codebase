@@ -4,6 +4,7 @@ import (
 	"errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"strings"
 )
 
 type Username struct {
@@ -31,6 +32,10 @@ func UnmarshalUsernameFromDatabase(username, accountId string, current bool) *Us
 
 func (c *Username) Username() string {
 	return c.username
+}
+
+func (c *Username) IsEqual(username string) bool {
+	return strings.ToLower(c.username) == strings.ToLower(username)
 }
 
 func (c *Username) AccountId() string {
@@ -73,7 +78,7 @@ func CanDeleteAccountUsername(requester *principal.Principal, accountId string, 
 	foundUsername := false
 
 	for _, em := range usernames {
-		if em.Username() == targetUsername {
+		if em.IsEqual(targetUsername) {
 			foundUsername = true
 
 			if em.IsCurrent() {

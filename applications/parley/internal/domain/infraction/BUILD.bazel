@@ -6,6 +6,7 @@ go_library(
         "account_infraction_history.go",
         "post_audit_log.go",
         "post_audit_log_filters.go",
+        "post_audit_log_status.go",
         "post_rejection_reason.go",
         "repository.go",
     ],

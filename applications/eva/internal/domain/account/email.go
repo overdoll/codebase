@@ -2,6 +2,7 @@ package account
 
 import (
 	"errors"
+	"strings"
 
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -55,6 +56,10 @@ func UnmarshalEmailFromDatabase(email, accountId string, status int) *Email {
 
 func (c *Email) Email() string {
 	return c.email
+}
+
+func (c *Email) IsEqual(email string) bool {
+	return strings.ToLower(c.email) == strings.ToLower(email)
 }
 
 func (c *Email) AccountId() string {
