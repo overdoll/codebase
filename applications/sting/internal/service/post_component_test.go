@@ -360,7 +360,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in published state")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
@@ -372,7 +372,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with brand")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
@@ -384,7 +384,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
@@ -408,7 +408,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
 }
 
 // Test_CreatePost_Discard - discard post
