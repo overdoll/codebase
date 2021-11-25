@@ -104,7 +104,10 @@ func TestAccount_lock_unlock(t *testing.T) {
 	require.Equal(t, true, res.Locked, "account should be locked")
 
 	gClient, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MIqqnkzew33q4elXuN1Ri27d"))
-	query := viewerAccount(t, gClient)
+
+	var query ViewerAccountLock
+	err = gClient.Query(context.Background(), &query, nil)
+	require.NoError(t, err, "no error fetching viewer")
 
 	require.NotNil(t, query.Viewer.Lock, "should be locked")
 	require.Equal(t, types.AccountLockReasonPostInfraction, query.Viewer.Lock.Reason, "viewer should see that the account is locked")
@@ -116,7 +119,8 @@ func TestAccount_lock_unlock(t *testing.T) {
 	require.NoError(t, err, "no error when unlocking")
 
 	// check account
-	query = viewerAccount(t, gClient)
+	err = gClient.Query(context.Background(), &query, nil)
+	require.NoError(t, err, "no error fetching viewer")
 
 	require.Nil(t, query.Viewer.Lock, "should not be locked")
 }
