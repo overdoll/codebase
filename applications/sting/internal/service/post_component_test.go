@@ -351,7 +351,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var posts Posts
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
+		"state":          graphql.String(types.PostStatePublished),
 		"brandSlugs":     []graphql.String{},
 		"categorySlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
