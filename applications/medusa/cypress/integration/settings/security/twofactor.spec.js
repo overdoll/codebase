@@ -15,12 +15,6 @@ describe('Settings - Configure Two-Factor', () => {
     cy.logout()
   })
 
-  // TODO fix flakiness in usernames expand button and clicking into the page
-  // TODO components where it expected the component to not be disposed
-  // TODO issue is that the h2 is being selected and not the button
-
-  // TODO add test for removing two factor
-
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
     cy.login(email)
@@ -29,9 +23,9 @@ describe('Settings - Configure Two-Factor', () => {
   it('can set up recovery codes', () => {
     gotoSettingsPage()
 
-    // Create recovery codes
-    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
-    cy.findByText(/Recovery Codes/).click()
+    // Create recovery codes. Chain parents to get to the button class
+    cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Recovery Codes/ }).click()
     cy.findByText(/No recovery codes/iu).should('exist')
     cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
     cy.findByText(/Your recovery codes/iu).should('exist')
@@ -41,8 +35,8 @@ describe('Settings - Configure Two-Factor', () => {
     gotoSettingsPage()
 
     // Generate new codes and check to see if they are equal to the new ones
-    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
-    cy.findByText(/Recovery Codes/).click()
+    cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Recovery Codes/ }).click()
     cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').then(initialText => {
       cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
       cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').should('not.equal', initialText)
@@ -58,8 +52,8 @@ describe('Settings - Configure Two-Factor', () => {
     gotoSettingsPage()
 
     // Set up authenticator app
-    cy.waitUntil(() => cy.findByText(/Authenticator App/).should('not.be.disabled'))
-    cy.findByText(/Authenticator App/).click()
+    cy.waitUntil(() => cy.findByRole('button', { name: /Authenticator App/ }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Authenticator App/ }).click()
     cy.findByText(/Download an Authenticator App/iu).should('exist')
     cy.get('[aria-label="Copy"]').find('code').invoke('text').then(secret => {
       // Store the secret as if the user stored it in an authenticator app
@@ -78,7 +72,7 @@ describe('Settings - Configure Two-Factor', () => {
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
       cy.task('generateOTP', cookie.value).then(token => {
-        cy.get('[aria-label="Please enter your pin code"]').then(element => {
+        cy.waitUntil(() => cy.get('[aria-label="Please enter your pin code"]').should('not.be.disabled')).then(element => {
           cy.get(element[0]).type(token)
           cy.url().should('include', '/profile')
         })
@@ -86,7 +80,8 @@ describe('Settings - Configure Two-Factor', () => {
     })
   })
 
-  it('login using a recovery code', () => {
+  it('login using a recovery code and disable two factor', () => {
+    // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
@@ -95,5 +90,12 @@ describe('Settings - Configure Two-Factor', () => {
       cy.findByRole('button', { name: /Submit/iu }).click()
       cy.url().should('include', '/profile')
     })
+
+    // Disable two factor
+    gotoSettingsPage()
+    cy.waitUntil(() => cy.findByRole('button', { name: /Disable/iu }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Disable/iu }).click()
+    cy.findByRole('button', { name: /Disable Two-factor/iu }).click()
+    cy.findByText(/Disable Two-Factor Authentication/iu).should('not.exist')
   })
 })

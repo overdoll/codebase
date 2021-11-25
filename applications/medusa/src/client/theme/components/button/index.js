@@ -59,7 +59,7 @@ function variantSolid (props) {
     _hover: {
       bg: mode(bg, transparentize(`${c}.400`, 0.9)(theme))(props),
       _disabled: {
-        bg: mode(bg, `${c}.100`)(props)
+        bg: mode(bg, `${c}.400`)(props)
       }
     },
     _active: {

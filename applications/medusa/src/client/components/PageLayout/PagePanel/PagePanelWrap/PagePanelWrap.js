@@ -2,11 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Flex, Button } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   children: string,

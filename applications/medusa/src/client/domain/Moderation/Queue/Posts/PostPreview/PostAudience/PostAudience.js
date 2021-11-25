@@ -25,7 +25,7 @@ export default function PostAudience ({ query }: Props): Node {
   return (
     <Wrap direction='column'>
       <WrapItem>
-        <Tag size='lg' colorScheme='green' borderRadius='full'>
+        <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
           <TagLabel>{data?.audience.title}</TagLabel>
         </Tag>
       </WrapItem>

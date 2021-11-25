@@ -9,14 +9,14 @@ import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../helpers/PrepareViewer'
 
 const GrantAction = graphql`
-    mutation GrantMutation {
-        grantAccountAccessWithAuthenticationToken {
-            validation
-            account {
-                id
-            }
-        }
+  mutation GrantMutation {
+    grantAccountAccessWithAuthenticationToken {
+      validation
+      account {
+        id
+      }
     }
+  }
 `
 
 export default function Grant (): Node {
@@ -47,7 +47,7 @@ export default function Grant (): Node {
           title: t('grant.success'),
           isClosable: true
         })
-        history.push('/')
+        history.push('/profile')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')

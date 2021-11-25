@@ -33,7 +33,7 @@ export default function PostCharacters ({ query }: Props): Node {
     <Wrap>
       {data.characters.map((item, index) =>
         <WrapItem key={index}>
-          <Tag size='lg' colorScheme='purple' borderRadius='full'>
+          <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.name} ({item.series.title})</TagLabel>
           </Tag>
         </WrapItem>

@@ -148,10 +148,11 @@ export default function ModeratePost (props: Props): Node {
         left={0}
         pointerEvents={isOpen ? 'initial' : 'none'}
       >
-        <Fade in={isOpen}>
+        <Fade style={{ zIndex: 2 }} in={isOpen}>
           <Flex
             p={4} direction='column' bg='dimmers.900' w='100%' h='100%' position='absolute'
             borderRadius={10} backdropFilter='blur(5px)'
+
           >
             <Flex align='center' w='100%' justify='space-between'>
               <Text fontSize='md' color='gray.100'>{t('queue.post.actions.reject.modal.title')}</Text>

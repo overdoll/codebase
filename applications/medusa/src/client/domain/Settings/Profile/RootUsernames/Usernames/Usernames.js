@@ -13,8 +13,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Text,
-  Collapse,
-  Button as ChakraButton
+  Collapse
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
@@ -23,27 +22,28 @@ import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSetti
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
+import Button from '@//:modules/form/Button'
 
 const UsernameQueryGQL = graphql`
-    query UsernamesQuery($first: Int) {
-        viewer {
-            ...UsernamesSettingsFragment
-        }
+  query UsernamesQuery($first: Int) {
+    viewer {
+      ...UsernamesSettingsFragment
     }
+  }
 `
 
 const UsernameFragmentGQL = graphql`
-    fragment UsernamesSettingsFragment on Account {
-        username
-        usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
-            __id
-            edges {
-                node {
-                    username
-                }
-            }
+  fragment UsernamesSettingsFragment on Account {
+    username
+    usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
+      __id
+      edges {
+        node {
+          username
         }
+      }
     }
+  }
 `
 
 type Props = {
@@ -71,7 +71,7 @@ export default function Usernames (props: Props): Node {
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
           <Flex align='center' direction='row' justify='space-between'>
             <Heading size='md' color='primary.500'>{data?.username}</Heading>
-            <ChakraButton onClick={onToggle} size='sm'>{t('profile.username.current.change')}</ChakraButton>
+            <Button onClick={onToggle} size='sm'>{t('profile.username.current.change')}</Button>
           </Flex>
           <Collapse in={isOpen} animateOpacity>
             <Flex mt={3}>

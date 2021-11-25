@@ -26,7 +26,7 @@ export default function PostCategories ({ query }: Props): Node {
     <Wrap>
       {data.categories.map((item, index) =>
         <WrapItem key={index}>
-          <Tag size='lg' colorScheme='orange' borderRadius='full'>
+          <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.title}</TagLabel>
           </Tag>
         </WrapItem>

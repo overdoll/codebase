@@ -37,7 +37,7 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
 
   const [swiper, setSwiper] = useState(null)
   const [currentSlide, setCurrentSlide] = useState(0)
-  const slidesCount = swiper?.slides?.length
+  const slidesCount = swiper?.slides?.length || 0
 
   const onChangeSlides = (swiper) => {
     // Pause all videos when navigating away from them
@@ -64,13 +64,14 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
   }
 
   return (
-    <>
+    <Box>
       <Swiper
         autoHeight
         onSwiper={(swiper) =>
           setSwiper(swiper)}
         onSlideChange={(swiper) =>
           onChangeSlides(swiper)}
+
       >
         {data.content.map((item, index) =>
           <SwiperSlide key={index}>
@@ -88,6 +89,6 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
           </SwiperSlide>)}
       </Swiper>
       {children && children({ slidesCount, currentSlide })}
-    </>
+    </Box>
   )
 }

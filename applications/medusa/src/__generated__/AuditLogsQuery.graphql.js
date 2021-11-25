@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash aae9ec4b55276b1ea26eccdbbbba5d17
+ * @relayHash 3bb9f6305cd465ea00be8c2f639551a7
  */
 
 /* eslint-disable */
@@ -105,7 +105,7 @@ fragment PostCharactersFragment on Post {
   }
 }
 
-fragment PostContentFragment on Post {
+fragment PostGalleryContentFragment on Post {
   content {
     type
     urls {
@@ -116,10 +116,10 @@ fragment PostContentFragment on Post {
 }
 
 fragment PostPreviewFragment on Post {
-  ...PostContentFragment
   ...PostAudienceFragment
   ...PostCharactersFragment
   ...PostCategoriesFragment
+  ...PostGalleryContentFragment
 }
 */
 
@@ -293,49 +293,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
-                            "kind": "LinkedField",
-                            "name": "content",
-                            "plural": true,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "url",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "concreteType": "Audience",
                             "kind": "LinkedField",
                             "name": "audience",
@@ -380,6 +337,49 @@ return {
                             "name": "categories",
                             "plural": true,
                             "selections": (v3/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "content",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceUrl",
+                                "kind": "LinkedField",
+                                "name": "urls",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "url",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              }
+                            ],
                             "storageKey": null
                           }
                         ],
@@ -466,7 +466,7 @@ return {
     ]
   },
   "params": {
-    "id": "aae9ec4b55276b1ea26eccdbbbba5d17",
+    "id": "3bb9f6305cd465ea00be8c2f639551a7",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

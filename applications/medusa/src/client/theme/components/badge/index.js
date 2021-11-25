@@ -38,9 +38,18 @@ function variantOutline (props) {
   const lightColor = getColor(theme, `${c}.500`)
   const color = mode(lightColor, darkColor)(props)
 
+  if (c === 'gray') {
+    const grayColor = transparentize(`${c}.100`, 0.7)(theme)
+    const grayColorBorder = mode(grayColor, grayColor)(props)
+    return {
+      color: grayColor,
+      boxShadow: `inset 0 0 0px 2px ${grayColorBorder}`
+    }
+  }
+
   return {
     color,
-    boxShadow: `inset 0 0 0px 1px ${color}`
+    boxShadow: `inset 0 0 0px 2px ${color}`
   }
 }
 

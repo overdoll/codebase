@@ -172,7 +172,7 @@ export default function Posts (props: Props): Node {
         direction='column'
         p={4}
       >
-        <Stack spacing={4}>
+        <Stack spacing={2}>
           <PostHeader query={currentPost} />
           <PostPreview query={currentPost} />
         </Stack>

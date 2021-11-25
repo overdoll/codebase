@@ -35,26 +35,23 @@ type Props = {
 }
 
 const UsernameMutationGQL = graphql`
-    mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
-        updateAccountUsernameAndRetainPrevious(input: $input) {
-            validation
-            accountUsername  {
-                id
-                username
-                account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
-                    id
-                    username
-                }
-            }
+  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
+    updateAccountUsernameAndRetainPrevious(input: $input) {
+      validation
+      accountUsername  {
+        id
+        username
+        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
+          id
+          username
         }
+      }
     }
+  }
 `
-
-// TODO create a username validator so all usernames can't be whatever you want them to be
 
 // TODO look up custom messages for empty and invalid form errors
 
-// TODO no native browser form configuration
 const schema = Joi.object({
   username: usernameSchema
 })

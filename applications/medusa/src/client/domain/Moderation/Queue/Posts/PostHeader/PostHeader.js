@@ -7,6 +7,7 @@ import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
 import { useTranslation } from 'react-i18next'
+import PostBrand from '../../../../../components/Posts/Post/PostBrand/PostBrand'
 
 type Props = {
   query: PostHeaderFragment$key
@@ -14,11 +15,8 @@ type Props = {
 
 const ContributorFragmentGQL = graphql`
   fragment PostHeaderFragment on Post {
-    contributor {
-      username
-      avatar
-    }
     reassignmentAt
+    ...PostBrandFragment
   }
 `
 
@@ -55,10 +53,7 @@ export default function PostHeader ({ query }: Props): Node {
 
   return (
     <Flex align='center' w='100%' justify='space-between'>
-      <Flex align='center'>
-        <Avatar borderRadius='25%' src={data?.contributor.avatar} w={10} h={10} mr={2} />
-        <Text color='gray.100' fontWeight='medium' size='md'>{data?.contributor.username}</Text>
-      </Flex>
+      <PostBrand query={data} />
       <Tooltip label={t('queue.post.reassignment')}>
         <Flex align='center'>
           <CircularProgress
