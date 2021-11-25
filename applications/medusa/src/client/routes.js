@@ -207,7 +207,7 @@ const routes: Array<Route> = [
               return {
                 auditLogsQuery: {
                   query: AuditLogsQuery,
-                  variables: { from: new Date(), to: new Date() },
+                  variables: { from: new Date(new Date().setDate(new Date().getDate() - 7)), to: new Date() },
                   options: {
                     fetchPolicy: 'store-or-network'
                   }

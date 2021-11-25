@@ -74,8 +74,16 @@ export default function DisableMultiFactor (props: Props): Node {
 
   return (
     <>
-      <Flex borderRadius='base' px={3} py={2} bg='gray.800' align='center' justify='space-between'>
-        <Flex align='flex-start' justify='center' direction='column'>
+      <Flex w='100%'>
+        <Flex
+          borderRadius='base'
+          borderTopRightRadius={0}
+          borderBottomRightRadius={0}
+          w='100%'
+          px={3} py={2} bg='gray.800'
+          align='center'
+          justify='space-between'
+        >
           <Text fontFamily='body' fontWeight='semibold' color='gray.200' fontSize='sm'>
             {t('security.multi_factor.disable.title')}
           </Text>
@@ -87,6 +95,9 @@ export default function DisableMultiFactor (props: Props): Node {
           <Button
             onClick={onOpen} variant='solid' colorScheme='orange'
             size='sm' isDisabled={!data.canDisableMultiFactor}
+            borderTopLeftRadius={0}
+            borderBottomLeftRadius={0}
+            h='37px'
           >
             {t('security.multi_factor.disable.button')}
           </Button>
@@ -107,11 +118,11 @@ export default function DisableMultiFactor (props: Props): Node {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button size='lg' onClick={onClose}>
+              <Button size='md' onClick={onClose}>
                 {t('security.multi_factor.disable.modal.cancel')}
               </Button>
               <Button
-                isLoading={isDisablingMultiFactor} size='lg' variant='solid' colorScheme='orange'
+                isLoading={isDisablingMultiFactor} size='md' variant='solid' colorScheme='orange'
                 onClick={onDisable} ml={3}
               >
                 {t('security.multi_factor.disable.modal.confirm')}
