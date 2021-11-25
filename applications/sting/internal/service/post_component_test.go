@@ -20,8 +20,14 @@ import (
 )
 
 type PostModified struct {
-	ID         string
-	Reference  string
+	ID        string
+	Reference string
+	Moderator *struct {
+		Id string
+	}
+	Contributor struct {
+		Id string
+	}
 	State      types.PostState
 	Characters []CharacterModified
 	Audience   *AudienceModified
@@ -409,6 +415,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
+
+	// make sure getPost works, and correct data is assigned
+	stingClient := getGrpcClient(t)
+	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: newPostId})
+	require.NoError(t, e)
+	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Contributor.Id).GetID(), data.ContributorId, "should have correct contributor ID assigned")
+	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
 }
 
 // Test_CreatePost_Discard - discard post

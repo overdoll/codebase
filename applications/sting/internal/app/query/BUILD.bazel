@@ -12,6 +12,7 @@ go_library(
         "character_by_id.go",
         "character_by_slug.go",
         "post_by_id.go",
+        "post_by_id_operator.go",
         "principal_by_id.go",
         "search_audience.go",
         "search_brands.go",

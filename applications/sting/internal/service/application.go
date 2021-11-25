@@ -77,8 +77,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoryById:     query.NewCategoryByIdHandler(postRepo),
 
-			SearchPosts: query.NewSearchPostsHandler(indexRepo),
-			PostById:    query.NewPostByIdHandler(postRepo),
+			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
+			PostById:         query.NewPostByIdHandler(postRepo),
+			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 
 			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
 			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),
