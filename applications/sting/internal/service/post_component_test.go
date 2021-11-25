@@ -351,21 +351,31 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var posts Posts
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state": types.PostStatePublished,
+		"state":          types.PostStatePublished,
+		"brandSlugs":     []graphql.String{},
+		"categorySlugs":  []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
 	})
 
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"brandSlugs": []graphql.String{"default_brand"},
+		"brandSlugs":     []graphql.String{"default_brand"},
+		"categorySlugs":  []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
 	})
 
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"categorySlugs": []graphql.String{"alter"},
+		"categorySlugs":  []graphql.String{"alter"},
+		"brandSlugs":     []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
 	})
 
 	require.NoError(t, err)
@@ -373,13 +383,19 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"characterSlugs": []graphql.String{"aarush_hills"},
+		"categorySlugs":  []graphql.String{},
+		"brandSlugs":     []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
 	})
 
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"audienceSlugs": []graphql.String{"standard_audience"},
+		"audienceSlugs":  []graphql.String{"standard_audience"},
+		"characterSlugs": []graphql.String{},
+		"categorySlugs":  []graphql.String{},
+		"brandSlugs":     []graphql.String{},
 	})
 
 	require.NoError(t, err)
