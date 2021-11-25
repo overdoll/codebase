@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash bd807d26fb74c5f78ed47d2de2c8a88b
+ * @relayHash f659b4b84cc3fe383250b407f5712c68
  */
 
 /* eslint-disable */
@@ -17,11 +17,11 @@ export type MakePrimaryOptionMutationVariables = {|
 |};
 export type MakePrimaryOptionMutationResponse = {|
   +updateAccountEmailStatusToPrimary: ?{|
-    +accountEmail: ?{|
+    +updatedAccountEmail: ?{|
       +id: string,
       +status: AccountEmailStatus,
       +email: string,
-      +account: {|
+      +account: ?{|
         +emails: {|
           +edges: $ReadOnlyArray<{|
             +node: {|
@@ -46,7 +46,7 @@ mutation MakePrimaryOptionMutation(
   $input: UpdateAccountEmailStatusToPrimaryInput!
 ) {
   updateAccountEmailStatusToPrimary(input: $input) {
-    accountEmail {
+    updatedAccountEmail {
       id
       status
       email
@@ -159,7 +159,7 @@ return {
             "args": null,
             "concreteType": "AccountEmail",
             "kind": "LinkedField",
-            "name": "accountEmail",
+            "name": "updatedAccountEmail",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -206,7 +206,7 @@ return {
             "args": null,
             "concreteType": "AccountEmail",
             "kind": "LinkedField",
-            "name": "accountEmail",
+            "name": "updatedAccountEmail",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -234,7 +234,7 @@ return {
     ]
   },
   "params": {
-    "id": "bd807d26fb74c5f78ed47d2de2c8a88b",
+    "id": "f659b4b84cc3fe383250b407f5712c68",
     "metadata": {},
     "name": "MakePrimaryOptionMutation",
     "operationKind": "mutation",
@@ -243,5 +243,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'add5d0caced161fb36cfcd31bcf7d183';
+(node: any).hash = '6e8235bf9bc1ff1afef069c5a4d84a69';
 module.exports = node;

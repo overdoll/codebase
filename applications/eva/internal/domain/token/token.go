@@ -28,7 +28,7 @@ type AuthenticationToken struct {
 	registered bool
 }
 
-var (
+const (
 	OTPKey = "otp-key"
 )
 

@@ -9,12 +9,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-const (
-	StatusRemoved  = "removed"
-	StatusApproved = "approved"
-	StatusDenied   = "denied"
-)
-
 var (
 	ErrInvalidModerator = errors.New("moderator does not match")
 )
@@ -33,7 +27,7 @@ type PostAuditLog struct {
 	notes    *string
 	reverted bool
 
-	status string
+	status PostAuditLogStatus
 
 	rejectionReason   *PostRejectionReason
 	accountInfraction *AccountInfractionHistory
@@ -49,7 +43,7 @@ func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId
 		pendingPostId:   postId,
 		moderatorId:     requester.AccountId(),
 		contributorId:   contributorId,
-		status:          StatusRemoved,
+		status:          PostAuditLogStatusRemoved,
 		rejectionReason: rejectionReason,
 		notes:           notes,
 		reverted:        false,
@@ -69,7 +63,7 @@ func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId,
 		pendingPostId:     postId,
 		moderatorId:       moderatorId,
 		contributorId:     contributorId,
-		status:            StatusApproved,
+		status:            PostAuditLogStatusApproved,
 		rejectionReason:   nil,
 		notes:             nil,
 		reverted:          false,
@@ -103,7 +97,7 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 		pendingPostId:     postId,
 		moderatorId:       moderatorId,
 		contributorId:     contributorId,
-		status:            StatusDenied,
+		status:            PostAuditLogStatusDenied,
 		rejectionReason:   rejectionReason,
 		notes:             notes,
 		reverted:          false,
@@ -112,12 +106,15 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 }
 
 func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
+
+	st, _ := PostAuditLogStatusFromString(status)
+
 	return &PostAuditLog{
 		id:                id,
 		pendingPostId:     postId,
 		moderatorId:       moderatorId,
 		contributorId:     contributorId,
-		status:            status,
+		status:            st,
 		rejectionReason:   rejectionReason,
 		notes:             notes,
 		reverted:          reverted,
@@ -133,7 +130,7 @@ func (m *PostAuditLog) PostID() string {
 	return m.pendingPostId
 }
 
-func (m *PostAuditLog) Status() string {
+func (m *PostAuditLog) Status() PostAuditLogStatus {
 	return m.status
 }
 
@@ -150,15 +147,15 @@ func (m *PostAuditLog) ContributorId() string {
 }
 
 func (m *PostAuditLog) IsApproved() bool {
-	return m.status == StatusApproved
+	return m.status == PostAuditLogStatusApproved
 }
 
 func (m *PostAuditLog) IsRemoved() bool {
-	return m.status == StatusRemoved
+	return m.status == PostAuditLogStatusRemoved
 }
 
 func (m *PostAuditLog) IsDenied() bool {
-	return m.status == StatusDenied
+	return m.status == PostAuditLogStatusDenied
 }
 
 func (m *PostAuditLog) Reverted() bool {
@@ -221,7 +218,7 @@ func (m *PostAuditLog) AccountInfraction() *AccountInfractionHistory {
 }
 
 func (m *PostAuditLog) IsDeniedWithInfraction() bool {
-	return m.status == StatusDenied && m.rejectionReason.Infraction()
+	return m.status == PostAuditLogStatusDenied && m.rejectionReason.Infraction()
 }
 
 func CanViewWithFilters(requester *principal.Principal, filter *PostAuditLogFilters) error {

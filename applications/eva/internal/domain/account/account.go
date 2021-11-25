@@ -4,24 +4,13 @@ import (
 	"errors"
 	"os"
 	"overdoll/libraries/translations"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-)
-
-type AccountRole string
-type LockReason string
-
-const (
-	Staff     AccountRole = "staff"
-	Moderator AccountRole = "moderator"
-)
-
-const (
-	PostInfraction LockReason = "post_infraction"
 )
 
 type Account struct {
@@ -31,12 +20,12 @@ type Account struct {
 
 	username string
 	email    string
-	roles    []AccountRole
+	roles    []Role
 	verified bool
 	avatar   string
-	locked   bool
 	language *translations.Language
 
+	locked       bool
 	lockedUntil  int
 	lockedReason LockReason
 
@@ -58,11 +47,14 @@ var (
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
 
-	var newRoles []AccountRole
+	var newRoles []Role
 
 	for _, role := range roles {
-		newRoles = append(newRoles, AccountRole(role))
+		rl, _ := RoleFromString(role)
+		newRoles = append(newRoles, rl)
 	}
+
+	lr, _ := LockReasonFromString(lockedReason)
 
 	return &Account{
 		id:                 id,
@@ -74,7 +66,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		lockedUntil:        lockedUntil,
 		locked:             locked,
 		language:           translations.NewLanguage(locale),
-		lockedReason:       LockReason(lockedReason),
+		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
 	}
 }
@@ -103,6 +95,10 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
+}
+
+func (a *Account) IsUsername(usr string) bool {
+	return strings.ToLower(a.username) == strings.ToLower(usr)
 }
 
 func (a *Account) Language() *translations.Language {
@@ -139,8 +135,8 @@ func (a *Account) IsLocked() bool {
 	return a.locked
 }
 
-func (a *Account) LockedReason() string {
-	return string(a.lockedReason)
+func (a *Account) LockedReason() LockReason {
+	return a.lockedReason
 }
 
 func (a *Account) IsLockedDueToPostInfraction() bool {
@@ -164,13 +160,19 @@ func (a *Account) ToggleMultiFactor() error {
 func (a *Account) Lock(duration int, reason string) error {
 	if duration == 0 {
 		a.lockedUntil = 0
-		a.lockedReason = ""
+		a.lockedReason = Unlocked
 		a.locked = false
 		return nil
 	}
 
+	rs, err := LockReasonFromString(reason)
+
+	if err != nil {
+		return nil
+	}
+
 	a.lockedUntil = duration
-	a.lockedReason = LockReason(reason)
+	a.lockedReason = rs
 	a.locked = true
 
 	return nil
@@ -208,7 +210,7 @@ func (a *Account) IsModerator() bool {
 func (a *Account) hasRoles(roles []string) bool {
 	for _, role := range a.roles {
 		for _, requiredRole := range roles {
-			if string(role) == requiredRole {
+			if role.String() == requiredRole {
 				return true
 			}
 		}
@@ -217,10 +219,26 @@ func (a *Account) hasRoles(roles []string) bool {
 	return false
 }
 
-func (a *Account) EditUsername(username string) error {
+func (a *Account) UsernameAlreadyBelongs(usernames []*Username, username string) *Username {
+
+	for _, current := range usernames {
+		if current.IsEqual(username) {
+			return current
+		}
+	}
+
+	return nil
+}
+
+func (a *Account) EditUsername(usernames []*Username, username string) error {
 
 	if err := validateUsername(username); err != nil {
 		return err
+	}
+
+	// if limit is reached, and the username doesn't belong to the account already
+	if len(usernames) >= MaxUsernamesLimit && a.UsernameAlreadyBelongs(usernames, username) == nil {
+		return ErrMaxUsernamesLimitReached
 	}
 
 	a.username = username
@@ -233,7 +251,7 @@ func (a *Account) RolesAsString() []string {
 	var n []string
 
 	for _, role := range a.roles {
-		n = append(n, string(role))
+		n = append(n, role.String())
 	}
 
 	return n
@@ -244,8 +262,13 @@ func (a *Account) UpdateLanguage(locale string) error {
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {
+
+	if len(emails) >= maxEmailsLimit {
+		return ErrMaxEmailsLimitReached
+	}
+
 	for _, current := range emails {
-		if current.Email() == email {
+		if current.IsEqual(email) {
 			if current.IsConfirmed() {
 				current.MakePrimary()
 				a.email = email
@@ -340,7 +363,7 @@ func (a *Account) revokeRoleCheck(requester *principal.Principal) error {
 }
 
 // remove from list of roles
-func (a *Account) removeRole(role AccountRole) error {
+func (a *Account) removeRole(role Role) error {
 	var ind int
 	found := false
 

@@ -22,6 +22,7 @@ go_library(
         "//applications/eva/internal/domain/token",
         "//libraries/crypt",
         "//libraries/paging",
+        "//libraries/passport",
         "//libraries/principal",
         "//libraries/scan",
         "@com_github_go_redis_redis_v8//:redis",

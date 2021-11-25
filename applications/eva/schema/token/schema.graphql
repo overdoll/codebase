@@ -1,5 +1,6 @@
-enum MultiFactorType {
-  TOTP
+"""Types of multi factor enabled for this account"""
+type MultiFactor {
+  totp: Boolean!
 }
 
 type AuthenticationTokenAccountStatus {
@@ -7,7 +8,7 @@ type AuthenticationTokenAccountStatus {
   registered: Boolean!
 
   """If multi-factor is enabled for this account"""
-  multiFactor: [MultiFactorType!]
+  multiFactor: MultiFactor
 }
 
 """Authentication token. Used for logging in."""

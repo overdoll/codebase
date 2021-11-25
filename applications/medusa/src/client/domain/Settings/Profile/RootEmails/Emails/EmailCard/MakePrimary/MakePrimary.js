@@ -25,7 +25,7 @@ const MakePrimaryFragmentGQL = graphql`
 const MakeEmailPrimaryMutationGQL = graphql`
   mutation MakePrimaryOptionMutation($input: UpdateAccountEmailStatusToPrimaryInput!) {
     updateAccountEmailStatusToPrimary(input: $input) {
-      accountEmail {
+      updatedAccountEmail {
         id
         status
         email

@@ -18,6 +18,7 @@ type Commands struct {
 	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
+	DeleteAccountUsername                   command.DeleteAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
 	RevokeAccountSession                    command.RevokeAccountSessionHandler
 	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler
@@ -50,6 +51,8 @@ type Queries struct {
 	AccountByUsername               query.AccountByUsernameHandler
 	AccountEmailByEmail             query.AccountEmailByEmailHandler
 	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
+	AccountEmailsLimit              query.AccountEmailsLimitHandler
+	AccountUsernamesLimit           query.AccountUsernamesLimitHandler
 	AccountUsernameByUsername       query.AccountUsernameByUsernameHandler
 	AccountUsernamesByAccount       query.AccountUsernamesByAccountHandler
 	AccountSessionById              query.AccountSessionByIdHandler

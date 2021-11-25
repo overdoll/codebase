@@ -7,12 +7,13 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type MultiFactorType = "TOTP" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type MultiFactorFragment$ref: FragmentReference;
 declare export opaque type MultiFactorFragment$fragmentType: MultiFactorFragment$ref;
 export type MultiFactorFragment = {|
-  +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
+  +multiFactor: ?{|
+    +totp: boolean
+  |},
   +$refType: MultiFactorFragment$ref,
 |};
 export type MultiFactorFragment$data = MultiFactorFragment;
@@ -32,8 +33,19 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "MultiFactor",
+      "kind": "LinkedField",
       "name": "multiFactor",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "totp",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -41,5 +53,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '492c876881c3fe2f792ca85bb7477495';
+(node: any).hash = '72435603072c0f4a2131eb8ee445d447';
 module.exports = node;

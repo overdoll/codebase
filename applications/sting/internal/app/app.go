@@ -41,8 +41,9 @@ type Commands struct {
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
-	SearchPosts query.SearchPostsHandler
-	PostById    query.PostByIdHandler
+	SearchPosts      query.SearchPostsHandler
+	PostById         query.PostByIdHandler
+	PostByIdOperator query.PostByIdOperatorHandler
 
 	SearchCharacters query.SearchCharactersHandler
 	CharacterBySlug  query.CharacterBySlugHandler

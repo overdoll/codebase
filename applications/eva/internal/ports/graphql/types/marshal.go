@@ -3,8 +3,8 @@ package types
 import (
 	"context"
 	"crypto/sha256"
-
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/cookies"
@@ -12,6 +12,8 @@ import (
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/translations"
+	"sort"
+	"time"
 )
 
 func MarshalLanguageToGraphQL(result *translations.Language) *Language {
@@ -32,6 +34,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Language:    MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:     result.IsStaff(),
 		IsModerator: result.IsModerator(),
+		Lock:        MarshalAccountLockToGraphQL(result),
 	}
 }
 
@@ -100,8 +103,6 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 		return nil
 	}
 
-	var lock *AccountLock
-
 	if result.IsLocked() {
 		var reason AccountLockReason
 
@@ -109,13 +110,13 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 			reason = AccountLockReasonPostInfraction
 		}
 
-		lock = &AccountLock{
-			Expires: result.LockedUntil(),
+		return &AccountLock{
+			Expires: time.Unix(int64(result.LockedUntil()), 0),
 			Reason:  reason,
 		}
 	}
 
-	return lock
+	return nil
 }
 
 func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
@@ -173,15 +174,14 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
 
-		var multiFactorTypes []MultiFactorType
-
-		if result.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
+		accountStatus = &AuthenticationTokenAccountStatus{
+			Registered: result.Registered(),
 		}
 
-		accountStatus = &AuthenticationTokenAccountStatus{
-			Registered:  result.Registered(),
-			MultiFactor: multiFactorTypes,
+		if result.IsTOTPRequired() {
+			accountStatus.MultiFactor = &MultiFactor{
+				Totp: true,
+			}
 		}
 	}
 
@@ -386,4 +386,20 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor
 	}
 
 	return conn
+}
+
+func MarshalRecoveryCodesToGraphql(ctx context.Context, codes []*multi_factor.RecoveryCode) []*AccountMultiFactorRecoveryCode {
+
+	// sort so the order is consistent
+	sort.SliceStable(codes, func(i, j int) bool {
+		return codes[i].Code() < codes[j].Code()
+	})
+
+	var recoveryCodes []*AccountMultiFactorRecoveryCode
+
+	for _, code := range codes {
+		recoveryCodes = append(recoveryCodes, &AccountMultiFactorRecoveryCode{Code: code.Code()})
+	}
+
+	return recoveryCodes
 }

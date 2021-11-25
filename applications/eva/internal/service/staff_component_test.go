@@ -36,7 +36,7 @@ func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
 
 	acc := getAccountByUsername(t, client, "testaccountforstuff")
 
-	require.True(t, acc.IsModerator)
+	require.True(t, acc.IsModerator, "account is now moderator")
 
 	var revokeAccountModeratorRole RevokeAccountModeratorRole
 
@@ -48,7 +48,7 @@ func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
 
 	acc = getAccountByUsername(t, client, "testaccountforstuff")
 
-	require.False(t, acc.IsModerator)
+	require.False(t, acc.IsModerator, "account is not moderator")
 }
 
 type AssignAccountStaffRole struct {
@@ -77,7 +77,7 @@ func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
 
 	acc := getAccountByUsername(t, client, "testaccountforstuff")
 
-	require.True(t, acc.IsStaff)
+	require.True(t, acc.IsStaff, "account is staff")
 
 	var revokeAccountStaffRole RevokeAccountStaffRole
 
@@ -89,5 +89,5 @@ func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
 
 	acc = getAccountByUsername(t, client, "testaccountforstuff")
 
-	require.False(t, acc.IsStaff)
+	require.False(t, acc.IsStaff, "account is not staff")
 }

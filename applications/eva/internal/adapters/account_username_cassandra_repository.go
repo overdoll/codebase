@@ -43,19 +43,19 @@ type UsernameByAccount struct {
 }
 
 // AddAccountEmail - add an email to the account
-func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *account.Account, username string) error {
+func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
 	stmt, _ := usernameByAccount.Delete()
 
-	batch.Query(stmt, instance.Username(), instance.ID())
+	batch.Query(stmt, accountId, username)
 
 	// delete from other table
 	stmt, _ = accountUsernameTable.Delete()
 
-	batch.Query(stmt, strings.ToLower(instance.Username()))
+	batch.Query(stmt, strings.ToLower(username))
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to delete account username: %v", err)
@@ -64,11 +64,32 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *
 	return nil
 }
 
+func (r AccountRepository) DeleteAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) error {
+
+	emails, err := r.GetAccountUsernames(ctx, requester, nil, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := account.CanDeleteAccountUsername(requester, accountId, emails, username); err != nil {
+		return err
+	}
+
+	return r.deleteAccountUsername(ctx, accountId, username)
+}
+
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)
 // or just change the casings
-func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usr *account.Account) error) (*account.Account, *account.Username, error) {
+func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usernames []*account.Username, usr *account.Account) error) (*account.Account, *account.Username, error) {
 
 	instance, err := r.GetAccountById(ctx, id)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	usernames, err := r.GetAccountUsernames(ctx, requester, nil, id)
 
 	if err != nil {
 		return nil, nil, err
@@ -78,22 +99,46 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		return nil, nil, err
 	}
 
-	oldUsername := instance.Username()
+	//oldUsername := instance.Username()
 
-	err = updateFn(instance)
+	err = updateFn(usernames, instance)
 
 	if err != nil {
 		return nil, nil, err
 	}
 
+	// if the username switch is a username that already belongs to the current user, then we dont do extra inserts
+	existingUsernameForAccount := instance.UsernameAlreadyBelongs(usernames, instance.Username())
+
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
-	if oldUsername != strings.ToLower(instance.Username()) {
+	if existingUsernameForAccount == nil {
+
+		// username doesn't belong to the account, make sure it's not taken by someone else first
+		_, err := r.GetAccountByUsername(ctx, instance.Username())
+
+		if err != nil {
+			if err != account.ErrAccountNotFound {
+				return nil, nil, err
+			}
+		} else {
+			// username not unique to the site
+			return nil, nil, account.ErrUsernameNotUnique
+		}
+
 		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
 			return nil, nil, err
 		}
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// existingusername can't be an exact match or else this fails - cassandra will delete both records
+	// case-sensitive changes are allowed still
+	if existingUsernameForAccount != nil && existingUsernameForAccount.Username() != instance.Username() {
+		// remove old username from being case-sensitive
+		stmt, _ := usernameByAccount.Delete()
+		batch.Query(stmt, existingUsernameForAccount.AccountId(), existingUsernameForAccount.Username())
+	}
 
 	// add to usernames table
 	stmt, _ := usernameByAccount.Insert()
@@ -110,7 +155,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		return nil, nil, fmt.Errorf("failed to update account username: %v", err)
 	}
 
-	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID()), nil
+	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID(), instance.IsUsername(instance.Username())), nil
 }
 
 // GetAccountByUsername - Get user using the username
@@ -153,6 +198,12 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 		return nil, err
 	}
 
+	accInstance, err := r.GetAccountById(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var accountUsernames []*UsernameByAccount
 
 	builder := usernameByAccount.SelectBuilder()
@@ -182,7 +233,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 	var usernames []*account.Username
 
 	for _, username := range accountUsernames {
-		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId)
+		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId, accInstance.IsUsername(username.Username))
 		usern.Node = paging.NewNode(username.Username)
 		usernames = append(usernames, usern)
 	}
@@ -192,6 +243,12 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *p
 
 // GetAccountEmails - get emails for account
 func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) (*account.Username, error) {
+
+	accInstance, err := r.GetAccountById(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var accountUsernames *UsernameByAccount
 
@@ -212,7 +269,7 @@ func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *pr
 		return nil, fmt.Errorf("failed to get account username: %v", err)
 	}
 
-	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId)
+	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId, accInstance.IsUsername(accountUsernames.Username))
 
 	if err := name.CanView(requester); err != nil {
 		return nil, err

@@ -23,6 +23,16 @@ type Account implements Node {
   """The details of the account lock"""
   lock: AccountLock
 
+  """
+  The language of the account.
+  
+  Note: this is the language that will be used to determine which emails should be sent where.
+  
+  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
+  """
+  language: Language!
+
   """Usernames for account (history)"""
   usernames(
     """Returns the elements in the list that come after the specified cursor."""
@@ -248,8 +258,12 @@ type AccountEmail implements Node {
   """The current status of the account email"""
   status: AccountEmailStatus!
 
-  """The account that this email belongs to"""
-  account: Account!
+  """
+  The account that this email belongs to
+  
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account
 }
 
 """Connection of the account email"""
@@ -391,6 +405,14 @@ input AddAccountEmailInput {
 type AddAccountEmailPayload {
   """The account email that was added to"""
   accountEmail: AccountEmail
+
+  """Any validation errors from the backend"""
+  validation: AddAccountEmailValidation
+}
+
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  INVALID_EMAIL
 }
 
 """Approve the pending post input"""
@@ -408,7 +430,7 @@ type ApprovePostPayload {
 """Input to assign account to a moderator role"""
 input AssignAccountModeratorRole {
   """The account ID that the role needs to be assigned to"""
-  accountId: String!
+  accountId: ID!
 }
 
 """Assigned account"""
@@ -420,7 +442,7 @@ type AssignAccountModeratorRolePayload {
 """Input to assign account to a staff role"""
 input AssignAccountStaffRole {
   """The account ID that the role needs to be assigned to"""
-  accountId: String!
+  accountId: ID!
 }
 
 """Assigned account"""
@@ -500,20 +522,48 @@ enum AudiencesOrderField {
   CREATED_AT
 }
 
+"""Authentication token. Used for logging in."""
 type AuthenticationToken {
+  """Unique ID of the token"""
   id: ID!
+
+  """
+  Whether or not the token belongs to the same session as it was created in
+  """
   sameSession: Boolean!
+
+  """Whether or not the token is verified"""
   verified: Boolean!
+
+  """
+  Whether or not this token is "secure"
+  Secure means that the token has been viewed from the same network as originally created
+  if it wasn't viewed in the same network, the interface should take care and double-check with
+  the user that they want to verify the token.
+  """
   secure: Boolean!
+
+  """The device this token was created from."""
   device: String!
+
+  """The location where this token was created at."""
   location: String!
+
+  """The email that belongs to this token."""
   email: String!
+
+  """Once the token is verified, you can see the status of the account"""
   accountStatus: AuthenticationTokenAccountStatus
 }
 
 type AuthenticationTokenAccountStatus {
+  """
+  When verified, whether or not there is an account belonging to this token.
+  """
   registered: Boolean!
-  multiFactor: [MultiFactorType!]
+
+  """If multi-factor is enabled for this account"""
+  multiFactor: MultiFactor
 }
 
 scalar BCP47
@@ -898,6 +948,14 @@ input GrantAuthenticationTokenInput {
 type GrantAuthenticationTokenPayload {
   """The authentication token after starting"""
   authenticationToken: AuthenticationToken
+
+  """Validation for granting an authentication token"""
+  validation: GrantAuthenticationTokenValidation
+}
+
+"""Validation for granting an authentication token"""
+enum GrantAuthenticationTokenValidation {
+  INVALID_EMAIL
 }
 
 type Language {
@@ -915,6 +973,11 @@ type Moderator implements Node {
   account: Account!
 }
 
+"""Types of multi factor enabled for this account"""
+type MultiFactor {
+  totp: Boolean!
+}
+
 """TOTP secret + image combination"""
 type MultiFactorTotp {
   """The TOTP secret"""
@@ -926,18 +989,22 @@ type MultiFactorTotp {
   imageSrc: String!
 }
 
-enum MultiFactorType {
-  TOTP
-}
-
 type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
   """
   unlockAccount: UnlockAccountPayload
 
-  """Update the current language"""
+  """Update the current language."""
   updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
+
+  """
+  Update the language of the account.
+  
+  Note: that this is only a value, and in order to see anything in the browser,
+  you should use the "UpdateLanguage" mutation.
+  """
+  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
 
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
@@ -1209,9 +1276,6 @@ type Post implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """The date range for audit logs. Required."""
-    dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection!
 
   """Whether or not the post was reported by the viewer."""
@@ -1257,7 +1321,7 @@ type PostAuditLog implements Node {
   action: PostAuditLogAction!
 
   """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason!
+  postRejectionReason: PostRejectionReason
 
   """Additional notes by the moderator"""
   notes: String
@@ -1407,6 +1471,8 @@ enum PostState {
   Discarded
   Rejected
   Processing
+  Removing
+  Removed
 }
 
 type Query {
@@ -1442,7 +1508,13 @@ type Query {
   """List of all available languages"""
   languages: [Language!]!
 
-  """The current language that is set"""
+  """
+  The current language that is set
+  
+  Note: this is only temporary, per-browser language
+  
+  For a permanent language on an account level, see "Language" as part of viewer
+  """
   language: Language!
 
   """
@@ -1822,7 +1894,7 @@ type RevokeAccountAccessPayload {
 """Input to revoke moderator role"""
 input RevokeAccountModeratorRole {
   """The account ID that the role needs to be revoked from"""
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -1846,7 +1918,7 @@ type RevokeAccountSessionPayload {
 """Input to revoke staff role"""
 input RevokeAccountStaffRole {
   """The account ID that the role needs to be revoked from"""
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -1989,6 +2061,21 @@ type UpdateAccountEmailStatusToPrimaryPayload {
 
   """The account email that was updated to 'confirmed' status"""
   updatedAccountEmail: AccountEmail
+}
+
+"""Input for updating the account language"""
+input UpdateAccountLanguageInput {
+  """The locale to update the language to"""
+  locale: BCP47!
+}
+
+"""Payload of the account language update"""
+type UpdateAccountLanguagePayload {
+  """The new language that is now set"""
+  language: Language
+
+  """The account that has the updated language"""
+  Account: Account
 }
 
 """Input for updating an account's username"""

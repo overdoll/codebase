@@ -58,14 +58,14 @@ const (
 	confirmEmailPrefix = "emailConfirm:"
 )
 
-func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *account.Account, email string) error {
+func (r AccountRepository) deleteAccountEmail(ctx context.Context, accountId, email string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
 	stmt, _ := emailByAccountTable.Delete()
 
-	batch.Query(stmt, email, instance.ID())
+	batch.Query(stmt, accountId, email)
 
 	// delete from other table
 	stmt, _ = accountEmailTable.Delete()
@@ -177,7 +177,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *p
 		})
 
 	if err := insertEmailByAccount.ExecRelease(); err != nil {
-		_ = r.deleteAccountEmail(ctx, acc, em.Email())
+		_ = r.deleteAccountEmail(ctx, acc.ID(), em.Email())
 		return nil, fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 
@@ -281,27 +281,10 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, requester *pr
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// delete emails by account
-	stmt, _ := emailByAccountTable.Delete()
-
-	batch.Query(stmt, accountId, email)
-
-	// delete account email
-	stmt, _ = accountEmailTable.Delete()
-
-	batch.Query(stmt, email)
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
-	}
-
-	return nil
+	return r.deleteAccountEmail(ctx, accountId, email)
 }
 
 // UpdateAccountMakeEmailPrimary - update the account and make the email primary
-// or just change the casings
 func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
 	acc, err := r.GetAccountById(ctx, accountId)

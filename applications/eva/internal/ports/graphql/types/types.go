@@ -8,6 +8,7 @@ import (
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
+	"time"
 )
 
 type Account struct {
@@ -32,8 +33,12 @@ type Account struct {
 	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
 	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
 	Language *Language `json:"language"`
+	// Maximum amount of usernames that this account can create
+	UsernamesLimit int `json:"usernamesLimit"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
+	// Maximum amount of emails that this account can create
+	EmailsLimit int `json:"emailsLimit"`
 	// Emails for account (multiple emails per account)
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -97,7 +102,7 @@ type AccountEmailEdge struct {
 }
 
 type AccountLock struct {
-	Expires int               `json:"expires"`
+	Expires time.Time         `json:"expires"`
 	Reason  AccountLockReason `json:"reason"`
 }
 
@@ -237,7 +242,7 @@ type AuthenticationTokenAccountStatus struct {
 	// When verified, whether or not there is an account belonging to this token.
 	Registered bool `json:"registered"`
 	// If multi-factor is enabled for this account
-	MultiFactor []MultiFactorType `json:"multiFactor"`
+	MultiFactor *MultiFactor `json:"multiFactor"`
 }
 
 // Input for confirming the account email
@@ -277,6 +282,18 @@ type DeleteAccountEmailInput struct {
 type DeleteAccountEmailPayload struct {
 	// The ID of the account email that was removed
 	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Input for removing an email from an account
+type DeleteAccountUsernameInput struct {
+	// The username that should be removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
+}
+
+// Username to delete from account
+type DeleteAccountUsernamePayload struct {
+	// The ID of the account username that was removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
 }
 
 // Payload for disabling account multi factor
@@ -368,6 +385,11 @@ type Moderator struct {
 }
 
 func (Moderator) IsEntity() {}
+
+// Types of multi factor enabled for this account
+type MultiFactor struct {
+	Totp bool `json:"totp"`
+}
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {
@@ -565,7 +587,7 @@ func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
 type AccountLockReason string
 
 const (
-	AccountLockReasonPostInfraction AccountLockReason = "PostInfraction"
+	AccountLockReasonPostInfraction AccountLockReason = "POST_INFRACTION"
 )
 
 var AllAccountLockReason = []AccountLockReason{
@@ -927,45 +949,6 @@ func (e *GrantAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type MultiFactorType string
-
-const (
-	MultiFactorTypeTotp MultiFactorType = "TOTP"
-)
-
-var AllMultiFactorType = []MultiFactorType{
-	MultiFactorTypeTotp,
-}
-
-func (e MultiFactorType) IsValid() bool {
-	switch e {
-	case MultiFactorTypeTotp:
-		return true
-	}
-	return false
-}
-
-func (e MultiFactorType) String() string {
-	return string(e)
-}
-
-func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = MultiFactorType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid MultiFactorType", str)
-	}
-	return nil
-}
-
-func (e MultiFactorType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

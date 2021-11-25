@@ -28,7 +28,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			zap.S().Error("resolver failed ", err)
 
-			if helpers.IsDebug() {
+			if !helpers.IsDebug() {
 				err.Message = "internal server error"
 			}
 

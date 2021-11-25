@@ -32,15 +32,15 @@ type Props = {
   connectionID: PendingPostsFragment$key,
 }
 
-const ModeratePostGQL = graphql`
-  mutation ModeratePostMutation($input: ModeratePostInput!, $connections: [ID!]!) {
-    moderatePost(input: $input) {
-      postAuditLog {
-        id @deleteEdge(connections: $connections)
-      }
-    }
-  }
-`
+// const ModeratePostGQL = graphql`
+//   mutation ModeratePostMutation($input: ModeratePostInput!, $connections: [ID!]!) {
+//     moderatePost(input: $input) {
+//       postAuditLog {
+//         id @deleteEdge(connections: $connections)
+//       }
+//     }
+//   }
+// `
 
 const PostIDGQL = graphql`
   fragment ModeratePostFragment on Post {
@@ -52,7 +52,7 @@ export default function ModeratePost (props: Props): Node {
   const [t] = useTranslation('moderation')
 
   const [moderatePost, isModeratingPost] = useMutation<ModeratePostMutation>(
-    ModeratePostGQL
+    nil
   )
 
   const data = useFragment(PostIDGQL, props.postID)

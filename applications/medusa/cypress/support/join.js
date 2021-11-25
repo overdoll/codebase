@@ -44,6 +44,4 @@ Cypress.Commands.add('newAccount', (id) => {
   cy.url().should('include', '/profile')
 })
 
-Cypress.Commands.add('preserveAccount', (email) => {
-  Cypress.Cookies.preserveOnce('connect.sid')
-})
+Cypress.Commands.add('preserveAccount', () => Cypress.Cookies.preserveOnce('connect.sid'))

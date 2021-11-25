@@ -14,7 +14,7 @@ func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 			return err
 		}
 
-		postPrefix := "/posts/" + pending.ContributorId() + "/"
+		postPrefix := "/posts/" + pending.ID() + "/"
 
 		// Process content (mime-type checks, etc...)
 		// add a prefix

@@ -1,7 +1,10 @@
 import { Ability, AbilityBuilder } from '@casl/ability'
 
 export default function defineAbility (user) {
-  const { can, build } = new AbilityBuilder(Ability)
+  const {
+    can,
+    build
+  } = new AbilityBuilder(Ability)
 
   // Check if user is logged in
   if (user) {

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b88eee9a0c8e1f15046d8a893982bea2
+ * @relayHash 8e30dfd46ad67a5e8620e1341c669528
  */
 
 /* eslint-disable */
@@ -42,7 +42,9 @@ fragment JoinRootFragment on AuthenticationToken {
   sameSession
   accountStatus {
     registered
-    multiFactor
+    multiFactor {
+      totp
+    }
     ...MultiFactorFragment
   }
 }
@@ -52,7 +54,9 @@ fragment LobbyFragment on AuthenticationToken {
 }
 
 fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
-  multiFactor
+  multiFactor {
+    totp
+  }
 }
 */
 
@@ -146,8 +150,19 @@ const node: ConcreteRequest = {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
+                "concreteType": "MultiFactor",
+                "kind": "LinkedField",
                 "name": "multiFactor",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "totp",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -166,7 +181,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "b88eee9a0c8e1f15046d8a893982bea2",
+    "id": "8e30dfd46ad67a5e8620e1341c669528",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",

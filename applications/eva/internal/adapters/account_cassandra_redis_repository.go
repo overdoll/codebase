@@ -68,7 +68,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
 		Language:           usr.Language().Locale(),
-		LockedReason:       usr.LockedReason(),
+		LockedReason:       usr.LockedReason().String(),
 		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
 }
@@ -260,7 +260,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	// do a rollback & deletion of the username if the email is already taken, just in case
 	if err := r.createUniqueAccountEmail(ctx, instance, instance.Email()); err != nil {
 
-		anotherErr := r.deleteAccountUsername(ctx, instance, instance.Username())
+		anotherErr := r.deleteAccountUsername(ctx, instance.ID(), instance.Username())
 
 		if anotherErr != nil {
 			return anotherErr
@@ -283,8 +283,8 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
 		// do a rollback if this batch statement fails
-		err1 := r.deleteAccountEmail(ctx, instance, instance.Email())
-		err2 := r.deleteAccountUsername(ctx, instance, instance.Username())
+		err1 := r.deleteAccountEmail(ctx, instance.ID(), instance.Email())
+		err2 := r.deleteAccountUsername(ctx, instance.ID(), instance.Username())
 
 		if err1 != nil {
 			return err1

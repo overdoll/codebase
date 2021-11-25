@@ -43,6 +43,13 @@ def go_repositories():
         sum = "h1:bvNMNQO63//z+xNgfBlViaCIJKLlCJ6/fmUseuG0wVQ=",
         version = "v0.0.0-20170406064948-c7f18ee00883",
     )
+    go_repository(
+        name = "com_github_andybalholm_cascadia",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/andybalholm/cascadia",
+        sum = "h1:nhxRkql1kdYCc8Snf7D5/D3spOX+dBgjA6u8x004T2c=",
+        version = "v1.3.1",
+    )
 
     go_repository(
         name = "com_github_arbovm_levenshtein",
@@ -1260,6 +1267,13 @@ def go_repositories():
         sum = "h1:NKxTG6GVGbfMXc2mIk+KphcH6hagbVXhcFkbTgYleTI=",
         version = "v0.0.0-20210214183328-a001468d78ef",
     )
+    go_repository(
+        name = "com_github_puerkitobio_goquery",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/PuerkitoBio/goquery",
+        sum = "h1:PJTF7AmFCFKk1N6V6jmKfrNH9tV5pNE6lZMkG0gta/U=",
+        version = "v1.8.0",
+    )
 
     go_repository(
         name = "com_github_robfig_cron",
@@ -1913,8 +1927,8 @@ def go_repositories():
         name = "org_golang_x_net",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/net",
-        sum = "h1:j2EK/QoxYNBsXI4R7fQkkRUk8y6wnOBI+6hgPdP/6Ds=",
-        version = "v0.0.0-20210716203947-853a461950ff",
+        sum = "h1:/6y1LfuqNuQdHAm0jjtPtgRcxIxjVZgm5OTu8/QhZvk=",
+        version = "v0.0.0-20210916014120-12bc252f5db8",
     )
     go_repository(
         name = "org_golang_x_oauth2",

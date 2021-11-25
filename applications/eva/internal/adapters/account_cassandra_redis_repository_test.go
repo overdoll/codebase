@@ -38,7 +38,7 @@ func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
 	usr, err := repo.GetAccountByEmail(ctx, "some-random-non-existent-email")
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, account.ErrAccountNotFound.Error())
+	assert.EqualError(t, err, account.ErrAccountNotFound.Error(), "should have been a not found error")
 }
 
 func TestUserRepository_GetUser_email_exists(t *testing.T) {
@@ -60,7 +60,7 @@ func TestUserRepository_GetUser_email_exists(t *testing.T) {
 	require.NoError(t, err)
 
 	// expect that we found our user
-	assert.Equal(t, findUser.ID(), usr.ID())
+	assert.Equal(t, findUser.ID(), usr.ID(), "found the account")
 }
 
 func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
@@ -84,7 +84,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the username isn't unique
-	assert.Equal(t, account.ErrUsernameNotUnique, err)
+	assert.Equal(t, account.ErrUsernameNotUnique, err, "errored out for a non unique username")
 }
 
 func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
@@ -110,7 +110,7 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the email isn't unique
-	assert.Equal(t, account.ErrEmailNotUnique, err)
+	assert.Equal(t, account.ErrEmailNotUnique, err, "errored out for a non unique email")
 }
 
 // A parallel execution that will run 20 instances of trying to create the same user, so we expect that only 1 will be created

@@ -117,9 +117,9 @@ class Resource {
  * @param {*} loader A method to load the resource's data if necessary
  * @param {*} hot a boolean which will force load it everytime
  */
-export default function JSResource (moduleId: string, loader: Loader, hot: boolean = false): Resource {
+export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
-  if (!CanUseDOM || hot) {
+  if (!CanUseDOM || module.hot) {
     return new Resource(loader, moduleId)
   }
 

@@ -59,5 +59,5 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 
 	lang = getLanguage(t, client)
 
-	require.Equal(t, pickedLanguage.Locale, lang.Locale)
+	require.Equal(t, pickedLanguage.Locale, lang.Locale, "language should be set")
 }

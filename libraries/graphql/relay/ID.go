@@ -66,6 +66,17 @@ func (i ID) GetTypeName() string {
 	return decode(i)[0]
 }
 
+func NewMustUnmarshalFromBase64(s string) ID {
+
+	sDec, err := base64.StdEncoding.DecodeString(s)
+
+	if err != nil {
+		return ID("")
+	}
+
+	return ID(sDec)
+}
+
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (i *ID) UnmarshalGQL(v interface{}) error {
 	id, ok := v.(string)

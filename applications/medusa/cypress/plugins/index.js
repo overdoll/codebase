@@ -26,8 +26,11 @@ module.exports = (on, config) => {
   // add other tasks to be registered here
 
   // copy any needed variables from process.env to config.env
-  config.env.TESTMAIL_API_KEY = process.env.CYPRESS_TESTMAIL_API_KEY
-  config.env.TESTMAIL_NAMESPACE = process.env.CYPRESS_TESTMAIL_NAMESPACE
+  config.env.TESTMAIL_API_KEY = process.env.TESTMAIL_API_KEY
+  config.env.TESTMAIL_NAMESPACE = process.env.TESTMAIL_NAMESPACE
+
+  config.env.CYPRESS_TESTMAIL_API_KEY = process.env.TESTMAIL_API_KEY
+  config.env.CYPRESS_TESTMAIL_NAMESPACE = process.env.TESTMAIL_NAMESPACE
 
   // IMPORTANT to return the config object
   // with the any changed environment variables

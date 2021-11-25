@@ -37,11 +37,11 @@ type AccountConnection {
 }
 
 enum AccountLockReason {
-  PostInfraction
+  POST_INFRACTION
 }
 
 type AccountLock {
-  expires: Int!
+  expires: Time!
   reason: AccountLockReason!
 }
 

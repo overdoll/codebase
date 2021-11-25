@@ -104,6 +104,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Series: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: seriesThumb,
+			Slug:      media.Slug(),
 			Title:     translations.MarshalTranslationToDatabase(media.Title()),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
