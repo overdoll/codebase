@@ -363,6 +363,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
 		"brandSlugs":     []graphql.String{"default_brand"},
 		"categorySlugs":  []graphql.String{},
 		"characterSlugs": []graphql.String{},
@@ -374,6 +375,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
 		"categorySlugs":  []graphql.String{"alter"},
 		"brandSlugs":     []graphql.String{},
 		"characterSlugs": []graphql.String{},
@@ -385,6 +387,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
 		"characterSlugs": []graphql.String{"aarush_hills"},
 		"categorySlugs":  []graphql.String{},
 		"brandSlugs":     []graphql.String{},
@@ -396,6 +399,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
 		"audienceSlugs":  []graphql.String{"standard_audience"},
 		"characterSlugs": []graphql.String{},
 		"categorySlugs":  []graphql.String{},
@@ -420,9 +424,9 @@ func TestCreatePost_Discard(t *testing.T) {
 	var newPostId string
 
 	createPost(t, client, env, func(postId string) func() {
+
 		return func() {
 			newPostId = postId
-
 			// setup another environment since we cant execute multiple workflows
 			newEnv := getWorkflowEnvironment(t)
 
