@@ -386,17 +386,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
 
-	//err = client.Query(context.Background(), &posts, map[string]interface{}{
-	//	"state":          types.PostStatePublished,
-	//	"characterSlugs": []graphql.String{"aarush_hills"},
-	//	"categorySlugs":  []graphql.String{},
-	//	"brandSlugs":     []graphql.String{},
-	//	"audienceSlugs":  []graphql.String{},
-	//	"seriesSlugs":    []graphql.String{},
-	//})
-	//
-	//require.NoError(t, err)
-	//require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"characterSlugs": []graphql.String{"aarush_hills"},
+		"categorySlugs":  []graphql.String{},
+		"brandSlugs":     []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,

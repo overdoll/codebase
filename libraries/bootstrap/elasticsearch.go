@@ -11,6 +11,7 @@ func InitializeElasticSearchSession() *elastic.Client {
 
 	client, err := elastic.NewClient(
 		elastic.SetURL(os.Getenv("ELASTICSEARCH_URL")),
+		// USEFUL FOR DEBUGGING QUERIES!
 		//elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
 		//elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),
 		//elastic.SetTraceLog(log.New(os.Stderr, "[[ELASTIC]]", 0)),

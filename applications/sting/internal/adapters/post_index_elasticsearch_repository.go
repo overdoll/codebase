@@ -244,33 +244,23 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	}
 
 	if len(filter.CategorySlugs()) > 0 {
-		for _, id := range filter.CategorySlugs() {
-			filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermQuery("categories.slug", id)))
-		}
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermsQueryFromStrings("categories.slug", filter.CategorySlugs()...)))
 	}
 
 	if len(filter.CharacterSlugs()) > 0 {
-		for _, id := range filter.CharacterSlugs() {
-			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermQuery("characters.slug", id)))
-		}
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermsQueryFromStrings("characters.slug", filter.CharacterSlugs()...)))
 	}
 
 	if len(filter.BrandSlugs()) > 0 {
-		for _, id := range filter.BrandSlugs() {
-			filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermQuery("brand.slug", id)))
-		}
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermsQueryFromStrings("brand.slug", filter.BrandSlugs()...)))
 	}
 
 	if len(filter.AudienceSlugs()) > 0 {
-		for _, id := range filter.AudienceSlugs() {
-			filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermQuery("audience.slug", id)))
-		}
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermsQueryFromStrings("audience.slug", filter.AudienceSlugs()...)))
 	}
 
 	if len(filter.SeriesSlugs()) > 0 {
-		for _, id := range filter.SeriesSlugs() {
-			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermQuery("characters.series.slug", id)))
-		}
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermsQueryFromStrings("characters.series.slug", filter.SeriesSlugs()...)))
 	}
 
 	// if orderby another column
