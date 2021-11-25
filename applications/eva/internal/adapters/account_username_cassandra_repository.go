@@ -50,7 +50,7 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 	// delete username
 	stmt, _ := usernameByAccount.Delete()
 
-	batch.Query(stmt, username, accountId)
+	batch.Query(stmt, accountId, username)
 
 	// delete from other table
 	stmt, _ = accountUsernameTable.Delete()
@@ -99,7 +99,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		return nil, nil, err
 	}
 
-	oldUsername := instance.Username()
+	//oldUsername := instance.Username()
 
 	err = updateFn(usernames, instance)
 
@@ -108,7 +108,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 	}
 
 	// if the username switch is a username that already belongs to the current user, then we dont do extra inserts
-	existingUsernameForAccount := instance.UsernameAlreadyBelongs(usernames, oldUsername)
+	existingUsernameForAccount := instance.UsernameAlreadyBelongs(usernames, instance.Username())
 
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
 	if existingUsernameForAccount == nil {
@@ -132,7 +132,9 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	if existingUsernameForAccount != nil {
+	// existingusername can't be an exact match or else this fails - cassandra will delete both records
+	// case-sensitive changes are allowed still
+	if existingUsernameForAccount != nil && existingUsernameForAccount.Username() != instance.Username() {
 		// remove old username from being case-sensitive
 		stmt, _ := usernameByAccount.Delete()
 		batch.Query(stmt, existingUsernameForAccount.AccountId(), existingUsernameForAccount.Username())

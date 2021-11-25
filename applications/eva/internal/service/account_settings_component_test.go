@@ -44,31 +44,6 @@ type AccountUsernameModified struct {
 	Username string
 }
 
-type AddAccountEmail struct {
-	AddAccountEmail struct {
-		AccountEmail *AccountEmailModified
-	} `graphql:"addAccountEmail(input: $input)"`
-}
-
-type ConfirmAccountEmail struct {
-	ConfirmAccountEmail struct {
-		AccountEmail *AccountEmailModified
-	} `graphql:"confirmAccountEmail(input: $input)"`
-}
-
-type DeleteAccountEmail struct {
-	DeleteAccountEmail struct {
-		AccountEmailID relay.ID
-	} `graphql:"deleteAccountEmail(input: $input)"`
-}
-
-type UpdateAccountEmailStatusToPrimary struct {
-	UpdateAccountEmailStatusToPrimary struct {
-		PrimaryAccountEmail *AccountEmailModified
-		UpdatedAccountEmail *AccountEmailModified
-	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
-}
-
 type ViewerAccountEmailUsernameSettings struct {
 	Viewer struct {
 		Username    string
@@ -95,39 +70,29 @@ func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) Vi
 	return settings
 }
 
-func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) AddAccountEmail {
-	var addAccountEmail AddAccountEmail
-
-	// add an email to our account
-	err := client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err, "no error for adding account email")
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail, "account email should be available")
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail, "emails should match")
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed, "email should be unconfirmed")
-
-	return addAccountEmail
+type AddAccountEmail struct {
+	AddAccountEmail struct {
+		AccountEmail *AccountEmailModified
+	} `graphql:"addAccountEmail(input: $input)"`
 }
 
-func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) ConfirmAccountEmail {
-	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmationTokenFromEmail(t, email)
+type ConfirmAccountEmail struct {
+	ConfirmAccountEmail struct {
+		AccountEmail *AccountEmailModified
+	} `graphql:"confirmAccountEmail(input: $input)"`
+}
 
-	require.NotEmpty(t, confirmationKey)
+type DeleteAccountEmail struct {
+	DeleteAccountEmail struct {
+		AccountEmailID relay.ID
+	} `graphql:"deleteAccountEmail(input: $input)"`
+}
 
-	var confirmAccountEmail ConfirmAccountEmail
-
-	// confirm the account's new email
-	err := client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
-	})
-
-	require.NoError(t, err, "no error for confirming account")
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail, "email should be available")
-
-	return confirmAccountEmail
+type UpdateAccountEmailStatusToPrimary struct {
+	UpdateAccountEmailStatusToPrimary struct {
+		PrimaryAccountEmail *AccountEmailModified
+		UpdatedAccountEmail *AccountEmailModified
+	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
 }
 
 // Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
@@ -147,9 +112,32 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	addAccountEmail(t, client, targetEmail)
+	var addAccountEmail AddAccountEmail
 
-	confirmAccountEmail := confirmAccountEmail(t, client, targetEmail)
+	// add an email to our account
+	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"input": types.AddAccountEmailInput{Email: targetEmail},
+	})
+
+	require.NoError(t, err, "no error for adding account email")
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail, "account email should be available")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail, "emails should match")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed, "email should be unconfirmed")
+
+	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
+	confirmationKey := getEmailConfirmationTokenFromEmail(t, targetEmail)
+
+	require.NotEmpty(t, confirmationKey)
+
+	var confirmAccountEmail ConfirmAccountEmail
+
+	// confirm the account's new email
+	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
+	})
+
+	require.NoError(t, err, "no error for confirming account")
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail, "email should be available")
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
@@ -189,6 +177,38 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	}
 
 	require.True(t, foundPrimaryEmail, "should have found an email that is primary")
+
+	// set old email as primary
+	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
+		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: "QWNjb3VudEVtYWlsOjFwY0tpYlJvcVRBVWdtT2lOcEdMSXJ6dE05UjppMmZoei50ZXN0LWFjY291bnRAaW5ib3gudGVzdG1haWwuYXBw"},
+	})
+
+	require.NoError(t, err, "no error for updating status to primary")
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail, "email is available")
+
+	// remove old email from account
+	var removeAccountEmail DeleteAccountEmail
+
+	// remove the email from the account
+	err = client.Mutate(context.Background(), &removeAccountEmail, map[string]interface{}{
+		"input": types.DeleteAccountEmailInput{AccountEmailID: addAccountEmail.AddAccountEmail.AccountEmail.ID},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, removeAccountEmail.DeleteAccountEmail.AccountEmailID)
+
+	settings = viewerAccountEmailUsernameSettings(t, client)
+
+	foundNewEmail := false
+
+	// go through account settings and make sure email is not found
+	for _, email := range settings.Viewer.Emails.Edges {
+		if email.Node.Email == targetEmail {
+			foundNewEmail = true
+		}
+	}
+
+	require.False(t, foundNewEmail, "should not have found an email as part of the viewer's emails")
 }
 
 func TestAccountEmailAndUsernameLimit(t *testing.T) {
@@ -203,51 +223,6 @@ func TestAccountEmailAndUsernameLimit(t *testing.T) {
 
 	require.Equal(t, settings.Viewer.EmailsLimit, 5, "should show an emails limit")
 	require.Equal(t, settings.Viewer.UsernamesLimit, 5, "should show a usernames limit")
-}
-
-// adds an email
-func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
-	t.Parallel()
-
-	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
-
-	// use passport with user
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
-
-	fake := TestUser{}
-
-	err := faker.FakeData(&fake)
-
-	require.NoError(t, err)
-
-	targetEmail := strings.ToLower(fake.Email)
-
-	addAccountEmail := addAccountEmail(t, client, targetEmail)
-
-	confirmAccountEmail(t, client, targetEmail)
-
-	var removeAccountEmail DeleteAccountEmail
-
-	// remove the email from the account
-	err = client.Mutate(context.Background(), &removeAccountEmail, map[string]interface{}{
-		"input": types.DeleteAccountEmailInput{AccountEmailID: addAccountEmail.AddAccountEmail.AccountEmail.ID},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, removeAccountEmail.DeleteAccountEmail.AccountEmailID)
-
-	settings := viewerAccountEmailUsernameSettings(t, client)
-
-	foundNewEmail := false
-
-	// go through account settings and make sure email is not found
-	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail {
-			foundNewEmail = true
-		}
-	}
-
-	require.False(t, foundNewEmail, "should have found an email as part of the viewer's emails")
 }
 
 type UpdateAccountUsernameAndRetainPrevious struct {
@@ -338,7 +313,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	var foundUsernameOld *AccountUsernameModified
 
-	// go through the account's usernames and make sure the username exists here
+	// make sure old username is gone
 	for _, username := range settings.Viewer.Usernames.Edges {
 		if username.Node.Username == foundUsername.Username {
 			foundUsernameOld = username.Node

@@ -65,7 +65,7 @@ func (r AccountRepository) deleteAccountEmail(ctx context.Context, accountId, em
 	// delete username
 	stmt, _ := emailByAccountTable.Delete()
 
-	batch.Query(stmt, email, accountId)
+	batch.Query(stmt, accountId, email)
 
 	// delete from other table
 	stmt, _ = accountEmailTable.Delete()
