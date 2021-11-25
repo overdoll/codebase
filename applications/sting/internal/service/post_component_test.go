@@ -317,7 +317,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStatePublished, post.Post.State)
 	cont := post.Post.Content[0]
 	split := strings.Split(cont.ID, "/")
-	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+post.Post.Reference+"/"+split[len(split)-1]+".webp", cont.Urls[0].URL)
+	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+post.Post.Reference+"/"+split[len(split)-1]+".webp", string(cont.Urls[0].URL))
 
 	// refresh index
 	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
