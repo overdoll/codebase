@@ -351,7 +351,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var posts Posts
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          graphql.String(types.PostStatePublished),
+		"state":          types.PostStatePublished,
 		"brandSlugs":     []graphql.String{},
 		"categorySlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
@@ -360,7 +360,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"brandSlugs":     []graphql.String{"default_brand"},
@@ -371,7 +371,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"categorySlugs":  []graphql.String{"alter"},
@@ -382,7 +382,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"characterSlugs": []graphql.String{"aarush_hills"},
@@ -393,7 +393,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"audienceSlugs":  []graphql.String{"standard_audience"},
@@ -404,7 +404,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, posts.Posts.Edges, 1)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1)
 }
 
 // Test_CreatePost_Discard - discard post
