@@ -33,8 +33,7 @@ const routes: Array<Route> = [
     component: JSResource('Root', () =>
       import(
         /* webpackChunkName: "Root" */ './domain/Root/Root'
-      ),
-    module.hot
+      )
     ),
     prepare: params => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
@@ -55,12 +54,14 @@ const routes: Array<Route> = [
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './domain/Join/JoinRoot'
-          ),
-        module.hot
+          )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
@@ -90,12 +91,14 @@ const routes: Array<Route> = [
         component: JSResource('TokenRoot', () =>
           import(
             /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
-          ),
-        module.hot
+          )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
@@ -125,12 +128,14 @@ const routes: Array<Route> = [
         component: JSResource('ConfirmationRoot', () =>
           import(
             /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
-          ),
-        module.hot
+          )
         ),
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.cannot('manage', 'account')) {
@@ -148,8 +153,7 @@ const routes: Array<Route> = [
         component: JSResource('HomeRoot', () =>
           import(
             /* webpackChunkName: "HomeRoot" */ './domain/Home/Home'
-          ),
-        module.hot
+          )
         )
       },
       {
@@ -157,12 +161,14 @@ const routes: Array<Route> = [
         component: JSResource('ModRoot', () =>
           import(
             /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
-          ),
-        module.hot
+          )
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('read', 'pendingPosts')) {
@@ -178,8 +184,7 @@ const routes: Array<Route> = [
             component: JSResource('ModQueueRoot', () =>
               import(
                 /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/Queue/Queue'
-              ),
-            module.hot
+              )
             ),
             prepare: params => {
               const PostsQuery = require('@//:artifacts/PostsQuery.graphql')
@@ -199,8 +204,7 @@ const routes: Array<Route> = [
             component: JSResource('ModHistoryRoot', () =>
               import(
                 /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/History/History'
-              ),
-            module.hot
+              )
             ),
             prepare: params => {
               const AuditLogsQuery = require('@//:artifacts/AuditLogsQuery.graphql')
@@ -226,7 +230,10 @@ const routes: Array<Route> = [
         module.hot
         ),
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'posting')) {
@@ -275,12 +282,14 @@ const routes: Array<Route> = [
         component: JSResource('SettingsRoot', () =>
           import(
             /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
-          ),
-        module.hot
+          )
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
@@ -296,8 +305,7 @@ const routes: Array<Route> = [
             component: JSResource('SettingsProfileRoot', () =>
               import(
                 /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/Profile/Profile'
-              ),
-            module.hot
+              )
             ),
             prepare: params => {
               const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
@@ -326,8 +334,7 @@ const routes: Array<Route> = [
             component: JSResource('SettingsSecurityRoot', () =>
               import(
                 /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
-              ),
-            module.hot
+              )
             ),
             prepare: params => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
@@ -357,8 +364,7 @@ const routes: Array<Route> = [
             component: JSResource('SettingsModerationRoot', () =>
               import(
                 /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/Moderation/Moderation'
-              ),
-            module.hot
+              )
             ),
             middleware: [
               ({ environment }) => {
@@ -391,8 +397,7 @@ const routes: Array<Route> = [
         component: JSResource('TotpSetup', () =>
           import(
             /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
-          ),
-        module.hot
+          )
         ),
         prepare: params => {
           const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
@@ -408,7 +413,10 @@ const routes: Array<Route> = [
           }
         },
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
@@ -424,8 +432,7 @@ const routes: Array<Route> = [
         component: JSResource('TotpSetup', () =>
           import(
             /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
-          ),
-        module.hot
+          )
         ),
         prepare: params => {
           const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
@@ -441,7 +448,10 @@ const routes: Array<Route> = [
           }
         },
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
@@ -518,8 +528,7 @@ const routes: Array<Route> = [
         component: JSResource('Empty', () =>
           import(
             /* webpackChunkName: "Empty" */ './domain/Error/NotFound/NotFound'
-          ),
-        module.hot
+          )
         )
       }
     ]

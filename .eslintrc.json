@@ -1,19 +1,39 @@
 {
+  "overrides": [
+    {
+      "extends": [
+        "plugin:cypress/recommended"
+      ],
+      "plugins": [
+        "cypress"
+      ],
+      "files": [
+        "applications/medusa/cypress/**/*.js"
+      ]
+    },
+    {
+      "extends": [
+        "plugin:jest/recommended"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "files": [
+        "applications/medusa/src/**/*.js"
+      ]
+    }
+  ],
   "extends": [
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:cypress/recommended",
     "standard",
     "standard-jsx"
   ],
   "plugins": [
     "flowtype",
     "relay",
-    "jest",
-    "testing-library",
-    "cypress"
+    "testing-library"
   ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
@@ -48,24 +68,7 @@
   "env": {
     "browser": true,
     "node": true,
-    "es6": true
-  },
-  "overrides": [
-    {
-      "plugins": [
-        "cypress"
-      ],
-      "files": [
-        "./applications/medusa/cypress/**/*.js"
-      ]
-    },
-    {
-      "plugins": [
-        "jest"
-      ],
-      "files": [
-        "./applications/medusa/src/**/*.js"
-      ]
-    }
-  ]
+    "es6": true,
+    "cypress/globals": true
+  }
 }

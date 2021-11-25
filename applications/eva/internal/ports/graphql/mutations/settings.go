@@ -3,7 +3,6 @@ package mutations
 import (
 	"context"
 	"net/http"
-
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
@@ -167,6 +166,13 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 	})
 
 	if err != nil {
+
+		// TODO: detect invalid email??
+		//if err == validation.ErrInvalidEmail {
+		//	invalid := types.AddAccountEmailValidationInvalidEmail
+		//	return &types.AddAccountEmailPayload{Validation: &invalid}, nil
+		//}
+
 		return nil, err
 	}
 
@@ -187,6 +193,22 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 	}
 
 	return &types.DeleteAccountEmailPayload{AccountEmailID: input.AccountEmailID}, nil
+}
+
+func (r *MutationResolver) DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.DeleteAccountUsername.Handle(ctx, command.DeleteAccountUsername{
+		Principal: principal.FromContext(ctx),
+		Username:  input.AccountUsernameID.GetID(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.DeleteAccountUsernamePayload{AccountUsernameID: input.AccountUsernameID}, nil
 }
 
 func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error) {
@@ -221,6 +243,7 @@ func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types
 
 	if err := r.App.Commands.RevokeAccountSession.Handle(ctx, command.RevokeAccountSession{
 		Principal: principal.FromContext(ctx),
+		Passport:  passport.FromContext(ctx),
 		SessionId: input.AccountSessionID.GetID(),
 	}); err != nil {
 		return nil, err
@@ -268,13 +291,9 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 		return nil, err
 	}
 
-	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
-
-	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
-	}
-
-	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{AccountMultiFactorRecoveryCodes: recoveryCodes}, nil
+	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{
+		AccountMultiFactorRecoveryCodes: types.MarshalRecoveryCodesToGraphql(ctx, codes),
+	}, nil
 }
 
 func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error) {

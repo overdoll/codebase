@@ -1745,16 +1745,16 @@ extend type Post {
 }
 
 enum PostState {
-  Draft
-  Publishing
-  Review
-  Published
-  Discarding
-  Discarded
-  Rejected
-  Processing
-  Removing
-  Removed
+  DRAFT
+  PUBLISHING
+  REVIEW
+  PUBLISHED
+  DISCARDING
+  DISCARDED
+  REJECTED
+  PROCESSING
+  REMOVING
+  REMOVED
 }
 
 """Update post brand."""
@@ -1906,7 +1906,7 @@ extend type Account {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Review
+    state: PostState = REVIEW
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -1942,7 +1942,7 @@ extend type Account {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2023,7 +2023,7 @@ extend type Query {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2058,7 +2058,7 @@ extend type Category {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2090,7 +2090,7 @@ extend type Character {
     categorySlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2125,7 +2125,7 @@ extend type Series {
     characterSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2160,7 +2160,7 @@ extend type Brand {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
@@ -2195,12 +2195,13 @@ extend type Audience {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `"""Identifies the type of resource"""
 enum ResourceType {
   IMAGE

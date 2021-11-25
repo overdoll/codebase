@@ -4,7 +4,10 @@ const expo = {
   reporters: ['default'],
   collectCoverage: true,
   coverageReporters: [
-    ['lcovonly', { file: 'coverage.dat', projectRoot: '../../' }]
+    ['lcovonly', {
+      file: 'coverage.dat',
+      projectRoot: '../../'
+    }]
   ],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',

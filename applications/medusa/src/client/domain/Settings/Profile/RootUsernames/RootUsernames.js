@@ -33,7 +33,10 @@ export default function RootUsernames (props: Props): Node {
       </PageSectionWrap>
       <Suspense fallback={<SkeletonStack />}>
         <ErrorBoundary
-          fallback={({ error, reset }) => (
+          fallback={({
+            error,
+            reset
+          }) => (
             <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
           )}
         >

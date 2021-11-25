@@ -8,6 +8,7 @@ import (
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
+	"time"
 )
 
 type Account struct {
@@ -25,8 +26,19 @@ type Account struct {
 	IsModerator bool `json:"isModerator"`
 	// The details of the account lock
 	Lock *AccountLock `json:"lock"`
+	// The language of the account.
+	//
+	// Note: this is the language that will be used to determine which emails should be sent where.
+	//
+	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
+	Language *Language `json:"language"`
+	// Maximum amount of usernames that this account can create
+	UsernamesLimit int `json:"usernamesLimit"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
+	// Maximum amount of emails that this account can create
+	EmailsLimit int `json:"emailsLimit"`
 	// Emails for account (multiple emails per account)
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -69,6 +81,8 @@ type AccountEmail struct {
 	// The current status of the account email
 	Status AccountEmailStatus `json:"status"`
 	// The account that this email belongs to
+	//
+	// May be null because unconfirmed emails are not yet actually attached to the account
 	Account *Account `json:"account"`
 }
 
@@ -88,7 +102,7 @@ type AccountEmailEdge struct {
 }
 
 type AccountLock struct {
-	Expires int               `json:"expires"`
+	Expires time.Time         `json:"expires"`
 	Reason  AccountLockReason `json:"reason"`
 }
 
@@ -173,6 +187,8 @@ type AddAccountEmailInput struct {
 type AddAccountEmailPayload struct {
 	// The account email that was added to
 	AccountEmail *AccountEmail `json:"accountEmail"`
+	// Any validation errors from the backend
+	Validation *AddAccountEmailValidation `json:"validation"`
 }
 
 // Input to assign account to a moderator role
@@ -199,20 +215,34 @@ type AssignAccountStaffRolePayload struct {
 	Account *Account `json:"account"`
 }
 
+// Authentication token. Used for logging in.
 type AuthenticationToken struct {
-	ID            relay.ID                          `json:"id"`
-	SameSession   bool                              `json:"sameSession"`
-	Verified      bool                              `json:"verified"`
-	Secure        bool                              `json:"secure"`
-	Device        string                            `json:"device"`
-	Location      string                            `json:"location"`
-	Email         string                            `json:"email"`
+	// Unique ID of the token
+	ID relay.ID `json:"id"`
+	// Whether or not the token belongs to the same session as it was created in
+	SameSession bool `json:"sameSession"`
+	// Whether or not the token is verified
+	Verified bool `json:"verified"`
+	// Whether or not this token is "secure"
+	// Secure means that the token has been viewed from the same network as originally created
+	// if it wasn't viewed in the same network, the interface should take care and double-check with
+	// the user that they want to verify the token.
+	Secure bool `json:"secure"`
+	// The device this token was created from.
+	Device string `json:"device"`
+	// The location where this token was created at.
+	Location string `json:"location"`
+	// The email that belongs to this token.
+	Email string `json:"email"`
+	// Once the token is verified, you can see the status of the account
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
 }
 
 type AuthenticationTokenAccountStatus struct {
-	Registered  bool              `json:"registered"`
-	MultiFactor []MultiFactorType `json:"multiFactor"`
+	// When verified, whether or not there is an account belonging to this token.
+	Registered bool `json:"registered"`
+	// If multi-factor is enabled for this account
+	MultiFactor *MultiFactor `json:"multiFactor"`
 }
 
 // Input for confirming the account email
@@ -252,6 +282,18 @@ type DeleteAccountEmailInput struct {
 type DeleteAccountEmailPayload struct {
 	// The ID of the account email that was removed
 	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Input for removing an email from an account
+type DeleteAccountUsernameInput struct {
+	// The username that should be removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
+}
+
+// Username to delete from account
+type DeleteAccountUsernamePayload struct {
+	// The ID of the account username that was removed
+	AccountUsernameID relay.ID `json:"accountUsernameId"`
 }
 
 // Payload for disabling account multi factor
@@ -328,6 +370,8 @@ type GrantAuthenticationTokenInput struct {
 type GrantAuthenticationTokenPayload struct {
 	// The authentication token after starting
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
+	// Validation for granting an authentication token
+	Validation *GrantAuthenticationTokenValidation `json:"validation"`
 }
 
 type Language struct {
@@ -341,6 +385,11 @@ type Moderator struct {
 }
 
 func (Moderator) IsEntity() {}
+
+// Types of multi factor enabled for this account
+type MultiFactor struct {
+	Totp bool `json:"totp"`
+}
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {
@@ -439,6 +488,20 @@ type UpdateAccountEmailStatusToPrimaryPayload struct {
 	UpdatedAccountEmail *AccountEmail `json:"updatedAccountEmail"`
 }
 
+// Input for updating the account language
+type UpdateAccountLanguageInput struct {
+	// The locale to update the language to
+	Locale string `json:"locale"`
+}
+
+// Payload of the account language update
+type UpdateAccountLanguagePayload struct {
+	// The new language that is now set
+	Language *Language `json:"language"`
+	// The account that has the updated language
+	Account *Account `json:"Account"`
+}
+
 // Input for updating an account's username
 type UpdateAccountUsernameAndRetainPreviousInput struct {
 	// The username that the account should be updated to
@@ -524,7 +587,7 @@ func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
 type AccountLockReason string
 
 const (
-	AccountLockReasonPostInfraction AccountLockReason = "PostInfraction"
+	AccountLockReasonPostInfraction AccountLockReason = "POST_INFRACTION"
 )
 
 var AllAccountLockReason = []AccountLockReason{
@@ -557,6 +620,46 @@ func (e *AccountLockReason) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountLockReason) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation message for adding account email
+type AddAccountEmailValidation string
+
+const (
+	AddAccountEmailValidationInvalidEmail AddAccountEmailValidation = "INVALID_EMAIL"
+)
+
+var AllAddAccountEmailValidation = []AddAccountEmailValidation{
+	AddAccountEmailValidationInvalidEmail,
+}
+
+func (e AddAccountEmailValidation) IsValid() bool {
+	switch e {
+	case AddAccountEmailValidationInvalidEmail:
+		return true
+	}
+	return false
+}
+
+func (e AddAccountEmailValidation) String() string {
+	return string(e)
+}
+
+func (e *AddAccountEmailValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AddAccountEmailValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AddAccountEmailValidation", str)
+	}
+	return nil
+}
+
+func (e AddAccountEmailValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -809,42 +912,43 @@ func (e GrantAccountAccessWithAuthenticationTokenValidation) MarshalGQL(w io.Wri
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type MultiFactorType string
+// Validation for granting an authentication token
+type GrantAuthenticationTokenValidation string
 
 const (
-	MultiFactorTypeTotp MultiFactorType = "TOTP"
+	GrantAuthenticationTokenValidationInvalidEmail GrantAuthenticationTokenValidation = "INVALID_EMAIL"
 )
 
-var AllMultiFactorType = []MultiFactorType{
-	MultiFactorTypeTotp,
+var AllGrantAuthenticationTokenValidation = []GrantAuthenticationTokenValidation{
+	GrantAuthenticationTokenValidationInvalidEmail,
 }
 
-func (e MultiFactorType) IsValid() bool {
+func (e GrantAuthenticationTokenValidation) IsValid() bool {
 	switch e {
-	case MultiFactorTypeTotp:
+	case GrantAuthenticationTokenValidationInvalidEmail:
 		return true
 	}
 	return false
 }
 
-func (e MultiFactorType) String() string {
+func (e GrantAuthenticationTokenValidation) String() string {
 	return string(e)
 }
 
-func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
+func (e *GrantAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = MultiFactorType(str)
+	*e = GrantAuthenticationTokenValidation(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid MultiFactorType", str)
+		return fmt.Errorf("%s is not a valid GrantAuthenticationTokenValidation", str)
 	}
 	return nil
 }
 
-func (e MultiFactorType) MarshalGQL(w io.Writer) {
+func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

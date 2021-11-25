@@ -15,8 +15,12 @@ type AccountEmail implements Node @key(fields: "id") {
   """The current status of the account email"""
   status: AccountEmailStatus!
 
-  """The account that this email belongs to"""
-  account: Account! @goField(forceResolver: true)
+  """
+  The account that this email belongs to
+
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account @goField(forceResolver: true)
 }
 
 """Edge of the account email"""
@@ -125,6 +129,12 @@ type AccountMultiFactorSettings {
 }
 
 extend type Account {
+
+  """
+  Maximum amount of usernames that this account can create
+  """
+  usernamesLimit: Int! @goField(forceResolver: true)
+
   """
   Usernames for account (history)
   """
@@ -143,6 +153,11 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountUsernameConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of emails that this account can create
+  """
+  emailsLimit: Int! @goField(forceResolver: true)
 
   """
   Emails for account (multiple emails per account)
@@ -217,6 +232,14 @@ input DeleteAccountEmailInput {
   accountEmailId: ID!
 }
 
+"""Input for removing an email from an account"""
+input DeleteAccountUsernameInput {
+  """
+  The username that should be removed
+  """
+  accountUsernameId: ID!
+}
+
 """Input for updating an account's username"""
 input UpdateAccountUsernameAndRetainPreviousInput {
   """
@@ -262,12 +285,26 @@ input ConfirmAccountEmailInput {
 type AddAccountEmailPayload {
   """The account email that was added to"""
   accountEmail: AccountEmail
+
+  """Any validation errors from the backend"""
+  validation: AddAccountEmailValidation
+}
+
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  INVALID_EMAIL
 }
 
 """Email to add the account"""
 type DeleteAccountEmailPayload {
   """The ID of the account email that was removed"""
   accountEmailId: ID!
+}
+
+"""Username to delete from account"""
+type DeleteAccountUsernamePayload {
+  """The ID of the account username that was removed"""
+  accountUsernameId: ID!
 }
 
 """Validation message for updating account username"""
@@ -356,6 +393,12 @@ extend type Mutation {
   Delete account email - email must belong to account and cannot be the primary email
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
+
+
+  """
+  Delete account username - cannot be the current username
+  """
+  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
 
   """
   Update the account username

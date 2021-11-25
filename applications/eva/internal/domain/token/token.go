@@ -2,6 +2,7 @@ package token
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"overdoll/applications/eva/internal/domain/account"
@@ -27,7 +28,7 @@ type AuthenticationToken struct {
 	registered bool
 }
 
-var (
+const (
 	OTPKey = "otp-key"
 )
 
@@ -41,7 +42,7 @@ func NewAuthenticationToken(id, email, device, location, ip string) (*Authentica
 	ck := &AuthenticationToken{
 		cookie:     id,
 		expiration: time.Minute * 15,
-		email:      email,
+		email:      strings.ToLower(email),
 		verified:   false,
 		device:     device,
 		location:   location,

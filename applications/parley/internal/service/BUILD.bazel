@@ -37,7 +37,7 @@ go_test(
         "//libraries/config",
         "//libraries/graphql/relay",
         "//libraries/passport",
-        "//libraries/tests",
+        "//libraries/testing_tools",
         "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",

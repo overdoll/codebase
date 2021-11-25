@@ -15,6 +15,10 @@ const (
 	key = "LanguageContextKey"
 )
 
+func addLanguageToRequest(c *gin.Context, language *Language) *http.Request {
+	return c.Request.WithContext(context.WithValue(c.Request.Context(), languageContextType(key), language))
+}
+
 func FromContext(ctx context.Context) *Language {
 	raw := ctx.Value(languageContextType(key))
 
@@ -25,8 +29,8 @@ func FromContext(ctx context.Context) *Language {
 	return nil
 }
 
-// CookieToContext - parse the language cookie and determine the language
-func CookieToContext(c *gin.Context) *http.Request {
+// LanguageToContext - parse the language cookie and determine the language
+func LanguageToContext(c *gin.Context) *http.Request {
 
 	ck, err := cookies.ReadCookie(c.Request.Context(), cookie)
 
@@ -36,11 +40,22 @@ func CookieToContext(c *gin.Context) *http.Request {
 		acceptedValue = ck.Value
 	}
 
-	accept := c.Request.Header.Get("Accept-Language")
-
 	// cookie available, match language
-	tag, _ := language.MatchStrings(matcher, acceptedValue, accept)
+	tag, _ := language.MatchStrings(matcher, acceptedValue)
 
-	ctx := context.WithValue(c.Request.Context(), languageContextType(key), &Language{tag: tag})
-	return c.Request.WithContext(ctx)
+	return addLanguageToRequest(c, &Language{tag: tag})
+}
+
+func MutateLanguageLocaleContext(ctx context.Context, p *Language, locale string) error {
+
+	err := p.SetLocale(locale)
+
+	if err != nil {
+		return err
+	}
+
+	return cookies.SetCookie(ctx, &http.Cookie{
+		Name:  cookie,
+		Value: p.Locale(),
+	})
 }

@@ -250,7 +250,7 @@ func (r *Resource) FullUrls() []*Url {
 			extension = formats[0]
 		}
 
-		domain := os.Getenv("APP_URL")
+		domain := os.Getenv("APP_URL") + "/api/uploads/"
 
 		if r.processed {
 			domain = os.Getenv("STATIC_URL")
@@ -284,7 +284,7 @@ func UnmarshalResourceFromDatabase(resource string) *Resource {
 	}
 }
 
-// usually we don't include marshalling functions inside of the domain (since the adapter layer should be handling this)
+// MarshalResourceToDatabase usually we don't include marshalling functions inside of the domain (since the adapter layer should be handling this)
 // but we want consistent formats that can be parsed easily across adapters so we include one. However, database adapters are free to not use this function -
 // it's simply a helper
 func (r *Resource) MarshalResourceToDatabase() (string, error) {

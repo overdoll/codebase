@@ -2,7 +2,6 @@ package entities
 
 import (
 	"context"
-
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/ports/graphql/dataloader"
@@ -59,16 +58,17 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 		return nil, err
 	}
 
-	session, err := r.App.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
+	sess, err := r.App.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
 		Principal: principal.FromContext(ctx),
 		SessionId: id.GetID(),
+		Passport:  passport.FromContext(ctx),
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountSessionToGraphQL(session), nil
+	return types.MarshalAccountSessionToGraphQL(sess), nil
 }
 
 func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {

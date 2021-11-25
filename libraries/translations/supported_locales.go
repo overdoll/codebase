@@ -4,6 +4,8 @@ import (
 	"golang.org/x/text/language"
 )
 
+var defaultLanguage = language.AmericanEnglish
+
 var tags = []language.Tag{
 	language.AmericanEnglish,
 	language.Spanish,

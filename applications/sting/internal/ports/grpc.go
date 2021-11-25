@@ -26,7 +26,7 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 
 func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {
 
-	post, err := s.app.Queries.PostById.Handle(ctx, query.PostById{
+	post, err := s.app.Queries.PostByIdOperator.Handle(ctx, query.PostById{
 		Id: request.Id,
 	})
 
@@ -37,7 +37,7 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 	var moderatorId string
 
 	if post.ModeratorId() != nil {
-		moderatorId = ""
+		moderatorId = *post.ModeratorId()
 	}
 
 	return &sting.Post{

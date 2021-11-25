@@ -21,7 +21,7 @@ type RevokeAccountAccess struct {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation RevokeAccountAccess
 
@@ -41,11 +41,11 @@ func TestLogout_user(t *testing.T) {
 func TestAccountAuthenticate_existing(t *testing.T) {
 	t.Parallel()
 
-	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.poisonminion@inbox.testmail.app")
+	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.artist_unverified@inbox.testmail.app")
 
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
-	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered, "should be registered")
 
 	// we need to now grant account access after verifying the token
 	grant := grantAccountAccessWithAuthenticationToken(t, client)
@@ -57,31 +57,31 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
 	// that the user is logged into the correct one
 	require.NoError(t, modified.Authenticated())
-	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
+	require.Equal(t, "1q7MIqqnkzew33q4elXuN1Ri27d", modified.AccountID(), "account ids should be equal")
 }
 
 // TestAccountAuthenticate_from_another_session - we login, but redeem our cookie from another "session"
 func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
+	client, _ := getHttpClient(t, passport.FreshPassport())
 
-	authenticate := grantAuthenticationToken(t, client, "i2fhz.poisonminion@inbox.testmail.app")
+	email := "i2fhz.poisonminion@inbox.testmail.app"
 
-	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
+	authenticate := grantAuthenticationToken(t, client, email)
+
+	authToken := getAuthTokenFromEmail(t, email)
 
 	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
 
-	clientFromAnotherSession, _, _ := getHttpClient(t, passport.FreshPassport())
+	clientFromAnotherSession, _ := getHttpClient(t, passport.FreshPassport())
 
-	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, authToken)
 
-	// should have indicated that it was redeemed by another session
-	require.Equal(t, false, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession)
+	require.Equal(t, false, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession, "should have indicated that it was redeemed by another session")
 
-	// after verifying the token, we need  to grant account access
 	grant := grantAccountAccessWithAuthenticationToken(t, client)
-	require.Equal(t, "poisonminion", grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
+	require.Equal(t, "poisonminion", grant.GrantAccountAccessWithAuthenticationToken.Account.Username, "username is correct")
 
 	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
@@ -89,7 +89,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	require.Equal(t, "poisonminion", settings.Viewer.Username)
+	require.Equal(t, "poisonminion", settings.Viewer.Username, "should be the correct account")
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
@@ -152,7 +152,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	testAccountEmail := "i2fhz.artist_verified@inbox.testmail.app"
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	var generateAccountRecoveryCodes GenerateAccountMultiFactorRecoveryCodes
 
@@ -161,12 +161,12 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.NoError(t, err)
 
 	// make sure recovery codes are at least greater
-	require.Greater(t, len(generateAccountRecoveryCodes.GenerateAccountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes), 0)
+	require.Greater(t, len(generateAccountRecoveryCodes.GenerateAccountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes), 0, "contains more than 0 recovery codes")
 
 	// get settings
 	settings := viewerAccountSettings(t, client)
 
-	require.True(t, settings.Viewer.MultiFactorSettings.RecoveryCodesGenerated)
+	require.True(t, settings.Viewer.MultiFactorSettings.RecoveryCodesGenerated, "recovery codes indicated as generated")
 
 	// ensure recovery code set is the same as the one we generated
 	for _, code := range settings.Viewer.RecoveryCodes {
@@ -180,7 +180,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 			}
 		}
 
-		require.True(t, foundCode)
+		require.True(t, foundCode, "code is found")
 	}
 
 	var generateAccountMultiFactorTOTP GenerateAccountMultiFactorTotp
@@ -189,7 +189,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	err = client.Mutate(context.Background(), &generateAccountMultiFactorTOTP, nil)
 	require.NoError(t, err)
 
-	require.NotEmpty(t, generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTotp.MultiFactorTotp.ImageSrc)
+	require.NotEmpty(t, generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTotp.MultiFactorTotp.ImageSrc, "image should be available")
 
 	// save for later (logging in)
 	totpSecret := generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTotp.MultiFactorTotp.Secret
@@ -197,7 +197,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// generate a TOTP code (usually, this would happen from a user's authenticator app or something else that does TOTP
 	// so we use a library here to do exactly that)
 	otp, err := totp.GenerateCode(totpSecret, time.Now())
-	require.NoError(t, err)
+	require.NoError(t, err, "code generation worked")
 
 	var enrollAccountMultiFactorTOTP EnrollAccountMultiFactorTotp
 
@@ -207,22 +207,22 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTotpEnabled)
+	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTotpEnabled, "TOTP is enabled")
 
 	// get new settings
 	settings = viewerAccountSettings(t, client)
 
 	// look up settings and ensure MFA is now enabled
-	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled)
+	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled, "multi factor enabled")
 	// totp should be configured (since this is what we set up)
-	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured)
+	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured, "multi factor is configured")
 
 	// log in with TOTP
 	redeemCookie, client, pass := authenticateAndVerifyToken(t, testAccountEmail)
 
 	require.NotNil(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken)
 	// when we try to login, TOTP should be in here to tell the user that they need to authenticate with MFA
-	require.Contains(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor, types.MultiFactorTypeTotp)
+	require.True(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor.Totp, "totp should be setup")
 
 	// generate the OTP code for authentication
 	otp, err = totp.GenerateCode(totpSecret, time.Now())
@@ -244,7 +244,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// log in with a Recovery Code
 	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	require.NotNil(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor)
+	require.NotNil(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor, "multi factor is turned off")
 
 	var authenticateRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode
 
@@ -286,14 +286,14 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	settings = viewerAccountSettings(t, client)
 
 	// look up settings and ensure MFA is now disabled
-	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled)
+	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled, "multi factor should be disabled")
 	// totp should also be no longer configured (since turning off MFA will remove all multi factor configuration)
-	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured)
+	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured, "multi factor not configured")
 
 	// attempt one last login and ensure it doesn't ask for a MFA code
 	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered, "account status should be registered")
 
 	// now grant account access
 	grant := grantAccountAccessWithAuthenticationToken(t, client)
@@ -318,7 +318,7 @@ type CreateAccountWithAuthenticationToken struct {
 func TestAccountRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getHttpClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	fake := TestUser{}
 
@@ -329,31 +329,28 @@ func TestAccountRegistration_complete(t *testing.T) {
 	authenticate := grantAuthenticationToken(t, client, fake.Email)
 
 	// get cookies
-	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
+	authToken := getAuthTokenFromEmail(t, fake.Email)
 
-	// make sure OTPKey is not empty
-	require.True(t, otpCookie != nil)
-
-	require.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken)
+	require.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken, "token is true")
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authenticationToken := viewAuthenticationToken(t, client)
 
 	// expect that the cookie is not redeemed
-	require.Equal(t, false, authenticationToken.ViewAuthenticationToken.Verified)
+	require.Equal(t, false, authenticationToken.ViewAuthenticationToken.Verified, "token is not yet verified")
 
-	redeemCookie := verifyAuthenticationToken(t, client, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, client, authToken)
 
 	// make sure cookie is redeemed
-	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.Verified)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.Verified, "token is verified")
 	// make sure in the same session
-	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession, "token from the same session")
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authenticationToken = viewAuthenticationToken(t, client)
 
 	// expect that our authentication query sees the cookie as redeemed
-	require.Equal(t, true, authenticationToken.ViewAuthenticationToken.Verified)
+	require.Equal(t, true, authenticationToken.ViewAuthenticationToken.Verified, "token is verified")
 
 	// now, we register (cookie is redeemed from above query)
 	var register CreateAccountWithAuthenticationToken
@@ -364,8 +361,4 @@ func TestAccountRegistration_complete(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, register.CreateAccountWithAuthenticationToken.Account)
-
-	otpCookie = getOTPTokenFromJar(t, httpUser.Jar)
-	// Making sure that with "register" the OTP cookie is removed
-	require.Nil(t, otpCookie)
 }

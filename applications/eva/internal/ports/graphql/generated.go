@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -54,9 +55,11 @@ type ComplexityRoot struct {
 	Account struct {
 		Avatar              func(childComplexity int, size *int) int
 		Emails              func(childComplexity int, after *string, before *string, first *int, last *int) int
+		EmailsLimit         func(childComplexity int) int
 		ID                  func(childComplexity int) int
 		IsModerator         func(childComplexity int) int
 		IsStaff             func(childComplexity int) int
+		Language            func(childComplexity int) int
 		Lock                func(childComplexity int) int
 		MultiFactorSettings func(childComplexity int) int
 		RecoveryCodes       func(childComplexity int) int
@@ -64,6 +67,7 @@ type ComplexityRoot struct {
 		Sessions            func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Username            func(childComplexity int) int
 		Usernames           func(childComplexity int, after *string, before *string, first *int, last *int) int
+		UsernamesLimit      func(childComplexity int) int
 	}
 
 	AccountConnection struct {
@@ -145,6 +149,7 @@ type ComplexityRoot struct {
 
 	AddAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
+		Validation   func(childComplexity int) int
 	}
 
 	AssignAccountModeratorRolePayload struct {
@@ -183,6 +188,10 @@ type ComplexityRoot struct {
 
 	DeleteAccountEmailPayload struct {
 		AccountEmailID func(childComplexity int) int
+	}
+
+	DeleteAccountUsernamePayload struct {
+		AccountUsernameID func(childComplexity int) int
 	}
 
 	DisableAccountMultiFactorPayload struct {
@@ -227,6 +236,7 @@ type ComplexityRoot struct {
 
 	GrantAuthenticationTokenPayload struct {
 		AuthenticationToken func(childComplexity int) int
+		Validation          func(childComplexity int) int
 	}
 
 	Language struct {
@@ -236,6 +246,10 @@ type ComplexityRoot struct {
 	Moderator struct {
 		Account func(childComplexity int) int
 		ID      func(childComplexity int) int
+	}
+
+	MultiFactor struct {
+		Totp func(childComplexity int) int
 	}
 
 	MultiFactorTotp struct {
@@ -250,6 +264,7 @@ type ComplexityRoot struct {
 		ConfirmAccountEmail                                                 func(childComplexity int, input types.ConfirmAccountEmailInput) int
 		CreateAccountWithAuthenticationToken                                func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
 		DeleteAccountEmail                                                  func(childComplexity int, input types.DeleteAccountEmailInput) int
+		DeleteAccountUsername                                               func(childComplexity int, input types.DeleteAccountUsernameInput) int
 		DisableAccountMultiFactor                                           func(childComplexity int) int
 		EnrollAccountMultiFactorTotp                                        func(childComplexity int, input types.EnrollAccountMultiFactorTotpInput) int
 		GenerateAccountMultiFactorRecoveryCodes                             func(childComplexity int) int
@@ -266,6 +281,7 @@ type ComplexityRoot struct {
 		RevokeAuthenticationToken                                           func(childComplexity int, input types.RevokeAuthenticationTokenInput) int
 		UnlockAccount                                                       func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                                   func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
+		UpdateAccountLanguage                                               func(childComplexity int, input types.UpdateAccountLanguageInput) int
 		UpdateAccountUsernameAndRetainPrevious                              func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
 		UpdateLanguage                                                      func(childComplexity int, input types.UpdateLanguageInput) int
 		VerifyAuthenticationToken                                           func(childComplexity int, input types.VerifyAuthenticationTokenInput) int
@@ -323,6 +339,11 @@ type ComplexityRoot struct {
 		UpdatedAccountEmail func(childComplexity int) int
 	}
 
+	UpdateAccountLanguagePayload struct {
+		Account  func(childComplexity int) int
+		Language func(childComplexity int) int
+	}
+
 	UpdateAccountUsernameAndRetainPreviousPayload struct {
 		AccountUsername func(childComplexity int) int
 		Validation      func(childComplexity int) int
@@ -344,7 +365,10 @@ type ComplexityRoot struct {
 
 type AccountResolver interface {
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
+
+	UsernamesLimit(ctx context.Context, obj *types.Account) (int, error)
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
+	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
 	MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error)
@@ -375,8 +399,10 @@ type MutationResolver interface {
 	VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error)
 	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
 	UpdateLanguage(ctx context.Context, input types.UpdateLanguageInput) (*types.UpdateLanguagePayload, error)
+	UpdateAccountLanguage(ctx context.Context, input types.UpdateAccountLanguageInput) (*types.UpdateAccountLanguagePayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
+	DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error)
 	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error)
@@ -438,6 +464,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Emails(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
+	case "Account.emailsLimit":
+		if e.complexity.Account.EmailsLimit == nil {
+			break
+		}
+
+		return e.complexity.Account.EmailsLimit(childComplexity), true
+
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
 			break
@@ -458,6 +491,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.IsStaff(childComplexity), true
+
+	case "Account.language":
+		if e.complexity.Account.Language == nil {
+			break
+		}
+
+		return e.complexity.Account.Language(childComplexity), true
 
 	case "Account.lock":
 		if e.complexity.Account.Lock == nil {
@@ -517,6 +557,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.Usernames(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "Account.usernamesLimit":
+		if e.complexity.Account.UsernamesLimit == nil {
+			break
+		}
+
+		return e.complexity.Account.UsernamesLimit(childComplexity), true
 
 	case "AccountConnection.edges":
 		if e.complexity.AccountConnection.Edges == nil {
@@ -770,6 +817,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddAccountEmailPayload.AccountEmail(childComplexity), true
 
+	case "AddAccountEmailPayload.validation":
+		if e.complexity.AddAccountEmailPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
+
 	case "AssignAccountModeratorRolePayload.account":
 		if e.complexity.AssignAccountModeratorRolePayload.Account == nil {
 			break
@@ -888,6 +942,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteAccountEmailPayload.AccountEmailID(childComplexity), true
+
+	case "DeleteAccountUsernamePayload.accountUsernameId":
+		if e.complexity.DeleteAccountUsernamePayload.AccountUsernameID == nil {
+			break
+		}
+
+		return e.complexity.DeleteAccountUsernamePayload.AccountUsernameID(childComplexity), true
 
 	case "DisableAccountMultiFactorPayload.accountMultiFactorTotpEnabled":
 		if e.complexity.DisableAccountMultiFactorPayload.AccountMultiFactorTotpEnabled == nil {
@@ -1033,6 +1094,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GrantAuthenticationTokenPayload.AuthenticationToken(childComplexity), true
 
+	case "GrantAuthenticationTokenPayload.validation":
+		if e.complexity.GrantAuthenticationTokenPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.GrantAuthenticationTokenPayload.Validation(childComplexity), true
+
 	case "Language.locale":
 		if e.complexity.Language.Locale == nil {
 			break
@@ -1053,6 +1121,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Moderator.ID(childComplexity), true
+
+	case "MultiFactor.totp":
+		if e.complexity.MultiFactor.Totp == nil {
+			break
+		}
+
+		return e.complexity.MultiFactor.Totp(childComplexity), true
 
 	case "MultiFactorTotp.imageSrc":
 		if e.complexity.MultiFactorTotp.ImageSrc == nil {
@@ -1139,6 +1214,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteAccountEmail(childComplexity, args["input"].(types.DeleteAccountEmailInput)), true
+
+	case "Mutation.deleteAccountUsername":
+		if e.complexity.Mutation.DeleteAccountUsername == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteAccountUsername_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteAccountUsername(childComplexity, args["input"].(types.DeleteAccountUsernameInput)), true
 
 	case "Mutation.disableAccountMultiFactor":
 		if e.complexity.Mutation.DisableAccountMultiFactor == nil {
@@ -1296,6 +1383,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateAccountEmailStatusToPrimary(childComplexity, args["input"].(types.UpdateAccountEmailStatusToPrimaryInput)), true
+
+	case "Mutation.updateAccountLanguage":
+		if e.complexity.Mutation.UpdateAccountLanguage == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAccountLanguage_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAccountLanguage(childComplexity, args["input"].(types.UpdateAccountLanguageInput)), true
 
 	case "Mutation.updateAccountUsernameAndRetainPrevious":
 		if e.complexity.Mutation.UpdateAccountUsernameAndRetainPrevious == nil {
@@ -1507,6 +1606,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.UpdatedAccountEmail(childComplexity), true
 
+	case "UpdateAccountLanguagePayload.Account":
+		if e.complexity.UpdateAccountLanguagePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountLanguagePayload.Account(childComplexity), true
+
+	case "UpdateAccountLanguagePayload.language":
+		if e.complexity.UpdateAccountLanguagePayload.Language == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountLanguagePayload.Language(childComplexity), true
+
 	case "UpdateAccountUsernameAndRetainPreviousPayload.accountUsername":
 		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername == nil {
 			break
@@ -1652,11 +1765,11 @@ type AccountConnection {
 }
 
 enum AccountLockReason {
-  PostInfraction
+  POST_INFRACTION
 }
 
 type AccountLock {
-  expires: Int!
+  expires: Time!
   reason: AccountLockReason!
 }
 
@@ -1707,7 +1820,8 @@ extend type Query {
     """Filter by the account username."""
     username: String
   ): AccountConnection!
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "schema/extensions/schema.graphql", Input: `extend type Moderator @key(fields: "id") {
   id: ID! @external
 
@@ -1721,6 +1835,18 @@ type Language {
   locale: BCP47!
 }
 
+extend type Account {
+  """
+  The language of the account.
+
+  Note: this is the language that will be used to determine which emails should be sent where.
+
+  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
+  """
+  language: Language!
+}
+
 extend type Query {
   """
   List of all available languages
@@ -1729,6 +1855,10 @@ extend type Query {
 
   """
   The current language that is set
+
+  Note: this is only temporary, per-browser language
+
+  For a permanent language on an account level, see "Language" as part of viewer
   """
   language: Language!
 }
@@ -1745,12 +1875,35 @@ type UpdateLanguagePayload {
   language: Language
 }
 
+"""Input for updating the account language"""
+input UpdateAccountLanguageInput {
+  """The locale to update the language to"""
+  locale: BCP47!
+}
+
+"""Payload of the account language update"""
+type UpdateAccountLanguagePayload {
+  """The new language that is now set"""
+  language: Language
+
+  """The account that has the updated language"""
+  Account: Account
+}
+
 extend type Mutation {
   """
-  Update the current language
+  Update the current language.
   """
   updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
-}`, BuiltIn: false},
+
+  """
+  Update the language of the account.
+
+  Note: that this is only a value, and in order to see anything in the browser, you should use the "UpdateLanguage" mutation.
+  """
+  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
+}
+`, BuiltIn: false},
 	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
   CONFIRMED
   UNCONFIRMED
@@ -1768,8 +1921,12 @@ type AccountEmail implements Node @key(fields: "id") {
   """The current status of the account email"""
   status: AccountEmailStatus!
 
-  """The account that this email belongs to"""
-  account: Account! @goField(forceResolver: true)
+  """
+  The account that this email belongs to
+
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account @goField(forceResolver: true)
 }
 
 """Edge of the account email"""
@@ -1878,6 +2035,12 @@ type AccountMultiFactorSettings {
 }
 
 extend type Account {
+
+  """
+  Maximum amount of usernames that this account can create
+  """
+  usernamesLimit: Int! @goField(forceResolver: true)
+
   """
   Usernames for account (history)
   """
@@ -1896,6 +2059,11 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountUsernameConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of emails that this account can create
+  """
+  emailsLimit: Int! @goField(forceResolver: true)
 
   """
   Emails for account (multiple emails per account)
@@ -1970,6 +2138,14 @@ input DeleteAccountEmailInput {
   accountEmailId: ID!
 }
 
+"""Input for removing an email from an account"""
+input DeleteAccountUsernameInput {
+  """
+  The username that should be removed
+  """
+  accountUsernameId: ID!
+}
+
 """Input for updating an account's username"""
 input UpdateAccountUsernameAndRetainPreviousInput {
   """
@@ -2015,12 +2191,26 @@ input ConfirmAccountEmailInput {
 type AddAccountEmailPayload {
   """The account email that was added to"""
   accountEmail: AccountEmail
+
+  """Any validation errors from the backend"""
+  validation: AddAccountEmailValidation
+}
+
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  INVALID_EMAIL
 }
 
 """Email to add the account"""
 type DeleteAccountEmailPayload {
   """The ID of the account email that was removed"""
   accountEmailId: ID!
+}
+
+"""Username to delete from account"""
+type DeleteAccountUsernamePayload {
+  """The ID of the account username that was removed"""
+  accountUsernameId: ID!
 }
 
 """Validation message for updating account username"""
@@ -2110,6 +2300,12 @@ extend type Mutation {
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
+
+  """
+  Delete account username - cannot be the current username
+  """
+  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
+
   """
   Update the account username
 
@@ -2160,7 +2356,8 @@ extend type Mutation {
   Confirm account email, so it may be used
   """
   confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "schema/staff/schema.graphql", Input: `"""Assigned account"""
 type AssignAccountModeratorRolePayload {
   """The account that the role was assigned to"""
@@ -2239,27 +2436,48 @@ extend type Mutation {
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
 }
 `, BuiltIn: false},
-	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
-  TOTP
+	{Name: "schema/token/schema.graphql", Input: `"""Types of multi factor enabled for this account"""
+type MultiFactor {
+  totp: Boolean!
 }
 
 type AuthenticationTokenAccountStatus {
+  """When verified, whether or not there is an account belonging to this token."""
   registered: Boolean!
-  multiFactor: [MultiFactorType!]
+
+  """If multi-factor is enabled for this account"""
+  multiFactor: MultiFactor
 }
 
+"""Authentication token. Used for logging in."""
 type AuthenticationToken {
+  """Unique ID of the token"""
   id: ID!
+
+  """Whether or not the token belongs to the same session as it was created in"""
   sameSession: Boolean!
+
+  """Whether or not the token is verified"""
   verified: Boolean!
-  # Whether or not this token is "secure"
-  # Secure means that the token has been viewed from the same network as originally created
-  # if it wasn't viewed in the same network, the interface should take care and double-check with
-  # the user that they want to verify the token.
+
+  """
+  Whether or not this token is "secure"
+  Secure means that the token has been viewed from the same network as originally created
+  if it wasn't viewed in the same network, the interface should take care and double-check with
+  the user that they want to verify the token.
+  """
   secure: Boolean!
+
+  """The device this token was created from."""
   device: String!
+
+  """The location where this token was created at."""
   location: String!
+
+  """The email that belongs to this token."""
   email: String!
+
+  """Once the token is verified, you can see the status of the account"""
   accountStatus: AuthenticationTokenAccountStatus
 }
 
@@ -2288,12 +2506,19 @@ input CreateAccountWithAuthenticationTokenInput {
   username: String!
 }
 
+"""Validation for granting an authentication token"""
+enum GrantAuthenticationTokenValidation {
+  INVALID_EMAIL
+}
+
 """Payload for starting an authentication"""
 type GrantAuthenticationTokenPayload {
   """The authentication token after starting"""
   authenticationToken: AuthenticationToken
-}
 
+  """Validation for granting an authentication token"""
+  validation: GrantAuthenticationTokenValidation
+}
 
 """Validation for creating an account with an authentication token"""
 enum CreateAccountWithAuthenticationTokenValidation {
@@ -2855,6 +3080,21 @@ func (ec *executionContext) field_Mutation_deleteAccountEmail_args(ctx context.C
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_deleteAccountUsername_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.DeleteAccountUsernameInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernameInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_enrollAccountMultiFactorTotp_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2982,6 +3222,21 @@ func (ec *executionContext) field_Mutation_updateAccountEmailStatusToPrimary_arg
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateAccountEmailStatusToPrimaryInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAccountLanguage_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAccountLanguageInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAccountLanguageInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountLanguageInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3433,6 +3688,76 @@ func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.Col
 	return ec.marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Account_language(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().UsernamesLimit(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_usernames(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3473,6 +3798,41 @@ func (ec *executionContext) _Account_usernames(ctx context.Context, field graphq
 	res := resTmp.(*types.AccountUsernameConnection)
 	fc.Result = res
 	return ec.marshalNAccountUsernameConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_emailsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().EmailsLimit(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_emails(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -3899,14 +4259,11 @@ func (ec *executionContext) _AccountEmail_account(ctx context.Context, field gra
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountEmailConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountEmailConnection) (ret graphql.Marshaler) {
@@ -4079,9 +4436,9 @@ func (ec *executionContext) _AccountLock_expires(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
@@ -4886,6 +5243,38 @@ func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Con
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AddAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AddAccountEmailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AddAccountEmailValidation)
+	fc.Result = res
+	return ec.marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AssignAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountModeratorRolePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5289,9 +5678,9 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]types.MultiFactorType)
+	res := resTmp.(*types.MultiFactor)
 	fc.Result = res
-	return ec.marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx, field.Selections, res)
+	return ec.marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ConfirmAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
@@ -5441,6 +5830,41 @@ func (ec *executionContext) _DeleteAccountEmailPayload_accountEmailId(ctx contex
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.AccountEmailID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteAccountUsernamePayload_accountUsernameId(ctx context.Context, field graphql.CollectedField, obj *types.DeleteAccountUsernamePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteAccountUsernamePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountUsernameID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6054,6 +6478,38 @@ func (ec *executionContext) _GrantAuthenticationTokenPayload_authenticationToken
 	return ec.marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _GrantAuthenticationTokenPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.GrantAuthenticationTokenPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GrantAuthenticationTokenPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.GrantAuthenticationTokenValidation)
+	fc.Result = res
+	return ec.marshalOGrantAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAuthenticationTokenValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6157,6 +6613,41 @@ func (ec *executionContext) _Moderator_account(ctx context.Context, field graphq
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _MultiFactor_totp(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MultiFactor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Totp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _MultiFactorTotp_secret(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactorTotp) (ret graphql.Marshaler) {
@@ -6630,6 +7121,45 @@ func (ec *executionContext) _Mutation_updateLanguage(ctx context.Context, field 
 	return ec.marshalOUpdateLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateLanguagePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateAccountLanguage(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAccountLanguage_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAccountLanguage(rctx, args["input"].(types.UpdateAccountLanguageInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAccountLanguagePayload)
+	fc.Result = res
+	return ec.marshalOUpdateAccountLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountLanguagePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6706,6 +7236,45 @@ func (ec *executionContext) _Mutation_deleteAccountEmail(ctx context.Context, fi
 	res := resTmp.(*types.DeleteAccountEmailPayload)
 	fc.Result = res
 	return ec.marshalODeleteAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteAccountUsername(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteAccountUsername_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccountUsername(rctx, args["input"].(types.DeleteAccountUsernameInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.DeleteAccountUsernamePayload)
+	fc.Result = res
+	return ec.marshalODeleteAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernamePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateAccountUsernameAndRetainPrevious(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7986,6 +8555,70 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_updatedAcc
 	res := resTmp.(*types.AccountEmail)
 	fc.Result = res
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccountLanguagePayload_language(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountLanguagePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountLanguagePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccountLanguagePayload_Account(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountLanguagePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountLanguagePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) (ret graphql.Marshaler) {
@@ -9387,6 +10020,26 @@ func (ec *executionContext) unmarshalInputDeleteAccountEmailInput(ctx context.Co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteAccountUsernameInput(ctx context.Context, obj interface{}) (types.DeleteAccountUsernameInput, error) {
+	var it types.DeleteAccountUsernameInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "accountUsernameId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountUsernameId"))
+			it.AccountUsernameID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputEnrollAccountMultiFactorTotpInput(ctx context.Context, obj interface{}) (types.EnrollAccountMultiFactorTotpInput, error) {
 	var it types.EnrollAccountMultiFactorTotpInput
 	var asMap = obj.(map[string]interface{})
@@ -9578,6 +10231,26 @@ func (ec *executionContext) unmarshalInputUpdateAccountEmailStatusToPrimaryInput
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountEmailId"))
 			it.AccountEmailID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateAccountLanguageInput(ctx context.Context, obj interface{}) (types.UpdateAccountLanguageInput, error) {
+	var it types.UpdateAccountLanguageInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9788,6 +10461,25 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				res = ec._Account_lock(ctx, field, obj)
 				return res
 			})
+		case "language":
+			out.Values[i] = ec._Account_language(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "usernamesLimit":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_usernamesLimit(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "usernames":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9797,6 +10489,20 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_usernames(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "emailsLimit":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_emailsLimit(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9968,9 +10674,6 @@ func (ec *executionContext) _AccountEmail(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._AccountEmail_account(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		default:
@@ -10383,6 +11086,8 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 			out.Values[i] = graphql.MarshalString("AddAccountEmailPayload")
 		case "accountEmail":
 			out.Values[i] = ec._AddAccountEmailPayload_accountEmail(ctx, field, obj)
+		case "validation":
+			out.Values[i] = ec._AddAccountEmailPayload_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10595,6 +11300,33 @@ func (ec *executionContext) _DeleteAccountEmailPayload(ctx context.Context, sel 
 			out.Values[i] = graphql.MarshalString("DeleteAccountEmailPayload")
 		case "accountEmailId":
 			out.Values[i] = ec._DeleteAccountEmailPayload_accountEmailId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deleteAccountUsernamePayloadImplementors = []string{"DeleteAccountUsernamePayload"}
+
+func (ec *executionContext) _DeleteAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountUsernamePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccountUsernamePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteAccountUsernamePayload")
+		case "accountUsernameId":
+			out.Values[i] = ec._DeleteAccountUsernamePayload_accountUsernameId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10897,6 +11629,8 @@ func (ec *executionContext) _GrantAuthenticationTokenPayload(ctx context.Context
 			out.Values[i] = graphql.MarshalString("GrantAuthenticationTokenPayload")
 		case "authenticationToken":
 			out.Values[i] = ec._GrantAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
+		case "validation":
+			out.Values[i] = ec._GrantAuthenticationTokenPayload_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10953,6 +11687,33 @@ func (ec *executionContext) _Moderator(ctx context.Context, sel ast.SelectionSet
 			}
 		case "account":
 			out.Values[i] = ec._Moderator_account(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var multiFactorImplementors = []string{"MultiFactor"}
+
+func (ec *executionContext) _MultiFactor(ctx context.Context, sel ast.SelectionSet, obj *types.MultiFactor) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, multiFactorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MultiFactor")
+		case "totp":
+			out.Values[i] = ec._MultiFactor_totp(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11036,10 +11797,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
 		case "updateLanguage":
 			out.Values[i] = ec._Mutation_updateLanguage(ctx, field)
+		case "updateAccountLanguage":
+			out.Values[i] = ec._Mutation_updateAccountLanguage(ctx, field)
 		case "addAccountEmail":
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
 		case "deleteAccountEmail":
 			out.Values[i] = ec._Mutation_deleteAccountEmail(ctx, field)
+		case "deleteAccountUsername":
+			out.Values[i] = ec._Mutation_deleteAccountUsername(ctx, field)
 		case "updateAccountUsernameAndRetainPrevious":
 			out.Values[i] = ec._Mutation_updateAccountUsernameAndRetainPrevious(ctx, field)
 		case "revokeAccountSession":
@@ -11438,6 +12203,32 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload(ctx contex
 			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx, field, obj)
 		case "updatedAccountEmail":
 			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAccountLanguagePayloadImplementors = []string{"UpdateAccountLanguagePayload"}
+
+func (ec *executionContext) _UpdateAccountLanguagePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountLanguagePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountLanguagePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAccountLanguagePayload")
+		case "language":
+			out.Values[i] = ec._UpdateAccountLanguagePayload_language(ctx, field, obj)
+		case "Account":
+			out.Values[i] = ec._UpdateAccountLanguagePayload_Account(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12235,6 +13026,11 @@ func (ec *executionContext) unmarshalNDeleteAccountEmailInput2overdollᚋapplica
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNDeleteAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernameInput(ctx context.Context, v interface{}) (types.DeleteAccountUsernameInput, error) {
+	res, err := ec.unmarshalInputDeleteAccountUsernameInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNEnrollAccountMultiFactorTotpInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnrollAccountMultiFactorTotpInput(ctx context.Context, v interface{}) (types.EnrollAccountMultiFactorTotpInput, error) {
 	res, err := ec.unmarshalInputEnrollAccountMultiFactorTotpInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -12345,16 +13141,6 @@ func (ec *executionContext) marshalNModerator2ᚖoverdollᚋapplicationsᚋeva�
 	return ec._Moderator(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, v interface{}) (types.MultiFactorType, error) {
-	var res types.MultiFactorType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, sel ast.SelectionSet, v types.MultiFactorType) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -12400,6 +13186,21 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
+func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql.MarshalTime(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (graphql1.URI, error) {
 	var res graphql1.URI
 	err := res.UnmarshalGQL(v)
@@ -12412,6 +13213,11 @@ func (ec *executionContext) marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx
 
 func (ec *executionContext) unmarshalNUpdateAccountEmailStatusToPrimaryInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryInput(ctx context.Context, v interface{}) (types.UpdateAccountEmailStatusToPrimaryInput, error) {
 	res, err := ec.unmarshalInputUpdateAccountEmailStatusToPrimaryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateAccountLanguageInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountLanguageInput(ctx context.Context, v interface{}) (types.UpdateAccountLanguageInput, error) {
+	res, err := ec.unmarshalInputUpdateAccountLanguageInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -12801,6 +13607,22 @@ func (ec *executionContext) marshalOAddAccountEmailPayload2ᚖoverdollᚋapplica
 	return ec._AddAccountEmailPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, v interface{}) (*types.AddAccountEmailValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.AddAccountEmailValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, sel ast.SelectionSet, v *types.AddAccountEmailValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOAssignAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -12904,6 +13726,13 @@ func (ec *executionContext) marshalODeleteAccountEmailPayload2ᚖoverdollᚋappl
 		return graphql.Null
 	}
 	return ec._DeleteAccountEmailPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountUsernamePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteAccountUsernamePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODisableAccountMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableAccountMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, v *types.DisableAccountMultiFactorPayload) graphql.Marshaler {
@@ -13026,6 +13855,22 @@ func (ec *executionContext) marshalOGrantAuthenticationTokenPayload2ᚖoverdoll�
 	return ec._GrantAuthenticationTokenPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOGrantAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAuthenticationTokenValidation(ctx context.Context, v interface{}) (*types.GrantAuthenticationTokenValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.GrantAuthenticationTokenValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOGrantAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAuthenticationTokenValidation(ctx context.Context, sel ast.SelectionSet, v *types.GrantAuthenticationTokenValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -13048,75 +13893,18 @@ func (ec *executionContext) marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋ
 	return ec._Language(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactor) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MultiFactor(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactorTotp) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._MultiFactorTotp(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorType, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
-	}
-	var err error
-	res := make([]types.MultiFactorType, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []types.MultiFactorType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
 }
 
 func (ec *executionContext) marshalOReissueAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.ReissueAuthenticationTokenPayload) graphql.Marshaler {
@@ -13213,6 +14001,13 @@ func (ec *executionContext) marshalOUpdateAccountEmailStatusToPrimaryPayload2ᚖ
 		return graphql.Null
 	}
 	return ec._UpdateAccountEmailStatusToPrimaryPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateAccountLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountLanguagePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountLanguagePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAccountLanguagePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernameAndRetainPreviousPayload) graphql.Marshaler {

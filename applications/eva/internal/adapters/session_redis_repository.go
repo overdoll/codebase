@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
+	"overdoll/libraries/passport"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -41,7 +41,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 }
 
 // getSessionById - get session by ID
-func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, sessionId string) (*session.Session, error) {
+func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
 	val, err := r.client.Get(ctx, sessionId).Result()
 
@@ -73,7 +73,13 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 		return nil, fmt.Errorf("failed to encrypt session id: %v", err)
 	}
 
-	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created)
+	current := false
+
+	if sessionId == passport.SessionId() {
+		current = true
+	}
+
+	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created, current)
 	res.Node = paging.NewNode(encryptedKey)
 
 	if err := res.CanView(requester); err != nil {
@@ -84,9 +90,10 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 }
 
 // GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, error) {
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 
-	keys, err := r.client.Keys(ctx, sessionPrefix+"*:"+accountPrefix+accountId).Result()
+	// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
+	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+"*:"+accountPrefix+accountId, 100).Result()
 
 	if err != nil {
 
@@ -97,17 +104,18 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		return nil, fmt.Errorf("failed to get sessions for account: %v", err)
 	}
 
+	// sort keys - based on cursor
+	if cursor != nil {
+		keys = cursor.BuildRedis(keys)
+	}
+
 	var sessions []*session.Session
 
 	for _, sessionID := range keys {
-		sess, err := r.GetSessionById(ctx, requester, sessionID)
+		sess, err := r.GetSessionById(ctx, requester, passport, sessionID)
 
 		if err != nil {
 			return nil, err
-		}
-
-		if sess.ID() == strings.Split(sessionCookie, ".")[0] {
-			sess.MakeCurrent()
 		}
 
 		sessions = append(sessions, sess)
@@ -117,7 +125,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 }
 
 // RevokeSessionById - revoke session
-func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, sessionId string) error {
+func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error {
 
 	// decrypt, since we send it as encrypted
 	key, err := crypt.Decrypt(sessionId)
@@ -126,10 +134,14 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 		return fmt.Errorf("failed to decrypt session id: %v", err)
 	}
 
-	_, err = r.GetSessionById(ctx, requester, key)
+	_, err = r.GetSessionById(ctx, requester, passport, key)
 
 	if err != nil {
 		return err
+	}
+
+	if sessionId == passport.SessionId() {
+		return errors.New("cannot revoke session same as logged in account")
 	}
 
 	// make sure that we delete the session that belongs to this user only

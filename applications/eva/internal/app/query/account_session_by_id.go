@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/principal"
@@ -10,6 +11,9 @@ import (
 type AccountSessionById struct {
 	// The account that is requesting this resource
 	Principal *principal.Principal
+
+	// passport, which contains our current session ID
+	Passport *passport.Passport
 
 	SessionId string
 }
@@ -24,7 +28,7 @@ func NewAccountSessionByIdHandler(sr session.Repository) AccountSessionByIdHandl
 
 func (h AccountSessionByIdHandler) Handle(ctx context.Context, query AccountSessionById) (*session.Session, error) {
 
-	sess, err := h.sr.GetSessionById(ctx, query.Principal, query.SessionId)
+	sess, err := h.sr.GetSessionById(ctx, query.Principal, query.Passport, query.SessionId)
 
 	if err != nil {
 		return nil, err

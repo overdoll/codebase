@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"net/http"
+	"overdoll/libraries/translations"
 	"strings"
 	"time"
 
@@ -28,9 +29,19 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		Email:     input.Email,
 		UserAgent: userAgent,
 		IP:        helpers.GetIp(ctx),
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {
+
+		// TODO: detect invalid email??
+		//if err == validation.ErrInvalidEmail {
+		//	invalid := types.GrantAuthenticationTokenValidationInvalidEmail
+		//	return &types.GrantAuthenticationTokenPayload{Validation: &invalid}, nil
+		//}
+
 		return nil, err
 	}
 
@@ -147,6 +158,9 @@ func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*typ
 
 	if err := r.App.Commands.ReissueAuthenticationToken.Handle(ctx, command.ReissueAuthenticationToken{
 		TokenId: tk.Value,
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx).Locale(),
 	}); err != nil {
 
 		if err == token.ErrTokenNotFound {
@@ -206,6 +220,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, command.CreateAccountWithAuthenticationToken{
 		TokenId:  currentCookie.Value,
 		Username: input.Username,
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {

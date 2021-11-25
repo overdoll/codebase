@@ -58,14 +58,14 @@ const (
 	confirmEmailPrefix = "emailConfirm:"
 )
 
-func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *account.Account, email string) error {
+func (r AccountRepository) deleteAccountEmail(ctx context.Context, accountId, email string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
 	stmt, _ := emailByAccountTable.Delete()
 
-	batch.Query(stmt, email, instance.ID())
+	batch.Query(stmt, accountId, email)
 
 	// delete from other table
 	stmt, _ = accountEmailTable.Delete()
@@ -123,43 +123,6 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	return account.UnmarshalEmailFromDatabase(confirm.Email(), acc.ID(), 0), nil
 }
 
-// GetEmailConfirmationByEmail - a method that is used to get the email confirmation ID by only passing the email
-// NOTE: this should only be used in tests! This is here purely because it is used for testing and any future
-// changes to how email confirmations will work would make this change easier
-func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, email string) (string, error) {
-	keys, err := r.client.Keys(ctx, confirmEmailPrefix+"*").Result()
-
-	if err != nil {
-		return "", err
-	}
-
-	for _, key := range keys {
-
-		// get each key's value
-		val, err := r.client.Get(ctx, key).Result()
-		if err != nil {
-			return "", err
-		}
-
-		val, err = crypt.Decrypt(val)
-
-		if err != nil {
-			return "", err
-		}
-
-		var emailConfirmation emailConfirmation
-		if err := json.Unmarshal([]byte(val), &emailConfirmation); err != nil {
-			return "", err
-		}
-
-		if emailConfirmation.Email == email {
-			return strings.Split(key, ":")[1], nil
-		}
-	}
-
-	return "", account.ErrEmailCodeInvalid
-}
-
 // ConfirmAccountEmail - confirm account email
 func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *principal.Principal, confirmId string) (*account.Email, error) {
 
@@ -199,7 +162,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *p
 		return nil, err
 	}
 
-	// create a unique email - will error out if not unique
+	// create a unique email - will error out if not uniques
 	if err := r.createUniqueAccountEmail(ctx, acc, em.Email()); err != nil {
 		return nil, err
 	}
@@ -214,7 +177,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *p
 		})
 
 	if err := insertEmailByAccount.ExecRelease(); err != nil {
-		_ = r.deleteAccountEmail(ctx, acc, em.Email())
+		_ = r.deleteAccountEmail(ctx, acc.ID(), em.Email())
 		return nil, fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 
@@ -318,27 +281,10 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, requester *pr
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// delete emails by account
-	stmt, _ := emailByAccountTable.Delete()
-
-	batch.Query(stmt, accountId, email)
-
-	// delete account email
-	stmt, _ = accountEmailTable.Delete()
-
-	batch.Query(stmt, email)
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
-	}
-
-	return nil
+	return r.deleteAccountEmail(ctx, accountId, email)
 }
 
 // UpdateAccountMakeEmailPrimary - update the account and make the email primary
-// or just change the casings
 func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
 	acc, err := r.GetAccountById(ctx, accountId)

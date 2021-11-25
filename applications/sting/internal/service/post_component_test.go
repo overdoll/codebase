@@ -2,6 +2,8 @@ package service_test
 
 import (
 	"context"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -18,8 +20,14 @@ import (
 )
 
 type PostModified struct {
-	ID         string
-	Reference  string
+	ID        string
+	Reference string
+	Moderator *struct {
+		Id string
+	}
+	Contributor struct {
+		Id string
+	}
 	State      types.PostState
 	Characters []CharacterModified
 	Audience   *AudienceModified
@@ -34,7 +42,7 @@ type Post struct {
 
 func getPost(t *testing.T, id string) Post {
 
-	client, _ := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var post Post
 
@@ -53,6 +61,14 @@ type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified
 	} `graphql:"createPost()"`
+}
+
+type Posts struct {
+	Posts *struct {
+		Edges []*struct {
+			Node PostModified
+		}
+	} `graphql:"posts(brandSlugs: $brandSlugs, audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
 }
 
 type UpdatePostContent struct {
@@ -123,6 +139,7 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	// properly identify the content and stuff
 	require.Len(t, updatePostContent.UpdatePostContent.Post.Content, 1)
 	require.Equal(t, types.ResourceTypeImage, updatePostContent.UpdatePostContent.Post.Content[0].Type)
+	require.Equal(t, os.Getenv("APP_URL")+"/api/uploads/"+fileId+".png", string(updatePostContent.UpdatePostContent.Post.Content[0].Urls[0].URL))
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories
@@ -209,11 +226,24 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	require.NoError(t, env.GetWorkflowError())
 }
 
-type AccountPosts struct {
+type AccountModeratorPosts struct {
 	Entities []struct {
 		Account struct {
 			ID                  string
 			ModeratorPostsQueue *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID    string
+			Posts *struct {
 				Edges []*struct {
 					Node PostModified
 				}
@@ -229,7 +259,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	var newPostId string
 
@@ -245,11 +275,11 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client, _ := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-			var accountPosts AccountPosts
+			var accountModeratorPosts AccountModeratorPosts
 
-			err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+			err = client.Query(context.Background(), &accountModeratorPosts, map[string]interface{}{
 				"representations": []_Any{
 					{
 						"__typename": "Account",
@@ -262,7 +292,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			exists := false
 
-			for _, post := range accountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
+			for _, post := range accountModeratorPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
 				if post.Node.Reference == postId {
 					exists = true
 				}
@@ -291,13 +321,16 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
+	cont := post.Post.Content[0]
+	split := strings.Split(cont.ID, "/")
+	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+post.Post.Reference+"/"+split[len(split)-1]+".webp", string(cont.Urls[0].URL))
 
 	// refresh index
 	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
 	require.NoError(t, err)
 
 	// query accountPosts once more, make sure post is no longer visible
-	var newAccountPosts AccountPosts
+	var newAccountPosts AccountModeratorPosts
 
 	err = client.Query(context.Background(), &newAccountPosts, map[string]interface{}{
 		"representations": []_Any{
@@ -320,6 +353,75 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	}
 
 	require.False(t, exists, "should no longer be in the moderator posts queue")
+
+	var posts Posts
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"brandSlugs":     []graphql.String{},
+		"categorySlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in published state")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"brandSlugs":     []graphql.String{"default_brand"},
+		"categorySlugs":  []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with brand")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"categorySlugs":  []graphql.String{"alter"},
+		"brandSlugs":     []graphql.String{},
+		"characterSlugs": []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"characterSlugs": []graphql.String{"aarush_hills"},
+		"categorySlugs":  []graphql.String{},
+		"brandSlugs":     []graphql.String{},
+		"audienceSlugs":  []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"state":          types.PostStatePublished,
+		"audienceSlugs":  []graphql.String{"standard_audience"},
+		"characterSlugs": []graphql.String{},
+		"categorySlugs":  []graphql.String{},
+		"brandSlugs":     []graphql.String{},
+		"seriesSlugs":    []graphql.String{},
+	})
+
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
+
+	// make sure getPost works, and correct data is assigned
+	stingClient := getGrpcClient(t)
+	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: newPostId})
+	require.NoError(t, e)
+	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Contributor.Id).GetID(), data.ContributorId, "should have correct contributor ID assigned")
+	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
 }
 
 // Test_CreatePost_Discard - discard post
@@ -328,16 +430,16 @@ func TestCreatePost_Discard(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 
 	var newPostId string
 
 	createPost(t, client, env, func(postId string) func() {
+
 		return func() {
 			newPostId = postId
-
 			// setup another environment since we cant execute multiple workflows
 			newEnv := getWorkflowEnvironment(t)
 
@@ -368,7 +470,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 
@@ -424,7 +526,7 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 

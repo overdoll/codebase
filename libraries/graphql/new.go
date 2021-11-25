@@ -3,7 +3,7 @@ package graphql
 import (
 	"context"
 	"errors"
-	"os"
+	"overdoll/libraries/helpers"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -28,7 +28,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			zap.S().Error("resolver failed ", err)
 
-			if os.Getenv("APP_DEBUG") != "true" {
+			if !helpers.IsDebug() {
 				err.Message = "internal server error"
 			}
 
@@ -44,7 +44,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 
-		if os.Getenv("APP_DEBUG") == "true" {
+		if helpers.IsDebug() {
 			graphAPIHandler.Use(extension.Introspection{})
 		}
 

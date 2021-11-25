@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/service"
 	"strings"
 	"testing"
 
@@ -16,16 +17,9 @@ import (
 	"overdoll/libraries/passport"
 )
 
-func getEmailConfirmation(t *testing.T, targetEmail string) string {
-
-	client := bootstrap.InitializeRedisSession()
-	sess := bootstrap.InitializeDatabaseSession()
-
-	accountRepo := adapters.NewAccountCassandraRedisRepository(sess, client)
-
-	res, err := accountRepo.GetEmailConfirmationByEmail(context.Background(), targetEmail)
-	require.NoError(t, err)
-
+func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
+	res, err := service.GetEmailConfirmationTokenFromEmail(email)
+	require.NoError(t, err, "no error for grabbing confirmation token")
 	return res
 }
 
@@ -48,6 +42,32 @@ type AccountEmailModified struct {
 type AccountUsernameModified struct {
 	ID       relay.ID
 	Username string
+}
+
+type ViewerAccountEmailUsernameSettings struct {
+	Viewer struct {
+		Username    string
+		EmailsLimit int
+		Emails      *struct {
+			Edges []*struct {
+				Node *AccountEmailModified
+			}
+		}
+		UsernamesLimit int
+		Usernames      *struct {
+			Edges []*struct {
+				Node *AccountUsernameModified
+			}
+		}
+		Sessions *types.AccountSessionConnection
+	} `graphql:"viewer()"`
+}
+
+func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
+	var settings ViewerAccountEmailUsernameSettings
+	err := client.Query(context.Background(), &settings, nil)
+	require.NoError(t, err, "no error for grabbing viewer account email settings")
+	return settings
 }
 
 type AddAccountEmail struct {
@@ -75,65 +95,6 @@ type UpdateAccountEmailStatusToPrimary struct {
 	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
 }
 
-type ViewerAccountEmailUsernameSettings struct {
-	Viewer struct {
-		Username string
-		Emails   *struct {
-			Edges []*struct {
-				Node *AccountEmailModified
-			}
-		}
-		Usernames *struct {
-			Edges []*struct {
-				Node *AccountUsernameModified
-			}
-		}
-		Sessions *types.AccountSessionConnection
-	} `graphql:"viewer()"`
-}
-
-func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
-	var settings ViewerAccountEmailUsernameSettings
-	err := client.Query(context.Background(), &settings, nil)
-	require.NoError(t, err)
-	return settings
-}
-
-func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) AddAccountEmail {
-	var addAccountEmail AddAccountEmail
-
-	// add an email to our account
-	err := client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed)
-
-	return addAccountEmail
-}
-
-func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) ConfirmAccountEmail {
-	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmation(t, email)
-
-	require.NotEmpty(t, confirmationKey)
-
-	var confirmAccountEmail ConfirmAccountEmail
-
-	// confirm the account's new email
-	err := client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
-
-	return confirmAccountEmail
-}
-
 // Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
@@ -141,19 +102,42 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
 	err := faker.FakeData(&fake)
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error generating fake account")
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	addAccountEmail(t, client, targetEmail)
+	var addAccountEmail AddAccountEmail
 
-	confirmAccountEmail := confirmAccountEmail(t, client, targetEmail)
+	// add an email to our account
+	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"input": types.AddAccountEmailInput{Email: targetEmail},
+	})
+
+	require.NoError(t, err, "no error for adding account email")
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail, "account email should be available")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail, "emails should match")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed, "email should be unconfirmed")
+
+	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
+	confirmationKey := getEmailConfirmationTokenFromEmail(t, targetEmail)
+
+	require.NotEmpty(t, confirmationKey)
+
+	var confirmAccountEmail ConfirmAccountEmail
+
+	// confirm the account's new email
+	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
+	})
+
+	require.NoError(t, err, "no error for confirming account")
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail, "email should be available")
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
@@ -166,7 +150,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundConfirmedEmail)
+	require.True(t, foundConfirmedEmail, "should have found a confirmed account email in list")
 
 	var makeEmailPrimary UpdateAccountEmailStatusToPrimary
 
@@ -175,10 +159,10 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: confirmAccountEmail.ConfirmAccountEmail.AccountEmail.ID},
 	})
 
-	require.NoError(t, err)
-	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail)
+	require.NoError(t, err, "no error for updating status to primary")
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail, "email is available")
 
-	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email)
+	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email, "emails should be equal")
 
 	// query account settings once more
 	settings = viewerAccountEmailUsernameSettings(t, client)
@@ -192,30 +176,17 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundPrimaryEmail)
-}
+	require.True(t, foundPrimaryEmail, "should have found an email that is primary")
 
-// adds an email
-func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
-	t.Parallel()
+	// set old email as primary
+	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
+		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: "QWNjb3VudEVtYWlsOjFwY0tpYlJvcVRBVWdtT2lOcEdMSXJ6dE05UjppMmZoei50ZXN0LWFjY291bnRAaW5ib3gudGVzdG1haWwuYXBw"},
+	})
 
-	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+	require.NoError(t, err, "no error for updating status to primary")
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail, "email is available")
 
-	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
-
-	fake := TestUser{}
-
-	err := faker.FakeData(&fake)
-
-	require.NoError(t, err)
-
-	targetEmail := strings.ToLower(fake.Email)
-
-	addAccountEmail := addAccountEmail(t, client, targetEmail)
-
-	confirmAccountEmail(t, client, targetEmail)
-
+	// remove old email from account
 	var removeAccountEmail DeleteAccountEmail
 
 	// remove the email from the account
@@ -226,7 +197,7 @@ func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, removeAccountEmail.DeleteAccountEmail.AccountEmailID)
 
-	settings := viewerAccountEmailUsernameSettings(t, client)
+	settings = viewerAccountEmailUsernameSettings(t, client)
 
 	foundNewEmail := false
 
@@ -237,13 +208,34 @@ func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 		}
 	}
 
-	require.False(t, foundNewEmail)
+	require.False(t, foundNewEmail, "should not have found an email as part of the viewer's emails")
+}
+
+func TestAccountEmailAndUsernameLimit(t *testing.T) {
+	t.Parallel()
+
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
+	// use passport with user
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+
+	settings := viewerAccountEmailUsernameSettings(t, client)
+
+	require.Equal(t, settings.Viewer.EmailsLimit, 5, "should show an emails limit")
+	require.Equal(t, settings.Viewer.UsernamesLimit, 5, "should show a usernames limit")
 }
 
 type UpdateAccountUsernameAndRetainPrevious struct {
 	UpdateAccountUsernameAndRetainPrevious struct {
 		AccountUsername *AccountUsernameModified
+		Validation      *types.UpdateAccountUsernameAndRetainPreviousValidation
 	} `graphql:"updateAccountUsernameAndRetainPrevious(input: $input)"`
+}
+
+type DeleteAccountUsername struct {
+	DeleteAccountUsername struct {
+		AccountUsernameId relay.ID
+	} `graphql:"deleteAccountUsername(input: $input)"`
 }
 
 func TestAccountUsername_modify(t *testing.T) {
@@ -251,7 +243,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
@@ -269,23 +261,66 @@ func TestAccountUsername_modify(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.Nil(t, modifyAccountUsername.UpdateAccountUsernameAndRetainPrevious.Validation, "no validation errors")
 	require.NotNil(t, modifyAccountUsername.UpdateAccountUsernameAndRetainPrevious.AccountUsername)
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
-	foundNewUsername := false
+	var foundUsername *AccountUsernameModified
 
 	// go through the account's usernames and make sure the username exists here
 	for _, username := range settings.Viewer.Usernames.Edges {
 		if username.Node.Username == targetUsername {
-			foundNewUsername = true
+			foundUsername = username.Node
 		}
 	}
 
-	require.True(t, foundNewUsername)
+	require.NotNil(t, foundUsername, "should have found a username in the list")
 
 	// make sure that the username is modified as well for the "authentication" query
-	require.Equal(t, targetUsername, settings.Viewer.Username)
+	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
+
+	oldUsername := "testaccountforstuff"
+
+	var modifyAccountUsernameToPrevious UpdateAccountUsernameAndRetainPrevious
+
+	// set username back to the old one
+	err = client.Mutate(context.Background(), &modifyAccountUsernameToPrevious, map[string]interface{}{
+		"input": types.UpdateAccountUsernameAndRetainPreviousInput{Username: oldUsername},
+	})
+
+	require.NoError(t, err)
+	require.Nil(t, modifyAccountUsernameToPrevious.UpdateAccountUsernameAndRetainPrevious.Validation, "no validation errors")
+	require.NotNil(t, modifyAccountUsernameToPrevious.UpdateAccountUsernameAndRetainPrevious.AccountUsername, "account username should be there")
+
+	settings = viewerAccountEmailUsernameSettings(t, client)
+
+	// make suer username is set back to the old one
+	require.Equal(t, oldUsername, settings.Viewer.Username, "username is set back to the old one")
+
+	// delete old username
+	var deleteAccountUsername DeleteAccountUsername
+
+	// delete old username that we set
+	err = client.Mutate(context.Background(), &deleteAccountUsername, map[string]interface{}{
+		"input": types.DeleteAccountUsernameInput{AccountUsernameID: foundUsername.ID},
+	})
+
+	require.NoError(t, err)
+
+	// make sure username no longer shows up
+	settings = viewerAccountEmailUsernameSettings(t, client)
+
+	var foundUsernameOld *AccountUsernameModified
+
+	// make sure old username is gone
+	for _, username := range settings.Viewer.Usernames.Edges {
+		if username.Node.Username == foundUsername.Username {
+			foundUsernameOld = username.Node
+		}
+	}
+
+	require.Nil(t, foundUsernameOld, "should not have the username in the list anymore")
 }
 
 type TestSession struct {
@@ -308,7 +343,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	createSession(t, testAccountId, "user-agent", fakeSession.Ip)
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	// query account settings once more
 	settings := viewerAccountEmailUsernameSettings(t, client)
@@ -324,7 +359,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundSession)
+	require.True(t, foundSession, "should have found a matching session")
 
 	var revokeAccountSession RevokeAccountSession
 
@@ -347,5 +382,5 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	}
 
 	// make sure its false
-	require.False(t, foundSession)
+	require.False(t, foundSession, "session should not have been found")
 }

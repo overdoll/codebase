@@ -57,7 +57,7 @@ func TestPostRejectionReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.PostRejectionReasons.Edges, 2)
-	require.Equal(t, "Reason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason)
+	require.Equal(t, "Reason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason, "correct infraction reason")
 }
 
 type AccountPostAuditLogs struct {
@@ -158,7 +158,7 @@ func TestGetNextModerator(t *testing.T) {
 	item, err := client.GetNextModerator(context.Background(), &parley.GetModeratorRequest{})
 
 	require.NoError(t, err)
-	require.Contains(t, []string{"1q7MJ3JkhcdcJJNqZezdfQt5pZ6", "1q7MJ5IyRTV0X4J27F3m5wGD5mj"}, item.Id)
+	require.Contains(t, []string{"1q7MJ3JkhcdcJJNqZezdfQt5pZ6", "1q7MJ5IyRTV0X4J27F3m5wGD5mj"}, item.Id, "contains one of the moderator account IDs")
 }
 
 type ApprovePost struct {
@@ -184,7 +184,7 @@ func TestModeratePost_approve(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action)
+	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action, "action is approved")
 
 	// make sure it shows up in the moderator logs as well
 	logs := auditLogsForModeratorAccount(t, client, "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=")
@@ -239,14 +239,14 @@ func TestModeratePost_remove(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action)
+	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action, "action is removed")
 
 	posts := auditLogsForPost(t, client, postId)
 
-	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
+	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1, "1 value")
 
 	// audit logs should exist for this action
-	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
+	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action, "action is removed still")
 }
 
 func TestModeratePost_reject(t *testing.T) {

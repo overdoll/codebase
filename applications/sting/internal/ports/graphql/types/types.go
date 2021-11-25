@@ -513,16 +513,16 @@ func (e CharactersOrderField) MarshalGQL(w io.Writer) {
 type PostState string
 
 const (
-	PostStateDraft      PostState = "Draft"
-	PostStatePublishing PostState = "Publishing"
-	PostStateReview     PostState = "Review"
-	PostStatePublished  PostState = "Published"
-	PostStateDiscarding PostState = "Discarding"
-	PostStateDiscarded  PostState = "Discarded"
-	PostStateRejected   PostState = "Rejected"
-	PostStateProcessing PostState = "Processing"
-	PostStateRemoving   PostState = "Removing"
-	PostStateRemoved    PostState = "Removed"
+	PostStateDraft      PostState = "DRAFT"
+	PostStatePublishing PostState = "PUBLISHING"
+	PostStateReview     PostState = "REVIEW"
+	PostStatePublished  PostState = "PUBLISHED"
+	PostStateDiscarding PostState = "DISCARDING"
+	PostStateDiscarded  PostState = "DISCARDED"
+	PostStateRejected   PostState = "REJECTED"
+	PostStateProcessing PostState = "PROCESSING"
+	PostStateRemoving   PostState = "REMOVING"
+	PostStateRemoved    PostState = "REMOVED"
 )
 
 var AllPostState = []PostState{

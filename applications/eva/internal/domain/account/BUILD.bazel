@@ -4,6 +4,8 @@ go_library(
     name = "account",
     srcs = [
         "account.go",
+        "account_lock_reason.go",
+        "account_role.go",
         "email.go",
         "email_confirmation.go",
         "repository.go",
@@ -15,6 +17,7 @@ go_library(
         "//libraries/graphql",
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/translations",
         "@com_github_go_playground_validator_v10//:validator",
         "@com_github_segmentio_ksuid//:ksuid",
     ],

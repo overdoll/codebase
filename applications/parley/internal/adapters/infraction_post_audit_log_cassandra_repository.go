@@ -121,7 +121,7 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 		ModeratorId:           auditLog.ModeratorId(),
 		ContributorId:         auditLog.ContributorId(),
 		AccountInfractionId:   userInfractionId,
-		Action:                auditLog.Status(),
+		Action:                auditLog.Status().String(),
 		PostRejectionReasonId: reason,
 		Notes:                 auditLog.Notes(),
 		Reverted:              auditLog.Reverted(),

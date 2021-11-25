@@ -30,7 +30,7 @@ type Category struct {
 func TestSearchCategories(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var searchCategories SearchCategories
 
@@ -47,7 +47,7 @@ func TestSearchCategories(t *testing.T) {
 func TestGetCategory(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var getCategory Category
 

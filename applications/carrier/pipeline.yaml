@@ -25,6 +25,9 @@ steps:
       - name: carrier.integration
         paths:
           - ./applications/carrier/internal/adapters/**/coverage.dat
+      - name: carrier.component
+        paths:
+          - ./applications/carrier/internal/service/**/coverage.dat
     targets:
       - //applications/carrier/internal/adapters/...
 

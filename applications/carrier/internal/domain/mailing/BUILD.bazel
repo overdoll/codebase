@@ -4,12 +4,12 @@ go_library(
     name = "mailing",
     srcs = [
         "darkmode_template.go",
-        "email.go",
         "recipient.go",
         "repository.go",
         "template.go",
+        "validate_email.go",
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],
-    deps = ["@com_github_matcornic_hermes_v2//:hermes"],
+    deps = ["//applications/carrier/internal/domain/identifier"],
 )

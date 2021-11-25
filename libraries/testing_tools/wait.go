@@ -1,4 +1,4 @@
-package tests
+package testing_tools
 
 import (
 	"net"

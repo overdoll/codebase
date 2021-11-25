@@ -149,3 +149,45 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 
 	return query
 }
+
+// take redis keys, and based on cursor, sort results
+func (c *Cursor) BuildRedis(k []string) []string {
+
+	keys := k
+
+	if c.After() != nil {
+
+		indexAt := -1
+
+		for i, v := range k {
+			if v == *c.After() {
+				indexAt = i
+			}
+		}
+
+		if indexAt == -1 {
+			return []string{}
+		}
+
+		keys = keys[indexAt:]
+	}
+
+	if c.Before() != nil {
+
+		indexAt := -1
+
+		for i, v := range k {
+			if v == *c.Before() {
+				indexAt = i
+			}
+		}
+
+		if indexAt == -1 {
+			return []string{}
+		}
+
+		keys = keys[:indexAt]
+	}
+
+	return keys
+}

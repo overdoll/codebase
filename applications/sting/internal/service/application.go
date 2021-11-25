@@ -45,7 +45,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		Commands: app.Commands{
 			TusComposer: command.NewTusComposerHandler(resourceRepo),
 
-			CreatePost:  command.NewCreatePostHandler(postRepo, eva, parley),
+			CreatePost:  command.NewCreatePostHandler(postRepo, indexRepo, eva, parley),
 			UndoPost:    command.NewUndoPostHandler(postRepo, indexRepo),
 			PublishPost: command.NewPublishPostHandler(postRepo, indexRepo, eva),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
@@ -77,8 +77,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoryById:     query.NewCategoryByIdHandler(postRepo),
 
-			SearchPosts: query.NewSearchPostsHandler(indexRepo),
-			PostById:    query.NewPostByIdHandler(postRepo),
+			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
+			PostById:         query.NewPostByIdHandler(postRepo),
+			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 
 			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
 			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),

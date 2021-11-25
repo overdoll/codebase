@@ -41,7 +41,10 @@ async function request (apollo, req, res) {
         operationName: params.name,
         variables: variables,
         query: queryMapJson[params.id]
-      }, { req, res })
+      }, {
+        req,
+        res
+      })
 
       // Throw an error, which will be caught by our server
       if (Array.isArray(result.errors)) {
@@ -59,7 +62,10 @@ async function request (apollo, req, res) {
   // Create a router
   const router = await createServerRouter(
     routes,
-    createMockHistory({ context, location: req.url }),
+    createMockHistory({
+      context,
+      location: req.url
+    }),
     environment,
     req
   )
@@ -67,7 +73,10 @@ async function request (apollo, req, res) {
   const helmetContext = {}
   const nonce = res.locals.cspNonce
 
-  const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
+  const cache = createCache({
+    key: EMOTION_CACHE_KEY,
+    nonce
+  })
   const { extractCritical } = createEmotionServer(cache)
 
   const App = (
@@ -131,7 +140,11 @@ async function request (apollo, req, res) {
     entrypoints: ['client', ...assets]
   })
 
-  const { html, css, ids } = extractCritical(
+  const {
+    html,
+    css,
+    ids
+  } = extractCritical(
     renderToString(extractor.collectChunks(App))
   )
 

@@ -7,7 +7,8 @@ import (
 )
 
 type ReissueAuthenticationToken struct {
-	TokenId string
+	TokenId  string
+	Language string
 }
 
 type ReissueAuthenticationTokenHandler struct {
@@ -27,5 +28,5 @@ func (h ReissueAuthenticationTokenHandler) Handle(ctx context.Context, cmd Reiss
 		return err
 	}
 
-	return h.carrier.NewLoginToken(ctx, tk.Email(), tk.Token())
+	return h.carrier.NewLoginToken(ctx, tk.Email(), tk.Token(), cmd.Language)
 }

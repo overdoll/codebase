@@ -74,6 +74,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
 	return &categoryDocument{
 		Id:        cat.ID(),
+		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
 		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),

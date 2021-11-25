@@ -9,6 +9,7 @@ import random
 import shutil
 import sys
 import tempfile
+import stat
 import threading
 import urllib.request
 
@@ -86,7 +87,9 @@ def execute_integration_tests_commands(configs):
 
 
 def execute_coverage_command(configs):
-    urllib.request.urlretrieve("https://codecov.io/bash", "codecov.sh")
+    urllib.request.urlretrieve("https://uploader.codecov.io/latest/linux/codecov", "codecov")
+    st = os.stat('codecov')
+    os.chmod('codecov', st.st_mode | stat.S_IEXEC)
 
     coverage_flags = dict()
 
@@ -109,7 +112,7 @@ def execute_coverage_command(configs):
 
     for flag in coverage_flags:
 
-        cmd = ["bash", "codecov.sh", "-t", os.getenv("CODECOV_API_KEY", ""), "-F", flag]
+        cmd = ["./codecov", "-t", os.getenv("CODECOV_API_KEY", ""), "-F", flag]
 
         # add each file
         for file in coverage_flags[flag]:

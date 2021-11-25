@@ -25,5 +25,5 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*identifier.Identif
 		return nil, err
 	}
 
-	return identifier.UnmarshalIdentifierFromDatabase(usr.Id, usr.Username, usr.Email), nil
+	return identifier.UnmarshalIdentifierFromDatabase(usr.Id, usr.Username, usr.Email, usr.Language), nil
 }

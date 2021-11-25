@@ -37,7 +37,10 @@ const LobbyFragment = graphql`
   }
 `
 
-export default function Lobby ({ queryRef, refresh }: Props): Node {
+export default function Lobby ({
+  queryRef,
+  refresh
+}: Props): Node {
   const data = useFragment(LobbyFragment, queryRef)
 
   const [commit, isInFlight] = useMutation(LobbyEmail)

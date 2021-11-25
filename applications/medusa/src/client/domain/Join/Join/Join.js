@@ -36,7 +36,11 @@ const JoinFragment = graphql`
   }
 `
 
-export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
+export default function Join ({
+  queryRef,
+  hadGrant,
+  clearGrant
+}: Props): Node {
   const [commit, isInFlight] = useMutation(JoinAction)
 
   const data = useFragment(JoinFragment, queryRef)

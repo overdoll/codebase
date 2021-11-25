@@ -88,6 +88,7 @@ return {
       "alias": "moderatorPostAuditLogs",
       "args": [
         {
+<<<<<<< HEAD
           "fields": [
             {
               "kind": "Variable",
@@ -102,6 +103,14 @@ return {
           ],
           "kind": "ObjectValue",
           "name": "dateRange"
+=======
+          "kind": "Literal",
+          "name": "dateRange",
+          "value": {
+            "from": 0,
+            "to": 0
+          }
+>>>>>>> master
         }
       ],
       "concreteType": "PostAuditLogConnection",
@@ -181,7 +190,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "__AuditLogs_moderatorPostAuditLogs_connection(dateRange:{\"from\":0,\"to\":0})"
     },
     {
       "alias": null,
@@ -196,5 +205,9 @@ return {
 };
 })();
 // prettier-ignore
+<<<<<<< HEAD
 (node: any).hash = '2a7defa328f720c02ce519209fd2ec32';
+=======
+(node: any).hash = '9ee7e0baa40cec68cbced30acbca8b46';
+>>>>>>> master
 module.exports = node;

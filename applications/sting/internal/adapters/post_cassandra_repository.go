@@ -86,7 +86,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	return &posts{
 		Id:             pending.ID(),
-		State:          pending.State(),
+		State:          pending.State().String(),
 		ModeratorId:    pending.ModeratorId(),
 		BrandId:        brandId,
 		AudienceId:     audienceId,

@@ -12,7 +12,7 @@ steps:
         TEMPORAL_URL: temporal:7233
         TEMPORAL_NAMESPACE: default
         GIN_MODE: debug
-        APP_DEBUG: true
+        APP_DEBUG: "true"
         EVA_SERVICE: eva:8080
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
@@ -21,4 +21,11 @@ steps:
         SESSION_SECRET: AES256Key-32Characters1234567890
         REDIS_HOST: redis
         STATIC_URL: https://traefik
+        APP_URL: https://traefik
         LIBWEBP_VERSION: 1.1.0
+        COOKIE_KEY: AES256Key-32Characters1234567890
+        COOKIE_BLOCK_KEY: AES256Key-32Characters1234567890
+        COOKIE_INSECURE: "true"
+        SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+        TESTMAIL_API_KEY: ${TESTMAIL_API_KEY}
+        TESTMAIL_NAMESPACE: ${TESTMAIL_NAMESPACE}

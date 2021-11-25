@@ -1,23 +1,20 @@
 describe('Settings - Configure Two-Factor', () => {
-  const id = Cypress._.random(0, 1e6)
-  const email = `${id}@test.com`
+  const username = cy.account.username()
+  const email = cy.account.email(username)
 
-  const gotoSettingsPage = () => cy.waitUntil(() =>
-    cy.url().should('include', '/profile').then(() => {
-      cy.visit('/settings/security')
-      cy.findByText(/Two-factor Authentication/).should('exist')
-    })
-  )
+  const gotoSettingsPage = () => {
+    cy.visit('/settings/security')
+    cy.findByText(/Two-factor Authentication/).should('exist')
+    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
+  }
 
   before(() => {
-    cy.login(email)
-    cy.register(email, id)
-    cy.logout()
+    cy.join(email).newAccount(username)
   })
 
   beforeEach(() => {
+    cy.preserveAccount()
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.login(email)
   })
 
   it('can set up recovery codes', () => {

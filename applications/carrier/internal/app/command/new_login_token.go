@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/matcornic/hermes/v2"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -32,36 +31,22 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "token", cmd.Token)
+	u.Path = path.Join(u.Path, "token")
 
-	email := hermes.Email{
-		Body: hermes.Body{
-			Name: "Anonymous",
-			Intros: []string{
-				"Welcome!",
-			},
-			Actions: []hermes.Action{
-				{
-					Instructions: "To get started, please click here:",
-					Button: hermes.Button{
-						Color: "#22BC66", // Optional action button color
-						Text:  "Login",
-						Link:  u.String(),
-					},
-				},
-			},
-		},
-	}
+	q := u.Query()
+	q.Set("id", cmd.Token)
 
-	subject := "login"
+	u.RawQuery = q.Encode()
 
-	template, err := mailing.EmailFromTemplate(subject, email)
+	template, err := mailing.NewTemplate("d-900a6f535312497d837ceee347799859", map[string]interface{}{
+		"link": u.String(),
+	})
 
 	if err != nil {
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("", cmd.Email)
+	recipient, err := mailing.NewRecipient("", cmd.Email, "")
 
 	if err != nil {
 		return err

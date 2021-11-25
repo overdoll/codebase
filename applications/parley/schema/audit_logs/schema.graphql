@@ -1,7 +1,7 @@
 enum PostAuditLogAction {
-  Approved
-  Denied
-  Removed
+  APPROVED
+  DENIED
+  REMOVED
 }
 
 """

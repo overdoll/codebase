@@ -2,14 +2,12 @@ package resolvers
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -19,20 +17,41 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) UsernamesLimit(ctx context.Context, obj *types.Account) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	return r.App.Queries.AccountUsernamesLimit.Handle(ctx, query.AccountUsernamesLimit{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+}
+
+func (r AccountResolver) EmailsLimit(ctx context.Context, obj *types.Account) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	return r.App.Queries.AccountEmailsLimit.Handle(ctx, query.AccountEmailsLimit{
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+}
+
 func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error) {
 
-	acc, err := r.App.Queries.AccountById.Handle(ctx, obj.ID.GetID())
-
-	if err != nil {
-
-		if err == account.ErrAccountNotFound {
-			return nil, nil
-		}
-
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountLockToGraphQL(acc), nil
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return nil, err
+	}
+
+	return obj.Lock, nil
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
@@ -107,22 +126,11 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	accountSession := ""
-
-	gc := helpers.GinContextFromContext(ctx)
-
-	// get current session from connect.sid cookie
-	currentCookie, err := gc.Request.Cookie("connect.sid")
-
-	if err == nil && currentCookie != nil {
-		accountSession = currentCookie.Value
-	}
-
 	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, query.AccountSessionsByAccount{
-		Cursor:           cursor,
-		CurrentSessionId: accountSession,
-		Principal:        principal.FromContext(ctx),
-		AccountId:        obj.ID.GetID(),
+		Cursor:    cursor,
+		Passport:  passport.FromContext(ctx),
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
 	})
 
 	if err != nil {
@@ -144,6 +152,10 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 	}
 
 	accountId := obj.ID.GetID()
+
+	if err := principal.FromContext(ctx).BelongsToAccount(accountId); err != nil {
+		return nil, err
+	}
 
 	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
 
@@ -197,11 +209,5 @@ func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) 
 		return nil, err
 	}
 
-	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
-
-	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
-	}
-
-	return recoveryCodes, nil
+	return types.MarshalRecoveryCodesToGraphql(ctx, codes), nil
 }
