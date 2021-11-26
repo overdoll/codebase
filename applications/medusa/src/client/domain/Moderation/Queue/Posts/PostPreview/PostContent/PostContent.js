@@ -6,7 +6,7 @@ import { Wrap, WrapItem } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostContentFragment$key } from '@//:artifacts/PostContentFragment.graphql'
-import ResourceItem from '../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 
 type Props = {
   query: PostContentFragment$key

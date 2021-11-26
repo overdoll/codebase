@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
-export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
+export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
 export type CreatePostQueryVariables = {|
   reference: string
 |};

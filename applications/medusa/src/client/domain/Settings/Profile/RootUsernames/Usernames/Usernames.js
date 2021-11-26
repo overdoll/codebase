@@ -23,6 +23,7 @@ import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import Button from '@//:modules/form/Button'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery($first: Int) {
@@ -60,53 +61,53 @@ export default function Usernames (props: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen: isFormOpen, onToggle: onToggleForm } = useDisclosure()
+
+  const { isOpen: isAliasesOpen, onToggle: onToggleAliases } = useDisclosure()
 
   const usernamesConnectionID = data?.usernames?.__id
 
   return (
     <>
-      <Stack spacing={3}>
-        <Flex direction='column'>
-          <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
-          <Flex align='center' direction='row' justify='space-between'>
-            <Heading size='md' color='primary.500'>{data?.username}</Heading>
-            <Button onClick={onToggle} size='sm'>{t('profile.username.current.change')}</Button>
+      <Stack spacing={2}>
+        <SmallBackgroundBox>
+          <Flex justify='center'>
+            <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
           </Flex>
-          <Collapse in={isOpen} animateOpacity>
-            <Flex mt={3}>
-              <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
-            </Flex>
-          </Collapse>
-        </Flex>
+        </SmallBackgroundBox>
         {data?.usernames.edges.length > 0 &&
-          <Flex direction='column'>
-            <Accordion allowToggle>
-              <AccordionItem border='none'>
-                <AccordionButton pl={0} pr={0} borderRadius={5} justify='space-between'>
-                  <Flex w='100%'>
-                    <Heading
-                      size='sm'
-                      color='gray.100'
-                    >{t('profile.username.previous.title')} ({data.usernames.edges.length})
-                    </Heading>
-                  </Flex>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pl={0} pr={0}>
-                  <Flex mb={1}>
-                    <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
-                    <InfoTip
-                      text={t('profile.username.previous.tooltip.hint')}
-                    />
-                  </Flex>
-                  {data.usernames.edges.map((item, index) =>
-                    <Text key={index} color='gray.200'>{item.node.username}</Text>
-                  )}
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Flex>}
+          <SmallBackgroundBox>
+            <Button
+              fontFamily='body'
+              fontSize='sm'
+              color='gray.100'
+              variant='link'
+              onClick={onToggleAliases}
+            >
+              {t('profile.username.previous.title', { count: data.usernames.edges.length })}
+            </Button>
+            <Collapse in={isAliasesOpen} animateOpacity>
+              <Flex mt={1}>
+                <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
+                <InfoTip
+                  text={t('profile.username.previous.tooltip.hint')}
+                />
+              </Flex>
+              {data.usernames.edges.map((item, index) =>
+                <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
+              )}
+            </Collapse>
+          </SmallBackgroundBox>}
+        <Button
+          variant='solid' colorScheme='gray' onClick={onToggleForm}
+          size='sm'
+        >{t('profile.username.current.change')}
+        </Button>
+        <Collapse in={isFormOpen} animateOpacity>
+          <Flex>
+            <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+          </Flex>
+        </Collapse>
       </Stack>
     </>
   )

@@ -21,10 +21,10 @@ export default function SidebarButton ({ path, title }: Props): Node {
           pl={3}
           pr={0}
           h={{ base: 9, md: 10 }}
-          variant={isActive ? 'panel' : 'ghost'}
+          variant={isActive ? 'solid' : 'ghost'}
           display='inline'
           lineHeight='inherit'
-          color={isActive ? 'gray.100' : 'gray.400'}
+          color={isActive ? 'gray.100' : 'gray.300'}
         >
           {title}
         </Button>

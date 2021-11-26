@@ -13,11 +13,11 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   beforeEach(() => {
-    cy.preserveAccount()
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
   })
 
   it('can set up recovery codes', () => {
+    cy.preserveAccount()
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -29,6 +29,7 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('can generate new recovery codes', () => {
+    cy.preserveAccount()
     gotoSettingsPage()
 
     // Generate new codes and check to see if they are equal to the new ones
@@ -46,6 +47,7 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('can set up authenticator app', () => {
+    cy.preserveAccount()
     gotoSettingsPage()
 
     // Set up authenticator app

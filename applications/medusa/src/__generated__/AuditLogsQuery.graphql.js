@@ -1,10 +1,6 @@
 /**
  * @flow
-<<<<<<< HEAD
  * @relayHash 3bb9f6305cd465ea00be8c2f639551a7
-=======
- * @relayHash 2c337a39e6f6890b8b343351271de229
->>>>>>> master
  */
 
 /* eslint-disable */
@@ -66,11 +62,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment on Account {
-<<<<<<< HEAD
   moderatorPostAuditLogs(first: 5, dateRange: {from: $from, to: $to}) {
-=======
-  moderatorPostAuditLogs(first: 5, dateRange: {from: 0, to: 0}) {
->>>>>>> master
     edges {
       node {
         ...AuditCardFragment
@@ -160,14 +152,6 @@ v1 = [
     ],
     "kind": "ObjectValue",
     "name": "dateRange"
-  },
-  {
-    "kind": "Literal",
-    "name": "dateRange",
-    "value": {
-      "from": 0,
-      "to": 0
-    }
   },
   {
     "kind": "Literal",
@@ -462,19 +446,11 @@ return {
                 "storageKey": null
               }
             ],
-<<<<<<< HEAD
             "storageKey": null
           },
           {
             "alias": null,
             "args": (v1/*: any*/),
-=======
-            "storageKey": "moderatorPostAuditLogs(dateRange:{\"from\":0,\"to\":0},first:5)"
-          },
-          {
-            "alias": null,
-            "args": (v0/*: any*/),
->>>>>>> master
             "filters": [
               "dateRange"
             ],
@@ -490,11 +466,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
     "id": "3bb9f6305cd465ea00be8c2f639551a7",
-=======
-    "id": "2c337a39e6f6890b8b343351271de229",
->>>>>>> master
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

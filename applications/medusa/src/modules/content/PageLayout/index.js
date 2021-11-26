@@ -7,3 +7,7 @@ export { default as PageSectionDescription } from './PageSection/PageSectionDesc
 export { default as PageSectionTitle } from './PageSection/PageSectionTitle/PageSectionTitle'
 
 export { default as PageWrapper } from './PageWrapper/PageWrapper'
+
+export { default as SmallBackgroundBox } from './BuildingBlocks/SmallBackgroundBox/SmallBackgroundBox'
+
+export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/ListSpacer'

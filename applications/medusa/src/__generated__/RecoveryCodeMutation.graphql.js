@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a7a70b7ed0206bd13f1791246c052a5c
+ * @relayHash a376f0c63f1f30bde5d56d40f0d03e3f
  */
 
 /* eslint-disable */
@@ -12,10 +12,10 @@ export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeV
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput = {|
   recoveryCode: string
 |};
-export type RecoveryCodeFormMutationVariables = {|
+export type RecoveryCodeMutationVariables = {|
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput
 |};
-export type RecoveryCodeFormMutationResponse = {|
+export type RecoveryCodeMutationResponse = {|
   +grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: ?{|
     +validation: ?GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation,
     +account: ?{|
@@ -23,14 +23,14 @@ export type RecoveryCodeFormMutationResponse = {|
     |},
   |}
 |};
-export type RecoveryCodeFormMutation = {|
-  variables: RecoveryCodeFormMutationVariables,
-  response: RecoveryCodeFormMutationResponse,
+export type RecoveryCodeMutation = {|
+  variables: RecoveryCodeMutationVariables,
+  response: RecoveryCodeMutationResponse,
 |};
 
 
 /*
-mutation RecoveryCodeFormMutation(
+mutation RecoveryCodeMutation(
   $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!
 ) {
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "RecoveryCodeFormMutation",
+    "name": "RecoveryCodeMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,18 +108,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "RecoveryCodeFormMutation",
+    "name": "RecoveryCodeMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "a7a70b7ed0206bd13f1791246c052a5c",
+    "id": "a376f0c63f1f30bde5d56d40f0d03e3f",
     "metadata": {},
-    "name": "RecoveryCodeFormMutation",
+    "name": "RecoveryCodeMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '24991b5f7aaa4a31aa83abaf81e20c67';
+(node: any).hash = '588c613c78f3d1c6744e4aadffe805b8';
 module.exports = node;

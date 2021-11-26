@@ -7,6 +7,7 @@ import {
   Divider,
   Flex,
   Heading,
+  Box,
   Stack, useToast
 } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
@@ -15,13 +16,18 @@ import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFra
 import EmailCard from './EmailCard/EmailCard'
 import { useFlash } from '@//:modules/flash'
 import type { EmailsQuery } from '@//:artifacts/EmailsQuery.graphql'
+import { ListSpacer } from '@//:modules/content/PageLayout'
+import { usePaginationFragment } from 'react-relay'
+import type { SessionsSettingsFragment$key } from '@//:artifacts/SessionsSettingsFragment.graphql'
+import Button from '@//:modules/form/Button'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   query: EmailsSettingsFragment$key
 }
 
 const EmailsQueryGQL = graphql`
-  query EmailsQuery($first: Int) {
+  query EmailsQuery {
     viewer {
       ...EmailsSettingsFragment
     }
@@ -29,8 +35,14 @@ const EmailsQueryGQL = graphql`
 `
 
 const EmailsFragmentGQL = graphql`
-  fragment EmailsSettingsFragment on Account {
-    emails(first: $first) @connection(key: "EmailsSettingsFragment_emails") {
+  fragment EmailsSettingsFragment on Account
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 3}
+    after: {type: String}
+  )
+  @refetchable(queryName: "EmailsSettingsPaginationQuery" ) {
+    emails(first: $first, after: $after)
+    @connection(key: "EmailsSettingsFragment_emails") {
       __id
       edges {
         node {
@@ -48,7 +60,13 @@ export default function Emails (props: Props): Node {
     props.query
   )
 
-  const data = useFragment(EmailsFragmentGQL, queryData?.viewer)
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<EmailsSettingsFragment$key,
+    _>(
+      EmailsFragmentGQL,
+      queryData?.viewer
+    )
+
+  const [t] = useTranslation('settings')
 
   const emailsConnectionID = data?.emails?.__id
 
@@ -82,8 +100,8 @@ export default function Emails (props: Props): Node {
   }, [confirmationError, confirmationSuccess])
 
   return (
-    <>
-      <Stack spacing={3} mb={3}>
+    <Stack spacing={3}>
+      <ListSpacer>
         {data?.emails.edges.map((item, index) => {
           return (
             <EmailCard
@@ -93,10 +111,16 @@ export default function Emails (props: Props): Node {
             />
           )
         })}
-      </Stack>
-      <Flex>
-        <AddEmailForm connectionID={emailsConnectionID} />
-      </Flex>
-    </>
+      </ListSpacer>
+      {hasNext &&
+        <Flex justify='center'>
+          <Button
+            onClick={() => loadNext(3)} isLoading={isLoadingNext} color='gray.200'
+            variant='link'
+          >{t('profile.email.load')}
+          </Button>
+        </Flex>}
+      <AddEmailForm connectionID={emailsConnectionID} />
+    </Stack>
   )
 }

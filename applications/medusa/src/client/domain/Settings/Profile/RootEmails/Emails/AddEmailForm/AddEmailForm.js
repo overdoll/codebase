@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
+import Button from '@//:modules/form/Button'
 
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
@@ -100,51 +101,48 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
   }
 
   return (
-    <>
-      <form noValidate onSubmit={handleSubmit(onAddEmail)}>
-        <FormControl isInvalid={errors.email} id='email'>
-          <FormLabel>{t('profile.email.add.title')}</FormLabel>
-          <Flex direction='row'>
-            <InputGroup>
-              <InputLeftElement h='32px' pointerEvents='none'>
-                <Icon icon={MailSignAt} m={3} fill='gray.200' />
-              </InputLeftElement>
-              <Input
-                {...register('email')}
-                w='100%'
-                size='sm'
-                placeholder={t('profile.email.add.placeholder')}
-                variant='outline' mr={2}
-              />
-              {formReveal && (
-                <InputRightElement zIndex={0} mr={2} h='32px' pointerEvents='none'>
-                  <Icon
-                    m={3}
-                    icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                    fill={success ? 'green.600' : 'orange.500'}
-                  />
-                </InputRightElement>
-              )}
-            </InputGroup>
-            <IconButton
-              aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
-              borderRadius={5}
-              isLoading={isAddingEmail}
+    <form noValidate onSubmit={handleSubmit(onAddEmail)}>
+      <FormControl isInvalid={errors.email} id='email'>
+        <FormLabel>{t('profile.email.add.title')}</FormLabel>
+        <Flex direction='row'>
+          <InputGroup>
+            <Input
+              {...register('email')}
+              w='100%'
               size='sm'
-              icon={
-                <Icon
-                  m={2}
-                  icon={InterfaceArrowsRight}
-                  fill='gray.100'
-                />
-              }
+              placeholder={t('profile.email.add.placeholder')}
+              variant='filled' mr={2}
+              colorScheme='gray'
             />
-          </Flex>
-          <FormErrorMessage>
-            {errors.email && errors.email.message}
-          </FormErrorMessage>
-        </FormControl>
-      </form>
-    </>
+            {formReveal && (
+              <InputRightElement zIndex={0} mr={2} h='32px' pointerEvents='none'>
+                <Icon
+                  m={3}
+                  icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
+                  fill={success ? 'green.600' : 'orange.500'}
+                />
+              </InputRightElement>
+            )}
+          </InputGroup>
+          <IconButton
+            aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
+            isLoading={isAddingEmail}
+            size='sm'
+            borderRadius='base'
+            icon={
+              <Icon
+                w={3}
+                h={3}
+                icon={InterfaceArrowsRight}
+                fill='gray.100'
+              />
+            }
+          />
+        </Flex>
+        <FormErrorMessage>
+          {errors.email && errors.email.message}
+        </FormErrorMessage>
+      </FormControl>
+    </form>
   )
 }

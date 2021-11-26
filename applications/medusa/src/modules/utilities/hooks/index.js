@@ -1,2 +1,2 @@
 export { default as useClickDelay } from './useClickDelay'
-export { default as useAbilityContext } from './useAbilityContext'
+export { default as useAbility } from './useAbility'

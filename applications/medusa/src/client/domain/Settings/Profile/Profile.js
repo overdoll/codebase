@@ -12,7 +12,7 @@ import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql'
 import RootEmails from './RootEmails/RootEmails'
 import RootUsernames from './RootUsernames/RootUsernames'
-import { PageWrapper } from '../../../../modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 type Props = {
   prepared: {

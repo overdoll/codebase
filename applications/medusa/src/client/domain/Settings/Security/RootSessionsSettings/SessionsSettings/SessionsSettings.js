@@ -24,34 +24,34 @@ type Props = {
 }
 
 const SessionsSettingsQueryGQL = graphql`
-    query SessionsSettingsQuery {
-        viewer {
-            ...SessionsSettingsFragment
-        }
+  query SessionsSettingsQuery {
+    viewer {
+      ...SessionsSettingsFragment
     }
+  }
 `
 
 const SessionsGQL = graphql`
-    fragment SessionsSettingsFragment on Account
-    @argumentDefinitions(
-        first: {type: Int, defaultValue: 3}
-        after: {type: String}
-    )
-    @refetchable(queryName: "SessionsPaginationQuery" ) {
-        sessions (first: $first, after: $after)
-        @connection(key: "sessions_sessions") {
-            __id
-            edges {
-                node {
-                    ...RevokeSessionFragment
-                    userAgent
-                    ip
-                    created
-                    current
-                }
-            }
+  fragment SessionsSettingsFragment on Account
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 3}
+    after: {type: String}
+  )
+  @refetchable(queryName: "SessionsPaginationQuery" ) {
+    sessions (first: $first, after: $after)
+    @connection(key: "sessions_sessions") {
+      __id
+      edges {
+        node {
+          ...RevokeSessionFragment
+          userAgent
+          ip
+          created
+          current
         }
+      }
     }
+  }
 `
 
 export default function MultiFactorSettings (props: Props): Node {
@@ -82,7 +82,7 @@ export default function MultiFactorSettings (props: Props): Node {
           return (
             <Box key={index} p={3} borderRadius='base' bg='gray.800'>
               <Flex mb={1} align='center'>
-                <Box borderRadius='full' w={2} h={2} bg={item.current ? 'green.500' : 'gray.300'} />
+                <Box borderRadius='full' w={2} h={2} bg={item.node.current ? 'green.500' : 'gray.300'} />
                 <Heading
                   ml={2} color='gray.100'
                   fontSize='md'
@@ -130,7 +130,7 @@ export default function MultiFactorSettings (props: Props): Node {
         <Flex justify='center'>
           <Button
             onClick={() => loadNext(3)} isLoading={isLoadingNext} color='gray.200'
-            variant='ghost'
+            variant='link'
           >{t('security.sessions.load')}
           </Button>
         </Flex>}

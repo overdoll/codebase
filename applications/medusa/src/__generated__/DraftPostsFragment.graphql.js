@@ -7,7 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
+export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 import type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType } from "./DraftPostsPaginationQuery.graphql";
 export type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType };

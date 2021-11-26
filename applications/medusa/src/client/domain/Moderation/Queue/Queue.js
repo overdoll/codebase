@@ -26,7 +26,7 @@ import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import Posts from './Posts/Posts'
 import { useQueryLoader } from 'react-relay/hooks'
-import ErrorFallback from '../../../../modules/content/ErrorFallback/ErrorFallback'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 

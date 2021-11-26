@@ -6,7 +6,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
-} from '../../../../../../../../../../../modules/content/PageLayout'
+} from '@//:modules/content/PageLayout'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { BrandFragment$key } from '@//:artifacts/BrandFragment.graphql'
@@ -20,7 +20,7 @@ import {
   Selector,
   SelectorTextOverlay, useSingleSelector
 } from '../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '../../../../../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { Flex, Text, Box, Heading } from '@chakra-ui/react'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 import { useEffect } from 'react'

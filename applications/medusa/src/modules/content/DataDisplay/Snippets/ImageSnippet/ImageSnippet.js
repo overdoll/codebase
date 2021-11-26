@@ -12,7 +12,10 @@ type Props = {
 
 export default function ImageSnippet ({ urls, ...rest }: Props): Node {
   // TODO provide image fallbacks?
+
   const url = urls[0].url
+
+  console.log(urls)
 
   return (
 

@@ -6,7 +6,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
-} from '../../../../../../../../../../../modules/content/PageLayout'
+} from '@//:modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'

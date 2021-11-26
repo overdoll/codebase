@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '../../../../modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 export default function Brands (): Node {
   return (

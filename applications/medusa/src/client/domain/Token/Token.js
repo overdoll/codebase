@@ -18,7 +18,7 @@ import Button from '@//:modules/form/Button'
 import { useHistory } from '@//:modules/routing'
 import Confirm from './Confirm/Confirm'
 import Link from '@//:modules/routing/Link'
-import { PageWrapper } from '../../../modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 type Props = {
   prepared: {

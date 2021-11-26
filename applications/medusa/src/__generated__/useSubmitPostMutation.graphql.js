@@ -8,7 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
+export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
 export type SubmitPostInput = {|
   id: string
 |};

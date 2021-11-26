@@ -9,10 +9,6 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
-<<<<<<< HEAD
-=======
-export type AddAccountEmailValidation = "INVALID_EMAIL" | "%future added value";
->>>>>>> master
 export type AddAccountEmailInput = {|
   email: string
 |};

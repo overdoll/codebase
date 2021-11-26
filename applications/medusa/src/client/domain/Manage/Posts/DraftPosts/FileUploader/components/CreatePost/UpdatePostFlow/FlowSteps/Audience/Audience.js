@@ -6,7 +6,6 @@ import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphql'
 import type { AudienceTagFragment$key } from '@//:artifacts/AudienceTagFragment.graphql'
-
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Stack, Box, Heading, Text, Wrap, WrapItem, Flex } from '@chakra-ui/react'
@@ -23,8 +22,8 @@ import {
   PageSectionWrap,
   PageSectionTitle,
   PageSectionDescription
-} from '../../../../../../../../../../../modules/content/PageLayout'
-import ResourceItem from '../../../../../../../../../../../modules/content/DataDisplay/ResourceItem/ResourceItem'
+} from '@//:modules/content/PageLayout'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 

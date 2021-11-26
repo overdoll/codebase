@@ -7,7 +7,7 @@ import RootMultiFactorSettings from './RootMultiFactorSettings/RootMultiFactorSe
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql'
-import { PageWrapper } from '../../../../modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Stack, Box } from '@chakra-ui/react'
 import RootSessionsSettings from './RootSessionsSettings/RootSessionsSettings'
 

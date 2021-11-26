@@ -50,8 +50,6 @@ const UsernameMutationGQL = graphql`
   }
 `
 
-// TODO look up custom messages for empty and invalid form errors
-
 export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): Node {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
@@ -113,17 +111,21 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
         id='username'
       >
         <FormLabel>{t('profile.username.modal.header')}</FormLabel>
-        <Flex justify='center'>
-          <InputGroup mr={2} size='sm'>
+        <Flex direction='row'>
+          <InputGroup>
             <Input
               {...register('username')}
-              variant='outline'
+              variant='filled'
+              w='100%'
+              size='sm'
+              mr={2}
               placeholder={t('profile.username.modal.header')}
             />
             {(errors.username || success) && (
               <InputRightElement mr={1}>
                 <Icon
                   m={2}
+                  h='32px'
                   icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
                   fill={success ? 'green.600' : 'orange.500'}
                 />

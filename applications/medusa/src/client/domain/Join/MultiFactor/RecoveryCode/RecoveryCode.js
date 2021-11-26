@@ -32,7 +32,7 @@ type CodeValues = {
 type Props = {}
 
 const RecoveryCodeMutationGQL = graphql`
-  mutation RecoveryCodeFormMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
+  mutation RecoveryCodeMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
       validation
       account {
@@ -42,7 +42,7 @@ const RecoveryCodeMutationGQL = graphql`
   }
 `
 
-export default function RecoveryCodeForm (props: Props): Node {
+export default function RecoveryCode (props: Props): Node {
   const [submitCode, isSubmittingCode] = useMutation(
     RecoveryCodeMutationGQL
   )

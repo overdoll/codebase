@@ -6,7 +6,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
-} from '../../../../../../../../../../../modules/content/PageLayout'
+} from '@//:modules/content/PageLayout'
 import { useCallback, useEffect, useState } from 'react'
 import { useFragment } from 'react-relay'
 import { useTranslation } from 'react-i18next'

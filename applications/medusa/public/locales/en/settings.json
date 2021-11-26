@@ -9,7 +9,8 @@
         "change": "Change Username"
       },
       "previous": {
-        "title": "Previous Usernames",
+        "title": "{{count}} previous alias",
+        "title_plural": "{{count}} previous aliases",
         "tooltip": {
           "title": "Your old usernames are replaced",
           "hint": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
@@ -86,7 +87,8 @@
           "success": "A confirmation email was sent to {{email}}. Check your inbox/spam!",
           "error": "There was an error adding the email"
         }
-      }
+      },
+      "load": "Load More"
     }
   },
   "moderation": {

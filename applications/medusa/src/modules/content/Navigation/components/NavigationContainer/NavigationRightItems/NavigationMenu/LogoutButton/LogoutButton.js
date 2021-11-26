@@ -37,6 +37,8 @@ export default function LogoutButton (): Node {
       },
       updater: (store, payload) => {
         history.push('/')
+        // listen to history until its at a certain path and then logout
+        // to fix double refresh bug
         const viewer = store
           .getRoot()
           .getLinkedRecord('viewer')

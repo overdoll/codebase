@@ -14,16 +14,16 @@ type Props = {
 }
 
 const MultiFactorQueryGQL = graphql`
-    query MultiFactorSettingsQuery {
-        viewer {
-            multiFactorSettings {
-                multiFactorTotpConfigured
-                ...DisableMultiFactorFragment
-                ...MultiFactorTotpSettingsFragment
-                ...RecoveryCodesSettingsFragment
-            }
-        }
+  query MultiFactorSettingsQuery {
+    viewer {
+      multiFactorSettings {
+        multiFactorTotpConfigured
+        ...DisableMultiFactorFragment
+        ...MultiFactorTotpSettingsFragment
+        ...RecoveryCodesSettingsFragment
+      }
     }
+  }
 `
 
 export default function MultiFactorSettings (props: Props): Node {
@@ -38,13 +38,11 @@ export default function MultiFactorSettings (props: Props): Node {
   }
 
   return (
-    <>
-      <Stack spacing={2}>
-        <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
-        <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
-        {data?.viewer?.multiFactorSettings.multiFactorTotpConfigured &&
-          <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
-      </Stack>
-    </>
+    <Stack spacing={2}>
+      <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
+      <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
+      {data?.viewer?.multiFactorSettings.multiFactorTotpConfigured &&
+        <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
+    </Stack>
   )
 }

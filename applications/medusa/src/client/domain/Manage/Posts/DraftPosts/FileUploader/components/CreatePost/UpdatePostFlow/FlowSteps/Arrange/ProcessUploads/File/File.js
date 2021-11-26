@@ -48,15 +48,13 @@ export default function File ({ state, file, dispatch, uppy, disabled }: Props):
 
   const FileMessage = () => {
     if (url) {
-      // Show a "processing" placeholder when files are done uploading
+      // Show a "processing" indicator when files are done uploading
       return (
         <>
-          <Flex align='center' w='100%'>
-            <Spinner color='primary.500' size='md' />
-            <Text ml={3} color='gray.100' fontSize='md'>
-              {t('posts.flow.steps.arrange.uploader.processing.in_progress')}
-            </Text>
-          </Flex>
+          <Progress
+            colorScheme='primary' w='100%' value={100} size='md' hasStripe
+            isAnimated
+          />
         </>
       )
     }

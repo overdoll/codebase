@@ -7,7 +7,7 @@ import { Button } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useAbilityContext } from '@//:modules/utilities/hooks'
+import { useAbility } from '@//:modules/utilities/hooks'
 import Link from '@//:modules/routing/Link'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { useRelayEnvironment } from 'react-relay'
@@ -47,10 +47,10 @@ type Props = {
 }
 
 const NavigationFragmentGQL = graphql`
-    fragment NavigationFragment on Account {
-        ...AvatarMenuFragment
-        ...ProfileButtonFragment
-    }
+  fragment NavigationFragment on Account {
+    ...AvatarMenuFragment
+    ...ProfileButtonFragment
+  }
 `
 
 export default function Navigation (props: Props): Node {
@@ -62,7 +62,7 @@ export default function Navigation (props: Props): Node {
 
   const data = useFragment(NavigationFragmentGQL, props.rootQuery)
 
-  const ability = useAbilityContext()
+  const ability = useAbility()
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment

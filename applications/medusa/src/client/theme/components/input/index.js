@@ -49,21 +49,24 @@ const size = {
     fontSize: 'lg',
     px: 4,
     h: 12,
-    borderRadius: 'md'
+    borderRadius: 'md',
+    fontWeight: 'semibold'
   },
 
   md: {
     fontSize: 'md',
     px: 4,
     h: 10,
-    borderRadius: 7
+    borderRadius: 'base',
+    fontWeight: 'semibold'
   },
 
   sm: {
     fontSize: 'sm',
     px: 3,
     h: 8,
-    borderRadius: 5
+    borderRadius: 'base',
+    fontWeight: 'semibold'
   },
 
   xs: {
@@ -160,10 +163,13 @@ function variantFilled (props) {
       borderStyle: 'solid',
       borderWidth: determineBorderWidth(size),
       borderColor: 'transparent',
-      bg: mode('gray.100', 'whiteAlpha.50')(props),
+      bg: mode('gray.100', 'gray.800')(props),
       _readOnly: {
         boxShadow: 'none !important',
         userSelect: 'all'
+      },
+      _hover: {
+        bg: mode('gray.100', 'gray.700')(props)
       },
       _disabled: {
         opacity: 0.4,
