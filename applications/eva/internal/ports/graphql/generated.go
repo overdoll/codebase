@@ -114,11 +114,11 @@ type ComplexityRoot struct {
 	}
 
 	AccountSession struct {
-		Created   func(childComplexity int) int
-		Current   func(childComplexity int) int
-		ID        func(childComplexity int) int
-		IP        func(childComplexity int) int
-		UserAgent func(childComplexity int) int
+		Created  func(childComplexity int) int
+		Current  func(childComplexity int) int
+		Device   func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Location func(childComplexity int) int
 	}
 
 	AccountSessionConnection struct {
@@ -241,6 +241,16 @@ type ComplexityRoot struct {
 
 	Language struct {
 		Locale func(childComplexity int) int
+	}
+
+	Location struct {
+		City        func(childComplexity int) int
+		Country     func(childComplexity int) int
+		IP          func(childComplexity int) int
+		Latitude    func(childComplexity int) int
+		Longitude   func(childComplexity int) int
+		PostalCode  func(childComplexity int) int
+		Subdivision func(childComplexity int) int
 	}
 
 	Moderator struct {
@@ -712,6 +722,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountSession.Current(childComplexity), true
 
+	case "AccountSession.device":
+		if e.complexity.AccountSession.Device == nil {
+			break
+		}
+
+		return e.complexity.AccountSession.Device(childComplexity), true
+
 	case "AccountSession.id":
 		if e.complexity.AccountSession.ID == nil {
 			break
@@ -719,19 +736,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountSession.ID(childComplexity), true
 
-	case "AccountSession.ip":
-		if e.complexity.AccountSession.IP == nil {
+	case "AccountSession.location":
+		if e.complexity.AccountSession.Location == nil {
 			break
 		}
 
-		return e.complexity.AccountSession.IP(childComplexity), true
-
-	case "AccountSession.userAgent":
-		if e.complexity.AccountSession.UserAgent == nil {
-			break
-		}
-
-		return e.complexity.AccountSession.UserAgent(childComplexity), true
+		return e.complexity.AccountSession.Location(childComplexity), true
 
 	case "AccountSessionConnection.edges":
 		if e.complexity.AccountSessionConnection.Edges == nil {
@@ -1107,6 +1117,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Language.Locale(childComplexity), true
+
+	case "Location.city":
+		if e.complexity.Location.City == nil {
+			break
+		}
+
+		return e.complexity.Location.City(childComplexity), true
+
+	case "Location.country":
+		if e.complexity.Location.Country == nil {
+			break
+		}
+
+		return e.complexity.Location.Country(childComplexity), true
+
+	case "Location.ip":
+		if e.complexity.Location.IP == nil {
+			break
+		}
+
+		return e.complexity.Location.IP(childComplexity), true
+
+	case "Location.latitude":
+		if e.complexity.Location.Latitude == nil {
+			break
+		}
+
+		return e.complexity.Location.Latitude(childComplexity), true
+
+	case "Location.longitude":
+		if e.complexity.Location.Longitude == nil {
+			break
+		}
+
+		return e.complexity.Location.Longitude(childComplexity), true
+
+	case "Location.postalCode":
+		if e.complexity.Location.PostalCode == nil {
+			break
+		}
+
+		return e.complexity.Location.PostalCode(childComplexity), true
+
+	case "Location.subdivision":
+		if e.complexity.Location.Subdivision == nil {
+			break
+		}
+
+		return e.complexity.Location.Subdivision(childComplexity), true
 
 	case "Moderator.account":
 		if e.complexity.Moderator.Account == nil {
@@ -1904,6 +1963,30 @@ extend type Mutation {
   updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
 }
 `, BuiltIn: false},
+	{Name: "schema/location/schema.graphql", Input: `"""Represents a physical location."""
+type Location {
+  """IP of the location"""
+  ip: String!
+
+  """City"""
+  city: String!
+
+  """Country"""
+  country: String!
+
+  """Postal Code"""
+  postalCode: String!
+
+  """Subdivision"""
+  subdivision: String!
+
+  """Latitude"""
+  latitude: Float!
+
+  """Longitude"""
+  longitude: Float!
+}
+`, BuiltIn: false},
 	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
   CONFIRMED
   UNCONFIRMED
@@ -1946,11 +2029,11 @@ type AccountSession implements Node @key(fields: "id") {
   """ID of the session"""
   id: ID!
 
-  """The user agent who first created the sesssion"""
-  userAgent: String!
+  """The originating user agent device"""
+  device: String!
 
-  """The IP of who first created the session"""
-  ip: String!
+  """Where the session was originally created"""
+  location: Location!
 
   """When the session was created"""
   created: String!
@@ -2472,7 +2555,7 @@ type AuthenticationToken {
   device: String!
 
   """The location where this token was created at."""
-  location: String!
+  location: Location!
 
   """The email that belongs to this token."""
   email: String!
@@ -4686,7 +4769,7 @@ func (ec *executionContext) _AccountSession_id(ctx context.Context, field graphq
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountSession_userAgent(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountSession_device(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4704,7 +4787,7 @@ func (ec *executionContext) _AccountSession_userAgent(ctx context.Context, field
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.UserAgent, nil
+		return obj.Device, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4721,7 +4804,7 @@ func (ec *executionContext) _AccountSession_userAgent(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountSession_ip(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountSession_location(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4739,7 +4822,7 @@ func (ec *executionContext) _AccountSession_ip(ctx context.Context, field graphq
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IP, nil
+		return obj.Location, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4751,9 +4834,9 @@ func (ec *executionContext) _AccountSession_ip(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*types.Location)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNLocation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLocation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSession_created(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
@@ -5544,9 +5627,9 @@ func (ec *executionContext) _AuthenticationToken_location(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*types.Location)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNLocation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLocation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AuthenticationToken_email(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
@@ -6543,6 +6626,251 @@ func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_ip(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IP, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_city(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.City, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_country(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Country, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_postalCode(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostalCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_subdivision(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Subdivision, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_latitude(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Latitude, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Location_longitude(ctx context.Context, field graphql.CollectedField, obj *types.Location) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Location",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Longitude, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Moderator_id(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
@@ -10868,13 +11196,13 @@ func (ec *executionContext) _AccountSession(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "userAgent":
-			out.Values[i] = ec._AccountSession_userAgent(ctx, field, obj)
+		case "device":
+			out.Values[i] = ec._AccountSession_device(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "ip":
-			out.Values[i] = ec._AccountSession_ip(ctx, field, obj)
+		case "location":
+			out.Values[i] = ec._AccountSession_location(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11655,6 +11983,63 @@ func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = graphql.MarshalString("Language")
 		case "locale":
 			out.Values[i] = ec._Language_locale(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var locationImplementors = []string{"Location"}
+
+func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet, obj *types.Location) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, locationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Location")
+		case "ip":
+			out.Values[i] = ec._Location_ip(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "city":
+			out.Values[i] = ec._Location_city(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "country":
+			out.Values[i] = ec._Location_country(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "postalCode":
+			out.Values[i] = ec._Location_postalCode(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "subdivision":
+			out.Values[i] = ec._Location_subdivision(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "latitude":
+			out.Values[i] = ec._Location_latitude(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "longitude":
+			out.Values[i] = ec._Location_longitude(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -13036,6 +13421,21 @@ func (ec *executionContext) unmarshalNEnrollAccountMultiFactorTotpInput2overdoll
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
+	res, err := graphql.UnmarshalFloat(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
+	res := graphql.MarshalFloat(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput(ctx context.Context, v interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput, error) {
 	res, err := ec.unmarshalInputGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13125,6 +13525,16 @@ func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋ
 		return graphql.Null
 	}
 	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNLocation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLocation(ctx context.Context, sel ast.SelectionSet, v *types.Location) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Location(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNModerator2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v types.Moderator) graphql.Marshaler {

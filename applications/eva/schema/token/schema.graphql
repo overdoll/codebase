@@ -34,7 +34,7 @@ type AuthenticationToken {
   device: String!
 
   """The location where this token was created at."""
-  location: String!
+  location: Location!
 
   """The email that belongs to this token."""
   email: String!

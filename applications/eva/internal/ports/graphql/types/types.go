@@ -127,10 +127,10 @@ type AccountMultiFactorSettings struct {
 type AccountSession struct {
 	// ID of the session
 	ID relay.ID `json:"id"`
-	// The user agent who first created the sesssion
-	UserAgent string `json:"userAgent"`
-	// The IP of who first created the session
-	IP string `json:"ip"`
+	// The originating user agent device
+	Device string `json:"device"`
+	// Where the session was originally created
+	Location *Location `json:"location"`
 	// When the session was created
 	Created string `json:"created"`
 	// If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
@@ -231,7 +231,7 @@ type AuthenticationToken struct {
 	// The device this token was created from.
 	Device string `json:"device"`
 	// The location where this token was created at.
-	Location string `json:"location"`
+	Location *Location `json:"location"`
 	// The email that belongs to this token.
 	Email string `json:"email"`
 	// Once the token is verified, you can see the status of the account
@@ -376,6 +376,24 @@ type GrantAuthenticationTokenPayload struct {
 
 type Language struct {
 	Locale string `json:"locale"`
+}
+
+// Represents a physical location.
+type Location struct {
+	// IP of the location
+	IP string `json:"ip"`
+	// City
+	City string `json:"city"`
+	// Country
+	Country string `json:"country"`
+	// Postal Code
+	PostalCode string `json:"postalCode"`
+	// Subdivision
+	Subdivision string `json:"subdivision"`
+	// Latitude
+	Latitude float64 `json:"latitude"`
+	// Longitude
+	Longitude float64 `json:"longitude"`
 }
 
 type Moderator struct {

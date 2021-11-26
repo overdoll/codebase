@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/token"
@@ -17,19 +18,24 @@ type GrantAuthenticationToken struct {
 
 type GrantAuthenticationTokenHandler struct {
 	cr      token.Repository
+	lr      location.Repository
 	carrier CarrierService
 }
 
-func NewGrantAuthenticationTokenHandler(cr token.Repository, carrier CarrierService) GrantAuthenticationTokenHandler {
-	return GrantAuthenticationTokenHandler{cr: cr, carrier: carrier}
+func NewGrantAuthenticationTokenHandler(cr token.Repository, lr location.Repository, carrier CarrierService) GrantAuthenticationTokenHandler {
+	return GrantAuthenticationTokenHandler{cr: cr, carrier: carrier, lr: lr}
 }
 
 func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAuthenticationToken) (*token.AuthenticationToken, error) {
 
+	loc, err := h.lr.GetLocationFromIp(ctx, cmd.IP)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Create an authentication cookie
-	// TODO: we want to eventually parse the user agent to a properly-formatted device name
-	// TODO: and also parse the IP for the actual location (country, state, city)
-	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, cmd.UserAgent, cmd.IP, cmd.IP)
+	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, cmd.UserAgent, loc)
 
 	if err != nil {
 		return nil, err

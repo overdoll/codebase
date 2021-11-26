@@ -63,7 +63,7 @@ func (c *TOTP) Image() (string, error) {
 		Issuer:      issuer,
 		AccountName: c.name,
 		Secret:      []byte(c.secret),
-		Digits:      otp.DigitsEight,
+		Digits:      otp.DigitsSix,
 	})
 
 	img, err := key.Image(100, 100)
@@ -92,7 +92,6 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 	key, _ := totp.Generate(totp.GenerateOpts{
 		Issuer:      issuer,
 		AccountName: username,
-		Digits:      otp.DigitsEight,
 	})
 
 	return &TOTP{

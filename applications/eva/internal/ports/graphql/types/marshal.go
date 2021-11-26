@@ -4,12 +4,12 @@ import (
 	"context"
 	"crypto/sha256"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/translations"
 	"sort"
@@ -35,6 +35,18 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		IsStaff:     result.IsStaff(),
 		IsModerator: result.IsModerator(),
 		Lock:        MarshalAccountLockToGraphQL(result),
+	}
+}
+
+func MarshalLocationToGraphQL(result *location.Location) *Location {
+	return &Location{
+		IP:          result.IP(),
+		City:        result.City(),
+		Country:     result.Country(),
+		PostalCode:  result.PostalCode(),
+		Subdivision: result.Subdivision(),
+		Latitude:    result.Latitude(),
+		Longitude:   result.Longitude(),
 	}
 }
 
@@ -162,14 +174,6 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		sameSession = false
 	}
 
-	// determine if "secure" (same IP)
-	secure := true
-	ip := helpers.GetIp(ctx)
-
-	if ip != result.IP() {
-		secure = false
-	}
-
 	// only show account status if verified
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
@@ -195,8 +199,8 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		Verified:      result.Verified(),
 		Device:        result.Device(),
 		Email:         result.Email(),
-		Location:      result.Location(),
-		Secure:        secure,
+		Location:      MarshalLocationToGraphQL(result.Location()),
+		Secure:        result.Location().IsSecure(ctx),
 		AccountStatus: accountStatus,
 	}
 }
@@ -321,11 +325,11 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, curs
 
 func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
 	return &AccountSession{
-		UserAgent: result.UserAgent(),
-		IP:        result.IP(),
-		Created:   result.Created(),
-		ID:        relay.NewID(AccountSession{}, result.ID()),
-		Current:   result.IsCurrent(),
+		Device:   result.Device(),
+		Location: MarshalLocationToGraphQL(result.Location()),
+		Created:  result.Created(),
+		ID:       relay.NewID(AccountSession{}, result.ID()),
+		Current:  result.IsCurrent(),
 	}
 }
 

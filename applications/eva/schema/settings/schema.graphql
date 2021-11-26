@@ -40,11 +40,11 @@ type AccountSession implements Node @key(fields: "id") {
   """ID of the session"""
   id: ID!
 
-  """The user agent who first created the sesssion"""
-  userAgent: String!
+  """The originating user agent device"""
+  device: String!
 
-  """The IP of who first created the session"""
-  ip: String!
+  """Where the session was originally created"""
+  location: Location!
 
   """When the session was created"""
   created: String!

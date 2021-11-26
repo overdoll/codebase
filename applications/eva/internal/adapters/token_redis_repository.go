@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"overdoll/applications/eva/internal/domain/location"
 
 	"github.com/go-redis/redis/v8"
 	"overdoll/applications/eva/internal/domain/token"
@@ -16,11 +17,10 @@ const (
 )
 
 type authenticationToken struct {
-	Email    string `json:"email"`
-	Verified int    `json:"verified"`
-	Device   string `json:"device"`
-	Location string `json:"location"`
-	IP       string `json:"ip"`
+	Email    string                `json:"email"`
+	Verified int                   `json:"verified"`
+	Device   string                `json:"device"`
+	Location location.Serializable `json:"location"`
 }
 
 type AuthenticationTokenRepository struct {
@@ -62,8 +62,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 		cookieItem.Email,
 		cookieItem.Verified == 1,
 		cookieItem.Device,
-		cookieItem.Location,
-		cookieItem.IP,
+		location.UnmarshalLocationFromSerialized(cookieItem.Location),
 	), nil
 }
 
@@ -87,8 +86,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		Email:    instance.Email(),
 		Verified: 0,
 		Device:   instance.Device(),
-		Location: instance.Location(),
-		IP:       instance.IP(),
+		Location: location.Serialize(instance.Location()),
 	}
 
 	val, err := json.Marshal(authCookie)
@@ -141,8 +139,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		Verified: redeemed,
 		Email:    instance.Email(),
 		Device:   instance.Device(),
-		Location: instance.Location(),
-		IP:       instance.IP(),
+		Location: location.Serialize(instance.Location()),
 	}
 
 	val, err := json.Marshal(authCookie)

@@ -2,6 +2,7 @@ package session
 
 import (
 	"errors"
+	"overdoll/applications/eva/internal/domain/location"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -13,11 +14,11 @@ import (
 type Session struct {
 	*paging.Node
 
-	id        string
-	userAgent string
-	ip        string
-	created   string
-	current   bool
+	id       string
+	device   string
+	location *location.Location
+	created  string
+	current  bool
 
 	passport *passport.Passport
 }
@@ -26,26 +27,26 @@ var (
 	ErrSessionsNotFound = errors.New("sessions not found")
 )
 
-func UnmarshalSessionFromDatabase(id, pass, userAgent, ip, created string, current bool) *Session {
+func UnmarshalSessionFromDatabase(id, pass, device, created string, current bool, location *location.Location) *Session {
 
 	return &Session{
-		id:        id,
-		userAgent: userAgent,
-		ip:        ip,
-		created:   created,
-		current:   current,
-		passport:  passport.FromString(pass),
+		id:       id,
+		device:   device,
+		location: location,
+		created:  created,
+		current:  current,
+		passport: passport.FromString(pass),
 	}
 }
 
-func NewSession(accountId, userAgent, ip string) *Session {
+func NewSession(accountId, userAgent string, location *location.Location) *Session {
 	return &Session{
-		id:        ksuid.New().String(),
-		userAgent: userAgent,
-		ip:        ip,
-		current:   false,
-		created:   time.Now().String(),
-		passport:  passport.FreshPassportWithAccount(accountId),
+		id:       ksuid.New().String(),
+		device:   userAgent,
+		location: location,
+		current:  false,
+		created:  time.Now().String(),
+		passport: passport.FreshPassportWithAccount(accountId),
 	}
 }
 
@@ -53,12 +54,12 @@ func (s *Session) ID() string {
 	return s.id
 }
 
-func (s *Session) UserAgent() string {
-	return s.userAgent
+func (s *Session) Device() string {
+	return s.device
 }
 
-func (s *Session) IP() string {
-	return s.ip
+func (s *Session) Location() *location.Location {
+	return s.location
 }
 
 func (s *Session) Passport() *passport.Passport {

@@ -25,6 +25,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/olivere/elastic/v7 v7.0.26
+	github.com/oschwald/geoip2-golang v1.5.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/otp v1.3.0
 	github.com/scylladb/gocqlx/v2 v2.4.0

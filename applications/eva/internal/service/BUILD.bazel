@@ -29,7 +29,10 @@ go_test(
         "language_component_test.go",
         "staff_component_test.go",
     ],
-    data = ["//applications/eva:config.toml"],
+    data = [
+        "//applications/eva:config.toml",
+        "//applications/eva/internal/service/file_fixtures:all",
+    ],
     deps = [
         ":service",
         "//applications/eva/internal/adapters",

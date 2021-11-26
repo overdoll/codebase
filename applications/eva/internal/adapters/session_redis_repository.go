@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/passport"
 	"time"
 
@@ -27,7 +28,7 @@ type sessions struct {
 }
 
 type sessionDetails struct {
-	Ip        string `json:"ip"`
+	Location  location.Serializable
 	UserAgent string `json:"userAgent"`
 	Created   string `json:"created"`
 }
@@ -79,7 +80,13 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 		current = true
 	}
 
-	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created, current)
+	res := session.UnmarshalSessionFromDatabase(encryptedKey,
+		sessionItem.Passport,
+		sessionItem.Details.UserAgent,
+		sessionItem.Details.Created,
+		current,
+		location.UnmarshalLocationFromSerialized(sessionItem.Details.Location),
+	)
 	res.Node = paging.NewNode(encryptedKey)
 
 	if err := res.CanView(requester); err != nil {
@@ -165,7 +172,19 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 
 	sessionData := &sessions{
 		Passport: session.Passport().SerializeToBaseString(),
-		Details:  sessionDetails{Ip: session.IP(), UserAgent: session.UserAgent(), Created: session.Created()},
+		Details: sessionDetails{
+			Location: location.Serializable{
+				Ip:          "",
+				City:        "",
+				Country:     "",
+				PostalCode:  "",
+				Subdivision: "",
+				Latitude:    "",
+				Longitude:   "",
+			},
+			UserAgent: session.Device(),
+			Created:   session.Created(),
+		},
 	}
 
 	val, err := json.Marshal(sessionData)

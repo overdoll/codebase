@@ -1,0 +1,23 @@
+"""Represents a physical location."""
+type Location {
+  """IP of the location"""
+  ip: String!
+
+  """City"""
+  city: String!
+
+  """Country"""
+  country: String!
+
+  """Postal Code"""
+  postalCode: String!
+
+  """Subdivision"""
+  subdivision: String!
+
+  """Latitude"""
+  latitude: Float!
+
+  """Longitude"""
+  longitude: Float!
+}

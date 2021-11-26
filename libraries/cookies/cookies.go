@@ -22,6 +22,13 @@ var (
 	ErrCookieError    = errors.New("internal cookie error")
 )
 
+func newSecureCookie() *securecookie.SecureCookie {
+	var secureCookie = securecookie.New([]byte(os.Getenv(CookieKey)), []byte(os.Getenv(CookieBlockKey)))
+	secureCookie.MaxAge(0)
+
+	return secureCookie
+}
+
 // Create Secure Cookies
 // Hash keys should be at least 32 bytes long
 // Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
@@ -29,8 +36,6 @@ var (
 
 // Set a cookie, encrypt
 func SetCookie(ctx context.Context, cookie *http.Cookie) error {
-
-	cookieKey := os.Getenv(CookieKey)
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -49,8 +54,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 		cookie.Secure = false
 	}
 
-	var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
-	encodedValue, err := secureCookie.Encode(name, value)
+	encodedValue, err := newSecureCookie().Encode(name, value)
 
 	if err != nil {
 		zap.S().Errorf("failed to encode cookie: %s", err)
@@ -67,8 +71,6 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 // Read cookie
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
-	cookieKey := os.Getenv(CookieKey)
-
 	gc := helpers.GinContextFromContext(ctx)
 
 	currentCookie, err := gc.Request.Cookie(name)
@@ -84,11 +86,9 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	}
 
 	var value string
-	secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
 
 	// no restriction on maxAge
-	secureCookie.MaxAge(0)
-	if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
+	if err = newSecureCookie().Decode(name, currentCookie.Value, &value); err == nil {
 		currentCookie.Value = value
 		return currentCookie, nil
 	}

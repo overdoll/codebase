@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/oschwald/geoip2-golang"
+	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/app"
@@ -43,11 +45,18 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
 	redis2 := bootstrap.InitializeRedisSessionWithCustomDB(0)
 
+	db, err := geoip2.Open(os.Getenv("GEOIP_DATABASE_LOCATION"))
+
+	if err != nil {
+		zap.S().Fatal("failed to open database", zap.Error(err))
+	}
+
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis2)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
+	locationRepo := adapters.NewLocationMaxmindRepository(db)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -55,7 +64,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
-			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, carrier),
+			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccountOperator:                       command.NewLockAccountOperatorHandler(accountRepo),
 			UnlockAccount:                             command.NewUnlockUserHandler(accountRepo),
 			AddAccountEmail:                           command.NewAddAccountEmailHandler(accountRepo, carrier),

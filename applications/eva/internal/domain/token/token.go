@@ -2,6 +2,7 @@ package token
 
 import (
 	"errors"
+	"overdoll/applications/eva/internal/domain/location"
 	"strings"
 	"time"
 
@@ -17,9 +18,7 @@ type AuthenticationToken struct {
 
 	device string
 
-	ip string
-
-	location string
+	location *location.Location
 
 	consumed bool
 
@@ -37,7 +36,7 @@ var (
 	ErrTokenNotFound    = errors.New("token not found")
 )
 
-func NewAuthenticationToken(id, email, device, location, ip string) (*AuthenticationToken, error) {
+func NewAuthenticationToken(id, email, device string, location *location.Location) (*AuthenticationToken, error) {
 
 	ck := &AuthenticationToken{
 		cookie:     id,
@@ -46,20 +45,18 @@ func NewAuthenticationToken(id, email, device, location, ip string) (*Authentica
 		verified:   false,
 		device:     device,
 		location:   location,
-		ip:         ip,
 	}
 
 	return ck, nil
 }
 
-func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified bool, device, location, ip string) *AuthenticationToken {
+func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified bool, device string, location *location.Location) *AuthenticationToken {
 	return &AuthenticationToken{
 		cookie:     cookie,
 		email:      email,
 		verified:   verified,
 		device:     device,
 		location:   location,
-		ip:         ip,
 		expiration: time.Minute * 15,
 	}
 }
@@ -84,12 +81,8 @@ func (c *AuthenticationToken) Device() string {
 	return c.device
 }
 
-func (c *AuthenticationToken) Location() string {
+func (c *AuthenticationToken) Location() *location.Location {
 	return c.location
-}
-
-func (c *AuthenticationToken) IP() string {
-	return c.ip
 }
 
 func (c *AuthenticationToken) Verified() bool {
