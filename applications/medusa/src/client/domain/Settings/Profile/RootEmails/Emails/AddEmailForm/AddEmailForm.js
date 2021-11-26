@@ -10,7 +10,8 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement, useToast,
-  FormLabel, FormErrorMessage
+  FormLabel, FormErrorMessage,
+  HStack
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
@@ -30,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import IconButton from '@//:modules/form/IconButton'
 import { useEmailFormSchema } from '@//:modules/constants/schemas'
+import SmallInput from '@//:modules/form/SmallInput/SmallInput'
 
 type EmailValues = {
   email: string,
@@ -104,26 +106,14 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
     <form noValidate onSubmit={handleSubmit(onAddEmail)}>
       <FormControl isInvalid={errors.email} id='email'>
         <FormLabel>{t('profile.email.add.title')}</FormLabel>
-        <Flex direction='row'>
-          <InputGroup>
-            <Input
-              {...register('email')}
-              w='100%'
-              size='sm'
-              placeholder={t('profile.email.add.placeholder')}
-              variant='filled' mr={2}
-              colorScheme='gray'
-            />
-            {formReveal && (
-              <InputRightElement zIndex={0} mr={2} h='32px' pointerEvents='none'>
-                <Icon
-                  m={3}
-                  icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                  fill={success ? 'green.600' : 'orange.500'}
-                />
-              </InputRightElement>
-            )}
-          </InputGroup>
+        <HStack align='flex-start'>
+          <SmallInput
+            register={register('email')}
+            success={success}
+            error={errors.email}
+            placeholder={t('profile.email.add.placeholder')}
+            errorMessage={errors?.email?.message}
+          />
           <IconButton
             aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
             isLoading={isAddingEmail}
@@ -138,10 +128,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
               />
             }
           />
-        </Flex>
-        <FormErrorMessage>
-          {errors.email && errors.email.message}
-        </FormErrorMessage>
+        </HStack>
       </FormControl>
     </form>
   )

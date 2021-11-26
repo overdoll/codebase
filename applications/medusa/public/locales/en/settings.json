@@ -9,8 +9,8 @@
         "change": "Change Username"
       },
       "previous": {
-        "title": "{{count}} previous alias",
-        "title_plural": "{{count}} previous aliases",
+        "title": "{{count}} alias",
+        "title_plural": "{{count}} aliases",
         "tooltip": {
           "title": "Your old usernames are replaced",
           "hint": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."

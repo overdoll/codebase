@@ -71,12 +71,8 @@ export default function Usernames (props: Props): Node {
     <>
       <Stack spacing={2}>
         <SmallBackgroundBox>
-          <Flex justify='center'>
+          <Flex justify='space-between'>
             <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
-          </Flex>
-        </SmallBackgroundBox>
-        {data?.usernames.edges.length > 0 &&
-          <SmallBackgroundBox>
             <Button
               fontFamily='body'
               fontSize='sm'
@@ -86,7 +82,11 @@ export default function Usernames (props: Props): Node {
             >
               {t('profile.username.previous.title', { count: data.usernames.edges.length })}
             </Button>
-            <Collapse in={isAliasesOpen} animateOpacity>
+          </Flex>
+        </SmallBackgroundBox>
+        {data?.usernames.edges.length > 0 &&
+          <Collapse in={isAliasesOpen} animateOpacity>
+            <SmallBackgroundBox>
               <Flex mt={1}>
                 <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
                 <InfoTip
@@ -96,8 +96,8 @@ export default function Usernames (props: Props): Node {
               {data.usernames.edges.map((item, index) =>
                 <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
               )}
-            </Collapse>
-          </SmallBackgroundBox>}
+            </SmallBackgroundBox>
+          </Collapse>}
         <Button
           variant='solid' colorScheme='gray' onClick={onToggleForm}
           size='sm'

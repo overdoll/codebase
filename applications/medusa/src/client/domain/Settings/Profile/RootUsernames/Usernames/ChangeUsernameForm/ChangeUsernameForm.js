@@ -10,7 +10,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  FormErrorMessage, useToast
+  FormErrorMessage, useToast, HStack
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
@@ -25,6 +25,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import { useUsernameFormSchema } from '@//:modules/constants/schemas'
+import SmallInput from '@//:modules/form/SmallInput/SmallInput'
 
 type UsernameValues = {
   username: string,
@@ -111,27 +112,14 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
         id='username'
       >
         <FormLabel>{t('profile.username.modal.header')}</FormLabel>
-        <Flex direction='row'>
-          <InputGroup>
-            <Input
-              {...register('username')}
-              variant='filled'
-              w='100%'
-              size='sm'
-              mr={2}
-              placeholder={t('profile.username.modal.header')}
-            />
-            {(errors.username || success) && (
-              <InputRightElement mr={1}>
-                <Icon
-                  m={2}
-                  h='32px'
-                  icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                  fill={success ? 'green.600' : 'orange.500'}
-                />
-              </InputRightElement>
-            )}
-          </InputGroup>
+        <HStack align='flex-start'>
+          <SmallInput
+            register={register('username')}
+            success={success}
+            error={errors.username}
+            placeholder={t('profile.username.modal.header')}
+            errorMessage={errors?.username?.message}
+          />
           <Button
             size='sm'
             variant='solid'
@@ -142,10 +130,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
           >
             {t('profile.username.modal.submit')}
           </Button>
-        </Flex>
-        <FormErrorMessage>
-          {errors.username && errors.username.message}
-        </FormErrorMessage>
+        </HStack>
       </FormControl>
     </form>
   )

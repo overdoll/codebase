@@ -4,11 +4,11 @@ const baseStyle = {
   fontSize: 'md',
   marginEnd: 2,
   mb: 1,
+
   color: 'gray.00',
   transitionProperty: 'common',
   transitionDuration: 'normal',
   letterSpacing: 'wide',
-  opacity: 1,
   _disabled: {
     opacity: 0.4
   }

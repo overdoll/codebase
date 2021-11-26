@@ -51,6 +51,7 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl isInvalid={errors.email} id='email'>
         <FormLabel
+          zIndex={1}
           htmlFor='email'
           variant='float'
           color={!success

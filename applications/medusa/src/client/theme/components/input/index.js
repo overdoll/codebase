@@ -57,7 +57,7 @@ const size = {
     fontSize: 'md',
     px: 4,
     h: 10,
-    borderRadius: 'base',
+    borderRadius: 7,
     fontWeight: 'semibold'
   },
 

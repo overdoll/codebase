@@ -296,13 +296,13 @@ const sizes = {
     fontSize: '2xl',
     fontWeight: 'extrabold',
     px: 6,
-    borderRadius: 'lg'
+    borderRadius: 'xl'
   },
   lg: {
     h: 12,
     minW: 12,
     fontSize: 'lg',
-    borderRadius: 'md',
+    borderRadius: 'lg',
     px: 6
   },
   md: {
@@ -310,7 +310,7 @@ const sizes = {
     minW: 10,
     fontSize: 'md',
     px: 5,
-    borderRadius: 'base'
+    borderRadius: 7
   },
   sm: {
     h: 8,
