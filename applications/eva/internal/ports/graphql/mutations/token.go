@@ -22,13 +22,25 @@ import (
 
 func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error) {
 
+	request := helpers.GinContextFromContext(ctx).Request
+
 	// Capture session data
-	userAgent := strings.Join(helpers.GinContextFromContext(ctx).Request.Header["User-Agent"], ",")
+	userAgent := strings.Join(request.Header["User-Agent"], ",")
+
+	forwarded := request.Header.Get("X-FORWARDED-FOR")
+
+	ip := ""
+
+	if forwarded != "" {
+		ip = forwarded
+	} else {
+		ip = request.RemoteAddr
+	}
 
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
 		Email:     input.Email,
 		UserAgent: userAgent,
-		IP:        helpers.GetIp(ctx),
+		IP:        ip,
 
 		// manually send the language because we need it for the email
 		Language: translations.FromContext(ctx),

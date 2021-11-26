@@ -9,6 +9,7 @@ go_library(
     importpath = "overdoll/applications/eva/internal/domain/session",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/eva/internal/domain/location",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

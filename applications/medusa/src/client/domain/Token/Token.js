@@ -44,7 +44,11 @@ const TokenStatus = graphql`
       id
       verified
       sameSession
-      location
+      location {
+        city
+        subdivision
+        country
+      }
       device
       secure
     }
@@ -57,8 +61,6 @@ export default function Token ({ prepared }: Props): Node {
   const [verifyToken, isVerifyingToken] = useMutation(
     VerifyTokenMutationGQL
   )
-
-  const history = useHistory()
 
   const notify = useToast()
 
@@ -153,7 +155,7 @@ export default function Token ({ prepared }: Props): Node {
           verify={verify}
           isVerifying={isVerifyingToken}
           device={renderDevice()}
-          location={data.location}
+          location={`${data.location.city}, ${data.location.subdivision}, ${data.location.country}`}
         />
       )
     }

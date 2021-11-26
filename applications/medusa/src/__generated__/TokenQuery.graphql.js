@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d6a46538a53e7838c08be21dd97a9455
+ * @relayHash f8f92ad46d5b8aebeba065ad06a145f5
  */
 
 /* eslint-disable */
@@ -16,7 +16,11 @@ export type TokenQueryResponse = {|
     +id: string,
     +verified: boolean,
     +sameSession: boolean,
-    +location: string,
+    +location: {|
+      +city: string,
+      +subdivision: string,
+      +country: string,
+    |},
     +device: string,
     +secure: boolean,
   |}
@@ -35,7 +39,11 @@ query TokenQuery(
     id
     verified
     sameSession
-    location
+    location {
+      city
+      subdivision
+      country
+    }
     device
     secure
   }
@@ -89,8 +97,33 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
+        "concreteType": "Location",
+        "kind": "LinkedField",
         "name": "location",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "city",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "subdivision",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "country",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -129,7 +162,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "d6a46538a53e7838c08be21dd97a9455",
+    "id": "f8f92ad46d5b8aebeba065ad06a145f5",
     "metadata": {},
     "name": "TokenQuery",
     "operationKind": "query",
@@ -138,5 +171,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'be583eec1281369cbe2ffc2e720488c2';
+(node: any).hash = 'ee85e0458f8390e45f4776fa378bd6c6';
 module.exports = node;

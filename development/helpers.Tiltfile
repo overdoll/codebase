@@ -55,7 +55,11 @@ def build_applications(applications, dependencies):
                 name = item,
                 values = ["development/services/" + item + ".yaml"],
                 namespace = ns,
+                set = [
+                    "mountDirectory=" + config.main_dir + "/development/mount",
+                ],
             ),
+            allow_duplicates = True,
         )
 
         application = applications[item]

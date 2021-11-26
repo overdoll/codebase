@@ -8,6 +8,7 @@ go_library(
         "account_index_elasticsearch_repository.go",
         "account_username_cassandra_repository.go",
         "carrier_grpc.go",
+        "location_maxmind_repository.go",
         "multi_factor_cassandra_repository.go",
         "session_redis_repository.go",
         "token_redis_repository.go",
@@ -17,6 +18,7 @@ go_library(
     deps = [
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
@@ -28,6 +30,7 @@ go_library(
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_olivere_elastic_v7//:elastic",
+        "@com_github_oschwald_geoip2_golang//:geoip2-golang",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",

@@ -1168,6 +1168,21 @@ def go_repositories():
         version = "v1.2.0",
     )
     go_repository(
+        name = "com_github_oschwald_geoip2_golang",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/oschwald/geoip2-golang",
+        sum = "h1:igg2yQIrrcRccB1ytFXqBfOHCjXWIoMv85lVJ1ONZzw=",
+        version = "v1.5.0",
+    )
+    go_repository(
+        name = "com_github_oschwald_maxminddb_golang",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/oschwald/maxminddb-golang",
+        sum = "h1:Uh/DSnGoxsyp/KYbY1AuP0tYEwfs0sCph9p/UMXK/Hk=",
+        version = "v1.8.0",
+    )
+
+    go_repository(
         name = "com_github_pascaldekloe_goe",
         build_file_proto_mode = "disable",
         importpath = "github.com/pascaldekloe/goe",

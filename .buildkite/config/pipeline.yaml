@@ -29,3 +29,4 @@ steps:
         SENDGRID_API_KEY: ${SENDGRID_API_KEY}
         TESTMAIL_API_KEY: ${TESTMAIL_API_KEY}
         TESTMAIL_NAMESPACE: ${TESTMAIL_NAMESPACE}
+        GEOIP_DATABASE_LOCATION: applications/eva/internal/service/file_fixtures/GeoIP2-City-Test.mmdb

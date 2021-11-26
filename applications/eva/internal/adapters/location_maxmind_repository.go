@@ -23,11 +23,17 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 		return nil, err
 	}
 
+	subdivision := ""
+
+	if len(record.Subdivisions) > 0 {
+		subdivision = record.Subdivisions[0].Names["en"]
+	}
+
 	return location.UnmarshalLocationFromDatabase(ip,
 		record.City.Names["en"],
 		record.Country.Names["en"],
 		record.Postal.Code,
-		record.Subdivisions[0].Names["en"],
+		subdivision,
 		record.Location.Latitude,
 		record.Location.Longitude,
 	), nil

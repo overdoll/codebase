@@ -72,6 +72,7 @@ func (c *Location) IP() string {
 }
 
 func (c *Location) IsSecure(ctx context.Context) bool {
+	return false
 	req := helpers.GinContextFromContext(ctx).Request
 
 	forwarded := req.Header.Get("X-FORWARDED-FOR")

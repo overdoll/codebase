@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "location",
+    srcs = [
+        "location.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/domain/location",
+    visibility = ["//applications/eva:__subpackages__"],
+    deps = ["//libraries/helpers"],
+)

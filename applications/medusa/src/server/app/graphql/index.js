@@ -280,10 +280,15 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       if (validPassport) {
         // await session regeneration or else it bugs out
         await new Promise(resolve => context.req.session.regenerate(resolve))
+
+        const ip = context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress
+
         context.req.session.passport = passport
         context.req.session.details = {
           userAgent: context.req.headers['user-agent'],
-          ip: context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress,
+          location: {
+            ip: ip
+          },
           created: new Date().toISOString()
         }
       }

@@ -16,6 +16,8 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/testing_tools",
+        "@com_github_oschwald_geoip2_golang//:geoip2-golang",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
