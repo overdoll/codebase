@@ -29,9 +29,24 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 		subdivision = record.Subdivisions[0].Names["en"]
 	}
 
+	city := record.City.Names["en"]
+	country := record.Country.Names["en"]
+
+	if subdivision == "" {
+		subdivision = "Unknown"
+	}
+
+	if city == "" {
+		city = "Unknown"
+	}
+
+	if country == "" {
+		country = "Unknown"
+	}
+
 	return location.UnmarshalLocationFromDatabase(ip,
-		record.City.Names["en"],
-		record.Country.Names["en"],
+		city,
+		country,
 		record.Postal.Code,
 		subdivision,
 		record.Location.Latitude,

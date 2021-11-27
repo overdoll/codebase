@@ -1,28 +1,3 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-mount-claim
-spec:
-  storageClassName: local-path
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: data-mount
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: local-path
-  capacity:
-    storage: 2Gi
-  hostPath:
-    path: "{{ .Values.mountDirectory }}"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -42,16 +17,17 @@ spec:
       labels:
     {{- include "default-service.selectorLabels" . | nindent 8 }}
     spec:
+      # mount data from host
       volumes:
-        - name: data-mount-storage
-          persistentVolumeClaim:
-            claimName: data-mount-claim
+        - name: data-mount
+          hostPath:
+            path: /var/data
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
           volumeMounts:
             - mountPath: /var/data
-              name: data-mount-storage
+              name: data-mount
           ports:
             {{- if .Values.grpc }}
             - name: grpc

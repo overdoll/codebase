@@ -3,6 +3,7 @@ package mutations
 import (
 	"context"
 	"crypto/sha256"
+	"fmt"
 	"net/http"
 	"overdoll/libraries/translations"
 	"strings"
@@ -28,6 +29,8 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	userAgent := strings.Join(request.Header["User-Agent"], ",")
 
 	forwarded := request.Header.Get("X-FORWARDED-FOR")
+	fmt.Println(request.RemoteAddr)
+	fmt.Println(request.Header.Get("X-FORWARDED-FOR"))
 
 	ip := ""
 
