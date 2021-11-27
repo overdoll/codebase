@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	config.Read("applications/sting")
+	config.Read("applications/puppy")
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,

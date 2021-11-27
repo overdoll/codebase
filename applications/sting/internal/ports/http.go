@@ -46,7 +46,7 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	rtr := router.NewGinRouter()
 
 	// graphql
-	rtr.POST("/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
+	rtr.POST("/api/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app, client),
 	})))
 

@@ -23,9 +23,9 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	datasourceWatcher := gateway.NewDatasourcePoller(httpClient, gateway.DatasourcePollerConfig{
 		Services: []gateway.ServiceConfig{
-			{Name: "eva", URL: "http://eva:8000/graphql"},
-			{Name: "sting", URL: "http://sting:8000/graphql", WS: "ws://sting:8000/graphql"},
-			{Name: "parley", URL: "http://parley:8000/graphql"},
+			{Name: "eva", URL: "http://eva:8000/api/graphql", WS: "ws://eva:8000/api/graphql"},
+			{Name: "sting", URL: "http://sting:8000/api/graphql", WS: "ws://sting:8000/api/graphql"},
+			{Name: "parley", URL: "http://parley:8000/api/graphql", WS: "ws://parley:8000/api/graphql"},
 		},
 		PollingInterval: 30 * time.Second,
 	})

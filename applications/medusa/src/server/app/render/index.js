@@ -6,7 +6,6 @@ import prepass from 'react-ssr-prepass'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
-import queryMapJson from '../../queries.json'
 import { createServerRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../../client/Bootstrap'
 import createMockHistory from './Domain/createMockHistory'
@@ -14,6 +13,7 @@ import createMockHistory from './Domain/createMockHistory'
 import express from 'express'
 import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
+import axios from 'axios'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -27,31 +27,28 @@ async function request (apollo, req, res) {
   // Set up relay environment
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
-      // On the relay environment, we call apollo directly instead of doing an API call
-      // This saves a network request and we don't have to worry about the complexities of
-      // forwarding cookies
+      // call on local network
+      // TODO: forward headers, and set headers on return
+      const response = await axios.post(
+        'http://puppy:8000/api/graphql',
+        {
+          operationName: params.name,
+          queryId: params.id,
+          variables
+        },
+        {}
+      )
 
-      // here, we grab our queries based on the ID passed by the request
-      if (!Object.prototype.hasOwnProperty.call(queryMapJson, params.id)) {
-        // technically this should never occur (unless someone doesn't commit correctly)
-        throw new Error('no query with id found')
+      const json = response.data
+
+      // GraphQL returns exceptions (for example, a missing required variable) in the "errors"
+      // property of the response. If any exceptions occurred when processing the request,
+      // throw an error to indicate to the developer what went wrong.
+      if (Array.isArray(json.errors)) {
+        throw new Error(JSON.stringify(json.errors))
       }
 
-      const result = await apollo.executeOperation({
-        operationName: params.name,
-        variables: variables,
-        query: queryMapJson[params.id]
-      }, {
-        req,
-        res
-      })
-
-      // Throw an error, which will be caught by our server
-      if (Array.isArray(result.errors)) {
-        throw new Error(JSON.stringify(result.errors, null, 2))
-      }
-
-      return { data: JSON.parse(JSON.stringify(result.data)) }
+      return json
     }),
     store: new Store(new RecordSource()),
     isServer: true

@@ -35,6 +35,11 @@ spec:
       services:
         - name: sting
           port: 8000
+    - match: Host(`overdoll.test`) && PathPrefix(`/api/graphql`)
+      kind: Rule
+      services:
+        - name: puppy
+          port: 8000
     - match: Host(`overdoll.test`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -66,6 +71,13 @@ spec:
       kind: Rule
       services:
         - name: sting
+          port: 8000
+      middlewares:
+        - name: redirect-https
+    - match: Host(`overdoll.test`) && PathPrefix(`/api/graphql`)
+      kind: Rule
+      services:
+        - name: puppy
           port: 8000
       middlewares:
         - name: redirect-https

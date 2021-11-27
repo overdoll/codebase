@@ -45,7 +45,7 @@ func principalToContext(app *app.Application) gin.HandlerFunc {
 func NewHttpServer(app *app.Application) http.Handler {
 	rtr := router.NewGinRouter()
 
-	rtr.POST("/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
+	rtr.POST("/api/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app),
 	})))
 
