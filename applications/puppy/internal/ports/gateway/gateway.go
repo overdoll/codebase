@@ -102,9 +102,11 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 			return
 		}
 
-		for _, q := range schema.Query.Fields {
-			if q.Name == "node" {
-				g.logger.Error(`service should not implement "node" Query type`, log.String("service", config.Federation.ServiceSDL))
+		if schema.Query != nil {
+			for _, q := range schema.Query.Fields {
+				if q.Name == "node" {
+					g.logger.Error(`service should not implement "node" Query type`, log.String("service", config.Federation.ServiceSDL))
+				}
 			}
 		}
 

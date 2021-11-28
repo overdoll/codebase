@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
 import i18nextMiddleware from 'i18next-http-middleware'
 import i18next from './config/i18next'
-import graphql from './app/graphql'
 import session from 'express-session'
 import sessionCfg from './config/session'
 import version from './app/version'
@@ -63,11 +62,8 @@ index.use(coverage)
 // Version endpoint - used by the client to always stay up-to-date
 index.use(version)
 
-// GraphQL Server
-const server = graphql(index)
-
 // Our entrypoint
-index.use(render(server))
+index.use(render)
 
 // If an error occurs in the entrypoint, this will catch it
 // usually this is because a server error occurred (a service is down, etc..)

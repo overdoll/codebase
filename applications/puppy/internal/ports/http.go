@@ -2,14 +2,15 @@ package ports
 
 import (
 	"context"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gin-gonic/gin"
 	log "github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/graphql"
-	"github.com/jensneuse/graphql-go-tools/pkg/playground"
 	"go.uber.org/zap"
 	"net/http"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/applications/puppy/internal/ports/gateway"
+	"overdoll/libraries/helpers"
 	"overdoll/libraries/router"
 	"time"
 )
@@ -30,19 +31,9 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		PollingInterval: 30 * time.Second,
 	})
 
-	p := playground.New(playground.Config{
-		GraphqlEndpointPath:             graphqlEndpoint,
-		GraphQLSubscriptionEndpointPath: graphqlEndpoint,
-	})
-
-	handlers, err := p.Handlers()
-
-	if err != nil {
-		zap.S().Fatal("failed to get handlers", zap.Error(err))
-	}
-
-	for i := range handlers {
-		rtr.Any(handlers[i].Path, gin.WrapH(handlers[i].Handler))
+	// graphql playground enabled on debug only
+	if helpers.IsDebug() {
+		rtr.GET("/api/graphql", gin.WrapH(playground.Handler("GraphQL playground", "/api/graphql")))
 	}
 
 	l := log.NewZapLogger(zap.L(), log.DebugLevel)

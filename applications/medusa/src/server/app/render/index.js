@@ -10,10 +10,10 @@ import { createServerRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../../client/Bootstrap'
 import createMockHistory from './Domain/createMockHistory'
 
-import express from 'express'
 import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import axios from 'axios'
+import express from 'express'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -23,7 +23,7 @@ const runtime = {
 }
 
 // Request handles a basic request and rendering all routes
-async function request (apollo, req, res) {
+async function request (req, res, next) {
   // Set up relay environment
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
@@ -170,16 +170,16 @@ async function request (apollo, req, res) {
   })
 }
 
-export default function (apollo) {
-  const router = express.Router()
+const router = express.Router()
 
-  router.get('/*', async function (req, res, next) {
-    try {
-      await request(apollo, req, res)
-    } catch (e) {
-      next(e)
-    }
-  })
+// render function
+// all routes
+router.get('/*', async function render (req, res, next) {
+  try {
+    await request(req, res, next)
+  } catch (e) {
+    next(e)
+  }
+})
 
-  return router
-}
+export default router

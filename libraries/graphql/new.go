@@ -3,7 +3,10 @@ package graphql
 import (
 	"context"
 	"errors"
+	"github.com/gorilla/websocket"
+	"net/http"
 	"overdoll/libraries/helpers"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -47,6 +50,15 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		if helpers.IsDebug() {
 			graphAPIHandler.Use(extension.Introspection{})
 		}
+
+		graphAPIHandler.AddTransport(transport.Websocket{
+			KeepAlivePingInterval: 10 * time.Second,
+			Upgrader: websocket.Upgrader{
+				CheckOrigin: func(r *http.Request) bool {
+					return true
+				},
+			},
+		})
 
 		graphAPIHandler.AddTransport(transport.POST{})
 
