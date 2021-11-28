@@ -1,7 +1,6 @@
 load("@bazel_gazelle//:deps.bzl", "go_repository")
 
 def go_repositories():
-    ""
     go_repository(
         name = "co_honnef_go_tools",
         build_file_proto_mode = "disable",
@@ -961,6 +960,11 @@ def go_repositories():
         importpath = "github.com/jensneuse/graphql-go-tools",
         sum = "h1:KeglTZnVbRzPUF/KqNC3JRf2OV70g6GQB1jAg/Rc5s4=",
         version = "v1.33.2",
+        patch_args = ["-p1"],
+        patches = [
+            "//.patches:0001-Fix-bugs-in-and-improve-performance-of-LocalTypeFiel.patch",
+            "//.patches:0002-LocalTypeFieldExtractor-Handle-local-union-extension.patch",
+        ],
     )
     go_repository(
         name = "com_github_jensneuse_graphql_go_tools_examples_chat",

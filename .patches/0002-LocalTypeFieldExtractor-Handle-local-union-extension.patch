@@ -1,0 +1,90 @@
+From 758b8e9736fde8ec5c1093593710c3c9fa3c4a39 Mon Sep 17 00:00:00 2001
+From: Mark Sandstrom <marksandstrom@khanacademy.org>
+Date: Wed, 3 Nov 2021 10:13:48 -0700
+Subject: [PATCH 2/2] LocalTypeFieldExtractor: Handle local union extensions
+
+Local union extensions can add union members or might not have any union
+members at all (e.g. if the extension only adds a directive). Note the
+union members in a schema are disjoint.
+
+See https://spec.graphql.org/October2021/#sec-Union-Extensions for
+details.
+---
+ pkg/engine/plan/local_type_field_extractor.go |  4 +-
+ .../plan/local_type_field_extractor_test.go   | 45 +++++++++++++++++++
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/pkg/engine/plan/local_type_field_extractor.go b/pkg/engine/plan/local_type_field_extractor.go
+index 904267b7..3a76db53 100644
+--- a/pkg/engine/plan/local_type_field_extractor.go
++++ b/pkg/engine/plan/local_type_field_extractor.go
+@@ -143,7 +143,9 @@ func (e *LocalTypeFieldExtractor) GetAllNodes() ([]TypeField, []TypeField) {
+ 		// considered a root node if ANY node related to the type is a root
+ 		// node.
+ 		nodeInfo.isRoot = nodeInfo.isRoot || isRootNode
+-		nodeInfo.concreteTypeNames = concreteTypeNames
++		// Local union extensions are disjoint. For details, see the GraphQL
++		// spec: https://spec.graphql.org/October2021/#sec-Union-Extensions
++		nodeInfo.concreteTypeNames = append(nodeInfo.concreteTypeNames, concreteTypeNames...)
+ 
+ 		if isRootNode {
+ 			rootNodeNames = appendIfNotPresent(rootNodeNames, typeName)
+diff --git a/pkg/engine/plan/local_type_field_extractor_test.go b/pkg/engine/plan/local_type_field_extractor_test.go
+index d1870f4f..b6099c78 100644
+--- a/pkg/engine/plan/local_type_field_extractor_test.go
++++ b/pkg/engine/plan/local_type_field_extractor_test.go
+@@ -385,6 +385,51 @@ func TestLocalTypeFieldExtractor_GetAllNodes(t *testing.T) {
+ 				{TypeName: "User", FieldNames: []string{"communications", "id"}},
+ 			})
+ 	})
++	t.Run("local union extension", func(t *testing.T) {
++		run(t, `
++			extend type Query {
++				me: User
++				communication(id: ID!): Communication
++				user(id: ID!): User
++			}
++
++			type User {
++				id: ID!
++				communications: [Communication!]!
++			}
++
++			type Review {
++				id: ID! @external
++				comment: String!
++				rating: Int!
++				user: User
++			}
++
++			type Comment {
++				id: ID! @external
++				comment: String!
++				user: User
++			}
++
++			type Post {
++				id: ID!
++				content: String!
++			}
++
++			union Communication = Review | Comment
++
++			extend union Communication = Post
++		`,
++			[]TypeField{
++				{TypeName: "Query", FieldNames: []string{"communication", "me", "user"}},
++			},
++			[]TypeField{
++				{TypeName: "Comment", FieldNames: []string{"comment", "id", "user"}},
++				{TypeName: "Post", FieldNames: []string{"content", "id"}},
++				{TypeName: "Review", FieldNames: []string{"comment", "id", "rating", "user"}},
++				{TypeName: "User", FieldNames: []string{"communications", "id"}},
++			})
++	})
+ 	t.Run("Entity definition", func(t *testing.T) {
+ 		run(t, `
+ 			type User @key(fields: "id") {
+-- 
+2.25.1
+
