@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 1f8ff461ada603fc5628f74421fa91fb
  */
 
 /* eslint-disable */
@@ -463,11 +462,12 @@ return {
     ]
   },
   "params": {
-    "id": "1f8ff461ada603fc5628f74421fa91fb",
+    "cacheID": "1f8ff461ada603fc5628f74421fa91fb",
+    "id": null,
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query PostsPaginationQuery(\n  $after: String\n  $first: Int = 1\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...PostsFragment_2HEEH6\n    id\n  }\n}\n\nfragment ModeratePostFragment on Post {\n  id\n}\n\nfragment NoPostsPlaceholderFragment on Account {\n  moderator {\n    __typename\n    id\n  }\n}\n\nfragment PostArtistFragment on Post {\n  brand {\n    name\n    id\n  }\n}\n\nfragment PostCategoriesFragment on Post {\n  categories {\n    title\n    id\n  }\n}\n\nfragment PostCharactersFragment on Post {\n  characters {\n    name\n    series {\n      title\n      id\n    }\n    id\n  }\n}\n\nfragment PostContentFragment on Post {\n  content {\n    urls {\n      url\n    }\n  }\n}\n\nfragment PostHeaderFragment on Post {\n  contributor {\n    username\n    avatar\n    id\n  }\n  reassignmentAt\n}\n\nfragment PostPreviewFragment on Post {\n  ...PostContentFragment\n  ...PostArtistFragment\n  ...PostCharactersFragment\n  ...PostCategoriesFragment\n}\n\nfragment PostsFragment_2HEEH6 on Account {\n  ...NoPostsPlaceholderFragment\n  moderatorPostsQueue(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        ...PostHeaderFragment\n        ...PostPreviewFragment\n        ...ModeratePostFragment\n        postedAt\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();

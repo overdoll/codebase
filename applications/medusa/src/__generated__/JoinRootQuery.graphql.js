@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 8e30dfd46ad67a5e8620e1341c669528
  */
 
 /* eslint-disable */
@@ -181,11 +180,12 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "8e30dfd46ad67a5e8620e1341c669528",
+    "cacheID": "8e30dfd46ad67a5e8620e1341c669528",
+    "id": null,
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query JoinRootQuery {\n  viewAuthenticationToken {\n    ...LobbyFragment\n    ...JoinRootFragment\n    ...JoinFragment\n    id\n  }\n}\n\nfragment JoinFragment on AuthenticationToken {\n  email\n}\n\nfragment JoinRootFragment on AuthenticationToken {\n  verified\n  sameSession\n  accountStatus {\n    registered\n    multiFactor {\n      totp\n    }\n    ...MultiFactorFragment\n  }\n}\n\nfragment LobbyFragment on AuthenticationToken {\n  email\n}\n\nfragment MultiFactorFragment on AuthenticationTokenAccountStatus {\n  multiFactor {\n    totp\n  }\n}\n"
   }
 };
 // prettier-ignore

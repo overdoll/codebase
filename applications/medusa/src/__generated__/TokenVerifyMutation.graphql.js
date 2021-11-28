@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 2c6a242cc75778483d432b75fe2fa4b4
  */
 
 /* eslint-disable */
@@ -121,11 +120,12 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2c6a242cc75778483d432b75fe2fa4b4",
+    "cacheID": "2c6a242cc75778483d432b75fe2fa4b4",
+    "id": null,
     "metadata": {},
     "name": "TokenVerifyMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation TokenVerifyMutation(\n  $input: VerifyAuthenticationTokenInput!\n) {\n  verifyAuthenticationToken(input: $input) {\n    validation\n    authenticationToken {\n      id\n      verified\n    }\n  }\n}\n"
   }
 };
 })();

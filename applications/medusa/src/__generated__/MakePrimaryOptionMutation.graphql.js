@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash f659b4b84cc3fe383250b407f5712c68
  */
 
 /* eslint-disable */
@@ -234,11 +233,12 @@ return {
     ]
   },
   "params": {
-    "id": "f659b4b84cc3fe383250b407f5712c68",
+    "cacheID": "f659b4b84cc3fe383250b407f5712c68",
+    "id": null,
     "metadata": {},
     "name": "MakePrimaryOptionMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation MakePrimaryOptionMutation(\n  $input: UpdateAccountEmailStatusToPrimaryInput!\n) {\n  updateAccountEmailStatusToPrimary(input: $input) {\n    updatedAccountEmail {\n      id\n      status\n      email\n      account {\n        emails {\n          edges {\n            node {\n              id\n              email\n              status\n            }\n          }\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();

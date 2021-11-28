@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 92dee5e2dd13c5704b0ca6b4f279f37c
  */
 
 /* eslint-disable */
@@ -67,11 +66,12 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "92dee5e2dd13c5704b0ca6b4f279f37c",
+    "cacheID": "92dee5e2dd13c5704b0ca6b4f279f37c",
+    "id": null,
     "metadata": {},
     "name": "QueueSettingsMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation QueueSettingsMutation {\n  toggleModeratorSettingsInQueue {\n    moderatorSettingsInQueue\n  }\n}\n"
   }
 };
 })();

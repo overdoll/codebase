@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 295afab893be13dad8b4d59ba21b9133
  */
 
 /* eslint-disable */
@@ -67,11 +66,12 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "295afab893be13dad8b4d59ba21b9133",
+    "cacheID": "295afab893be13dad8b4d59ba21b9133",
+    "id": null,
     "metadata": {},
     "name": "DisableMultiFactorMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation DisableMultiFactorMutation {\n  disableAccountMultiFactor {\n    accountMultiFactorTotpEnabled\n  }\n}\n"
   }
 };
 })();

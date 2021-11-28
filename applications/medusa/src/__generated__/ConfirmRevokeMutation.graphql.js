@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 66447af1fee23a4edaee4700871549be
  */
 
 /* eslint-disable */
@@ -87,11 +86,12 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "66447af1fee23a4edaee4700871549be",
+    "cacheID": "66447af1fee23a4edaee4700871549be",
+    "id": null,
     "metadata": {},
     "name": "ConfirmRevokeMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation ConfirmRevokeMutation(\n  $input: RevokeAuthenticationTokenInput!\n) {\n  revokeAuthenticationToken(input: $input) {\n    revokedAuthenticationTokenId\n  }\n}\n"
   }
 };
 })();

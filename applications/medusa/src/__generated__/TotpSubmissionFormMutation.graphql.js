@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 8da6df175ba332299eb439bef0f9ed9f
  */
 
 /* eslint-disable */
@@ -97,11 +96,12 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "8da6df175ba332299eb439bef0f9ed9f",
+    "cacheID": "8da6df175ba332299eb439bef0f9ed9f",
+    "id": null,
     "metadata": {},
     "name": "TotpSubmissionFormMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation TotpSubmissionFormMutation(\n  $input: EnrollAccountMultiFactorTotpInput!\n) {\n  enrollAccountMultiFactorTotp(input: $input) {\n    validation\n    accountMultiFactorTotpEnabled\n  }\n}\n"
   }
 };
 })();

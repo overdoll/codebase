@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash d0f7d44cd800726b46e53e970757851a
  */
 
 /* eslint-disable */
@@ -91,11 +90,12 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "d0f7d44cd800726b46e53e970757851a",
+    "cacheID": "d0f7d44cd800726b46e53e970757851a",
+    "id": null,
     "metadata": {},
     "name": "MultiFactorTotpFlowMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation MultiFactorTotpFlowMutation {\n  generateAccountMultiFactorTotp {\n    multiFactorTotp {\n      secret\n      imageSrc\n    }\n  }\n}\n"
   }
 };
 })();

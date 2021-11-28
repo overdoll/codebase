@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash df1bb1c0b3d007aa2174bed8b2352bea
  */
 
 /* eslint-disable */
@@ -92,11 +91,12 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "df1bb1c0b3d007aa2174bed8b2352bea",
+    "cacheID": "df1bb1c0b3d007aa2174bed8b2352bea",
+    "id": null,
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation GrantMutation {\n  grantAccountAccessWithAuthenticationToken {\n    validation\n    account {\n      id\n    }\n  }\n}\n"
   }
 };
 })();

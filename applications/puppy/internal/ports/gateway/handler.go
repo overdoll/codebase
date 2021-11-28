@@ -3,6 +3,7 @@ package gateway
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/subscription"
 	"net"
@@ -122,6 +123,7 @@ func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Re
 	buf := bytes.NewBuffer(make([]byte, 0, 4096))
 	resultWriter := graphql.NewEngineResultWriterFromBuffer(buf)
 	if err = g.engine.Execute(r.Context(), &gqlRequest, &resultWriter); err != nil {
+		fmt.Println("error ")
 		g.logger.Error("engine.Execute", abstractlogger.Error(err))
 		w.WriteHeader(http.StatusInternalServerError)
 		return

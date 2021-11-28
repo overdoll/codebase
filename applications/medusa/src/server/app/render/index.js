@@ -33,7 +33,8 @@ async function request (req, res, next) {
         'http://puppy:8000/api/graphql',
         {
           operationName: params.name,
-          queryId: params.id,
+          query: params.text,
+          // queryId: params.id,
           variables
         },
         {}

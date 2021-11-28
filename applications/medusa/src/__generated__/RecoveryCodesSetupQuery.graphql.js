@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 9097a2936461090daa359d77db6f3c6e
  */
 
 /* eslint-disable */
@@ -123,11 +122,12 @@ return {
     ]
   },
   "params": {
-    "id": "9097a2936461090daa359d77db6f3c6e",
+    "cacheID": "9097a2936461090daa359d77db6f3c6e",
+    "id": null,
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query RecoveryCodesSetupQuery {\n  viewer {\n    ...RecoveryCodesListFragment\n    id\n  }\n}\n\nfragment RecoveryCodesListFragment on Account {\n  recoveryCodes {\n    code\n  }\n}\n"
   }
 };
 })();

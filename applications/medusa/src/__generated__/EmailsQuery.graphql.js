@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 4736793e2ddb5a843128c385c65e7c87
  */
 
 /* eslint-disable */
@@ -246,11 +245,12 @@ return {
     ]
   },
   "params": {
-    "id": "4736793e2ddb5a843128c385c65e7c87",
+    "cacheID": "4736793e2ddb5a843128c385c65e7c87",
+    "id": null,
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query EmailsQuery(\n  $first: Int\n) {\n  viewer {\n    ...EmailsSettingsFragment\n    id\n  }\n}\n\nfragment DeleteFragment on AccountEmail {\n  id\n  email\n}\n\nfragment EmailCardFragment on AccountEmail {\n  ...DeleteFragment\n  ...MakePrimaryFragment\n  email\n  status\n}\n\nfragment EmailsSettingsFragment on Account {\n  emails(first: $first) {\n    edges {\n      node {\n        ...EmailCardFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment MakePrimaryFragment on AccountEmail {\n  id\n  email\n}\n"
   }
 };
 })();

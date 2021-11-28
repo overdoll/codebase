@@ -80,7 +80,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 
 		"""
 		An object with an ID.
-	  	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 	  	"""
 	  	interface Node {
 			id: ID!
@@ -94,7 +94,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 		schema, err := gqlparser.LoadSchema(&ast.Source{
 			Name:    "node",
 			Input:   config.UpstreamSchema,
-			BuiltIn: false,
+			BuiltIn: true,
 		})
 
 		if err != nil {

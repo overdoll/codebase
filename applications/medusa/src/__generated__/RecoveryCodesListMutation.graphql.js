@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash b7326e750441d0b9f4799be4f284216a
  */
 
 /* eslint-disable */
@@ -95,11 +94,12 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "b7326e750441d0b9f4799be4f284216a",
+    "cacheID": "b7326e750441d0b9f4799be4f284216a",
+    "id": null,
     "metadata": {},
     "name": "RecoveryCodesListMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation RecoveryCodesListMutation {\n  generateAccountMultiFactorRecoveryCodes {\n    accountMultiFactorRecoveryCodes {\n      code\n    }\n  }\n}\n"
   }
 };
 })();

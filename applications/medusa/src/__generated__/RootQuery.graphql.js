@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 855ae9c1fe7deaa2c3c9e312de23343b
  */
 
 /* eslint-disable */
@@ -174,11 +173,12 @@ return {
     ]
   },
   "params": {
-    "id": "855ae9c1fe7deaa2c3c9e312de23343b",
+    "cacheID": "855ae9c1fe7deaa2c3c9e312de23343b",
+    "id": null,
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query RootQuery {\n  viewer {\n    id\n    ...NavigationFragment\n    isModerator\n    isStaff\n    lock {\n      reason\n      expires\n    }\n  }\n}\n\nfragment AvatarMenuFragment on Account {\n  avatar\n}\n\nfragment NavigationFragment on Account {\n  ...AvatarMenuFragment\n  ...ProfileButtonFragment\n}\n\nfragment ProfileButtonFragment on Account {\n  username\n  avatar\n}\n"
   }
 };
 })();

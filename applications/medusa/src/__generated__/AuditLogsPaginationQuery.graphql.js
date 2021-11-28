@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 422c803ce92d977af61493e208ea44fa
  */
 
 /* eslint-disable */
@@ -482,11 +481,12 @@ return {
     ]
   },
   "params": {
-    "id": "422c803ce92d977af61493e208ea44fa",
+    "cacheID": "422c803ce92d977af61493e208ea44fa",
+    "id": null,
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query AuditLogsPaginationQuery(\n  $after: String\n  $first: Int = 5\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...AuditLogsFragment_2HEEH6\n    id\n  }\n}\n\nfragment AuditCardFragment on PostAuditLog {\n  reverted\n  reversibleUntil\n  contributor {\n    username\n    id\n  }\n  post {\n    postedAt\n    id\n  }\n  action\n}\n\nfragment AuditInspectFragment on PostAuditLog {\n  id\n  notes\n  reverted\n  reversibleUntil\n  action\n  post {\n    ...PostPreviewFragment\n    id\n  }\n}\n\nfragment AuditLogsFragment_2HEEH6 on Account {\n  moderatorPostAuditLogs(first: $first, after: $after, dateRange: {from: 0, to: 0}) {\n    edges {\n      node {\n        ...AuditCardFragment\n        ...AuditInspectFragment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment PostArtistFragment on Post {\n  brand {\n    name\n    id\n  }\n}\n\nfragment PostCategoriesFragment on Post {\n  categories {\n    title\n    id\n  }\n}\n\nfragment PostCharactersFragment on Post {\n  characters {\n    name\n    series {\n      title\n      id\n    }\n    id\n  }\n}\n\nfragment PostContentFragment on Post {\n  content {\n    urls {\n      url\n    }\n  }\n}\n\nfragment PostPreviewFragment on Post {\n  ...PostContentFragment\n  ...PostArtistFragment\n  ...PostCharactersFragment\n  ...PostCategoriesFragment\n}\n"
   }
 };
 })();

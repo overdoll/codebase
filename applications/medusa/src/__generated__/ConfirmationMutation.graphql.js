@@ -1,6 +1,5 @@
 /**
  * @flow
- * @relayHash 57511a979e67422ac45a244a14ea3d75
  */
 
 /* eslint-disable */
@@ -121,11 +120,12 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "57511a979e67422ac45a244a14ea3d75",
+    "cacheID": "57511a979e67422ac45a244a14ea3d75",
+    "id": null,
     "metadata": {},
     "name": "ConfirmationMutation",
     "operationKind": "mutation",
-    "text": null
+    "text": "mutation ConfirmationMutation(\n  $input: ConfirmAccountEmailInput!\n) {\n  confirmAccountEmail(input: $input) {\n    accountEmail {\n      id\n      email\n      status\n    }\n  }\n}\n"
   }
 };
 })();
