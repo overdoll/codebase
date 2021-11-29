@@ -12,8 +12,10 @@ go_library(
     importpath = "overdoll/applications/puppy/internal/ports/gateway",
     visibility = ["//applications/puppy:__subpackages__"],
     deps = [
+        "//libraries/passport",
         "@com_github_gobwas_ws//:ws",
         "@com_github_gobwas_ws//wsutil",
+        "@com_github_gorilla_sessions//:sessions",
         "@com_github_jensneuse_abstractlogger//:abstractlogger",
         "@com_github_jensneuse_graphql_go_tools//pkg/engine/datasource/graphql_datasource",
         "@com_github_jensneuse_graphql_go_tools//pkg/engine/plan",
