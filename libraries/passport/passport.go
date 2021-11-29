@@ -6,22 +6,22 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"github.com/gorilla/sessions"
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
 	"go.uber.org/zap"
-	"overdoll/libraries/helpers"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
 
 type MutationType string
 
 const (
+	AppendHeader      = "X-Passport"
 	MutationHeader    = "X-Modified-Passport"
 	MutationKey       = "PassportContextKey"
 	sessionCookieName = "connect.sid"
@@ -94,10 +94,6 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 		return err
 	}
 
-	gc := helpers.GinContextFromContext(ctx)
-
-	gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
-
 	return nil
 }
 
@@ -114,9 +110,30 @@ func FreshPassportWithAccount(id string) *Passport {
 	return pass
 }
 
-// AddToBody is responsible for appending passport to the body of the request
+func AddToRequestFromSessionStore(r *http.Request, store sessions.Store) error {
+
+	session, err := store.Get(r, "session")
+
+	if err != nil {
+		return err
+	}
+
+	if val, ok := session.Values["passport"]; ok {
+
+		passResult := FromString(val.(string))
+		passResult.setSessionId(session.ID)
+
+		if err := AddToRequest(r, passResult); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// AddToRequest is responsible for appending passport to the body of the request
 // mainly used for testing (because usually, our graphql gateway appends the passport to the body)
-func AddToBody(r *http.Request, passport *Passport) error {
+func AddToRequest(r *http.Request, passport *Passport) error {
 	var body Body
 	var buf bytes.Buffer
 
@@ -127,7 +144,11 @@ func AddToBody(r *http.Request, passport *Passport) error {
 		return err
 	}
 
-	body.Extensions.Passport = passport.SerializeToBaseString()
+	passportSerialized := passport.SerializeToBaseString()
+
+	// add to body && header
+	body.Extensions.Passport = passportSerialized
+	r.Header.Add(AppendHeader, passportSerialized)
 
 	encode, err := json.Marshal(body)
 
@@ -157,8 +178,14 @@ func BodyToContext(c *gin.Context) *http.Request {
 		return nil
 	}
 
-	if body.Extensions.Passport != "" {
-		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), body.Extensions.Passport)
+	// check header first, then body
+	if val := c.Request.Header.Get(AppendHeader); val != "" {
+		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), FromString(val))
+		return c.Request.WithContext(ctx)
+	}
+
+	if val := body.Extensions.Passport; val != "" {
+		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), FromString(val))
 		return c.Request.WithContext(ctx)
 	}
 
@@ -193,34 +220,14 @@ func FromString(raw string) *Passport {
 }
 
 func FromContext(ctx context.Context) *Passport {
-	raw, _ := ctx.Value(MutationType(MutationKey)).(string)
 
-	pass := FromString(raw)
+	raw, ok := ctx.Value(MutationType(MutationKey)).(*Passport)
 
-	gc := helpers.GinContextFromContext(ctx)
-
-	sessionId := ""
-
-	currentCookie, err := gc.Request.Cookie(sessionCookieName)
-
-	if err == nil {
-		decodedValue, err := url.QueryUnescape(currentCookie.Value)
-
-		if err == nil {
-			start := strings.Split(decodedValue, ".")[0]
-			sessionId = strings.Replace(start, "s:", "session:", 1)
-		}
-	}
-
-	// If there's no passport in the body, we will use a fresh passport so that implementors have something to work with
-
-	if pass == nil {
+	if !ok {
 		return FreshPassport()
 	}
 
-	pass.setSessionId(sessionId)
-
-	return pass
+	return raw
 }
 
 func FromResponse(resp *http.Response) *Passport {

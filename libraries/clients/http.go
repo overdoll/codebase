@@ -91,7 +91,7 @@ func CloneRequest(req *http.Request, pass *passport.Passport) *http.Request {
 	*r = *req
 
 	if pass != nil {
-		err := passport.AddToBody(r, pass)
+		err := passport.AddToRequest(r, pass)
 
 		if err != nil {
 			panic(err)

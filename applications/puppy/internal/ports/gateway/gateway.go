@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"context"
+	"github.com/gorilla/sessions"
 	log "github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/engine/plan"
 	"github.com/vektah/gqlparser/v2"
@@ -51,6 +52,7 @@ type Gateway struct {
 	gqlHandlerFactory HandlerFactory
 	httpClient        *http.Client
 	logger            log.Logger
+	store             sessions.Store
 
 	gqlHandler http.Handler
 	mu         *sync.Mutex

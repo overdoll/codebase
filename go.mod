@@ -21,6 +21,7 @@ require (
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/securecookie v1.1.1
+	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/jensneuse/abstractlogger v0.0.4

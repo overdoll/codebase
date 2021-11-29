@@ -724,6 +724,14 @@ def go_repositories():
         version = "v1.1.1",
     )
     go_repository(
+        name = "com_github_gorilla_sessions",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/gorilla/sessions",
+        sum = "h1:DHd3rPN5lE3Ts3D8rKkQ8x/0kqfeNmBAaiSi+o7FsgI=",
+        version = "v1.2.1",
+    )
+
+    go_repository(
         name = "com_github_gorilla_websocket",
         build_file_proto_mode = "disable",
         importpath = "github.com/gorilla/websocket",
@@ -958,13 +966,13 @@ def go_repositories():
         name = "com_github_jensneuse_graphql_go_tools",
         build_file_proto_mode = "disable",
         importpath = "github.com/jensneuse/graphql-go-tools",
-        sum = "h1:KeglTZnVbRzPUF/KqNC3JRf2OV70g6GQB1jAg/Rc5s4=",
-        version = "v1.33.2",
         patch_args = ["-p1"],
         patches = [
             "//.patches:0001-Fix-bugs-in-and-improve-performance-of-LocalTypeFiel.patch",
             "//.patches:0002-LocalTypeFieldExtractor-Handle-local-union-extension.patch",
         ],
+        sum = "h1:KeglTZnVbRzPUF/KqNC3JRf2OV70g6GQB1jAg/Rc5s4=",
+        version = "v1.33.2",
     )
     go_repository(
         name = "com_github_jensneuse_graphql_go_tools_examples_chat",

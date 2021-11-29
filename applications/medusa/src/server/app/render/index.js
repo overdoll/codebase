@@ -14,6 +14,7 @@ import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import axios from 'axios'
 import express from 'express'
+import parseCookies from './Domain/parseCookies'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -28,7 +29,15 @@ async function request (req, res, next) {
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
       // call on local network
-      // TODO: forward headers, and set headers on return
+
+      const headers = {}
+
+      Object.entries(
+        req.headers || {}
+      ).forEach(([key, value]) => {
+        headers[key] = value
+      })
+
       const response = await axios.post(
         'http://puppy:8000/api/graphql',
         {
@@ -37,8 +46,27 @@ async function request (req, res, next) {
           // queryId: params.id,
           variables
         },
-        {}
+        {
+          // forward all headers coming from client
+          headers
+        }
       )
+
+      // forward cookies if any set-cookie is sent over
+      const cookie = response.headers['set-cookie']
+
+      if (cookie) {
+        // parse set-cookie and add it to our cookies
+        const cookies = parseCookies(cookie.join(','))
+
+        cookies.forEach(({
+          cookieName,
+          cookieValue,
+          options
+        }) => {
+          res.cookie(cookieName, cookieValue, options)
+        })
+      }
 
       const json = response.data
 
@@ -158,7 +186,7 @@ async function request (req, res, next) {
     emotionIds: ids.join(' '),
     emotionCss: css,
     html,
-    csrfToken: req.csrfToken ? req.csrfToken() : null,
+    csrfToken: req.csrfToken(),
     relayStore: serialize(
       environment
         .getStore()

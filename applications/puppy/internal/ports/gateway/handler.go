@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/gorilla/sessions"
 	"github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/subscription"
 	"net"
 	"net/http"
+	"overdoll/libraries/passport"
 
 	"github.com/gobwas/ws"
 
@@ -24,6 +26,8 @@ func NewGraphqlHTTPHandler(
 	schema *graphql.Schema,
 	engine *graphql.ExecutionEngineV2,
 	logger abstractlogger.Logger,
+	store sessions.Store,
+
 ) http.Handler {
 
 	upgrader := &ws.DefaultHTTPUpgrader
@@ -32,6 +36,7 @@ func NewGraphqlHTTPHandler(
 
 	return &GraphQLHTTPRequestHandler{
 		schema:     schema,
+		store:      store,
 		engine:     engine,
 		wsUpgrader: upgrader,
 		logger:     logger,
@@ -43,6 +48,7 @@ type GraphQLHTTPRequestHandler struct {
 	wsUpgrader *ws.HTTPUpgrader
 	engine     *graphql.ExecutionEngineV2
 	schema     *graphql.Schema
+	store      sessions.Store
 }
 
 func (g *GraphQLHTTPRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -95,10 +101,19 @@ func (g *GraphQLHTTPRequestHandler) handleWebsocket(connInitReqCtx context.Conte
 }
 
 func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Request) {
-	var err error
+
+	// here, we do some passport logic
+	// read it from our session store.
+	// if there is a passport, add it to the request to be sent downstream to other services
+	// also adds the current session ID to the passport so it can be used downstream
+	if err := passport.AddToRequestFromSessionStore(r, g.store); err != nil {
+		g.logger.Error("passport.Append", abstractlogger.Error(err))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	var gqlRequest graphql.Request
-	if err = graphql.UnmarshalHttpRequest(r, &gqlRequest); err != nil {
+	if err := graphql.UnmarshalHttpRequest(r, &gqlRequest); err != nil {
 		g.logger.Error("UnmarshalHttpRequest", abstractlogger.Error(err))
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -123,11 +138,12 @@ func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Re
 	buf := bytes.NewBuffer(make([]byte, 0, 4096))
 	resultWriter := graphql.NewEngineResultWriterFromBuffer(buf)
 	if err = g.engine.Execute(r.Context(), &gqlRequest, &resultWriter); err != nil {
-		fmt.Println("error ")
 		g.logger.Error("engine.Execute", abstractlogger.Error(err))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Println(resultWriter.String())
 
 	w.Header().Add(httpHeaderContentType, httpContentTypeApplicationJson)
 	w.WriteHeader(http.StatusOK)
