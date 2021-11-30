@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 	"testing"
 	"time"
 )
@@ -49,7 +48,7 @@ type PostRejectionReasons struct {
 func TestPostRejectionReasons(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var search PostRejectionReasons
 
@@ -170,7 +169,7 @@ type ApprovePost struct {
 func TestModeratePost_approve(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var approvePost ApprovePost
 
@@ -224,7 +223,7 @@ type RemovePost struct {
 func TestModeratePost_remove(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	var removePost RemovePost
 
@@ -252,7 +251,7 @@ func TestModeratePost_remove(t *testing.T) {
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	notes := "some additional notes"
 	postId := getRandomPostId()
@@ -288,7 +287,7 @@ type AccountInfractionHistory struct {
 func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	postId := getRandomPostId()
 	notes := "some additional notes and stuff"
@@ -300,7 +299,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	require.Equal(t, notes, res.RejectPost.PostAuditLog.Notes)
 	require.Equal(t, infractionReason, res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
-	client = getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+	client = getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	// get infraction history for this account
 	var infractionHistory AccountInfractionHistory
@@ -327,7 +326,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	require.True(t, foundInfraction)
 
-	client = getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client = getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
 

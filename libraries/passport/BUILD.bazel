@@ -3,11 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "passport",
     srcs = [
+        "context.go",
         "gin_middleware.go",
         "http.go",
         "http_client.go",
         "http_test_client.go",
         "passport.go",
+        "serialize.go",
     ],
     importpath = "overdoll/libraries/passport",
     visibility = ["//visibility:public"],

@@ -11,5 +11,6 @@ go_library(
     deps = [
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/location",
+        "//libraries/passport",
     ],
 )

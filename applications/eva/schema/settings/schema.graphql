@@ -43,6 +43,9 @@ type AccountSession implements Node @key(fields: "id") {
   """The originating user agent device"""
   device: String!
 
+  """The original IP"""
+  ip: String!
+
   """Where the session was originally created"""
   location: Location!
 

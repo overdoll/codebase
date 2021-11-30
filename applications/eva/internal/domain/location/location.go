@@ -1,14 +1,11 @@
 package location
 
 import (
-	"context"
 	"fmt"
-	"overdoll/libraries/helpers"
 	"strconv"
 )
 
 type Serializable struct {
-	Ip          string `json:"ip"`
 	City        string `json:"city"`
 	Country     string `json:"country"`
 	PostalCode  string `json:"postalCode"`
@@ -18,7 +15,6 @@ type Serializable struct {
 }
 
 type Location struct {
-	ip          string
 	city        string
 	country     string
 	postalCode  string
@@ -27,9 +23,8 @@ type Location struct {
 	longitude   float64
 }
 
-func UnmarshalLocationFromDatabase(ip, city, country, postalCode, subdivision string, latitude, longitude float64) *Location {
+func UnmarshalLocationFromDatabase(city, country, postalCode, subdivision string, latitude, longitude float64) *Location {
 	return &Location{
-		ip:          ip,
 		city:        city,
 		country:     country,
 		postalCode:  postalCode,
@@ -45,7 +40,6 @@ func UnmarshalLocationFromSerialized(serialized Serializable) *Location {
 	lng, _ := strconv.ParseFloat(serialized.Longitude, 64)
 
 	return &Location{
-		ip:          serialized.Ip,
 		city:        serialized.City,
 		country:     serialized.Country,
 		postalCode:  serialized.PostalCode,
@@ -57,7 +51,6 @@ func UnmarshalLocationFromSerialized(serialized Serializable) *Location {
 
 func Serialize(loc *Location) Serializable {
 	return Serializable{
-		Ip:          loc.ip,
 		City:        loc.city,
 		Country:     loc.country,
 		PostalCode:  loc.postalCode,
@@ -65,27 +58,6 @@ func Serialize(loc *Location) Serializable {
 		Latitude:    fmt.Sprintf("%f", loc.latitude),
 		Longitude:   fmt.Sprintf("%f", loc.longitude),
 	}
-}
-
-func (c *Location) IP() string {
-	return c.ip
-}
-
-func (c *Location) IsSecure(ctx context.Context) bool {
-	return false
-	req := helpers.GinContextFromContext(ctx).Request
-
-	forwarded := req.Header.Get("X-FORWARDED-FOR")
-
-	ip := ""
-
-	if forwarded != "" {
-		ip = forwarded
-	} else {
-		ip = req.RemoteAddr
-	}
-
-	return ip == c.ip
 }
 
 func (c *Location) City() string {

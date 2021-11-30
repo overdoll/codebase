@@ -1,12 +1,10 @@
 package passport
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/gorilla/sessions"
-	"io/ioutil"
 	"net/http"
 	"net/http/cookiejar"
+	"strings"
 )
 
 type headerTransport struct {
@@ -34,37 +32,69 @@ func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 
-	// new sessions obviously don't have a passport
-	if val, ok := session.Values["passport"]; ok {
+	userAgent := strings.Join(req.Header["User-Agent"], ",")
 
-		passResult := fromString(val.(string))
-		passResult.setSessionId(session.ID)
+	forwarded := req.Header.Get("X-FORWARDED-FOR")
 
-		if err := addToRequest(req, passResult); err != nil {
-			return nil, err
-		}
+	ip := ""
+
+	if forwarded != "" {
+		ip = forwarded
 	} else {
-		if err := addToRequest(req, FreshPassport()); err != nil {
-			return nil, err
-		}
+		ip = req.RemoteAddr
 	}
 
-	resp, err := h.base.RoundTrip(req)
+	accountId := ""
 
-	b, err := ioutil.ReadAll(resp.Body)
+	if val, ok := session.Values["accountId"]; ok {
+		accountId = val.(string)
+	}
+
+	// issue new passport for this request
+	if err := addToRequest(req,
+		issuePassport(
+			session.ID,
+			ip,
+			userAgent,
+			accountId,
+		)); err != nil {
+		return nil, err
+	}
+
+	res, err := h.base.RoundTrip(req)
+
+	pass, err := fromResponse(res)
 
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("roundtrip")
-	fmt.Println(string(b))
+	// if passport was found in response
+	if pass != nil {
+		currentAccountId := session.Values["accountId"]
 
-	if err := resp.Body.Close(); err != nil {
-		return nil, err
+		// some logic around revoking account, etc...
+		if pass.Authenticated() == nil {
+			if currentAccountId != pass.AccountID() {
+				// account ID was revoked here
+				if pass.AccountID() == "" {
+
+					// since account was revoked, regenerate the session
+					session.Options.MaxAge = -1
+					//if err := session.Save(req, res.Body); err != nil {
+					//}
+
+					return res, nil
+				}
+
+				// no account revoke - account was added
+				session.Values["accountId"] = pass.AccountID()
+				//if err := session.Save(req, res.Body); err != nil {
+				//
+				//}
+			}
+		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewReader(b))
-
-	return resp, err
+	return res, err
 }

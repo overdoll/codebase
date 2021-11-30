@@ -10,7 +10,6 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/passport"
 )
 
 type RevokeAccountAccess struct {
@@ -21,7 +20,7 @@ type RevokeAccountAccess struct {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, pass := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var mutation RevokeAccountAccess
 
@@ -64,7 +63,7 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, passport.FreshPassport())
+	client, _ := getHttpClient(t)
 
 	email := "i2fhz.poisonminion@inbox.testmail.app"
 
@@ -74,7 +73,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
 
-	clientFromAnotherSession, _ := getHttpClient(t, passport.FreshPassport())
+	clientFromAnotherSession, _ := getHttpClient(t)
 
 	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, authToken)
 
@@ -152,7 +151,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	testAccountEmail := "i2fhz.artist_verified@inbox.testmail.app"
 
 	// use passport with user
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t)
 
 	var generateAccountRecoveryCodes GenerateAccountMultiFactorRecoveryCodes
 
@@ -318,7 +317,7 @@ type CreateAccountWithAuthenticationToken struct {
 func TestAccountRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getHttpClient(t)
 
 	fake := TestUser{}
 

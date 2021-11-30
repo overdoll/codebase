@@ -3,6 +3,7 @@ package token
 import (
 	"errors"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/passport"
 	"strings"
 	"time"
 
@@ -17,6 +18,8 @@ type AuthenticationToken struct {
 	expiration time.Duration
 
 	device string
+
+	ip string
 
 	location *location.Location
 
@@ -36,22 +39,24 @@ var (
 	ErrTokenNotFound    = errors.New("token not found")
 )
 
-func NewAuthenticationToken(id, email, device string, location *location.Location) (*AuthenticationToken, error) {
+func NewAuthenticationToken(id, email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, error) {
 
 	ck := &AuthenticationToken{
 		cookie:     id,
 		expiration: time.Minute * 15,
 		email:      strings.ToLower(email),
 		verified:   false,
-		device:     device,
+		device:     pass.UserAgent(),
 		location:   location,
+		ip:         pass.IP(),
 	}
 
 	return ck, nil
 }
 
-func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified bool, device string, location *location.Location) *AuthenticationToken {
+func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified bool, device, ip string, location *location.Location) *AuthenticationToken {
 	return &AuthenticationToken{
+		ip:         ip,
 		cookie:     cookie,
 		email:      email,
 		verified:   verified,
@@ -67,6 +72,14 @@ func (c *AuthenticationToken) Token() string {
 
 func (c *AuthenticationToken) Email() string {
 	return c.email
+}
+
+func (c *AuthenticationToken) IP() string {
+	return c.ip
+}
+
+func (c *AuthenticationToken) IsSecure(pass *passport.Passport) bool {
+	return c.ip == pass.IP()
 }
 
 func (c *AuthenticationToken) Expiration() time.Duration {

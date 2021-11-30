@@ -42,9 +42,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	client := bootstrap.InitializeElasticSearchSession()
 
-	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
-	redis2 := bootstrap.InitializeRedisSessionWithCustomDB(0)
-
 	db, err := geoip2.Open(os.Getenv("GEOIP_DATABASE_LOCATION"))
 
 	if err != nil {
@@ -52,7 +49,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 	}
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
-	sessionRepo := adapters.NewSessionRepository(redis2)
+	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
@@ -71,6 +68,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo),
 			UpdateAccountUsernameAndRetainPrevious:    command.NewUpdateAccountUsernameAndRetainPreviousHandler(accountRepo),
 			DeleteAccountUsername:                     command.NewDeleteAccountUsernameHandler(accountRepo),
+			SaveAccountSession:                        command.NewSaveAccountSessionHandler(sessionRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),
 			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(mfaRepo),

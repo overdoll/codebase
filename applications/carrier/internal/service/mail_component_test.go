@@ -48,7 +48,7 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	headers := make(map[string]string)
 	headers["Authorization"] = "Bearer: " + os.Getenv("TESTMAIL_API_KEY")
 
-	client := passport.NewHTTPClientWithCustomHeaders(headers)
+	client := passport.NewHTTPTestClientWithCustomHeaders(headers)
 	gClient := graphql.NewClient(testmailApiEndpoint, client)
 
 	var queryInbox Inbox

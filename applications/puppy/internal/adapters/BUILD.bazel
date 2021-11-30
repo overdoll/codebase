@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = ["eva_grpc_store_repository.go"],
+    importpath = "overdoll/applications/puppy/internal/adapters",
+    visibility = ["//applications/puppy:__subpackages__"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "@com_github_go_redis_redis_v8//:redis",
+        "@com_github_gorilla_securecookie//:securecookie",
+        "@com_github_gorilla_sessions//:sessions",
+    ],
+)

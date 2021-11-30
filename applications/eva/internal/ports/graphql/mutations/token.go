@@ -3,10 +3,8 @@ package mutations
 import (
 	"context"
 	"crypto/sha256"
-	"fmt"
 	"net/http"
 	"overdoll/libraries/translations"
-	"strings"
 	"time"
 
 	"overdoll/applications/eva/internal/app/command"
@@ -17,34 +15,14 @@ import (
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 )
 
 func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error) {
 
-	request := helpers.GinContextFromContext(ctx).Request
-
-	// Capture session data
-	userAgent := strings.Join(request.Header["User-Agent"], ",")
-
-	forwarded := request.Header.Get("X-FORWARDED-FOR")
-	fmt.Println(request.RemoteAddr)
-	fmt.Println(request.Header.Get("X-FORWARDED-FOR"))
-
-	ip := ""
-
-	if forwarded != "" {
-		ip = forwarded
-	} else {
-		ip = request.RemoteAddr
-	}
-
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
-		Email:     input.Email,
-		UserAgent: userAgent,
-		IP:        ip,
-
+		Email:    input.Email,
+		Passport: passport.FromContext(ctx),
 		// manually send the language because we need it for the email
 		Language: translations.FromContext(ctx),
 	})

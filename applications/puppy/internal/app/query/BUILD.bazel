@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "query",
+    srcs = ["get_session.go"],
+    importpath = "overdoll/applications/puppy/internal/app/query",
+    visibility = ["//applications/puppy:__subpackages__"],
+)

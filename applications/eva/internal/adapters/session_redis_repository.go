@@ -30,6 +30,7 @@ type sessions struct {
 type sessionDetails struct {
 	Location  location.Serializable
 	UserAgent string `json:"userAgent"`
+	IP        string `json:"ip"`
 	Created   string `json:"created"`
 }
 
@@ -76,13 +77,14 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 
 	current := false
 
-	if sessionId == passport.SessionId() {
+	if sessionId == passport.SessionID() {
 		current = true
 	}
 
 	res := session.UnmarshalSessionFromDatabase(encryptedKey,
 		sessionItem.Passport,
 		sessionItem.Details.UserAgent,
+		sessionItem.Details.IP,
 		sessionItem.Details.Created,
 		current,
 		location.UnmarshalLocationFromSerialized(sessionItem.Details.Location),
@@ -147,7 +149,7 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 		return err
 	}
 
-	if sessionId == passport.SessionId() {
+	if sessionId == passport.SessionID() {
 		return errors.New("cannot revoke session same as logged in account")
 	}
 
@@ -171,10 +173,8 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session *session.Session) error {
 
 	sessionData := &sessions{
-		Passport: session.Passport().SerializeToBaseString(),
 		Details: sessionDetails{
 			Location: location.Serializable{
-				Ip:          "",
 				City:        "",
 				Country:     "",
 				PostalCode:  "",
@@ -184,6 +184,7 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 			},
 			UserAgent: session.Device(),
 			Created:   session.Created(),
+			IP:        session.IP(),
 		},
 	}
 
@@ -198,7 +199,7 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, sessionPrefix+ksuid.New().String()+":"+accountPrefix+session.Passport().AccountID(), valReal, time.Hour*24).Result()
+	ok, err := r.client.SetNX(ctx, sessionPrefix+ksuid.New().String()+":"+accountPrefix+session.AccountID(), valReal, time.Hour*24).Result()
 
 	if err != nil {
 		return err
@@ -209,4 +210,9 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 	}
 
 	return nil
+}
+
+// SaveAccountSession will either update or create a new account session
+func (r SessionRepository) SaveAccountSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, id string, updateFn func(usr *session.Session) error) (*session.Session, error) {
+	panic("implement me")
 }

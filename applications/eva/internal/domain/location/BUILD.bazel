@@ -8,5 +8,4 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/internal/domain/location",
     visibility = ["//applications/eva:__subpackages__"],
-    deps = ["//libraries/helpers"],
 )

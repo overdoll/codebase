@@ -44,7 +44,7 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 		country = "Unknown"
 	}
 
-	return location.UnmarshalLocationFromDatabase(ip,
+	return location.UnmarshalLocationFromDatabase(
 		city,
 		country,
 		record.Postal.Code,

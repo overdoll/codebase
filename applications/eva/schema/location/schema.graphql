@@ -1,8 +1,5 @@
 """Represents a physical location."""
 type Location {
-  """IP of the location"""
-  ip: String!
-
   """City"""
   city: String!
 

@@ -28,7 +28,7 @@ type Serial struct {
 func TestSearchSeries(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t)
 
 	var searchSeries SearchSeries
 
@@ -44,7 +44,7 @@ func TestSearchSeries(t *testing.T) {
 func TestGetSerial(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t)
 
 	var getSerial Serial
 

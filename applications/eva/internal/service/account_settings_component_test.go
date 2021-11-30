@@ -14,7 +14,6 @@ import (
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 )
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
@@ -29,7 +28,7 @@ func createSession(t *testing.T, accountId, userAgent, ip string) {
 
 	sessionRepo := adapters.NewSessionRepository(client)
 
-	err := sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip))
+	err := sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip, nil))
 	require.NoError(t, err)
 }
 
@@ -102,7 +101,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
 	// use passport with user
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
 	fake := TestUser{}
 
@@ -217,7 +216,7 @@ func TestAccountEmailAndUsernameLimit(t *testing.T) {
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
 	// use passport with user
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
@@ -243,7 +242,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
 	fake := TestUser{}
 
@@ -343,7 +342,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	createSession(t, testAccountId, "user-agent", fakeSession.Ip)
 
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
 	// query account settings once more
 	settings := viewerAccountEmailUsernameSettings(t, client)

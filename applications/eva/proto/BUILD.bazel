@@ -5,6 +5,7 @@ proto_library(
     name = "v1_proto",
     srcs = ["eva.proto"],
     visibility = ["//visibility:public"],
+    deps = ["@com_google_protobuf//:empty_proto"],
 )
 
 go_proto_library(

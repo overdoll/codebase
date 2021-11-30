@@ -19,6 +19,7 @@ const (
 type authenticationToken struct {
 	Email    string                `json:"email"`
 	Verified int                   `json:"verified"`
+	IP       string                `json:"ip"`
 	Device   string                `json:"device"`
 	Location location.Serializable `json:"location"`
 }
@@ -62,6 +63,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 		cookieItem.Email,
 		cookieItem.Verified == 1,
 		cookieItem.Device,
+		cookieItem.IP,
 		location.UnmarshalLocationFromSerialized(cookieItem.Location),
 	), nil
 }
@@ -83,6 +85,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 
 	// run a query to create the authentication token
 	authCookie := &authenticationToken{
+		IP:       instance.IP(),
 		Email:    instance.Email(),
 		Verified: 0,
 		Device:   instance.Device(),
@@ -136,6 +139,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 
 	// get authentication cookie with this ID
 	authCookie := &authenticationToken{
+		IP:       instance.IP(),
 		Verified: redeemed,
 		Email:    instance.Email(),
 		Device:   instance.Device(),

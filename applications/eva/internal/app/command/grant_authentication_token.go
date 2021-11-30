@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/token"
@@ -10,10 +11,9 @@ import (
 )
 
 type GrantAuthenticationToken struct {
-	Email     string
-	UserAgent string
-	IP        string
-	Language  *translations.Language
+	Email    string
+	Passport *passport.Passport
+	Language *translations.Language
 }
 
 type GrantAuthenticationTokenHandler struct {
@@ -28,14 +28,14 @@ func NewGrantAuthenticationTokenHandler(cr token.Repository, lr location.Reposit
 
 func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAuthenticationToken) (*token.AuthenticationToken, error) {
 
-	loc, err := h.lr.GetLocationFromIp(ctx, cmd.IP)
+	loc, err := h.lr.GetLocationFromIp(ctx, cmd.Passport.IP())
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Create an authentication cookie
-	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, cmd.UserAgent, loc)
+	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, loc, cmd.Passport)
 
 	if err != nil {
 		return nil, err

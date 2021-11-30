@@ -18,6 +18,7 @@ go_library(
         "//libraries/graphql",
         "//libraries/graphql/relay",
         "//libraries/paging",
+        "//libraries/passport",
         "//libraries/translations",
     ],
 )

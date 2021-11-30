@@ -2,6 +2,7 @@ package ports
 
 import (
 	"context"
+	"overdoll/libraries/principal"
 
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
@@ -22,6 +23,18 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 		app:    application,
 		client: client,
 	}
+}
+
+// this is here so our GRPC server can use it to grab the current principal
+func (s Server) GetPrincipalById(ctx context.Context, id string) (*principal.Principal, error) {
+
+	p, err := s.app.Queries.PrincipalById.Handle(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }
 
 func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {

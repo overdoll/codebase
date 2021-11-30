@@ -20,6 +20,7 @@ type Commands struct {
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
 	DeleteAccountUsername                   command.DeleteAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
+	SaveAccountSession                      command.SaveAccountSessionHandler
 	RevokeAccountSession                    command.RevokeAccountSessionHandler
 	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler
 	GenerateAccountMultiFactorRecoveryCodes command.GenerateAccountMultiFactorRecoveryCodesHandler

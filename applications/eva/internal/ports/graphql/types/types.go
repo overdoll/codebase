@@ -129,6 +129,8 @@ type AccountSession struct {
 	ID relay.ID `json:"id"`
 	// The originating user agent device
 	Device string `json:"device"`
+	// The original IP
+	IP string `json:"ip"`
 	// Where the session was originally created
 	Location *Location `json:"location"`
 	// When the session was created
@@ -380,8 +382,6 @@ type Language struct {
 
 // Represents a physical location.
 type Location struct {
-	// IP of the location
-	IP string `json:"ip"`
 	// City
 	City string `json:"city"`
 	// Country

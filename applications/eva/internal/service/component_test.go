@@ -110,7 +110,7 @@ func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Cli
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
 func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *passport.ClientPassport) {
 
-	client, pass := getHttpClient(t, passport.FreshPassport())
+	client, pass := getHttpClient(t)
 
 	authenticate := grantAuthenticationToken(t, client, email)
 
@@ -157,9 +157,16 @@ func getAuthTokenFromEmail(t *testing.T, email string) string {
 	return res
 }
 
-func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *passport.ClientPassport) {
+func getHttpClientWithAuthenticatedAccount(t *testing.T, account string) (*graphql.Client, *passport.ClientPassport) {
 
-	client, transport := passport.NewHTTPClientWithHeaders(pass)
+	client, transport := passport.NewHTTPTestClientWithPassport(&account)
+
+	return graphql.NewClient(EvaHttpClientAddr, client), transport
+}
+
+func getHttpClient(t *testing.T) (*graphql.Client, *passport.ClientPassport) {
+
+	client, transport := passport.NewHTTPTestClientWithPassport(nil)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), transport
 }

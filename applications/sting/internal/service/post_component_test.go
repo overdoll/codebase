@@ -16,7 +16,6 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 )
 
 type PostModified struct {
@@ -42,7 +41,7 @@ type Post struct {
 
 func getPost(t *testing.T, id string) Post {
 
-	client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var post Post
 
@@ -257,9 +256,7 @@ type AccountPosts struct {
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var newPostId string
 
@@ -275,7 +272,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 			var accountModeratorPosts AccountModeratorPosts
 
@@ -428,9 +425,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 
@@ -468,9 +463,7 @@ func TestCreatePost_Discard(t *testing.T) {
 func TestCreatePost_Reject_undo_reject(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 
@@ -524,9 +517,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 

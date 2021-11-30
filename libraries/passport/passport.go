@@ -2,18 +2,10 @@ package passport
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
-	"github.com/golang/protobuf/proto"
-	"go.uber.org/zap"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 	"sync"
-)
-
-type MutationType string
-
-const (
-	MutationKey = "PassportContextKey"
+	"time"
 )
 
 var (
@@ -21,10 +13,8 @@ var (
 )
 
 type Passport struct {
-	passport        *libraries_passport_v1.Passport
-	sessionId       string
-	recentlyMutated bool
-	passportMu      sync.Mutex
+	passport   *libraries_passport_v1.Passport
+	passportMu sync.Mutex
 }
 
 func (p *Passport) Authenticated() error {
@@ -39,8 +29,16 @@ func (p *Passport) AccountID() string {
 	return p.passport.Account.AccountId
 }
 
-func (p *Passport) SessionId() string {
-	return p.sessionId
+func (p *Passport) SessionID() string {
+	return p.passport.Header.SessionId
+}
+
+func (p *Passport) IP() string {
+	return p.passport.DeviceInfo.Ip
+}
+
+func (p *Passport) UserAgent() string {
+	return p.passport.DeviceInfo.UserAgent
 }
 
 // Revoke the currently authenticated user from the passport
@@ -53,85 +51,46 @@ func (p *Passport) SetAccount(id string) {
 	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
 }
 
-func (p *Passport) setSessionId(id string) {
-	p.sessionId = id
-}
-
-func (p *Passport) SerializeToBaseString() string {
-	msg, err := proto.Marshal(p.passport)
-
-	if err != nil {
-		return ""
-	}
-
-	return base64.StdEncoding.EncodeToString(msg)
-}
-
 func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	p := FromContext(ctx)
 	p.passportMu.Lock()
 	defer p.passportMu.Unlock()
 
-	p.recentlyMutated = true
-
 	return updateFn(p)
 }
 
-func (p *Passport) hasBeenRecentlyMutated() bool {
-	return p.recentlyMutated
-}
+func issuePassport(sessionId, ip, userAgent, accountId string) *Passport {
 
-func FreshPassport() *Passport {
-	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil, Header: &libraries_passport_v1.Header{
-		SessionId: "test",
-		Created:   0,
-		Expires:   0,
-	}}, sessionId: "", recentlyMutated: false}
-}
+	var account *libraries_passport_v1.AccountInfo
 
-func FreshPassportWithAccount(id string) *Passport {
-
-	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: "", recentlyMutated: false}
-
-	pass.SetAccount(id)
-
-	return pass
-}
-
-func fromString(raw string) *Passport {
-
-	// empty passport in string - use fresh one
-	if raw == "" {
-		return FreshPassport()
+	if accountId != "" {
+		account = &libraries_passport_v1.AccountInfo{AccountId: accountId}
 	}
 
-	sDec, err := base64.StdEncoding.DecodeString(raw)
+	created := time.Now()
 
-	if err != nil {
-		zap.S().Errorf("could not decode passport: %s", err)
-		return FreshPassport()
+	header := &libraries_passport_v1.Header{
+		SessionId: sessionId,
+		Created:   created.Unix(),
+		// passports expire 5 minutes after creation
+		Expires: created.Add(time.Minute * 5).Unix(),
 	}
 
-	var msg libraries_passport_v1.Passport
-
-	err = proto.Unmarshal(sDec, &msg)
-
-	if err != nil {
-		zap.S().Errorf("could not unmarshal passport proto: %s", err)
-		return FreshPassport()
+	device := &libraries_passport_v1.DeviceInfo{
+		Ip:        ip,
+		UserAgent: userAgent,
 	}
 
-	return &Passport{passport: &msg, sessionId: ""}
-
-}
-
-func FromContext(ctx context.Context) *Passport {
-
-	raw, ok := ctx.Value(MutationType(MutationKey)).(*Passport)
-
-	if !ok {
-		return nil
+	integrity := &libraries_passport_v1.Integrity{
+		Version: 0,
+		KeyName: "",
+		Hmac:    nil,
 	}
 
-	return raw
+	return &Passport{passport: &libraries_passport_v1.Passport{
+		Account:    account,
+		Header:     header,
+		DeviceInfo: device,
+		Integrity:  integrity,
+	}}
 }

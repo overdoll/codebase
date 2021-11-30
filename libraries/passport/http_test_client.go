@@ -15,17 +15,28 @@ type headerTestTransport struct {
 	clientPassport *ClientPassport
 }
 
+func issueTestingPassport(id *string) *Passport {
+
+	accountId := ""
+
+	if id != nil {
+		accountId = *id
+	}
+
+	return issuePassport("", "", "", accountId)
+}
+
 // A custom HTTP client
 // Useful for when running GraphQL requests, and you need to attach some sort of authorization
 
 // the client "kind of" simulates a request in and out of the graphql gateway, in that it will add a passport to
 // the request, and modify the passport, when a new one is placed in the header
 // this makes it perfect for testing and ensuring your passport modifications were correct
-func NewHTTPClientWithHeaders(pass *Passport) (*http.Client, *ClientPassport) {
+func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientPassport) {
 	jar, _ := cookiejar.New(nil)
 
 	clientPassport := &ClientPassport{
-		passport: pass,
+		passport: issueTestingPassport(accountId),
 	}
 
 	transport := &headerTestTransport{
@@ -40,7 +51,7 @@ func NewHTTPClientWithHeaders(pass *Passport) (*http.Client, *ClientPassport) {
 	}, clientPassport
 }
 
-func NewHTTPClientWithCustomHeaders(headers map[string]string) *http.Client {
+func NewHTTPTestClientWithCustomHeaders(headers map[string]string) *http.Client {
 	jar, _ := cookiejar.New(nil)
 
 	transport := &headerTestTransport{
@@ -71,9 +82,11 @@ func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, erro
 		return nil, err
 	}
 
-	// TODO: read
+	nw, err := fromResponse(resp)
 
-	nw := fromResponse(resp)
+	if err != nil {
+		return nil, err
+	}
 
 	if nw != nil {
 		h.clientPassport.passport = nw

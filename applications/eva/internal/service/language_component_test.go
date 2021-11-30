@@ -34,7 +34,7 @@ func getLanguage(t *testing.T, client *graphql.Client) types.Language {
 func TestGetRandomLanguageAndSet(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getHttpClient(t)
 
 	lang := getLanguage(t, client)
 

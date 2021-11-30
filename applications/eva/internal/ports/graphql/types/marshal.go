@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/translations"
 	"sort"
 	"time"
@@ -40,7 +41,6 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 
 func MarshalLocationToGraphQL(result *location.Location) *Location {
 	return &Location{
-		IP:          result.IP(),
 		City:        result.City(),
 		Country:     result.Country(),
 		PostalCode:  result.PostalCode(),
@@ -200,7 +200,7 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		Device:        result.Device(),
 		Email:         result.Email(),
 		Location:      MarshalLocationToGraphQL(result.Location()),
-		Secure:        result.Location().IsSecure(ctx),
+		Secure:        result.IsSecure(passport.FromContext(ctx)),
 		AccountStatus: accountStatus,
 	}
 }
