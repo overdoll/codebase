@@ -28,7 +28,7 @@ const ParleyGrpcClientAddr = "localhost:8889"
 
 func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {
 
-	client, _ := clients.NewHTTPClientWithHeaders(pass)
+	client, _ := passport.NewHTTPClientWithHeaders(pass)
 
 	return graphql.NewClient(ParleyHttpClientAddr, client)
 }

@@ -8,7 +8,6 @@ go_library(
     deps = [
         "//applications/puppy/internal/app",
         "//applications/puppy/internal/ports/gateway",
-        "//libraries/clients",
         "//libraries/helpers",
         "//libraries/passport",
         "//libraries/router",

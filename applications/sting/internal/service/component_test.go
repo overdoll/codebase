@@ -36,7 +36,7 @@ const StingGrpcClientAddr = "localhost:6667"
 
 func getGraphqlClient(t *testing.T, pass *passport.Passport) *graphql.Client {
 
-	client, _ := clients.NewHTTPClientWithHeaders(pass)
+	client, _ := passport.NewHTTPClientWithHeaders(pass)
 
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }

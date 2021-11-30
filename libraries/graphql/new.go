@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"overdoll/libraries/helpers"
-	"overdoll/libraries/passport"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -45,8 +44,6 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			return errors.New("internal server error")
 		})
-
-		graphAPIHandler.Use(passport.GraphqlResponseExtension{})
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"os"
 	carrier "overdoll/applications/carrier/proto"
-	"overdoll/libraries/clients"
+	"overdoll/libraries/passport"
 	"strings"
 	"testing"
 	"time"
@@ -48,7 +48,7 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	headers := make(map[string]string)
 	headers["Authorization"] = "Bearer: " + os.Getenv("TESTMAIL_API_KEY")
 
-	client := clients.NewHTTPClientWithCustomHeaders(headers)
+	client := passport.NewHTTPClientWithCustomHeaders(headers)
 	gClient := graphql.NewClient(testmailApiEndpoint, client)
 
 	var queryInbox Inbox

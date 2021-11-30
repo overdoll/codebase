@@ -13,23 +13,12 @@ import (
 type MutationType string
 
 const (
-	AppendHeader   = "X-Passport"
-	MutationHeader = "X-Modified-Passport"
-	MutationKey    = "PassportContextKey"
+	MutationKey = "PassportContextKey"
 )
 
 var (
 	ErrNotAuthenticated = errors.New("not authenticated")
 )
-
-// Body - parses graphql requests
-type Body struct {
-	Query      string                 `json:"query,omitempty"`
-	Variables  map[string]interface{} `json:"variables,omitempty"`
-	Extensions struct {
-		Passport string `json:"passport"`
-	}
-}
 
 type Passport struct {
 	passport        *libraries_passport_v1.Passport
@@ -47,7 +36,7 @@ func (p *Passport) Authenticated() error {
 }
 
 func (p *Passport) AccountID() string {
-	return p.passport.Account.Id
+	return p.passport.Account.AccountId
 }
 
 func (p *Passport) SessionId() string {
@@ -61,7 +50,7 @@ func (p *Passport) RevokeAccount() error {
 }
 
 func (p *Passport) SetAccount(id string) {
-	p.passport.Account = &libraries_passport_v1.Account{Id: id}
+	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
 }
 
 func (p *Passport) setSessionId(id string) {
@@ -93,7 +82,11 @@ func (p *Passport) hasBeenRecentlyMutated() bool {
 }
 
 func FreshPassport() *Passport {
-	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: "", recentlyMutated: false}
+	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil, Header: &libraries_passport_v1.Header{
+		SessionId: "test",
+		Created:   0,
+		Expires:   0,
+	}}, sessionId: "", recentlyMutated: false}
 }
 
 func FreshPassportWithAccount(id string) *Passport {
@@ -105,7 +98,7 @@ func FreshPassportWithAccount(id string) *Passport {
 	return pass
 }
 
-func FromString(raw string) *Passport {
+func fromString(raw string) *Passport {
 
 	// empty passport in string - use fresh one
 	if raw == "" {

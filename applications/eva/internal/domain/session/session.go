@@ -35,7 +35,7 @@ func UnmarshalSessionFromDatabase(id, pass, device, created string, current bool
 		location: location,
 		created:  created,
 		current:  current,
-		passport: passport.FromString(pass),
+		passport: nil,
 	}
 }
 

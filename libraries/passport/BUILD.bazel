@@ -3,21 +3,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "passport",
     srcs = [
-        "gateway_hook.go",
-        "gqlgen_graphql.go",
+        "gin_middleware.go",
         "http.go",
+        "http_client.go",
+        "http_test_client.go",
         "passport.go",
     ],
     importpath = "overdoll/libraries/passport",
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/passport/proto:v1_go_proto",
-        "@com_github_99designs_gqlgen//graphql",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_gorilla_sessions//:sessions",
-        "@com_github_jensneuse_abstractlogger//:abstractlogger",
-        "@com_github_jensneuse_graphql_go_tools//pkg/engine/resolve",
         "@org_uber_go_zap//:zap",
     ],
 )

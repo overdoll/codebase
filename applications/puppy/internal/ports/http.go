@@ -12,7 +12,6 @@ import (
 	"os"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/applications/puppy/internal/ports/gateway"
-	"overdoll/libraries/clients"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
@@ -20,13 +19,14 @@ import (
 )
 
 func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
-	rtr := router.NewGinRouter()
+
+	rtr := router.NewRawGinRouter()
 
 	graphqlEndpoint := "/api/graphql"
 
 	var store sessions.Store = sessions.NewCookieStore([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
-	httpClient, _ := clients.NewHTTPClientWithHeaders(passport.FreshPassport())
+	httpClient := passport.NewHTTPClientWithStore(store)
 
 	datasourceWatcher := gateway.NewDatasourcePoller(httpClient, gateway.DatasourcePollerConfig{
 		Services: []gateway.ServiceConfig{

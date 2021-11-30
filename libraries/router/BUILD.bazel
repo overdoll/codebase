@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "gin.go",
         "language.go",
-        "passport.go",
         "query_observer.go",
         "router.go",
     ],

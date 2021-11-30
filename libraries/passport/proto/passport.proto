@@ -1,11 +1,52 @@
 syntax = "proto3";
 
 package libraries.passport.v1;
+import "google/protobuf/timestamp.proto";
 
 message Passport {
-  Account account = 1;
+  // Each passport has a header that identifies who created the passport
+  Header header = 1;
+
+  // Each passport may or may not have an account linked to it
+  AccountInfo account = 2;
+
+  // Device information linked to this passport
+  DeviceInfo deviceInfo = 3;
+
+  // Integrity of the passport (can be used to make sure the passport is correctly created)
+  Integrity integrity = 4;
 }
 
-message Account {
-  string id = 1;
+message Header {
+  // Unique session ID for this passport
+  string sessionId = 1;
+
+  // When the passport was created
+  int64 created = 2;
+
+  // When the passport expires
+  int64 expires = 3;
+}
+
+message AccountInfo {
+  string accountId = 1;
+}
+
+message DeviceInfo {
+  // IP of the device
+  string ip = 1;
+
+  // User Agent of the device (can be parsed to grab the actual device information)
+  string userAgent = 2;
+}
+
+message Integrity {
+  // What version is the integrity using
+  int32 version = 1;
+
+  // The name of the key
+  string keyName = 2;
+
+  // Hmac hash that can be used to verify it
+  bytes hmac = 3;
 }
