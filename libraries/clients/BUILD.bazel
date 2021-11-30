@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "carrier.go",
         "eva.go",
-        "http.go",
         "parley.go",
         "sting.go",
         "temporal.go",
@@ -17,7 +16,6 @@ go_library(
         "//applications/eva/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
-        "//libraries/passport",
         "@com_github_grpc_ecosystem_go_grpc_middleware//retry",
         "@io_temporal_go_sdk//client",
         "@org_golang_google_grpc//:go_default_library",
