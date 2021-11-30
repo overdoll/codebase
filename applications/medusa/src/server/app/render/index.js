@@ -30,7 +30,11 @@ async function request (req, res, next) {
     network: Network.create(async function (params, variables) {
       // call on local network
 
-      const headers = {}
+      const headers = {
+        // add CSRF token since its added by client
+        'Content-Type': 'application/json',
+        'Csrf-Token': req.csrfToken()
+      }
 
       Object.entries(
         req.headers || {}

@@ -106,7 +106,6 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 
 	// Update passport to include our new user
 	if err := passport.
-		FromContext(ctx).
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
 				p.SetAccount(acc.ID())
@@ -260,7 +259,6 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	cookies.DeleteCookie(ctx, token.OTPKey)
 
 	if err := passport.
-		FromContext(ctx).
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
 				p.SetAccount(acc.ID())
@@ -309,7 +307,6 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	cookies.DeleteCookie(ctx, token.OTPKey)
 
 	if err := passport.
-		FromContext(ctx).
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
 				p.SetAccount(acc.ID())
@@ -358,7 +355,6 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	cookies.DeleteCookie(ctx, token.OTPKey)
 
 	if err := passport.
-		FromContext(ctx).
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
 				p.SetAccount(acc.ID())

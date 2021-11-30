@@ -53,7 +53,6 @@ func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.Revo
 
 	// logout just revokes the currently-authenticated user from the passport
 	if err := passport.
-		FromContext(ctx).
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
 				return p.RevokeAccount()

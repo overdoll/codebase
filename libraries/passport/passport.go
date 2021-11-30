@@ -1,30 +1,21 @@
 package passport
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
-	"github.com/gorilla/sessions"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"strings"
-
-	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
 	"go.uber.org/zap"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
+	"sync"
 )
 
 type MutationType string
 
 const (
-	AppendHeader      = "X-Passport"
-	MutationHeader    = "X-Modified-Passport"
-	MutationKey       = "PassportContextKey"
-	sessionCookieName = "connect.sid"
+	AppendHeader   = "X-Passport"
+	MutationHeader = "X-Modified-Passport"
+	MutationKey    = "PassportContextKey"
 )
 
 var (
@@ -41,8 +32,10 @@ type Body struct {
 }
 
 type Passport struct {
-	passport  *libraries_passport_v1.Passport
-	sessionId string
+	passport        *libraries_passport_v1.Passport
+	sessionId       string
+	recentlyMutated bool
+	passportMu      sync.Mutex
 }
 
 func (p *Passport) Authenticated() error {
@@ -85,111 +78,31 @@ func (p *Passport) SerializeToBaseString() string {
 	return base64.StdEncoding.EncodeToString(msg)
 }
 
-// MutatePassport will add the passport to the context
-func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
+func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
+	p := FromContext(ctx)
+	p.passportMu.Lock()
+	defer p.passportMu.Unlock()
 
-	err := updateFn(p)
+	p.recentlyMutated = true
 
-	if err != nil {
-		return err
-	}
+	return updateFn(p)
+}
 
-	return nil
+func (p *Passport) hasBeenRecentlyMutated() bool {
+	return p.recentlyMutated
 }
 
 func FreshPassport() *Passport {
-	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: ""}
+	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: "", recentlyMutated: false}
 }
 
 func FreshPassportWithAccount(id string) *Passport {
 
-	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: ""}
+	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}, sessionId: "", recentlyMutated: false}
 
 	pass.SetAccount(id)
 
 	return pass
-}
-
-func AddToRequestFromSessionStore(r *http.Request, store sessions.Store) error {
-
-	session, err := store.Get(r, "session")
-
-	if err != nil {
-		return err
-	}
-
-	if val, ok := session.Values["passport"]; ok {
-
-		passResult := FromString(val.(string))
-		passResult.setSessionId(session.ID)
-
-		if err := AddToRequest(r, passResult); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// AddToRequest is responsible for appending passport to the body of the request
-// mainly used for testing (because usually, our graphql gateway appends the passport to the body)
-func AddToRequest(r *http.Request, passport *Passport) error {
-	var body Body
-	var buf bytes.Buffer
-
-	tee := io.TeeReader(r.Body, &buf)
-	err := json.NewDecoder(tee).Decode(&body)
-
-	if err != nil {
-		return err
-	}
-
-	passportSerialized := passport.SerializeToBaseString()
-
-	// add to body && header
-	body.Extensions.Passport = passportSerialized
-	r.Header.Add(AppendHeader, passportSerialized)
-
-	encode, err := json.Marshal(body)
-
-	if err != nil {
-		return err
-	}
-
-	r.ContentLength = int64(len(encode))
-
-	r.Body = ioutil.NopCloser(strings.NewReader(string(encode)))
-
-	return nil
-}
-
-// BodyToContext is responsible for parsing the incoming passport and
-// adding it to context so the application can access it
-func BodyToContext(c *gin.Context) *http.Request {
-	var body Body
-
-	var buf bytes.Buffer
-	tee := io.TeeReader(c.Request.Body, &buf)
-	bd, _ := ioutil.ReadAll(tee)
-	err := json.Unmarshal(bd, &body)
-	c.Request.Body = ioutil.NopCloser(&buf)
-
-	if err != nil {
-		return nil
-	}
-
-	// check header first, then body
-	if val := c.Request.Header.Get(AppendHeader); val != "" {
-		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), FromString(val))
-		return c.Request.WithContext(ctx)
-	}
-
-	if val := body.Extensions.Passport; val != "" {
-		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), FromString(val))
-		return c.Request.WithContext(ctx)
-	}
-
-	return nil
 }
 
 func FromString(raw string) *Passport {
@@ -224,22 +137,8 @@ func FromContext(ctx context.Context) *Passport {
 	raw, ok := ctx.Value(MutationType(MutationKey)).(*Passport)
 
 	if !ok {
-		return FreshPassport()
-	}
-
-	return raw
-}
-
-func FromResponse(resp *http.Response) *Passport {
-
-	// check for header existence first, because
-	// we might return an empty string
-	headers := resp.Header
-	_, ok := headers[MutationHeader]
-
-	if !ok {
 		return nil
 	}
 
-	return FromString(resp.Header.Get(MutationHeader))
+	return raw
 }

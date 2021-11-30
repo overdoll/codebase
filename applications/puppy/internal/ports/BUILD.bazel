@@ -8,7 +8,9 @@ go_library(
     deps = [
         "//applications/puppy/internal/app",
         "//applications/puppy/internal/ports/gateway",
+        "//libraries/clients",
         "//libraries/helpers",
+        "//libraries/passport",
         "//libraries/router",
         "@com_github_99designs_gqlgen//graphql/playground",
         "@com_github_gin_gonic_gin//:gin",

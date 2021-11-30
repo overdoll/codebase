@@ -12,7 +12,9 @@ import (
 	"os"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/applications/puppy/internal/ports/gateway"
+	"overdoll/libraries/clients"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 	"time"
 )
@@ -22,7 +24,9 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	graphqlEndpoint := "/api/graphql"
 
-	httpClient := http.DefaultClient
+	var store sessions.Store = sessions.NewCookieStore([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
+
+	httpClient, _ := clients.NewHTTPClientWithHeaders(passport.FreshPassport())
 
 	datasourceWatcher := gateway.NewDatasourcePoller(httpClient, gateway.DatasourcePollerConfig{
 		Services: []gateway.ServiceConfig{
@@ -39,8 +43,6 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	}
 
 	l := log.NewZapLogger(zap.L(), log.DebugLevel)
-
-	var store sessions.Store = sessions.NewCookieStore([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
 	var gqlHandlerFactory gateway.HandlerFactoryFn = func(schema *graphql.Schema, engine *graphql.ExecutionEngineV2) http.Handler {
 		return gateway.NewGraphqlHTTPHandler(schema, engine, l, store)

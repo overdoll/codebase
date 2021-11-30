@@ -3,7 +3,6 @@ package graphql
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
 	"overdoll/libraries/helpers"
@@ -20,27 +19,6 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 )
-
-type TestPassportResponse struct{}
-
-func (r TestPassportResponse) ExtensionName() string {
-	return "2InlineResponseFunc"
-}
-
-func (r TestPassportResponse) Validate(schema graphql.ExecutableSchema) error {
-	return nil
-}
-
-func (r TestPassportResponse) InterceptResponse(ctx context.Context, next graphql.ResponseHandler) *graphql.Response {
-
-	pass := passport.FromContext(ctx)
-
-	fmt.Println(pass.Authenticated())
-
-	resp := next(ctx)
-
-	return resp
-}
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -68,7 +46,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 			return errors.New("internal server error")
 		})
 
-		graphAPIHandler.Use(TestPassportResponse{})
+		graphAPIHandler.Use(passport.GraphqlResponseExtension{})
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 
