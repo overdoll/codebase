@@ -34,7 +34,7 @@ export default function NavigationMenu ({ children }: Props): Node {
               }
             />
           </Tooltip>
-          <MenuList minW='300px' boxShadow='xs'>
+          <MenuList minW='300px' boxShadow='lg'>
             {children}
           </MenuList>
         </>

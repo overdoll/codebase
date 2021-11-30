@@ -55,7 +55,7 @@ export default function QueueSettings (props: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const status = !!data?.viewer.moderator
+  const status = !!data?.viewer?.moderator
 
   const notify = useToast()
 

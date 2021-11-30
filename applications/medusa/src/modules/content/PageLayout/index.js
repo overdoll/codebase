@@ -9,5 +9,6 @@ export { default as PageSectionTitle } from './PageSection/PageSectionTitle/Page
 export { default as PageWrapper } from './PageWrapper/PageWrapper'
 
 export { default as SmallBackgroundBox } from './BuildingBlocks/SmallBackgroundBox/SmallBackgroundBox'
+export { default as LargeBackgroundBox } from './BuildingBlocks/LargeBackgroundBox/LargeBackgroundBox'
 
 export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/ListSpacer'

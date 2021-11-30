@@ -15,22 +15,25 @@ type Props = {
   error: boolean,
   placeholder: string,
   errorMessage: string,
+  size?: string,
+  variant?: string
 };
 
-export default function SmallInput ({ register, success, error, placeholder, errorMessage }: Props): Node {
+export default function StyledInput ({ register, success, error, placeholder, errorMessage, size, variant }: Props): Node {
   return (
     <Box w='100%'>
       <InputGroup>
         <Input
           {...register}
-          variant='filled'
-          size='sm'
+          variant={variant || 'filled'}
+          size={size || 'sm'}
           placeholder={placeholder}
         />
         {(error || success) && (
-          <InputRightElement h='32px' pointerEvents='none'>
+          <InputRightElement h='100%' pointerEvents='none'>
             <Icon
-              m={3}
+              h={4}
+              w={4}
               icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
               fill={success ? 'gray.100' : 'orange.500'}
             />

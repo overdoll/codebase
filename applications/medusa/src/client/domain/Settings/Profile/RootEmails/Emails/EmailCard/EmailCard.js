@@ -70,7 +70,7 @@ export default function EmailCard ({ emails, connectionID }: Props): Node {
             {data.status}
           </Badge>
           <Spacer />
-          {data.status !== 'PRIMARY' &&
+          {data.status === 'CONFIRMED' &&
             <Menu mt={1} autoSelect={false}>
               <MenuButton
                 bg='transparent'
@@ -83,13 +83,9 @@ export default function EmailCard ({ emails, connectionID }: Props): Node {
                   />
               }
               />
-              <MenuList boxShadow='xs'>
-                {data.status === 'CONFIRMED' &&
-                  <MakePrimary emails={data} connectionID={connectionID} />}
-                {data.status === 'UNCONFIRMED' &&
-                  <Resend />}
-                {(data.status === 'CONFIRMED') &&
-                  <Delete emails={data} connectionID={connectionID} />}
+              <MenuList boxShadow='lg'>
+                <MakePrimary emails={data} connectionID={connectionID} />
+                <Delete emails={data} connectionID={connectionID} />
               </MenuList>
             </Menu>}
         </Flex>

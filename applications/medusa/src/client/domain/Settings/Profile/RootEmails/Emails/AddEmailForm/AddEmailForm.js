@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import IconButton from '@//:modules/form/IconButton'
 import { useEmailFormSchema } from '@//:modules/constants/schemas'
-import SmallInput from '@//:modules/form/SmallInput/SmallInput'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type EmailValues = {
   email: string,
@@ -107,7 +107,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
       <FormControl isInvalid={errors.email} id='email'>
         <FormLabel>{t('profile.email.add.title')}</FormLabel>
         <HStack align='flex-start'>
-          <SmallInput
+          <StyledInput
             register={register('email')}
             success={success}
             error={errors.email}

@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import type { ResourceUrl } from '@//:types/upload'
-import { Skeleton, Image } from '@chakra-ui/react'
+import { Box, Skeleton } from '@chakra-ui/react'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
 type Props = {
@@ -11,21 +11,34 @@ type Props = {
 }
 
 export default function ImageSnippet ({ urls, ...rest }: Props): Node {
-  // TODO provide image fallbacks?
-
   const url = urls[0].url
+  /*
+  return (
+     <SuspenseImage
+       alt='thumbnail'
 
-  console.log(urls)
+       w='inherit'
+       {...rest}
+       src={url} fallback={<Skeleton w='100%' h='100%' {...rest} />}
+     />
+   )
+   */
 
   return (
-
-    <SuspenseImage
-      alt='thumbnail'
+    <Box
       objectFit='cover'
       userSelect='none'
-      w='inherit'
-      {...rest}
-      src={url} fallback={<Skeleton w='100%' h='100%' {...rest} />}
-    />
+    >
+      <picture>
+        {urls.map((item, index) =>
+          (<source
+            key={index}
+            srcSet={item.url}
+            type={item.mimeType}
+          />
+          )
+        )}
+      </picture>
+    </Box>
   )
 }

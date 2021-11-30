@@ -6,7 +6,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpSubmissionFormMutation } from '@//:artifacts/TotpSubmissionFormMutation.graphql'
 import {
   Flex,
-  useToast, FormControl, InputGroup, Input, InputRightElement, FormErrorMessage
+  useToast, FormControl, InputGroup, Input, InputRightElement, FormErrorMessage, HStack
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,7 @@ import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type CodeValues = {
   code: string
@@ -107,24 +108,16 @@ export default function TotpSubmissionForm (props: Props): Node {
       <FormControl
         isInvalid={errors.code}
       >
-        <Flex justify='center'>
-          <InputGroup mr={2} size='sm'>
-            <Input
-              {...register('code')}
-              variant='outline'
-              size='md'
-              placeholder='123456'
-            />
-            {(errors.code || success) && (
-              <InputRightElement h='100%' mr={1}>
-                <Icon
-                  m={2}
-                  icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                  fill={success ? 'green.600' : 'orange.500'}
-                />
-              </InputRightElement>
-            )}
-          </InputGroup>
+        <HStack align='flex-start'>
+          <StyledInput
+            register={register('code')}
+            success={success}
+            error={errors.code}
+            size='md'
+            variant='outline'
+            placeholder='123456'
+            errorMessage={errors?.code?.message}
+          />
           <Button
             size='md'
             variant='solid'
@@ -135,10 +128,7 @@ export default function TotpSubmissionForm (props: Props): Node {
           >
             {t('totp.flow.code_step.form.submit')}
           </Button>
-        </Flex>
-        <FormErrorMessage>
-          {errors.code && errors.code.message}
-        </FormErrorMessage>
+        </HStack>
       </FormControl>
     </form>
   )

@@ -18,6 +18,7 @@ import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 import RevokeSession from './RevokeSession/RevokeSession'
 import Button from '@//:modules/form/Button'
+import SpoilerBox from '../../../../../components/ContentHints/SpoilerBox/SpoilerBox'
 
 type Props = {
   query: PreloadedQueryInner<SessionsSettingsQuery>,
@@ -96,11 +97,13 @@ export default function MultiFactorSettings (props: Props): Node {
                     fontSize='sm'
                   >{item.node.current ? t('security.sessions.current') : t('security.sessions.accessed', { date: formattedDate })}
                   </Text>
-                  <Text
-                    onClick={onToggle} color='gray.200'
-                    fontSize='sm'
-                  >{isRevealed ? item.node.ip : t('security.sessions.show')}
-                  </Text>
+                  <SpoilerBox text={t('security.sessions.show')}>
+                    <Text
+                      color='gray.200'
+                      fontSize='sm'
+                    >{item.node.ip}
+                    </Text>
+                  </SpoilerBox>
                 </Flex>
                 <Flex align='flex-end'>
                   {!item.node.current &&
@@ -113,7 +116,7 @@ export default function MultiFactorSettings (props: Props): Node {
                               as={IconButton}
                               icon={<Icon icon={InterfaceSettingCog} w='fill' h='fill' fill='gray.300' m={1} />}
                             />
-                          <MenuList display={isOpen ? 'block' : 'none'} boxShadow='xs'>
+                          <MenuList display={isOpen ? 'block' : 'none'} boxShadow='lg'>
                               <RevokeSession session={item.node} connectionID={sessionsConnectionID} />
                             </MenuList>
                         </>

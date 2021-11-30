@@ -25,7 +25,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import { useUsernameFormSchema } from '@//:modules/constants/schemas'
-import SmallInput from '@//:modules/form/SmallInput/SmallInput'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type UsernameValues = {
   username: string,
@@ -113,7 +113,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
       >
         <FormLabel>{t('profile.username.modal.header')}</FormLabel>
         <HStack align='flex-start'>
-          <SmallInput
+          <StyledInput
             register={register('username')}
             success={success}
             error={errors.username}

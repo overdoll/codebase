@@ -25,6 +25,7 @@ import PhoneActionDownload
   from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'
 import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {}
 
@@ -109,103 +110,99 @@ export default function MultiFactorTotpFlow (props: Props): Node {
   }
 
   return (
-    <Flex direction='column'>
-      <SimpleGrid
-        borderRadius={5} borderWidth={2} borderColor='gray.800' columns={1}
-        spacing={1}
-      >
-        <Box>
-          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
-            <Flex m={2} justify='center' align='center'>
-              <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
-                <Icon icon={PhoneActionDownload} color='gray.100' />
-              </Box>
-            </Flex>
-            <Box m={2}>
-              <Heading fontSize='lg' color='gray.00'>
-                {t('totp.flow.app_step.title')}
-              </Heading>
-              <Text color='gray.100' fontSize='sm'>
-                {t('totp.flow.app_step.description')}
-              </Text>
-              <List spacing={1} mt={2}>
-                <ListItem>
-                  <ExternalLink path='https://support.google.com/accounts/answer/1066447'>
-                    {t('totp.flow.app_step.options.google_authenticator')}
-                  </ExternalLink>
-                </ListItem>
-                <ListItem>
-                  <ExternalLink path='https://authy.com/features/setup/'>
-                    {t('totp.flow.app_step.options.authy')}
-                  </ExternalLink>
-                </ListItem>
-              </List>
+    <SimpleGrid
+      columns={1}
+      spacing={2}
+    >
+      <SmallBackgroundBox p={0}>
+        <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+          <Flex m={2} justify='center' align='center'>
+            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+              <Icon icon={PhoneActionDownload} color='gray.100' />
             </Box>
           </Flex>
-        </Box>
-        <Divider />
-        <Box>
-          <Flex align={{ base: 'initial', md: 'center' }} m={2} direction={{ base: 'column', md: 'row' }}>
-            <Flex m={2} justify='center' align='center'>
-              <Flex
-                h={32}
-                w={32} borderRadius={5} bg='gray.00'
-                align='center'
-                justify='center'
-              >
-                <SuspenseImage
-                  alt='thumbnail'
-                  src={totp?.generateAccountMultiFactorTotp.multiFactorTotp.imageSrc}
-                  fallback={<Skeleton w='100%' h='100%' />}
-                />
-              </Flex>
+          <Box m={2}>
+            <Heading fontSize='lg' color='gray.00'>
+              {t('totp.flow.app_step.title')}
+            </Heading>
+            <Text color='gray.100' fontSize='sm'>
+              {t('totp.flow.app_step.description')}
+            </Text>
+            <List spacing={1} mt={2}>
+              <ListItem>
+                <ExternalLink path='https://support.google.com/accounts/answer/1066447'>
+                  {t('totp.flow.app_step.options.google_authenticator')}
+                </ExternalLink>
+              </ListItem>
+              <ListItem>
+                <ExternalLink path='https://authy.com/features/setup/'>
+                  {t('totp.flow.app_step.options.authy')}
+                </ExternalLink>
+              </ListItem>
+            </List>
+          </Box>
+        </Flex>
+      </SmallBackgroundBox>
+      <SmallBackgroundBox p={0}>
+        <Flex align={{ base: 'initial', md: 'center' }} m={2} direction={{ base: 'column', md: 'row' }}>
+          <Flex m={2} justify='center' align='center'>
+            <Flex
+              h={32}
+              w={32} borderRadius={5} bg='gray.00'
+              align='center'
+              justify='center'
+            >
+              <SuspenseImage
+                alt='thumbnail'
+                src={totp?.generateAccountMultiFactorTotp.multiFactorTotp.imageSrc}
+                fallback={<Skeleton w='100%' h='100%' />}
+              />
             </Flex>
-            <Box m={2}>
-              <Heading fontSize='lg' color='gray.00'>
-                {t('totp.flow.scan_step.title')}
-              </Heading>
-              <Text color='gray.100' fontSize='sm'>
-                {t('totp.flow.scan_step.description')}
-              </Text>
-              <Text mt={2} color='gray.100' fontSize='sm'>
-                {t('totp.flow.scan_step.alternative')}
-              </Text>
-              <CopyToClipboardText
-                borderRadius={2}
-                fontWeight='normal'
-                fontStyle='mono' mt={2}
-                text={totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
-              >
-                <Code
-                  whiteSpace='normal'
-                  wordBreak='break-word'
-                  fontSize='sm'
-                >{totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
-                </Code>
-              </CopyToClipboardText>
+          </Flex>
+          <Box m={2}>
+            <Heading fontSize='lg' color='gray.00'>
+              {t('totp.flow.scan_step.title')}
+            </Heading>
+            <Text color='gray.100' fontSize='sm'>
+              {t('totp.flow.scan_step.description')}
+            </Text>
+            <Text mt={2} color='gray.100' fontSize='sm'>
+              {t('totp.flow.scan_step.alternative')}
+            </Text>
+            <CopyToClipboardText
+              borderRadius={2}
+              fontWeight='normal'
+              fontStyle='mono' mt={2}
+              text={totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
+            >
+              <Code
+                whiteSpace='normal'
+                wordBreak='break-word'
+                fontSize='sm'
+              >{totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
+              </Code>
+            </CopyToClipboardText>
+          </Box>
+        </Flex>
+      </SmallBackgroundBox>
+      <SmallBackgroundBox p={0}>
+        <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+          <Flex m={2} justify='center' align='center'>
+            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+              <Icon icon={Typing} color='gray.100' />
             </Box>
           </Flex>
-        </Box>
-        <Divider />
-        <Box>
-          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
-            <Flex m={2} justify='center' align='center'>
-              <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
-                <Icon icon={Typing} color='gray.100' />
-              </Box>
-            </Flex>
-            <Box m={2}>
-              <Heading fontSize='lg' color='gray.00'>
-                {t('totp.flow.code_step.title')}
-              </Heading>
-              <Text mb={2} color='gray.100' fontSize='sm'>
-                {t('totp.flow.code_step.description')}
-              </Text>
-              <TotpSubmissionForm setIsSuccessful={() => setIsSuccessful(true)} />
-            </Box>
-          </Flex>
-        </Box>
-      </SimpleGrid>
-    </Flex>
+          <Box m={2}>
+            <Heading fontSize='lg' color='gray.00'>
+              {t('totp.flow.code_step.title')}
+            </Heading>
+            <Text mb={2} color='gray.100' fontSize='sm'>
+              {t('totp.flow.code_step.description')}
+            </Text>
+            <TotpSubmissionForm setIsSuccessful={() => setIsSuccessful(true)} />
+          </Box>
+        </Flex>
+      </SmallBackgroundBox>
+    </SimpleGrid>
   )
 }

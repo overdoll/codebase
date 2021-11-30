@@ -8,7 +8,8 @@
     "add": "Add",
     "modify": "Modify",
     "copy": "Copy",
-    "guidelines": "Community Guidelines"
+    "guidelines": "Community Guidelines",
+    "reveal": "Reveal Spoiler"
   },
   "input": {
     "search": "Search something you know..."

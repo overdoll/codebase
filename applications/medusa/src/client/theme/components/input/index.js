@@ -120,7 +120,7 @@ function variantOutline (props) {
     field: {
       borderWidth: determineBorderWidth(size),
       borderColor: 'gray.500',
-      bg: 'inherit',
+      bg: 'gray.900',
       _hover: {
         borderColor: mode('gray.300', 'gray.300')(props)
       },

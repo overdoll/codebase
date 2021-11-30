@@ -25,6 +25,7 @@ import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
 import { usePreloadedQuery } from 'react-relay/hooks'
+import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<PostsQuery>,
@@ -110,19 +111,17 @@ export default function Posts (props: Props): Node {
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
   if (data.moderatorPostsQueue.edges.length < 1) {
     return (
-      <Flex
-        flexDirection='column'
-        alignItems='center'
-        justifyContent='center'
-        textAlign='center'
-        height='500px'
-        mt={4}
-        p={12}
-        bg='gray.800'
-        borderRadius={10}
-      >
-        <NoPostsPlaceholder moderator={data} />
-      </Flex>
+      <LargeBackgroundBox>
+        <Flex
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          height='500px'
+        >
+          <NoPostsPlaceholder moderator={data} />
+        </Flex>
+      </LargeBackgroundBox>
     )
   }
 
@@ -130,36 +129,33 @@ export default function Posts (props: Props): Node {
 
   // Otherwise, show a post queue if the user has one
   return (
-    <>
-      <Flex mt={2}>
+    <Stack spacing={2}>
+      <Flex>
         {currentIndex !== 0 &&
           <IconButton
-            icon={<Icon icon={InterfaceArrowsButtonLeft} w='fill' h='fill' fill='gray.300' />}
-            variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-            h={12}
+            icon={<Icon icon={InterfaceArrowsButtonLeft} w={4} h={4} fill='gray.300' />}
+            variant='solid'
             mr={2}
+            size='lg'
             bg='gray.800'
+            borderRadius='base'
             onClick={previousPage}
           />}
-        <Flex
-          borderRadius={5} h={12} pl={2} pr={2} pt={1} pb={1} w='100%' bg='gray.800'
-          justify='center'
-          align='center'
-          position='relative'
-        >
+        <SmallBackgroundBox align='center' w='100%'>
           <Text
-            color='gray.300' fontWeight='medium'
-            size='md'
+            color='gray.300'
+            fontSize='md'
           >{t('queue.post.title', { date: formattedDate })}
           </Text>
-        </Flex>
+        </SmallBackgroundBox>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&
           <IconButton
             ml={2}
-            icon={<Icon icon={InterfaceArrowsButtonRight} w='fill' h='fill' fill='gray.300' />}
-            variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-            h={12}
+            icon={<Icon icon={InterfaceArrowsButtonRight} w={4} h={4} fill='gray.300' />}
+            variant='solid'
             bg='gray.800'
+            size='lg'
+            borderRadius='base'
             isLoading={isLoadingNext}
             onClick={nextPage}
           />}
@@ -169,14 +165,9 @@ export default function Posts (props: Props): Node {
           return <Fragment key={index} />
         }
         return (
-          <Flex
-            mt={2}
-            bg='gray.800'
-            borderRadius={10}
-            position='relative'
-            direction='column'
-            p={4}
+          <LargeBackgroundBox
             key={index}
+            position='relative'
           >
             <Stack spacing={2}>
               <PostHeader query={item.node} />
@@ -185,10 +176,9 @@ export default function Posts (props: Props): Node {
             <Flex justify='flex-end' mt={4}>
               <ModeratePost connectionID={postsConnection} infractions={queryData} postID={item.node} />
             </Flex>
-          </Flex>
+          </LargeBackgroundBox>
         )
       })}
-
-    </>
+    </Stack>
   )
 }
