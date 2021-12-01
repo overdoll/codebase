@@ -15,16 +15,19 @@ import {
   ButtonGroup,
   useToast,
   Heading,
-  Skeleton
+  Skeleton,
+  Stack
 } from '@chakra-ui/react'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
 import Icon from '@//:modules/content/Icon/Icon'
-import CopyToClipboardText from '../../../../components/ContentHints/CopyToClipboardText/CopyToClipboardText'
+import CopyCodeToClipboard from '../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import DownloadDashArrow
   from '@streamlinehq/streamlinehq/img/streamline-bold/internet-networks-servers/upload-download/download-dash-arrow.svg'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'
+import CopyToClipboardButton from '../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   query: RecoveryCodesSetupQuery
@@ -135,50 +138,50 @@ export default function RecoveryCodesSetup (props: Props): Node {
   }
 
   return (
-    <>
-      <Flex direction='column' borderRadius={5} borderWidth={2} borderColor='gray.700'>
-        <Text p={3} fontSize='lg' color='gray.00'>{t('recovery_codes.exists.title')}</Text>
-        <Alert borderRadius={0} borderLeftWidth={0} borderRightWidth={0} status='warning'>
-          <Flex align='center' direction='column'>
-            <AlertIcon mb={2} />
-            <AlertDescription align='center' lineHeight={5} fontSize='sm'>
-              {t('recovery_codes.exists.alert')}
-            </AlertDescription>
+    <Stack>
+      <SmallBackgroundBox bg='gray.900'>
+        <Stack spacing={4}>
+          <Text fontSize='lg' color='gray.00'>{t('recovery_codes.exists.title')}</Text>
+          <Alert status='warning'>
+            <Flex align='center' direction='column'>
+              <AlertIcon mb={2} />
+              <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+                {t('recovery_codes.exists.alert')}
+              </AlertDescription>
+            </Flex>
+          </Alert>
+          <SimpleGrid columns={2} spacing={4}>
+            {recoveryCodes.map((item, index) => {
+              return (
+                <Flex h={8} position='relative' justify='center' align='center' key={index}>
+                  {isGeneratingCodes
+                    ? <Skeleton w='100%' h='100%' />
+                    : <Code
+                        data-cy='recovery-code'
+                        colorScheme='gray'
+                        fontSize='lg'
+                      >{item.code}
+                    </Code>}
+                </Flex>
+              )
+            })}
+          </SimpleGrid>
+          <Flex justify='center'>
+            <ButtonGroup spacing={12}>
+              <CopyToClipboardButton>
+                {t('recovery_codes.exists.copy.button')}
+              </CopyToClipboardButton>
+              <Button
+                onClick={onDownloadCodes}
+                rightIcon={<Icon w={3} h={3} icon={DownloadDashArrow} fill='gray.100' />} size='sm'
+              >{t('recovery_codes.exists.download.button')}
+              </Button>
+            </ButtonGroup>
           </Flex>
-        </Alert>
-        <SimpleGrid columns={2} spacing={4} mx={3} mt={6} mb={6}>
-          {recoveryCodes.map((item, index) => {
-            return (
-              <Flex h={8} position='relative' justify='center' align='center' key={index}>
-                {isGeneratingCodes
-                  ? <Skeleton w='100%' h='100%' />
-                  : <Code
-                      data-cy='recovery-code'
-                      colorScheme='gray'
-                      fontSize='lg'
-                    >{item.code}
-                  </Code>}
-              </Flex>
-            )
-          })}
-        </SimpleGrid>
-        <Flex justify='center' mx={3} mb={3}>
-          <ButtonGroup spacing={12}>
-            <CopyToClipboardText
-              variant='solid'
-              size='sm'
-              text={plainRecoveryCodes}
-            >{t('recovery_codes.exists.copy.button')}
-            </CopyToClipboardText>
-            <Button
-              onClick={onDownloadCodes}
-              leftIcon={<Icon w={3} h={3} icon={DownloadDashArrow} fill='gray.100' />} size='sm'
-            >{t('recovery_codes.exists.download.button')}
-            </Button>
-          </ButtonGroup>
-        </Flex>
-      </Flex>
-      <Flex align='flex-start' direction='column' mt={3}>
+        </Stack>
+      </SmallBackgroundBox>
+
+      <Flex align='flex-start' direction='column'>
         <Heading fontSize='lg' color='gray.00'>{t('recovery_codes.exists.generate.title')}</Heading>
         <Text mb={2} fontSize='sm' color='gray.100'>{t('recovery_codes.exists.generate.description')}</Text>
         <Button
@@ -187,6 +190,6 @@ export default function RecoveryCodesSetup (props: Props): Node {
         >{t('recovery_codes.empty.button')}
         </Button>
       </Flex>
-    </>
+    </Stack>
   )
 }

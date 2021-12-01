@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3bb9f6305cd465ea00be8c2f639551a7
+ * @relayHash ee4af0cd988637d4b532eee7cf629334
  */
 
 /* eslint-disable */
@@ -47,6 +47,7 @@ fragment AuditCardFragment on PostAuditLog {
     id
   }
   action
+  ...AuditInspectFragment
 }
 
 fragment AuditInspectFragment on PostAuditLog {
@@ -466,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "3bb9f6305cd465ea00be8c2f639551a7",
+    "id": "ee4af0cd988637d4b532eee7cf629334",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

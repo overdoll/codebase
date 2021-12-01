@@ -18,7 +18,7 @@ import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 import RevokeSession from './RevokeSession/RevokeSession'
 import Button from '@//:modules/form/Button'
-import SpoilerBox from '../../../../../components/ContentHints/SpoilerBox/SpoilerBox'
+import SpoilerText from '../../../../../components/ContentHints/SpoilerText/SpoilerText'
 
 type Props = {
   query: PreloadedQueryInner<SessionsSettingsQuery>,
@@ -97,13 +97,9 @@ export default function MultiFactorSettings (props: Props): Node {
                     fontSize='sm'
                   >{item.node.current ? t('security.sessions.current') : t('security.sessions.accessed', { date: formattedDate })}
                   </Text>
-                  <SpoilerBox text={t('security.sessions.show')}>
-                    <Text
-                      color='gray.200'
-                      fontSize='sm'
-                    >{item.node.ip}
-                    </Text>
-                  </SpoilerBox>
+                  <SpoilerText text={t('security.sessions.show')}>
+                    {item.node.ip}
+                  </SpoilerText>
                 </Flex>
                 <Flex align='flex-end'>
                   {!item.node.current &&

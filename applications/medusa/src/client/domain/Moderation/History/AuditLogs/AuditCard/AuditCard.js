@@ -9,7 +9,9 @@ import {
   Box,
   AccordionItem,
   AccordionButton,
-  AccordionPanel
+  AccordionPanel,
+  Collapse,
+  useDisclosure
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -27,6 +29,7 @@ import InterfaceArrowsButtonDown
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-down.svg'
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   auditLog: AuditCardFragment$key,
@@ -43,11 +46,14 @@ const AuditCardFragmentGQL = graphql`
       postedAt
     }
     action
+    ...AuditInspectFragment
   }
 `
 
 export default function AuditCard ({ auditLog }: Props): Node {
   const data = useFragment(AuditCardFragmentGQL, auditLog)
+
+  const { isOpen, onToggle } = useDisclosure()
 
   const getMinuteDifference = (date) => {
     const ms = 1000 * 60
@@ -66,12 +72,13 @@ export default function AuditCard ({ auditLog }: Props): Node {
   const formattedDate = format(new Date(data.post.postedAt), 'eeee h:m aaa')
 
   return (
-    <AccordionItem bg='gray.800' borderRadius={5} border='none'>
+    <AccordionItem border='none'>
       {({ isExpanded }) => (
         <>
           <AccordionButton
-            pl={3} pr={3} textAlign='left'
-            borderRadius={5} variant='solid' size='xl' h={12}
+            textAlign='left'
+            borderRadius='base' size='lg' bg='gray.800'
+            h={12}
           >
             <Flex align='center' justify='space-between' w='100%' direction='row'>
               <Text fontSize='md'>
@@ -83,9 +90,9 @@ export default function AuditCard ({ auditLog }: Props): Node {
               <Flex align='center' justify='center' position='relative'>
                 <Box>
                   <Icon
-                    icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'Approved' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
+                    icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'APPROVED' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
                     w={4} h={4}
-                    fill={data.reverted ? 'blue.500' : data.action === 'Approved' ? 'green.500' : 'orange.500'}
+                    fill={data.reverted ? 'blue.500' : data.action === 'APPROVED' ? 'green.500' : 'orange.500'}
                   />
                 </Box>
                 {(expiryPercent > 0 && !data.reverted) &&
@@ -99,7 +106,7 @@ export default function AuditCard ({ auditLog }: Props): Node {
               />
             </Flex>
           </AccordionButton>
-          <AccordionPanel p={0}>
+          <AccordionPanel px={0} pt={2} pb={2}>
             <AuditInspect auditLog={auditLog} />
           </AccordionPanel>
         </>

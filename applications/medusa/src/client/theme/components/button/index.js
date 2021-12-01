@@ -2,6 +2,7 @@
  * @flow
  */
 import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
+import Button from '@//:modules/form/Button'
 
 const baseStyle = {
   lineHeight: '1.2',
@@ -181,6 +182,7 @@ const accessibleColorMap: { [key: string]: AccessibleColor } = {
 
 function variantLink (props) {
   const { colorScheme: c } = props
+  const { theme } = props
 
   if (c === 'gray') {
     return {
@@ -188,6 +190,8 @@ function variantLink (props) {
       height: 'auto',
       lineHeight: 'normal',
       verticalAlign: 'baseline',
+      fontFamily: 'body',
+      fontWeight: 'normal',
       color: mode(`${c}.500`, 'gray.100')(props),
       _hover: {
         textDecoration: 'underline',
@@ -196,6 +200,7 @@ function variantLink (props) {
         }
       },
       _active: {
+        boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
         color: mode(`${c}.700`, 'gray.200')(props)
       }
     }
@@ -206,15 +211,17 @@ function variantLink (props) {
     height: 'auto',
     lineHeight: 'normal',
     verticalAlign: 'baseline',
-    color: mode(`${c}.500`, `${c}.100`)(props),
+    fontFamily: 'body',
+    fontWeight: 'normal',
+    color: mode(`${c}.500`, `${c}.400`)(props),
     _hover: {
-      textDecoration: 'underline',
       _disabled: {
         textDecoration: 'none'
       }
     },
     _active: {
-      color: mode(`${c}.700`, `${c}.500`)(props)
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
+      color: mode(`${c}.700`, `${c}.600`)(props)
     }
   }
 }
@@ -310,7 +317,7 @@ const sizes = {
     minW: 10,
     fontSize: 'md',
     px: 5,
-    borderRadius: 7
+    borderRadius: 'semi'
   },
   sm: {
     h: 8,

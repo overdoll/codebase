@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import ExternalLink from '../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
-import CopyToClipboardText from '../../../../components/ContentHints/CopyToClipboardText/CopyToClipboardText'
+import CopyCodeToClipboard from '../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import Typing from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-edition/typing.svg'
 import PhoneActionDownload
   from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'
@@ -117,7 +117,7 @@ export default function MultiFactorTotpFlow (props: Props): Node {
       <SmallBackgroundBox p={0}>
         <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
           <Flex m={2} justify='center' align='center'>
-            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.900'>
               <Icon icon={PhoneActionDownload} color='gray.100' />
             </Box>
           </Flex>
@@ -169,26 +169,19 @@ export default function MultiFactorTotpFlow (props: Props): Node {
             <Text mt={2} color='gray.100' fontSize='sm'>
               {t('totp.flow.scan_step.alternative')}
             </Text>
-            <CopyToClipboardText
-              borderRadius={2}
-              fontWeight='normal'
-              fontStyle='mono' mt={2}
+            <CopyCodeToClipboard
+              mt={2}
               text={totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
             >
-              <Code
-                whiteSpace='normal'
-                wordBreak='break-word'
-                fontSize='sm'
-              >{totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
-              </Code>
-            </CopyToClipboardText>
+              {totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
+            </CopyCodeToClipboard>
           </Box>
         </Flex>
       </SmallBackgroundBox>
       <SmallBackgroundBox p={0}>
         <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
           <Flex m={2} justify='center' align='center'>
-            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+            <Box borderRadius={5} h={32} w={32} p={6} bg='gray.900'>
               <Icon icon={Typing} color='gray.100' />
             </Box>
           </Flex>
