@@ -15,7 +15,7 @@ type headerTestTransport struct {
 	clientPassport *ClientPassport
 }
 
-func issueTestingPassport(id *string) *Passport {
+func issueTestingPassport(id *string) (*Passport, error) {
 
 	accountId := ""
 
@@ -23,7 +23,7 @@ func issueTestingPassport(id *string) *Passport {
 		accountId = *id
 	}
 
-	return issuePassport("", "", "", accountId)
+	return IssuePassport("", "", "", accountId)
 }
 
 // A custom HTTP client
@@ -35,8 +35,14 @@ func issueTestingPassport(id *string) *Passport {
 func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientPassport) {
 	jar, _ := cookiejar.New(nil)
 
+	p, err := issueTestingPassport(accountId)
+
+	if err != nil {
+		panic(err)
+	}
+
 	clientPassport := &ClientPassport{
-		passport: issueTestingPassport(accountId),
+		passport: p,
 	}
 
 	transport := &headerTestTransport{
@@ -72,7 +78,7 @@ func (h *ClientPassport) GetPassport() *Passport {
 
 func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
-	if err := addToRequest(req, h.clientPassport.passport); err != nil {
+	if err := AddToRequest(req, h.clientPassport.passport); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +88,7 @@ func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, erro
 		return nil, err
 	}
 
-	nw, err := fromResponse(resp)
+	nw, err := FromResponse(resp)
 
 	if err != nil {
 		return nil, err

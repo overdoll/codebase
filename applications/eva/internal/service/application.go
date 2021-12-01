@@ -68,7 +68,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo),
 			UpdateAccountUsernameAndRetainPrevious:    command.NewUpdateAccountUsernameAndRetainPreviousHandler(accountRepo),
 			DeleteAccountUsername:                     command.NewDeleteAccountUsernameHandler(accountRepo),
-			SaveAccountSession:                        command.NewSaveAccountSessionHandler(sessionRepo),
+			CreateAccountSession:                      command.NewCreateAccountSessionHandler(sessionRepo, locationRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),
 			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(mfaRepo),

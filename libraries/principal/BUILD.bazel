@@ -3,13 +3,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "principal",
     srcs = [
-        "middleware.go",
+        "context.go",
+        "grpc_middleware.go",
+        "http_middleware.go",
         "principal.go",
     ],
     importpath = "overdoll/libraries/principal",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_uber_go_zap//:zap",
     ],
 )

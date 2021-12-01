@@ -10,7 +10,7 @@ import (
 
 type Repository interface {
 	GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*Session, error)
-	SaveAccountSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, id string, updateFn func(usr *Session) error) (*Session, error)
+	CreateSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, session *Session) error
 	RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error
 	GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*Session, error)
 }

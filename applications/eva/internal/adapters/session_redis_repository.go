@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
@@ -23,15 +22,12 @@ const (
 )
 
 type sessions struct {
-	Passport string `json:"passport"`
-	Details  sessionDetails
-}
-
-type sessionDetails struct {
 	Location  location.Serializable
 	UserAgent string `json:"userAgent"`
 	IP        string `json:"ip"`
-	Created   string `json:"created"`
+	Created   int64  `json:"created"`
+	LastSeen  int64  `json:"lastSeen"`
+	AccountId string `json:"accountId"`
 }
 
 type SessionRepository struct {
@@ -45,7 +41,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 // getSessionById - get session by ID
 func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
-	val, err := r.client.Get(ctx, sessionId).Result()
+	val, err := r.client.Get(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 
@@ -69,27 +65,23 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 		return nil, fmt.Errorf("failed to unmarshal session: %v", err)
 	}
 
-	// we want to encrypt our session key
-	encryptedKey, err := crypt.Encrypt(sessionId)
-	if err != nil {
-		return nil, fmt.Errorf("failed to encrypt session id: %v", err)
-	}
-
 	current := false
 
 	if sessionId == passport.SessionID() {
 		current = true
 	}
 
-	res := session.UnmarshalSessionFromDatabase(encryptedKey,
-		sessionItem.Passport,
-		sessionItem.Details.UserAgent,
-		sessionItem.Details.IP,
-		sessionItem.Details.Created,
+	res := session.UnmarshalSessionFromDatabase(sessionId,
+		sessionItem.AccountId,
+		sessionItem.UserAgent,
+		sessionItem.IP,
+		sessionItem.Created,
+		sessionItem.LastSeen,
 		current,
-		location.UnmarshalLocationFromSerialized(sessionItem.Details.Location),
+		location.UnmarshalLocationFromSerialized(sessionItem.Location),
 	)
-	res.Node = paging.NewNode(encryptedKey)
+
+	res.Node = paging.NewNode(sessionId)
 
 	if err := res.CanView(requester); err != nil {
 		return nil, err
@@ -168,27 +160,9 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 	return nil
 }
 
-// CreateSessionForAccount - create a session for the account
-// NOTE: only use for tests! sessions are created and managed by express-session
-func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session *session.Session) error {
+func (r SessionRepository) CreateSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, session *session.Session) error {
 
-	sessionData := &sessions{
-		Details: sessionDetails{
-			Location: location.Serializable{
-				City:        "",
-				Country:     "",
-				PostalCode:  "",
-				Subdivision: "",
-				Latitude:    "",
-				Longitude:   "",
-			},
-			UserAgent: session.Device(),
-			Created:   session.Created(),
-			IP:        session.IP(),
-		},
-	}
-
-	val, err := json.Marshal(sessionData)
+	val, err := json.Marshal(session)
 
 	if err != nil {
 		return err
@@ -199,7 +173,7 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, sessionPrefix+ksuid.New().String()+":"+accountPrefix+session.AccountID(), valReal, time.Hour*24).Result()
+	ok, err := r.client.SetNX(ctx, sessionPrefix+session.AccountID(), valReal, time.Hour*24).Result()
 
 	if err != nil {
 		return err
@@ -210,9 +184,4 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 	}
 
 	return nil
-}
-
-// SaveAccountSession will either update or create a new account session
-func (r SessionRepository) SaveAccountSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, id string, updateFn func(usr *session.Session) error) (*session.Session, error) {
-	panic("implement me")
 }

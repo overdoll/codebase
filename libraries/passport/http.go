@@ -46,9 +46,9 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(bts)
 }
 
-// addToRequest is responsible for appending passport to the body of the request
+// AddToRequest is responsible for appending passport to the body of the request
 // mainly used for testing (because usually, our graphql gateway appends the passport to the body)
-func addToRequest(r *http.Request, passport *Passport) error {
+func AddToRequest(r *http.Request, passport *Passport) error {
 	var body map[string]interface{}
 	var buf bytes.Buffer
 
@@ -104,7 +104,7 @@ func fromRequest(req *http.Request) *Passport {
 }
 
 // read passport from an HTTP response
-func fromResponse(resp *http.Response) (*Passport, error) {
+func FromResponse(resp *http.Response) (*Passport, error) {
 
 	var body map[string]interface{}
 

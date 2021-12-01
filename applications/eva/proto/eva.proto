@@ -32,27 +32,27 @@ message CreateAccountRequest {
   string email = 2;
 }
 
-message Session {
-  string id = 1;
-  string serialized = 2;
-}
-
-message GetSessionRequest {
+message SessionRequest {
   string id = 1;
 }
 
-message DeleteSessionRequest {
-  string id = 1;
+message SessionResponse {
+  bool valid = 1;
 }
 
-message SaveSessionRequest {
-  Session session = 1;
+message CreateSessionRequest {
+  string accountId = 1;
+}
+
+message CreateSessionResponse {
+  string id = 1;
 }
 
 service Eva {
   rpc LockAccount(LockAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
-  rpc GetSession(GetSessionRequest) returns (Session);
-  rpc DeleteSession(DeleteSessionRequest) returns (google.protobuf.Empty);
-  rpc SaveSession(SaveSessionRequest) returns (Session);
+
+  rpc GetSession(SessionRequest) returns (SessionResponse);
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc RevokeSession(SessionRequest) returns (google.protobuf.Empty);
 }

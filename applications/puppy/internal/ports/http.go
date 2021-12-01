@@ -4,29 +4,24 @@ import (
 	"context"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 	log "github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/graphql"
 	"go.uber.org/zap"
 	"net/http"
-	"os"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/applications/puppy/internal/ports/gateway"
 	"overdoll/libraries/helpers"
-	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 	"time"
 )
 
-func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
+func NewHttpServer(ctx context.Context, p *app.Application) http.Handler {
 
 	rtr := router.NewRawGinRouter()
 
+	httpClient := app.NewHttpClient(p)
+
 	graphqlEndpoint := "/api/graphql"
-
-	var store sessions.Store = sessions.NewCookieStore([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
-
-	httpClient := passport.NewHTTPClientWithStore(store)
 
 	datasourceWatcher := gateway.NewDatasourcePoller(httpClient, gateway.DatasourcePollerConfig{
 		Services: []gateway.ServiceConfig{
@@ -45,7 +40,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	l := log.NewZapLogger(zap.L(), log.DebugLevel)
 
 	var gqlHandlerFactory gateway.HandlerFactoryFn = func(schema *graphql.Schema, engine *graphql.ExecutionEngineV2) http.Handler {
-		return gateway.NewGraphqlHTTPHandler(schema, engine, l, store)
+		return gateway.NewGraphqlHTTPHandler(schema, engine, l)
 	}
 
 	gate := gateway.NewGateway(gqlHandlerFactory, httpClient, l)

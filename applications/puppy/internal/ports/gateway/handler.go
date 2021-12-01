@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"github.com/gobwas/ws"
-	"github.com/gorilla/sessions"
 	"github.com/jensneuse/abstractlogger"
 	"github.com/jensneuse/graphql-go-tools/pkg/subscription"
 	"net"
@@ -23,7 +22,6 @@ func NewGraphqlHTTPHandler(
 	schema *graphql.Schema,
 	engine *graphql.ExecutionEngineV2,
 	logger abstractlogger.Logger,
-	store sessions.Store,
 
 ) http.Handler {
 
@@ -33,7 +31,6 @@ func NewGraphqlHTTPHandler(
 
 	return &GraphQLHTTPRequestHandler{
 		schema:     schema,
-		store:      store,
 		engine:     engine,
 		wsUpgrader: upgrader,
 		logger:     logger,
@@ -45,7 +42,6 @@ type GraphQLHTTPRequestHandler struct {
 	wsUpgrader *ws.HTTPUpgrader
 	engine     *graphql.ExecutionEngineV2
 	schema     *graphql.Schema
-	store      sessions.Store
 }
 
 func (g *GraphQLHTTPRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

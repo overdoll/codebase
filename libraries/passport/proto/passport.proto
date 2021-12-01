@@ -14,6 +14,7 @@ message Passport {
   DeviceInfo deviceInfo = 3;
 
   // Integrity of the passport (can be used to make sure the passport is correctly created)
+  // integrity is the RSA signature of Header + AccountInfo + DeviceInfo
   Integrity integrity = 4;
 }
 
@@ -44,9 +45,6 @@ message Integrity {
   // What version is the integrity using
   int32 version = 1;
 
-  // The name of the key
-  string keyName = 2;
-
-  // Hmac hash that can be used to verify it
-  bytes hmac = 3;
+  // The signature of the passport
+  bytes signature = 2;
 }

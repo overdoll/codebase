@@ -74,29 +74,55 @@ func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountReques
 	return marshalAccountToProto(acc), nil
 }
 
-func (s *Server) GetSession(ctx context.Context, request *eva.GetSessionRequest) (*eva.Session, error) {
+func (s Server) GetSession(ctx context.Context, request *eva.SessionRequest) (*eva.SessionResponse, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, status.Error(codes.PermissionDenied, err.Error())
 	}
 
-	ss, err := s.app.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
+	_, err := s.app.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
 		Principal: principal.FromContext(ctx),
 		Passport:  passport.FromContext(ctx),
 		SessionId: request.Id,
 	})
 
 	if err != nil {
+
+		// not found, return as invalid
+		if err == session.ErrSessionsNotFound {
+			return &eva.SessionResponse{
+				Valid: false,
+			}, nil
+		}
+
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &eva.Session{
-		Id:         ss.ID(),
-		Serialized: session.Serialize(ss),
+	return &eva.SessionResponse{
+		Valid: true,
 	}, nil
 }
 
-func (s *Server) DeleteSession(ctx context.Context, request *eva.DeleteSessionRequest) (*empty.Empty, error) {
+func (s Server) CreateSession(ctx context.Context, request *eva.CreateSessionRequest) (*eva.CreateSessionResponse, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, status.Error(codes.PermissionDenied, err.Error())
+	}
+
+	ss, err := s.app.Commands.CreateAccountSession.Handle(ctx, command.CreateAccountSession{
+		Principal: principal.FromContext(ctx),
+		Passport:  passport.FromContext(ctx),
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &eva.CreateSessionResponse{Id: ss.ID()}, nil
+}
+
+func (s Server) RevokeSession(ctx context.Context, request *eva.SessionRequest) (*empty.Empty, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, status.Error(codes.PermissionDenied, err.Error())
@@ -111,27 +137,4 @@ func (s *Server) DeleteSession(ctx context.Context, request *eva.DeleteSessionRe
 	}
 
 	return &empty.Empty{}, nil
-}
-
-func (s *Server) SaveSession(ctx context.Context, request *eva.SaveSessionRequest) (*eva.Session, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, status.Error(codes.PermissionDenied, err.Error())
-	}
-
-	ss, err := s.app.Commands.SaveAccountSession.Handle(ctx, command.SaveAccountSession{
-		Principal:   principal.FromContext(ctx),
-		Passport:    passport.FromContext(ctx),
-		SessionId:   request.Session.Id,
-		SessionData: request.Session.Serialized,
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &eva.Session{
-		Id:         ss.ID(),
-		Serialized: session.Serialize(ss),
-	}, nil
 }

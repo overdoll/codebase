@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
+
 	"sync"
 	"time"
 )
 
 var (
 	ErrNotAuthenticated = errors.New("not authenticated")
+	errExpired          = errors.New("passport expired")
 )
 
 type Passport struct {
@@ -56,10 +58,21 @@ func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	p.passportMu.Lock()
 	defer p.passportMu.Unlock()
 
-	return updateFn(p)
+	if err := updateFn(p); err != nil {
+		return err
+	}
+
+	// update signature after mutation
+	if err := signPassport(
+		p.passport,
+	); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func issuePassport(sessionId, ip, userAgent, accountId string) *Passport {
+func IssuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error) {
 
 	var account *libraries_passport_v1.AccountInfo
 
@@ -81,16 +94,34 @@ func issuePassport(sessionId, ip, userAgent, accountId string) *Passport {
 		UserAgent: userAgent,
 	}
 
-	integrity := &libraries_passport_v1.Integrity{
-		Version: 0,
-		KeyName: "",
-		Hmac:    nil,
-	}
-
-	return &Passport{passport: &libraries_passport_v1.Passport{
+	p := &libraries_passport_v1.Passport{
 		Account:    account,
 		Header:     header,
 		DeviceInfo: device,
-		Integrity:  integrity,
-	}}
+	}
+
+	// update signature after mutation
+	if err := signPassport(
+		p,
+	); err != nil {
+		return nil, err
+	}
+
+	return &Passport{passport: p}, nil
+}
+
+// helper to verify passport authenticity
+func verifyPassport(p *libraries_passport_v1.Passport) error {
+
+	// verify signature
+	if err := verifySignature(p); err != nil {
+		return err
+	}
+
+	// make sure passport isnt expired
+	if time.Now().After(time.Unix(p.Header.Expires, 0)) {
+		return errExpired
+	}
+
+	return nil
 }

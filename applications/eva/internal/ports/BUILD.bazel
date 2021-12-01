@@ -12,7 +12,9 @@ go_library(
     deps = [
         "//applications/eva/internal/app",
         "//applications/eva/internal/app/command",
+        "//applications/eva/internal/app/query",
         "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/session",
         "//applications/eva/internal/ports/graphql",
         "//applications/eva/internal/ports/graphql/dataloader",
         "//applications/eva/internal/service",
@@ -23,8 +25,8 @@ go_library(
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_spf13_cobra//:cobra",
+        "@io_bazel_rules_go//proto/wkt:empty_go_proto",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",
-        "@org_uber_go_zap//:zap",
     ],
 )

@@ -16,8 +16,9 @@ type Session struct {
 	id       string
 	device   string
 	location *location.Location
-	created  string
 	current  bool
+	created  time.Time
+	lastSeen time.Time
 
 	ip string
 
@@ -28,29 +29,37 @@ var (
 	ErrSessionsNotFound = errors.New("sessions not found")
 )
 
-func UnmarshalSessionFromDatabase(id, accountId, device, ip, created string, current bool, location *location.Location) *Session {
+func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, lastSeen int64, current bool, location *location.Location) *Session {
 
 	return &Session{
 		id:        id,
 		device:    device,
 		ip:        ip,
 		location:  location,
-		created:   created,
+		created:   time.Unix(created, 0),
+		lastSeen:  time.Unix(lastSeen, 0),
 		current:   current,
 		accountId: accountId,
 	}
 }
 
-func NewSession(accountId, userAgent, ip string, location *location.Location) *Session {
+func NewSession(p *principal.Principal, accountId, userAgent, ip string, location *location.Location) (*Session, error) {
+
+	// only self can create own sessions
+	if err := p.BelongsToAccount(accountId); err != nil {
+		return nil, err
+	}
+
 	return &Session{
-		id:        ksuid.New().String(),
+		id:        ksuid.New().String() + ":account:" + accountId,
 		device:    userAgent,
 		ip:        ip,
 		location:  location,
 		current:   false,
-		created:   time.Now().String(),
+		created:   time.Now(),
+		lastSeen:  time.Now(),
 		accountId: accountId,
-	}
+	}, nil
 }
 
 func (s *Session) ID() string {
@@ -69,21 +78,20 @@ func (s *Session) AccountID() string {
 	return s.accountId
 }
 
-func (s *Session) HasLocation() bool {
-	return s.location != nil
+func (s *Session) LastSeen() time.Time {
+	return s.lastSeen
 }
 
 func (s *Session) Location() *location.Location {
 	return s.location
 }
 
-func (s *Session) UpdateLocation(l *location.Location) error {
-	s.location = l
-	return nil
+func (s *Session) Created() time.Time {
+	return s.created
 }
 
-func (s *Session) Created() string {
-	return s.created
+func (s *Session) IsCurrent() bool {
+	return s.current
 }
 
 func (s *Session) CanView(requester *principal.Principal) error {
@@ -92,16 +100,4 @@ func (s *Session) CanView(requester *principal.Principal) error {
 	}
 
 	return nil
-}
-
-func (s *Session) IsCurrent() bool {
-	return s.current
-}
-
-func (s *Session) MergeWithSerializedData(serialized string) error {
-	return nil
-}
-
-func Serialize(s *Session) string {
-	return ""
 }

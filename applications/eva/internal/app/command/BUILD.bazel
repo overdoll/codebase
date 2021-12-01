@@ -7,6 +7,7 @@ go_library(
         "assign_account_moderator_role.go",
         "assign_account_staff_role.go",
         "confirm_account_email.go",
+        "create_account_session.go",
         "create_account_with_authentication_token.go",
         "delete_account_email.go",
         "delete_account_username.go",

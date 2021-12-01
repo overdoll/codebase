@@ -6,7 +6,11 @@ go_library(
     importpath = "overdoll/applications/puppy/internal/service",
     visibility = ["//applications/puppy:__subpackages__"],
     deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/puppy/internal/adapters",
         "//applications/puppy/internal/app",
         "//libraries/bootstrap",
+        "//libraries/clients",
+        "@com_github_gorilla_securecookie//:securecookie",
     ],
 )
