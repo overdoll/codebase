@@ -15,11 +15,11 @@ declare export opaque type AuditCardFragment$fragmentType: AuditCardFragment$ref
 export type AuditCardFragment = {|
   +reverted: boolean,
   +reversibleUntil: any,
-  +contributor: {|
-    +username: string
-  |},
   +post: {|
-    +postedAt: ?any
+    +postedAt: ?any,
+    +brand: ?{|
+      +name: string
+    |},
   |},
   +action: PostAuditLogAction,
   +$fragmentRefs: AuditInspectFragment$ref,
@@ -56,24 +56,6 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
-      "kind": "LinkedField",
-      "name": "contributor",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "username",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Post",
       "kind": "LinkedField",
       "name": "post",
@@ -84,6 +66,24 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "postedAt",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Brand",
+          "kind": "LinkedField",
+          "name": "brand",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "name",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -106,5 +106,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '2e7e5c0eb171d5a55baad24a9faf084f';
+(node: any).hash = 'c2603b7112e7aa8ee3c027b24db29fe9';
 module.exports = node;

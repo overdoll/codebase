@@ -303,7 +303,7 @@ const sizes = {
     fontSize: '2xl',
     fontWeight: 'extrabold',
     px: 6,
-    borderRadius: 'xl'
+    borderRadius: '2xl'
   },
   lg: {
     h: 12,

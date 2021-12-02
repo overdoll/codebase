@@ -8,9 +8,9 @@ type Props = {
   children: string
 };
 
-export default function ListSpacer ({ children }: Props): Node {
+export default function ListSpacer ({ children, ...rest }: Props): Node {
   return (
-    <Stack spacing={2}>
+    <Stack {...rest} spacing={2}>
       {children}
     </Stack>
   )

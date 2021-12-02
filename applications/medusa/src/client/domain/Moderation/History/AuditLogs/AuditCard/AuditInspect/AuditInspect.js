@@ -8,11 +8,8 @@ import {
   Text,
   Heading,
   Stack,
-  Badge,
-  Alert,
-  AlertIcon,
-  AlertDescription, useToast,
-  Divider
+  useToast
+
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -24,7 +21,7 @@ import { useMutation } from 'react-relay/hooks'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
 import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
 import Button from '@//:modules/form/Button'
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   auditLog: AuditInspectFragment$key,
@@ -89,48 +86,41 @@ export default function AuditInspect ({ auditLog }: Props): Node {
     })
   }
 
-  const canRevert = new Date(data?.reversibleUntil) > new Date()
+  const canRevert = new Date(data?.reversibleUntil) > new Date() && !data.reverted
 
   return (
     <LargeBackgroundBox>
-      {data.reverted &&
-        <Alert borderRadius={5} mb={2} status='info'>
-          <AlertIcon />
-          <AlertDescription fontSize='sm'>
-            {t('history.inspect.revert.alert.reverted')}
-          </AlertDescription>
-        </Alert>}
-      {(!canRevert && !data.reverted) &&
-        <Alert borderRadius={5} mb={2} status='info'>
-          <AlertIcon />
-          <AlertDescription fontSize='sm'>
-            {t('history.inspect.revert.alert.expired')}
-          </AlertDescription>
-        </Alert>}
-      <Stack spacing={2}>
-        <Box>
-          <Heading color='gray.00' size='md'>{t('history.inspect.status')}</Heading>
-          <Flex align='center' justify='space-between'>
-            <Badge
-              fontSize='sm'
-              colorScheme={data.action === 'APPROVED' ? 'green' : 'orange'}
-            >{data.action}
-            </Badge>
-            <Button
-              rightIcon={<Icon w={4} h={4} icon={RotateBack} fill='blue.300' />} size='md' variant='ghost'
-              colorScheme='blue' disabled={data.reverted || !canRevert} isLoading={isRevertingPost}
-              onClick={revertLog}
+      <Stack spacing={3}>
+        {data.reverted
+          ? <SmallBackgroundBox bg='purple.50' align='center' justify='center'>
+            <Text color='purple.500' fontSize='2xl' fontFamily='mono'>
+              {t('history.inspect.revert.action')}
+            </Text>
+            <Text>{t('history.inspect.revert.description', { action: data.action })}</Text>
+          </SmallBackgroundBox>
+          : <SmallBackgroundBox
+              bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'} align='center'
+              justify='center'
             >
-              {t('history.inspect.revert.button.action')}
-            </Button>
-          </Flex>
-        </Box>
-        {data.notes &&
-          <Box>
-            <Heading mb={2} color='gray.100' size='sm'>{t('history.inspect.note')}</Heading>
-            <Text>{data.notes}</Text>
-          </Box>}
+            <Text color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'} fontSize='2xl' fontFamily='mono'>
+              {data.action}
+            </Text>
+            {data.notes && <Text>{data.notes}</Text>}
+          </SmallBackgroundBox>}
         <PostPreview query={data.post} />
+        {canRevert &&
+          <Button
+            rightIcon={
+              <Icon w={4} h={4} icon={RotateBack} fill='purple.900' />
+          }
+            size='md'
+            variant='solid'
+            colorScheme='purple'
+            disabled={data.reverted || !canRevert} isLoading={isRevertingPost}
+            onClick={revertLog}
+          >
+            {t('history.inspect.revert.button.action')}
+          </Button>}
       </Stack>
     </LargeBackgroundBox>
   )

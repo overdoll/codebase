@@ -11,6 +11,11 @@ import {
   AccordionButton,
   AccordionPanel,
   Collapse,
+  SimpleGrid,
+  Grid,
+  GridItem,
+  Fade,
+  ScaleFade,
   useDisclosure
 } from '@chakra-ui/react'
 import type { Node } from 'react'
@@ -30,6 +35,7 @@ import InterfaceArrowsButtonDown
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
 import Button from '@//:modules/form/Button'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   auditLog: AuditCardFragment$key,
@@ -39,11 +45,11 @@ const AuditCardFragmentGQL = graphql`
   fragment AuditCardFragment on PostAuditLog {
     reverted
     reversibleUntil
-    contributor {
-      username
-    }
     post {
       postedAt
+      brand {
+        name
+      }
     }
     action
     ...AuditInspectFragment
@@ -69,48 +75,58 @@ export default function AuditCard ({ auditLog }: Props): Node {
 
   const expiryPercent = (expiryTime / 10) * 100
 
-  const formattedDate = format(new Date(data.post.postedAt), 'eeee h:m aaa')
+  const formattedDate = format(new Date(data.post.postedAt), 'eeee h:mm aaa')
 
   return (
-    <AccordionItem border='none'>
-      {({ isExpanded }) => (
-        <>
-          <AccordionButton
-            textAlign='left'
-            borderRadius='base' size='lg' bg='gray.800'
-            h={12}
-          >
-            <Flex align='center' justify='space-between' w='100%' direction='row'>
-              <Text fontSize='md'>
+    <Box>
+      <ClickableBox h={10} onClick={onToggle}>
+        <Flex>
+          <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
+            <GridItem colSpan={3}>
+              <Text fontSize='sm'>
                 {formattedDate}
               </Text>
-              <Text fontSize='md'>
-                {data.contributor.username}
+            </GridItem>
+            <GridItem colSpan={3}>
+              <Text fontSize='sm'>
+                {data.post.brand.name}
               </Text>
-              <Flex align='center' justify='center' position='relative'>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
                 <Box>
                   <Icon
                     icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'APPROVED' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
                     w={4} h={4}
-                    fill={data.reverted ? 'blue.500' : data.action === 'APPROVED' ? 'green.500' : 'orange.500'}
+                    fill={data.reverted ? 'purple.500' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
                   />
                 </Box>
                 {(expiryPercent > 0 && !data.reverted) &&
-                  <CircularProgress color='blue.500' position='absolute' value={expiryPercent} size={7} />}
+                  <CircularProgress
+                    trackColor='transparent'
+                    color='teal.500'
+                    position='absolute'
+                    value={expiryPercent}
+                    size={7}
+                  />}
               </Flex>
-            </Flex>
-            <Flex ml={3}>
-              <Icon
-                icon={isExpanded ? InterfaceArrowsButtonDown : InterfaceArrowsButtonRight} w={4} h={4}
-                fill='gray.300'
-              />
-            </Flex>
-          </AccordionButton>
-          <AccordionPanel px={0} pt={2} pb={2}>
-            <AuditInspect auditLog={auditLog} />
-          </AccordionPanel>
-        </>
-      )}
-    </AccordionItem>
+            </GridItem>
+            <GridItem align='center' colSpan={1}>
+              <Flex w='100%' h='100%' align='center' justify='flex-end'>
+                <Icon
+                  icon={isOpen ? InterfaceArrowsButtonDown : InterfaceArrowsButtonRight} w={4} h={4}
+                  fill='gray.300'
+                />
+              </Flex>
+            </GridItem>
+          </Grid>
+        </Flex>
+      </ClickableBox>
+      <Collapse in={isOpen}>
+        <Box mt={2}>
+          <AuditInspect auditLog={auditLog} />
+        </Box>
+      </Collapse>
+    </Box>
   )
 }

@@ -73,7 +73,7 @@ const sizes = {
 
 const defaultProps = {
   size: 'md',
-  colorScheme: 'blue'
+  colorScheme: 'teal'
 }
 
 export default {

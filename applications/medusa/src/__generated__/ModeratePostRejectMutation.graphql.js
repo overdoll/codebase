@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash fc2cd3a27bd1fcc4e2a5c0d6b2909128
+ * @relayHash 89f44bcb143b2ddf9c77f21bdbde4406
  */
 
 /* eslint-disable */
@@ -20,7 +20,10 @@ export type ModeratePostRejectMutationVariables = {|
 export type ModeratePostRejectMutationResponse = {|
   +rejectPost: ?{|
     +postAuditLog: ?{|
-      +id: string
+      +id: string,
+      +post: {|
+        +id: string
+      |},
     |}
   |}
 |};
@@ -37,6 +40,9 @@ mutation ModeratePostRejectMutation(
   rejectPost(input: $input) {
     postAuditLog {
       id
+      post {
+        id
+      }
     }
   }
 }
@@ -93,7 +99,19 @@ return {
             "name": "postAuditLog",
             "plural": false,
             "selections": [
-              (v3/*: any*/)
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Post",
+                "kind": "LinkedField",
+                "name": "post",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           }
@@ -133,18 +151,30 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "filters": null,
-                "handle": "deleteEdge",
-                "key": "",
-                "kind": "ScalarHandle",
-                "name": "id",
-                "handleArgs": [
+                "concreteType": "Post",
+                "kind": "LinkedField",
+                "name": "post",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
                   {
-                    "kind": "Variable",
-                    "name": "connections",
-                    "variableName": "connections"
+                    "alias": null,
+                    "args": null,
+                    "filters": null,
+                    "handle": "deleteEdge",
+                    "key": "",
+                    "kind": "ScalarHandle",
+                    "name": "id",
+                    "handleArgs": [
+                      {
+                        "kind": "Variable",
+                        "name": "connections",
+                        "variableName": "connections"
+                      }
+                    ]
                   }
-                ]
+                ],
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -155,7 +185,7 @@ return {
     ]
   },
   "params": {
-    "id": "fc2cd3a27bd1fcc4e2a5c0d6b2909128",
+    "id": "89f44bcb143b2ddf9c77f21bdbde4406",
     "metadata": {},
     "name": "ModeratePostRejectMutation",
     "operationKind": "mutation",
@@ -164,5 +194,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '631e184ac54110b6debe0219ca673eb0';
+(node: any).hash = '43c3f00a14f96a925f1ccec977fabbb9';
 module.exports = node;

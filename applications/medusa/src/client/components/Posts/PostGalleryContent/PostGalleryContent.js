@@ -66,6 +66,8 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
   return (
     <Box>
       <Swiper
+        observer
+        observeParents
         autoHeight
         onSwiper={(swiper) =>
           setSwiper(swiper)}

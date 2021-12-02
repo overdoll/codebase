@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Center, Flex, Heading, Table, Th, Thead, Tr } from '@chakra-ui/react'
+import { Center, Flex, Heading, Table, Th, Thead, Tr, Stack, Grid, GridItem, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
@@ -14,7 +14,7 @@ import AuditLogs from './AuditLogs/AuditLogs'
 import { useQueryLoader } from 'react-relay/hooks'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import { PageWrapper, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { PageWrapper, PageSectionTitle, PageSectionWrap, PageSectionDescription } from '@//:modules/content/PageLayout'
 
 type Props = {
   prepared: {
@@ -38,25 +38,39 @@ export default function History (props: Props): Node {
           <PageSectionTitle>
             {t('history.title')}
           </PageSectionTitle>
+          <PageSectionDescription>
+            {t('history.description')}
+          </PageSectionDescription>
         </PageSectionWrap>
-        <Table variant='simple'>
-          <Thead>
-            <Tr>
-              <Th>{t('history.table.headers.date')}</Th>
-              <Th>{t('history.table.headers.contributor')}</Th>
-              <Th>{t('history.table.headers.status')}</Th>
-            </Tr>
-          </Thead>
-        </Table>
-        <Suspense fallback={<SkeletonStack />}>
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
-            )}
-          >
-            <AuditLogs query={queryRef} />
-          </ErrorBoundary>
-        </Suspense>
+        <Stack>
+          <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
+            <GridItem color='gray.200' colSpan={3}>
+              <Text>
+                {t('history.table.headers.date')}
+              </Text>
+            </GridItem>
+            <GridItem color='gray.200' colSpan={3}>
+              <Text>
+                {t('history.table.headers.brand')}
+              </Text>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Text color='gray.200'>
+                {t('history.table.headers.status')}
+              </Text>
+            </GridItem>
+            <GridItem colSpan={1} />
+          </Grid>
+          <Suspense fallback={<SkeletonStack />}>
+            <ErrorBoundary
+              fallback={({ error, reset }) => (
+                <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
+              )}
+            >
+              <AuditLogs query={queryRef} />
+            </ErrorBoundary>
+          </Suspense>
+        </Stack>
       </PageWrapper>
     </>
   )

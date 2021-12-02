@@ -5,10 +5,10 @@
 import {
   Flex,
   Text,
-  IconButton, Box, Stack
+  IconButton, Box, Stack, Skeleton
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import { usePaginationFragment, graphql } from 'react-relay'
 import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
@@ -108,6 +108,34 @@ export default function Posts (props: Props): Node {
     }
   }
 
+  // If a user approves a post and there are no more in the store but
+  // they are able to load more, we go to next page for them
+  // automatically so the queue can continue
+  useEffect(() => {
+    if (hasNext && data?.moderatorPostsQueue.edges.length < 1) {
+      nextPage()
+    }
+    if (!currentPost && data.moderatorPostsQueue.edges.length > 0) {
+      previousPage()
+    }
+  }, [data?.moderatorPostsQueue.edges])
+
+  // Make sure we show a placeholder for the above logic
+  // so we can have a loading state
+  if ((data.moderatorPostsQueue.edges.length < 1 && hasNext) || (!currentPost && data.moderatorPostsQueue.edges.length > 0)) {
+    return (
+      <LargeBackgroundBox>
+        <Skeleton
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          height='500px'
+        />
+      </LargeBackgroundBox>
+    )
+  }
+
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
   if (data.moderatorPostsQueue.edges.length < 1) {
     return (
@@ -125,9 +153,9 @@ export default function Posts (props: Props): Node {
     )
   }
 
-  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:m aaa')
+  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:mm aaa')
 
-  // Otherwise, show a post queue if the user has one
+  // Show the posts queue for the user
   return (
     <Stack spacing={2}>
       <Flex>

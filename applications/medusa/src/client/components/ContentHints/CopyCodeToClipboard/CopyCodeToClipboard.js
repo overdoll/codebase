@@ -13,6 +13,7 @@ import InterfaceFileText
 import InterfaceFileCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/files-folders/interface-file-check.svg'
 import { useCopyToClipboardWrapper } from '@//:modules/utilities/hooks'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: string,
@@ -24,18 +25,14 @@ export default function CopyCodeToClipboard ({ children, ...rest }: Props): Node
   const [hasCopied, onCopy] = useCopyToClipboardWrapper(children)
 
   return (
-    <Button
-      overflow='hidden' textOverflow='ellipsis'
-      colorScheme='gray' variant='unstyled'
+    <ClickableBox
       aria-label={t('button.copy')}
-      bg='gray.900'
+      onClick={onCopy}
       borderWidth={2}
       borderColor='gray.400'
-      borderRadius='semi'
-      w='100%'
-      onClick={onCopy} {...rest}
+      {...rest}
     >
-      <Flex justify='space-between' mx={2} align='center'>
+      <Flex justify='space-between' align='center'>
         <Code
           whiteSpace='normal'
           wordBreak='break-word'
@@ -43,12 +40,13 @@ export default function CopyCodeToClipboard ({ children, ...rest }: Props): Node
           bg='transparent'
           fontWeight='normal'
           fontStyle='mono'
-          color='blue.200'
+          color='teal.300'
+          p={0}
         >
           {children}
         </Code>
-        <Icon ml={2} w={4} h={4} icon={hasCopied ? InterfaceFileCheck : InterfaceFileText} fill='gray.400' />
+        <Icon ml={2} w={4} h={4} icon={hasCopied ? InterfaceFileCheck : InterfaceFileText} fill='teal.50' />
       </Flex>
-    </Button>
+    </ClickableBox>
   )
 }

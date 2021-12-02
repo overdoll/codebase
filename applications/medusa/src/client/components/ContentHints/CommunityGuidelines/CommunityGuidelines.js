@@ -13,7 +13,7 @@ export default function CommunityGuidelines ({ ...rest }: Props): Node {
 
   return (
     <Link to='#'>
-      <Button size='sm' colorScheme='blue' variant='link' {...rest}>{t('button.guidelines')}</Button>
+      <Button size='sm' colorScheme='teal' variant='link' {...rest}>{t('button.guidelines')}</Button>
     </Link>
   )
 }

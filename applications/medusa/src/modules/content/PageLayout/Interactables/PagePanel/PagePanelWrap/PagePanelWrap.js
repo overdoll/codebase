@@ -7,7 +7,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import Button from '@//:modules/form/Button'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: string,
@@ -18,11 +18,7 @@ type Props = {
 export default function PagePanelWrap ({ path, children, disabled }: Props): Node {
   return (
     <Link disabled={disabled} to={path}>
-      <Button
-        whiteSpace='normal'
-        wordBreak='break-all' borderRadius='base' disabled={disabled} variant='panel' colorScheme='gray' h='100%'
-        w='100%'
-      >
+      <ClickableBox>
         <Flex justify='space-between'>
           <Flex justify='flex-start' align='flex-start' direction='column'>
             {children}
@@ -31,7 +27,7 @@ export default function PagePanelWrap ({ path, children, disabled }: Props): Nod
             <Icon icon={InterfaceArrowsButtonRight} w={6} fill='gray.500' />
           </Flex>
         </Flex>
-      </Button>
+      </ClickableBox>
     </Link>
   )
 }

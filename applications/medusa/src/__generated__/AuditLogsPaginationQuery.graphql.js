@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c48e3edb093042cb9b1344511f8aef62
+ * @relayHash 3155aa92fa90c40b913e5266e0d6e304
  */
 
 /* eslint-disable */
@@ -47,12 +47,12 @@ query AuditLogsPaginationQuery(
 fragment AuditCardFragment on PostAuditLog {
   reverted
   reversibleUntil
-  contributor {
-    username
-    id
-  }
   post {
     postedAt
+    brand {
+      name
+      id
+    }
     id
   }
   action
@@ -210,7 +210,14 @@ v10 = [
   },
   (v7/*: any*/)
 ],
-v11 = [
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -322,25 +329,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Account",
-                            "kind": "LinkedField",
-                            "name": "contributor",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "username",
-                                "storageKey": null
-                              },
-                              (v9/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "concreteType": "Post",
                             "kind": "LinkedField",
                             "name": "post",
@@ -353,6 +341,19 @@ return {
                                 "name": "postedAt",
                                 "storageKey": null
                               },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Brand",
+                                "kind": "LinkedField",
+                                "name": "brand",
+                                "plural": false,
+                                "selections": [
+                                  (v11/*: any*/),
+                                  (v9/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v9/*: any*/),
                               {
                                 "alias": null,
@@ -361,7 +362,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "audience",
                                 "plural": false,
-                                "selections": (v11/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -372,13 +373,7 @@ return {
                                 "name": "characters",
                                 "plural": true,
                                 "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "name",
-                                    "storageKey": null
-                                  },
+                                  (v11/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -386,7 +381,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "series",
                                     "plural": false,
-                                    "selections": (v11/*: any*/),
+                                    "selections": (v12/*: any*/),
                                     "storageKey": null
                                   },
                                   (v9/*: any*/)
@@ -400,7 +395,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "categories",
                                 "plural": true,
-                                "selections": (v11/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -527,7 +522,7 @@ return {
     ]
   },
   "params": {
-    "id": "c48e3edb093042cb9b1344511f8aef62",
+    "id": "3155aa92fa90c40b913e5266e0d6e304",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

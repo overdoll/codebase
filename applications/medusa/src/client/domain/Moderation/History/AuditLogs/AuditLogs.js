@@ -17,6 +17,7 @@ import Button from '@//:modules/form/Button'
 import { usePreloadedQuery } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { AuditLogsQuery } from '@//:artifacts/AuditLogsQuery.graphql'
+import { ListSpacer } from '@//:modules/content/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<AuditLogsQuery>,
@@ -72,15 +73,13 @@ export default function AuditLogs (props: Props): Node {
 
   return (
     <>
-      <Stack mt={2} mb={3}>
-        <Accordion allowToggle>
-          {auditLogs.map((item, index) =>
-            <AuditCard
-              key={index} auditLog={auditLogs[index]?.node}
-            />
-          )}
-        </Accordion>
-      </Stack>
+      <ListSpacer>
+        {auditLogs.map((item, index) =>
+          <AuditCard
+            key={index} auditLog={auditLogs[index]?.node}
+          />
+        )}
+      </ListSpacer>
       <Flex justify='center'>
         {hasNext
           ? <Button

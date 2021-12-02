@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ee4af0cd988637d4b532eee7cf629334
+ * @relayHash 9d4f75247dc17afba077184178608f5f
  */
 
 /* eslint-disable */
@@ -38,12 +38,12 @@ query AuditLogsQuery(
 fragment AuditCardFragment on PostAuditLog {
   reverted
   reversibleUntil
-  contributor {
-    username
-    id
-  }
   post {
     postedAt
+    brand {
+      name
+      id
+    }
     id
   }
   action
@@ -164,10 +164,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -175,7 +182,7 @@ v3 = [
     "name": "title",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v3/*: any*/)
 ];
 return {
   "fragment": {
@@ -259,25 +266,6 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Account",
-                        "kind": "LinkedField",
-                        "name": "contributor",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "username",
-                            "storageKey": null
-                          },
-                          (v2/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "Post",
                         "kind": "LinkedField",
                         "name": "post",
@@ -290,7 +278,20 @@ return {
                             "name": "postedAt",
                             "storageKey": null
                           },
-                          (v2/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Brand",
+                            "kind": "LinkedField",
+                            "name": "brand",
+                            "plural": false,
+                            "selections": [
+                              (v2/*: any*/),
+                              (v3/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -298,7 +299,7 @@ return {
                             "kind": "LinkedField",
                             "name": "audience",
                             "plural": false,
-                            "selections": (v3/*: any*/),
+                            "selections": (v4/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -309,13 +310,7 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
-                                "storageKey": null
-                              },
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -323,10 +318,10 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v3/*: any*/),
+                                "selections": (v4/*: any*/),
                                 "storageKey": null
                               },
-                              (v2/*: any*/)
+                              (v3/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -337,7 +332,7 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v3/*: any*/),
+                            "selections": (v4/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -393,7 +388,7 @@ return {
                         "name": "action",
                         "storageKey": null
                       },
-                      (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -460,14 +455,14 @@ return {
             "kind": "LinkedHandle",
             "name": "moderatorPostAuditLogs"
           },
-          (v2/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "ee4af0cd988637d4b532eee7cf629334",
+    "id": "9d4f75247dc17afba077184178608f5f",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

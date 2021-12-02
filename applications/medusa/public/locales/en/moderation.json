@@ -70,11 +70,12 @@
   },
   "history": {
     "title": "Moderation History",
+    "description": "Any moderation actions you do will appear here. You can undo any actions within 10 minutes of making them. ",
     "table": {
       "headers": {
         "date": "Date Posted",
         "id": "Request ID",
-        "contributor": "Contributor",
+        "brand": "Brand",
         "status": "Status"
       },
       "load": "Load More",
@@ -88,6 +89,8 @@
       "characters": "Characters",
       "categories": "Categories",
       "revert": {
+        "action": "REVERTED",
+        "description": "Originally {{action}}",
         "query": {
           "success": "This audit log was reverted. The post should appear back in your queue shortly.",
           "failure": "There was an error reverting the audit log"

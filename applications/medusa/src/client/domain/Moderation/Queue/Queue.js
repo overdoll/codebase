@@ -29,7 +29,7 @@ import { useQueryLoader } from 'react-relay/hooks'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
-import { PageWrapper, PageSectionWrap, PageSectionTitle } from '@//:modules/content/PageLayout'
+import { PageWrapper, PageSectionWrap, PageSectionTitle, PageSectionDescription } from '@//:modules/content/PageLayout'
 
 type Props = {
   prepared: {
@@ -50,32 +50,13 @@ export default function Queue (props: Props): Node {
       <Helmet title='queue' />
       <PageWrapper>
         <PageSectionWrap>
-          <Flex>
-            <PageSectionTitle>
-              {t('queue.title')}
-            </PageSectionTitle>
-            <Popover placement='bottom'>
-              <PopoverTrigger>
-                <IconButton
-                  ml={1}
-                  size='xs'
-                  variant='link' mb={2}
-                  icon={<Icon h={3} w={3} fill='gray.100' icon={InterfaceHelpQuestionCircle} />}
-                />
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverHeader pt={4} border={0}>
-                  <Heading color='gray.00' fontSize='lg'>{t('queue.post.actions.notice.title')}</Heading>
-                </PopoverHeader>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverBody pr={2}>{t('queue.post.actions.notice.description')}</PopoverBody>
-                <PopoverFooter pb={2} justify='flex-start' border={0}>
-                  <CommunityGuidelines />
-                </PopoverFooter>
-              </PopoverContent>
-            </Popover>
-          </Flex>
+          <PageSectionTitle>
+            {t('queue.title')}
+          </PageSectionTitle>
+          <PageSectionDescription>
+            {t('queue.post.actions.notice.description')}
+          </PageSectionDescription>
+          <CommunityGuidelines />
         </PageSectionWrap>
         <Suspense fallback={<SkeletonStack />}>
           <ErrorBoundary

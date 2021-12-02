@@ -35,7 +35,10 @@ const ModeratePostApproveGQL = graphql`
   mutation ModeratePostApproveMutation($input: ApprovePostInput!, $connections: [ID!]!) {
     approvePost(input: $input) {
       postAuditLog {
-        id @deleteEdge(connections: $connections)
+        id
+        post {
+          id @deleteEdge(connections: $connections)
+        }
       }
     }
   }
@@ -45,7 +48,10 @@ const ModeratePostRejectGQL = graphql`
   mutation ModeratePostRejectMutation($input: RejectPostInput!, $connections: [ID!]!) {
     rejectPost(input: $input) {
       postAuditLog {
-        id @deleteEdge(connections: $connections)
+        id
+        post {
+          id @deleteEdge(connections: $connections)
+        }
       }
     }
   }
