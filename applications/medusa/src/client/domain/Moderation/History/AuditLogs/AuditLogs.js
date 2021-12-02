@@ -43,7 +43,6 @@ const AuditLogsGQL = graphql`
       edges {
         node {
           ...AuditCardFragment
-          ...AuditInspectFragment
         }
       }
     }

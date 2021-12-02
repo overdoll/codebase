@@ -83,12 +83,12 @@ export default function AuditCard ({ auditLog }: Props): Node {
         <Flex>
           <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
             <GridItem colSpan={3}>
-              <Text fontSize='sm'>
+              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
                 {formattedDate}
               </Text>
             </GridItem>
-            <GridItem colSpan={3}>
-              <Text fontSize='sm'>
+            <GridItem textOverflow='ellipsis' colSpan={3}>
+              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
                 {data.post.brand.name}
               </Text>
             </GridItem>
@@ -124,7 +124,7 @@ export default function AuditCard ({ auditLog }: Props): Node {
       </ClickableBox>
       <Collapse in={isOpen}>
         <Box mt={2}>
-          <AuditInspect auditLog={auditLog} />
+          <AuditInspect auditLog={data} />
         </Box>
       </Collapse>
     </Box>

@@ -18,6 +18,7 @@ import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import Button from '@//:modules/form/Button'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,
@@ -105,17 +106,19 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
       <Stack spacing={4}>
         <FilePicker uppy={uppy}>
           <DragOverFileInput uppy={uppy}>
-            <Flex
-              w='100%' bg='gray.800' p={4}
-              borderRadius={15}
-              align='center'
-              justify='center'
-              h={400}
-            >
-              <Heading textAlign='center' color='gray.00' fontSize='4xl'>
-                {t('posts.flow.create.uploader.title')}
-              </Heading>
-            </Flex>
+            <LargeBackgroundBox>
+              <Flex
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+                textAlign='center'
+                h={400}
+              >
+                <Heading color='gray.00' fontSize='4xl'>
+                  {t('posts.flow.create.uploader.title')}
+                </Heading>
+              </Flex>
+            </LargeBackgroundBox>
           </DragOverFileInput>
         </FilePicker>
         <Box>
@@ -139,10 +142,10 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   }
 
   // If the post was already submitted
-  if (postData?.state !== 'Draft' && state.step !== STEPS.SUBMIT) {
+  if (postData?.state !== 'DRAFT' && state.step !== STEPS.SUBMIT) {
     return (
       <Flex direction='column' align='center'>
-        <Heading mb={2} fontSize='2xl'>
+        <Heading mb={2} textAlign='center' fontSize='2xl'>
           {t('posts.flow.create.not_draft.title')}
         </Heading>
         <Button onClick={onCleanup} size='md'>

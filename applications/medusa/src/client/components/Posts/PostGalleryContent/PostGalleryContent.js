@@ -58,7 +58,6 @@ export default function PostGalleryContent ({ query, children }: Props): Node {
   }
 
   const onVolumeChange = (e) => {
-    console.log(e.target.volume)
     setVolume(e.target.volume)
     setMuted(e.target.muted)
   }

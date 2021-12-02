@@ -16,8 +16,6 @@ type Props = {}
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
 export default function FileUploader (props: Props): Node {
-  const [t] = useTranslation('manage')
-
   const [state, dispatch] = useReducer<State, Action>(
     reducer,
     INITIAL_STATE

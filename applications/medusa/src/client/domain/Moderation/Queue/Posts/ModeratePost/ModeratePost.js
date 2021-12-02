@@ -60,6 +60,9 @@ const ModeratePostRejectGQL = graphql`
 const PostIDGQL = graphql`
   fragment ModeratePostFragment on Post {
     id
+    brand {
+      name
+    }
   }
 `
 
@@ -91,14 +94,14 @@ export default function ModeratePost (props: Props): Node {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.approve.query.success', { id: data.id }),
+          title: t('queue.post.actions.approve.query.success', { brand: data.brand.name }),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.approve.query.error', { id: data.id }),
+          title: t('queue.post.actions.approve.query.error', { brand: data.brand.name }),
           isClosable: true
         })
       }
@@ -117,7 +120,7 @@ export default function ModeratePost (props: Props): Node {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.reject.query.success', { id: data.id }),
+          title: t('queue.post.actions.reject.query.success', { brand: data.brand.name }),
           isClosable: true
         })
         onClose()
@@ -125,7 +128,7 @@ export default function ModeratePost (props: Props): Node {
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.reject.query.error', { id: data.id }),
+          title: t('queue.post.actions.reject.query.error', { brand: data.brand.name }),
           isClosable: true
         })
       }
@@ -153,7 +156,6 @@ export default function ModeratePost (props: Props): Node {
           <Flex
             p={4} direction='column' bg='dimmers.900' w='100%' h='100%' position='absolute'
             borderRadius={10} backdropFilter='blur(5px)'
-
           >
             <Flex align='center' w='100%' justify='space-between'>
               <Text fontSize='md' color='gray.100'>{t('queue.post.actions.reject.modal.title')}</Text>

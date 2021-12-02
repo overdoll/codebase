@@ -79,8 +79,6 @@ export default function Posts (props: Props): Node {
 
   const [t] = useTranslation('moderation')
 
-  // TODO make pagination more dynamic/flexible because it will probably break when a node is deleted
-
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const currentPost = data?.moderatorPostsQueue.edges[currentIndex]?.node
@@ -114,8 +112,7 @@ export default function Posts (props: Props): Node {
   useEffect(() => {
     if (hasNext && data?.moderatorPostsQueue.edges.length < 1) {
       nextPage()
-    }
-    if (!currentPost && data.moderatorPostsQueue.edges.length > 0) {
+    } else if (!currentPost && data.moderatorPostsQueue.edges.length > 0) {
       previousPage()
     }
   }, [data?.moderatorPostsQueue.edges])

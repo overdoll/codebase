@@ -8,7 +8,6 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { AuditCardFragment$ref } from "./AuditCardFragment.graphql";
-import type { AuditInspectFragment$ref } from "./AuditInspectFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 import type { AuditLogsFragment$ref, AuditLogsFragment$fragmentType } from "./AuditLogsPaginationQuery.graphql";
 export type { AuditLogsFragment$ref, AuditLogsFragment$fragmentType };
@@ -16,7 +15,7 @@ export type AuditLogsFragment = {|
   +moderatorPostAuditLogs: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +$fragmentRefs: AuditCardFragment$ref & AuditInspectFragment$ref
+        +$fragmentRefs: AuditCardFragment$ref
       |}
     |}>
   |},
@@ -136,11 +135,6 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "AuditCardFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "AuditInspectFragment"
                 }
               ],
               "storageKey": null
@@ -196,5 +190,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '2a7defa328f720c02ce519209fd2ec32';
+(node: any).hash = '6db86852053df48207963870e14a4cd2';
 module.exports = node;

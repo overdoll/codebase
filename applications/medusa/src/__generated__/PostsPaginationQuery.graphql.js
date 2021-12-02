@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 93c3361e870dd05777688c9ed336e89b
+ * @relayHash 0314a98affcb773c6f4556972b7201bc
  */
 
 /* eslint-disable */
@@ -42,6 +42,10 @@ query PostsPaginationQuery(
 
 fragment ModeratePostFragment on Post {
   id
+  brand {
+    name
+    id
+  }
 }
 
 fragment NoPostsPlaceholderFragment on Account {
@@ -501,7 +505,7 @@ return {
     ]
   },
   "params": {
-    "id": "93c3361e870dd05777688c9ed336e89b",
+    "id": "0314a98affcb773c6f4556972b7201bc",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

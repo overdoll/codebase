@@ -2,8 +2,8 @@
   "posts": {
     "title": "My Posts",
     "flow": {
-      "title": "Drafts",
       "create": {
+        "title": "Create Post",
         "creating": "Creating your draft post",
         "uploader": {
           "title": "Upload one or more files",
@@ -25,6 +25,7 @@
         }
       },
       "drafts": {
+        "title": "Drafts"
       },
       "steps": {
         "footer": {

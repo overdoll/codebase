@@ -7,34 +7,18 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { usePaginationFragment } from 'react-relay'
+import { useFragment, usePaginationFragment } from 'react-relay'
 import FileUploader from './FileUploader/FileUploader'
 import type { DraftPostsFragment$key } from '@//:artifacts/DraftPostsFragment.graphql'
+import { StringParam, useQueryParam } from 'use-query-params'
+import OpenDraftPosts from './OpenDraftPosts/OpenDraftPosts'
 
 type Props = {}
-const DraftPostsQueryGQL = graphql`
-  query DraftPostsQuery {
-    viewer {
-      ...DraftPostsFragment
-    }
-  }
-`
 
-const DraftPostsFragmentGQL = graphql`
-  fragment DraftPostsFragment on Account
-  @argumentDefinitions(
-    first: {type: Int, defaultValue: 4}
-    after: {type: String}
-  )
-  @refetchable(queryName: "DraftPostsPaginationQuery" ) {
-    posts (first: $first, after: $after)
-    @connection(key: "DraftPostsPaginationQuery_posts") {
-      edges {
-        node {
-          id
-          state
-        }
-      }
+const DraftPostsQueryGQL = graphql`
+  query DraftPostsQuery  {
+    viewer {
+      ...OpenDraftPostsFragment
     }
   }
 `
@@ -45,19 +29,13 @@ export default function DraftPosts (props: Props): Node {
     props.query
   )
 
-  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<DraftPostsFragment$key,
-    _>(
-      DraftPostsFragmentGQL,
-      queryData?.viewer
-    )
+  const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
   const [t] = useTranslation('manage')
 
-  const posts = data?.posts.edges
-
   const CreatePostComponent = () => <FileUploader />
 
-  if (posts.length < 1) {
+  if (postReference) {
     return CreatePostComponent()
   }
 
@@ -68,15 +46,15 @@ export default function DraftPosts (props: Props): Node {
       </PageSectionWrap>
       <Tabs defaultIndex={0} isFitted variant='soft-rounded' colorScheme='gray'>
         <TabList>
-          <Tab>{t('posts.create.title')}</Tab>
-          <Tab>{t('posts.draft.title')}</Tab>
+          <Tab ml={0}>{t('posts.flow.create.title')}</Tab>
+          <Tab mr={0}>{t('posts.flow.drafts.title')}</Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel>
-            <CreatePostComponent query={data} />
+        <TabPanels pt={4}>
+          <TabPanel p={0}>
+            <CreatePostComponent />
           </TabPanel>
-          <TabPanel>
-            <p>click to open draft</p>
+          <TabPanel p={0}>
+            <OpenDraftPosts query={queryData.viewer} />
           </TabPanel>
         </TabPanels>
       </Tabs>

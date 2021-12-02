@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 78603b6650340962dbd59f6906ea9f61
+ * @relayHash 8eb2cf546da76ff092c8f7e363c177a7
  */
 
 /* eslint-disable */
@@ -34,6 +34,10 @@ query PostsQuery {
 
 fragment ModeratePostFragment on Post {
   id
+  brand {
+    name
+    id
+  }
 }
 
 fragment NoPostsPlaceholderFragment on Account {
@@ -521,7 +525,7 @@ return {
     ]
   },
   "params": {
-    "id": "78603b6650340962dbd59f6906ea9f61",
+    "id": "8eb2cf546da76ff092c8f7e363c177a7",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 349c291be9a283376c4835028deb7941
+ * @relayHash 5942d89e210140c9c269e0c2b445d2b8
  */
 
 /* eslint-disable */
@@ -8,11 +8,11 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { DraftPostsFragment$ref } from "./DraftPostsFragment.graphql";
+import type { OpenDraftPostsFragment$ref } from "./OpenDraftPostsFragment.graphql";
 export type DraftPostsQueryVariables = {||};
 export type DraftPostsQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: DraftPostsFragment$ref
+    +$fragmentRefs: OpenDraftPostsFragment$ref
   |}
 |};
 export type DraftPostsQuery = {|
@@ -24,13 +24,13 @@ export type DraftPostsQuery = {|
 /*
 query DraftPostsQuery {
   viewer {
-    ...DraftPostsFragment
+    ...OpenDraftPostsFragment
     id
   }
 }
 
-fragment DraftPostsFragment on Account {
-  posts(first: 4) {
+fragment OpenDraftPostsFragment on Account {
+  posts(first: 3) {
     edges {
       node {
         id
@@ -53,7 +53,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 4
+    "value": 3
   }
 ],
 v1 = {
@@ -81,7 +81,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "DraftPostsFragment"
+            "name": "OpenDraftPostsFragment"
           }
         ],
         "storageKey": null
@@ -182,14 +182,14 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "posts(first:4)"
+            "storageKey": "posts(first:3)"
           },
           {
             "alias": null,
             "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "DraftPostsPaginationQuery_posts",
+            "key": "OpenDraftPostsPaginationQuery_posts",
             "kind": "LinkedHandle",
             "name": "posts"
           },
@@ -200,7 +200,7 @@ return {
     ]
   },
   "params": {
-    "id": "349c291be9a283376c4835028deb7941",
+    "id": "5942d89e210140c9c269e0c2b445d2b8",
     "metadata": {},
     "name": "DraftPostsQuery",
     "operationKind": "query",
@@ -209,5 +209,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '359e345e7904867f929a5f0f5a972aaa';
+(node: any).hash = 'f179813f64c57a7126a12380387b0cd5';
 module.exports = node;

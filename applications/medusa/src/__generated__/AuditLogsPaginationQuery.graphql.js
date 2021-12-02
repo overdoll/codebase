@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3155aa92fa90c40b913e5266e0d6e304
+ * @relayHash 316939c2647b97f274a36dfd4db78cbf
  */
 
 /* eslint-disable */
@@ -76,7 +76,6 @@ fragment AuditLogsFragment_2HEEH6 on Account {
     edges {
       node {
         ...AuditCardFragment
-        ...AuditInspectFragment
         id
         __typename
       }
@@ -522,7 +521,7 @@ return {
     ]
   },
   "params": {
-    "id": "3155aa92fa90c40b913e5266e0d6e304",
+    "id": "316939c2647b97f274a36dfd4db78cbf",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -531,5 +530,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '2a7defa328f720c02ce519209fd2ec32';
+(node: any).hash = '6db86852053df48207963870e14a4cd2';
 module.exports = node;

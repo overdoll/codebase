@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9d4f75247dc17afba077184178608f5f
+ * @relayHash 4b19abe3fa61d51d25e010c08659878f
  */
 
 /* eslint-disable */
@@ -67,7 +67,6 @@ fragment AuditLogsFragment on Account {
     edges {
       node {
         ...AuditCardFragment
-        ...AuditInspectFragment
         id
         __typename
       }
@@ -462,7 +461,7 @@ return {
     ]
   },
   "params": {
-    "id": "9d4f75247dc17afba077184178608f5f",
+    "id": "4b19abe3fa61d51d25e010c08659878f",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

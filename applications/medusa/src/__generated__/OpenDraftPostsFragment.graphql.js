@@ -9,9 +9,9 @@
 import type { ReaderFragment } from 'relay-runtime';
 export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-import type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType } from "./DraftPostsPaginationQuery.graphql";
-export type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType };
-export type DraftPostsFragment = {|
+import type { OpenDraftPostsFragment$ref, OpenDraftPostsFragment$fragmentType } from "./OpenDraftPostsPaginationQuery.graphql";
+export type { OpenDraftPostsFragment$ref, OpenDraftPostsFragment$fragmentType };
+export type OpenDraftPostsFragment = {|
   +posts: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
@@ -21,12 +21,12 @@ export type DraftPostsFragment = {|
     |}>
   |},
   +id: string,
-  +$refType: DraftPostsFragment$ref,
+  +$refType: OpenDraftPostsFragment$ref,
 |};
-export type DraftPostsFragment$data = DraftPostsFragment;
-export type DraftPostsFragment$key = {
-  +$data?: DraftPostsFragment$data,
-  +$fragmentRefs: DraftPostsFragment$ref,
+export type OpenDraftPostsFragment$data = OpenDraftPostsFragment;
+export type OpenDraftPostsFragment$key = {
+  +$data?: OpenDraftPostsFragment$data,
+  +$fragmentRefs: OpenDraftPostsFragment$ref,
   ...
 };
 
@@ -50,7 +50,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 4,
+      "defaultValue": 3,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -77,18 +77,18 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./DraftPostsPaginationQuery.graphql.js'),
+      "operation": require('./OpenDraftPostsPaginationQuery.graphql.js'),
       "identifierField": "id"
     }
   },
-  "name": "DraftPostsFragment",
+  "name": "OpenDraftPostsFragment",
   "selections": [
     {
       "alias": "posts",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__DraftPostsPaginationQuery_posts_connection",
+      "name": "__OpenDraftPostsPaginationQuery_posts_connection",
       "plural": false,
       "selections": [
         {
@@ -170,5 +170,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '193163415c042e2d98cb44d3edafdcdf';
+(node: any).hash = '230f9aeae90fdb9cc6fa06867b5ac953';
 module.exports = node;
