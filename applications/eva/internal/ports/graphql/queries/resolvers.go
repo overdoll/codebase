@@ -65,7 +65,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string)
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.SetAccount("test-id")
+				p.AuthenticateAccount("test-id")
 				return nil
 			}); err != nil {
 		return nil, err

@@ -12,6 +12,7 @@ go_library(
     importpath = "overdoll/applications/puppy/internal/ports/gateway",
     visibility = ["//applications/puppy:__subpackages__"],
     deps = [
+        "//applications/puppy/internal/app",
         "@com_github_gobwas_ws//:ws",
         "@com_github_gobwas_ws//wsutil",
         "@com_github_gorilla_sessions//:sessions",

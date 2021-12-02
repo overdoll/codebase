@@ -5,5 +5,4 @@ go_library(
     srcs = ["repository.go"],
     importpath = "overdoll/applications/puppy/internal/domain/session",
     visibility = ["//applications/puppy:__subpackages__"],
-    deps = ["@com_github_gorilla_sessions//:sessions"],
 )

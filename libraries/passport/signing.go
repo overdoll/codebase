@@ -20,6 +20,7 @@ func signPassport(signatureTarget *libraries_passport_v1.Passport) error {
 		Account:    signatureTarget.Account,
 		Header:     signatureTarget.Header,
 		DeviceInfo: signatureTarget.DeviceInfo,
+		Actions:    signatureTarget.Actions,
 	}
 
 	msg, err := proto.Marshal(target)

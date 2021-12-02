@@ -27,6 +27,7 @@ type Session struct {
 
 var (
 	ErrSessionsNotFound = errors.New("sessions not found")
+	defaultDuration     = int64(86400 * 30)
 )
 
 func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, lastSeen int64, current bool, location *location.Location) *Session {
@@ -43,13 +44,7 @@ func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, las
 	}
 }
 
-func NewSession(p *principal.Principal, accountId, userAgent, ip string, location *location.Location) (*Session, error) {
-
-	// only self can create own sessions
-	if err := p.BelongsToAccount(accountId); err != nil {
-		return nil, err
-	}
-
+func NewSession(accountId, userAgent, ip string, location *location.Location) (*Session, error) {
 	return &Session{
 		id:        ksuid.New().String() + ":account:" + accountId,
 		device:    userAgent,
@@ -90,6 +85,15 @@ func (s *Session) Created() time.Time {
 	return s.created
 }
 
+func (s *Session) Duration() int64 {
+	return defaultDuration
+}
+
+func (s *Session) Touch() error {
+	s.lastSeen = time.Now()
+	return nil
+}
+
 func (s *Session) IsCurrent() bool {
 	return s.current
 }
@@ -97,6 +101,18 @@ func (s *Session) IsCurrent() bool {
 func (s *Session) CanView(requester *principal.Principal) error {
 	if err := requester.BelongsToAccount(s.accountId); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (s *Session) CanRevoke(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(s.accountId); err != nil {
+		return err
+	}
+
+	if s.current {
+		return errors.New("cannot revoke current session")
 	}
 
 	return nil

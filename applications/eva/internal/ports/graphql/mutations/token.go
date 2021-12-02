@@ -86,7 +86,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
+				p.AuthenticateAccount(acc.ID())
 				return nil
 			}); err != nil {
 		return nil, err
@@ -239,7 +239,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
+				p.AuthenticateAccount(acc.ID())
 				return nil
 			}); err != nil {
 		return nil, err
@@ -287,7 +287,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
+				p.AuthenticateAccount(acc.ID())
 				return nil
 			}); err != nil {
 		return nil, err
@@ -335,7 +335,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
+				p.AuthenticateAccount(acc.ID())
 				return nil
 			}); err != nil {
 		return nil, err

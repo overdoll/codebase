@@ -1,114 +1,186 @@
 package app
 
 import (
+	"context"
+	"errors"
 	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
+	"github.com/segmentio/ksuid"
 	"net/http"
 	"overdoll/applications/puppy/internal/domain/session"
 	"overdoll/libraries/passport"
 	"strings"
+	"sync"
+	"time"
 )
 
+const (
+	sessionCookieName = "od.session"
+)
+
+type returnedPassportKeyT string
+
+const (
+	returnedPassportKey = "ReturnedPassportContextKey"
+)
+
+type passportsReturnedFromResponse struct {
+	passports []*passport.Passport
+	mu        sync.Mutex
+}
+
+func (s *passportsReturnedFromResponse) addPassport(p *passport.Passport) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.passports = append(s.passports, p)
+}
+
 type Application struct {
-	Session session.Repository
-	Codecs  []securecookie.Codec
+	httpClient *http.Client
+	session    session.Repository
+	codecs     []securecookie.Codec
 }
 
-func (s *Application) Get(r *http.Request, name string) (*sessions.Session, error) {
-	return sessions.GetRegistry(r).Get(s, name)
-}
-
-func (s *Application) New(r *http.Request, name string) (*sessions.Session, error) {
-	var (
-		err error
-	)
-	// make a copy
-	session := sessions.NewSession(s, name)
-	options := *session.Options
-	session.Options = &options
-	session.IsNew = true
-	if c, errCookie := r.Cookie(session.Name()); errCookie == nil {
-		err = securecookie.DecodeMulti(session.Name(), c.Value, &session.ID, s.Codecs...)
-		if err == nil {
-			ss, err := s.Session.Load(r.Context(), session)
-			if err != nil {
-				return nil, err
-			}
-
-			return ss, nil
-		}
-	}
-	return session, err
-}
-
-func (s *Application) Save(r *http.Request, w http.ResponseWriter, session *sessions.Session) error {
-	// Marked for deletion.
-	if session.Options.MaxAge <= 0 {
-		if err := s.Session.Delete(r.Context(), session); err != nil {
-			return err
-		}
-		http.SetCookie(w, sessions.NewCookie(session.Name(), "", session.Options))
-	} else {
-		// Build an alphanumeric key for the redis store.
-		ss, err := s.Session.Save(r.Context(), session)
-
-		// reassign
-		session = ss
-
-		if err != nil {
-			return err
-		}
-		encoded, err := securecookie.EncodeMulti(session.Name(), session.ID, s.Codecs...)
-		if err != nil {
-			return err
-		}
-		http.SetCookie(w, sessions.NewCookie(session.Name(), encoded, session.Options))
-	}
-	return nil
-}
-
-func NewHttpClient(store sessions.Store) *http.Client {
-	return &http.Client{
-		Transport: &headerTransport{
-			base:  http.DefaultTransport,
-			store: store,
+func NewApplication(session session.Repository, codecs []securecookie.Codec) Application {
+	return Application{
+		session: session,
+		codecs:  codecs,
+		httpClient: &http.Client{
+			Transport: &transport{
+				base:    http.DefaultTransport,
+				session: session,
+				codecs:  codecs,
+			},
 		},
 	}
 }
 
-type headerTransport struct {
-	base  http.RoundTripper
-	store sessions.Store
-}
+func (s Application) HandlePassportChanges(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
-func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	returnedPassportRes, ok := ctx.Value(returnedPassportKeyT(returnedPassportKey)).(*passportsReturnedFromResponse)
 
-	session, err := h.store.Get(req, "session")
-
-	if err != nil {
-		return nil, err
+	if !ok {
+		return errors.New("could not get context key")
 	}
 
-	userAgent := strings.Join(req.Header["User-Agent"], ",")
+	for _, responsePassport := range returnedPassportRes.passports {
+		// need to create a new context where passport is passed down for requests
+		ctx := passport.WithContext(ctx, responsePassport)
 
-	forwarded := req.Header.Get("X-FORWARDED-FOR")
+		if responsePassport.PerformedAuthenticatedAccountAction() {
+
+			sessionId, duration, err := s.session.CreateSession(ctx, responsePassport.AccountID())
+
+			if err != nil {
+				return err
+			}
+
+			encoded, err := securecookie.EncodeMulti(sessionCookieName, sessionId, s.codecs...)
+
+			if err != nil {
+				return err
+			}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:     sessionCookieName,
+				Value:    encoded,
+				Path:     "/",
+				MaxAge:   int(duration),
+				HttpOnly: true,
+				Secure:   true,
+			})
+		}
+
+		if responsePassport.PerformedRevokedAccountAction() {
+
+			if err := s.session.RevokeSession(ctx, responsePassport.SessionID()); err != nil {
+				return err
+			}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:     sessionCookieName,
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: true,
+				Secure:   true,
+			})
+		}
+	}
+
+	return nil
+}
+
+func (s Application) HandlePassportAndReturnModifiedContext(w http.ResponseWriter, r *http.Request) (context.Context, error) {
+
+	userAgent := strings.Join(r.Header["User-Agent"], ",")
+	forwarded := r.Header.Get("X-FORWARDED-FOR")
 
 	ip := ""
 
 	if forwarded != "" {
 		ip = forwarded
 	} else {
-		ip = req.RemoteAddr
+		ip = r.RemoteAddr
 	}
 
-	accountId := ""
+	var sessionId string
+	var accountId string
 
-	if val, ok := session.Values["accountId"]; ok {
-		accountId = val.(string)
+	c, err := r.Cookie(sessionCookieName)
+
+	if err != nil && err != http.ErrNoCookie {
+		return nil, err
 	}
 
-	p, err := passport.IssuePassport(
-		session.ID,
+	var duration int64
+
+	if err == nil {
+		if err := securecookie.DecodeMulti(sessionCookieName, c.Value, &sessionId, s.codecs...); err != nil {
+			return nil, err
+		}
+
+		valid, currentAccountId, dur, err := s.session.GetSession(r.Context(), sessionId)
+		duration = dur
+		if err != nil {
+			return nil, err
+		}
+
+		if !valid {
+			http.SetCookie(w, &http.Cookie{
+				Name:     sessionCookieName,
+				Value:    "",
+				Path:     "/",
+				Expires:  time.Unix(0, 0),
+				HttpOnly: true,
+				Secure:   true,
+			})
+		} else {
+			accountId = currentAccountId
+			// if session valid, refresh it
+			encoded, err := securecookie.EncodeMulti(sessionCookieName, sessionId, s.codecs...)
+
+			if err != nil {
+				return nil, err
+			}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:     sessionCookieName,
+				Value:    encoded,
+				Path:     "/",
+				MaxAge:   int(duration),
+				HttpOnly: true,
+				Secure:   true,
+			})
+		}
+	}
+
+	if sessionId == "" {
+		sessionId = ksuid.New().String()
+	}
+
+	requestPassport, err := passport.IssuePassport(
+		sessionId,
 		ip,
 		userAgent,
 		accountId,
@@ -118,44 +190,50 @@ func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 
-	// issue new passport for this request
-	if err := passport.AddToRequest(req, p); err != nil {
-		return nil, err
+	ctx := passport.WithContext(r.Context(), requestPassport)
+	ctx = context.WithValue(ctx, returnedPassportKeyT(returnedPassportKey), &passportsReturnedFromResponse{})
+
+	return ctx, nil
+}
+
+func (s Application) GetHttpClient() *http.Client {
+	return s.httpClient
+}
+
+type transport struct {
+	base    http.RoundTripper
+	session session.Repository
+	codecs  []securecookie.Codec
+}
+
+func (h *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+
+	requestPassport := passport.FromContext(req.Context())
+
+	if requestPassport != nil {
+		// add passport to request so it can be processed
+		if err := passport.AddToRequest(req, requestPassport); err != nil {
+			return nil, err
+		}
 	}
 
-	res, err := http.DefaultTransport.RoundTrip(req)
+	res, err := h.base.RoundTrip(req)
 
-	pass, err := passport.FromResponse(res)
+	responsePassport, err := passport.FromResponse(res)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// if passport was found in response
-	if pass != nil {
-		currentAccountId := session.Values["accountId"]
+	if responsePassport != nil {
+		// get returned passports and add them to context to process later
+		returnedPassportRes, ok := req.Context().Value(returnedPassportKeyT(returnedPassportKey)).(*passportsReturnedFromResponse)
 
-		// some logic around revoking account, etc...
-		if pass.Authenticated() == nil {
-			if currentAccountId != pass.AccountID() {
-				// account ID was revoked here
-				if pass.AccountID() == "" {
-
-					// since account was revoked, regenerate the session
-					session.Options.MaxAge = -1
-					//if err := session.Save(req, res.Body); err != nil {
-					//}
-
-					return res, nil
-				}
-
-				// no account revoke - account was added
-				session.Values["accountId"] = pass.AccountID()
-				//if err := session.Save(req, res.Body); err != nil {
-				//
-				//}
-			}
+		if !ok {
+			return nil, errors.New("could not get context key")
 		}
+
+		returnedPassportRes.addPassport(responsePassport)
 	}
 
 	return res, err

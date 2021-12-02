@@ -20,7 +20,6 @@ type Commands struct {
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
 	DeleteAccountUsername                   command.DeleteAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
-	CreateAccountSession                    command.CreateAccountSessionHandler
 	RevokeAccountSession                    command.RevokeAccountSessionHandler
 	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler
 	GenerateAccountMultiFactorRecoveryCodes command.GenerateAccountMultiFactorRecoveryCodesHandler
@@ -41,7 +40,10 @@ type Commands struct {
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
 
 	// operator handlers don't do any permission checks
-	LockAccountOperator command.LockAccountOperatorHandler
+	LockAccountOperator          command.LockAccountOperatorHandler
+	CreateAccountSessionOperator command.CreateAccountSessionOperatorHandler
+	TouchAccountSessionOperator  command.TouchAccountSessionOperatorHandler
+	RevokeAccountSessionOperator command.RevokeAccountSessionOperatorHandler
 }
 
 type Queries struct {

@@ -43,14 +43,39 @@ func (p *Passport) UserAgent() string {
 	return p.passport.DeviceInfo.UserAgent
 }
 
-// Revoke the currently authenticated user from the passport
+func (p *Passport) PerformedAuthenticatedAccountAction() bool {
+
+	for _, a := range p.passport.Actions {
+		action := actionFromString(a.Action)
+		if action == AuthenticateAccount {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (p *Passport) PerformedRevokedAccountAction() bool {
+
+	for _, a := range p.passport.Actions {
+		action := actionFromString(a.Action)
+		if action == RevokeAccount {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (p *Passport) RevokeAccount() error {
 	p.passport = &libraries_passport_v1.Passport{Account: nil}
+	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: RevokeAccount.slug})
 	return nil
 }
 
-func (p *Passport) SetAccount(id string) {
+func (p *Passport) AuthenticateAccount(id string) {
 	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
+	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: AuthenticateAccount.slug})
 }
 
 func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
@@ -82,22 +107,18 @@ func IssuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error
 
 	created := time.Now()
 
-	header := &libraries_passport_v1.Header{
-		SessionId: sessionId,
-		Created:   created.Unix(),
-		// passports expire 5 minutes after creation
-		Expires: created.Add(time.Minute * 5).Unix(),
-	}
-
-	device := &libraries_passport_v1.DeviceInfo{
-		Ip:        ip,
-		UserAgent: userAgent,
-	}
-
 	p := &libraries_passport_v1.Passport{
-		Account:    account,
-		Header:     header,
-		DeviceInfo: device,
+		Account: account,
+		Header: &libraries_passport_v1.Header{
+			SessionId: sessionId,
+			Created:   created.Unix(),
+			// passports expire 5 minutes after creation
+			Expires: created.Add(time.Minute * 5).Unix(),
+		},
+		DeviceInfo: &libraries_passport_v1.DeviceInfo{
+			Ip:        ip,
+			UserAgent: userAgent,
+		},
 	}
 
 	// update signature after mutation

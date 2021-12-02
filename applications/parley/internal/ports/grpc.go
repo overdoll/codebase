@@ -2,8 +2,6 @@ package ports
 
 import (
 	"context"
-	"overdoll/libraries/principal"
-
 	"overdoll/applications/parley/internal/app"
 	parley "overdoll/applications/parley/proto"
 )
@@ -16,18 +14,6 @@ func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
 		app: application,
 	}
-}
-
-// this is here so our GRPC server can use it to grab the current principal
-func (s Server) GetPrincipalById(ctx context.Context, id string) (*principal.Principal, error) {
-
-	p, err := s.app.Queries.PrincipalById.Handle(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return p, nil
 }
 
 func (s Server) GetNextModerator(ctx context.Context, request *parley.GetModeratorRequest) (*parley.Moderator, error) {

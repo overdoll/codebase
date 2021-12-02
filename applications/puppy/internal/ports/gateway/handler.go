@@ -5,11 +5,11 @@ import (
 	"context"
 	"github.com/gobwas/ws"
 	"github.com/jensneuse/abstractlogger"
+	"github.com/jensneuse/graphql-go-tools/pkg/graphql"
 	"github.com/jensneuse/graphql-go-tools/pkg/subscription"
 	"net"
 	"net/http"
-
-	"github.com/jensneuse/graphql-go-tools/pkg/graphql"
+	"overdoll/applications/puppy/internal/app"
 )
 
 const (
@@ -21,6 +21,7 @@ const (
 func NewGraphqlHTTPHandler(
 	schema *graphql.Schema,
 	engine *graphql.ExecutionEngineV2,
+	app app.Application,
 	logger abstractlogger.Logger,
 
 ) http.Handler {
@@ -32,6 +33,7 @@ func NewGraphqlHTTPHandler(
 	return &GraphQLHTTPRequestHandler{
 		schema:     schema,
 		engine:     engine,
+		app:        app,
 		wsUpgrader: upgrader,
 		logger:     logger,
 	}
@@ -40,6 +42,7 @@ func NewGraphqlHTTPHandler(
 type GraphQLHTTPRequestHandler struct {
 	logger     abstractlogger.Logger
 	wsUpgrader *ws.HTTPUpgrader
+	app        app.Application
 	engine     *graphql.ExecutionEngineV2
 	schema     *graphql.Schema
 }
@@ -95,6 +98,14 @@ func (g *GraphQLHTTPRequestHandler) handleWebsocket(connInitReqCtx context.Conte
 
 func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Request) {
 
+	ctx, err := g.app.HandlePassportAndReturnModifiedContext(w, r)
+
+	if err != nil {
+		g.logger.Error("passport.Issue", abstractlogger.Error(err))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	var gqlRequest graphql.Request
 	if err := graphql.UnmarshalHttpRequest(r, &gqlRequest); err != nil {
 		g.logger.Error("UnmarshalHttpRequest", abstractlogger.Error(err))
@@ -120,8 +131,14 @@ func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Re
 
 	buf := bytes.NewBuffer(make([]byte, 0, 4096))
 	resultWriter := graphql.NewEngineResultWriterFromBuffer(buf)
-	if err = g.engine.Execute(r.Context(), &gqlRequest, &resultWriter); err != nil {
+	if err = g.engine.Execute(ctx, &gqlRequest, &resultWriter); err != nil {
 		g.logger.Error("engine.Execute", abstractlogger.Error(err))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if err := g.app.HandlePassportChanges(ctx, w, r); err != nil {
+		g.logger.Error("passport.Process", abstractlogger.Error(err))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

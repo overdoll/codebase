@@ -119,6 +119,7 @@ type ComplexityRoot struct {
 		Device   func(childComplexity int) int
 		ID       func(childComplexity int) int
 		IP       func(childComplexity int) int
+		LastSeen func(childComplexity int) int
 		Location func(childComplexity int) int
 	}
 
@@ -376,11 +377,11 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
 
+	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
 	UsernamesLimit(ctx context.Context, obj *types.Account) (int, error)
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
 	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
-	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
 	MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error)
 	RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error)
 }
@@ -410,11 +411,11 @@ type MutationResolver interface {
 	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
 	UpdateLanguage(ctx context.Context, input types.UpdateLanguageInput) (*types.UpdateLanguagePayload, error)
 	UpdateAccountLanguage(ctx context.Context, input types.UpdateAccountLanguageInput) (*types.UpdateAccountLanguagePayload, error)
+	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
 	DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error)
 	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
-	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error)
 	GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error)
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error)
@@ -742,6 +743,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountSession.IP(childComplexity), true
+
+	case "AccountSession.lastSeen":
+		if e.complexity.AccountSession.LastSeen == nil {
+			break
+		}
+
+		return e.complexity.AccountSession.LastSeen(childComplexity), true
 
 	case "AccountSession.location":
 		if e.complexity.AccountSession.Location == nil {
@@ -1984,6 +1992,86 @@ type Location {
   longitude: Float!
 }
 `, BuiltIn: false},
+	{Name: "schema/session/schema.graphql", Input: `"""Session belonging to a specific account"""
+type AccountSession implements Node @key(fields: "id") {
+  """ID of the session"""
+  id: ID!
+
+  """The originating user agent device"""
+  device: String!
+
+  """The original IP"""
+  ip: String!
+
+  """Where the session was originally created"""
+  location: Location!
+
+  """When the session was created"""
+  created: Time!
+
+  """When the session was last seen (last API call)"""
+  lastSeen: Time!
+
+  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
+  current: Boolean!
+}
+
+"""Edge of the account session"""
+type AccountSessionEdge {
+  cursor: String!
+  node: AccountSession!
+}
+
+"""Edge of the account session"""
+type AccountSessionConnection {
+  pageInfo: PageInfo!
+  edges: [AccountSessionEdge!]!
+}
+
+"""Payload of the revoked account session"""
+type RevokeAccountSessionPayload {
+  """The ID of the session that was revoked"""
+  accountSessionId: ID!
+}
+
+"""Input for updating an account's username"""
+input RevokeAccountSessionInput {
+  """
+  Session ID that should be revoked
+  """
+  accountSessionId: ID!
+}
+
+extend type Account {
+  """
+  Sessions linked to this account
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection! @goField(forceResolver: true)
+}
+
+extend type Mutation {
+  """
+  Revoke a session for this account
+  """
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
+}
+`, BuiltIn: false},
 	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
   CONFIRMED
   UNCONFIRMED
@@ -2019,39 +2107,6 @@ type AccountEmailEdge {
 type AccountEmailConnection {
   pageInfo: PageInfo!
   edges: [AccountEmailEdge!]!
-}
-
-"""Session belonging to a specific account"""
-type AccountSession implements Node @key(fields: "id") {
-  """ID of the session"""
-  id: ID!
-
-  """The originating user agent device"""
-  device: String!
-
-  """The original IP"""
-  ip: String!
-
-  """Where the session was originally created"""
-  location: Location!
-
-  """When the session was created"""
-  created: String!
-
-  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
-  current: Boolean!
-}
-
-"""Edge of the account session"""
-type AccountSessionEdge {
-  cursor: String!
-  node: AccountSession!
-}
-
-"""Edge of the account session"""
-type AccountSessionConnection {
-  pageInfo: PageInfo!
-  edges: [AccountSessionEdge!]!
 }
 
 """Username belonging to a specific account"""
@@ -2170,27 +2225,6 @@ extend type Account {
   ): AccountEmailConnection! @goField(forceResolver: true)
 
   """
-  Sessions linked to this account
-
-  Only queryable if the currently logged-in account belongs to the requested account
-  """
-  sessions(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountSessionConnection! @goField(forceResolver: true)
-
-  """
   Multi factor account settings
 
   Only queryable if the currently logged-in account belongs to the requested account
@@ -2244,15 +2278,6 @@ input UpdateAccountEmailStatusToPrimaryInput {
   """
   accountEmailId: ID!
 }
-
-"""Input for updating an account's username"""
-input RevokeAccountSessionInput {
-  """
-  Session ID that should be revoked
-  """
-  accountSessionId: ID!
-}
-
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
@@ -2308,12 +2333,6 @@ type UpdateAccountUsernameAndRetainPreviousPayload {
 
   """The account username that was added"""
   accountUsername: AccountUsername
-}
-
-"""Payload of the revoked account session"""
-type RevokeAccountSessionPayload {
-  """The ID of the session that was revoked"""
-  accountSessionId: ID!
 }
 
 """Payload of the updated account email"""
@@ -2395,11 +2414,6 @@ extend type Mutation {
   Will retain the old username
   """
   updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
-
-  """
-  Revoke a session for this account
-  """
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
   Update the account email status to primary
@@ -3806,6 +3820,48 @@ func (ec *executionContext) _Account_language(ctx context.Context, field graphql
 	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Account_sessions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Account_sessions_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Sessions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountSessionConnection)
+	fc.Result = res
+	return ec.marshalNAccountSessionConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSessionConnection(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3958,48 +4014,6 @@ func (ec *executionContext) _Account_emails(ctx context.Context, field graphql.C
 	res := resTmp.(*types.AccountEmailConnection)
 	fc.Result = res
 	return ec.marshalNAccountEmailConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmailConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_sessions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_sessions_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Sessions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountSessionConnection)
-	fc.Result = res
-	return ec.marshalNAccountSessionConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSessionConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_multiFactorSettings(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -4904,9 +4918,44 @@ func (ec *executionContext) _AccountSession_created(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountSession_lastSeen(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountSession",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastSeen, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSession_current(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
@@ -7488,6 +7537,45 @@ func (ec *executionContext) _Mutation_updateAccountLanguage(ctx context.Context,
 	return ec.marshalOUpdateAccountLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountLanguagePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_revokeAccountSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revokeAccountSession_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountSession(rctx, args["input"].(types.RevokeAccountSessionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RevokeAccountSessionPayload)
+	fc.Result = res
+	return ec.marshalORevokeAccountSessionPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7642,45 +7730,6 @@ func (ec *executionContext) _Mutation_updateAccountUsernameAndRetainPrevious(ctx
 	res := resTmp.(*types.UpdateAccountUsernameAndRetainPreviousPayload)
 	fc.Result = res
 	return ec.marshalOUpdateAccountUsernameAndRetainPreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_revokeAccountSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_revokeAccountSession_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RevokeAccountSession(rctx, args["input"].(types.RevokeAccountSessionInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.RevokeAccountSessionPayload)
-	fc.Result = res
-	return ec.marshalORevokeAccountSessionPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateAccountEmailStatusToPrimary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -10663,13 +10712,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Account(ctx, sel, obj)
-	case types.AccountEmail:
-		return ec._AccountEmail(ctx, sel, &obj)
-	case *types.AccountEmail:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._AccountEmail(ctx, sel, obj)
 	case types.AccountSession:
 		return ec._AccountSession(ctx, sel, &obj)
 	case *types.AccountSession:
@@ -10677,6 +10719,13 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._AccountSession(ctx, sel, obj)
+	case types.AccountEmail:
+		return ec._AccountEmail(ctx, sel, &obj)
+	case *types.AccountEmail:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._AccountEmail(ctx, sel, obj)
 	case types.AccountUsername:
 		return ec._AccountUsername(ctx, sel, &obj)
 	case *types.AccountUsername:
@@ -10794,6 +10843,20 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "sessions":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_sessions(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "usernamesLimit":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10845,20 +10908,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_emails(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "sessions":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_sessions(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -11213,6 +11262,11 @@ func (ec *executionContext) _AccountSession(ctx context.Context, sel ast.Selecti
 			}
 		case "created":
 			out.Values[i] = ec._AccountSession_created(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "lastSeen":
+			out.Values[i] = ec._AccountSession_lastSeen(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12184,6 +12238,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateLanguage(ctx, field)
 		case "updateAccountLanguage":
 			out.Values[i] = ec._Mutation_updateAccountLanguage(ctx, field)
+		case "revokeAccountSession":
+			out.Values[i] = ec._Mutation_revokeAccountSession(ctx, field)
 		case "addAccountEmail":
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
 		case "deleteAccountEmail":
@@ -12192,8 +12248,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_deleteAccountUsername(ctx, field)
 		case "updateAccountUsernameAndRetainPrevious":
 			out.Values[i] = ec._Mutation_updateAccountUsernameAndRetainPrevious(ctx, field)
-		case "revokeAccountSession":
-			out.Values[i] = ec._Mutation_revokeAccountSession(ctx, field)
 		case "updateAccountEmailStatusToPrimary":
 			out.Values[i] = ec._Mutation_updateAccountEmailStatusToPrimary(ctx, field)
 		case "generateAccountMultiFactorRecoveryCodes":

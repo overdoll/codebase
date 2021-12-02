@@ -39,7 +39,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 }
 
 // getSessionById - get session by ID
-func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
+func (r SessionRepository) getSessionById(ctx context.Context, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
 	val, err := r.client.Get(ctx, sessionPrefix+sessionId).Result()
 
@@ -67,8 +67,10 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 
 	current := false
 
-	if sessionId == passport.SessionID() {
-		current = true
+	if passport != nil {
+		if sessionId == passport.SessionID() {
+			current = true
+		}
 	}
 
 	res := session.UnmarshalSessionFromDatabase(sessionId,
@@ -82,6 +84,18 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 	)
 
 	res.Node = paging.NewNode(sessionId)
+
+	return res, nil
+}
+
+// getSessionById - get session by ID
+func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
+
+	res, err := r.getSessionById(ctx, passport, sessionId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := res.CanView(requester); err != nil {
 		return nil, err
@@ -126,27 +140,10 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 }
 
 // RevokeSessionById - revoke session
-func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error {
-
-	// decrypt, since we send it as encrypted
-	key, err := crypt.Decrypt(sessionId)
-
-	if err != nil {
-		return fmt.Errorf("failed to decrypt session id: %v", err)
-	}
-
-	_, err = r.GetSessionById(ctx, requester, passport, key)
-
-	if err != nil {
-		return err
-	}
-
-	if sessionId == passport.SessionID() {
-		return errors.New("cannot revoke session same as logged in account")
-	}
+func (r SessionRepository) revokeSessionById(ctx context.Context, sessionId string) error {
 
 	// make sure that we delete the session that belongs to this user only
-	_, err = r.client.Del(ctx, key).Result()
+	_, err := r.client.Del(ctx, sessionId).Result()
 
 	if err != nil {
 
@@ -160,7 +157,23 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 	return nil
 }
 
-func (r SessionRepository) CreateSession(ctx context.Context, requester *principal.Principal, passport *passport.Passport, session *session.Session) error {
+// RevokeSessionById - revoke session
+func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error {
+
+	ss, err := r.GetSessionById(ctx, requester, passport, sessionId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := ss.CanRevoke(requester); err != nil {
+		return err
+	}
+
+	return r.revokeSessionById(ctx, sessionId)
+}
+
+func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *session.Session) error {
 
 	val, err := json.Marshal(session)
 
@@ -173,7 +186,7 @@ func (r SessionRepository) CreateSession(ctx context.Context, requester *princip
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, sessionPrefix+session.AccountID(), valReal, time.Hour*24).Result()
+	ok, err := r.client.SetNX(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
 		return err
@@ -184,4 +197,40 @@ func (r SessionRepository) CreateSession(ctx context.Context, requester *princip
 	}
 
 	return nil
+}
+
+func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId string, updateFn func(session *session.Session) error) (*session.Session, error) {
+
+	res, err := r.getSessionById(ctx, nil, sessionId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := updateFn(res); err != nil {
+		return nil, err
+	}
+
+	val, err := json.Marshal(res)
+
+	if err != nil {
+		return nil, err
+	}
+
+	valReal, err := crypt.EncryptSession(string(val))
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.client.Set(ctx, sessionPrefix+res.ID(), valReal, time.Second*time.Duration(res.Duration())).Result()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (r SessionRepository) RevokeSessionOperator(ctx context.Context, sessionId string) error {
+	return r.revokeSessionById(ctx, sessionId)
 }

@@ -3,6 +3,7 @@ package passport
 import (
 	"context"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
@@ -14,10 +15,10 @@ func fromGrpc(ctx context.Context) (*Passport, error) {
 	return unserializeFromString(passportSaved)
 }
 
-func toGrpc(ctx context.Context, passport *Passport) (metautils.NiceMD, error) {
+func toGrpc(ctx context.Context, passport *Passport) (context.Context, error) {
 	serialized, err := serializeToString(passport)
 	if err != nil {
 		return nil, err
 	}
-	return metautils.ExtractIncoming(ctx).Add(passportHeader, serialized), nil
+	return metadata.AppendToOutgoingContext(ctx, passportHeader, serialized), nil
 }

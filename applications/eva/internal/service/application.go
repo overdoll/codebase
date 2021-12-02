@@ -68,7 +68,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo),
 			UpdateAccountUsernameAndRetainPrevious:    command.NewUpdateAccountUsernameAndRetainPreviousHandler(accountRepo),
 			DeleteAccountUsername:                     command.NewDeleteAccountUsernameHandler(accountRepo),
-			CreateAccountSession:                      command.NewCreateAccountSessionHandler(sessionRepo, locationRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),
 			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(mfaRepo),
@@ -84,6 +83,10 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
 			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
 			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
+
+			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, locationRepo),
+			TouchAccountSessionOperator:  command.NewTouchAccountSessionOperatorHandler(sessionRepo),
+			RevokeAccountSessionOperator: command.NewRevokeAccountSessionOperatorHandler(sessionRepo),
 		},
 		Queries: app.Queries{
 			SearchAccounts:                  query.NewSearchAccountsHandler(accountIndexRepo),

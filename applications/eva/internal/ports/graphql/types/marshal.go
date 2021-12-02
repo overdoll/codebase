@@ -325,10 +325,12 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, curs
 
 func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
 	return &AccountSession{
+		ID:       relay.NewID(AccountSession{}, result.ID()),
 		Device:   result.Device(),
+		IP:       result.IP(),
 		Location: MarshalLocationToGraphQL(result.Location()),
 		Created:  result.Created(),
-		ID:       relay.NewID(AccountSession{}, result.ID()),
+		LastSeen: result.LastSeen(),
 		Current:  result.IsCurrent(),
 	}
 }

@@ -8,8 +8,13 @@ import (
 func GinPassportRequestMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// first, add passport to context
-		newCtx := toContext(c.Request.Context(), fromRequest(c.Request))
-		c.Request = c.Request.WithContext(newCtx)
+
+		pass := fromRequest(c.Request)
+
+		if pass != nil {
+			newCtx := WithContext(c.Request.Context(), pass)
+			c.Request = c.Request.WithContext(newCtx)
+		}
 
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer, ctx: c.Request.Context()}
 

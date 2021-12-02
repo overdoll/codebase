@@ -38,6 +38,8 @@ message SessionRequest {
 
 message SessionResponse {
   bool valid = 1;
+  int64 duration = 2;
+  string accountId = 3;
 }
 
 message CreateSessionRequest {
@@ -46,6 +48,7 @@ message CreateSessionRequest {
 
 message CreateSessionResponse {
   string id = 1;
+  int64 duration = 2;
 }
 
 service Eva {

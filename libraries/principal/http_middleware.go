@@ -17,12 +17,19 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 
 		ctx := c.Request.Context()
 
-		if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		pass := passport.FromContext(ctx)
+
+		if pass == nil {
 			c.Next()
 			return
 		}
 
-		principal, err := srv.PrincipalById(ctx, passport.FromContext(ctx).AccountID())
+		if err := pass.Authenticated(); err != nil {
+			c.Next()
+			return
+		}
+
+		principal, err := srv.PrincipalById(ctx, pass.AccountID())
 
 		if err != nil {
 			zap.S().Error("unable to get account ", zap.Error(err))

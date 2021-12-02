@@ -33,6 +33,10 @@ type Account struct {
 	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
 	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
 	Language *Language `json:"language"`
+	// Sessions linked to this account
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	Sessions *AccountSessionConnection `json:"sessions"`
 	// Maximum amount of usernames that this account can create
 	UsernamesLimit int `json:"usernamesLimit"`
 	// Usernames for account (history)
@@ -43,10 +47,6 @@ type Account struct {
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
 	Emails *AccountEmailConnection `json:"emails"`
-	// Sessions linked to this account
-	//
-	// Only queryable if the currently logged-in account belongs to the requested account
-	Sessions *AccountSessionConnection `json:"sessions"`
 	// Multi factor account settings
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -134,7 +134,9 @@ type AccountSession struct {
 	// Where the session was originally created
 	Location *Location `json:"location"`
 	// When the session was created
-	Created string `json:"created"`
+	Created time.Time `json:"created"`
+	// When the session was last seen (last API call)
+	LastSeen time.Time `json:"lastSeen"`
 	// If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
 	Current bool `json:"current"`
 }

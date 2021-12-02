@@ -15,11 +15,11 @@ import (
 	"time"
 )
 
-func NewHttpServer(ctx context.Context, p *app.Application) http.Handler {
+func NewHttpServer(ctx context.Context, p app.Application) http.Handler {
 
 	rtr := router.NewRawGinRouter()
 
-	httpClient := app.NewHttpClient(p)
+	httpClient := p.GetHttpClient()
 
 	graphqlEndpoint := "/api/graphql"
 
@@ -40,7 +40,7 @@ func NewHttpServer(ctx context.Context, p *app.Application) http.Handler {
 	l := log.NewZapLogger(zap.L(), log.DebugLevel)
 
 	var gqlHandlerFactory gateway.HandlerFactoryFn = func(schema *graphql.Schema, engine *graphql.ExecutionEngineV2) http.Handler {
-		return gateway.NewGraphqlHTTPHandler(schema, engine, l)
+		return gateway.NewGraphqlHTTPHandler(schema, engine, p, l)
 	}
 
 	gate := gateway.NewGateway(gqlHandlerFactory, httpClient, l)

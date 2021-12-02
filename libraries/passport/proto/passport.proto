@@ -13,9 +13,12 @@ message Passport {
   // Device information linked to this passport
   DeviceInfo deviceInfo = 3;
 
+  // Actions, if any, performed on the passport
+  repeated Action actions = 4;
+
   // Integrity of the passport (can be used to make sure the passport is correctly created)
   // integrity is the RSA signature of Header + AccountInfo + DeviceInfo
-  Integrity integrity = 4;
+  Integrity integrity = 5;
 }
 
 message Header {
@@ -39,6 +42,11 @@ message DeviceInfo {
 
   // User Agent of the device (can be parsed to grab the actual device information)
   string userAgent = 2;
+}
+
+message Action {
+  // Action performed on the passport
+  string action = 1;
 }
 
 message Integrity {

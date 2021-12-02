@@ -29,13 +29,19 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 		panic(err)
 	}
 
-	pass, err := serializeToString(FromContext(w.ctx))
-	if err != nil {
-		return 0, err
-	}
+	rawPass := FromContext(w.ctx)
 
-	// add passport to object
-	body[bodyKey] = pass
+	if rawPass != nil {
+
+		pass, err := serializeToString(rawPass)
+
+		if err != nil {
+			return 0, err
+		}
+
+		// add passport to object
+		body[bodyKey] = pass
+	}
 
 	bts, err := json.Marshal(body)
 
@@ -92,7 +98,9 @@ func fromRequest(req *http.Request) *Passport {
 	req.Body = ioutil.NopCloser(&buf)
 
 	if val, ok := body[bodyKey]; ok {
+
 		pass, err := unserializeFromString(val.(string))
+
 		if err != nil {
 			panic(err)
 		}

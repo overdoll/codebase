@@ -10,7 +10,7 @@ const (
 	MutationKey = "PassportContextKey"
 )
 
-func toContext(ctx context.Context, passport *Passport) context.Context {
+func WithContext(ctx context.Context, passport *Passport) context.Context {
 	return context.WithValue(ctx, MutationType(MutationKey), passport)
 }
 

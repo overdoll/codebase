@@ -2,11 +2,10 @@ package session
 
 import (
 	"context"
-	"github.com/gorilla/sessions"
 )
 
 type Repository interface {
-	Load(ctx context.Context, session *sessions.Session) (*sessions.Session, error)
-	Delete(ctx context.Context, session *sessions.Session) error
-	Save(ctx context.Context, session *sessions.Session) (*sessions.Session, error)
+	GetSession(ctx context.Context, sessionId string) (bool, string, int64, error)
+	RevokeSession(ctx context.Context, sessionId string) error
+	CreateSession(ctx context.Context, accountId string) (string, int64, error)
 }
