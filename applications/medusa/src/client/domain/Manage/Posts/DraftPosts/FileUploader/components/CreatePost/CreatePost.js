@@ -93,10 +93,18 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   // Show a loading placeholder for post being created
   if (isCreatingPost) {
     return (
-      <Flex h='100%' align='center' justify='center' direction='column'>
-        <Spinner mb={6} thickness={4} size='lg' color='primary.500' />
-        <Text size='sm' color='gray.100'>{t('posts.flow.create.creating')}</Text>
-      </Flex>
+      <LargeBackgroundBox>
+        <Flex
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          h={400}
+        >
+          <Spinner mb={6} thickness={4} size='lg' color='primary.500' />
+          <Text fontSize='md' color='gray.100'>{t('posts.flow.create.creating')}</Text>
+        </Flex>
+      </LargeBackgroundBox>
     )
   }
 

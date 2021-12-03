@@ -19,6 +19,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import Icon from '@//:modules/content/Icon/Icon'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   content: Array<ContentType>,

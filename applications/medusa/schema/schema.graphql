@@ -33,6 +33,9 @@ type Account implements Node {
   """
   language: Language!
 
+  """Maximum amount of usernames that this account can create"""
+  usernamesLimit: Int!
+
   """Usernames for account (history)"""
   usernames(
     """Returns the elements in the list that come after the specified cursor."""
@@ -49,6 +52,9 @@ type Account implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountUsernameConnection!
+
+  """Maximum amount of emails that this account can create"""
+  emailsLimit: Int!
 
   """
   Emails for account (multiple emails per account)
@@ -138,7 +144,7 @@ type Account implements Node {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Review
+    state: PostState = REVIEW
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -176,7 +182,7 @@ type Account implements Node {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -306,12 +312,12 @@ type AccountInfractionHistoryEdge {
 }
 
 type AccountLock {
-  expires: Int!
+  expires: Time!
   reason: AccountLockReason!
 }
 
 enum AccountLockReason {
-  PostInfraction
+  POST_INFRACTION
 }
 
 """The multi-factor recovery code belonging to the account"""
@@ -493,7 +499,7 @@ type Audience implements Node & Object {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -610,7 +616,7 @@ type Brand implements Node & Object {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -693,7 +699,7 @@ type Category implements Node & Object {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -752,7 +758,7 @@ type Character implements Node & Object {
     categorySlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -839,6 +845,18 @@ input DeleteAccountEmailInput {
 type DeleteAccountEmailPayload {
   """The ID of the account email that was removed"""
   accountEmailId: ID!
+}
+
+"""Input for removing an email from an account"""
+input DeleteAccountUsernameInput {
+  """The username that should be removed"""
+  accountUsernameId: ID!
+}
+
+"""Username to delete from account"""
+type DeleteAccountUsernamePayload {
+  """The ID of the account username that was removed"""
+  accountUsernameId: ID!
 }
 
 """Payload for disabling account multi factor"""
@@ -1013,6 +1031,9 @@ type Mutation {
   Delete account email - email must belong to account and cannot be the primary email
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
+
+  """Delete account username - cannot be the current username"""
+  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
 
   """
   Update the account username
@@ -1337,9 +1358,9 @@ type PostAuditLog implements Node {
 }
 
 enum PostAuditLogAction {
-  Approved
-  Denied
-  Removed
+  APPROVED
+  DENIED
+  REMOVED
 }
 
 """Connection of the audit log"""
@@ -1463,16 +1484,16 @@ enum PostsOrderField {
 }
 
 enum PostState {
-  Draft
-  Publishing
-  Review
-  Published
-  Discarding
-  Discarded
-  Rejected
-  Processing
-  Removing
-  Removed
+  DRAFT
+  PUBLISHING
+  REVIEW
+  PUBLISHED
+  DISCARDING
+  DISCARDED
+  REJECTED
+  PROCESSING
+  REMOVING
+  REMOVED
 }
 
 type Query {
@@ -1734,7 +1755,7 @@ type Query {
     seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}
@@ -1985,7 +2006,7 @@ type Series implements Node & Object {
     characterSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = Published
+    state: PostState = PUBLISHED
 
     """Ordering options for posts."""
     orderBy: PostsOrder! = {field: CREATED_AT}

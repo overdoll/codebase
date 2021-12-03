@@ -14,11 +14,11 @@ type Props = {
 
 export default function ResourceItem ({ urls, type, ...rest }: Props): Node {
   return (
-    <>
+    <Flex h='100%'>
       {type === 'IMAGE' &&
-        <ImageSnippet urls={urls} />}
+        <ImageSnippet {...rest} urls={urls} />}
       {type === 'VIDEO' &&
-        <VideoSnippet urls={urls} />}
-    </>
+        <VideoSnippet {...rest} urls={urls} />}
+    </Flex>
   )
 }

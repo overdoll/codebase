@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { EVENTS } from '../../../../../../../constants/constants'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,
@@ -25,8 +26,6 @@ type Props = {
 };
 
 export default function File ({ state, file, dispatch, uppy, disabled }: Props): Node {
-  const [t] = useTranslation('manage')
-
   const progress = state.progress[file.id]
   const progressValue = progress && (progress[0] / progress[1]) * 100
   const url = state.urls[file.id]
@@ -68,9 +67,11 @@ export default function File ({ state, file, dispatch, uppy, disabled }: Props):
   }
 
   return (
-    <HStack py={2} bg='gray.800' pr={2} pl={4} borderRadius='md' spacing={4}>
-      <FileMessage />
-      <CloseButton isDisabled={disabled || url} onClick={() => onRemoveFile(file.id)} />
-    </HStack>
+    <LargeBackgroundBox pl={4}>
+      <HStack spacing={4}>
+        <FileMessage />
+        <CloseButton isDisabled={disabled || url} onClick={() => onRemoveFile(file.id)} />
+      </HStack>
+    </LargeBackgroundBox>
   )
 }

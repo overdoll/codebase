@@ -8,7 +8,7 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { PostPreviewFragment$ref } from "./PostPreviewFragment.graphql";
-export type PostAuditLogAction = "Approved" | "Denied" | "Removed" | "%future added value";
+export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AuditInspectFragment$ref: FragmentReference;
 declare export opaque type AuditInspectFragment$fragmentType: AuditInspectFragment$ref;

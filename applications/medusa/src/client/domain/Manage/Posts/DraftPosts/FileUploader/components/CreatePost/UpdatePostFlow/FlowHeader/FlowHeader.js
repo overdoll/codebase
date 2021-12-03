@@ -22,6 +22,8 @@ import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.gr
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import useCheckRequirements from './useCheckRequirements'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import progressScore from './progressScore'
 
 type Props = {
   uppy: Uppy,
@@ -48,14 +50,7 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
 
   const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data.post })
 
-  const progressScore = () => {
-    const scores = [content, audience, brand, categories, characters]
-    const calculated = scores.map((item) => item ? 1 : 0)
-    const reduced = calculated.reduce((a, b) => a + b, 0)
-    return (reduced / scores.length) * 100
-  }
-
-  const score = progressScore()
+  const score = progressScore([content, audience, brand, categories, characters])
 
   const onCleanup = () => {
     uppy.reset()
@@ -85,7 +80,7 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
   }
 
   return (
-    <Box borderRadius='md' p={3} bg='gray.800'>
+    <Box>
       <Flex align='center' justify='space-between' mb={2}>
         <Flex direction='column'>
           <Heading color='gray.00' fontSize='2xl'>

@@ -8,14 +8,14 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AccountLockReason = "PostInfraction" | "%future added value";
+export type AccountLockReason = "POST_INFRACTION" | "%future added value";
 export type LockedQueryVariables = {||};
 export type LockedQueryResponse = {|
   +viewer: ?{|
     +avatar: any,
     +lock: ?{|
       +reason: AccountLockReason,
-      +expires: number,
+      +expires: any,
     |},
   |}
 |};

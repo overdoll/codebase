@@ -22,6 +22,12 @@ import FilePicker from '../../../../FilePicker/FilePicker'
 import InterfaceUploadBox2
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg'
 import { EVENTS } from '../../../../../constants/constants'
+import {
+  PageSectionDescription,
+  PageSectionTitle,
+  PageSectionWrap,
+  SmallBackgroundBox
+} from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,
@@ -87,23 +93,14 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
 
   return (
     <>
-      <Flex p={3} bg='gray.800' borderRadius='md' align='center' justify='space-between'>
-        <Heading fontSize='md'>
-          {t('posts.flow.steps.arrange.uploader.hint', { count: contentData.length })}
-        </Heading>
-        <FilePicker w='auto' uppy={uppy}>
-          <Flex w='100%' align='center' justify='flex-end'>
-            <Button
-              w='100%'
-              isDisabled={disableUploads}
-              variant='link'
-              size='md'
-              rightIcon={<Icon h={3} w={3} icon={InterfaceUploadBox2} fill='gray.100' />}
-            >{t('posts.flow.steps.arrange.uploader.picker')}
-            </Button>
-          </Flex>
-        </FilePicker>
-      </Flex>
+      <PageSectionWrap>
+        <PageSectionTitle>
+          {t('posts.flow.steps.arrange.uploader.title', { count: contentData.length })}
+        </PageSectionTitle>
+        <PageSectionDescription>
+          {t('posts.flow.steps.arrange.uploader.description')}
+        </PageSectionDescription>
+      </PageSectionWrap>
       <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
       <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
     </>

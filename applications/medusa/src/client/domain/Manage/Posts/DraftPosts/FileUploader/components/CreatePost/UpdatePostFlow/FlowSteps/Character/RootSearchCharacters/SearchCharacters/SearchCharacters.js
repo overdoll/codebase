@@ -16,6 +16,7 @@ import {
 } from '../../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import Button from '@//:modules/form/Button'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   selected: Array<string>,
@@ -117,17 +118,19 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         )}
         {hasNext &&
           <LargeGridItem height='inherit'>
-            <Button w='100%' h='100%' variant='panel' onClick={() => loadNext(5)} isLoading={isLoadingNext}>
-              <Flex
-                align='center'
-                justify='center'
-                whiteSpace='normal'
-              >
-                <Text color='gray.00'>
-                  {t('posts.flow.steps.character.selector.search.load')}
-                </Text>
-              </Flex>
-            </Button>
+            <ClickableBox
+              w='100%'
+              h='100%'
+              onClick={() => loadNext(5)}
+              isLoading={isLoadingNext}
+              whiteSpace='normal'
+              align='center'
+              justify='center'
+            >
+              <Text textAlign='center' color='gray.00'>
+                {t('posts.flow.steps.character.selector.search.load')}
+              </Text>
+            </ClickableBox>
           </LargeGridItem>}
       </GridWrap>
     </>

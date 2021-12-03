@@ -57,13 +57,13 @@ export default function useSubmitPost ({ uppy, dispatch, state, query }: Props) 
         }
       },
       onCompleted (data) {
+        setPostReference(undefined)
         uppy.reset()
         dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
-        setPostReference(undefined)
+        dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
         if (data?.submitPost?.inReview) {
           dispatch({ type: EVENTS.IN_REVIEW })
         }
-        dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
       },
       onError (data) {
         notify({

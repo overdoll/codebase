@@ -19,6 +19,8 @@ import { EVENTS } from '../../../../../../constants/constants'
 import Button from '@//:modules/form/Button'
 import Icon from '@//:modules/content/Icon/Icon'
 import FilePicker from '../../../../../FilePicker/FilePicker'
+import InterfaceUploadBox2
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg'
 
 type Props = {
   uppy: Uppy,
@@ -30,6 +32,7 @@ type Props = {
 const ProcessUploadsFragmentGQL = graphql`
   fragment ProcessUploadsFragment on Post {
     id
+    reference
     content {
       urls {
         url
@@ -116,7 +119,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
 
   // When all the uploads are complete, we commit the post content
   useEffect(() => {
-    if ((Object.keys(state.urls)).length === state.files.length) {
+    if ((Object.keys(state.urls)).length === state.files.length && state.files.length > 0 && (Object.keys(state.urls)).length > 0) {
       onUpdateContent()
     }
   }, [state.urls])
@@ -142,7 +145,19 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
   }
 
   if (state.files.length < 1) {
-    return <></>
+    return (
+      <FilePicker w='auto' uppy={uppy}>
+        <Flex w='100%' align='center' justify='flex-end'>
+          <Button
+            w='100%'
+            variant='solid'
+            size='md'
+            rightIcon={<Icon h={3} w={3} icon={InterfaceUploadBox2} fill='gray.100' />}
+          >{t('posts.flow.steps.arrange.uploader.picker')}
+          </Button>
+        </Flex>
+      </FilePicker>
+    )
   }
 
   return (

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 76ffb040691796fcf80589c6d4911d80
+ * @relayHash d28c4ee77a5e3c5a3014f48a2b95093c
  */
 
 /* eslint-disable */
@@ -40,12 +40,25 @@ query OpenDraftPostsPaginationQuery(
   }
 }
 
+fragment DraftPostPreviewFragment on Post {
+  id
+  reference
+  ...useCheckRequirementsFragment
+  content {
+    type
+    urls {
+      url
+      mimeType
+    }
+  }
+}
+
 fragment OpenDraftPostsFragment_2HEEH6 on Account {
   posts(first: $first, after: $after) {
     edges {
       node {
+        ...DraftPostPreviewFragment
         id
-        state
         __typename
       }
       cursor
@@ -56,6 +69,28 @@ fragment OpenDraftPostsFragment_2HEEH6 on Account {
     }
   }
   id
+}
+
+fragment useCheckRequirementsFragment on Post {
+  content {
+    __typename
+  }
+  audience {
+    __typename
+    id
+  }
+  brand {
+    __typename
+    id
+  }
+  categories {
+    __typename
+    id
+  }
+  characters {
+    __typename
+    id
+  }
 }
 */
 
@@ -109,7 +144,11 @@ v4 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v5 = [
+  (v3/*: any*/),
+  (v4/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -185,7 +224,91 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "state",
+                            "name": "reference",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "content",
+                            "plural": true,
+                            "selections": [
+                              (v3/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceUrl",
+                                "kind": "LinkedField",
+                                "name": "urls",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "url",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Audience",
+                            "kind": "LinkedField",
+                            "name": "audience",
+                            "plural": false,
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Brand",
+                            "kind": "LinkedField",
+                            "name": "brand",
+                            "plural": false,
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "categories",
+                            "plural": true,
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           (v3/*: any*/)
@@ -249,7 +372,7 @@ return {
     ]
   },
   "params": {
-    "id": "76ffb040691796fcf80589c6d4911d80",
+    "id": "d28c4ee77a5e3c5a3014f48a2b95093c",
     "metadata": {},
     "name": "OpenDraftPostsPaginationQuery",
     "operationKind": "query",
@@ -258,5 +381,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '230f9aeae90fdb9cc6fa06867b5ac953';
+(node: any).hash = '00fee834db021405a51ba403546b964a';
 module.exports = node;

@@ -2,8 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-
-import Button from '@//:modules/form/Button'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   id: string,
@@ -19,13 +18,14 @@ export default function Selector ({ id, selected, onSelect, children, ...rest }:
   const isSelected = selected.includes(id)
 
   return (
-    <Button
+    <ClickableBox
       onClick={onClick} borderColor={isSelected ? 'green.500' : 'gray.900'} borderWidth={2} overflow='hidden'
       m={0} p={0}
+      borderRadius='semi'
       w='100%' h='100%'
-      variant='panel' {...rest}
+      {...rest}
     >
       {children}
-    </Button>
+    </ClickableBox>
   )
 }

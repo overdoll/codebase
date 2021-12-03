@@ -23,7 +23,6 @@ const EVENTS = {
   BRAND: 'brand',
   CHARACTERS: 'characters',
   CATEGORIES: 'categories',
-  SUBMIT: 'submit',
   CLEANUP: 'cleanup',
   IN_REVIEW: 'isInReview'
 }
@@ -38,7 +37,6 @@ const INITIAL_STATE: State = {
   brands: null,
   characters: {},
   categories: {},
-  submit: {},
   cleanup: null,
   isInReview: false
 }

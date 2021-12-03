@@ -7,7 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
+import type { DraftPostPreviewFragment$ref } from "./DraftPostPreviewFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 import type { OpenDraftPostsFragment$ref, OpenDraftPostsFragment$fragmentType } from "./OpenDraftPostsPaginationQuery.graphql";
 export type { OpenDraftPostsFragment$ref, OpenDraftPostsFragment$fragmentType };
@@ -15,8 +15,7 @@ export type OpenDraftPostsFragment = {|
   +posts: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +id: string,
-        +state: PostState,
+        +$fragmentRefs: DraftPostPreviewFragment$ref
       |}
     |}>
   |},
@@ -34,14 +33,7 @@ export type OpenDraftPostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -107,20 +99,17 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "state",
-                  "storageKey": null
-                },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "DraftPostPreviewFragment"
                 }
               ],
               "storageKey": null
@@ -163,12 +152,18 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 // prettier-ignore
-(node: any).hash = '230f9aeae90fdb9cc6fa06867b5ac953';
+(node: any).hash = '00fee834db021405a51ba403546b964a';
 module.exports = node;

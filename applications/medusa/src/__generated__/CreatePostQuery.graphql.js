@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9dee855c545edc5605dfe691b2b5dfe0
+ * @relayHash 0acc8b1dd9cbc52bc3c00069b66e4e17
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
-export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Removed" | "Removing" | "Review" | "%future added value";
+export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 export type CreatePostQueryVariables = {|
   reference: string
 |};
@@ -229,6 +229,7 @@ fragment PostGalleryContentFragment on Post {
 
 fragment ProcessUploadsFragment on Post {
   id
+  reference
   content {
     urls {
       url
@@ -482,6 +483,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Audience",
             "kind": "LinkedField",
             "name": "audience",
@@ -632,7 +640,7 @@ return {
     ]
   },
   "params": {
-    "id": "9dee855c545edc5605dfe691b2b5dfe0",
+    "id": "0acc8b1dd9cbc52bc3c00069b66e4e17",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

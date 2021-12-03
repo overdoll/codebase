@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { NavigationFragment$ref } from "./NavigationFragment.graphql";
-export type AccountLockReason = "PostInfraction" | "%future added value";
+export type AccountLockReason = "POST_INFRACTION" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +viewer: ?{|
@@ -18,7 +18,7 @@ export type RootQueryResponse = {|
     +isStaff: boolean,
     +lock: ?{|
       +reason: AccountLockReason,
-      +expires: number,
+      +expires: any,
     |},
     +$fragmentRefs: NavigationFragment$ref,
   |}

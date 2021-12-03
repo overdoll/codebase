@@ -28,6 +28,7 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
 import Button from '@//:modules/form/Button'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   selected: Array<string>,
@@ -126,17 +127,18 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         )}
         {hasNext &&
           <SmallGridItem h='inherit'>
-            <Button h='100%' w='100%' variant='panel' onClick={() => loadNext(5)} isLoading={isLoadingNext}>
-              <Flex
-                align='center'
-                justify='center'
-                whiteSpace='normal'
-              >
-                <Text color='gray.00'>
-                  {t('posts.flow.steps.category.selector.search.load')}
-                </Text>
-              </Flex>
-            </Button>
+            <ClickableBox
+              h='100%' w='100%'
+              align='center'
+              justify='center'
+              onClick={() => loadNext(5)}
+              isLoading={isLoadingNext}
+              whiteSpace='normal'
+            >
+              <Text textAlign='center' color='gray.00'>
+                {t('posts.flow.steps.category.selector.search.load')}
+              </Text>
+            </ClickableBox>
           </SmallGridItem>}
       </GridWrap>
     </>

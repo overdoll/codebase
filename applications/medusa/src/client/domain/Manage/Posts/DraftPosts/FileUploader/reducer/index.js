@@ -105,6 +105,7 @@ const reducer: {} = (state: State, action: Action): State => {
       }
     }
     case EVENTS.STEP:
+
       // going back to first step - clear all data
       if (EVENTS.STEP === null) {
         return { ...state, step: STEPS.ARRANGE }
@@ -112,11 +113,8 @@ const reducer: {} = (state: State, action: Action): State => {
 
       return { ...state, step: action.value }
     case EVENTS.CLEANUP:
-
       return INITIAL_STATE
-    case EVENTS.SUBMIT:
 
-      return { ...state, submit: action.value, step: STEPS.FINISH }
     default:
       return state
   }

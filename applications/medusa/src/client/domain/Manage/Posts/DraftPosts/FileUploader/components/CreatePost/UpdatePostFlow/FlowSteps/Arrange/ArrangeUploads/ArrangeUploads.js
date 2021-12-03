@@ -12,7 +12,8 @@ import {
   Progress,
   Heading,
   Text,
-  CloseButton, Spacer, Stack
+  CloseButton, Spacer, Stack,
+  Center
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
@@ -22,6 +23,7 @@ import type { ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFra
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../../../constants/constants'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Content from './Content/Content'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,
@@ -98,9 +100,11 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
 
   if (displayData.length < 1) {
     return (
-      <Flex bg='gray.800' align='center' justify='center' p={2} h={100} borderRadius='md'>
-        <Text>{t('posts.flow.steps.arrange.arranger.empty')}</Text>
-      </Flex>
+      <SmallBackgroundBox display='flex' h={100}>
+        <Flex align='center' justify='center'>
+          <Text>{t('posts.flow.steps.arrange.arranger.empty')}</Text>
+        </Flex>
+      </SmallBackgroundBox>
     )
   }
 

@@ -42,8 +42,6 @@ export default function Root (props: Props): Node {
 
   const ability = useMemo(() => defineAbility(data?.viewer), [data?.viewer])
 
-  console.log(data.viewer)
-
   return (
     <>
       <Helmet

@@ -29,22 +29,16 @@ export default function DraftPosts (props: Props): Node {
     props.query
   )
 
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
-
   const [t] = useTranslation('manage')
 
   const CreatePostComponent = () => <FileUploader />
-
-  if (postReference) {
-    return CreatePostComponent()
-  }
 
   return (
     <>
       <PageSectionWrap>
         <PageSectionTitle>{t('posts.title')}</PageSectionTitle>
       </PageSectionWrap>
-      <Tabs defaultIndex={0} isFitted variant='soft-rounded' colorScheme='gray'>
+      <Tabs defaultIndex={1} isFitted variant='soft-rounded' colorScheme='gray'>
         <TabList>
           <Tab ml={0}>{t('posts.flow.create.title')}</Tab>
           <Tab mr={0}>{t('posts.flow.drafts.title')}</Tab>

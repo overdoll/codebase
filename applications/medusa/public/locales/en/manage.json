@@ -25,7 +25,8 @@
         }
       },
       "drafts": {
-        "title": "Drafts"
+        "title": "Drafts",
+        "load": "Load More"
       },
       "steps": {
         "footer": {
@@ -39,8 +40,9 @@
           "header": "Step 1",
           "subheader": "Arrange your uploads",
           "uploader": {
+            "title": "Posting {{count}} Media",
+            "description": "Add, arrange, or remove the files you're uploading.",
             "picker": "Upload Files",
-            "hint": "Posting {{count}} Media",
             "upload_limit": "You can only upload a maximum of {{count}} files",
             "processing": {
               "in_progress": "Processing file",

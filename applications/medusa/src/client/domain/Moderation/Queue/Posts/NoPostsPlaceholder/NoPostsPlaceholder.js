@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Button, Heading, Text } from '@chakra-ui/react'
+import { Button, Heading, Text, Stack, Flex } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
@@ -33,15 +33,17 @@ export default function PostHeader (props: Props): Node {
 
   if (!data.moderator) {
     return (
-      <>
+      <Stack align='center'>
         <Icon
-          w={12} h={12} icon={EntertainmentControlButtonPauseCircle}
+          w={12} h={12}
+          mb={4}
+          icon={EntertainmentControlButtonPauseCircle}
           fill='orange.300'
         />
-        <Heading color='gray.00' fontWeight='normal' size='xl' mt={8} mb={1}>
+        <Heading color='gray.00' fontSize='4xl'>
           {t('queue.paused.header')}
         </Heading>
-        <Text mb={1} color='gray.200'>
+        <Text color='gray.200'>
           {t('queue.paused.subheader')}
         </Text>
         <Link to='/settings/moderation'>
@@ -51,22 +53,23 @@ export default function PostHeader (props: Props): Node {
           >{t('queue.paused.unpause')}
           </Button>
         </Link>
-      </>
+      </Stack>
     )
   }
 
   return (
-    <>
+    <Stack align='center'>
       <Icon
         w={12} h={12} icon={InterfaceValidationCheckSquare1}
+        mb={4}
         fill='green.300'
       />
-      <Heading color='gray.00' fontWeight='normal' size='xl' mt={8} mb={1}>
+      <Heading color='gray.00' fontSize='4xl'>
         {t('queue.empty.header')}
       </Heading>
       <Text color='gray.200'>
         {t('queue.empty.subheader')}
       </Text>
-    </>
+    </Stack>
   )
 }
