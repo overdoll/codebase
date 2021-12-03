@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import Button from '@//:modules/form/Button'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 
 type Props = {
   uppy: Uppy,
@@ -36,16 +37,6 @@ const RootCreatePostFlowQueryGQL = graphql`
   }
 `
 
-const RootCreatePostFlowMutationGQL = graphql`
-  mutation CreatePostMutation {
-    createPost {
-      post {
-        reference
-      }
-    }
-  }
-`
-
 export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
@@ -54,35 +45,9 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
     { reference: postReference || '' }
   )
 
-  const [createPost, isCreatingPost] = useMutation(RootCreatePostFlowMutationGQL)
-
   const [t] = useTranslation('manage')
 
-  const notify = useToast()
-
-  const postData = data?.post
-
-  // After the user initially uploads a file, we create a new post
-  useEffect(() => {
-    uppy.on('file-added', file => {
-      if (!postData) {
-        createPost({
-          onCompleted (payload) {
-            setPostReference(x => {
-              return payload.createPost.post.reference
-            })
-          },
-          onError () {
-            notify({
-              status: 'error',
-              title: t('posts.flow.create.query.error'),
-              isClosable: true
-            })
-          }
-        })
-      }
-    })
-  }, [uppy])
+  const postData = data.post
 
   const onCleanup = () => {
     uppy.reset()
@@ -90,45 +55,11 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
     setPostReference(undefined)
   }
 
-  // Show a loading placeholder for post being created
-  if (isCreatingPost) {
-    return (
-      <LargeBackgroundBox>
-        <Flex
-          flexDirection='column'
-          alignItems='center'
-          justifyContent='center'
-          textAlign='center'
-          h={400}
-        >
-          <Spinner mb={6} thickness={4} size='lg' color='primary.500' />
-          <Text fontSize='md' color='gray.100'>{t('posts.flow.create.creating')}</Text>
-        </Flex>
-      </LargeBackgroundBox>
-    )
-  }
-
   // If there is no post found from the URL parameter, show create post initiator
   if (!postData && (state.step !== STEPS.SUBMIT)) {
     return (
       <Stack spacing={4}>
-        <FilePicker uppy={uppy}>
-          <DragOverFileInput uppy={uppy}>
-            <LargeBackgroundBox>
-              <Flex
-                flexDirection='column'
-                alignItems='center'
-                justifyContent='center'
-                textAlign='center'
-                h={400}
-              >
-                <Heading color='gray.00' fontSize='4xl'>
-                  {t('posts.flow.create.uploader.title')}
-                </Heading>
-              </Flex>
-            </LargeBackgroundBox>
-          </DragOverFileInput>
-        </FilePicker>
+        <CreatePostFlow uppy={uppy} state={state} dispatch={dispatch} />
         <Box>
           <Heading color='gray.100' fontSize='xl'>
             {t('posts.flow.create.uploader.rules.heading')}

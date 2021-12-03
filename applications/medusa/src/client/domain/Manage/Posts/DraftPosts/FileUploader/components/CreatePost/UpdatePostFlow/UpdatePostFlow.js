@@ -32,7 +32,6 @@ const UpdatePostFlowFragmentGQL = graphql`
   }
 `
 
-// Stepper - handles all stepping functions
 export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
 

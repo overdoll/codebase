@@ -14,7 +14,7 @@ type Props = {
 
 export default function ResourceItem ({ urls, type, ...rest }: Props): Node {
   return (
-    <Flex h='100%'>
+    <Flex>
       {type === 'IMAGE' &&
         <ImageSnippet {...rest} urls={urls} />}
       {type === 'VIDEO' &&

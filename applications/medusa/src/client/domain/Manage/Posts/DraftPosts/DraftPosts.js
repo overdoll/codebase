@@ -38,7 +38,7 @@ export default function DraftPosts (props: Props): Node {
       <PageSectionWrap>
         <PageSectionTitle>{t('posts.title')}</PageSectionTitle>
       </PageSectionWrap>
-      <Tabs defaultIndex={1} isFitted variant='soft-rounded' colorScheme='gray'>
+      <Tabs defaultIndex={0} isFitted variant='soft-rounded' colorScheme='gray'>
         <TabList>
           <Tab ml={0}>{t('posts.flow.create.title')}</Tab>
           <Tab mr={0}>{t('posts.flow.drafts.title')}</Tab>

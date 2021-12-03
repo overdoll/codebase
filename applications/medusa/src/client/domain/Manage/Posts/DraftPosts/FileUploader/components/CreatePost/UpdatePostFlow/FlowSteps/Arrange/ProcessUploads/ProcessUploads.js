@@ -46,6 +46,7 @@ const ProcessUploadsMutationGQL = graphql`
     updatePostContent(input: $input) {
       post {
         id
+        reference
         content {
           id
           type
@@ -69,6 +70,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
   const [hasProcessingError, setProcessingError] = useState(false)
 
   const postContent = data?.content
+  console.log(data.id)
 
   // Function for updating content with uploads + current content
   const onUpdateContent = () => {
@@ -78,7 +80,10 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
       const uploadedURLs = Object.values(state.urls)
       const currentURLs = postContent?.map((item) =>
         item.urls[0].url) || []
+
       const combinedUpload = [...currentURLs, ...uploadedURLs]
+      console.log('running update content')
+      console.log(combinedUpload)
 
       updateContent({
         variables: {
@@ -88,6 +93,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
           }
         },
         onCompleted (data) {
+          console.log(data)
           uploadedIDs.forEach((item) => {
             dispatch({
               type: EVENTS.FILES,
@@ -122,10 +128,9 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
     if ((Object.keys(state.urls)).length === state.files.length && state.files.length > 0 && (Object.keys(state.urls)).length > 0) {
       onUpdateContent()
     }
-  }, [state.urls])
+  }, [state.urls, state.files])
 
-  // Need to create a limit to uploading files
-  // Emit all current files to uppy?
+  // If processing error, show a message
   const ErrorMessage = () => {
     return (
       <Alert status='warning'>
@@ -166,7 +171,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
         {state.files.map((file, index) => {
           return (
             <File
-              disabled={false} key={index} uppy={uppy}
+              disabled={isUpdatingContent} key={index} uppy={uppy}
               state={state} file={file}
               dispatch={dispatch}
             />

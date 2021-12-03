@@ -12,7 +12,11 @@ import {
   GridItem,
   SimpleGrid,
   Progress,
-  Box
+  Box,
+  Text,
+  Heading,
+  CircularProgress,
+  CircularProgressLabel
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -66,14 +70,23 @@ export default function DraftPostPreview ({ query }: Props): Node {
   }
 
   const DisplayContentGrid = () => {
-    return limitedContent.map((item, index) =>
-      <ResourceItem key={index} type={item.type} urls={item.urls} />
+    return (
+      <SimpleGrid h='100%' spacing={0} columns={limitedContent.length > 1 ? 2 : 1}>
+        {limitedContent.map((item, index) =>
+          <ResourceItem h='100%' key={index} type={item.type} urls={item.urls} />
+        )}
+        {data.content.length > 4 && (<Flex align='center' justify='center'>
+          <Heading color='gray.200' fontSize='lg'>
+            +{data.content.length - limitedContent.length}
+          </Heading>
+        </Flex>)}
+      </SimpleGrid>
     )
   }
 
   return (
     <Flex h='100%' direction='column'>
-      <Flex h='80%'>
+      <Flex direction='column' h='80%'>
         <ClickableBox
           borderBottomLeftRadius={0}
           borderBottomRightRadius={0}
@@ -81,12 +94,25 @@ export default function DraftPostPreview ({ query }: Props): Node {
           p={0}
           overflow='hidden'
           position='relative'
+          h='100%'
         >
-          <SimpleGrid spacing={1}>
+          <Flex h='100%' position='relative' direction='column' justify='space-between'>
             <DisplayContentGrid />
-          </SimpleGrid>
+            <Flex bg='dimmers.400' h='100%' w='100%' justify='center' align='center' position='absolute'>
+              <CircularProgress
+                color={score >= 100 ? 'green.500' : 'primary.500'}
+                size={28}
+                trackColor='transparent'
+                thickness={6}
+                value={score}
+              >
+                <CircularProgressLabel color='gray.00' fontSize='xl'>
+                  {score}%
+                </CircularProgressLabel>
+              </CircularProgress>
+            </Flex>
+          </Flex>
         </ClickableBox>
-        <Progress colorScheme={score >= 100 ? 'green' : 'primary'} size='xs' borderRadius='none' value={score} />
       </Flex>
       <Flex h='20%'>
         <SmallBackgroundBox

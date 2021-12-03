@@ -63,6 +63,7 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
 
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
+
   useEffect(() => {
     if (state.files.length < 1 && state.urls.length < 1) {
       uppy.cancelAll()
@@ -89,7 +90,7 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
           })
       })
     }
-  }, [data.content])
+  }, [data.post.content])
 
   return (
     <>

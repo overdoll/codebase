@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import type { Dispatch, ResourceUrl, State } from '@//:types/upload'
-import { Box, Skeleton, Image, Img, Flex, Spinner, Text, Heading } from '@chakra-ui/react'
+import { Box, Skeleton, Image, Img, Flex, Spinner, Text, Heading, useToast } from '@chakra-ui/react'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 import type { Uppy } from '@uppy/core'
 import { useEffect } from 'react'
@@ -20,8 +20,8 @@ type Props = {
   dispatch: Dispatch
 };
 
-const RootCreatePostFlowMutationGQL = graphql`
-  mutation CreatePostMutation {
+const Mutation = graphql`
+  mutation CreatePostFlowMutation {
     createPost {
       post {
         reference
@@ -30,12 +30,14 @@ const RootCreatePostFlowMutationGQL = graphql`
   }
 `
 
-export default function CreatePostUploader ({ uppy, state, dispatch }: Props): Node {
+export default function CreatePostFlow ({ uppy, state, dispatch }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-  const [createPost, isCreatingPost] = useMutation(RootCreatePostFlowMutationGQL)
+  const [createPost, isCreatingPost] = useMutation(Mutation)
 
   const [t] = useTranslation('manage')
+
+  const notify = useToast()
 
   const onCreatePost = () => {
     createPost({

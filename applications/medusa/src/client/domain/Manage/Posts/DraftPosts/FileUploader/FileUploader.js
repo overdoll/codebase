@@ -21,7 +21,7 @@ export default function FileUploader (props: Props): Node {
     INITIAL_STATE
   )
 
-  // hook controls lifecycle of uppy & restoring indexeddb state
+  // hook controls lifecycle of uppy
   const [uppy] = useUpload(state, dispatch)
 
   const notify = useToast()

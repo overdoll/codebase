@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 419bfd6d6db48c69d7ea015adeb9730f
+ * @relayHash f45c22656e3c1382553435a28e17d104
  */
 
 /* eslint-disable */
@@ -8,22 +8,22 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreatePostMutationVariables = {||};
-export type CreatePostMutationResponse = {|
+export type CreatePostFlowMutationVariables = {||};
+export type CreatePostFlowMutationResponse = {|
   +createPost: ?{|
     +post: ?{|
       +reference: string
     |}
   |}
 |};
-export type CreatePostMutation = {|
-  variables: CreatePostMutationVariables,
-  response: CreatePostMutationResponse,
+export type CreatePostFlowMutation = {|
+  variables: CreatePostFlowMutationVariables,
+  response: CreatePostFlowMutationResponse,
 |};
 
 
 /*
-mutation CreatePostMutation {
+mutation CreatePostFlowMutation {
   createPost {
     post {
       reference
@@ -46,7 +46,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "CreatePostMutation",
+    "name": "CreatePostFlowMutation",
     "selections": [
       {
         "alias": null,
@@ -79,7 +79,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "CreatePostMutation",
+    "name": "CreatePostFlowMutation",
     "selections": [
       {
         "alias": null,
@@ -114,14 +114,14 @@ return {
     ]
   },
   "params": {
-    "id": "419bfd6d6db48c69d7ea015adeb9730f",
+    "id": "f45c22656e3c1382553435a28e17d104",
     "metadata": {},
-    "name": "CreatePostMutation",
+    "name": "CreatePostFlowMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '870abfceeddd4cd4b118d8215fc1d2dd';
+(node: any).hash = '58f2e537beb9700622d56004dac81aa3';
 module.exports = node;

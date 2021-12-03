@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2e15b44f5346a5b4ffcf9d52789e7ef4
+ * @relayHash 1d4c3a7ee91ad2802b57f7379b43b027
  */
 
 /* eslint-disable */
@@ -20,6 +20,7 @@ export type ProcessUploadsMutationResponse = {|
   +updatePostContent: ?{|
     +post: ?{|
       +id: string,
+      +reference: string,
       +content: $ReadOnlyArray<{|
         +id: string,
         +type: ResourceType,
@@ -44,6 +45,7 @@ mutation ProcessUploadsMutation(
   updatePostContent(input: $input) {
     post {
       id
+      reference
       content {
         id
         type
@@ -96,6 +98,13 @@ v2 = [
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -165,7 +174,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "2e15b44f5346a5b4ffcf9d52789e7ef4",
+    "id": "1d4c3a7ee91ad2802b57f7379b43b027",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -174,5 +183,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '90f291d8a24e708f204b7e749a7af8a3';
+(node: any).hash = '65032db9d0edf296f5624d7cead51e8b';
 module.exports = node;
