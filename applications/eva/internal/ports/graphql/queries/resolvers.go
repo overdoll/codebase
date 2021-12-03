@@ -2,7 +2,6 @@ package queries
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
@@ -61,15 +60,6 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 }
 
 func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string) (*types.AuthenticationToken, error) {
-
-	if err := passport.
-		MutatePassport(ctx,
-			func(p *passport.Passport) error {
-				p.AuthenticateAccount("test-id")
-				return nil
-			}); err != nil {
-		return nil, err
-	}
 
 	tokenId := ""
 

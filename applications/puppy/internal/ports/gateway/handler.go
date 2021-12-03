@@ -99,7 +99,6 @@ func (g *GraphQLHTTPRequestHandler) handleWebsocket(connInitReqCtx context.Conte
 func (g *GraphQLHTTPRequestHandler) handleHTTP(w http.ResponseWriter, r *http.Request) {
 
 	ctx, err := g.app.HandlePassportAndReturnModifiedContext(w, r)
-
 	if err != nil {
 		g.logger.Error("passport.Issue", abstractlogger.Error(err))
 		w.WriteHeader(http.StatusInternalServerError)

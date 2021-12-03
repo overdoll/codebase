@@ -3,6 +3,7 @@ package gateway
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/jensneuse/graphql-go-tools/pkg/engine/plan"
 	"io"
 )
@@ -53,6 +54,7 @@ func (p *Planner) ConfigureSubscription() plan.SubscriptionConfiguration {
 type Source struct{}
 
 func (_ Source) Load(ctx context.Context, input []byte, w io.Writer) (err error) {
+	fmt.Println(input)
 	_, err = w.Write(input)
 	return
 }

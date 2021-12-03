@@ -35,6 +35,27 @@ type Account implements Node {
   """
   language: Language!
 
+  """
+  Sessions linked to this account
+  
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection!
+
   """Maximum amount of usernames that this account can create"""
   usernamesLimit: Int!
 
@@ -78,27 +99,6 @@ type Account implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountEmailConnection!
-
-  """
-  Sessions linked to this account
-  
-  Only queryable if the currently logged-in account belongs to the requested account
-  """
-  sessions(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountSessionConnection!
 
   """
   Multi factor account settings
@@ -354,11 +354,17 @@ type AccountSession implements Node {
   """The originating user agent device"""
   device: String!
 
+  """The original IP"""
+  ip: String!
+
   """Where the session was originally created"""
   location: Location!
 
   """When the session was created"""
-  created: String!
+  created: Time!
+
+  """When the session was last seen (last API call)"""
+  lastSeen: Time!
 
   """
   If the session belongs to the currently authenticated account. This means that
@@ -984,9 +990,6 @@ type Language {
 
 """Represents a physical location."""
 type Location {
-  """IP of the location"""
-  ip: String!
-
   """City"""
   city: String!
 
@@ -1050,6 +1053,9 @@ type Mutation {
   """
   updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
 
+  """Revoke a session for this account"""
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
+
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
@@ -1067,9 +1073,6 @@ type Mutation {
   Will retain the old username
   """
   updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
-
-  """Revoke a session for this account"""
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
   Update the account email status to primary
@@ -1248,7 +1251,7 @@ type Mutation {
 
 """
 An object with an ID.
-	  	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
 interface Node {
   id: ID!
@@ -1828,6 +1831,11 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostReportReasonConnection!
+
+  """
+  Represents a Relay Node [Relay Global Object Identification
+  Specification](https://relay.dev/graphql/objectidentification.htm)
+  """
   node(id: ID!): Node
 }
 

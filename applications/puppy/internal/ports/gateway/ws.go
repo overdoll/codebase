@@ -51,8 +51,7 @@ func (w *WebsocketSubscriptionClient) ReadFromClient() (message *subscription.Me
 		return nil, err
 	}
 
-	err = json.Unmarshal(data, &message)
-	if err != nil {
+	if err = json.Unmarshal(data, &message); err != nil {
 		w.logger.Error("http.WebsocketSubscriptionClient.ReadFromClient()",
 			abstractlogger.Error(err),
 			abstractlogger.ByteString("data", data),
@@ -81,8 +80,7 @@ func (w *WebsocketSubscriptionClient) WriteToClient(message subscription.Message
 		return err
 	}
 
-	err = wsutil.WriteServerMessage(w.clientConn, ws.OpText, messageBytes)
-	if err != nil {
+	if err = wsutil.WriteServerMessage(w.clientConn, ws.OpText, messageBytes); err != nil {
 		w.logger.Error("http.WebsocketSubscriptionClient.WriteToClient()",
 			abstractlogger.Error(err),
 			abstractlogger.ByteString("messageBytes", messageBytes),

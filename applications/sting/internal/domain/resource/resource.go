@@ -250,7 +250,7 @@ func (r *Resource) FullUrls() []*Url {
 			extension = formats[0]
 		}
 
-		domain := os.Getenv("APP_URL") + "/api/uploads/"
+		domain := os.Getenv("APP_URL") + "/api/upload/"
 
 		if r.processed {
 			domain = os.Getenv("STATIC_URL")

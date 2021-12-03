@@ -219,6 +219,10 @@ func (h *transport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	res, err := h.base.RoundTrip(req)
 
+	if err != nil {
+		return nil, err
+	}
+
 	responsePassport, err := passport.FromResponse(res)
 
 	if err != nil {

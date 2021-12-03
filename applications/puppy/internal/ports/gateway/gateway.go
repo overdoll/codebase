@@ -75,8 +75,36 @@ func (g *Gateway) Ready() {
 
 func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Configuration) {
 
+	federationSDL := `
+		scalar _Any
+		scalar _FieldSet
+		
+		# a union of all types that use the @key directive
+		union _Entity
+		
+		type _Service {
+		  sdl: String
+		}
+		
+		extend type Query {
+		  _entities(representations: [_Any!]!): [_Entity]!
+		  _service: _Service!
+		}
+		
+		directive @external on FIELD_DEFINITION
+		directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+		directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+		directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+		
+		# this is an optional directive discussed below
+		directive @extends on OBJECT | INTERFACE
+	`
+
 	gatewaySDL := `
 		type Query {
+		"""
+		Represents a Relay Node [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+	  	"""
 			node(id: ID!): Node
 		}
 
@@ -95,7 +123,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 		// grab all new schemas, and add relay Node support to each of them
 		schema, err := gqlparser.LoadSchema(&ast.Source{
 			Name:    "node",
-			Input:   config.UpstreamSchema,
+			Input:   federationSDL + config.Federation.ServiceSDL,
 			BuiltIn: true,
 		})
 
