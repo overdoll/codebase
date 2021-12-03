@@ -8,6 +8,7 @@ import { EVENTS, INITIAL_STATE, STEPS } from '../../../../../constants/constants
 import Button from '@//:modules/form/Button'
 import { Stack, Flex, Heading, Text, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,
@@ -20,25 +21,29 @@ export default function Submit ({ uppy, state, dispatch }: Props): Node {
 
   if (state.isInReview) {
     return (
-      <Flex justify='center' direction='column' align='center'>
-        <Heading textAlign='center' color='gray.00' fontSize='xl'>
-          {t('posts.flow.steps.submit.in_review.title')}
-        </Heading>
-        <Text textAlign='center' color='gray.100' fontSize='md'>
-          {t('posts.flow.steps.submit.in_review.description')}
-        </Text>
-      </Flex>
+      <LargeBackgroundBox>
+        <Flex h={400} justify='center' direction='column' align='center'>
+          <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
+            {t('posts.flow.steps.submit.in_review.title')}
+          </Heading>
+          <Text textAlign='center' color='gray.100' fontSize='md'>
+            {t('posts.flow.steps.submit.in_review.description')}
+          </Text>
+        </Flex>
+      </LargeBackgroundBox>
     )
   }
 
   return (
-    <Flex justify='center' direction='column' align='center'>
-      <Heading textAlign='center' color='gray.00' fontSize='xl'>
-        {t('posts.flow.steps.submit.not_in_review.title')}
-      </Heading>
-      <Text textAlign='center' color='gray.100' fontSize='md'>
-        {t('posts.flow.steps.submit.not_in_review.description')}
-      </Text>
-    </Flex>
+    <LargeBackgroundBox>
+      <Flex h={400} justify='center' direction='column' align='center'>
+        <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
+          {t('posts.flow.steps.submit.not_in_review.title')}
+        </Heading>
+        <Text textAlign='center' color='gray.100' fontSize='md'>
+          {t('posts.flow.steps.submit.not_in_review.description')}
+        </Text>
+      </Flex>
+    </LargeBackgroundBox>
   )
 }

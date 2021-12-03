@@ -26,7 +26,8 @@
       },
       "drafts": {
         "title": "Drafts",
-        "load": "Load More"
+        "load": "Load More",
+        "delete": "Delete"
       },
       "steps": {
         "footer": {

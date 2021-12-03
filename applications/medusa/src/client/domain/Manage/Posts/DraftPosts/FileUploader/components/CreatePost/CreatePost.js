@@ -61,7 +61,7 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
       <Stack spacing={4}>
         <CreatePostFlow uppy={uppy} state={state} dispatch={dispatch} />
         <Box>
-          <Heading color='gray.100' fontSize='xl'>
+          <Heading color='gray.00' fontSize='xl'>
             {t('posts.flow.create.uploader.rules.heading')}
           </Heading>
           <Box ml={4}>
@@ -71,10 +71,10 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
           </Box>
         </Box>
         <Box>
-          <Text fontSize='md' color='gray.200'>
+          <Text fontSize='md' color='gray.100'>
             {t('posts.flow.create.uploader.rules.hint')}
           </Text>
-          <CommunityGuidelines colorScheme='gray' size='md' />
+          <CommunityGuidelines size='md' />
         </Box>
       </Stack>
     )
@@ -83,14 +83,16 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   // If the post was already submitted
   if (postData?.state !== 'DRAFT' && state.step !== STEPS.SUBMIT) {
     return (
-      <Flex direction='column' align='center'>
-        <Heading mb={2} textAlign='center' fontSize='2xl'>
-          {t('posts.flow.create.not_draft.title')}
-        </Heading>
-        <Button onClick={onCleanup} size='md'>
-          {t('posts.flow.create.not_draft.button')}
-        </Button>
-      </Flex>
+      <LargeBackgroundBox>
+        <Flex h={400} direction='column' justify='center' align='center'>
+          <Heading mb={8} textAlign='center' color='gray.00' fontSize='2xl'>
+            {t('posts.flow.create.not_draft.title')}
+          </Heading>
+          <Button variant='solid' colorScheme='primary' onClick={onCleanup} size='lg'>
+            {t('posts.flow.create.not_draft.button')}
+          </Button>
+        </Flex>
+      </LargeBackgroundBox>
     )
   }
 

@@ -46,7 +46,7 @@ export default function OpenDraftPosts ({ query }: Props): Node {
   return (
     <GridWrap spacing={0}>
       {data.posts.edges.map((item, index) =>
-        <LargeGridItem key={index} h={200}>
+        <LargeGridItem key={index} h={230}>
           <DraftPostPreview query={item.node} />
         </LargeGridItem>
       )}
@@ -55,7 +55,7 @@ export default function OpenDraftPosts ({ query }: Props): Node {
           <ClickableBox
             isLoading={isLoadingNext}
             onClick={() => loadNext(3)}
-            h={200}
+            h={230}
           >
             <Text textAlign='center' color='gray.00'>
               {t('posts.flow.drafts.load')}
