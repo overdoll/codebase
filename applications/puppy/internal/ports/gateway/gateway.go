@@ -101,13 +101,6 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 	`
 
 	gatewaySDL := `
-		type Query {
-		"""
-		Represents a Relay Node [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
-	  	"""
-			node(id: ID!): Node
-		}
-
 		"""
 		An object with an ID.
 	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
@@ -115,6 +108,13 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 	  	interface Node {
 			id: ID!
 	  	}
+
+		extend type Query {
+		"""
+		Represents a Relay Node [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+	  	"""
+			node(id: ID!): Node
+		}
 	`
 
 	// along with our data sources, we need to add another "service" which is the gateway that will accept
@@ -136,6 +136,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 			for _, q := range schema.Query.Fields {
 				if q.Name == "node" {
 					g.logger.Error(`service should not implement "node" Query type`, log.String("service", config.Federation.ServiceSDL))
+					return
 				}
 			}
 		}
@@ -144,7 +145,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 			for _, i := range t.Interfaces {
 				if i == "Node" {
 					gatewaySDL += `
-				  		extend type ` + t.Name + ` implements Node @key(fields: "id") {
+				  		extend type ` + t.Name + ` @key(fields: "id") {
 				  			id: ID! @external
 						}
 					`
@@ -153,6 +154,7 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 		}
 	}
 
+	// set data source config - will delete it later with our new modifications
 	newDataSourcesConfig = append(newDataSourcesConfig, graphqlDataSource.Configuration{
 		Fetch:        graphqlDataSource.FetchConfiguration{},
 		Subscription: graphqlDataSource.SubscriptionConfiguration{},
@@ -165,13 +167,9 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 
 	ctx := context.Background()
 
-	engineConfigFactory := graphql.NewFederationEngineConfigFactory(newDataSourcesConfig, graphqlDataSource.NewBatchFactory(), graphql.WithFederationHttpClient(g.httpClient))
+	batchFactory := graphqlDataSource.NewBatchFactory()
 
-	schema, err := engineConfigFactory.MergedSchema()
-	if err != nil {
-		g.logger.Error("get schema:", log.Error(err))
-		return
-	}
+	engineConfigFactory := graphql.NewFederationEngineConfigFactory(newDataSourcesConfig, batchFactory, graphql.WithFederationHttpClient(g.httpClient))
 
 	datasourceConfig, err := engineConfigFactory.EngineV2Configuration()
 	if err != nil {
@@ -179,14 +177,40 @@ func (g *Gateway) UpdateDataSources(newDataSourcesConfig []graphqlDataSource.Con
 		return
 	}
 
-	datasourceConfig.EnableDataLoader(true)
+	schema, err := engineConfigFactory.MergedSchema()
 
-	datasourceConfig.AddDataSource(plan.DataSourceConfiguration{
-		RootNodes: []plan.TypeField{
-			{TypeName: "Query", FieldNames: []string{"node"}},
-		},
-		Factory: &Factory{},
-	})
+	if err != nil {
+		g.logger.Error("new schema error: %v", log.Error(err))
+		return
+	}
+
+	var datasources []plan.DataSourceConfiguration
+
+	for _, datasource := range datasourceConfig.DataSources() {
+		for _, name := range datasource.RootNodes {
+			if name.TypeName == "Query" {
+				for _, fieldName := range name.FieldNames {
+					if fieldName == "node" {
+						// found node - edit datasource to be custom for this
+						datasource.Factory = &graphqlDataSource.Factory{
+							HTTPClient: &http.Client{
+								// use a local transport that will not actually ever send an http call, but will actually just resolve local nodes
+								Transport: &gatewayLocalTransport{},
+							},
+							BatchFactory: batchFactory,
+						}
+						break
+					}
+				}
+			}
+		}
+		datasources = append(datasources, datasource)
+	}
+
+	// update data sources with new factory
+	datasourceConfig.SetDataSources(datasources)
+	datasourceConfig.EnableDataLoader(true)
+	// CUSTOM NODE DATA SOURCE END
 
 	engine, err := graphql.NewExecutionEngineV2(ctx, g.logger, datasourceConfig)
 	if err != nil {

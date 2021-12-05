@@ -5,8 +5,8 @@ go_library(
     srcs = [
         "datasource_poller.go",
         "gateway.go",
+        "gateway_local_transport.go",
         "handler.go",
-        "local_datasource.go",
         "ws.go",
     ],
     importpath = "overdoll/applications/puppy/internal/ports/gateway",

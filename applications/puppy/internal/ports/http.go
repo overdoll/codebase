@@ -20,7 +20,6 @@ func NewHttpServer(ctx context.Context, p app.Application) http.Handler {
 	rtr := router.NewRawGinRouter()
 
 	httpClient := p.GetHttpClient()
-
 	graphqlEndpoint := "/api/graphql"
 
 	datasourceWatcher := gateway.NewDatasourcePoller(httpClient, gateway.DatasourcePollerConfig{
