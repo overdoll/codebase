@@ -1,5 +1,3 @@
-directive @goField(forceResolver: Boolean) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
-
 type Account implements Node {
   """ID representing the account"""
   id: ID!
@@ -1251,7 +1249,7 @@ type Mutation {
 
 """
 An object with an ID.
-	Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
 interface Node {
   id: ID!
@@ -1831,11 +1829,6 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostReportReasonConnection!
-
-  """
-  Represents a Relay Node [Relay Global Object Identification
-  Specification](https://relay.dev/graphql/objectidentification.htm)
-  """
   node(id: ID!): Node
 }
 
