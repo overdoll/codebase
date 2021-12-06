@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d28c4ee77a5e3c5a3014f48a2b95093c
+ * @relayHash 586a5bca26e9743a8ebf48af2c2ad423
  */
 
 /* eslint-disable */
@@ -9,8 +9,8 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type OpenDraftPostsFragment$ref: FragmentReference;
-declare export opaque type OpenDraftPostsFragment$fragmentType: OpenDraftPostsFragment$ref;
+declare export opaque type MyPostsFragment$ref: FragmentReference;
+declare export opaque type MyPostsFragment$fragmentType: MyPostsFragment$ref;
 export type OpenDraftPostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
@@ -18,7 +18,7 @@ export type OpenDraftPostsPaginationQueryVariables = {|
 |};
 export type OpenDraftPostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: OpenDraftPostsFragment$ref
+    +$fragmentRefs: MyPostsFragment$ref
   |}
 |};
 export type OpenDraftPostsPaginationQuery = {|
@@ -35,29 +35,16 @@ query OpenDraftPostsPaginationQuery(
 ) {
   node(id: $id) {
     __typename
-    ...OpenDraftPostsFragment_2HEEH6
+    ...MyPostsFragment_2HEEH6
     id
   }
 }
 
-fragment DraftPostPreviewFragment on Post {
-  id
-  reference
-  ...useCheckRequirementsFragment
-  content {
-    type
-    urls {
-      url
-      mimeType
-    }
-  }
-}
-
-fragment OpenDraftPostsFragment_2HEEH6 on Account {
+fragment MyPostsFragment_2HEEH6 on Account {
   posts(first: $first, after: $after) {
     edges {
       node {
-        ...DraftPostPreviewFragment
+        ...PostStatePreviewFragment
         id
         __typename
       }
@@ -69,6 +56,19 @@ fragment OpenDraftPostsFragment_2HEEH6 on Account {
     }
   }
   id
+}
+
+fragment PostStatePreviewFragment on Post {
+  id
+  reference
+  ...useCheckRequirementsFragment
+  content {
+    type
+    urls {
+      url
+      mimeType
+    }
+  }
 }
 
 fragment useCheckRequirementsFragment on Post {
@@ -167,7 +167,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "OpenDraftPostsFragment"
+            "name": "MyPostsFragment"
           }
         ],
         "storageKey": null
@@ -372,7 +372,7 @@ return {
     ]
   },
   "params": {
-    "id": "d28c4ee77a5e3c5a3014f48a2b95093c",
+    "id": "586a5bca26e9743a8ebf48af2c2ad423",
     "metadata": {},
     "name": "OpenDraftPostsPaginationQuery",
     "operationKind": "query",
@@ -381,5 +381,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '00fee834db021405a51ba403546b964a';
+(node: any).hash = '521c69852656e43cddbd0ddc1f6f015d';
 module.exports = node;

@@ -248,7 +248,7 @@ const routes: Array<Route> = [
             path: '/manage/posts',
             component: JSResource('ManagePostsRoot', () =>
               import(
-                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/Posts/Posts'
+                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/AddNewPost/AddNewPost'
               ),
             module.hot
             ),

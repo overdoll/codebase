@@ -1,6 +1,0 @@
-export { default as useUpdateContent } from './useUpdateContent/index'
-export { default as useUpdateAudience } from './useUpdateAudience/index'
-export { default as useUpdateBrand } from './useUpdateBrand/index'
-export { default as useUpdateCategory } from './useUpdateCategory/index'
-export { default as useUpdateCharacter } from './useUpdateCharacter/index'
-export { default as useSubmitPost } from './useSubmitPost/index'
