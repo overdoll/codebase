@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash f8f92ad46d5b8aebeba065ad06a145f5
  */
 
 /* eslint-disable */
@@ -161,12 +162,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f8f92ad46d5b8aebeba065ad06a145f5",
-    "id": null,
+    "id": "f8f92ad46d5b8aebeba065ad06a145f5",
     "metadata": {},
     "name": "TokenQuery",
     "operationKind": "query",
-    "text": "query TokenQuery(\n  $token: String\n) {\n  viewAuthenticationToken(token: $token) {\n    id\n    verified\n    sameSession\n    location {\n      city\n      subdivision\n      country\n    }\n    device\n    secure\n  }\n}\n"
+    "text": null
   }
 };
 })();

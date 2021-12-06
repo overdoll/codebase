@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash a1440aace9828c9d8a4b25dc64d80b80
  */
 
 /* eslint-disable */
@@ -126,12 +127,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a1440aace9828c9d8a4b25dc64d80b80",
-    "id": null,
+    "id": "a1440aace9828c9d8a4b25dc64d80b80",
     "metadata": {},
     "name": "DeleteEmailMutation",
     "operationKind": "mutation",
-    "text": "mutation DeleteEmailMutation(\n  $input: DeleteAccountEmailInput!\n) {\n  deleteAccountEmail(input: $input) {\n    accountEmailId\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,7 +1,5 @@
 exports_files([
     "coverage.patch",
-    "0001-Fix-bugs-in-and-improve-performance-of-LocalTypeFiel.patch",
-    "0002-LocalTypeFieldExtractor-Handle-local-union-extension.patch",
 ])
 
 package(default_visibility = ["//visibility:public"])

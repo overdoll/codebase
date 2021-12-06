@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash d7c65b4fa9fe3846a5044beb756865e3
  */
 
 /* eslint-disable */
@@ -81,12 +82,11 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "cacheID": "d7c65b4fa9fe3846a5044beb756865e3",
-    "id": null,
+    "id": "d7c65b4fa9fe3846a5044beb756865e3",
     "metadata": {},
     "name": "QueueSettingsQuery",
     "operationKind": "query",
-    "text": "query QueueSettingsQuery {\n  ...QueueSettingsFragment\n}\n\nfragment QueueSettingsFragment on Query {\n  viewer {\n    __typename\n    id\n  }\n}\n"
+    "text": null
   }
 };
 // prettier-ignore

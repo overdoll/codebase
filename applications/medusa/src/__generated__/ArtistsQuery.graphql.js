@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash a26d21fe5c6b97dd25a40f206447ec07
  */
 
 /* eslint-disable */
@@ -131,12 +132,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "a26d21fe5c6b97dd25a40f206447ec07",
-    "id": null,
+    "id": "a26d21fe5c6b97dd25a40f206447ec07",
     "metadata": {},
     "name": "ArtistsQuery",
     "operationKind": "query",
-    "text": "query ArtistsQuery(\n  $username: String\n) {\n  accounts(username: $username) {\n    edges {\n      node {\n        id\n        avatar\n        username\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

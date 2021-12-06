@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 5c69dcac9633cb23bf8681e52c98026a
  */
 
 /* eslint-disable */
@@ -111,12 +112,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5c69dcac9633cb23bf8681e52c98026a",
-    "id": null,
+    "id": "5c69dcac9633cb23bf8681e52c98026a",
     "metadata": {},
     "name": "MultiFactorTotpHeaderQuery",
     "operationKind": "query",
-    "text": "query MultiFactorTotpHeaderQuery {\n  viewer {\n    multiFactorSettings {\n      multiFactorTotpConfigured\n      recoveryCodesGenerated\n    }\n    id\n  }\n}\n"
+    "text": null
   }
 };
 })();

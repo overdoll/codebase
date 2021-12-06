@@ -15,6 +15,7 @@ import coverage from './app/coverage'
 import csrfConfig from './config/csrf'
 import flash from './app/flash'
 import helmetConfig from './config/helmet'
+import graphql from './app/graphql'
 import cookieConfig from './config/cookie'
 import error from './app/error'
 import render from './app/render'
@@ -62,8 +63,11 @@ index.use(coverage)
 // Version endpoint - used by the client to always stay up-to-date
 index.use(version)
 
+// GraphQL Server
+const server = graphql(index)
+
 // Our entrypoint
-index.use(render)
+index.use(render(server))
 
 // If an error occurs in the entrypoint, this will catch it
 // usually this is because a server error occurred (a service is down, etc..)

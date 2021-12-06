@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 7b6af25bb5f3307fb55741ece39a6839
  */
 
 /* eslint-disable */
@@ -119,12 +120,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "7b6af25bb5f3307fb55741ece39a6839",
-    "id": null,
+    "id": "7b6af25bb5f3307fb55741ece39a6839",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
-    "text": "mutation JoinMutation(\n  $input: GrantAuthenticationTokenInput!\n) {\n  grantAuthenticationToken(input: $input) {\n    authenticationToken {\n      id\n      email\n      sameSession\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

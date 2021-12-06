@@ -81,25 +81,6 @@ applications = {
             sync("applications/parley/database", "/app/applications/parley/internal/local-image.binary.runfiles/overdoll/applications/parley/database"),
         ],
     },
-    "puppy": {
-        "type": "go",
-        "directory": "puppy",
-        "image_reference": "puppy-image",
-        "image_target": "//applications/puppy/internal:local-image",
-        "binary_target": "//applications/puppy/internal:internal",
-        "binary_output": "applications/puppy/internal/internal_/internal",
-        "container_workdir": "/app/applications/puppy/internal/local-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/puppy/internal/local-image.binary_/local-image.binary",
-        "bazel_image": "bazel/applications/puppy/internal:local-image",
-        "dependencies": [
-            "applications/puppy/.env",
-            "applications/puppy/config.toml",
-        ],
-        "live_update": [
-            sync("applications/puppy/.env", "/app/applications/puppy/internal/local-image.binary.runfiles/overdoll/applications/puppy/.env"),
-            sync("applications/puppy/config.toml", "/app/applications/puppy/internal/local-image.binary.runfiles/overdoll/applications/puppy/config.toml"),
-        ],
-    },
 }
 
 k8s_yaml("./development/traefik/ingress.yaml")

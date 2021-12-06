@@ -9,12 +9,10 @@ import createCache from '@emotion/cache'
 import { createServerRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../../client/Bootstrap'
 import createMockHistory from './Domain/createMockHistory'
-
+import queryMapJson from '../../queries.json'
 import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
-import axios from 'axios'
 import express from 'express'
-import parseCookies from './Domain/parseCookies'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -24,64 +22,35 @@ const runtime = {
 }
 
 // Request handles a basic request and rendering all routes
-async function request (req, res, next) {
+async function request (apollo, req, res, next) {
   // Set up relay environment
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
-      // call on local network
+      // On the relay environment, we call apollo directly instead of doing an API call
+      // This saves a network request and we don't have to worry about the complexities of
+      // forwarding cookies
 
-      const headers = {
-        // add CSRF token since its added by client
-        'Content-Type': 'application/json',
-        'Csrf-Token': req.csrfToken()
+      // here, we grab our queries based on the ID passed by the request
+      if (!Object.prototype.hasOwnProperty.call(queryMapJson, params.id)) {
+        // technically this should never occur (unless someone doesn't commit correctly)
+        throw new Error('no query with id found')
       }
 
-      Object.entries(
-        req.headers || {}
-      ).forEach(([key, value]) => {
-        headers[key] = value
+      const result = await apollo.executeOperation({
+        operationName: params.name,
+        variables: variables,
+        query: queryMapJson[params.id]
+      }, {
+        req,
+        res
       })
 
-      const response = await axios.post(
-        'http://puppy:8000/api/graphql',
-        {
-          operationName: params.name,
-          query: params.text,
-          // queryId: params.id,
-          variables
-        },
-        {
-          // forward all headers coming from client
-          headers
-        }
-      )
-
-      // forward cookies if any set-cookie is sent over
-      const cookie = response.headers['set-cookie']
-
-      if (cookie) {
-        // parse set-cookie and add it to our cookies
-        const cookies = parseCookies(cookie.join(','))
-
-        cookies.forEach(({
-          cookieName,
-          cookieValue,
-          options
-        }) => {
-          res.cookie(cookieName, cookieValue, options)
-        })
+      // Throw an error, which will be caught by our server
+      if (Array.isArray(result.errors)) {
+        throw new Error(JSON.stringify(result.errors, null, 2))
       }
 
-      const json = response.data
-
-      // GraphQL returns exceptions (for example, a missing required variable) in the "errors"
-      // property of the response. If any exceptions occurred when processing the request,
-      // throw an error to indicate to the developer what went wrong.
-      if (Array.isArray(json.errors)) {
-        throw new Error(JSON.stringify(json.errors))
-      }
-
-      return json
+      return { data: JSON.parse(JSON.stringify(result.data)) }
     }),
     store: new Store(new RecordSource()),
     isServer: true
@@ -203,16 +172,16 @@ async function request (req, res, next) {
   })
 }
 
-const router = express.Router()
+export default function (apollo) {
+  const router = express.Router()
 
-// render function
-// all routes
-router.get('/*', async function render (req, res, next) {
-  try {
-    await request(req, res, next)
-  } catch (e) {
-    next(e)
-  }
-})
+  router.get('/*', async function (req, res, next) {
+    try {
+      await request(apollo, req, res)
+    } catch (e) {
+      next(e)
+    }
+  })
 
-export default router
+  return router
+}

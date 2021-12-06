@@ -1859,6 +1859,7 @@ extend type Mutation {
 }
 
 extend type Query {
+
   """
   Get the currently-authenticated account
   """

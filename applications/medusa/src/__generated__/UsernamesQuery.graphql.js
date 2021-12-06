@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 6fdd71db6b8be5a80b955e67dd5659b9
  */
 
 /* eslint-disable */
@@ -224,12 +225,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6fdd71db6b8be5a80b955e67dd5659b9",
-    "id": null,
+    "id": "6fdd71db6b8be5a80b955e67dd5659b9",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",
-    "text": "query UsernamesQuery(\n  $first: Int\n) {\n  viewer {\n    ...UsernamesSettingsFragment\n    id\n  }\n}\n\nfragment UsernamesSettingsFragment on Account {\n  username\n  usernames(first: $first) {\n    edges {\n      node {\n        username\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 633d6abdc12ec3db601c9c1bb6b1a230
  */
 
 /* eslint-disable */
@@ -111,12 +112,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "633d6abdc12ec3db601c9c1bb6b1a230",
-    "id": null,
+    "id": "633d6abdc12ec3db601c9c1bb6b1a230",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
-    "text": "mutation RegisterMutation(\n  $input: CreateAccountWithAuthenticationTokenInput!\n) {\n  createAccountWithAuthenticationToken(input: $input) {\n    validation\n    account {\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -15,6 +15,7 @@ go_library(
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
         "//libraries/cookies",
+        "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/translations",

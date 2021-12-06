@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 10311543ae1b66f83e9a27af064cd534
  */
 
 /* eslint-disable */
@@ -111,12 +112,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "10311543ae1b66f83e9a27af064cd534",
-    "id": null,
+    "id": "10311543ae1b66f83e9a27af064cd534",
     "metadata": {},
     "name": "TotpAuthenticationMutation",
     "operationKind": "mutation",
-    "text": "mutation TotpAuthenticationMutation(\n  $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!\n) {\n  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {\n    validation\n    account {\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

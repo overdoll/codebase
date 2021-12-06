@@ -26,7 +26,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/jensneuse/abstractlogger v0.0.4
-	github.com/jensneuse/graphql-go-tools v1.33.2
+	github.com/jensneuse/graphql-go-tools v1.35.0
 	github.com/jensneuse/graphql-go-tools/examples/federation v0.0.0-20211127155458-ea3fcacf3999
 	github.com/joho/godotenv v1.3.0
 	github.com/nwaples/rardecode v1.1.1 // indirect

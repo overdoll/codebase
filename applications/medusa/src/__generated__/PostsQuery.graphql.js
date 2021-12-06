@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 0f9bcbf8b65cdd03b9a1e1f6931b274a
  */
 
 /* eslint-disable */
@@ -482,12 +483,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0f9bcbf8b65cdd03b9a1e1f6931b274a",
-    "id": null,
+    "id": "0f9bcbf8b65cdd03b9a1e1f6931b274a",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",
-    "text": "query PostsQuery {\n  viewer {\n    ...PostsFragment\n    id\n  }\n  ...RejectionReasonsFragment\n}\n\nfragment ModeratePostFragment on Post {\n  id\n}\n\nfragment NoPostsPlaceholderFragment on Account {\n  moderator {\n    __typename\n    id\n  }\n}\n\nfragment PostArtistFragment on Post {\n  brand {\n    name\n    id\n  }\n}\n\nfragment PostCategoriesFragment on Post {\n  categories {\n    title\n    id\n  }\n}\n\nfragment PostCharactersFragment on Post {\n  characters {\n    name\n    series {\n      title\n      id\n    }\n    id\n  }\n}\n\nfragment PostContentFragment on Post {\n  content {\n    urls {\n      url\n    }\n  }\n}\n\nfragment PostHeaderFragment on Post {\n  contributor {\n    username\n    avatar\n    id\n  }\n  reassignmentAt\n}\n\nfragment PostPreviewFragment on Post {\n  ...PostContentFragment\n  ...PostArtistFragment\n  ...PostCharactersFragment\n  ...PostCategoriesFragment\n}\n\nfragment PostsFragment on Account {\n  ...NoPostsPlaceholderFragment\n  moderatorPostsQueue(first: 1) {\n    edges {\n      node {\n        id\n        ...PostHeaderFragment\n        ...PostPreviewFragment\n        ...ModeratePostFragment\n        postedAt\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment RejectionReasonsFragment on Query {\n  postRejectionReasons {\n    edges {\n      node {\n        id\n        reason\n        infraction\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

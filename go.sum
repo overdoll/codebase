@@ -386,6 +386,8 @@ github.com/jensneuse/graphql-go-tools v1.33.0 h1:fg6iuAy3Zsy80FBZfw6IjGfo24CpUht
 github.com/jensneuse/graphql-go-tools v1.33.0/go.mod h1:VNCPOa8hM9Oq5GMw/bdpTHVLKduaUMm8KJCI5eiLQGg=
 github.com/jensneuse/graphql-go-tools v1.33.2 h1:KeglTZnVbRzPUF/KqNC3JRf2OV70g6GQB1jAg/Rc5s4=
 github.com/jensneuse/graphql-go-tools v1.33.2/go.mod h1:VNCPOa8hM9Oq5GMw/bdpTHVLKduaUMm8KJCI5eiLQGg=
+github.com/jensneuse/graphql-go-tools v1.35.0 h1:262U594Tu2tAED5Ttu7HqWQGpnQs+QpKsdCjL8TjvDk=
+github.com/jensneuse/graphql-go-tools v1.35.0/go.mod h1:VNCPOa8hM9Oq5GMw/bdpTHVLKduaUMm8KJCI5eiLQGg=
 github.com/jensneuse/graphql-go-tools/examples/chat v0.0.0-20210714083836-7bf4457dc2b2 h1:9Fz+13ph1LjrZCip1ymflwPQT6Mcyjfw1rH1wC1gvV4=
 github.com/jensneuse/graphql-go-tools/examples/chat v0.0.0-20210714083836-7bf4457dc2b2/go.mod h1:KQO0HE/7k6+BPuPyg9wPx8MC/sjmZmQnq3wCcv4DCEY=
 github.com/jensneuse/graphql-go-tools/examples/federation v0.0.0-20210714083836-7bf4457dc2b2/go.mod h1:bby8E+a/+kl+6Ug/3MSvqx1QcN1CX2goY3KW1baJfGw=

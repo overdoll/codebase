@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash d2ac99964b4f17311f5408705dd8c403
  */
 
 /* eslint-disable */
@@ -177,12 +178,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d2ac99964b4f17311f5408705dd8c403",
-    "id": null,
+    "id": "d2ac99964b4f17311f5408705dd8c403",
     "metadata": {},
     "name": "AddEmailFormMutation",
     "operationKind": "mutation",
-    "text": "mutation AddEmailFormMutation(\n  $input: AddAccountEmailInput!\n) {\n  addAccountEmail(input: $input) {\n    validation\n    accountEmail {\n      id\n      email\n      status\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

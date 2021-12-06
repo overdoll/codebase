@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash c3538ff1ed0ac6870c3e7e3eb05887c2
  */
 
 /* eslint-disable */
@@ -125,12 +126,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c3538ff1ed0ac6870c3e7e3eb05887c2",
-    "id": null,
+    "id": "c3538ff1ed0ac6870c3e7e3eb05887c2",
     "metadata": {},
     "name": "LobbyMutation",
     "operationKind": "mutation",
-    "text": "mutation LobbyMutation {\n  reissueAuthenticationToken {\n    validation\n    authenticationToken {\n      email\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

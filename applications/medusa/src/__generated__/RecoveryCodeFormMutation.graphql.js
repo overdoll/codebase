@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash a7a70b7ed0206bd13f1791246c052a5c
  */
 
 /* eslint-disable */
@@ -111,12 +112,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "a7a70b7ed0206bd13f1791246c052a5c",
-    "id": null,
+    "id": "a7a70b7ed0206bd13f1791246c052a5c",
     "metadata": {},
     "name": "RecoveryCodeFormMutation",
     "operationKind": "mutation",
-    "text": "mutation RecoveryCodeFormMutation(\n  $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!\n) {\n  grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {\n    validation\n    account {\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

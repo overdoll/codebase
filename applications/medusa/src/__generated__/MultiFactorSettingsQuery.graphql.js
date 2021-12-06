@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 5b5160d34dcb5834074b91976301cf80
  */
 
 /* eslint-disable */
@@ -162,12 +163,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5b5160d34dcb5834074b91976301cf80",
-    "id": null,
+    "id": "5b5160d34dcb5834074b91976301cf80",
     "metadata": {},
     "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
-    "text": "query MultiFactorSettingsQuery {\n  viewer {\n    multiFactorSettings {\n      multiFactorTotpConfigured\n      ...DisableMultiFactorFragment\n      ...MultiFactorTotpSettingsFragment\n      ...RecoveryCodesSettingsFragment\n    }\n    id\n  }\n}\n\nfragment DisableMultiFactorFragment on AccountMultiFactorSettings {\n  canDisableMultiFactor\n}\n\nfragment MultiFactorTotpSettingsFragment on AccountMultiFactorSettings {\n  multiFactorTotpConfigured\n  recoveryCodesGenerated\n}\n\nfragment RecoveryCodesSettingsFragment on AccountMultiFactorSettings {\n  recoveryCodesGenerated\n}\n"
+    "text": null
   }
 };
 })();

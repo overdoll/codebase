@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 2c93181c7c3a593188b2d52c726483d5
  */
 
 /* eslint-disable */
@@ -110,12 +111,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2c93181c7c3a593188b2d52c726483d5",
-    "id": null,
+    "id": "2c93181c7c3a593188b2d52c726483d5",
     "metadata": {},
     "name": "AuditInspectMutation",
     "operationKind": "mutation",
-    "text": "mutation AuditInspectMutation(\n  $input: RevertPostAuditLogInput!\n) {\n  revertPostAuditLog(input: $input) {\n    postAuditLog {\n      id\n      reverted\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

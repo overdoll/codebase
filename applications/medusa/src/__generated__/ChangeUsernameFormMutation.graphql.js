@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash 9a2b14d6b1fcc87a88391e8c8f9e7460
  */
 
 /* eslint-disable */
@@ -203,12 +204,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9a2b14d6b1fcc87a88391e8c8f9e7460",
-    "id": null,
+    "id": "9a2b14d6b1fcc87a88391e8c8f9e7460",
     "metadata": {},
     "name": "ChangeUsernameFormMutation",
     "operationKind": "mutation",
-    "text": "mutation ChangeUsernameFormMutation(\n  $input: UpdateAccountUsernameAndRetainPreviousInput!\n) {\n  updateAccountUsernameAndRetainPrevious(input: $input) {\n    validation\n    accountUsername {\n      id\n      username\n      account {\n        id\n        username\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

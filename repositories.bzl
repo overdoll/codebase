@@ -966,13 +966,10 @@ def go_repositories():
         name = "com_github_jensneuse_graphql_go_tools",
         build_file_proto_mode = "disable",
         importpath = "github.com/jensneuse/graphql-go-tools",
+        sum = "h1:262U594Tu2tAED5Ttu7HqWQGpnQs+QpKsdCjL8TjvDk=",
+        version = "v1.35.0",
         patch_args = ["-p1"],
-        patches = [
-            "//.patches:0001-Fix-bugs-in-and-improve-performance-of-LocalTypeFiel.patch",
-            "//.patches:0002-LocalTypeFieldExtractor-Handle-local-union-extension.patch",
-        ],
-        sum = "h1:KeglTZnVbRzPUF/KqNC3JRf2OV70g6GQB1jAg/Rc5s4=",
-        version = "v1.33.2",
+        patches = ["//.patches:0001-a.patch", "//.patches:0001-b.patch", "//.patches:0001-c.patch"],
     )
     go_repository(
         name = "com_github_jensneuse_graphql_go_tools_examples_chat",

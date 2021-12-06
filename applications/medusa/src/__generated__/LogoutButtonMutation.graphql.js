@@ -1,5 +1,6 @@
 /**
  * @flow
+ * @relayHash b275c8da21d7b64428977155a2b50124
  */
 
 /* eslint-disable */
@@ -66,12 +67,11 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "b275c8da21d7b64428977155a2b50124",
-    "id": null,
+    "id": "b275c8da21d7b64428977155a2b50124",
     "metadata": {},
     "name": "LogoutButtonMutation",
     "operationKind": "mutation",
-    "text": "mutation LogoutButtonMutation {\n  revokeAccountAccess {\n    revokedAccountId\n  }\n}\n"
+    "text": null
   }
 };
 })();
