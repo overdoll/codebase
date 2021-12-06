@@ -1,7 +1,0 @@
-schema: https://overdoll.test/api/graphql
-extensions:
-  codegen:
-    generates:
-      ./applications/medusa/schema/schema.graphql:
-        plugins:
-          - schema-ast

@@ -81,7 +81,7 @@
     "docs": "docsify serve docs",
     "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && wait-port --wait-for-dns parley:8000 && cd ./applications/medusa && razzle start",
     "relay": "cd ./applications/medusa && relay-compiler",
-    "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn graphql-codegen",
+    "graphql": "cd ./applications/medusa && NODE_TLS_REJECT_UNAUTHORIZED=0 node get-graphql-schema.js -r dotenv/config",
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build",
     "proxy:medusa": "telepresence intercept medusa --port 8081 -- yarn run service:medusa",
     "service:medusa": "cd ./applications/medusa && razzle start",
