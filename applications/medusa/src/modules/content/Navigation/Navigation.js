@@ -2,8 +2,8 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useMemo } from 'react'
-import { Button } from '@chakra-ui/react'
+import { useMemo, Fragment } from 'react'
+import { Button, Box, useBreakpointValue } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -13,7 +13,7 @@ import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { useRelayEnvironment } from 'react-relay'
 import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
 import getBasePath from './helpers/getBasePath'
-import LockedAccountBanner from './components/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
 
 import {
   NavigationButton,
@@ -24,12 +24,12 @@ import {
   NavigationRightItems,
   PageContents,
   SimplifiedNavigation
-} from '@//:modules/content/Navigation/components'
+} from '@//:modules/content/Navigation/content'
 import {
   Sidebar,
   SidebarButton,
   SidebarGrouping
-} from '@//:modules/content/Navigation/components/NavigationContents/Sidebar'
+} from '@//:modules/content/Navigation/content/NavigationContents/Sidebar'
 
 import {
   AvatarMenu,
@@ -39,7 +39,7 @@ import {
   MenuItemButton,
   NavigationMenu,
   ProfileButton
-} from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems'
+} from '@//:modules/content/Navigation/content/NavigationContainer/NavigationRightItems'
 
 type Props = {
   children: Node,
@@ -67,6 +67,42 @@ export default function Navigation (props: Props): Node {
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
   }), [ability])
+
+  const display = useBreakpointValue({ base: 'mobile', md: 'desktop' })
+
+  const NavigationRightMenuCalc = () => {
+    if (ability.can('manage', 'account')) {
+      return (
+        <NavigationRightItems>
+          {!ability.can('read', 'locked') &&
+            <AvatarMenu viewer={data} />}
+          <NavigationMenu>
+            {!ability.can('read', 'locked') &&
+              <ProfileButton viewer={data} />}
+            {navigationMenu.map((item, index) => {
+              return (
+                <MenuItemButton
+                  key={index}
+                  path={item.path} label={item.navigation.title}
+                  icon={item.navigation.icon}
+                />
+              )
+            })}
+            <LogoutButton />
+          </NavigationMenu>
+        </NavigationRightItems>
+      )
+    }
+
+    return (
+      <NavigationRightItems>
+        <LoginMenu />
+        <NavigationMenu>
+          <LoggedOutPlaceholder />
+        </NavigationMenu>
+      </NavigationRightItems>
+    )
+  }
 
   // Show a simplified navigation bar if on a filtered route
   if (navigationFiltered.includes(getBasePath(location.pathname))) {
@@ -99,38 +135,9 @@ export default function Navigation (props: Props): Node {
               />
             )
           })}
+          {display === 'mobile' && <NavigationRightMenuCalc />}
         </NavigationCenterItems>
-        {
-          ability.can('manage', 'account')
-            ? (
-              <NavigationRightItems>
-                {!ability.can('read', 'locked') &&
-                  <AvatarMenu viewer={data} />}
-                <NavigationMenu>
-                  {!ability.can('read', 'locked') &&
-                    <ProfileButton viewer={data} />}
-                  {navigationMenu.map((item, index) => {
-                    return (
-                      <MenuItemButton
-                        key={index}
-                        path={item.path} label={item.navigation.title}
-                        icon={item.navigation.icon}
-                      />
-                    )
-                  })}
-                  <LogoutButton />
-                </NavigationMenu>
-              </NavigationRightItems>
-              )
-            : (
-              <NavigationRightItems>
-                <LoginMenu />
-                <NavigationMenu>
-                  <LoggedOutPlaceholder />
-                </NavigationMenu>
-              </NavigationRightItems>
-              )
-        }
+        {display === 'desktop' && <NavigationRightMenuCalc />}
       </NavigationContainer>
       {(ability.can('read', 'locked') && getBasePath(location.pathname) !== '/locked') && <LockedAccountBanner />}
       <NavigationContents>

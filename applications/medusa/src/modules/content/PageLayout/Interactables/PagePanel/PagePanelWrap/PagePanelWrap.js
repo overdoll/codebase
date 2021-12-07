@@ -18,7 +18,7 @@ type Props = {
 export default function PagePanelWrap ({ path, children, disabled }: Props): Node {
   return (
     <Link disabled={disabled} to={path}>
-      <ClickableBox>
+      <ClickableBox p={3}>
         <Flex justify='space-between'>
           <Flex justify='flex-start' align='flex-start' direction='column'>
             {children}

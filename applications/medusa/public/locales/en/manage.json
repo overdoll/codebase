@@ -1,6 +1,6 @@
 {
-  "posts": {
-    "title": "My Posts",
+  "create_post": {
+    "title": "Create a Post",
     "flow": {
       "create": {
         "title": "Create Post",
@@ -142,5 +142,8 @@
         }
       }
     }
+  },
+  "my_posts": {
+    "title": "My Posts"
   }
 }

@@ -32,15 +32,16 @@ import { useFragment } from 'react-relay'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { StringParam, useQueryParam } from 'use-query-params'
 import useCheckRequirements
-  from '../../../AddNewPost/FileUploader/components/CreatePost/UpdatePostFlow/FlowHeader/useCheckRequirements'
+  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
 import progressScore
-  from '../../../AddNewPost/FileUploader/components/CreatePost/UpdatePostFlow/FlowHeader/progressScore'
+  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
 import MakePrimary from '../../../../Settings/Profile/RootEmails/Emails/EmailCard/MakePrimary/MakePrimary'
 import Delete from '../../../../Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete'
 import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 import InterfaceDeleteBin1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
+import { useHistory } from '@//:modules/routing'
 
 type Props = {
   query: PostStatePreviewFragment$key,
@@ -66,6 +67,8 @@ export default function PostStatePreview ({ query }: Props): Node {
 
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
+  const history = useHistory()
+
   const [t] = useTranslation('manage')
 
   const limitedContent = data.content.slice(0, 3)
@@ -75,7 +78,7 @@ export default function PostStatePreview ({ query }: Props): Node {
   const score = progressScore([content, audience, brand, categories, characters])
 
   const selectPost = () => {
-    setPostReference(data.reference)
+    history.push(`/manage/create_post?id=${data.reference}`)
   }
 
   const DisplayContentGrid = () => {
@@ -148,7 +151,7 @@ export default function PostStatePreview ({ query }: Props): Node {
                   justify='center'
                 >
                   <Icon pointerEvents='none' icon={InterfaceDeleteBin1} fill='orange.300' w={4} h={4} mr={2} />
-                  <Text pointerEvents='none' color='orange.300'>{t('posts.flow.drafts.delete')}</Text>
+                  <Text pointerEvents='none' color='orange.300'>{t('create_post.flow.drafts.delete')}</Text>
                 </MenuItem>
               </MenuList>
             </Menu>

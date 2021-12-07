@@ -3,32 +3,38 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import { graphql, useQueryLoader } from 'react-relay/hooks'
-import type { DraftPostsQuery as DraftPostsQueryType } from '@//:artifacts/DraftPostsQuery.graphql'
-import PostsQuery from '@//:artifacts/PostsQuery.graphql'
+import type { MyPostsQuery as MyPostsQueryType } from '@//:artifacts/MyPostsQuery.graphql'
+import MyPostsQuery from '@//:artifacts/MyPostsQuery.graphql'
 import MyPosts from './MyPosts/MyPosts'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   prepared: {
-    myPostsQuery: DraftPostsQueryType
+    myPostsQuery: MyPostsQueryType
   }
 }
 
 export default function RootMyPosts (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader(
-    PostsQuery,
+    MyPostsQuery,
     props.prepared.myPostsQuery
   )
 
+  const [t] = useTranslation('manage')
+
   return (
     <>
-      <Helmet title='posts' />
+      <Helmet title='my posts' />
       <PageWrapper>
+        <PageSectionWrap>
+          <PageSectionTitle>{t('my_posts.title')}</PageSectionTitle>
+        </PageSectionWrap>
         <Suspense fallback={<SkeletonStack />}>
           <ErrorBoundary
             fallback={({ error, reset }) => (

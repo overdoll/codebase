@@ -27,7 +27,8 @@
     },
     "manage": {
       "title": "Post Management",
-      "posts": "My Posts",
+      "my_posts": "My Posts",
+      "create_post": "Create a Post",
       "brands": "Manage Brands"
     }
   },

@@ -52,7 +52,7 @@ export default function MyPosts ({ query }: Props): Node {
   const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<MyPostsFragment$key,
     _>(
       MyPostsFragmentGQL,
-      queryData
+      queryData.viewer
     )
 
   const [t] = useTranslation('manage')
@@ -72,7 +72,7 @@ export default function MyPosts ({ query }: Props): Node {
             h={230}
           >
             <Text textAlign='center' color='gray.00'>
-              {t('posts.flow.drafts.load')}
+              {t('create_post.flow.drafts.load')}
             </Text>
           </ClickableBox>
         </LargeGridItem>}

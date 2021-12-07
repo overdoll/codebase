@@ -226,8 +226,7 @@ const routes: Array<Route> = [
         component: JSResource('ManageRoot', () =>
           import(
             /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
-          ),
-        module.hot
+          )
         ),
         middleware: [
           ({
@@ -245,19 +244,18 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/manage/posts',
-            component: JSResource('ManagePostsRoot', () =>
+            path: '/manage/my_posts',
+            component: JSResource('ManageMyPostsRoot', () =>
               import(
-                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/AddNewPost/AddNewPost'
-              ),
-            module.hot
+                /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
+              )
             ),
             prepare: params => {
-              const DraftPostsQuery = require('@//:artifacts/DraftPostsQuery.graphql')
+              const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
 
               return {
-                draftPostsQuery: {
-                  query: DraftPostsQuery,
+                myPostsQuery: {
+                  query: MyPostsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -267,12 +265,19 @@ const routes: Array<Route> = [
             }
           },
           {
+            path: '/manage/create_post',
+            component: JSResource('CreatePostRoot', () =>
+              import(
+                /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+              )
+            )
+          },
+          {
             path: '/manage/brands',
             component: JSResource('ManageBrandsRoot', () =>
               import(
                 /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
-              ),
-            module.hot
+              )
             )
           }
         ]
@@ -468,8 +473,7 @@ const routes: Array<Route> = [
         component: JSResource('LockedRoot', () =>
           import(
             /* webpackChunkName: "LockedRoot" */ './domain/Locked/RootLocked'
-          ),
-        module.hot
+          )
         ),
         prepare: params => {
           const LockedQuery = require('@//:artifacts/LockedQuery.graphql')
@@ -502,8 +506,7 @@ const routes: Array<Route> = [
         component: JSResource('ProfileRoot', () =>
           import(
             /* webpackChunkName: "ProfileRoot" */ './domain/Profile/Profile'
-          ),
-        module.hot
+          )
         ),
         middleware: [
           ({ environment, history }) => {

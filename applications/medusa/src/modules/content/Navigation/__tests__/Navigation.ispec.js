@@ -2,24 +2,24 @@ import { createMockEnvironment } from 'relay-test-utils'
 import { render, screen } from '@testing-library/react'
 import withProviders from '@//:modules/testing/withProviders'
 
-import Sidebar from '../components/NavigationContents/Sidebar/Sidebar'
-import SidebarButton from '../components/NavigationContents/Sidebar/SidebarButton/SidebarButton'
-import SidebarGrouping from '../components/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
-import NavigationContents from '../components/NavigationContents/NavigationContents'
-import PageContents from '../components/NavigationContents/PageContents/PageContents'
-import NavigationContainer from '@//:modules/content/Navigation/components/NavigationContainer/NavigationContainer'
+import Sidebar from '../content/NavigationContents/Sidebar/Sidebar'
+import SidebarButton from '../content/NavigationContents/Sidebar/SidebarButton/SidebarButton'
+import SidebarGrouping from '../content/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
+import NavigationContents from '../content/NavigationContents/NavigationContents'
+import PageContents from '../content/NavigationContents/PageContents/PageContents'
+import NavigationContainer from '@//:modules/content/Navigation/content/NavigationContainer/NavigationContainer'
 import NavigationLeftBrand
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
 import NavigationCenterItems
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
 import NavigationButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
 import NavigationRightItems
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationRightItems'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationRightItems/NavigationRightItems'
 import MenuItemButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuItemButton/MenuItemButton'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationRightItems/NavigationMenu/MenuItemButton/MenuItemButton'
 import NavigationMenu
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
+  from '@//:modules/content/Navigation/content/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
 
 const routes = []
 

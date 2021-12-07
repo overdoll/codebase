@@ -128,14 +128,22 @@ const routes: Array<Route> = [
     },
     routes: [
       {
-        path: '/manage/posts',
+        path: '/manage/create_post',
         navigation: {
           top: {
             title: 'nav.posts',
             icon: ContentBrushPen
           },
           side: {
-            title: 'sidebar.manage.posts'
+            title: 'sidebar.manage.create_post'
+          }
+        }
+      },
+      {
+        path: '/manage/my_posts',
+        navigation: {
+          side: {
+            title: 'sidebar.manage.my_posts'
           }
         }
       },
