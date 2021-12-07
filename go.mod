@@ -43,6 +43,8 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
+	github.com/tidwall/gjson v1.12.1 // indirect
+	github.com/tidwall/sjson v1.2.3 // indirect
 	github.com/tus/tusd v1.6.0
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.temporal.io/sdk v1.6.0

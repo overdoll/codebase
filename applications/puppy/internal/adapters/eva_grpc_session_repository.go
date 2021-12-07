@@ -13,15 +13,15 @@ func NewEvaGrpcSessionRepository(client eva.EvaClient) EvaGrpcSessionRepository 
 	return EvaGrpcSessionRepository{client: client}
 }
 
-func (s EvaGrpcSessionRepository) GetSession(ctx context.Context, sessionId string) (bool, string, int64, error) {
+func (s EvaGrpcSessionRepository) GetSession(ctx context.Context, sessionId string) (bool, string, error) {
 
 	ss, err := s.client.GetSession(ctx, &eva.SessionRequest{Id: sessionId})
 
 	if err != nil {
-		return false, "", 0, err
+		return false, "", err
 	}
 
-	return ss.Valid, ss.AccountId, ss.Duration, nil
+	return ss.Valid, ss.AccountId, nil
 }
 
 func (s EvaGrpcSessionRepository) RevokeSession(ctx context.Context, sessionId string) error {
@@ -35,13 +35,13 @@ func (s EvaGrpcSessionRepository) RevokeSession(ctx context.Context, sessionId s
 	return nil
 }
 
-func (s EvaGrpcSessionRepository) CreateSession(ctx context.Context, accountId string) (string, int64, error) {
+func (s EvaGrpcSessionRepository) CreateSession(ctx context.Context, accountId string) (string, error) {
 
 	ss, err := s.client.CreateSession(ctx, &eva.CreateSessionRequest{AccountId: accountId})
 
 	if err != nil {
-		return "", 0, err
+		return "", err
 	}
 
-	return ss.Id, ss.Duration, nil
+	return ss.Id, nil
 }

@@ -3,8 +3,9 @@ package passport
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -24,11 +25,6 @@ type bodyLogWriter struct {
 func (w bodyLogWriter) Write(b []byte) (int, error) {
 	w.body.Write(b)
 
-	var body map[string]interface{}
-	if err := json.Unmarshal(b, &body); err != nil {
-		panic(err)
-	}
-
 	rawPass := FromContext(w.ctx)
 
 	// only add passport to response body if it was modified
@@ -40,28 +36,25 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 			return 0, err
 		}
 
-		// add passport to object
-		body[bodyKey] = pass
+		value, err := sjson.Set(string(b), bodyKey, pass)
+
+		if err != nil {
+			return 0, err
+		}
+
+		return w.ResponseWriter.Write([]byte(value))
 	}
 
-	bts, err := json.Marshal(body)
-
-	if err != nil {
-		return 0, err
-	}
-
-	return w.ResponseWriter.Write(bts)
+	return w.ResponseWriter.Write(b)
 }
 
 // addToRequest is responsible for appending passport to the body of the request
 // mainly used for testing (because usually, our graphql gateway appends the passport to the body)
 func addToRequest(r *http.Request, passport *Passport) error {
-	var body map[string]interface{}
-	var buf bytes.Buffer
 
-	tee := io.TeeReader(r.Body, &buf)
-	if err := json.NewDecoder(tee).Decode(&body); err != nil {
-		return err
+	// only parse JSON responses
+	if r.Header.Get("Content-Type") != "application/json" {
+		return nil
 	}
 
 	passportSerialized, err := serializeToString(passport)
@@ -69,38 +62,42 @@ func addToRequest(r *http.Request, passport *Passport) error {
 		return err
 	}
 
-	body[bodyKey] = passportSerialized
+	var buf bytes.Buffer
+	tee := io.TeeReader(r.Body, &buf)
+	bd, _ := ioutil.ReadAll(tee)
 
-	encode, err := json.Marshal(body)
+	value, err := sjson.Set(string(bd), bodyKey, passportSerialized)
 
 	if err != nil {
 		return err
 	}
 
-	r.ContentLength = int64(len(encode))
+	r.ContentLength = int64(len(value))
 
-	r.Body = ioutil.NopCloser(strings.NewReader(string(encode)))
+	r.Body = ioutil.NopCloser(strings.NewReader(value))
 
 	return nil
 }
 
 // read passport from body
-func fromRequest(req *http.Request) *Passport {
-	var body map[string]interface{}
+func fromRequest(r *http.Request) *Passport {
 
-	var buf bytes.Buffer
-	tee := io.TeeReader(req.Body, &buf)
-	bd, _ := ioutil.ReadAll(tee)
-
-	if err := json.Unmarshal(bd, &body); err != nil {
-		panic(err)
+	// only parse JSON responses
+	if r.Header.Get("Content-Type") != "application/json" {
+		return nil
 	}
 
-	req.Body = ioutil.NopCloser(&buf)
+	var buf bytes.Buffer
+	tee := io.TeeReader(r.Body, &buf)
+	bd, _ := ioutil.ReadAll(tee)
 
-	if val, ok := body[bodyKey]; ok {
+	r.Body = ioutil.NopCloser(&buf)
 
-		pass, err := unserializeFromString(val.(string))
+	value := gjson.Get(string(bd), bodyKey)
+
+	if value.Exists() {
+
+		pass, err := unserializeFromString(value.String())
 
 		if err != nil {
 			panic(err)
@@ -113,35 +110,39 @@ func fromRequest(req *http.Request) *Passport {
 }
 
 // read passport from an HTTP response
-func fromResponse(resp *http.Response) (*Passport, error) {
+func fromResponse(res *http.Response) (*Passport, error) {
 
-	var body map[string]interface{}
+	// only parse JSON responses
+	if res.Header.Get("Content-Type") != "application/json; charset=utf-8" {
+		return nil, nil
+	}
 
 	var reader io.ReadCloser
-	switch resp.Header.Get("Content-Encoding") {
+	switch res.Header.Get("Content-Encoding") {
 	case "gzip":
 		// dont read gzip responses
 		return nil, nil
 	default:
-		reader = resp.Body
+		reader = res.Body
 	}
 
 	var buf bytes.Buffer
 	tee := io.TeeReader(reader, &buf)
 	bd, _ := ioutil.ReadAll(tee)
 
-	if err := json.Unmarshal(bd, &body); err != nil {
-		return nil, err
-	}
+	value := gjson.Get(string(bd), bodyKey)
 
-	resp.Body = ioutil.NopCloser(&buf)
+	res.Body = ioutil.NopCloser(&buf)
 
-	if val, ok := body[bodyKey]; ok {
+	if value.Exists() {
 
-		pass, err := unserializeFromString(val.(string))
+		pass, err := unserializeFromString(value.String())
 		if err != nil {
 			return nil, err
 		}
+
+		newBody, _ := sjson.Delete(string(bd), bodyKey)
+		res.Body = ioutil.NopCloser(bytes.NewBufferString(newBody))
 
 		return pass, nil
 	}

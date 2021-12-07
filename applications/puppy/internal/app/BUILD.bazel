@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "app",
+    srcs = ["app.go"],
+    importpath = "overdoll/applications/puppy/internal/app",
+    visibility = ["//applications/puppy:__subpackages__"],
+    deps = [
+        "//applications/puppy/internal/domain/session",
+        "@com_github_gorilla_securecookie//:securecookie",
+    ],
+)

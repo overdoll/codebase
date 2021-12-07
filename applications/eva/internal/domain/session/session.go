@@ -2,6 +2,7 @@ package session
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"overdoll/applications/eva/internal/domain/location"
 	"time"
@@ -128,5 +129,5 @@ func GetSearchTermForAccounts(accountId string) string {
 
 func hashAccountId(accountId string) string {
 	hash := sha256.Sum256([]byte(accountId))
-	return string(hash[:])
+	return hex.EncodeToString(hash[:])
 }

@@ -73,7 +73,6 @@ func (s Server) GetSession(ctx context.Context, request *eva.SessionRequest) (*e
 			return &eva.SessionResponse{
 				Valid:     false,
 				AccountId: "",
-				Duration:  0,
 			}, nil
 		}
 
@@ -83,7 +82,6 @@ func (s Server) GetSession(ctx context.Context, request *eva.SessionRequest) (*e
 	return &eva.SessionResponse{
 		Valid:     true,
 		AccountId: ss.AccountID(),
-		Duration:  ss.Duration(),
 	}, nil
 }
 
@@ -98,7 +96,7 @@ func (s Server) CreateSession(ctx context.Context, request *eva.CreateSessionReq
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &eva.CreateSessionResponse{Id: ss.ID(), Duration: ss.Duration()}, nil
+	return &eva.CreateSessionResponse{Id: ss.ID()}, nil
 }
 
 func (s Server) RevokeSession(ctx context.Context, request *eva.SessionRequest) (*empty.Empty, error) {
