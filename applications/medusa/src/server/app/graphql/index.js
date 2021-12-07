@@ -1,6 +1,6 @@
 import { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
-import parseCookies from './Domain/parseCookies'
+import parseCookies from '../../utilities/parseCookies'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../queries.json'
@@ -291,6 +291,4 @@ export default function (index) {
     path: '/api/graphql',
     app: index.use('/api/graphql', renderPlayground, matchQueryMiddleware(queryMapJson))
   })
-
-  return server
 }

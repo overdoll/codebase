@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "service",
+    srcs = ["application.go"],
+    importpath = "overdoll/applications/puppy/internal/service",
+    visibility = ["//applications/puppy:__subpackages__"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/puppy/internal/adapters",
+        "//applications/puppy/internal/app",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "@com_github_gorilla_securecookie//:securecookie",
+    ],
+)

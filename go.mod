@@ -3,7 +3,7 @@ module overdoll
 go 1.16
 
 require (
-	github.com/99designs/gqlgen v0.13.1-0.20210728041543-7e38dd46943c
+	github.com/99designs/gqlgen v0.14.0
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect

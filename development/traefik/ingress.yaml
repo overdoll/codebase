@@ -42,6 +42,11 @@ spec:
           port: 8000
       middlewares:
         - name: compression
+    - match: Host(`overdoll.test`) && PathPrefix(`/api/graphql`)
+      kind: Rule
+      services:
+        - name: puppy
+          port: 8000
     - match: Host(`static.dollycdn.test`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -73,6 +78,13 @@ spec:
       kind: Rule
       services:
         - name: medusa
+          port: 8000
+      middlewares:
+        - name: redirect-https
+    - match: Host(`overdoll.test`) && PathPrefix(`/api/graphql`)
+      kind: Rule
+      services:
+        - name: puppy
           port: 8000
       middlewares:
         - name: redirect-https
