@@ -31,7 +31,11 @@ async function request (req, res, next) {
     // essentially, we want to replicate the same conditions on the client as on the server
     // eventually, the graphql gateway is gonna be moved to it's own service so its helpful to be ready for that here
     network: Network.create(async function (params, variables) {
-      const headers = {}
+      const headers = {
+        // add CSRF token since its added by client
+        'Content-Type': 'application/json',
+        'Csrf-Token': req.csrfToken()
+      }
 
       Object.entries(
         req.headers || {}

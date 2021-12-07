@@ -175,7 +175,14 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 
 func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *session.Session) error {
 
-	val, err := json.Marshal(session)
+	val, err := json.Marshal(&sessions{
+		Location:  location.Serialize(session.Location()),
+		UserAgent: session.Device(),
+		IP:        session.IP(),
+		Created:   session.Created().Unix(),
+		LastSeen:  session.LastSeen().Unix(),
+		AccountId: session.AccountID(),
+	})
 
 	if err != nil {
 		return err
@@ -201,17 +208,24 @@ func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *s
 
 func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId string, updateFn func(session *session.Session) error) (*session.Session, error) {
 
-	res, err := r.getSessionById(ctx, nil, sessionId)
+	session, err := r.getSessionById(ctx, nil, sessionId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := updateFn(res); err != nil {
+	if err := updateFn(session); err != nil {
 		return nil, err
 	}
 
-	val, err := json.Marshal(res)
+	val, err := json.Marshal(&sessions{
+		Location:  location.Serialize(session.Location()),
+		UserAgent: session.Device(),
+		IP:        session.IP(),
+		Created:   session.Created().Unix(),
+		LastSeen:  session.LastSeen().Unix(),
+		AccountId: session.AccountID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -222,13 +236,13 @@ func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId 
 		return nil, err
 	}
 
-	_, err = r.client.Set(ctx, sessionPrefix+res.ID(), valReal, time.Second*time.Duration(res.Duration())).Result()
+	_, err = r.client.Set(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
 		return nil, err
 	}
 
-	return res, nil
+	return session, nil
 }
 
 func (r SessionRepository) RevokeSessionOperator(ctx context.Context, sessionId string) error {

@@ -30,7 +30,7 @@ func createApplication(ctx context.Context, service eva.EvaClient) app.Applicati
 		securecookie.CodecsFromPairs(
 			[]byte(os.Getenv("COOKIE_KEY")),
 			// for some reason having the block key bugs it out, disable for now
-			//[]byte(os.Getenv("COOKIE_BLOCK_KEY")),
+			[]byte(os.Getenv("COOKIE_BLOCK_KEY")),
 		),
 	)
 }

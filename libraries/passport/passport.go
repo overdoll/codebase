@@ -43,6 +43,10 @@ func (p *Passport) UserAgent() string {
 	return p.passport.DeviceInfo.UserAgent
 }
 
+func (p *Passport) hasActions() bool {
+	return len(p.passport.Actions) > 0
+}
+
 func (p *Passport) PerformedAuthenticatedAccountAction() bool {
 
 	for _, a := range p.passport.Actions {

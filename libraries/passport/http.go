@@ -31,7 +31,8 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 
 	rawPass := FromContext(w.ctx)
 
-	if rawPass != nil {
+	// only add passport to response body if it was modified
+	if rawPass != nil && rawPass.hasActions() {
 
 		pass, err := serializeToString(rawPass)
 

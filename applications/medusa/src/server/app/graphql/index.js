@@ -8,6 +8,8 @@ import { defaultPlaygroundOptions, gql } from 'apollo-server'
 import { graphqlSync, parse, visit } from 'graphql'
 import { buildFederatedSchema } from '@apollo/federation'
 import { renderPlaygroundPage } from '@apollographql/graphql-playground-html'
+import { Request, Response } from 'apollo-server-env'
+import { GraphQLRequestContext, GraphQLResponse, ValueOrPromise } from 'apollo-server-types'
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -216,6 +218,22 @@ class CookieDataSource extends RemoteGraphQLDataSource {
         }
       })
     }
+
+    // make sure passport is forwarded back in the response as well
+    if (response.passport) {
+      const originalSend = context.res.send
+
+      context.res.send = (data) => {
+        const parse = JSON.parse(data)
+        parse.passport = response.passport
+        data = JSON.stringify(parse)
+
+        context.res.send = originalSend // set function back to avoid the 'double-send'
+
+        return context.res.send(data) // just call as normal with data
+      }
+    }
+
     return response
   }
 
@@ -226,6 +244,12 @@ class CookieDataSource extends RemoteGraphQLDataSource {
   willSendRequest (requestContext) {
     if (!requestContext.context.req) {
       return
+    }
+
+    const passportForward = requestContext.context.req.body.passport
+
+    if (passportForward) {
+      requestContext.request.passport = passportForward
     }
 
     requestContext.request.http?.headers.set('cookie',
