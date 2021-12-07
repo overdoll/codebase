@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"image/png"
+	"overdoll/libraries/crypt"
 	"time"
 
 	"github.com/pquerna/otp"
@@ -15,11 +16,12 @@ import (
 type TOTP struct {
 	secret string
 	name   string
+	// id is basically encrypted secret
+	id string
 }
 
 const (
-	TOTPCookieKey = "enroll-totp"
-	issuer        = "overdoll"
+	issuer = "overdoll"
 )
 
 var (
@@ -32,9 +34,17 @@ var (
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
+
+	val, err := crypt.Encrypt(secret)
+
+	if err != nil {
+		panic(err)
+	}
+
 	return &TOTP{
 		secret: secret,
 		name:   "",
+		id:     val,
 	}
 }
 
@@ -54,6 +64,10 @@ func (c *TOTP) ValidateCode(code string) bool {
 
 func (c *TOTP) Secret() string {
 	return c.secret
+}
+
+func (c *TOTP) ID() string {
+	return c.id
 }
 
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)
@@ -101,7 +115,13 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 }
 
 // should be used when enrolling users in OTP
-func EnrollTOTP(recoveryCodes []*RecoveryCode, secret, code string) (*TOTP, error) {
+func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
+
+	secret, err := crypt.Decrypt(id)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if len(recoveryCodes) == 0 {
 		return nil, ErrRecoveryCodesNotConfigured

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../helpers/PrepareViewer'
+import type { Node } from 'react'
 
 const GrantAction = graphql`
   mutation GrantMutation {
@@ -47,11 +48,11 @@ export default function Grant (): Node {
           title: t('grant.success'),
           isClosable: true
         })
-        history.push('/profile')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         PrepareViewer(store, payload)
+        history.push('/profile')
       },
       onError (data) {
         console.log(data)

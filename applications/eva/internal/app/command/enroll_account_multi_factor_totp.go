@@ -11,7 +11,7 @@ import (
 type EnrollAccountMultiFactorTOTP struct {
 	// the account that is making this request
 	Principal *principal.Principal
-	Secret    string
+	ID        string
 	Code      string
 }
 
@@ -39,7 +39,7 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 	}
 
 	// enroll TOTP
-	mfa, err := multi_factor.EnrollTOTP(codes, cmd.Secret, cmd.Code)
+	mfa, err := multi_factor.EnrollTOTP(codes, cmd.ID, cmd.Code)
 
 	if err != nil {
 		return err

@@ -17,7 +17,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		// passport is available add to context
 		if passport != nil {
-			return handler(WithContext(ctx, passport), req)
+			return handler(withContext(ctx, passport), req)
 		}
 
 		return handler(ctx, req)
@@ -38,7 +38,7 @@ func StreamServerInterceptor() grpc.StreamServerInterceptor {
 
 		// passport is available add to context
 		if passport != nil {
-			wrapped.WrappedContext = WithContext(ctx, passport)
+			wrapped.WrappedContext = withContext(ctx, passport)
 			return handler(srv, wrapped)
 		}
 

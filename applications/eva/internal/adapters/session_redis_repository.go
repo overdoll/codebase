@@ -108,7 +108,7 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 
 	// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
-	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+"*:"+accountPrefix+accountId, 100).Result()
+	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+session.GetSearchTermForAccounts(accountId), 100).Result()
 
 	if err != nil {
 

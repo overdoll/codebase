@@ -30,8 +30,7 @@ async function fetchRelay (params, variables) {
     '/api/graphql',
     {
       operationName: params.name,
-      query: params.text,
-      // queryId: params.id,
+      queryId: params.id,
       variables
     },
     {

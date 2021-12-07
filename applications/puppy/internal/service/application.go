@@ -11,7 +11,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 
@@ -24,13 +24,12 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func createApplication(ctx context.Context, service eva.EvaClient) app.Application {
-	return app.NewApplication(
-		adapters.NewEvaGrpcSessionRepository(service),
-		securecookie.CodecsFromPairs(
+func createApplication(ctx context.Context, service eva.EvaClient) *app.Application {
+	return &app.Application{
+		Codecs: securecookie.CodecsFromPairs(
 			[]byte(os.Getenv("COOKIE_KEY")),
-			// for some reason having the block key bugs it out, disable for now
 			[]byte(os.Getenv("COOKIE_BLOCK_KEY")),
 		),
-	)
+		Repository: adapters.NewEvaGrpcSessionRepository(service),
+	}
 }

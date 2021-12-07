@@ -1,8 +1,6 @@
 package session
 
-import (
-	"context"
-)
+import "context"
 
 type Repository interface {
 	GetSession(ctx context.Context, sessionId string) (bool, string, int64, error)

@@ -8,10 +8,11 @@ import (
 	"net/url"
 	"os"
 	"overdoll/applications/puppy/internal/app"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 )
 
-func NewHttpServer(ctx context.Context, app app.Application) http.Handler {
+func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	rtr := router.NewRawGinRouter()
 
@@ -21,19 +22,19 @@ func NewHttpServer(ctx context.Context, app app.Application) http.Handler {
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(u)
-	proxy.ModifyResponse = app.HandleResponse()
+	proxy.Transport = passport.NewHttpRoundTripper(app)
 
 	// proxy POST requests to graphql - we add our passport to payload here
 	rtr.POST("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		if err := app.HandleRequest(w, r); err != nil {
-			panic(err)
-		}
 		proxy.ServeHTTP(w, r)
 	}))
 
+	// another proxy, but without a custom transport since we dont care about passport here
+	proxy2 := httputil.NewSingleHostReverseProxy(u)
+
 	// GET requests proxy directly back to the actual thing
 	rtr.GET("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		proxy.ServeHTTP(w, r)
+		proxy2.ServeHTTP(w, r)
 	}))
 
 	return rtr

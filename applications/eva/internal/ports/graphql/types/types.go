@@ -308,6 +308,8 @@ type DisableAccountMultiFactorPayload struct {
 
 // Input for enrolling the account into TOTP
 type EnrollAccountMultiFactorTotpInput struct {
+	// The TOTP ID, sent intially
+	ID string `json:"id"`
 	// The code that the TOTP expects
 	Code string `json:"code"`
 }
@@ -413,6 +415,8 @@ type MultiFactor struct {
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {
+	// The TOTP ID. Should be sent back when creating the TOTP
+	ID string `json:"id"`
 	// The TOTP secret
 	Secret string `json:"secret"`
 	// Always html image compatible. Just set SRC tag to this and it will work!

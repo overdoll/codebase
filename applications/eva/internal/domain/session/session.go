@@ -1,6 +1,7 @@
 package session
 
 import (
+	"crypto/sha256"
 	"errors"
 	"overdoll/applications/eva/internal/domain/location"
 	"time"
@@ -27,7 +28,7 @@ type Session struct {
 
 var (
 	ErrSessionsNotFound = errors.New("sessions not found")
-	defaultDuration     = int64(86400 * 30)
+	defaultDuration     = int64(28800000)
 )
 
 func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, lastSeen int64, current bool, location *location.Location) *Session {
@@ -45,8 +46,11 @@ func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, las
 }
 
 func NewSession(accountId, userAgent, ip string, location *location.Location) (*Session, error) {
+
+	// account ID is hashed so you dont know who the session belongs to
+
 	return &Session{
-		id:        ksuid.New().String() + ":account:" + accountId,
+		id:        ksuid.New().String() + ":account:" + hashAccountId(accountId),
 		device:    userAgent,
 		ip:        ip,
 		location:  location,
@@ -116,4 +120,13 @@ func (s *Session) CanRevoke(requester *principal.Principal) error {
 	}
 
 	return nil
+}
+
+func GetSearchTermForAccounts(accountId string) string {
+	return "*:account:" + hashAccountId(accountId)
+}
+
+func hashAccountId(accountId string) string {
+	hash := sha256.Sum256([]byte(accountId))
+	return string(hash[:])
 }

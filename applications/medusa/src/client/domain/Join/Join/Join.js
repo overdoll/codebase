@@ -41,6 +41,8 @@ export default function Join ({
   hadGrant,
   clearGrant
 }: Props): Node {
+  console.log('yes')
+
   const [commit, isInFlight] = useMutation(JoinAction)
 
   const data = useFragment(JoinFragment, queryRef)

@@ -12,7 +12,7 @@ func GinPassportRequestMiddleware() gin.HandlerFunc {
 		pass := fromRequest(c.Request)
 
 		if pass != nil {
-			newCtx := WithContext(c.Request.Context(), pass)
+			newCtx := withContext(c.Request.Context(), pass)
 			c.Request = c.Request.WithContext(newCtx)
 		}
 

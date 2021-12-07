@@ -53,9 +53,9 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(bts)
 }
 
-// AddToRequest is responsible for appending passport to the body of the request
+// addToRequest is responsible for appending passport to the body of the request
 // mainly used for testing (because usually, our graphql gateway appends the passport to the body)
-func AddToRequest(r *http.Request, passport *Passport) error {
+func addToRequest(r *http.Request, passport *Passport) error {
 	var body map[string]interface{}
 	var buf bytes.Buffer
 
@@ -113,12 +113,21 @@ func fromRequest(req *http.Request) *Passport {
 }
 
 // read passport from an HTTP response
-func FromResponse(resp *http.Response) (*Passport, error) {
+func fromResponse(resp *http.Response) (*Passport, error) {
 
 	var body map[string]interface{}
 
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		// dont read gzip responses
+		return nil, nil
+	default:
+		reader = resp.Body
+	}
+
 	var buf bytes.Buffer
-	tee := io.TeeReader(resp.Body, &buf)
+	tee := io.TeeReader(reader, &buf)
 	bd, _ := ioutil.ReadAll(tee)
 
 	if err := json.Unmarshal(bd, &body); err != nil {

@@ -49,7 +49,7 @@ export default function Root (props: Props): Node {
       />
       <AbilityContext.Provider value={ability}>
         <Navigation rootQuery={data?.viewer}>
-          <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
+          {props.children}
         </Navigation>
       </AbilityContext.Provider>
     </>

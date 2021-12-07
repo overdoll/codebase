@@ -11,7 +11,6 @@ import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
 import Join from './Join/Join'
 import Grant from './Grant/Grant'
 import MultiFactor from './MultiFactor/MultiFactor'
-import type { JoinRootFragment$key } from '@//:artifacts/JoinRootFragment.graphql'
 
 type Props = {
   prepared: {
@@ -79,8 +78,10 @@ export default function JoinRoot (props: Props): Node {
 
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
-    loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
-  }, [])
+    if (authenticationInitiated) {
+      loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
+    }
+  }, [authenticationInitiated])
 
   // when authentication not initiated
   if (!authenticationInitiated) {
@@ -106,6 +107,5 @@ export default function JoinRoot (props: Props): Node {
   }
 
   // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
-
   return (<Grant />)
 }

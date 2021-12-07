@@ -43,6 +43,17 @@ async function request (req, res, next) {
         headers[key] = value
       })
 
+      const setCookie = res.getHeader('set-cookie')
+
+      // on the server, we need to pass the _csrf cookie as a real cookie or else it bugs out
+      if (setCookie !== undefined) {
+        if (headers.cookie === undefined) {
+          headers.cookie = setCookie
+        } else {
+          headers.cookie += ',' + setCookie
+        }
+      }
+
       const response = await axios.post(
         'http://puppy:8000/api/graphql',
         {

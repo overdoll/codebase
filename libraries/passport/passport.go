@@ -3,6 +3,7 @@ package passport
 import (
 	"context"
 	"errors"
+	"github.com/segmentio/ksuid"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 
 	"sync"
@@ -43,11 +44,22 @@ func (p *Passport) UserAgent() string {
 	return p.passport.DeviceInfo.UserAgent
 }
 
+func (p *Passport) RevokeAccount() error {
+	p.passport.Account = nil
+	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: RevokeAccount.slug})
+	return nil
+}
+
+func (p *Passport) AuthenticateAccount(id string) {
+	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
+	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: AuthenticateAccount.slug})
+}
+
 func (p *Passport) hasActions() bool {
 	return len(p.passport.Actions) > 0
 }
 
-func (p *Passport) PerformedAuthenticatedAccountAction() bool {
+func (p *Passport) performedAuthenticatedAccountAction() bool {
 
 	for _, a := range p.passport.Actions {
 		action := actionFromString(a.Action)
@@ -59,7 +71,7 @@ func (p *Passport) PerformedAuthenticatedAccountAction() bool {
 	return false
 }
 
-func (p *Passport) PerformedRevokedAccountAction() bool {
+func (p *Passport) performedRevokedAccountAction() bool {
 
 	for _, a := range p.passport.Actions {
 		action := actionFromString(a.Action)
@@ -69,17 +81,6 @@ func (p *Passport) PerformedRevokedAccountAction() bool {
 	}
 
 	return false
-}
-
-func (p *Passport) RevokeAccount() error {
-	p.passport = &libraries_passport_v1.Passport{Account: nil}
-	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: RevokeAccount.slug})
-	return nil
-}
-
-func (p *Passport) AuthenticateAccount(id string) {
-	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
-	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: AuthenticateAccount.slug})
 }
 
 func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
@@ -101,7 +102,11 @@ func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	return nil
 }
 
-func IssuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error) {
+func issuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error) {
+
+	if sessionId == "" {
+		sessionId = ksuid.New().String()
+	}
 
 	var account *libraries_passport_v1.AccountInfo
 

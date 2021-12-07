@@ -24,6 +24,7 @@ go_library(
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap",
         "@com_github_grpc_ecosystem_go_grpc_middleware//tags",
         "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

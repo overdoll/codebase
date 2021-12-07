@@ -264,6 +264,7 @@ type ComplexityRoot struct {
 	}
 
 	MultiFactorTotp struct {
+		ID       func(childComplexity int) int
 		ImageSrc func(childComplexity int) int
 		Secret   func(childComplexity int) int
 	}
@@ -1195,6 +1196,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.MultiFactor.Totp(childComplexity), true
+
+	case "MultiFactorTotp.id":
+		if e.complexity.MultiFactorTotp.ID == nil {
+			break
+		}
+
+		return e.complexity.MultiFactorTotp.ID(childComplexity), true
 
 	case "MultiFactorTotp.imageSrc":
 		if e.complexity.MultiFactorTotp.ImageSrc == nil {
@@ -2142,6 +2150,10 @@ type AccountMultiFactorRecoveryCode {
 
 """TOTP secret + image combination"""
 type MultiFactorTotp  {
+
+  """The TOTP ID. Should be sent back when creating the TOTP"""
+  id: String!
+
   """The TOTP secret"""
   secret: String!
 
@@ -2282,6 +2294,12 @@ input UpdateAccountEmailStatusToPrimaryInput {
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
+
+  """
+  The TOTP ID, sent intially
+  """
+  id: String!
+
   """
   The code that the TOTP expects
   """
@@ -7028,6 +7046,41 @@ func (ec *executionContext) _MultiFactor_totp(ctx context.Context, field graphql
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _MultiFactorTotp_id(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactorTotp) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MultiFactorTotp",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _MultiFactorTotp_secret(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactorTotp) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9328,6 +9381,41 @@ func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql
 	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) ___Directive_isRepeatable(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Directive",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsRepeatable, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) ___EnumValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10280,7 +10368,10 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 func (ec *executionContext) unmarshalInputAddAccountEmailInput(ctx context.Context, obj interface{}) (types.AddAccountEmailInput, error) {
 	var it types.AddAccountEmailInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10300,7 +10391,10 @@ func (ec *executionContext) unmarshalInputAddAccountEmailInput(ctx context.Conte
 
 func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context.Context, obj interface{}) (types.AssignAccountModeratorRole, error) {
 	var it types.AssignAccountModeratorRole
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10320,7 +10414,10 @@ func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context
 
 func (ec *executionContext) unmarshalInputAssignAccountStaffRole(ctx context.Context, obj interface{}) (types.AssignAccountStaffRole, error) {
 	var it types.AssignAccountStaffRole
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10340,7 +10437,10 @@ func (ec *executionContext) unmarshalInputAssignAccountStaffRole(ctx context.Con
 
 func (ec *executionContext) unmarshalInputConfirmAccountEmailInput(ctx context.Context, obj interface{}) (types.ConfirmAccountEmailInput, error) {
 	var it types.ConfirmAccountEmailInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10360,7 +10460,10 @@ func (ec *executionContext) unmarshalInputConfirmAccountEmailInput(ctx context.C
 
 func (ec *executionContext) unmarshalInputCreateAccountWithAuthenticationTokenInput(ctx context.Context, obj interface{}) (types.CreateAccountWithAuthenticationTokenInput, error) {
 	var it types.CreateAccountWithAuthenticationTokenInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10380,7 +10483,10 @@ func (ec *executionContext) unmarshalInputCreateAccountWithAuthenticationTokenIn
 
 func (ec *executionContext) unmarshalInputDeleteAccountEmailInput(ctx context.Context, obj interface{}) (types.DeleteAccountEmailInput, error) {
 	var it types.DeleteAccountEmailInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10400,7 +10506,10 @@ func (ec *executionContext) unmarshalInputDeleteAccountEmailInput(ctx context.Co
 
 func (ec *executionContext) unmarshalInputDeleteAccountUsernameInput(ctx context.Context, obj interface{}) (types.DeleteAccountUsernameInput, error) {
 	var it types.DeleteAccountUsernameInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10420,10 +10529,21 @@ func (ec *executionContext) unmarshalInputDeleteAccountUsernameInput(ctx context
 
 func (ec *executionContext) unmarshalInputEnrollAccountMultiFactorTotpInput(ctx context.Context, obj interface{}) (types.EnrollAccountMultiFactorTotpInput, error) {
 	var it types.EnrollAccountMultiFactorTotpInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "code":
 			var err error
 
@@ -10440,7 +10560,10 @@ func (ec *executionContext) unmarshalInputEnrollAccountMultiFactorTotpInput(ctx 
 
 func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput(ctx context.Context, obj interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput, error) {
 	var it types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10460,7 +10583,10 @@ func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTo
 
 func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput(ctx context.Context, obj interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput, error) {
 	var it types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10480,7 +10606,10 @@ func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTo
 
 func (ec *executionContext) unmarshalInputGrantAuthenticationTokenInput(ctx context.Context, obj interface{}) (types.GrantAuthenticationTokenInput, error) {
 	var it types.GrantAuthenticationTokenInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10500,7 +10629,10 @@ func (ec *executionContext) unmarshalInputGrantAuthenticationTokenInput(ctx cont
 
 func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context.Context, obj interface{}) (types.RevokeAccountModeratorRole, error) {
 	var it types.RevokeAccountModeratorRole
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10520,7 +10652,10 @@ func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context
 
 func (ec *executionContext) unmarshalInputRevokeAccountSessionInput(ctx context.Context, obj interface{}) (types.RevokeAccountSessionInput, error) {
 	var it types.RevokeAccountSessionInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10540,7 +10675,10 @@ func (ec *executionContext) unmarshalInputRevokeAccountSessionInput(ctx context.
 
 func (ec *executionContext) unmarshalInputRevokeAccountStaffRole(ctx context.Context, obj interface{}) (types.RevokeAccountStaffRole, error) {
 	var it types.RevokeAccountStaffRole
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10560,7 +10698,10 @@ func (ec *executionContext) unmarshalInputRevokeAccountStaffRole(ctx context.Con
 
 func (ec *executionContext) unmarshalInputRevokeAuthenticationTokenInput(ctx context.Context, obj interface{}) (types.RevokeAuthenticationTokenInput, error) {
 	var it types.RevokeAuthenticationTokenInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10580,7 +10721,10 @@ func (ec *executionContext) unmarshalInputRevokeAuthenticationTokenInput(ctx con
 
 func (ec *executionContext) unmarshalInputUnlockAccountInput(ctx context.Context, obj interface{}) (types.UnlockAccountInput, error) {
 	var it types.UnlockAccountInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10600,7 +10744,10 @@ func (ec *executionContext) unmarshalInputUnlockAccountInput(ctx context.Context
 
 func (ec *executionContext) unmarshalInputUpdateAccountEmailStatusToPrimaryInput(ctx context.Context, obj interface{}) (types.UpdateAccountEmailStatusToPrimaryInput, error) {
 	var it types.UpdateAccountEmailStatusToPrimaryInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10620,7 +10767,10 @@ func (ec *executionContext) unmarshalInputUpdateAccountEmailStatusToPrimaryInput
 
 func (ec *executionContext) unmarshalInputUpdateAccountLanguageInput(ctx context.Context, obj interface{}) (types.UpdateAccountLanguageInput, error) {
 	var it types.UpdateAccountLanguageInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10640,7 +10790,10 @@ func (ec *executionContext) unmarshalInputUpdateAccountLanguageInput(ctx context
 
 func (ec *executionContext) unmarshalInputUpdateAccountUsernameAndRetainPreviousInput(ctx context.Context, obj interface{}) (types.UpdateAccountUsernameAndRetainPreviousInput, error) {
 	var it types.UpdateAccountUsernameAndRetainPreviousInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10660,7 +10813,10 @@ func (ec *executionContext) unmarshalInputUpdateAccountUsernameAndRetainPrevious
 
 func (ec *executionContext) unmarshalInputUpdateLanguageInput(ctx context.Context, obj interface{}) (types.UpdateLanguageInput, error) {
 	var it types.UpdateLanguageInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10680,7 +10836,10 @@ func (ec *executionContext) unmarshalInputUpdateLanguageInput(ctx context.Contex
 
 func (ec *executionContext) unmarshalInputVerifyAuthenticationTokenInput(ctx context.Context, obj interface{}) (types.VerifyAuthenticationTokenInput, error) {
 	var it types.VerifyAuthenticationTokenInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -12179,6 +12338,11 @@ func (ec *executionContext) _MultiFactorTotp(ctx context.Context, sel ast.Select
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("MultiFactorTotp")
+		case "id":
+			out.Values[i] = ec._MultiFactorTotp_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "secret":
 			out.Values[i] = ec._MultiFactorTotp_secret(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -12808,6 +12972,11 @@ func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isRepeatable":
+			out.Values[i] = ec.___Directive_isRepeatable(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13087,6 +13256,13 @@ func (ec *executionContext) marshalNAccountEdge2ᚕᚖoverdollᚋapplicationsᚋ
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13162,6 +13338,13 @@ func (ec *executionContext) marshalNAccountEmailEdge2ᚕᚖoverdollᚋapplicatio
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13229,6 +13412,13 @@ func (ec *executionContext) marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdol
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13318,6 +13508,13 @@ func (ec *executionContext) marshalNAccountSessionEdge2ᚕᚖoverdollᚋapplicat
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13393,6 +13590,13 @@ func (ec *executionContext) marshalNAccountUsernameEdge2ᚕᚖoverdollᚋapplica
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13569,6 +13773,13 @@ func (ec *executionContext) marshalNLanguage2ᚕᚖoverdollᚋapplicationsᚋeva
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13749,6 +13960,12 @@ func (ec *executionContext) marshalN_Any2ᚕmapᚄ(ctx context.Context, sel ast.
 		ret[i] = ec.marshalN_Any2map(ctx, sel, v[i])
 	}
 
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13786,6 +14003,7 @@ func (ec *executionContext) marshalN_Entity2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 
 	}
 	wg.Wait()
+
 	return ret
 }
 
@@ -13846,6 +14064,13 @@ func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13919,6 +14144,13 @@ func (ec *executionContext) marshalN__DirectiveLocation2ᚕstringᚄ(ctx context
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -13968,6 +14200,13 @@ func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -14009,6 +14248,13 @@ func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -14572,6 +14818,13 @@ func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -14612,6 +14865,13 @@ func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -14652,6 +14912,13 @@ func (ec *executionContext) marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -14699,6 +14966,13 @@ func (ec *executionContext) marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 

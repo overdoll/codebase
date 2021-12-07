@@ -5,14 +5,14 @@ import (
 	"net/http/cookiejar"
 )
 
-type ClientPassport struct {
+type ClientTestPassport struct {
 	passport *Passport
 }
 
 type headerTestTransport struct {
 	base           http.RoundTripper
 	headers        map[string]string
-	clientPassport *ClientPassport
+	clientPassport *ClientTestPassport
 }
 
 func issueTestingPassport(id *string) (*Passport, error) {
@@ -23,7 +23,7 @@ func issueTestingPassport(id *string) (*Passport, error) {
 		accountId = *id
 	}
 
-	return IssuePassport("", "", "", accountId)
+	return issuePassport("", "", "", accountId)
 }
 
 // A custom HTTP client
@@ -32,7 +32,7 @@ func issueTestingPassport(id *string) (*Passport, error) {
 // the client "kind of" simulates a request in and out of the graphql gateway, in that it will add a passport to
 // the request, and modify the passport, when a new one is placed in the header
 // this makes it perfect for testing and ensuring your passport modifications were correct
-func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientPassport) {
+func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientTestPassport) {
 	jar, _ := cookiejar.New(nil)
 
 	p, err := issueTestingPassport(accountId)
@@ -41,7 +41,7 @@ func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientPass
 		panic(err)
 	}
 
-	clientPassport := &ClientPassport{
+	clientPassport := &ClientTestPassport{
 		passport: p,
 	}
 
@@ -72,13 +72,13 @@ func NewHTTPTestClientWithCustomHeaders(headers map[string]string) *http.Client 
 	}
 }
 
-func (h *ClientPassport) GetPassport() *Passport {
+func (h *ClientTestPassport) GetPassport() *Passport {
 	return h.passport
 }
 
 func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
-	if err := AddToRequest(req, h.clientPassport.passport); err != nil {
+	if err := addToRequest(req, h.clientPassport.passport); err != nil {
 		return nil, err
 	}
 
@@ -88,7 +88,7 @@ func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, erro
 		return nil, err
 	}
 
-	nw, err := FromResponse(resp)
+	nw, err := fromResponse(resp)
 
 	if err != nil {
 		return nil, err

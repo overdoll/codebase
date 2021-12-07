@@ -2,13 +2,10 @@ package mutations
 
 import (
 	"context"
-	"net/http"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
-	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -51,6 +48,8 @@ func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.Revo
 		return nil, err
 	}
 
+	accountId := passport.FromContext(ctx).AccountID()
+
 	// logout just revokes the currently-authenticated user from the passport
 	if err := passport.
 		MutatePassport(ctx,
@@ -61,7 +60,7 @@ func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.Revo
 	}
 
 	return &types.RevokeAccountAccessPayload{
-		RevokedAccountID: relay.NewID(types.Account{}, passport.FromContext(ctx).AccountID()),
+		RevokedAccountID: relay.NewID(types.Account{}, accountId),
 	}, nil
 }
 
@@ -79,14 +78,6 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 		return nil, err
 	}
 
-	// add TOTP secret to cookie, which will be read when enrolling
-	if err := cookies.SetCookie(ctx, &http.Cookie{
-		Name:  multi_factor.TOTPCookieKey,
-		Value: totp.Secret(),
-	}); err != nil {
-		return nil, err
-	}
-
 	img, err := totp.Image()
 
 	if err != nil {
@@ -97,6 +88,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 		MultiFactorTotp: &types.MultiFactorTotp{
 			Secret:   totp.Secret(),
 			ImageSrc: img,
+			ID:       totp.ID(),
 		},
 	}, nil
 }
@@ -107,20 +99,11 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 		return nil, err
 	}
 
-	currentCookie, err := cookies.ReadCookie(ctx, multi_factor.TOTPCookieKey)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, command.EnrollAccountMultiFactorTOTP{
+	if err := r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, command.EnrollAccountMultiFactorTOTP{
 		Principal: principal.FromContext(ctx),
-		Secret:    currentCookie.Value,
+		ID:        input.ID,
 		Code:      input.Code,
-	})
-
-	if err != nil {
-
+	}); err != nil {
 		if err == multi_factor.ErrTOTPCodeInvalid {
 			expired := types.EnrollAccountMultiFactorTotpValidationInvalidCode
 			return &types.EnrollAccountMultiFactorTotpPayload{Validation: &expired}, nil
@@ -128,8 +111,6 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 
 		return nil, err
 	}
-
-	cookies.DeleteCookie(ctx, token.OTPKey)
 
 	enabled := true
 
