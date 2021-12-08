@@ -2,12 +2,14 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/domain/token"
 )
 
 type RevokeAuthenticationToken struct {
-	TokenId string
+	Token    string
+	Passport *passport.Passport
 }
 
 type RevokeAuthenticationTokenHandler struct {
@@ -19,5 +21,5 @@ func NewRevokeAuthenticationTokenHandler(cr token.Repository) RevokeAuthenticati
 }
 
 func (h RevokeAuthenticationTokenHandler) Handle(ctx context.Context, cmd RevokeAuthenticationToken) error {
-	return h.cr.DeleteAuthenticationTokenById(ctx, cmd.TokenId)
+	return h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, cmd.Token)
 }

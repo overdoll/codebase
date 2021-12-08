@@ -1,18 +1,52 @@
 package passport
 
 import (
+	"context"
 	"net/http"
 	"net/http/cookiejar"
 )
 
-type ClientTestPassport struct {
+type Pocket struct {
 	passport *Passport
 }
 
-type headerTestTransport struct {
-	base           http.RoundTripper
-	headers        map[string]string
-	clientPassport *ClientTestPassport
+func (a *Pocket) GetPassport() *Passport {
+	return a.passport
+}
+
+type memoryPassportStore struct {
+	pocket *Pocket
+}
+
+func (a *memoryPassportStore) ResponseEvent(ctx context.Context, res *http.Response) error {
+	return nil
+}
+
+func (a *memoryPassportStore) GetSessionDataFromRequest(req *http.Request) (string, string, error) {
+
+	if err := a.pocket.passport.Authenticated(); err != nil {
+		return a.pocket.passport.SessionID(), "", nil
+	}
+
+	return a.pocket.passport.SessionID(), a.pocket.passport.AccountID(), nil
+}
+
+// make into a regular passport
+func (a *memoryPassportStore) RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error {
+	t := ""
+	p, err := issueTestingPassport(&t)
+
+	if err != nil {
+		return err
+	}
+
+	a.pocket.passport = p
+	return nil
+}
+
+func (a *memoryPassportStore) NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error {
+	a.pocket.passport = FromContext(ctx)
+	return nil
 }
 
 func issueTestingPassport(id *string) (*Passport, error) {
@@ -23,16 +57,12 @@ func issueTestingPassport(id *string) (*Passport, error) {
 		accountId = *id
 	}
 
-	return issuePassport("", "", "", accountId)
+	return issuePassport("testing-session-dont-use-lol", "127.0.0.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", accountId)
 }
 
-// A custom HTTP client
-// Useful for when running GraphQL requests, and you need to attach some sort of authorization
-
-// the client "kind of" simulates a request in and out of the graphql gateway, in that it will add a passport to
-// the request, and modify the passport, when a new one is placed in the header
-// this makes it perfect for testing and ensuring your passport modifications were correct
-func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientTestPassport) {
+// NewHTTPTestClientWithPassport Custom HTTP client that stores passport in memory so it can be used in testing
+// since tests don't use a proxy to set the passport
+func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *Pocket) {
 	jar, _ := cookiejar.New(nil)
 
 	p, err := issueTestingPassport(accountId)
@@ -41,62 +71,14 @@ func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *ClientTest
 		panic(err)
 	}
 
-	clientPassport := &ClientTestPassport{
-		passport: p,
-	}
+	pocket := &Pocket{passport: p}
 
-	transport := &headerTestTransport{
-		base:           http.DefaultTransport,
-		headers:        make(map[string]string),
-		clientPassport: clientPassport,
-	}
+	newTransport := NewHttpRoundTripper(&memoryPassportStore{
+		pocket: pocket,
+	})
 
 	return &http.Client{
-		Transport: transport,
+		Transport: newTransport,
 		Jar:       jar,
-	}, clientPassport
-}
-
-func NewHTTPTestClientWithCustomHeaders(headers map[string]string) *http.Client {
-	jar, _ := cookiejar.New(nil)
-
-	transport := &headerTestTransport{
-		base:           http.DefaultTransport,
-		headers:        headers,
-		clientPassport: nil,
-	}
-
-	return &http.Client{
-		Transport: transport,
-		Jar:       jar,
-	}
-}
-
-func (h *ClientTestPassport) GetPassport() *Passport {
-	return h.passport
-}
-
-func (h *headerTestTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-
-	if err := addToRequest(req, h.clientPassport.passport); err != nil {
-		return nil, err
-	}
-
-	resp, err := h.base.RoundTrip(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	nw, err := fromResponse(resp)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if nw != nil {
-		h.clientPassport.passport = nw
-	}
-
-	return resp, err
+	}, pocket
 }

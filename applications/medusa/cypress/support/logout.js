@@ -1,5 +1,5 @@
 Cypress.Commands.add('logout', () => {
-  cy.clearCookie('connect.sid')
+  cy.clearCookie('od.session')
 
   cy.visit('/join')
 

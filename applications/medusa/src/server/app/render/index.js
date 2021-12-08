@@ -13,7 +13,6 @@ import axios from 'axios'
 import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import express from 'express'
-import parseCookies from '../../utilities/parseCookies'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -66,22 +65,6 @@ async function request (req, res, next) {
           headers
         }
       )
-
-      // forward cookies if any set-cookie is sent over
-      const cookie = response.headers['set-cookie']
-
-      if (cookie) {
-        // parse set-cookie and add it to our cookies
-        const cookies = parseCookies(cookie.join(','))
-
-        cookies.forEach(({
-          cookieName,
-          cookieValue,
-          options
-        }) => {
-          res.cookie(cookieName, cookieValue, options)
-        })
-      }
 
       const json = response.data
 

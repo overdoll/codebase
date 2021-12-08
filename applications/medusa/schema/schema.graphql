@@ -873,6 +873,9 @@ type DisableAccountMultiFactorPayload {
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
+  """The TOTP ID, sent intially"""
+  id: String!
+
   """The code that the TOTP expects"""
   code: String!
 }
@@ -1025,6 +1028,9 @@ type MultiFactor {
 
 """TOTP secret + image combination"""
 type MultiFactorTotp {
+  """The TOTP ID. Should be sent back when creating the TOTP"""
+  id: String!
+
   """The TOTP secret"""
   secret: String!
 

@@ -1,6 +1,5 @@
 import { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
-import parseCookies from '../../utilities/parseCookies'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../queries.json'
@@ -8,8 +7,6 @@ import { defaultPlaygroundOptions, gql } from 'apollo-server'
 import { graphqlSync, parse, visit } from 'graphql'
 import { buildFederatedSchema } from '@apollo/federation'
 import { renderPlaygroundPage } from '@apollographql/graphql-playground-html'
-import { Request, Response } from 'apollo-server-env'
-import { GraphQLRequestContext, GraphQLResponse, ValueOrPromise } from 'apollo-server-types'
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -188,13 +185,9 @@ class NodeGateway extends ApolloGateway {
   }
 }
 
-// https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
-// Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
-class CookieDataSource extends RemoteGraphQLDataSource {
-  /**
-   * Processes set-cookie headers from the service back to the
-   * client, so the cookies are set within their browser
-   */
+// Ensures passport is forwarded from downstream services
+class PassportDataSource extends RemoteGraphQLDataSource {
+  // Process passport from response
   async process ({
     request,
     context
@@ -203,21 +196,6 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       request,
       context
     })
-
-    const cookie = response.http?.headers.get('set-cookie')
-
-    if (cookie) {
-      const cookies = parseCookies(cookie)
-      cookies.forEach(({
-        cookieName,
-        cookieValue,
-        options
-      }) => {
-        if (context && context.res) {
-          context.res.cookie(cookieName, cookieValue, options)
-        }
-      })
-    }
 
     // make sure passport is forwarded back in the response as well
     if (response.passport) {
@@ -237,10 +215,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
     return response
   }
 
-  /**
-   * Sends any cookies found within the clients request headers then
-   * pushes them to the requested services context
-   */
+  // Send passport from request to body
   willSendRequest (requestContext) {
     if (!requestContext.context.req) {
       return
@@ -251,10 +226,6 @@ class CookieDataSource extends RemoteGraphQLDataSource {
     if (passportForward) {
       requestContext.request.passport = passportForward
     }
-
-    requestContext.request.http?.headers.set('cookie',
-      requestContext.context.req.headers.cookie
-    )
   }
 }
 
@@ -262,7 +233,7 @@ const gateway = new NodeGateway({
   serviceList: services,
   persistedQueries: true,
   buildService ({ url }) {
-    return new CookieDataSource({ url })
+    return new PassportDataSource({ url })
   }
 })
 

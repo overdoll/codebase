@@ -2,13 +2,11 @@ package types
 
 import (
 	"context"
-	"crypto/sha256"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
-	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -161,46 +159,35 @@ func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername 
 	}
 }
 
-func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken) *AuthenticationToken {
+func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken, acc *account.Account) *AuthenticationToken {
+
+	p := passport.FromContext(ctx)
 
 	var accountStatus *AuthenticationTokenAccountStatus
-
-	sameSession := true
-
-	// determine if the cookie is in the same session
-	_, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err == cookies.ErrCookieNotFound {
-		sameSession = false
-	}
 
 	// only show account status if verified
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
 
 		accountStatus = &AuthenticationTokenAccountStatus{
-			Registered: result.Registered(),
+			Registered: acc != nil,
 		}
 
-		if result.IsTOTPRequired() {
+		if acc.MultiFactorEnabled() {
 			accountStatus.MultiFactor = &MultiFactor{
 				Totp: true,
 			}
 		}
 	}
 
-	// we need to provide a globally-unique ID for the authentication token
-	// however we don't want to reveal the actual value (since it can be used to authenticate people)
-	// so we just hash it
-	hash := sha256.Sum256([]byte(result.Token()))
 	return &AuthenticationToken{
-		ID:            relay.NewID(AuthenticationToken{}, string(hash[:])),
-		SameSession:   sameSession,
+		ID:            relay.NewID(AuthenticationToken{}, result.Token()),
+		Token:         result.Token(),
+		SameDevice:    result.SameDevice(p),
 		Verified:      result.Verified(),
-		Device:        result.Device(),
-		Email:         result.Email(),
+		UserAgent:     result.UserAgent(),
 		Location:      MarshalLocationToGraphQL(result.Location()),
-		Secure:        result.IsSecure(passport.FromContext(ctx)),
+		Secure:        result.IsSecure(p),
 		AccountStatus: accountStatus,
 	}
 }

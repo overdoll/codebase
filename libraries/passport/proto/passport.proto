@@ -8,7 +8,7 @@ message Passport {
   Header header = 1;
 
   // Each passport may or may not have an account linked to it
-  AccountInfo account = 2;
+  AccountInfo accountInfo = 2;
 
   // Device information linked to this passport
   DeviceInfo deviceInfo = 3;
@@ -33,15 +33,19 @@ message Header {
 }
 
 message AccountInfo {
-  string accountId = 1;
+  // An ID attached to the account
+  string id = 1;
 }
 
 message DeviceInfo {
+  // An ID to uniquely identify this device
+  string id = 1;
+
   // IP of the device
-  string ip = 1;
+  string ip = 2;
 
   // User Agent of the device (can be parsed to grab the actual device information)
-  string userAgent = 2;
+  string userAgent = 3;
 }
 
 message Action {

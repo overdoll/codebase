@@ -7,7 +7,6 @@ import (
 	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/token"
-	"overdoll/libraries/uuid"
 )
 
 type GrantAuthenticationToken struct {
@@ -35,7 +34,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// Create an authentication cookie
-	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, loc, cmd.Passport)
+	instance, err := token.NewAuthenticationToken(cmd.Email, loc, cmd.Passport)
 
 	if err != nil {
 		return nil, err
@@ -45,8 +44,14 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 		return nil, err
 	}
 
+	email, secret, err := instance.GetSecretWithEmailAndDispose()
+
+	if err != nil {
+		return nil, err
+	}
+
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token(), cmd.Language.Locale()); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, email, instance.Token(), secret, cmd.Language.Locale()); err != nil {
 		return nil, err
 	}
 

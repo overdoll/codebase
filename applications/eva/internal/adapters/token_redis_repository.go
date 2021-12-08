@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/passport"
 
 	"github.com/go-redis/redis/v8"
 	"overdoll/applications/eva/internal/domain/token"
@@ -33,7 +34,7 @@ func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationT
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Context, id string) (*token.AuthenticationToken, error) {
+func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Context, id string) (*token.AuthenticationToken, error) {
 
 	val, err := r.client.Get(ctx, authenticationTokenPrefix+id).Result()
 
@@ -69,7 +70,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r AuthenticationTokenRepository) DeleteAuthenticationTokenById(ctx context.Context, id string) error {
+func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Context, passport *passport.Passport, id string) error {
 
 	_, err := r.client.Del(ctx, authenticationTokenPrefix+id).Result()
 
@@ -88,7 +89,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		IP:       instance.IP(),
 		Email:    instance.Email(),
 		Verified: 0,
-		Device:   instance.Device(),
+		Device:   instance.UserAgent(),
 		Location: location.Serialize(instance.Location()),
 	}
 
@@ -119,7 +120,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 
 func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Context, cookieId string, updateFn func(instance *token.AuthenticationToken) error) (*token.AuthenticationToken, error) {
 
-	instance, err := r.GetAuthenticationTokenById(ctx, cookieId)
+	instance, err := r.GetAuthenticationToken(ctx, cookieId)
 
 	if err != nil {
 		return nil, err
@@ -142,7 +143,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		IP:       instance.IP(),
 		Verified: redeemed,
 		Email:    instance.Email(),
-		Device:   instance.Device(),
+		Device:   instance.UserAgent(),
 		Location: location.Serialize(instance.Location()),
 	}
 

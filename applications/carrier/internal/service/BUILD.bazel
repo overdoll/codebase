@@ -28,7 +28,6 @@ go_test(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
-        "//libraries/passport",
         "//libraries/testing_tools",
         "@com_github_puerkitobio_goquery//:goquery",
         "@com_github_segmentio_ksuid//:ksuid",

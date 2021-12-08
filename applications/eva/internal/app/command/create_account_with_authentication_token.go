@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/account"
@@ -10,8 +11,9 @@ import (
 )
 
 type CreateAccountWithAuthenticationToken struct {
-	TokenId  string
+	Token    string
 	Username string
+	Passport *passport.Passport
 	Language *translations.Language
 }
 
@@ -26,18 +28,19 @@ func NewCreateAccountWithAuthenticationTokenHandler(cr token.Repository, ur acco
 
 func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd CreateAccountWithAuthenticationToken) (*account.Account, error) {
 
-	ck, err := h.cr.GetAuthenticationTokenById(ctx, cmd.TokenId)
+	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Token)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// AuthenticationToken should have been redeemed at this point, if we are on this command
-	if err := ck.MakeConsumed(); err != nil {
+	em, err := ck.Email(cmd.Passport)
+
+	if err != nil {
 		return nil, err
 	}
 
-	instance, err := account.NewAccount(cmd.Language, uuid.New().String(), cmd.Username, ck.Email())
+	instance, err := account.NewAccount(cmd.Language, uuid.New().String(), cmd.Username, em)
 
 	if err != nil {
 		return nil, err
@@ -47,7 +50,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	if err := h.cr.DeleteAuthenticationTokenById(ctx, ck.Token()); err != nil {
+	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token()); err != nil {
 		return nil, err
 	}
 

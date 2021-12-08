@@ -9,7 +9,6 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
-	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
@@ -20,7 +19,7 @@ require (
 	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
 	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
@@ -43,14 +42,14 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
-	github.com/tidwall/gjson v1.12.1 // indirect
-	github.com/tidwall/sjson v1.2.3 // indirect
+	github.com/tidwall/gjson v1.12.1
+	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.6.0
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/zap v1.18.1
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
 	golang.org/x/text v0.3.6
 	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect

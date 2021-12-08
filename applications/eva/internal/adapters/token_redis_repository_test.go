@@ -29,7 +29,7 @@ func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
 
 	id := uuid.New().String()
 
-	usr, err := repo.GetAuthenticationTokenById(ctx, id)
+	usr, err := repo.GetAuthenticationToken(ctx, id)
 
 	assert.Nil(t, usr)
 	assert.EqualError(t, err, token.ErrTokenNotFound.Error())
@@ -47,7 +47,7 @@ func TestCookieRepository_GetCookie_exists(t *testing.T) {
 
 	require.NoError(t, err)
 
-	usr, err := repo.GetAuthenticationTokenById(ctx, ck.Token())
+	usr, err := repo.GetAuthenticationToken(ctx, ck.Token())
 
 	assert.NotNil(t, usr)
 	assert.NoError(t, err)
@@ -69,7 +69,7 @@ func TestCookieRepository_DeleteCookie(t *testing.T) {
 
 	require.NoError(t, err)
 
-	err = repo.DeleteAuthenticationTokenById(ctx, ck.Token())
+	err = repo.DeleteAuthenticationToken(ctx, ck.Token())
 
 	assert.NoError(t, err)
 }

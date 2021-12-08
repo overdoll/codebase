@@ -8,7 +8,8 @@ import (
 )
 
 type VerifyAuthenticationToken struct {
-	TokenId string
+	Token  string
+	Secret string
 }
 
 type VerifyAuthenticationTokenHandler struct {
@@ -22,8 +23,8 @@ func NewVerifyAuthenticationTokenHandler(cr token.Repository, ar account.Reposit
 
 func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cmd VerifyAuthenticationToken) error {
 
-	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.TokenId, func(c *token.AuthenticationToken) error {
-		return c.MakeVerified()
+	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.Token, func(c *token.AuthenticationToken) error {
+		return c.MakeVerified(cmd.Secret)
 	})
 
 	if err != nil {

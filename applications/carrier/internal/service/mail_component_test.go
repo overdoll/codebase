@@ -7,9 +7,9 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"net/http"
 	"os"
 	carrier "overdoll/applications/carrier/proto"
-	"overdoll/libraries/passport"
 	"strings"
 	"testing"
 	"time"
@@ -35,6 +35,14 @@ type Inbox struct {
 	} `graphql:"inbox(namespace: $namespace, tag: $tag, timestamp_from: $timestamp_from, livequery: true)"`
 }
 
+// add testmail API key to header
+type addHeaderTransport struct{}
+
+func (adt *addHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Add("Authorization", "Bearer: "+os.Getenv("TESTMAIL_API_KEY"))
+	return http.DefaultTransport.RoundTrip(req)
+}
+
 func generateEmail(name string) string {
 	return os.Getenv("TESTMAIL_NAMESPACE") + "." + name + "@inbox.testmail.app"
 }
@@ -45,10 +53,8 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	main := strings.Split(parts[0], ".")
 	tag := main[1]
 
-	headers := make(map[string]string)
-	headers["Authorization"] = "Bearer: " + os.Getenv("TESTMAIL_API_KEY")
+	client := &http.Client{Transport: &addHeaderTransport{}}
 
-	client := passport.NewHTTPTestClientWithCustomHeaders(headers)
 	gClient := graphql.NewClient(testmailApiEndpoint, client)
 
 	var queryInbox Inbox

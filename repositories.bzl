@@ -1616,6 +1616,34 @@ def go_repositories():
         sum = "h1:fBdIW9lB4Iz0n9khmH8w27SJ3QEJ7+IgjPEwGSZiFdE=",
         version = "v1.0.0",
     )
+    go_repository(
+        name = "com_github_tidwall_gjson",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/tidwall/gjson",
+        sum = "h1:ikuZsLdhr8Ws0IdROXUS1Gi4v9Z4pGqpX/CvJkxvfpo=",
+        version = "v1.12.1",
+    )
+    go_repository(
+        name = "com_github_tidwall_match",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/tidwall/match",
+        sum = "h1:+Ho715JplO36QYgwN9PGYNhgZvoUSc9X2c80KVTi+GA=",
+        version = "v1.1.1",
+    )
+    go_repository(
+        name = "com_github_tidwall_pretty",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/tidwall/pretty",
+        sum = "h1:RWIZEg2iJ8/g6fDDYzMpobmaoGh5OLl4AXtGUGPcqCs=",
+        version = "v1.2.0",
+    )
+    go_repository(
+        name = "com_github_tidwall_sjson",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/tidwall/sjson",
+        sum = "h1:5+deguEhHSEjmuICXZ21uSSsXotWMA0orU783+Z7Cp8=",
+        version = "v1.2.3",
+    )
 
     go_repository(
         name = "com_github_tmc_grpc_websocket_proxy",

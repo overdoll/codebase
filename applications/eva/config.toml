@@ -2,4 +2,4 @@
 keyspace = "eva"
 
 [redis]
-db = 2
+db = 1

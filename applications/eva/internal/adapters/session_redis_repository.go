@@ -53,7 +53,7 @@ func (r SessionRepository) getSessionById(ctx context.Context, passport *passpor
 	}
 
 	// decrypt session - since value is initially encrypted
-	details, err := crypt.DecryptSession(val)
+	details, err := crypt.Decrypt(val)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt session: %v", err)
@@ -188,7 +188,7 @@ func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *s
 		return err
 	}
 
-	valReal, err := crypt.EncryptSession(string(val))
+	valReal, err := crypt.Encrypt(string(val))
 	if err != nil {
 		return err
 	}
@@ -231,7 +231,7 @@ func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId 
 		return nil, err
 	}
 
-	valReal, err := crypt.EncryptSession(string(val))
+	valReal, err := crypt.Encrypt(string(val))
 	if err != nil {
 		return nil, err
 	}

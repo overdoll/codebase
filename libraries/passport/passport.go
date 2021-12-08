@@ -3,7 +3,6 @@ package passport
 import (
 	"context"
 	"errors"
-	"github.com/segmentio/ksuid"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 
 	"sync"
@@ -21,7 +20,7 @@ type Passport struct {
 }
 
 func (p *Passport) Authenticated() error {
-	if p.passport.Account != nil {
+	if p.passport.AccountInfo != nil {
 		return nil
 	}
 
@@ -29,7 +28,11 @@ func (p *Passport) Authenticated() error {
 }
 
 func (p *Passport) AccountID() string {
-	return p.passport.Account.AccountId
+	return p.passport.AccountInfo.Id
+}
+
+func (p *Passport) DeviceID() string {
+	return p.passport.DeviceInfo.Id
 }
 
 func (p *Passport) SessionID() string {
@@ -45,13 +48,13 @@ func (p *Passport) UserAgent() string {
 }
 
 func (p *Passport) RevokeAccount() error {
-	p.passport.Account = nil
+	p.passport.AccountInfo = nil
 	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: RevokeAccount.slug})
 	return nil
 }
 
 func (p *Passport) AuthenticateAccount(id string) {
-	p.passport.Account = &libraries_passport_v1.AccountInfo{AccountId: id}
+	p.passport.AccountInfo = &libraries_passport_v1.AccountInfo{Id: id}
 	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: AuthenticateAccount.slug})
 }
 
@@ -102,22 +105,18 @@ func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	return nil
 }
 
-func issuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error) {
-
-	if sessionId == "" {
-		sessionId = ksuid.New().String()
-	}
+func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passport, error) {
 
 	var account *libraries_passport_v1.AccountInfo
 
 	if accountId != "" {
-		account = &libraries_passport_v1.AccountInfo{AccountId: accountId}
+		account = &libraries_passport_v1.AccountInfo{Id: accountId}
 	}
 
 	created := time.Now()
 
 	p := &libraries_passport_v1.Passport{
-		Account: account,
+		AccountInfo: account,
 		Header: &libraries_passport_v1.Header{
 			SessionId: sessionId,
 			Created:   created.Unix(),
@@ -125,6 +124,7 @@ func issuePassport(sessionId, ip, userAgent, accountId string) (*Passport, error
 			Expires: created.Add(time.Minute * 5).Unix(),
 		},
 		DeviceInfo: &libraries_passport_v1.DeviceInfo{
+			Id:        deviceId,
 			Ip:        ip,
 			UserAgent: userAgent,
 		},

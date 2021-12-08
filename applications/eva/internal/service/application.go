@@ -102,7 +102,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			AccountSessionsByAccount:        query.NewAccountSessionsByAccountHandler(sessionRepo),
 			AccountRecoveryCodesByAccount:   query.NewAccountRecoveryCodesByAccountHandler(mfaRepo),
 			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountMultiFactorTOTPEnabledHandler(mfaRepo),
-			AuthenticationTokenById:         query.NewAuthenticationTokenByIdHandler(tokenRepo, accountRepo, mfaRepo),
+			ViewAuthenticationToken:         query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			AccountUsernamesLimit:           query.NewAccountUsernamesLimitHandler(accountRepo),
 			AccountEmailsLimit:              query.NewAccountEmailsLimitHandler(accountRepo),
 		},

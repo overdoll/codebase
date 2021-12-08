@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/gorilla/securecookie"
 	"net/http"
-	"strings"
 )
 
 // passport doesn't care about the storage mechanism of how you store sessions or any other data
@@ -12,10 +11,23 @@ import (
 //  - there is already an account && session ID associated with the current request
 //  - you want to run any methods after a specific action happens
 type repository interface {
+	// GetSessionDataFromRequest - runs at the beginning, asking if the current request has any session or account data available
+	// otherwise, it issues a fresh passport with no account and a new session ID
 	GetSessionDataFromRequest(req *http.Request) (sessionId string, accountId string, error error)
 
+	// GetDeviceDataFromRequest - grabs device data from request
+	GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error)
+
+	// For events, the current passport is stored in context, so it can be easily accessible
+
+	// RevokedAccountSessionEvent - runs when an account session should be revoked
 	RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error
+
+	// NewAccountSessionEvent - runs when a new account session should be created
 	NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error
+
+	// ResponseEvent - runs right before a response is about to be sent out
+	ResponseEvent(ctx context.Context, res *http.Response) error
 }
 
 type passportTransport struct {
@@ -32,21 +44,13 @@ func NewHttpRoundTripper(r repository) http.RoundTripper {
 }
 func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
-	userAgent := strings.Join(req.Header["User-Agent"], ",")
-	forwarded := req.Header.Get("X-FORWARDED-FOR")
+	sessionId, accountId, err := h.repository.GetSessionDataFromRequest(req)
 
-	ip := ""
-
-	if forwarded != "" {
-		ip = strings.Split(forwarded, ",")[0]
-	} else {
-		ip = req.RemoteAddr
+	if err != nil {
+		return nil, err
 	}
 
-	var sessionId string
-	var accountId string
-
-	sessionId, accountId, err := h.repository.GetSessionDataFromRequest(req)
+	deviceId, ip, userAgent, err := h.repository.GetDeviceDataFromRequest(req)
 
 	if err != nil {
 		return nil, err
@@ -54,6 +58,7 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 
 	requestPassport, err := issuePassport(
 		sessionId,
+		deviceId,
 		ip,
 		userAgent,
 		accountId,
@@ -81,6 +86,12 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 
 	// passport was not modified during this session
 	if responsePassport == nil {
+
+		// still run the response event, but with the "request" passport instead
+		if err := h.repository.ResponseEvent(withContext(res.Request.Context(), requestPassport), res); err != nil {
+			return nil, err
+		}
+
 		return res, nil
 	}
 
@@ -97,6 +108,10 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 		if err := h.repository.RevokedAccountSessionEvent(ctx, res, responsePassport.SessionID()); err != nil {
 			return nil, err
 		}
+	}
+
+	if err := h.repository.ResponseEvent(ctx, res); err != nil {
+		return nil, err
 	}
 
 	return res, err

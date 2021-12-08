@@ -10,8 +10,9 @@ import (
 )
 
 type NewLoginToken struct {
-	Email string
-	Token string
+	Email  string
+	Token  string
+	Secret string
 }
 
 type NewLoginTokenHandler struct {
@@ -34,7 +35,8 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 	u.Path = path.Join(u.Path, "token")
 
 	q := u.Query()
-	q.Set("id", cmd.Token)
+	q.Set("token", cmd.Token)
+	q.Set("secret", cmd.Secret)
 
 	u.RawQuery = q.Encode()
 
