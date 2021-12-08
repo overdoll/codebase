@@ -11,5 +11,7 @@ export { default as PageWrapper } from './PageWrapper/PageWrapper'
 
 export { default as SmallBackgroundBox } from './BuildingBlocks/SmallBackgroundBox/SmallBackgroundBox'
 export { default as LargeBackgroundBox } from './BuildingBlocks/LargeBackgroundBox/LargeBackgroundBox'
+export { default as RenderOnDesktop } from './BuildingBlocks/RenderOnDesktop/RenderOnDesktop'
+export { default as RenderOnMobile } from './BuildingBlocks/RenderOnMobile/RenderOnMobile'
 
 export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/ListSpacer'

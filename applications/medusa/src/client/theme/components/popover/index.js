@@ -11,7 +11,7 @@ const baseStyleContent = (props) => {
   return {
     bg: bg,
     width: 'xs',
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'inherit',
     borderRadius: 'md',
     boxShadow: 'sm',

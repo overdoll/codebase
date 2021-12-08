@@ -111,7 +111,7 @@ export default function RouterRenderer (): Node {
         {routeComponent}
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
           <Slide direction='top' in={isPending}>
-            <Progress borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
+            <Progress h='3px' borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
           </Slide>
         </chakra.div>
       </Suspense>

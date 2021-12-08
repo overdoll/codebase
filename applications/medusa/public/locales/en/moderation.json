@@ -70,7 +70,7 @@
   },
   "history": {
     "title": "Moderation History",
-    "description": "Any moderation actions you do will appear here. You can undo any actions within 10 minutes of making them. ",
+    "description": "Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making them. ",
     "table": {
       "headers": {
         "date": "Date Posted",

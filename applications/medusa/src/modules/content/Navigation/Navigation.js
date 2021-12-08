@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { useMemo, Fragment } from 'react'
-import { Button, Box, useBreakpointValue } from '@chakra-ui/react'
+import { Button, Box, useBreakpointValue, Skeleton } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -14,158 +14,250 @@ import { useRelayEnvironment } from 'react-relay'
 import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
 import getBasePath from './helpers/getBasePath'
 import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
-
+import { RenderOnMobile, RenderOnDesktop } from '@//:modules/content/PageLayout'
+import NavLink from '@//:modules/routing/NavLink'
+import { SidebarButton, NavigationButton, MenuButton } from '@//:modules/content/Navigation/components'
 import {
-  NavigationButton,
-  NavigationCenterItems,
-  NavigationContainer,
+  NavigationBarCenter,
   NavigationContents,
-  NavigationLeftBrand,
-  NavigationRightItems,
+  NavigationBar,
+  NavigationBarLeft,
+  NavigationBarRight,
   PageContents,
-  SimplifiedNavigation
+  SimplifiedNavigation,
+  Sidebar,
+  SidebarGrouping
 } from '@//:modules/content/Navigation/content'
 import {
-  Sidebar,
-  SidebarButton,
-  SidebarGrouping
-} from '@//:modules/content/Navigation/content/NavigationContents/Sidebar'
-
-import {
-  AvatarMenu,
+  SimpleProfileButton,
   LoggedOutPlaceholder,
-  LoginMenu,
+  SimpleLoginButton,
   LogoutButton,
-  MenuItemButton,
   NavigationMenu,
   ProfileButton
-} from '@//:modules/content/Navigation/content/NavigationContainer/NavigationRightItems'
+} from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight'
 
 type Props = {
   children: Node,
-  rootQuery: NavigationFragment$key
+  query: NavigationFragment$key
 }
 
 const NavigationFragmentGQL = graphql`
   fragment NavigationFragment on Account {
-    ...AvatarMenuFragment
+    ...SimpleProfileButtonFragment
     ...ProfileButtonFragment
   }
 `
 
-export default function Navigation (props: Props): Node {
+export default function Navigation ({ children, query }: Props): Node {
+  const data = useFragment(NavigationFragmentGQL, query)
+
   const [t] = useTranslation('navigation')
 
   const environment = useRelayEnvironment()
 
   const location = useLocation()
 
-  const data = useFragment(NavigationFragmentGQL, props.rootQuery)
-
   const ability = useAbility()
+
+  const display = useBreakpointValue({ base: 'mobile', md: 'desktop' })
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
   }), [ability])
 
-  const display = useBreakpointValue({ base: 'mobile', md: 'desktop' })
+  // Buttons that appear in the expandable Menu at the top right
+  const MenuButtons = () => {
+    // Buttons that appear regardless of the user type, such as language swapping
+    const UniversalButtons = () => <></>
 
-  const NavigationRightMenuCalc = () => {
+    // If layout is mobile, extra buttons will be condensed to the Menu so
+    // the navigation bar isn't overcrowded
+    const CondensedButtons = () => {
+      if (display === 'mobile') {
+        return navigationTop.slice(3).map((item, index) =>
+          <NavLink key={index} exact={item.exact} to={item.path}>
+            {({ isActiveBasePath }) => (
+              <MenuButton
+                active={isActiveBasePath}
+                label={t(item.navigation.title)}
+                icon={item.navigation.icon}
+              />
+            )}
+          </NavLink>)
+      }
+
+      return <></>
+    }
+
     if (ability.can('manage', 'account')) {
       return (
-        <NavigationRightItems>
+        <>
           {!ability.can('read', 'locked') &&
-            <AvatarMenu viewer={data} />}
-          <NavigationMenu>
-            {!ability.can('read', 'locked') &&
-              <ProfileButton viewer={data} />}
-            {navigationMenu.map((item, index) => {
-              return (
-                <MenuItemButton
-                  key={index}
-                  path={item.path} label={item.navigation.title}
-                  icon={item.navigation.icon}
-                />
-              )
-            })}
-            <LogoutButton />
-          </NavigationMenu>
-        </NavigationRightItems>
+            <ProfileButton query={data} />}
+          <CondensedButtons />
+          {navigationMenu.map((item, index) => {
+            return (
+              <NavLink key={index} exact={item.exact} to={item.path}>
+                {({ isActiveBasePath }) => (
+                  <MenuButton
+                    active={isActiveBasePath}
+                    label={t(item.navigation.title)}
+                    icon={item.navigation.icon}
+                  />
+                )}
+              </NavLink>
+            )
+          })}
+          <UniversalButtons />
+          <LogoutButton />
+        </>
+      )
+    }
+    return (
+      <>
+        <LoggedOutPlaceholder />
+        <UniversalButtons />
+      </>
+    )
+  }
+
+  // Buttons that appear at the top of the navigation
+  const NavigationButtons = () => {
+    const NavigationButtonSkeleton = () =>
+      <Skeleton
+        startColor='gray.600'
+        w='58px' h={{ base: '48px', md: '38px' }}
+        borderRadius={{ base: 2, md: 10 }}
+      />
+
+    if (!display) {
+      return (
+        <>
+          <NavigationButtonSkeleton />
+          <NavigationButtonSkeleton />
+          <NavigationButtonSkeleton />
+        </>
       )
     }
 
+    // For simplifying the buttons when on mobile to avoid overcrowding
+    const navigationButtons = () => {
+      if (display === 'mobile') return navigationTop.slice(0, 3)
+      return navigationTop
+    }
+
     return (
-      <NavigationRightItems>
-        <LoginMenu />
-        <NavigationMenu>
-          <LoggedOutPlaceholder />
-        </NavigationMenu>
-      </NavigationRightItems>
+      <>
+        {navigationButtons().map((item, index) =>
+          <NavLink key={index} exact={item.exact} to={item.path}>
+            {({ isActiveBasePath }) => (
+              <NavigationButton
+                active={isActiveBasePath}
+                icon={item.navigation.icon}
+                label={t(item.navigation.title)}
+              />
+            )}
+          </NavLink>)}
+        {display === 'mobile' &&
+          <>
+            <NavigationMenu>
+              <MenuButtons />
+            </NavigationMenu>
+          </>}
+      </>
     )
   }
 
-  // Show a simplified navigation bar if on a filtered route
+  // All the sidebar buttons as well as their groupings
+  const SidebarButtons = (group) => {
+    return Object.keys(group.routes).map((grouping, groupingIndex) =>
+      <SidebarGrouping key={groupingIndex} label={grouping}>
+        {(group.routes[grouping]).map((sidebarItem, sidebarItemIndex) =>
+          <NavLink key={sidebarItemIndex} to={sidebarItem.path}>
+            {({ isActive }) => (
+              <SidebarButton
+                active={isActive}
+                icon={sidebarItem.navigation.icon}
+                title={t(sidebarItem.navigation.title)}
+              />
+            )}
+          </NavLink>
+        )}
+      </SidebarGrouping>
+    )
+  }
+
+  // A component to display the quick access buttons on desktop
+  const QuickAccessHandler = () => {
+    if (ability.can('manage', 'account')) {
+      return <SimpleProfileButton query={data} />
+    }
+
+    return <SimpleLoginButton />
+  }
+
+  // A banner that can be displayed for the user to see as soon as they log in
+  const BannerHandler = () => {
+    if (ability.can('read', 'locked') && getBasePath(location.pathname) !== '/locked') {
+      return <LockedAccountBanner />
+    }
+
+    return <></>
+  }
+
+  // Show a simplified navigation bar if on a filtered route like the login page
   if (navigationFiltered.includes(getBasePath(location.pathname))) {
     return (
-      <SimplifiedNavigation>
-        <PageContents>
-          {props.children}
-        </PageContents>
-      </SimplifiedNavigation>
+      <>
+        <BannerHandler />
+        <SimplifiedNavigation>
+          <PageContents>
+            {children}
+          </PageContents>
+        </SimplifiedNavigation>
+      </>
     )
   }
 
-  // Otherwise, show the regular navigation bar
+  // The main navigation bar with all the relevant components
   return (
     <>
-      <NavigationContainer>
-        <NavigationLeftBrand>
+      <NavigationBar>
+        <NavigationBarLeft>
           <Link to='/'>
             <Button textColor='primary.500' variant='link' colorScheme='primary'>{t('title')}</Button>
           </Link>
-        </NavigationLeftBrand>
-        <NavigationCenterItems>
-          {navigationTop.map((item, index) => {
-            return (
-              <NavigationButton
-                key={index}
-                exact={item.exact}
-                icon={item.navigation.icon}
-                path={item.path} label={t(item.navigation.title)}
-              />
-            )
-          })}
-          {display === 'mobile' && <NavigationRightMenuCalc />}
-        </NavigationCenterItems>
-        {display === 'desktop' && <NavigationRightMenuCalc />}
-      </NavigationContainer>
-      {(ability.can('read', 'locked') && getBasePath(location.pathname) !== '/locked') && <LockedAccountBanner />}
+        </NavigationBarLeft>
+        <NavigationBarCenter>
+          <NavigationButtons />
+        </NavigationBarCenter>
+        <NavigationBarRight>
+          <QuickAccessHandler />
+          <NavigationMenu>
+            <MenuButtons />
+          </NavigationMenu>
+        </NavigationBarRight>
+      </NavigationBar>
       <NavigationContents>
-        {navigationSidebar.map((sidebarGroup, index) => {
-          if (getBasePath(location.pathname) !== sidebarGroup.path) {
+        <RenderOnMobile>
+          <BannerHandler />
+        </RenderOnMobile>
+        {navigationSidebar.map((item, index) => {
+          if (getBasePath(location.pathname) !== item.path) {
             return null
           }
           return (
-            <Sidebar key={index} title={t(sidebarGroup.navigation.title)}>
-              {Object.keys(sidebarGroup.routes).map((grouping, groupingIndex) => {
-                return (
-                  <SidebarGrouping key={groupingIndex} label={grouping}>
-                    {(sidebarGroup.routes[grouping]).map((sidebarItem, sidebarItemIndex) => (
-                      <SidebarButton
-                        key={sidebarItemIndex}
-                        title={t(sidebarItem.navigation.title)}
-                        path={sidebarItem.path}
-                      />
-                    )
-                    )}
-                  </SidebarGrouping>
-                )
-              })}
+            <Sidebar key={index} title={t(item.navigation.title)}>
+              {SidebarButtons(item)}
             </Sidebar>
           )
         })}
         <PageContents>
-          {props.children}
+          <RenderOnDesktop>
+            <BannerHandler />
+          </RenderOnDesktop>
+          {children}
         </PageContents>
       </NavigationContents>
     </>

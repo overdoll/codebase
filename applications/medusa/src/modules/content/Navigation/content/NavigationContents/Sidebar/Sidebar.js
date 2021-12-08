@@ -40,19 +40,13 @@ export default function Sidebar (props: Props): Node {
         zIndex='sidebar'
         display={{ base: 'none', md: 'initial' }}
       >
-        <Button
-          bg='transparent'
-          pl={1} w='100%'
-          mb={4}
-          pr={1}
+        <Flex
+          w='100%'
+          align='center' justify='space-between'
+          mb={3}
         >
-          <Flex
-            w='100%'
-            align='center' justify='space-between'
-          >
-            <Heading color='gray.00' ml={1} size='md'>{props.title}</Heading>
-          </Flex>
-        </Button>
+          <Heading color='gray.00' ml={1} size='md'>{props.title}</Heading>
+        </Flex>
         <Stack spacing={2}>
           {props.children}
         </Stack>

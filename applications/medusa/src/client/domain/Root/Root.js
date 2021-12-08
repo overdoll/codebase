@@ -48,7 +48,7 @@ export default function Root (props: Props): Node {
         title='overdoll'
       />
       <AbilityContext.Provider value={ability}>
-        <Navigation rootQuery={data?.viewer}>
+        <Navigation query={data?.viewer}>
           <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
         </Navigation>
       </AbilityContext.Provider>

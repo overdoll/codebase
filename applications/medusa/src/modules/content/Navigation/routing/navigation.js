@@ -91,7 +91,8 @@ const routes: Array<Route> = [
             icon: LoginKeys
           },
           side: {
-            title: 'sidebar.mod.queue'
+            title: 'sidebar.mod.queue',
+            icon: LoginKeys
           }
         }
       },
@@ -99,7 +100,8 @@ const routes: Array<Route> = [
         path: '/moderation/history',
         navigation: {
           side: {
-            title: 'sidebar.mod.history'
+            title: 'sidebar.mod.history',
+            icon: LoginKeys
           }
         }
       }
@@ -135,7 +137,8 @@ const routes: Array<Route> = [
             icon: ContentBrushPen
           },
           side: {
-            title: 'sidebar.manage.create_post'
+            title: 'sidebar.manage.create_post',
+            icon: LoginKeys
           }
         }
       },
@@ -143,7 +146,8 @@ const routes: Array<Route> = [
         path: '/manage/my_posts',
         navigation: {
           side: {
-            title: 'sidebar.manage.my_posts'
+            title: 'sidebar.manage.my_posts',
+            icon: LoginKeys
           }
         }
       },
@@ -151,7 +155,8 @@ const routes: Array<Route> = [
         path: '/manage/brands',
         navigation: {
           side: {
-            title: 'sidebar.manage.brands'
+            title: 'sidebar.manage.brands',
+            icon: LoginKeys
           }
         }
       }
@@ -161,7 +166,8 @@ const routes: Array<Route> = [
     path: '/settings',
     navigation: {
       side: {
-        title: 'sidebar.settings.title'
+        title: 'sidebar.settings.title',
+        icon: LoginKeys
       }
     },
     middleware: [
@@ -180,7 +186,8 @@ const routes: Array<Route> = [
         path: '/settings/profile',
         navigation: {
           side: {
-            title: 'sidebar.settings.profile'
+            title: 'sidebar.settings.profile',
+            icon: LoginKeys
           },
           menu: {
             title: 'menu.settings',
@@ -192,7 +199,8 @@ const routes: Array<Route> = [
         path: '/settings/security',
         navigation: {
           side: {
-            title: 'sidebar.settings.security'
+            title: 'sidebar.settings.security',
+            icon: LoginKeys
           }
         }
       },
@@ -200,7 +208,8 @@ const routes: Array<Route> = [
         path: '/settings/moderation',
         navigation: {
           side: {
-            title: 'sidebar.settings.moderation'
+            title: 'sidebar.settings.moderation',
+            icon: LoginKeys
           }
         },
         middleware: [
