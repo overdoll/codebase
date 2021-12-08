@@ -18,6 +18,10 @@ type memoryPassportStore struct {
 	pocket *Pocket
 }
 
+func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error) {
+	return a.pocket.passport.DeviceID(), a.pocket.passport.IP(), a.pocket.passport.UserAgent(), nil
+}
+
 func (a *memoryPassportStore) ResponseEvent(ctx context.Context, res *http.Response) error {
 	return nil
 }
@@ -57,7 +61,7 @@ func issueTestingPassport(id *string) (*Passport, error) {
 		accountId = *id
 	}
 
-	return issuePassport("testing-session-dont-use-lol", "127.0.0.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", accountId)
+	return issuePassport("testing-session-dont-use-lol", "random-device-id", "127.0.0.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", accountId)
 }
 
 // NewHTTPTestClientWithPassport Custom HTTP client that stores passport in memory so it can be used in testing

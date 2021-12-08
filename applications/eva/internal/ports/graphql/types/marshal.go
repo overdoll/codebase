@@ -173,7 +173,7 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 			Registered: acc != nil,
 		}
 
-		if acc.MultiFactorEnabled() {
+		if acc != nil && acc.MultiFactorEnabled() {
 			accountStatus.MultiFactor = &MultiFactor{
 				Totp: true,
 			}

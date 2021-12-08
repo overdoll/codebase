@@ -112,6 +112,7 @@ async function request (req, res, next) {
       runtimeContext={runtime}
       helmetContext={helmetContext}
       flash={req.flash}
+      cookies={req.universalCookies}
     />
   )
 

@@ -155,7 +155,7 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 	if err != nil {
 		// no device cookie - we will add one
 		if err == http.ErrNoCookie {
-			encoded, err := securecookie.EncodeMulti(deviceCookieName, passport.FromContext(ctx).DeviceId(), a.Codecs...)
+			encoded, err := securecookie.EncodeMulti(deviceCookieName, passport.FromContext(ctx).DeviceID(), a.Codecs...)
 
 			if err != nil {
 				return err

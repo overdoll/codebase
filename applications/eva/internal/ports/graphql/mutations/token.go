@@ -43,7 +43,8 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenInput) (*types.GrantAccountAccessWithAuthenticationTokenPayload, error) {
 
 	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
-		Token: input.Token,
+		Token:    input.Token,
+		Passport: passport.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -75,8 +76,9 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error) {
 
 	if err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, command.VerifyAuthenticationToken{
-		Token:  input.Token,
-		Secret: input.Secret,
+		Token:    input.Token,
+		Secret:   input.Secret,
+		Passport: passport.FromContext(ctx),
 	}); err != nil {
 
 		if err == token.ErrTokenNotFound {
@@ -90,6 +92,7 @@ func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input 
 	// get updated token
 	ck, acc, err := r.App.Queries.ViewAuthenticationToken.Handle(ctx, query.ViewAuthenticationToken{
 		Token:    input.Token,
+		Secret:   &input.Secret,
 		Passport: passport.FromContext(ctx),
 	})
 
@@ -113,6 +116,7 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context, input 
 
 	if err := r.App.Commands.RevokeAuthenticationToken.Handle(ctx, command.RevokeAuthenticationToken{
 		Token:    input.Token,
+		Secret:   input.Secret,
 		Passport: passport.FromContext(ctx),
 	}); err != nil {
 		return nil, err

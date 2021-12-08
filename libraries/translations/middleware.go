@@ -3,10 +3,10 @@ package translations
 import (
 	"context"
 	"net/http"
+	"overdoll/libraries/helpers"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/text/language"
-	"overdoll/libraries/cookies"
 )
 
 type languageContextType string
@@ -32,7 +32,7 @@ func FromContext(ctx context.Context) *Language {
 // LanguageToContext - parse the language cookie and determine the language
 func LanguageToContext(c *gin.Context) *http.Request {
 
-	ck, err := cookies.ReadCookie(c.Request.Context(), cookie)
+	ck, err := c.Request.Cookie(cookie)
 
 	acceptedValue := ""
 
@@ -54,8 +54,12 @@ func MutateLanguageLocaleContext(ctx context.Context, p *Language, locale string
 		return err
 	}
 
-	return cookies.SetCookie(ctx, &http.Cookie{
+	gc := helpers.GinContextFromContext(ctx)
+
+	http.SetCookie(gc.Writer, &http.Cookie{
 		Name:  cookie,
 		Value: p.Locale(),
 	})
+
+	return nil
 }

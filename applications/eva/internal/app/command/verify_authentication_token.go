@@ -2,14 +2,16 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
 type VerifyAuthenticationToken struct {
-	Token  string
-	Secret string
+	Passport *passport.Passport
+	Token    string
+	Secret   string
 }
 
 type VerifyAuthenticationTokenHandler struct {
@@ -23,7 +25,7 @@ func NewVerifyAuthenticationTokenHandler(cr token.Repository, ar account.Reposit
 
 func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cmd VerifyAuthenticationToken) error {
 
-	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.Token, func(c *token.AuthenticationToken) error {
+	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.Passport, cmd.Token, cmd.Secret, func(c *token.AuthenticationToken) error {
 		return c.MakeVerified(cmd.Secret)
 	})
 

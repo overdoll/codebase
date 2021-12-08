@@ -28,13 +28,13 @@ func NewCreateAccountWithAuthenticationTokenHandler(cr token.Repository, ur acco
 
 func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd CreateAccountWithAuthenticationToken) (*account.Account, error) {
 
-	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Token)
+	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Passport, cmd.Token, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	em, err := ck.Email(cmd.Passport)
+	em, err := ck.ViewEmailWithPassport(cmd.Passport)
 
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token()); err != nil {
+	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token(), nil); err != nil {
 		return nil, err
 	}
 

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d0f7d44cd800726b46e53e970757851a
+ * @relayHash 8ff037e504b055ff04061393c42088d1
  */
 
 /* eslint-disable */
@@ -12,6 +12,7 @@ export type MultiFactorTotpFlowMutationVariables = {||};
 export type MultiFactorTotpFlowMutationResponse = {|
   +generateAccountMultiFactorTotp: ?{|
     +multiFactorTotp: ?{|
+      +id: string,
       +secret: string,
       +imageSrc: string,
     |}
@@ -27,6 +28,7 @@ export type MultiFactorTotpFlowMutation = {|
 mutation MultiFactorTotpFlowMutation {
   generateAccountMultiFactorTotp {
     multiFactorTotp {
+      id
       secret
       imageSrc
     }
@@ -52,6 +54,13 @@ var v0 = [
         "name": "multiFactorTotp",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -91,7 +100,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "d0f7d44cd800726b46e53e970757851a",
+    "id": "8ff037e504b055ff04061393c42088d1",
     "metadata": {},
     "name": "MultiFactorTotpFlowMutation",
     "operationKind": "mutation",
@@ -100,5 +109,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ab43a8171fd19c2f81c11c6f3297a611';
+(node: any).hash = 'e3553fc0ce0d27b96991a0298cfb97af';
 module.exports = node;

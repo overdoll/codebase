@@ -22,19 +22,19 @@ message Passport {
 }
 
 message Header {
-  // Unique session ID for this passport
-  string sessionId = 1;
-
   // When the passport was created
-  int64 created = 2;
+  int64 created = 1;
 
   // When the passport expires
-  int64 expires = 3;
+  int64 expires = 2;
 }
 
 message AccountInfo {
   // An ID attached to the account
   string id = 1;
+
+  // Session ID attached to this account
+  string sessionId = 2;
 }
 
 message DeviceInfo {

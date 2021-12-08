@@ -34,7 +34,8 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// Create an authentication cookie
-	instance, err := token.NewAuthenticationToken(cmd.Email, loc, cmd.Passport)
+	// temporary contains the email and secret
+	instance, temporary, err := token.NewAuthenticationToken(cmd.Email, loc, cmd.Passport)
 
 	if err != nil {
 		return nil, err
@@ -44,14 +45,12 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 		return nil, err
 	}
 
-	email, secret, err := instance.GetSecretWithEmailAndDispose()
-
 	if err != nil {
 		return nil, err
 	}
 
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, email, instance.Token(), secret, cmd.Language.Locale()); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret(), cmd.Language.Locale()); err != nil {
 		return nil, err
 	}
 

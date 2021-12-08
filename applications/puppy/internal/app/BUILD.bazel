@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//applications/puppy/internal/domain/session",
         "//libraries/passport",
+        "@com_github_google_uuid//:uuid",
         "@com_github_gorilla_securecookie//:securecookie",
     ],
 )

@@ -24,7 +24,6 @@ go_library(
         "@com_github_gorilla_securecookie//:securecookie",
         "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",
         "@com_github_grpc_ecosystem_go_grpc_middleware//util/metautils",
-        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_tidwall_gjson//:gjson",
         "@com_github_tidwall_sjson//:sjson",
         "@org_golang_google_grpc//:go_default_library",

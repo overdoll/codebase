@@ -9,6 +9,7 @@ import (
 
 type RevokeAuthenticationToken struct {
 	Token    string
+	Secret   *string
 	Passport *passport.Passport
 }
 
@@ -21,5 +22,5 @@ func NewRevokeAuthenticationTokenHandler(cr token.Repository) RevokeAuthenticati
 }
 
 func (h RevokeAuthenticationTokenHandler) Handle(ctx context.Context, cmd RevokeAuthenticationToken) error {
-	return h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, cmd.Token)
+	return h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, cmd.Token, cmd.Secret)
 }

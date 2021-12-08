@@ -4,13 +4,14 @@ go_library(
     name = "token",
     srcs = [
         "repository.go",
+        "temporary_state.go",
         "token.go",
     ],
     importpath = "overdoll/applications/eva/internal/domain/token",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/location",
         "//libraries/passport",
+        "@org_golang_x_crypto//nacl/secretbox",
     ],
 )

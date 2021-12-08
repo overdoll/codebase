@@ -4,7 +4,7 @@
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useCallback, useEffect, useState, Suspense } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Register from './Register/Register'
 import Lobby from './Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
@@ -20,11 +20,14 @@ type Props = {
 };
 
 const JoinTokenStatus = graphql`
-  query JoinRootQuery {
-    viewAuthenticationToken {
+  query JoinRootQuery($token: String!) {
+    viewAuthenticationToken(token: $token) {
       ...LobbyFragment
       ...JoinRootFragment
       ...JoinFragment
+      ...RegisterFragment
+      ...MultiFactorFragment
+      ...GrantFragment
     }
   }
 `
@@ -32,13 +35,13 @@ const JoinTokenStatus = graphql`
 const JoinRootFragment = graphql`
   fragment JoinRootFragment on AuthenticationToken {
     verified
-    sameSession
+    token
+    sameDevice
     accountStatus {
       registered
       multiFactor {
         totp
       }
-      ...MultiFactorFragment
     }
   }
 `
@@ -48,7 +51,6 @@ export default function JoinRoot (props: Props): Node {
     JoinTokenStatus,
     props.prepared.joinQuery
   )
-
   const ref = usePreloadedQuery<JoinRootQuery>(JoinTokenStatus, queryRef)
 
   const tokenData = ref.viewAuthenticationToken
@@ -78,10 +80,10 @@ export default function JoinRoot (props: Props): Node {
 
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
-    if (authenticationInitiated) {
-      loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
+    if (data?.verified !== true) {
+      loadQuery({ token: data.token }, { fetchPolicy: 'network-only' })
     }
-  }, [authenticationInitiated])
+  }, [data])
 
   // when authentication not initiated
   if (!authenticationInitiated) {
@@ -98,14 +100,14 @@ export default function JoinRoot (props: Props): Node {
   }
 
   if (!data.accountStatus?.registered) {
-    return <Register />
+    return <Register queryRef={tokenData} />
   }
 
   // Check if the user has multi-factor enabled and show them the flow if they do
   if (multiFactorEnabled) {
-    return <MultiFactor query={data.accountStatus} />
+    return <MultiFactor queryRef={tokenData} />
   }
 
   // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
-  return (<Grant />)
+  return (<Grant queryRef={tokenData} />)
 }

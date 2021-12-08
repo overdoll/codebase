@@ -8,9 +8,10 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "TOKEN_EXPIRED" | "USERNAME_TAKEN" | "%future added value";
+export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "TOKEN_INVALID" | "USERNAME_TAKEN" | "%future added value";
 export type CreateAccountWithAuthenticationTokenInput = {|
-  username: string
+  token: string,
+  username: string,
 |};
 export type RegisterMutationVariables = {|
   input: CreateAccountWithAuthenticationTokenInput

@@ -29,14 +29,15 @@ import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 type Props = {}
 
 const MultiFactorTotpFlowMutationGQL = graphql`
-    mutation MultiFactorTotpFlowMutation {
-        generateAccountMultiFactorTotp {
-            multiFactorTotp {
-                secret
-                imageSrc
-            }
-        }
+  mutation MultiFactorTotpFlowMutation {
+    generateAccountMultiFactorTotp {
+      multiFactorTotp {
+        id
+        secret
+        imageSrc
+      }
     }
+  }
 `
 
 export default function MultiFactorTotpFlow (props: Props): Node {
@@ -115,7 +116,15 @@ export default function MultiFactorTotpFlow (props: Props): Node {
         spacing={1}
       >
         <Box>
-          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+          <Flex
+            m={2} align={{
+              base: 'initial',
+              md: 'center'
+            }} direction={{
+              base: 'column',
+              md: 'row'
+            }}
+          >
             <Flex m={2} justify='center' align='center'>
               <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
                 <Icon icon={PhoneActionDownload} color='gray.100' />
@@ -145,7 +154,15 @@ export default function MultiFactorTotpFlow (props: Props): Node {
         </Box>
         <Divider />
         <Box>
-          <Flex align={{ base: 'initial', md: 'center' }} m={2} direction={{ base: 'column', md: 'row' }}>
+          <Flex
+            align={{
+              base: 'initial',
+              md: 'center'
+            }} m={2} direction={{
+              base: 'column',
+              md: 'row'
+            }}
+          >
             <Flex m={2} justify='center' align='center'>
               <Flex
                 h={32}
@@ -188,7 +205,15 @@ export default function MultiFactorTotpFlow (props: Props): Node {
         </Box>
         <Divider />
         <Box>
-          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+          <Flex
+            m={2} align={{
+              base: 'initial',
+              md: 'center'
+            }} direction={{
+              base: 'column',
+              md: 'row'
+            }}
+          >
             <Flex m={2} justify='center' align='center'>
               <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
                 <Icon icon={Typing} color='gray.100' />
@@ -201,7 +226,7 @@ export default function MultiFactorTotpFlow (props: Props): Node {
               <Text mb={2} color='gray.100' fontSize='sm'>
                 {t('totp.flow.code_step.description')}
               </Text>
-              <TotpSubmissionForm setIsSuccessful={() => setIsSuccessful(true)} />
+              <TotpSubmissionForm id={totp.id} setIsSuccessful={() => setIsSuccessful(true)} />
             </Box>
           </Flex>
         </Box>

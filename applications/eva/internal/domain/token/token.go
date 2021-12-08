@@ -24,27 +24,26 @@ type AuthenticationToken struct {
 
 	ip string
 
-	token  string
-	secret string
+	token string
 
 	location *location.Location
 }
 
-const (
-	OTPKey = "otp-key"
-)
-
 var (
-	ErrTokenNotVerified = errors.New("token is not yet verified")
-	ErrTokenNotFound    = errors.New("token not found")
+	ErrAlreadyVerified   = errors.New("token already verified")
+	ErrNotVerified       = errors.New("token not yet verified")
+	ErrTokenNotRevocable = errors.New("token cannot be revoked by the current user")
+	ErrInvalidSecret     = errors.New("token secret is invalid")
+	ErrTokenNotFound     = errors.New("token not found")
+	ErrInvalidDevice     = errors.New("token viewed or used on an invalid device")
 )
 
-func NewAuthenticationToken(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, error) {
+func NewAuthenticationToken(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {
 
 	secretKeyBytes := make([]byte, 64)
 	_, err := rand.Read(secretKeyBytes)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	secretKeyEncoded := hex.EncodeToString(secretKeyBytes)
@@ -54,7 +53,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 
 	var nonce [24]byte
 	if _, err := io.ReadFull(rand.Reader, nonce[:]); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	properEmail := strings.ToLower(email)
@@ -66,12 +65,12 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 	// when we decrypt it, we will know the email on the other end, and will be able to determine if an account belongs to
 	// this token
 	encrypted := secretbox.Seal(nonce[:], []byte(properEmail), &nonce, &secretKey)
+	encryptedEncoded := hex.EncodeToString(encrypted)
 
 	ck := &AuthenticationToken{
-		token:      string(encrypted),
-		secret:     secretKeyEncoded,
+		token:      encryptedEncoded,
 		expiration: time.Minute * 15,
-		email:      properEmail,
+		email:      "",
 		verified:   false,
 		userAgent:  pass.UserAgent(),
 		deviceId:   pass.DeviceID(),
@@ -79,7 +78,12 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 		ip:         pass.IP(),
 	}
 
-	return ck, nil
+	t := &TemporaryState{
+		email:  properEmail,
+		secret: secretKeyEncoded,
+	}
+
+	return ck, t, nil
 }
 
 func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool, userAgent, ip, deviceId string, location *location.Location) *AuthenticationToken {
@@ -97,15 +101,6 @@ func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool
 
 func (c *AuthenticationToken) Token() string {
 	return c.token
-}
-
-func (c *AuthenticationToken) Email(pass *passport.Passport) (string, error) {
-
-	if !c.CanViewAccountEmail(pass) {
-		return "", errors.New("cannot view email. token not verified or devices are mismatched")
-	}
-
-	return c.email, nil
 }
 
 func (c *AuthenticationToken) SameDevice(pass *passport.Passport) bool {
@@ -132,8 +127,8 @@ func (c *AuthenticationToken) Location() *location.Location {
 	return c.location
 }
 
-func (c *AuthenticationToken) CanViewAccountEmail(pass *passport.Passport) bool {
-	return c.verified && c.SameDevice(pass)
+func (c *AuthenticationToken) DeviceId() string {
+	return c.deviceId
 }
 
 func (c *AuthenticationToken) Verified() bool {
@@ -143,42 +138,95 @@ func (c *AuthenticationToken) Verified() bool {
 // MakeVerified the original secret is required to verify the token
 func (c *AuthenticationToken) MakeVerified(secret string) error {
 
-	secretKeyBytes, err := hex.DecodeString(secret)
+	if c.verified {
+		return ErrAlreadyVerified
+	}
+
+	decrypted, err := decryptBox(c.token, secret)
+
 	if err != nil {
 		return err
+	}
+
+	c.verified = true
+	c.email = decrypted
+
+	return nil
+}
+
+func (c *AuthenticationToken) ViewEmailWithSecret(secret string) (string, error) {
+
+	if !c.verified {
+		return "", ErrNotVerified
+	}
+
+	_, err := decryptBox(c.token, secret)
+
+	if err != nil {
+		return "", err
+	}
+
+	return c.email, nil
+}
+
+func (c *AuthenticationToken) ViewEmailWithPassport(pass *passport.Passport) (string, error) {
+
+	if !c.verified {
+		return "", ErrNotVerified
+	}
+
+	if !c.SameDevice(pass) {
+		return "", ErrInvalidDevice
+	}
+
+	return c.email, nil
+}
+
+func (c *AuthenticationToken) CanView(pass *passport.Passport, secret *string) error {
+	return c.CanDelete(pass, secret)
+}
+
+func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string) error {
+
+	if secret != nil {
+		_, err := decryptBox(c.token, *secret)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	if !c.SameDevice(pass) {
+		return ErrInvalidDevice
+	}
+
+	return nil
+}
+
+func decryptBox(content, secret string) (string, error) {
+
+	secretKeyBytes, err := hex.DecodeString(secret)
+	if err != nil {
+		return "", err
+	}
+
+	contentBytes, err := hex.DecodeString(content)
+	if err != nil {
+		return "", err
 	}
 
 	var secretKey [32]byte
 	copy(secretKey[:], secretKeyBytes)
 
 	var decryptNonce [24]byte
-	copy(decryptNonce[:], c.token[:24])
+	copy(decryptNonce[:], contentBytes[:24])
 
-	decrypted, ok := secretbox.Open(nil, []byte(c.token[24:]), &decryptNonce, &secretKey)
+	decrypted, ok := secretbox.Open(nil, contentBytes[24:], &decryptNonce, &secretKey)
 	if !ok {
-		return err
+		return "", ErrInvalidSecret
 	}
 
-	c.verified = true
-	c.email = string(decrypted)
-
-	return nil
-}
-
-// GetSecretWithEmailAndDispose - the secret stored for the encryption is not stored anywhere
-// after grabbing it once and only once (for the purpose of sending the email), it will be discarded from the state
-
-// next time, you can only view the email once you get the secret again
-func (c *AuthenticationToken) GetSecretWithEmailAndDispose() (string, string, error) {
-
-	if c.verified {
-		return "", "", errors.New("already verified. cannot dispose")
-	}
-
-	secret := c.secret
-	c.secret = ""
-
-	email := c.email
-	c.email = ""
-	return secret, email, nil
+	return string(decrypted), nil
 }

@@ -17,10 +17,10 @@ var (
 func signPassport(signatureTarget *libraries_passport_v1.Passport) error {
 
 	target := &libraries_passport_v1.Passport{
-		Account:    signatureTarget.Account,
-		Header:     signatureTarget.Header,
-		DeviceInfo: signatureTarget.DeviceInfo,
-		Actions:    signatureTarget.Actions,
+		AccountInfo: signatureTarget.AccountInfo,
+		Header:      signatureTarget.Header,
+		DeviceInfo:  signatureTarget.DeviceInfo,
+		Actions:     signatureTarget.Actions,
 	}
 
 	msg, err := proto.Marshal(target)

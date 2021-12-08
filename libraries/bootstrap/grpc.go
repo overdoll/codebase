@@ -27,7 +27,7 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			passport.UnaryServerInterceptor(),
-			grpc_zap.UnaryServerInterceptor(zap.L()),
+			//	grpc_zap.UnaryServerInterceptor(zap.L()),
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),

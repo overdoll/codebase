@@ -1,12 +1,12 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import {
   Flex,
-  FormLabel,
   FormControl,
   FormErrorMessage,
+  FormLabel,
   Input,
   InputGroup,
   InputRightElement,
@@ -23,7 +23,7 @@ import InterfaceAlertWarningTriangle
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../../../helpers/PrepareViewer'
+import PrepareViewer from '../../helpers/PrepareViewer'
 
 type CodeValues = {
   code: string,
@@ -42,6 +42,12 @@ const RecoveryCodeMutationGQL = graphql`
   }
 `
 
+const RecoveryCodeFragment = graphql`
+  fragment RecoveryCodeFragment on AuthenticationToken {
+    id
+  }
+`
+
 const schema = Joi.object({
   code: Joi
     .string()
@@ -50,14 +56,25 @@ const schema = Joi.object({
     .required()
 })
 
-export default function RecoveryCodeForm (props: Props): Node {
+export default function RecoveryCode ({ queryRef }: Props): Node {
   const [submitCode, isSubmittingCode] = useMutation(
     RecoveryCodeMutationGQL
   )
 
+  const data = useFragment(RecoveryCodeFragment, queryRef)
+
   const [t] = useTranslation('auth')
 
-  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
+  const {
+    register,
+    setError,
+    handleSubmit,
+    formState: {
+      errors,
+      isDirty,
+      isSubmitted
+    }
+  } = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
@@ -91,8 +108,8 @@ export default function RecoveryCodeForm (props: Props): Node {
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
-
         PrepareViewer(store, payload)
+        store.delete(data.id)
       },
       onError (data) {
         console.log(data)

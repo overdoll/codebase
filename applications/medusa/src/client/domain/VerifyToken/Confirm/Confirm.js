@@ -24,20 +24,27 @@ const RevokeTokenMutationGQL = graphql`
   }
 `
 
-export default function Confirm ({ verify, isVerifying, device, location }: Props): Node {
+export default function Confirm ({
+  verify,
+  isVerifying,
+  device,
+  location
+}: Props): Node {
   const [revokeToken, isRevokingToken] = useMutation(
     RevokeTokenMutationGQL
   )
 
   const [t] = useTranslation('token')
 
-  const [queryToken] = useQueryParam('id', StringParam)
+  const [queryToken] = useQueryParam('token', StringParam)
+  const [querySecret] = useQueryParam('secret', StringParam)
 
   const revoke = () => {
     revokeToken({
       variables: {
         input: {
-          authenticationTokenId: queryToken
+          token: queryToken,
+          secret: querySecret
         }
       },
       onError (data) {

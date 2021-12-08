@@ -21,6 +21,11 @@ type Passport struct {
 
 func (p *Passport) Authenticated() error {
 	if p.passport.AccountInfo != nil {
+
+		if p.passport.AccountInfo.Id == "" {
+			return ErrNotAuthenticated
+		}
+
 		return nil
 	}
 
@@ -36,7 +41,7 @@ func (p *Passport) DeviceID() string {
 }
 
 func (p *Passport) SessionID() string {
-	return p.passport.Header.SessionId
+	return p.passport.AccountInfo.SessionId
 }
 
 func (p *Passport) IP() string {
@@ -48,7 +53,10 @@ func (p *Passport) UserAgent() string {
 }
 
 func (p *Passport) RevokeAccount() error {
-	p.passport.AccountInfo = nil
+	// keep session for reference
+	p.passport.AccountInfo = &libraries_passport_v1.AccountInfo{
+		SessionId: p.SessionID(),
+	}
 	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: RevokeAccount.slug})
 	return nil
 }
@@ -110,7 +118,10 @@ func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passp
 	var account *libraries_passport_v1.AccountInfo
 
 	if accountId != "" {
-		account = &libraries_passport_v1.AccountInfo{Id: accountId}
+		account = &libraries_passport_v1.AccountInfo{
+			Id:        accountId,
+			SessionId: sessionId,
+		}
 	}
 
 	created := time.Now()
@@ -118,8 +129,7 @@ func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passp
 	p := &libraries_passport_v1.Passport{
 		AccountInfo: account,
 		Header: &libraries_passport_v1.Header{
-			SessionId: sessionId,
-			Created:   created.Unix(),
+			Created: created.Unix(),
 			// passports expire 5 minutes after creation
 			Expires: created.Add(time.Minute * 5).Unix(),
 		},

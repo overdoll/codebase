@@ -205,6 +205,9 @@ type VerifyAuthenticationTokenPayload {
 input RevokeAuthenticationTokenInput {
   """The token to revoke"""
   token: String!
+
+  """The secret associated with this token. Required if revoking the token not on the same device that created it."""
+  secret: String
 }
 
 type Mutation {
@@ -264,6 +267,8 @@ type Mutation {
 type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+
+  Note: you can only view the authentication token if you're the originating device or you have entered a valid secret (not from same device)
   """
-  viewAuthenticationToken(token: String!): AuthenticationToken
+  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
 }

@@ -13,7 +13,7 @@ go_library(
     importpath = "overdoll/libraries/translations",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/cookies",
+        "//libraries/helpers",
         "@com_github_gin_gonic_gin//:gin",
         "@org_golang_x_text//language",
         "@org_uber_go_zap//:zap",

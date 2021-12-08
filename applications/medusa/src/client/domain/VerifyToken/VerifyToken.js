@@ -8,14 +8,13 @@ import { Helmet } from 'react-helmet-async'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, useMutation, usePreloadedQuery, useRelayEnvironment } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { Node, useEffect } from 'react'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import Button from '@//:modules/form/Button'
-import { useHistory } from '@//:modules/routing'
 import Confirm from './Confirm/Confirm'
 import Link from '@//:modules/routing/Link'
 import { PageWrapper } from '../../components/PageLayout'
@@ -27,7 +26,7 @@ type Props = {
 };
 
 const VerifyTokenMutationGQL = graphql`
-  mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
+  mutation VerifyTokenMutation($input: VerifyAuthenticationTokenInput!) {
     verifyAuthenticationToken(input: $input) {
       validation
       authenticationToken {
@@ -39,23 +38,23 @@ const VerifyTokenMutationGQL = graphql`
 `
 
 const TokenStatus = graphql`
-  query TokenQuery($token: String) {
-    viewAuthenticationToken(token: $token) {
+  query VerifyTokenQuery($token: String!, $secret: String) {
+    viewAuthenticationToken(token: $token, secret: $secret) {
       id
       verified
-      sameSession
+      sameDevice
       location {
         city
         subdivision
         country
       }
-      device
+      userAgent
       secure
     }
   }
 `
 
-export default function Token ({ prepared }: Props): Node {
+export default function VerifyToken ({ prepared }: Props): Node {
   const query = usePreloadedQuery<TokenQuery>(TokenStatus, prepared.tokenQuery)
 
   const [verifyToken, isVerifyingToken] = useMutation(
@@ -66,13 +65,15 @@ export default function Token ({ prepared }: Props): Node {
 
   const [t] = useTranslation('token')
 
-  const [queryToken] = useQueryParam('id', StringParam)
+  const [queryToken] = useQueryParam('token', StringParam)
+  const [querySecret] = useQueryParam('secret', StringParam)
 
   const verify = () => {
     verifyToken({
       variables: {
         input: {
-          authenticationTokenId: queryToken
+          token: queryToken,
+          secret: querySecret
         }
       },
       onCompleted (payload) {
@@ -135,7 +136,7 @@ export default function Token ({ prepared }: Props): Node {
 
   const renderDevice = () => {
     const cookieText = UAParser(
-      data.device
+      data.userAgent
     )
 
     return (
@@ -193,7 +194,7 @@ export default function Token ({ prepared }: Props): Node {
             {t('close')}
           </AlertDescription>
         </Alert>
-        {data.sameSession
+        {data.sameDevice
           ? (
             <Flex justify='center'>
               <Button

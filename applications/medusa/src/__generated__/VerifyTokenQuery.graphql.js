@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f8f92ad46d5b8aebeba065ad06a145f5
+ * @relayHash 10f25abf5f453ed34a15659b68d91744
  */
 
 /* eslint-disable */
@@ -8,60 +8,70 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type TokenQueryVariables = {|
-  token?: ?string
+export type VerifyTokenQueryVariables = {|
+  token: string,
+  secret?: ?string,
 |};
-export type TokenQueryResponse = {|
+export type VerifyTokenQueryResponse = {|
   +viewAuthenticationToken: ?{|
     +id: string,
     +verified: boolean,
-    +sameSession: boolean,
+    +sameDevice: boolean,
     +location: {|
       +city: string,
       +subdivision: string,
       +country: string,
     |},
-    +device: string,
+    +userAgent: string,
     +secure: boolean,
   |}
 |};
-export type TokenQuery = {|
-  variables: TokenQueryVariables,
-  response: TokenQueryResponse,
+export type VerifyTokenQuery = {|
+  variables: VerifyTokenQueryVariables,
+  response: VerifyTokenQueryResponse,
 |};
 
 
 /*
-query TokenQuery(
-  $token: String
+query VerifyTokenQuery(
+  $token: String!
+  $secret: String
 ) {
-  viewAuthenticationToken(token: $token) {
+  viewAuthenticationToken(token: $token, secret: $secret) {
     id
     verified
-    sameSession
+    sameDevice
     location {
       city
       subdivision
       country
     }
-    device
+    userAgent
     secure
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "token"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "secret"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "token"
+},
+v2 = [
   {
     "alias": null,
     "args": [
+      {
+        "kind": "Variable",
+        "name": "secret",
+        "variableName": "secret"
+      },
       {
         "kind": "Variable",
         "name": "token",
@@ -91,7 +101,7 @@ v1 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "sameSession",
+        "name": "sameDevice",
         "storageKey": null
       },
       {
@@ -130,7 +140,7 @@ v1 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "device",
+        "name": "userAgent",
         "storageKey": null
       },
       {
@@ -146,30 +156,36 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TokenQuery",
-    "selections": (v1/*: any*/),
+    "name": "VerifyTokenQuery",
+    "selections": (v2/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
-    "name": "TokenQuery",
-    "selections": (v1/*: any*/)
+    "name": "VerifyTokenQuery",
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "f8f92ad46d5b8aebeba065ad06a145f5",
+    "id": "10f25abf5f453ed34a15659b68d91744",
     "metadata": {},
-    "name": "TokenQuery",
+    "name": "VerifyTokenQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ee85e0458f8390e45f4776fa378bd6c6';
+(node: any).hash = '49330ec24843baef6b796ca2039088c5';
 module.exports = node;

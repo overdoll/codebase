@@ -1,38 +1,27 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import { useClickDelay } from '@//:modules/utilities/hooks'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 import { PageWrapper } from '../../../components/PageLayout'
 
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
+import { useCookies } from 'react-cookie'
 
 type Props = {
   refresh: () => void,
   queryRef: LobbyFragment$key,
 };
 
-const LobbyEmail = graphql`
-  mutation LobbyMutation {
-    reissueAuthenticationToken {
-      validation
-      authenticationToken {
-        email
-      }
-    }
-  }
-`
-
 const LobbyFragment = graphql`
   fragment LobbyFragment on AuthenticationToken {
+    id
     email
   }
 `
@@ -43,13 +32,20 @@ export default function Lobby ({
 }: Props): Node {
   const data = useFragment(LobbyFragment, queryRef)
 
-  const [commit, isInFlight] = useMutation(LobbyEmail)
+  const [cookies] = useCookies(['token'])
 
-  const notify = useToast()
+  // in case email isn't available, we get our fallback (read from cookie)
+  const email = useMemo(() => {
+    const emailCookie = cookies.token
+
+    if (emailCookie) {
+      return emailCookie.split(';')[1]
+    }
+
+    return ''
+  }, [cookies])
 
   const [t] = useTranslation('auth')
-
-  const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
 
   // poll for result
   useEffect(() => {
@@ -60,36 +56,6 @@ export default function Lobby ({
 
     setTimeout(refreshLoop, 2000)
   }, [])
-
-  const onSubmit = () => {
-    commit({
-      variables: {},
-      onCompleted (payload) {
-        if (payload.reissueAuthenticationToken.validation) {
-          notify({
-            status: 'error',
-            title: payload.reissueAuthenticationToken.validation,
-            isClosable: true
-          })
-          return
-        }
-
-        createTimeout(60000)
-        notify({
-          status: 'success',
-          title: t('lobby.verification'),
-          isClosable: true
-        })
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t('lobby.verification_error'),
-          isClosable: true
-        })
-      }
-    })
-  }
 
   return (
     <PageWrapper>
@@ -111,18 +77,8 @@ export default function Lobby ({
         w='100%'
       >
         <Text fontSize='lg' color='purple.300'>
-          {data.email}
+          {email || data.email}
         </Text>
-      </Flex>
-      <Flex justify='center'>
-        <Button
-          size='lg'
-          loading={isInFlight}
-          onClick={onSubmit}
-          disabled={isTimedOut}
-        >
-          {t('lobby.resend') + (isTimedOut ? ` (${currentTimer / 1000})` : '')}
-        </Button>
       </Flex>
     </PageWrapper>
   )

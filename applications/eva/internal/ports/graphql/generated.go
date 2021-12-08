@@ -314,7 +314,7 @@ type ComplexityRoot struct {
 		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string) int
 		Language                func(childComplexity int) int
 		Languages               func(childComplexity int) int
-		ViewAuthenticationToken func(childComplexity int, token string) int
+		ViewAuthenticationToken func(childComplexity int, token string, secret *string) int
 		Viewer                  func(childComplexity int) int
 		__resolve__service      func(childComplexity int) int
 		__resolve_entities      func(childComplexity int, representations []map[string]interface{}) int
@@ -426,7 +426,7 @@ type MutationResolver interface {
 	RevokeAccountStaffRole(ctx context.Context, input types.RevokeAccountStaffRole) (*types.RevokeAccountStaffRolePayload, error)
 }
 type QueryResolver interface {
-	ViewAuthenticationToken(ctx context.Context, token string) (*types.AuthenticationToken, error)
+	ViewAuthenticationToken(ctx context.Context, token string, secret *string) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
 	Account(ctx context.Context, username string) (*types.Account, error)
 	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error)
@@ -1606,7 +1606,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.ViewAuthenticationToken(childComplexity, args["token"].(string)), true
+		return e.complexity.Query.ViewAuthenticationToken(childComplexity, args["token"].(string), args["secret"].(*string)), true
 
 	case "Query.viewer":
 		if e.complexity.Query.Viewer == nil {
@@ -2768,6 +2768,9 @@ type VerifyAuthenticationTokenPayload {
 input RevokeAuthenticationTokenInput {
   """The token to revoke"""
   token: String!
+
+  """The secret associated with this token. Required if revoking the token not on the same device that created it."""
+  secret: String
 }
 
 type Mutation {
@@ -2827,8 +2830,10 @@ type Mutation {
 type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+
+  Note: you can only view the authentication token if you're the originating device or you have entered a valid secret (not from same device)
   """
-  viewAuthenticationToken(token: String!): AuthenticationToken
+  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
@@ -3527,6 +3532,15 @@ func (ec *executionContext) field_Query_viewAuthenticationToken_args(ctx context
 		}
 	}
 	args["token"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["secret"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("secret"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["secret"] = arg1
 	return args, nil
 }
 
@@ -8442,7 +8456,7 @@ func (ec *executionContext) _Query_viewAuthenticationToken(ctx context.Context, 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ViewAuthenticationToken(rctx, args["token"].(string))
+		return ec.resolvers.Query().ViewAuthenticationToken(rctx, args["token"].(string), args["secret"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10821,6 +10835,14 @@ func (ec *executionContext) unmarshalInputRevokeAuthenticationTokenInput(ctx con
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("token"))
 			it.Token, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "secret":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("secret"))
+			it.Secret, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

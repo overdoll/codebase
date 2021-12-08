@@ -18,11 +18,12 @@ const (
 )
 
 type authenticationToken struct {
-	Email    string                `json:"email"`
-	Verified int                   `json:"verified"`
-	IP       string                `json:"ip"`
-	Device   string                `json:"device"`
-	Location location.Serializable `json:"location"`
+	Email     string                `json:"email"`
+	Verified  int                   `json:"verified"`
+	IP        string                `json:"ip"`
+	DeviceId  string                `json:"deviceId"`
+	UserAgent string                `json:"userAgent"`
+	Location  location.Serializable `json:"location"`
 }
 
 type AuthenticationTokenRepository struct {
@@ -34,9 +35,9 @@ func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationT
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Context, id string) (*token.AuthenticationToken, error) {
+func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Context, passport *passport.Passport, tk string, secret *string) (*token.AuthenticationToken, error) {
 
-	val, err := r.client.Get(ctx, authenticationTokenPrefix+id).Result()
+	val, err := r.client.Get(ctx, authenticationTokenPrefix+tk).Result()
 
 	if err != nil {
 
@@ -59,20 +60,37 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 		return nil, fmt.Errorf("failed to unmarshal token: %v", err)
 	}
 
-	return token.UnmarshalAuthenticationTokenFromDatabase(
-		id,
+	instance := token.UnmarshalAuthenticationTokenFromDatabase(
+		tk,
 		cookieItem.Email,
 		cookieItem.Verified == 1,
-		cookieItem.Device,
+		cookieItem.UserAgent,
 		cookieItem.IP,
+		cookieItem.DeviceId,
 		location.UnmarshalLocationFromSerialized(cookieItem.Location),
-	), nil
+	)
+
+	if err := instance.CanView(passport, secret); err != nil {
+		return nil, err
+	}
+
+	return instance, nil
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Context, passport *passport.Passport, id string) error {
+func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Context, passport *passport.Passport, id string, secret *string) error {
 
-	_, err := r.client.Del(ctx, authenticationTokenPrefix+id).Result()
+	tk, err := r.GetAuthenticationToken(ctx, passport, id, secret)
+
+	if err != nil {
+		return err
+	}
+
+	if err := tk.CanDelete(passport, secret); err != nil {
+		return err
+	}
+
+	_, err = r.client.Del(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
 		return fmt.Errorf("failed to delete token: %v", err)
@@ -86,11 +104,12 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 
 	// run a query to create the authentication token
 	authCookie := &authenticationToken{
-		IP:       instance.IP(),
-		Email:    instance.Email(),
-		Verified: 0,
-		Device:   instance.UserAgent(),
-		Location: location.Serialize(instance.Location()),
+		IP:        instance.IP(),
+		Email:     "",
+		Verified:  0,
+		UserAgent: instance.UserAgent(),
+		DeviceId:  instance.DeviceId(),
+		Location:  location.Serialize(instance.Location()),
 	}
 
 	val, err := json.Marshal(authCookie)
@@ -118,9 +137,9 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 	return nil
 }
 
-func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Context, cookieId string, updateFn func(instance *token.AuthenticationToken) error) (*token.AuthenticationToken, error) {
+func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Context, passport *passport.Passport, id, secret string, updateFn func(instance *token.AuthenticationToken) error) (*token.AuthenticationToken, error) {
 
-	instance, err := r.GetAuthenticationToken(ctx, cookieId)
+	instance, err := r.GetAuthenticationToken(ctx, passport, id, &secret)
 
 	if err != nil {
 		return nil, err
@@ -138,13 +157,20 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		redeemed = 1
 	}
 
+	email, err := instance.ViewEmailWithSecret(secret)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// get authentication cookie with this ID
 	authCookie := &authenticationToken{
-		IP:       instance.IP(),
-		Verified: redeemed,
-		Email:    instance.Email(),
-		Device:   instance.UserAgent(),
-		Location: location.Serialize(instance.Location()),
+		IP:        instance.IP(),
+		Verified:  redeemed,
+		DeviceId:  instance.DeviceId(),
+		Email:     email,
+		UserAgent: instance.UserAgent(),
+		Location:  location.Serialize(instance.Location()),
 	}
 
 	val, err := json.Marshal(authCookie)

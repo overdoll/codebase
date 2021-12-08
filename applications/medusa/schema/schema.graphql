@@ -539,12 +539,19 @@ type AuthenticationToken {
   """Unique ID of the token"""
   id: ID!
 
-  """
-  Whether or not the token belongs to the same session as it was created in
-  """
-  sameSession: Boolean!
+  """Token belong to this authentication token"""
+  token: String!
 
-  """Whether or not the token is verified"""
+  """
+  When the token is viewed with the correct ID, whether or not the devices match
+  (you cannot use the token unless the device is the same).
+  """
+  sameDevice: Boolean!
+
+  """
+  Whether or not the token is verified (required in order to see account status,
+  and to use it for completing the auth flow).
+  """
   verified: Boolean!
 
   """
@@ -555,16 +562,13 @@ type AuthenticationToken {
   """
   secure: Boolean!
 
-  """The device this token was created from."""
-  device: String!
+  """The userAgent this token was created from."""
+  userAgent: String!
 
   """The location where this token was created at."""
   location: Location!
 
-  """The email that belongs to this token."""
-  email: String!
-
-  """Once the token is verified, you can see the status of the account"""
+  """Once the token is verified, you can see the status of the account."""
   accountStatus: AuthenticationTokenAccountStatus
 }
 
@@ -814,8 +818,12 @@ enum ConfirmAccountEmailValidation {
   EMAIL_TAKEN
 }
 
-"""Payload for a created pending post"""
+"""Payload for creating an account with authentication token"""
 input CreateAccountWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
+
+  """The username to create the account with"""
   username: String!
 }
 
@@ -826,13 +834,16 @@ type CreateAccountWithAuthenticationTokenPayload {
 
   """The account that was created"""
   account: Account
+
+  """A token is revoked once an account is created, this represents it"""
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for creating an account with an authentication token"""
 enum CreateAccountWithAuthenticationTokenValidation {
   EMAIL_TAKEN
   USERNAME_TAKEN
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }
 
 """Payload for a created pending post"""
@@ -910,6 +921,10 @@ type GenerateAccountMultiFactorTotpPayload {
 Payload for granting access to an account using the token and the recovery code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
+  """The original token"""
+  token: String!
+
+  """Recovery code"""
   recoveryCode: String!
 }
 
@@ -922,18 +937,27 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload 
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
-  TOKEN_EXPIRED
-  INVALID_RECOVERY_CODE
+  TOKEN_INVALID
+  RECOVERY_CODE_INVALID
 }
 
 """
 Payload for granting access to an account using the token and the totp code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
+  """The original token"""
+  token: String!
+
+  """TOTP code"""
   code: String!
 }
 
@@ -946,12 +970,25 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
-  TOKEN_EXPIRED
-  INVALID_CODE
+  TOKEN_INVALID
+  CODE_INVALID
+}
+
+"""
+Payload for granting account access with the token. Will fail if account has multi-factor auth enabled.
+"""
+input GrantAccountAccessWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
 }
 
 type GrantAccountAccessWithAuthenticationTokenPayload {
@@ -960,14 +997,20 @@ type GrantAccountAccessWithAuthenticationTokenPayload {
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 enum GrantAccountAccessWithAuthenticationTokenValidation {
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }
 
 """Input for granting an authentication token"""
 input GrantAuthenticationTokenInput {
+  """The email that the token will be granted for"""
   email: String!
 }
 
@@ -1132,8 +1175,6 @@ type Mutation {
   
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
@@ -1144,22 +1185,8 @@ type Mutation {
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
 
-  """
-  Create an account using the current authentication token
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
+  """Create an account using the current authentication token"""
   createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
-
-  """Logout the current account"""
-  revokeAccountAccess: RevokeAccountAccessPayload
-
-  """
-  Re-issue an authentication token based on the current one
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
-  reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
   Grant account access with authentication token
@@ -1167,14 +1194,12 @@ type Mutation {
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
   verified first
   """
-  grantAccountAccessWithAuthenticationToken: GrantAccountAccessWithAuthenticationTokenPayload
+  grantAccountAccessWithAuthenticationToken(input: GrantAccountAccessWithAuthenticationTokenInput!): GrantAccountAccessWithAuthenticationTokenPayload
 
   """
   Grant account access using an authentication token and a multi factor option
   
   Set "code" when authenticating with a TOTP code
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
@@ -1182,24 +1207,16 @@ type Mutation {
   Grant account access using an authentication token and a multi factor option
   
   Set "recoveryCode" when authenticating with a recovery code
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
-  Will verify the authentication token.
-  
-  If token does not exist in the cookie, it will only verify
-  
-  If the token exists in the cookie, it will also attempt to grant access to the account associated
-  to this token
-  
-  If no account exists,
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
+  Will verify the authentication token. Requires the secret (sent in an email)
   """
   verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+
+  """Logout the current account"""
+  revokeAccountAccess: RevokeAccountAccessPayload
 
   """Create a new post"""
   createPost: CreatePostPayload
@@ -1574,11 +1591,10 @@ type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
   
-  If "token" is not provided, it will attempt to read the opaque token
-  
-  However, if the token is provided, and the ID is valid, it will show the token
+  Note: you can only view the authentication token if you're the originating
+  device or you have entered a valid secret (not from same device)
   """
-  viewAuthenticationToken(token: String): AuthenticationToken
+  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
 
   """Search all audiences."""
   audiences(
@@ -1838,20 +1854,6 @@ type Query {
   node(id: ID!): Node
 }
 
-"""Payload re-sending authentication email"""
-type ReissueAuthenticationTokenPayload {
-  """Validation for reissuing authentication token"""
-  validation: ReissueAuthenticationTokenValidation
-
-  """The authentication token"""
-  authenticationToken: AuthenticationToken
-}
-
-"""Validation for reissuing authentication token"""
-enum ReissueAuthenticationTokenValidation {
-  TOKEN_EXPIRED
-}
-
 """Moderate the pending post input"""
 input RejectPostInput {
   """Pending post to take action against"""
@@ -1983,12 +1985,13 @@ type RevokeAccountStaffRolePayload {
 
 """Input for revoking an authentication token"""
 input RevokeAuthenticationTokenInput {
+  """The token to revoke"""
+  token: String!
+
   """
-  If an ID is specified, the token can be revoked if a proper ID is specified
-  
-  If an ID is not specified, a token from the cookie will be used
+  The secret associated with this token. Required if revoking the token not on the same device that created it.
   """
-  authenticationTokenId: String
+  secret: String
 }
 
 """Payload for revoking the authentication token"""
@@ -2242,9 +2245,13 @@ type UpdatePostContentPayload {
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
 
-"""Input for verifying token account"""
+"""Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
-  authenticationTokenId: String!
+  """The original token"""
+  token: String!
+
+  """Secret (get it from the email)"""
+  secret: String!
 }
 
 """Payload for verifying the authentication token"""
@@ -2258,5 +2265,5 @@ type VerifyAuthenticationTokenPayload {
 
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }

@@ -32,13 +32,9 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "token")
+	u.Path = path.Join(u.Path, "verify-token")
 
-	q := u.Query()
-	q.Set("token", cmd.Token)
-	q.Set("secret", cmd.Secret)
-
-	u.RawQuery = q.Encode()
+	u.RawQuery = "token=" + cmd.Token + "&secret=" + cmd.Secret
 
 	template, err := mailing.NewTemplate("d-900a6f535312497d837ceee347799859", map[string]interface{}{
 		"link": u.String(),

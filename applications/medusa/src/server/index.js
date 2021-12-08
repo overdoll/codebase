@@ -3,6 +3,7 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
 import i18nextMiddleware from 'i18next-http-middleware'
+import universalCookies from 'universal-cookie-express'
 import i18next from './config/i18next'
 import session from 'express-session'
 import sessionCfg from './config/session'
@@ -41,6 +42,9 @@ index.use(i18nextMiddleware.handle(i18next))
 
 // cookie-parser
 index.use(cookieParser(cookieConfig))
+
+// universal-cookies middleware for react
+index.use(universalCookies())
 
 // Generate a Nonce tag
 index.use(nonce)

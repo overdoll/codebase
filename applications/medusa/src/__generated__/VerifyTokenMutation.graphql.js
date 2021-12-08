@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2c6a242cc75778483d432b75fe2fa4b4
+ * @relayHash 783f87ee699c44d613ebcdc34d94128e
  */
 
 /* eslint-disable */
@@ -8,14 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type VerifyAuthenticationTokenValidation = "TOKEN_EXPIRED" | "%future added value";
+export type VerifyAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
 export type VerifyAuthenticationTokenInput = {|
-  authenticationTokenId: string
+  token: string,
+  secret: string,
 |};
-export type TokenVerifyMutationVariables = {|
+export type VerifyTokenMutationVariables = {|
   input: VerifyAuthenticationTokenInput
 |};
-export type TokenVerifyMutationResponse = {|
+export type VerifyTokenMutationResponse = {|
   +verifyAuthenticationToken: ?{|
     +validation: ?VerifyAuthenticationTokenValidation,
     +authenticationToken: ?{|
@@ -24,14 +25,14 @@ export type TokenVerifyMutationResponse = {|
     |},
   |}
 |};
-export type TokenVerifyMutation = {|
-  variables: TokenVerifyMutationVariables,
-  response: TokenVerifyMutationResponse,
+export type VerifyTokenMutation = {|
+  variables: VerifyTokenMutationVariables,
+  response: VerifyTokenMutationResponse,
 |};
 
 
 /*
-mutation TokenVerifyMutation(
+mutation VerifyTokenMutation(
   $input: VerifyAuthenticationTokenInput!
 ) {
   verifyAuthenticationToken(input: $input) {
@@ -108,7 +109,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "TokenVerifyMutation",
+    "name": "VerifyTokenMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -117,18 +118,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "TokenVerifyMutation",
+    "name": "VerifyTokenMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2c6a242cc75778483d432b75fe2fa4b4",
+    "id": "783f87ee699c44d613ebcdc34d94128e",
     "metadata": {},
-    "name": "TokenVerifyMutation",
+    "name": "VerifyTokenMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'c2d498b98a87ce002ebbbc344811afd7';
+(node: any).hash = 'bfce37f014436b55ebd382bf991455ba';
 module.exports = node;

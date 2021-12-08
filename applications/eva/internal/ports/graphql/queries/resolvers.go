@@ -58,10 +58,15 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 	return types.MarshalAccountToGraphQL(acc), nil
 }
 
-func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk string) (*types.AuthenticationToken, error) {
+func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk string, secret *string) (*types.AuthenticationToken, error) {
+
+	if tk == "" {
+		return nil, nil
+	}
 
 	ck, acc, err := r.App.Queries.ViewAuthenticationToken.Handle(ctx, query.ViewAuthenticationToken{
 		Token:    tk,
+		Secret:   secret,
 		Passport: passport.FromContext(ctx),
 	})
 

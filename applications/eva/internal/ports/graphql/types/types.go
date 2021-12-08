@@ -493,6 +493,8 @@ type RevokeAccountStaffRolePayload struct {
 type RevokeAuthenticationTokenInput struct {
 	// The token to revoke
 	Token string `json:"token"`
+	// The secret associated with this token. Required if revoking the token not on the same device that created it.
+	Secret *string `json:"secret"`
 }
 
 // Payload for revoking the authentication token

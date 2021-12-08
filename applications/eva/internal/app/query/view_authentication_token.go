@@ -10,7 +10,10 @@ import (
 )
 
 type ViewAuthenticationToken struct {
-	Token    string
+	Token string
+
+	// optional - if passports don't match
+	Secret   *string
 	Passport *passport.Passport
 }
 
@@ -27,7 +30,7 @@ func NewViewAuthenticationTokenHandler(tr token.Repository, ar account.Repositor
 func (h ViewAuthenticationTokenHandler) Handle(ctx context.Context, query ViewAuthenticationToken) (*token.AuthenticationToken, *account.Account, error) {
 
 	// Redeem cookie
-	ck, err := h.tr.GetAuthenticationToken(ctx, query.Token)
+	ck, err := h.tr.GetAuthenticationToken(ctx, query.Passport, query.Token, query.Secret)
 
 	if err != nil {
 
@@ -38,14 +41,20 @@ func (h ViewAuthenticationTokenHandler) Handle(ctx context.Context, query ViewAu
 		return nil, nil, err
 	}
 
-	// not on same device - don't give any other details as well
-	if !ck.CanViewAccountEmail(query.Passport) {
-		return ck, nil, nil
-	}
-
-	em, err := ck.Email(query.Passport)
+	em, err := ck.ViewEmailWithPassport(query.Passport)
 
 	if err != nil {
+
+		// not yet verified, can't show
+		if err == token.ErrNotVerified {
+			return ck, nil, nil
+		}
+
+		// viewed on wrong device, don't show account info
+		if err == token.ErrInvalidDevice {
+			return ck, nil, nil
+		}
+
 		return nil, nil, err
 	}
 

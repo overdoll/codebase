@@ -10,8 +10,7 @@ import (
 
 type GrantAccountAccessWithAuthenticationToken struct {
 	Passport *passport.Passport
-
-	Token string
+	Token    string
 	// optional parameters
 	// if the account linked to the token is MFA, these fields are required
 	RecoveryCode *string
@@ -34,13 +33,13 @@ func NewGrantAccountAccessWithAuthenticationTokenHandler(cr token.Repository, ur
 func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAccountAccessWithAuthenticationToken) (*account.Account, error) {
 
 	// Redeem cookie
-	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Token)
+	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Passport, cmd.Token, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	em, err := ck.Email(cmd.Passport)
+	em, err := ck.ViewEmailWithPassport(cmd.Passport)
 
 	if err != nil {
 		return nil, err
@@ -87,7 +86,7 @@ func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Con
 
 	// Delete cookie - account is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
-	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token()); err != nil {
+	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token(), nil); err != nil {
 		return nil, err
 	}
 

@@ -76,7 +76,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
-			ReissueAuthenticationToken:                command.NewReissueAuthenticationTokenHandler(tokenRepo, carrier),
 			IndexAllAccounts:                          command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
 
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),

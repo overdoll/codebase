@@ -5,6 +5,7 @@ import { matchRoutes } from 'react-router-config'
 import { fetchQuery, loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import type { Resource } from '@//:modules/utilities/JSResource'
+import Cookies from 'universal-cookie'
 
 export type Location = $ReadOnly<{
   pathname: string,
@@ -159,9 +160,12 @@ async function createServerRouter (
     data
   )
 
-  const parameters = new URLSearchParams(history.location.search)
+  const prepareOptions = {
+    query: new URLSearchParams(history.location.search),
+    cookies: new Cookies(req.headers.cookie)
+  }
 
-  const initialEntries = prepareMatches(initialMatches, parameters, environment)
+  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
 
   // The actual object that will be passed on the RoutingContext.
   const context = {
@@ -180,7 +184,12 @@ async function createServerRouter (
       )
     },
     preload (pathname) {
-      prepareMatches(matchRoutes(routes, pathname), new URLSearchParams(pathname), environment)
+      const prepareOptions = {
+        query: new URLSearchParams(pathname),
+        cookies: new Cookies(req.headers.cookie)
+      }
+
+      prepareMatches(matchRoutes(routes, pathname), prepareOptions, environment)
     },
     subscribe (cb) {
 
@@ -211,9 +220,13 @@ function createClientRouter (
 ): RouterInstance {
   // Find the initial match and prepare it
   const initialMatches = matchRoutes(routes, history.location.pathname)
-  const parameters = new URLSearchParams(history.location.search)
 
-  const initialEntries = prepareMatches(initialMatches, parameters, environment)
+  const prepareOptions = {
+    query: new URLSearchParams(history.location.search),
+    cookies: new Cookies()
+  }
+
+  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
 
   let currentEntry: RouterInit = {
     location: history.location,
@@ -232,8 +245,13 @@ function createClientRouter (
       return
     }
     const matches = matchRoutes(routes, history.location.pathname)
-    const parameters = new URLSearchParams(history.location.search)
-    const entries = prepareMatches(matches, parameters, environment)
+
+    const prepareOptions = {
+      query: new URLSearchParams(history.location.search),
+      cookies: new Cookies()
+    }
+
+    const entries = prepareMatches(matches, prepareOptions, environment)
     const nextEntry = {
       location,
       entries
@@ -256,7 +274,13 @@ function createClientRouter (
     preload (pathname) {
       // preload the code and data for a route, without storing the result
       const matches = matchRoutes(routes, pathname)
-      prepareMatches(matches, new URLSearchParams(pathname), environment)
+
+      const prepareOptions = {
+        query: new URLSearchParams(pathname),
+        cookies: new Cookies()
+      }
+
+      prepareMatches(matches, prepareOptions, environment)
     },
     subscribe (cb) {
       const id = nextId++
@@ -297,7 +321,7 @@ function matchRouteWithFilter (routes, history, location, data) {
  *
  * Inject RelayEnvironment
  */
-function prepareMatches (matches, query, relayEnvironment) {
+function prepareMatches (matches, prepareOptions, relayEnvironment) {
   return matches.map((match, index) => {
     const {
       route,
@@ -307,9 +331,10 @@ function prepareMatches (matches, query, relayEnvironment) {
     const prepared = convertPreparedToQueries(
       relayEnvironment,
       route.prepare,
-      matchData.params,
-      query,
-      index
+      {
+        ...prepareOptions,
+        params: matchData.params
+      }
     )
 
     const Component = route.component.get()
@@ -331,12 +356,12 @@ function prepareMatches (matches, query, relayEnvironment) {
  * Converts our "prepared" object into an actual routing key
  *
  */
-function convertPreparedToQueries (environment, prepare, params, query, index) {
+function convertPreparedToQueries (environment, prepare, prepareOptions) {
   const prepared = {}
 
   if (prepare === undefined) return prepared
 
-  const queriesToPrepare = prepare(params, query)
+  const queriesToPrepare = prepare(prepareOptions)
   const queryKeys = Object.keys(queriesToPrepare)
 
   // For each route, fetch the query
