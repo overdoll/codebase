@@ -10,7 +10,7 @@ type Props = {
 
 export default function PageContents ({ children }: Props): Node {
   return (
-    <Box w='100%'>
+    <Box className='page-contents' w='100%'>
       {children}
     </Box>
   )
