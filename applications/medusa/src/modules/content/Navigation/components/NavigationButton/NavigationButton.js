@@ -14,9 +14,10 @@ type Props = {
   children?: Node,
   w?: number,
   h?: number,
+  as?: Node,
 }
 
-export default function NavigationButton ({ icon, label, active, onClick, children, w, h }: Props): Node {
+export default function NavigationButton ({ icon, label, active, onClick, children, w, h, as }: Props): Node {
   return (
     <Tooltip hasArrow label={label} placement='bottom'>
       <Box h='100%'>
@@ -27,6 +28,7 @@ export default function NavigationButton ({ icon, label, active, onClick, childr
           aria-label={label}
           bg={active ? 'gray.500' : 'transparent'}
           h={h || { base: '48px', md: '42px' }}
+          as={as}
         >
           {icon
             ? <Icon

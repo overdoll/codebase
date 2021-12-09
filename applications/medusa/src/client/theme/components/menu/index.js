@@ -5,7 +5,7 @@ const parts = ['item', 'command', 'list', 'button', 'groupTitle', 'divider']
 function baseStyleList (props) {
   return {
     bg: mode('#fff', 'gray.800')(props),
-    boxShadow: mode('sm', 'dark-lg')(props),
+    boxShadow: mode('sm', 'lg')(props),
     color: 'inherit',
     minW: '4xs',
     py: '2',

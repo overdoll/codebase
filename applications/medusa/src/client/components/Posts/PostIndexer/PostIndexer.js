@@ -24,9 +24,9 @@ export default function PostIndexer ({ length, currentIndex, slidesPerView, ...r
         return (
           <Box
             borderWidth={1}
-            borderColor='gray.300'
+            borderColor='gray.500'
             w={key === currentIndex ? 2 : 1} h={key === currentIndex ? 2 : 1}
-            bg={key === currentIndex ? 'gray.500' : 'gray.700'} borderRadius='sm'
+            bg={key === currentIndex ? 'gray.300' : 'gray.500'} borderRadius='base'
             key={key}
           />
         )

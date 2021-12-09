@@ -190,11 +190,43 @@ export default function Navigation ({ children, query }: Props): Node {
 
   // A component to display the quick access buttons on desktop
   const QuickAccessHandler = () => {
-    if (ability.can('manage', 'account')) {
-      return <SimpleProfileButton query={data} />
+    const NavigationButtonSkeleton = () =>
+      <Skeleton
+        startColor='gray.600'
+        w='42px' h='42px'
+        borderRadius='md'
+      />
+
+    if (!display) {
+      return (
+        <>
+          <NavigationButtonSkeleton />
+          <NavigationButtonSkeleton />
+          <NavigationButtonSkeleton />
+        </>
+      )
     }
 
-    return <SimpleLoginButton />
+    const QuickAccessButtons = () => {
+      if (ability.can('manage', 'account')) {
+        return <SimpleProfileButton query={data} />
+      }
+
+      return <SimpleLoginButton />
+    }
+
+    if (display === 'desktop') {
+      return (
+        <>
+          <QuickAccessButtons />
+          <NavigationMenu>
+            <MenuButtons />
+          </NavigationMenu>
+        </>
+      )
+    }
+
+    return <></>
   }
 
   // A banner that can be displayed for the user to see as soon as they log in
@@ -234,9 +266,6 @@ export default function Navigation ({ children, query }: Props): Node {
         </NavigationBarCenter>
         <NavigationBarRight>
           <QuickAccessHandler />
-          <NavigationMenu>
-            <MenuButtons />
-          </NavigationMenu>
         </NavigationBarRight>
       </NavigationBar>
       <NavigationContents>

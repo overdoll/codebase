@@ -17,16 +17,16 @@ export default function SidebarButton ({ active, title, icon }: Props): Node {
   return (
     <ClickableBox
       h={9}
-      variant={active ? 'solid' : 'ghost'}
       display='inline'
-      color={active ? 'gray.100' : 'gray.300'}
+      color={active ? 'primary.400' : 'gray.300'}
+      bg={active ? 'gray.600' : 'transparent'}
     >
       <Flex align='center'>
         {icon &&
           <Icon
             mr={3}
             icon={icon} w='20px' h='20px'
-            fill={active ? 'gray.100' : 'gray.300'}
+            fill={active ? 'primary.400' : 'gray.300'}
           />}
         <Heading fontSize='md' fontWeight='semibold'>{title}</Heading>
       </Flex>

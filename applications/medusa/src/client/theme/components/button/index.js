@@ -239,7 +239,7 @@ function variantPanel (props) {
       m: 0,
       p: 3,
       _hover: {
-        bg: mode('gray.200', 'gray.800')(props),
+        bg: mode('gray.200', 'gray.700')(props),
         _disabled: {
           bg
         }
