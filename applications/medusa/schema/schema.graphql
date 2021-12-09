@@ -238,7 +238,7 @@ type Account implements Node {
   
   Viewable by the currently authenticated account or staff+
   """
-  moderator: Moderator
+  moderatorSettings: ModeratorSettings!
 }
 
 """Connection of the account"""
@@ -425,6 +425,18 @@ type AddAccountEmailPayload {
 """Validation message for adding account email"""
 enum AddAccountEmailValidation {
   INVALID_EMAIL
+}
+
+"""Add moderator to posts queue."""
+input AddModeratorToPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+type AddModeratorToPostQueuePayload {
+  """The account that was updated"""
+  account: Account
 }
 
 """Approve the pending post input"""
@@ -1053,15 +1065,15 @@ type Location {
   longitude: Float!
 }
 
-type Moderator implements Node {
-  """The ID of the moderator"""
-  id: ID!
+"""General moderator settings."""
+type ModeratorSettings {
+  """If this moderator is in queue."""
+  isInModeratorQueue: Boolean!
 
-  """The last time this moderator was selected for a post"""
-  lastSelected: Time!
-
-  """The account linked to this moderator"""
-  account: Account!
+  """
+  The last time this moderator was selected for a post. Null if moderator not in queue
+  """
+  lastSelected: Time
 }
 
 """Types of multi factor enabled for this account"""
@@ -1257,14 +1269,11 @@ type Mutation {
   """
   revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
-  """
-  Toggle moderator status
-  
-  Will remove or add the moderator from the queue
-  
-  Current status can be queried from moderatorSettings of the account
-  """
-  toggleModeratorSettingsInQueue: ToggleModeratorSettingsInQueuePayload
+  """Add moderator to posts queue"""
+  addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
+
+  """Remove moderator from posts queue"""
+  removeModeratorFromPostQueue(input: RemoveModeratorFromPostQueueInput!): RemoveModeratorFromPostQueuePayload
 
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
@@ -1872,6 +1881,18 @@ type RejectPostPayload {
   postAuditLog: PostAuditLog
 }
 
+"""Remove moderator from posts queue."""
+input RemoveModeratorFromPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+type RemoveModeratorFromPostQueuePayload {
+  """The account that was updated"""
+  account: Account
+}
+
 """Moderate the pending post input"""
 input RemovePostInput {
   """Pending post to take action against"""
@@ -2087,12 +2108,6 @@ type SubmitPostPayload {
 }
 
 scalar Time
-
-"""Toggle whether or not the moderator will be part of the queue"""
-type ToggleModeratorSettingsInQueuePayload {
-  """The new status of the moderator in queue"""
-  moderatorSettingsInQueue: Boolean
-}
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
