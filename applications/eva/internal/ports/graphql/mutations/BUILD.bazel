@@ -22,6 +22,5 @@ go_library(
         "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/principal",
-        "//libraries/translations",
     ],
 )

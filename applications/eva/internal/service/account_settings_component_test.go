@@ -320,10 +320,7 @@ type RevokeAccountSession struct {
 func TestAccountSessions_view_and_revoke(t *testing.T) {
 	t.Parallel()
 
-	fakeSession := TestSession{}
-
-	err := faker.FakeData(&fakeSession)
-	require.NoError(t, err)
+	ip := "127.0.0.1"
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
@@ -350,7 +347,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	// go through sessions and find by IP
 	for _, sess := range settings.Viewer.Sessions.Edges {
-		if sess.Node.IP == fakeSession.Ip {
+		if sess.Node.IP == ip {
 			foundSession = true
 			sessionId = sess.Node.ID
 		}
@@ -365,7 +362,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 		"input": types.RevokeAccountSessionInput{AccountSessionID: sessionId},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error when revoking session")
 	require.NotNil(t, revokeAccountSession.RevokeAccountSession.AccountSessionID)
 
 	// now test to make sure the session does not exist
@@ -373,7 +370,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	foundSession = false
 
 	for _, sess := range settings.Viewer.Sessions.Edges {
-		if sess.Node.IP == fakeSession.Ip {
+		if sess.Node.ID == sessionId {
 			foundSession = true
 		}
 	}
@@ -387,7 +384,7 @@ func TestAccountSessions_view_and_revoke_remote(t *testing.T) {
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
-	grpcClient, ctx := getGrpcClientWithAuthenticatedAccount(t, testAccountId)
+	grpcClient, ctx := getGrpcClient(t)
 
 	// create another new session
 	s, err := grpcClient.CreateSession(ctx, &eva.CreateSessionRequest{AccountId: testAccountId})

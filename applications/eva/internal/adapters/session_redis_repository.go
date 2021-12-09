@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/passport"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -127,9 +128,15 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 	var sessions []*session.Session
 
 	for _, sessionID := range keys {
-		sess, err := r.GetSessionById(ctx, requester, passport, sessionID)
+
+		// remove prefix
+		sess, err := r.getSessionById(ctx, passport, strings.TrimLeft(sessionID, sessionPrefix))
 
 		if err != nil {
+			return nil, err
+		}
+
+		if err := sess.CanView(requester); err != nil {
 			return nil, err
 		}
 
@@ -143,7 +150,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 func (r SessionRepository) revokeSessionById(ctx context.Context, sessionId string) error {
 
 	// make sure that we delete the session that belongs to this user only
-	_, err := r.client.Del(ctx, sessionId).Result()
+	_, err := r.client.Del(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 

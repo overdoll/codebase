@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "base.go",
         "default.go",
-        "phrase.go",
     ],
     importpath = "overdoll/libraries/crypt",
     visibility = ["//visibility:public"],

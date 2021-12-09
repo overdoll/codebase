@@ -113,7 +113,7 @@ func fromRequest(r *http.Request) *Passport {
 func fromResponse(res *http.Response) (*Passport, error) {
 
 	// only parse JSON responses
-	if res.Header.Get("Content-Type") != "application/json; charset=utf-8" {
+	if res.Header.Get("Content-Type") != "application/json; charset=utf-8" && res.Header.Get("Content-Type") != "application/json" {
 		return nil, nil
 	}
 

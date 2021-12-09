@@ -2,6 +2,7 @@ package mutations
 
 import (
 	"context"
+	"encoding/hex"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
@@ -221,10 +222,16 @@ func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types
 		return nil, err
 	}
 
+	val, err := hex.DecodeString(input.AccountSessionID.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	if err := r.App.Commands.RevokeAccountSession.Handle(ctx, command.RevokeAccountSession{
 		Principal: principal.FromContext(ctx),
 		Passport:  passport.FromContext(ctx),
-		SessionId: input.AccountSessionID.GetID(),
+		SessionId: string(val),
 	}); err != nil {
 		return nil, err
 	}

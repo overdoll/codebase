@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"encoding/hex"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/multi_factor"
@@ -312,7 +313,8 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, curs
 
 func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
 	return &AccountSession{
-		ID:       relay.NewID(AccountSession{}, result.ID()),
+		// encode session
+		ID:       relay.NewID(AccountSession{}, hex.EncodeToString([]byte(result.ID()))),
 		Device:   result.Device(),
 		IP:       result.IP(),
 		Location: MarshalLocationToGraphQL(result.Location()),

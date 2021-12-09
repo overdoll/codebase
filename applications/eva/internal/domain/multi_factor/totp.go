@@ -108,9 +108,16 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 		AccountName: username,
 	})
 
+	val, err := crypt.Encrypt(key.Secret())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &TOTP{
 		secret: key.Secret(),
 		name:   username,
+		id:     val,
 	}, nil
 }
 
@@ -133,6 +140,8 @@ func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
 
 	return &TOTP{
 		secret: secret,
+		name:   "",
+		id:     id,
 	}, nil
 }
 

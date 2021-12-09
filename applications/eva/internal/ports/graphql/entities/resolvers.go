@@ -2,6 +2,7 @@ package entities
 
 import (
 	"context"
+	"encoding/hex"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/ports/graphql/dataloader"
@@ -58,9 +59,16 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 		return nil, err
 	}
 
+	// id is hex encoded in marshalling because of issues with relay.id
+	val, err := hex.DecodeString(id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	sess, err := r.App.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
 		Principal: principal.FromContext(ctx),
-		SessionId: id.GetID(),
+		SessionId: string(val),
 		Passport:  passport.FromContext(ctx),
 	})
 

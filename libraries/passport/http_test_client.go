@@ -18,7 +18,8 @@ type memoryPassportStore struct {
 }
 
 func (a *memoryPassportStore) UpdateDeviceLanguageEvent(ctx context.Context, res *http.Response, sessionId string) error {
-	panic("implement me")
+	a.pocket.passport = FromContext(ctx)
+	return nil
 }
 
 func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, language string, error error) {
@@ -26,6 +27,7 @@ func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (devic
 }
 
 func (a *memoryPassportStore) ResponseEvent(ctx context.Context, res *http.Response) error {
+	//a.pocket.passport = FromContext(ctx)
 	return nil
 }
 
@@ -40,14 +42,7 @@ func (a *memoryPassportStore) GetSessionDataFromRequest(req *http.Request) (stri
 
 // make into a regular passport
 func (a *memoryPassportStore) RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error {
-	t := ""
-	p, err := issueTestingPassport(&t)
-
-	if err != nil {
-		return err
-	}
-
-	a.pocket.passport = p
+	a.pocket.passport = FromContext(ctx)
 	return nil
 }
 

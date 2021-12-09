@@ -308,7 +308,8 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 type CreateAccountWithAuthenticationToken struct {
 	CreateAccountWithAuthenticationToken struct {
-		Account *struct {
+		Validation *types.CreateAccountWithAuthenticationTokenValidation
+		Account    *struct {
 			Username string
 		}
 	} `graphql:"createAccountWithAuthenticationToken(input: $input)"`
@@ -357,9 +358,9 @@ func TestAccountRegistration_complete(t *testing.T) {
 	var register CreateAccountWithAuthenticationToken
 
 	err = client.Mutate(context.Background(), &register, map[string]interface{}{
-		"input": types.CreateAccountWithAuthenticationTokenInput{Username: fake.Username},
+		"input": types.CreateAccountWithAuthenticationTokenInput{Username: fake.Username, Token: authenticationToken.ViewAuthenticationToken.Token},
 	})
 
 	require.NoError(t, err)
-	require.NotNil(t, register.CreateAccountWithAuthenticationToken.Account)
+	require.NotNil(t, register.CreateAccountWithAuthenticationToken.Account, "account is here when creating")
 }
