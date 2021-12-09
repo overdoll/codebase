@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 92dee5e2dd13c5704b0ca6b4f279f37c
+ * @relayHash ad7be3e8f157cc6b26255da0faea5015
  */
 
 /* eslint-disable */
@@ -8,10 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type QueueSettingsMutationVariables = {||};
+export type RemoveModeratorFromPostQueueInput = {|
+  accountId: string
+|};
+export type QueueSettingsMutationVariables = {|
+  input: RemoveModeratorFromPostQueueInput
+|};
 export type QueueSettingsMutationResponse = {|
-  +toggleModeratorSettingsInQueue: ?{|
-    +moderatorSettingsInQueue: ?boolean
+  +removeModeratorFromPostQueue: ?{|
+    +account: ?{|
+      +moderatorSettings: {|
+        +isInModeratorQueue: boolean
+      |}
+    |}
   |}
 |};
 export type QueueSettingsMutation = {|
@@ -21,9 +30,16 @@ export type QueueSettingsMutation = {|
 
 
 /*
-mutation QueueSettingsMutation {
-  toggleModeratorSettingsInQueue {
-    moderatorSettingsInQueue
+mutation QueueSettingsMutation(
+  $input: RemoveModeratorFromPostQueueInput!
+) {
+  removeModeratorFromPostQueue(input: $input) {
+    account {
+      moderatorSettings {
+        isInModeratorQueue
+      }
+      id
+    }
   }
 }
 */
@@ -31,43 +47,110 @@ mutation QueueSettingsMutation {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "alias": null,
-    "args": null,
-    "concreteType": "ToggleModeratorSettingsInQueuePayload",
-    "kind": "LinkedField",
-    "name": "toggleModeratorSettingsInQueue",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "moderatorSettingsInQueue",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
   }
-];
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ModeratorSettings",
+  "kind": "LinkedField",
+  "name": "moderatorSettings",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isInModeratorQueue",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "QueueSettingsMutation",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "RemoveModeratorFromPostQueuePayload",
+        "kind": "LinkedField",
+        "name": "removeModeratorFromPostQueue",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "account",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "QueueSettingsMutation",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "RemoveModeratorFromPostQueuePayload",
+        "kind": "LinkedField",
+        "name": "removeModeratorFromPostQueue",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "account",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "92dee5e2dd13c5704b0ca6b4f279f37c",
+    "id": "ad7be3e8f157cc6b26255da0faea5015",
     "metadata": {},
     "name": "QueueSettingsMutation",
     "operationKind": "mutation",
@@ -76,5 +159,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '327d438990480ea97b7861d5e53b6c79';
+(node: any).hash = 'df481713a523983f898f98ef7cc3d60f';
 module.exports = node;

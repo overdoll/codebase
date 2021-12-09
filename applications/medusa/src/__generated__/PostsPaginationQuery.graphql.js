@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1f8ff461ada603fc5628f74421fa91fb
+ * @relayHash df4e4d94c79ce096782b4793f13f969b
  */
 
 /* eslint-disable */
@@ -45,9 +45,8 @@ fragment ModeratePostFragment on Post {
 }
 
 fragment NoPostsPlaceholderFragment on Account {
-  moderator {
-    __typename
-    id
+  moderatorSettings {
+    isInModeratorQueue
   }
 }
 
@@ -240,13 +239,18 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Moderator",
+                "concreteType": "ModeratorSettings",
                 "kind": "LinkedField",
-                "name": "moderator",
+                "name": "moderatorSettings",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isInModeratorQueue",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -463,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "1f8ff461ada603fc5628f74421fa91fb",
+    "id": "df4e4d94c79ce096782b4793f13f969b",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

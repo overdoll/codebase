@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0f9bcbf8b65cdd03b9a1e1f6931b274a
+ * @relayHash 22d9535cd4b6fea40d059503ad93cb0f
  */
 
 /* eslint-disable */
@@ -37,9 +37,8 @@ fragment ModeratePostFragment on Post {
 }
 
 fragment NoPostsPlaceholderFragment on Account {
-  moderator {
-    __typename
-    id
+  moderatorSettings {
+    isInModeratorQueue
   }
 }
 
@@ -128,13 +127,13 @@ fragment RejectionReasonsFragment on Query {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
+var v0 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 1
+  }
+],
 v1 = {
   "alias": null,
   "args": null,
@@ -142,21 +141,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 1
-  }
-],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -215,19 +207,24 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Moderator",
+            "concreteType": "ModeratorSettings",
             "kind": "LinkedField",
-            "name": "moderator",
+            "name": "moderatorSettings",
             "plural": false,
             "selections": [
-              (v0/*: any*/),
-              (v1/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isInModeratorQueue",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "moderatorPostsQueue",
@@ -320,7 +317,7 @@ return {
                         "name": "brand",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           (v1/*: any*/)
                         ],
                         "storageKey": null
@@ -333,7 +330,7 @@ return {
                         "name": "characters",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -341,7 +338,7 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
-                            "selections": (v4/*: any*/),
+                            "selections": (v3/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -355,7 +352,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
-                        "selections": (v4/*: any*/),
+                        "selections": (v3/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -365,7 +362,13 @@ return {
                         "name": "postedAt",
                         "storageKey": null
                       },
-                      (v0/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -421,7 +424,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "Posts_moderatorPostsQueue",
@@ -483,7 +486,7 @@ return {
     ]
   },
   "params": {
-    "id": "0f9bcbf8b65cdd03b9a1e1f6931b274a",
+    "id": "22d9535cd4b6fea40d059503ad93cb0f",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",
