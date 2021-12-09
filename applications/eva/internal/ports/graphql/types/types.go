@@ -424,14 +424,6 @@ type Location struct {
 	Longitude float64 `json:"longitude"`
 }
 
-type Moderator struct {
-	ID relay.ID `json:"id"`
-	// The account linked to this moderator
-	Account *Account `json:"account"`
-}
-
-func (Moderator) IsEntity() {}
-
 // Types of multi factor enabled for this account
 type MultiFactor struct {
 	Totp bool `json:"totp"`

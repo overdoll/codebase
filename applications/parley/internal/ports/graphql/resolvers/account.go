@@ -2,11 +2,11 @@ package resolvers
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/moderator"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
-	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -71,7 +71,7 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 	return types.MarshalAccountInfractionHistoryToGraphQLConnection(ctx, history, cursor), nil
 }
 
-func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error) {
+func (r AccountResolver) ModeratorSettings(ctx context.Context, obj *types.Account) (*types.ModeratorSettings, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -82,14 +82,9 @@ func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*ty
 		Principal: principal.FromContext(ctx),
 	})
 
-	if err != nil {
-
-		if err == infraction.ErrInvalidModerator {
-			return nil, nil
-		}
-
+	if err != nil && err != moderator.ErrModeratorNotFound {
 		return nil, err
 	}
 
-	return types.MarshalModeratorToGraphQL(mod), nil
+	return types.MarshalModeratorSettingsToGraphQL(mod), nil
 }

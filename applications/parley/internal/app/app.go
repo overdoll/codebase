@@ -20,7 +20,9 @@ type Commands struct {
 	ReportPost command.ReportPostHandler
 
 	RevertModeratePost command.RevertModeratePostHandler
-	ToggleModerator    command.ToggleModeratorHandler
+
+	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
+	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
 }
 
 type Queries struct {

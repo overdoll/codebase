@@ -35,14 +35,13 @@ type Account struct {
 }
 
 var (
-	ErrUsernameNotUnique     = errors.New("username is not unique")
-	ErrEmailNotUnique        = errors.New("email is not unique")
-	ErrEmailCodeInvalid      = errors.New("email confirmation expired or invalid")
-	ErrAccountNotFound       = errors.New("account not found")
-	ErrAccountPrivileged     = errors.New("account is privileged")
-	ErrMultiFactorRequired   = errors.New("account needs to have multi factor enabled")
-	ErrAccountAlreadyHasRole = errors.New("account is already the assigned role")
-	ErrAccountNoRole         = errors.New("account does not have the assigned role")
+	ErrUsernameNotUnique   = errors.New("username is not unique")
+	ErrEmailNotUnique      = errors.New("email is not unique")
+	ErrEmailCodeInvalid    = errors.New("email confirmation expired or invalid")
+	ErrAccountNotFound     = errors.New("account not found")
+	ErrAccountPrivileged   = errors.New("account is privileged")
+	ErrMultiFactorRequired = errors.New("account needs to have multi factor enabled")
+	ErrAccountNoRole       = errors.New("account does not have the assigned role")
 )
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
@@ -337,8 +336,9 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 		return err
 	}
 
+	// if already moderator, don't do anything
 	if a.IsModerator() {
-		return ErrAccountAlreadyHasRole
+		return nil
 	}
 
 	a.roles = append(a.roles, Moderator)
@@ -353,7 +353,7 @@ func (a *Account) AssignStaffRole(requester *principal.Principal) error {
 	}
 
 	if a.IsStaff() {
-		return ErrAccountAlreadyHasRole
+		return nil
 	}
 
 	a.roles = append(a.roles, Staff)

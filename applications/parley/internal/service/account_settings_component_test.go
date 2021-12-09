@@ -4,67 +4,55 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 )
 
 // query is weird here because we query the entities field directly
-type AccountModerator struct {
-	Entities []struct {
-		Account struct {
-			ID        string
-			Moderator *types.Moderator
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
+
+type AddModeratorToPostQueue struct {
+	AddModeratorToPostQueue *struct {
+		Account *struct {
+			ID                string
+			ModeratorSettings *types.ModeratorSettings
+		}
+	} `graphql:"addModeratorToPostQueue(input: $input)"`
 }
 
-type _Any map[string]interface{}
-
-func moderator(t *testing.T, client *graphql.Client, accountId string) *types.Moderator {
-	var account AccountModerator
-
-	err := client.Query(context.Background(), &account, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         accountId,
-			},
-		},
-	})
-
-	require.NoError(t, err)
-
-	return account.Entities[0].Account.Moderator
+type RemoveModeratorFromPostQueue struct {
+	RemoveModeratorFromPostQueue *struct {
+		Account *struct {
+			ID                string
+			ModeratorSettings *types.ModeratorSettings
+		}
+	} `graphql:"removeModeratorFromPostQueue(input: $input)"`
 }
 
-type ToggleModeratorSettingsInQueue struct {
-	ToggleModeratorSettingsInQueue types.ToggleModeratorSettingsInQueuePayload `graphql:"toggleModeratorSettingsInQueue()"`
-}
-
-// TestToggleModeratorStatus - toggle moderator status
-// TODO: test flaky, fix it
+// TestToggleModeratorStatus - toggle moderator status from post queue
 func TestToggleModeratorStatus(t *testing.T) {
 	t.Parallel()
 
-	require.Equal(t, true, true)
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
-	//client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
-	//
-	//oldInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
-	//
-	//var toggleModeratorStatus ToggleModeratorSettingsInQueue
-	//
-	//err := client.Mutate(context.Background(), &toggleModeratorStatus, nil)
-	//
-	//require.NoError(t, err)
-	//
-	//newInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
-	//
-	//// compare that the old result of inqueue is the opposite of the new inqueue
-	//require.NotEqual(t, oldInQueue, newInQueue)
-	//
-	//err = client.Mutate(context.Background(), &toggleModeratorStatus, nil)
-	//
-	//require.NoError(t, err)
+	var addModeratorToPostQueue AddModeratorToPostQueue
+
+	err := client.Mutate(context.Background(), &addModeratorToPostQueue, map[string]interface{}{
+		"input": types.AddModeratorToPostQueueInput{
+			AccountID: "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+		},
+	})
+
+	require.NoError(t, err, "no error when setting moderator to post queue")
+	require.True(t, addModeratorToPostQueue.AddModeratorToPostQueue.Account.ModeratorSettings.IsInModeratorQueue, "moderator should now be in post queue")
+
+	var removeModeratorFromPostQueue RemoveModeratorFromPostQueue
+
+	err = client.Mutate(context.Background(), &removeModeratorFromPostQueue, map[string]interface{}{
+		"input": types.RemoveModeratorFromPostQueueInput{
+			AccountID: "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+		},
+	})
+
+	require.NoError(t, err, "no error when removing moderator from post queue")
+	require.False(t, removeModeratorFromPostQueue.RemoveModeratorFromPostQueue.Account.ModeratorSettings.IsInModeratorQueue, "moderator should not be in post queue")
 }

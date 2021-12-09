@@ -1,4 +1,4 @@
-import { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } from '@apollo/gateway'
+import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'

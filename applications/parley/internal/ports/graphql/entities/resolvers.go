@@ -95,29 +95,6 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 	return types.MarshalPostRejectionReasonToGraphQL(ctx, rejectionReason), nil
 }
 
-func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	mod, err := r.App.Queries.ModeratorById.Handle(ctx, query.ModeratorById{
-		AccountId: id.GetID(),
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-
-		if err == infraction.ErrInvalidModerator {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalModeratorToGraphQL(mod), nil
-}
-
 func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*types.PostReport, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

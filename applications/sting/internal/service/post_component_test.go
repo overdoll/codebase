@@ -106,6 +106,18 @@ type SubmitPost struct {
 		InReview bool
 	} `graphql:"submitPost(input: $input)"`
 }
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID    string
+			Posts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			} `graphql:"posts(state: $state)"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
 
 func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
 	var createPost CreatePost
@@ -203,6 +215,32 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	require.NotNil(t, updatePostAudience.UpdatePostAudience.Post.Audience)
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
 
+	// check if post is in account's drafts
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
+	require.NoError(t, err)
+
+	var accountPosts AccountPosts
+	err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+			},
+		},
+		"state": types.PostStateDraft,
+	})
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(accountPosts.Entities[0].Account.Posts.Edges), 1)
+
+	// make sure we got an error for viewing a post unauthenticated
+	client2 := getGraphqlClient(t)
+	var post Post
+	err = client2.Query(context.Background(), &post, map[string]interface{}{
+		"reference": graphql.String(newPostReference),
+	})
+	require.Error(t, err)
+
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -230,19 +268,6 @@ type AccountModeratorPosts struct {
 		Account struct {
 			ID                  string
 			ModeratorPostsQueue *struct {
-				Edges []*struct {
-					Node PostModified
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-type AccountPosts struct {
-	Entities []struct {
-		Account struct {
-			ID    string
-			Posts *struct {
 				Edges []*struct {
 					Node PostModified
 				}

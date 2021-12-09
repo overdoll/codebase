@@ -211,7 +211,6 @@ type ComplexityRoot struct {
 		FindAccountEmailByID    func(childComplexity int, id relay.ID) int
 		FindAccountSessionByID  func(childComplexity int, id relay.ID) int
 		FindAccountUsernameByID func(childComplexity int, id relay.ID) int
-		FindModeratorByID       func(childComplexity int, id relay.ID) int
 	}
 
 	GenerateAccountMultiFactorRecoveryCodesPayload struct {
@@ -256,11 +255,6 @@ type ComplexityRoot struct {
 		Longitude   func(childComplexity int) int
 		PostalCode  func(childComplexity int) int
 		Subdivision func(childComplexity int) int
-	}
-
-	Moderator struct {
-		Account func(childComplexity int) int
-		ID      func(childComplexity int) int
 	}
 
 	MultiFactor struct {
@@ -395,7 +389,6 @@ type EntityResolver interface {
 	FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error)
 	FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error)
 	FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error)
-	FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error)
 }
 type MutationResolver interface {
 	GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error)
@@ -1049,18 +1042,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindAccountUsernameByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "Entity.findModeratorByID":
-		if e.complexity.Entity.FindModeratorByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findModeratorByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindModeratorByID(childComplexity, args["id"].(relay.ID)), true
-
 	case "GenerateAccountMultiFactorRecoveryCodesPayload.accountMultiFactorRecoveryCodes":
 		if e.complexity.GenerateAccountMultiFactorRecoveryCodesPayload.AccountMultiFactorRecoveryCodes == nil {
 			break
@@ -1200,20 +1181,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Location.Subdivision(childComplexity), true
-
-	case "Moderator.account":
-		if e.complexity.Moderator.Account == nil {
-			break
-		}
-
-		return e.complexity.Moderator.Account(childComplexity), true
-
-	case "Moderator.id":
-		if e.complexity.Moderator.ID == nil {
-			break
-		}
-
-		return e.complexity.Moderator.ID(childComplexity), true
 
 	case "MultiFactor.totp":
 		if e.complexity.MultiFactor.Totp == nil {
@@ -1907,12 +1874,6 @@ extend type Query {
   ): AccountConnection!
 }
 `, BuiltIn: false},
-	{Name: "schema/extensions/schema.graphql", Input: `extend type Moderator @key(fields: "id") {
-  id: ID! @external
-
-  """The account linked to this moderator"""
-  account: Account!
-}`, BuiltIn: false},
 	{Name: "schema/language/schema.graphql", Input: `# Localization formatted in BCP47
 scalar BCP47
 
@@ -2865,7 +2826,7 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountEmail | AccountSession | AccountUsername | Moderator
+union _Entity = Account | AccountEmail | AccountSession | AccountUsername
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -2873,7 +2834,6 @@ type Entity {
 	findAccountEmailByID(id: ID!,): AccountEmail!
 	findAccountSessionByID(id: ID!,): AccountSession!
 	findAccountUsernameByID(id: ID!,): AccountUsername!
-	findModeratorByID(id: ID!,): Moderator!
 
 }
 
@@ -3080,21 +3040,6 @@ func (ec *executionContext) field_Entity_findAccountSessionByID_args(ctx context
 }
 
 func (ec *executionContext) field_Entity_findAccountUsernameByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Entity_findModeratorByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -6393,48 +6338,6 @@ func (ec *executionContext) _Entity_findAccountUsernameByID(ctx context.Context,
 	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Entity_findModeratorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findModeratorByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindModeratorByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Moderator)
-	fc.Result = res
-	return ec.marshalNModerator2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField, obj *types.GenerateAccountMultiFactorRecoveryCodesPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7106,76 +7009,6 @@ func (ec *executionContext) _Location_longitude(ctx context.Context, field graph
 	res := resTmp.(float64)
 	fc.Result = res
 	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Moderator_id(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Moderator",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Moderator_account(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Moderator",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _MultiFactor_totp(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactor) (ret graphql.Marshaler) {
@@ -11071,13 +10904,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountUsername(ctx, sel, obj)
-	case types.Moderator:
-		return ec._Moderator(ctx, sel, &obj)
-	case *types.Moderator:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Moderator(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -12155,20 +11981,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 				}
 				return res
 			})
-		case "findModeratorByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findModeratorByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12415,38 +12227,6 @@ func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "longitude":
 			out.Values[i] = ec._Location_longitude(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var moderatorImplementors = []string{"Moderator", "_Entity"}
-
-func (ec *executionContext) _Moderator(ctx context.Context, sel ast.SelectionSet, obj *types.Moderator) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, moderatorImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Moderator")
-		case "id":
-			out.Values[i] = ec._Moderator_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "account":
-			out.Values[i] = ec._Moderator_account(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -13939,20 +13719,6 @@ func (ec *executionContext) marshalNLocation2ᚖoverdollᚋapplicationsᚋevaᚋ
 		return graphql.Null
 	}
 	return ec._Location(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNModerator2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v types.Moderator) graphql.Marshaler {
-	return ec._Moderator(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNModerator2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v *types.Moderator) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Moderator(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {

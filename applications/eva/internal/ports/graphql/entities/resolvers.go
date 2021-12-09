@@ -20,20 +20,6 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 	return dataloader.For(ctx).AccountById.Load(id.GetID())
 }
 
-func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
-
-	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Moderator{
-		ID:      id,
-		Account: acc,
-	}, nil
-}
-
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

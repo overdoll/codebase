@@ -337,14 +337,26 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			postedAtTime = &newTime
 		}
 
+		var brand *post.Brand
+
+		if pst.Brand != nil {
+			brand = post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail)
+		}
+
+		var audience *post.Audience
+
+		if pst.Audience != nil {
+			audience = post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.Thumbnail, pst.Audience.Standard)
+		}
+
 		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
 			pst.State,
 			&pst.ModeratorId,
 			pst.ContributorId,
 			pst.Content,
-			post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail),
-			post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.Thumbnail, pst.Audience.Standard),
+			brand,
+			audience,
 			characters,
 			categories,
 			time.Unix(createdAt, 0),

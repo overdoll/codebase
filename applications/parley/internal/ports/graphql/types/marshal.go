@@ -304,10 +304,17 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, res
 	return conn
 }
 
-func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
-	return &Moderator{
-		ID:           relay.NewID(Moderator{}, result.ID()),
-		LastSelected: result.LastSelected(),
+func MarshalModeratorSettingsToGraphQL(result *moderator.Moderator) *ModeratorSettings {
+
+	if result == nil {
+		return &ModeratorSettings{IsInModeratorQueue: false}
+	}
+
+	time := result.LastSelected()
+
+	return &ModeratorSettings{
+		IsInModeratorQueue: true,
+		LastSelected:       &time,
 	}
 }
 
