@@ -3,8 +3,6 @@ package mutations
 import (
 	"context"
 
-	"overdoll/libraries/translations"
-
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
@@ -20,8 +18,6 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
 		Email:    input.Email,
 		Passport: passport.FromContext(ctx),
-		// manually send the language because we need it for the email
-		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -61,8 +57,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.AuthenticateAccount(acc.ID())
-				return nil
+				return p.AuthenticateAccount(acc.ID())
 			}); err != nil {
 		return nil, err
 	}
@@ -131,7 +126,6 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 		Token:    input.Token,
 		Passport: passport.FromContext(ctx),
 		Username: input.Username,
-		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -156,8 +150,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.AuthenticateAccount(acc.ID())
-				return nil
+				return p.AuthenticateAccount(acc.ID())
 			}); err != nil {
 		return nil, err
 	}
@@ -195,8 +188,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.AuthenticateAccount(acc.ID())
-				return nil
+				return p.AuthenticateAccount(acc.ID())
 			}); err != nil {
 		return nil, err
 	}
@@ -234,8 +226,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	if err := passport.
 		MutatePassport(ctx,
 			func(p *passport.Passport) error {
-				p.AuthenticateAccount(acc.ID())
-				return nil
+				return p.AuthenticateAccount(acc.ID())
 			}); err != nil {
 		return nil, err
 	}

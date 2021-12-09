@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
+	"overdoll/libraries/translations"
 
 	"sync"
 	"time"
@@ -32,16 +33,22 @@ func (p *Passport) Authenticated() error {
 	return ErrNotAuthenticated
 }
 
+// AccountID - may throw nil pointer - make sure you check Authenticated() first
 func (p *Passport) AccountID() string {
 	return p.passport.AccountInfo.Id
+}
+
+// SessionID - may throw nil pointer - make sure you check Authenticated() first
+func (p *Passport) SessionID() string {
+	return p.passport.AccountInfo.SessionId
 }
 
 func (p *Passport) DeviceID() string {
 	return p.passport.DeviceInfo.Id
 }
 
-func (p *Passport) SessionID() string {
-	return p.passport.AccountInfo.SessionId
+func (p *Passport) Language() *translations.Language {
+	return translations.NewLanguageWithFallback(p.passport.DeviceInfo.Language)
 }
 
 func (p *Passport) IP() string {
@@ -61,13 +68,39 @@ func (p *Passport) RevokeAccount() error {
 	return nil
 }
 
-func (p *Passport) AuthenticateAccount(id string) {
+func (p *Passport) AuthenticateAccount(id string) error {
 	p.passport.AccountInfo = &libraries_passport_v1.AccountInfo{Id: id}
 	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: AuthenticateAccount.slug})
+	return nil
+}
+
+func (p *Passport) UpdateDeviceLanguage(lang string) error {
+
+	lng, err := translations.NewLanguage(lang)
+
+	if err != nil {
+		return err
+	}
+
+	p.passport.DeviceInfo.Language = lng.Locale()
+	p.passport.Actions = append(p.passport.Actions, &libraries_passport_v1.Action{Action: UpdateDeviceLanguage.slug})
+	return nil
 }
 
 func (p *Passport) hasActions() bool {
 	return len(p.passport.Actions) > 0
+}
+
+func (p *Passport) performedDeviceLanguageUpdate() bool {
+
+	for _, a := range p.passport.Actions {
+		action := actionFromString(a.Action)
+		if action == UpdateDeviceLanguage {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (p *Passport) performedAuthenticatedAccountAction() bool {
@@ -113,7 +146,7 @@ func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	return nil
 }
 
-func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passport, error) {
+func issuePassport(sessionId, deviceId, ip, userAgent, language, accountId string) (*Passport, error) {
 
 	var account *libraries_passport_v1.AccountInfo
 
@@ -137,6 +170,7 @@ func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passp
 			Id:        deviceId,
 			Ip:        ip,
 			UserAgent: userAgent,
+			Language:  language,
 		},
 	}
 

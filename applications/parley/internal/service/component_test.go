@@ -21,7 +21,7 @@ import (
 )
 
 const ParleyHttpAddr = ":8888"
-const ParleyHttpClientAddr = "http://:8888/graphql"
+const ParleyHttpClientAddr = "http://:8888/api/graphql"
 
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"

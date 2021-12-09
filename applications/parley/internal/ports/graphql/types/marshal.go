@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/domain/moderator"
@@ -181,7 +182,7 @@ func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *infra
 func MarshalPostReportReasonToGraphQL(ctx context.Context, result *report.PostReportReason) *PostReportReason {
 	return &PostReportReason{
 		ID:     relay.NewID(AccountInfractionHistory{}, result.ID()),
-		Reason: result.Reason().TranslateFromContext(ctx, result.ID()),
+		Reason: result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
 	}
 }
 
@@ -313,7 +314,7 @@ func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
 func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *infraction.PostRejectionReason) *PostRejectionReason {
 	return &PostRejectionReason{
 		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
-		Reason:     result.Reason().TranslateFromContext(ctx, result.ID()),
+		Reason:     result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		Infraction: result.Infraction(),
 	}
 }

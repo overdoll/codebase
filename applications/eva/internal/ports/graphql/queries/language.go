@@ -2,6 +2,7 @@ package queries
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/translations"
@@ -19,5 +20,5 @@ func (r *QueryResolver) Languages(ctx context.Context) ([]*types.Language, error
 }
 
 func (r *QueryResolver) Language(ctx context.Context) (*types.Language, error) {
-	return types.MarshalLanguageToGraphQL(translations.FromContext(ctx)), nil
+	return types.MarshalLanguageToGraphQL(passport.FromContext(ctx).Language()), nil
 }

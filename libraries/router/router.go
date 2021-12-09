@@ -12,7 +12,6 @@ func NewGinRouter() *gin.Engine {
 	router := NewRawGinRouter()
 
 	router.Use(GinContextToContextMiddleware())
-	router.Use(LanguageToContext())
 	router.Use(passport.GinPassportRequestMiddleware())
 	router.Use(CassandraQueryObserverToContext())
 	router.Use(CassandraQueryObserverGetMetrics())

@@ -28,7 +28,7 @@ import (
 )
 
 const StingHttpAddr = ":6666"
-const StingGraphqlClientAddr = "http://:6666/graphql"
+const StingGraphqlClientAddr = "http://:6666/api/graphql"
 const StingTusClientAddr = "http://:6666/api/upload/"
 
 const StingGrpcAddr = "localhost:6667"

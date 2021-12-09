@@ -3,16 +3,13 @@ package command
 import (
 	"context"
 	"overdoll/applications/eva/internal/domain/location"
-	"overdoll/libraries/passport"
-	"overdoll/libraries/translations"
-
 	"overdoll/applications/eva/internal/domain/token"
+	"overdoll/libraries/passport"
 )
 
 type GrantAuthenticationToken struct {
 	Email    string
 	Passport *passport.Passport
-	Language *translations.Language
 }
 
 type GrantAuthenticationTokenHandler struct {
@@ -50,7 +47,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret(), cmd.Language.Locale()); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret(), cmd.Passport.Language().Locale()); err != nil {
 		return nil, err
 	}
 

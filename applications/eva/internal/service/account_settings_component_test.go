@@ -2,34 +2,21 @@ package service_test
 
 import (
 	"context"
-	"overdoll/applications/eva/internal/service"
-	"strings"
-	"testing"
-
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/eva/internal/adapters"
-	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/bootstrap"
+	"overdoll/applications/eva/internal/service"
+	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/graphql/relay"
+	"strings"
+	"testing"
 )
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
 	res, err := service.GetEmailConfirmationTokenFromEmail(email)
 	require.NoError(t, err, "no error for grabbing confirmation token")
 	return res
-}
-
-func createSession(t *testing.T, accountId, userAgent, ip string) {
-
-	client := bootstrap.InitializeRedisSessionWithCustomDB(0)
-
-	sessionRepo := adapters.NewSessionRepository(client)
-
-	err := sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip, nil))
-	require.NoError(t, err)
 }
 
 type AccountEmailModified struct {
@@ -340,7 +327,18 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
-	createSession(t, testAccountId, "user-agent", fakeSession.Ip)
+	grpcClient, ctx := getGrpcClientWithAuthenticatedAccount(t, testAccountId)
+
+	// create a new session
+	s, err := grpcClient.CreateSession(ctx, &eva.CreateSessionRequest{AccountId: testAccountId})
+	require.NoError(t, err)
+
+	// get session and make sure its valid
+	v, err := grpcClient.GetSession(ctx, &eva.SessionRequest{Id: s.Id})
+	require.NoError(t, err)
+
+	require.Equal(t, true, v.Valid, "session should be valid")
+	require.Equal(t, testAccountId, v.AccountId, "session should be exact account id")
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
@@ -382,4 +380,25 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	// make sure its false
 	require.False(t, foundSession, "session should not have been found")
+
+}
+
+func TestAccountSessions_view_and_revoke_remote(t *testing.T) {
+
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
+	grpcClient, ctx := getGrpcClientWithAuthenticatedAccount(t, testAccountId)
+
+	// create another new session
+	s, err := grpcClient.CreateSession(ctx, &eva.CreateSessionRequest{AccountId: testAccountId})
+	require.NoError(t, err, "should have created a new session")
+
+	// revoke session
+	_, err = grpcClient.RevokeSession(ctx, &eva.SessionRequest{Id: s.Id})
+	require.NoError(t, err, "session should have been revoked")
+
+	// get session and see that its not valid
+	v, err := grpcClient.GetSession(ctx, &eva.SessionRequest{Id: s.Id})
+	require.NoError(t, err)
+	require.Equal(t, false, v.Valid, "session should no longer be valid")
 }

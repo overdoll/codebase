@@ -2,11 +2,9 @@ package command
 
 import (
 	"context"
-	"overdoll/libraries/passport"
-	"overdoll/libraries/translations"
-
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 )
 
@@ -14,7 +12,6 @@ type CreateAccountWithAuthenticationToken struct {
 	Token    string
 	Username string
 	Passport *passport.Passport
-	Language *translations.Language
 }
 
 type CreateAccountWithAuthenticationTokenHandler struct {
@@ -40,7 +37,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	instance, err := account.NewAccount(cmd.Language, uuid.New().String(), cmd.Username, em)
+	instance, err := account.NewAccount(cmd.Passport.Language(), uuid.New().String(), cmd.Username, em)
 
 	if err != nil {
 		return nil, err

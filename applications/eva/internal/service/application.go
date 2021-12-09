@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/config"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -42,7 +43,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	client := bootstrap.InitializeElasticSearchSession()
 
-	db, err := geoip2.Open(os.Getenv("GEOIP_DATABASE_LOCATION"))
+	db, err := geoip2.Open(config.GetFilePath(os.Getenv("GEOIP_DATABASE_LOCATION")))
 
 	if err != nil {
 		zap.S().Fatal("failed to open database", zap.Error(err))

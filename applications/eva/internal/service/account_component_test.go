@@ -24,7 +24,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, "")
 
-	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie")
+	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie", "some random secret")
 
 	// check to make sure its returned as invalid
 	require.Nil(t, redeemToken.VerifyAuthenticationToken.AuthenticationToken, "authentication token is valid")
@@ -41,7 +41,7 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
 	require.Nil(t, query.Viewer, "no viewer present for no account")
 
-	queryToken := viewAuthenticationToken(t, client)
+	queryToken := viewAuthenticationToken(t, client, "")
 
 	require.Nil(t, queryToken.ViewAuthenticationToken, "no authentication token for empty")
 }
@@ -59,17 +59,13 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 	query := viewerAccount(t, client)
 
 	require.Equal(t, "poisonminion", query.Viewer.Username, "correct username for account")
-
-	queryToken := viewAuthenticationToken(t, client)
-
-	require.Nil(t, queryToken.ViewAuthenticationToken, "no authentication token for authenticated account")
 }
 
 // TestAccount_get - test GRPC endpoint for grabbing a user
 func TestAccount_get(t *testing.T) {
 	t.Parallel()
 
-	client := getGrpcClient(t)
+	client, _ := getGrpcClient(t)
 
 	res, err := client.GetAccount(context.Background(), &eva.GetAccountRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
@@ -89,7 +85,7 @@ type UnlockAccount struct {
 func TestAccount_lock_unlock(t *testing.T) {
 	t.Parallel()
 
-	client := getGrpcClient(t)
+	client, _ := getGrpcClient(t)
 
 	// lock account with grpc endpoint
 	res, err := client.LockAccount(context.Background(), &eva.LockAccountRequest{

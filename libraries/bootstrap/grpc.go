@@ -2,8 +2,6 @@ package bootstrap
 
 import (
 	"context"
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
-	"go.uber.org/zap"
 	"log"
 	"net"
 	"os"
@@ -21,7 +19,7 @@ import (
 func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	// Make sure that log statements internal to gRPC library are logged using the zapLogger as well.
-	grpc_zap.ReplaceGrpcLoggerV2(zap.L())
+	//grpc_zap.ReplaceGrpcLoggerV2(zap.L())
 
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(

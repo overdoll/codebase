@@ -7,12 +7,14 @@ import (
 	"net/http"
 	"overdoll/applications/puppy/internal/domain/session"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/translations"
 	"strings"
 )
 
 const (
-	sessionCookieName = "od.session"
-	deviceCookieName  = "od.device"
+	sessionCookieName  = "od.session"
+	deviceCookieName   = "od.device"
+	languageCookieName = "od.language"
 )
 
 type Application struct {
@@ -20,13 +22,13 @@ type Application struct {
 	Repository session.Repository
 }
 
-func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, error) {
+func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, string, error) {
 	userAgent := strings.Join(req.Header["User-Agent"], ",")
 	forwarded := req.Header.Get("X-FORWARDED-FOR")
 
 	ip := ""
-
 	deviceId := ""
+	language := ""
 
 	if forwarded != "" {
 		ip = strings.Split(forwarded, ",")[0]
@@ -38,12 +40,24 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 
 	if err == nil {
 		if err := securecookie.DecodeMulti(deviceCookieName, c.Value, &deviceId, a.Codecs...); err != nil {
-			return "", "", "", err
+			return "", "", "", "", err
 		}
 	}
 
 	if err != nil && err != http.ErrNoCookie {
-		return "", "", "", err
+		return "", "", "", "", err
+	}
+
+	c, err = req.Cookie(languageCookieName)
+
+	if err == nil {
+		if err := securecookie.DecodeMulti(languageCookieName, c.Value, &language, a.Codecs...); err != nil {
+			return "", "", "", "", err
+		}
+	}
+
+	if err != nil && err != http.ErrNoCookie {
+		return "", "", "", "", err
 	}
 
 	// no device ID - generate a new one (will be saved at the end of the request)
@@ -51,7 +65,42 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 		deviceId = uuid.New().String()
 	}
 
-	return deviceId, ip, userAgent, nil
+	// no language set - read accept-language header
+	if language == "" {
+		accept := req.Header.Get("Accept-Language")
+		language = translations.NewLanguageWithFallback(accept).Locale()
+	}
+
+	return deviceId, ip, userAgent, language, nil
+}
+
+func (a *Application) UpdateDeviceLanguageEvent(ctx context.Context, res *http.Response, language string) error {
+
+	_, err := res.Request.Cookie(languageCookieName)
+
+	if err != nil {
+		// no device cookie - we will add one
+		if err == http.ErrNoCookie {
+			encoded, err := securecookie.EncodeMulti(languageCookieName, language, a.Codecs...)
+
+			if err != nil {
+				return err
+			}
+
+			ck := http.Cookie{
+				Name:     languageCookieName,
+				Value:    encoded,
+				Path:     "/",
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteLaxMode,
+			}
+
+			res.Header.Add("Set-Cookie", ck.String())
+		}
+	}
+
+	return nil
 }
 
 func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, string, error) {

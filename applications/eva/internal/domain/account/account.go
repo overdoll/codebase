@@ -65,7 +65,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		avatar:             avatar,
 		lockedUntil:        lockedUntil,
 		locked:             locked,
-		language:           translations.NewLanguage(locale),
+		language:           translations.NewLanguageWithFallback(locale),
 		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
 	}
@@ -258,7 +258,16 @@ func (a *Account) RolesAsString() []string {
 }
 
 func (a *Account) UpdateLanguage(locale string) error {
-	return a.language.SetLocale(locale)
+
+	l, err := translations.NewLanguage(locale)
+
+	if err != nil {
+		return err
+	}
+
+	a.language = l
+
+	return nil
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {

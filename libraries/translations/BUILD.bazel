@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "elasticsearch_index.go",
         "language.go",
-        "middleware.go",
         "supported_locales.go",
         "translated_support.go",
         "translation.go",
@@ -13,8 +12,6 @@ go_library(
     importpath = "overdoll/libraries/translations",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/helpers",
-        "@com_github_gin_gonic_gin//:gin",
         "@org_golang_x_text//language",
         "@org_uber_go_zap//:zap",
     ],

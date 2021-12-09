@@ -1,9 +1,10 @@
 package passport
 
 var (
-	Unknown             = Action{""}
-	RevokeAccount       = Action{"revoke_account"}
-	AuthenticateAccount = Action{"auth_account"}
+	Unknown              = Action{""}
+	RevokeAccount        = Action{"revoke_account"}
+	AuthenticateAccount  = Action{"auth_account"}
+	UpdateDeviceLanguage = Action{"update_device_language"}
 )
 
 type Action struct {
@@ -20,6 +21,8 @@ func actionFromString(s string) Action {
 		return RevokeAccount
 	case AuthenticateAccount.slug:
 		return AuthenticateAccount
+	case UpdateDeviceLanguage.slug:
+		return UpdateDeviceLanguage
 	}
 
 	return Unknown

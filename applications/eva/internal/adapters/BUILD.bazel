@@ -43,13 +43,11 @@ go_test(
     srcs = [
         "account_cassandra_redis_repository_test.go",
         "repository_test.go",
-        "token_redis_repository_test.go",
     ],
     data = ["//applications/eva:config.toml"],
     embed = [":adapters"],
     deps = [
         "//applications/eva/internal/domain/account",
-        "//applications/eva/internal/domain/token",
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/translations",

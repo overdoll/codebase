@@ -2,6 +2,7 @@ package config
 
 import (
 	"path"
+	"strings"
 
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/joho/godotenv"
@@ -33,4 +34,15 @@ func Read(root string) {
 			panic(err)
 		}
 	}
+}
+
+// GetFilePath - get file path
+// if path is prefixed with "/", will not use root directory
+// otherwise, it's relative
+func GetFilePath(file string) string {
+	if strings.HasPrefix(file, "/") {
+		return file
+	}
+
+	return viper.GetString("root_directory") + "/" + file
 }
