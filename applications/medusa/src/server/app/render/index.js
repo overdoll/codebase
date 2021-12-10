@@ -66,7 +66,7 @@ async function request (req, res, next) {
       }
 
       const response = await axios.post(
-        'http://puppy:8000/api/graphql',
+        process.env.SERVER_GRAPHQL_ENDPOINT,
         {
           operationName: params.name,
           queryId: params.id,

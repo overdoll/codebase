@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  parley:
+  puppy:
     image: $CONTAINER_REGISTRY/puppy/dev:$BUILDKITE_COMMIT
     entrypoint: ""
     command: /bin/sh -c "/app/applications/puppy/internal/image.binary"
