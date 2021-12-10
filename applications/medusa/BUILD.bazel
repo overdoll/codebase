@@ -107,6 +107,7 @@ _RUNTIME_DEPS = [
     "@npm//connect-redis",
     "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
+    "@npm//universal-cookie-express",
     "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
     "@npm//joi",
