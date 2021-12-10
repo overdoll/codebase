@@ -1,4 +1,4 @@
-import { mode } from '@chakra-ui/theme-tools';
+import { mode } from '@chakra-ui/theme-tools'
 
 function baseStyle (props) {
   const bg = mode('gray.700', 'gray.500')(props)

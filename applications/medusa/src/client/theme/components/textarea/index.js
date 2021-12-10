@@ -1,4 +1,4 @@
-import Input from '../input';
+import Input from '../input'
 
 const baseStyle = {
   ...Input.baseStyle.field,
