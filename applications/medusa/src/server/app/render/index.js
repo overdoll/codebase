@@ -44,21 +44,25 @@ async function request (req, res, next) {
       })
 
       // on the server, we need to pass the _csrf cookie as a real cookie or else it bugs out
-      const setCookies = res.getHeader('set-cookie')
-      if (setCookies !== undefined) {
-        setCookies.forEach((setCookie) => {
-          const cookies = parseCookies(setCookie)
-          cookies.forEach((ck) => {
-            if (ck.cookieName === '_csrf') {
-              const actualCookie = '_csrf=' + ck.cookieValue
-              if (headers.cookie === undefined) {
-                headers.cookie = actualCookie
-              } else {
-                headers.cookie += ';' + actualCookie
-              }
-            }
+
+      const setCookie = res
+        .getHeader('set-cookie')
+
+      if (setCookie) {
+        setCookie
+          .forEach((setCookie) => {
+            parseCookies(setCookie)
+              .forEach((ck) => {
+                if (ck.cookieName === '_csrf') {
+                  const actualCookie = '_csrf=' + ck.cookieValue
+                  if (headers.cookie === undefined) {
+                    headers.cookie = actualCookie
+                  } else {
+                    headers.cookie += ';' + actualCookie
+                  }
+                }
+              })
           })
-        })
       }
 
       const response = await axios.post(
@@ -75,6 +79,22 @@ async function request (req, res, next) {
       )
 
       const json = response.data
+
+      const responseSetCookie = response.headers['set-cookie']
+
+      if (responseSetCookie) {
+        responseSetCookie
+          .forEach((setCookie) => {
+            parseCookies(setCookie)
+              .forEach(({
+                cookieName,
+                cookieValue,
+                options
+              }) => {
+                res.cookie(cookieName, cookieValue, options)
+              })
+          })
+      }
 
       // GraphQL returns exceptions (for example, a missing required variable) in the "errors"
       // property of the response. If any exceptions occurred when processing the request,
@@ -210,12 +230,13 @@ const router = express.Router()
 
 // render function
 // all routes
-router.get('/*', async function render (req, res, next) {
-  try {
-    await request(req, res, next)
-  } catch (e) {
-    next(e)
-  }
-})
+router
+  .get('/*', async function render (req, res, next) {
+    try {
+      await request(req, res, next)
+    } catch (e) {
+      next(e)
+    }
+  })
 
 export default router
