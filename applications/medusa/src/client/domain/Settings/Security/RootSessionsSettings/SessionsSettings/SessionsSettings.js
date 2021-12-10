@@ -19,6 +19,7 @@ import InterfaceSettingCog
 import RevokeSession from './RevokeSession/RevokeSession'
 import Button from '@//:modules/form/Button'
 import SpoilerText from '../../../../../components/ContentHints/SpoilerText/SpoilerText'
+import SessionCard from './SessionCard/SessionCard'
 
 type Props = {
   query: PreloadedQueryInner<SessionsSettingsQuery>,
@@ -44,11 +45,7 @@ const SessionsGQL = graphql`
       __id
       edges {
         node {
-          ...RevokeSessionFragment
-          userAgent
-          ip
-          created
-          current
+          ...SessionCardFragment
         }
       }
     }
@@ -76,53 +73,8 @@ export default function MultiFactorSettings (props: Props): Node {
   return (
     <>
       <Stack mb={3}>
-        {sessions.map((item, index) => {
-          const userAgent = UAParser(item.node.userAgent)
-          const formattedDate = format(new Date(item.node.created), 'LLLL Lo, y')
-          const { isOpen: isRevealed, onToggle } = useDisclosure()
-          return (
-            <Box key={index} p={3} borderRadius='base' bg='gray.800'>
-              <Flex mb={1} align='center'>
-                <Box borderRadius='full' w={2} h={2} bg={item.node.current ? 'green.500' : 'gray.300'} />
-                <Heading
-                  ml={2} color='gray.100'
-                  fontSize='md'
-                >{t('security.sessions.on', { browser: userAgent.browser.name, device: userAgent.os.name })}
-                </Heading>
-              </Flex>
-              <Flex justify='space-between'>
-                <Flex direction='column'>
-                  <Text
-                    color='gray.200'
-                    fontSize='sm'
-                  >{item.node.current ? t('security.sessions.current') : t('security.sessions.accessed', { date: formattedDate })}
-                  </Text>
-                  <SpoilerText text={t('security.sessions.show')}>
-                    {item.node.ip}
-                  </SpoilerText>
-                </Flex>
-                <Flex align='flex-end'>
-                  {!item.node.current &&
-                    <Menu autoSelect={false}>
-                      {({ isOpen }) => (
-                        <>
-                          <MenuButton
-                              bg='transparent'
-                              size='xs'
-                              as={IconButton}
-                              icon={<Icon icon={InterfaceSettingCog} w='fill' h='fill' fill='gray.300' m={1} />}
-                            />
-                          <MenuList display={isOpen ? 'block' : 'none'} boxShadow='lg'>
-                              <RevokeSession session={item.node} connectionID={sessionsConnectionID} />
-                            </MenuList>
-                        </>
-                      )}
-                    </Menu>}
-                </Flex>
-              </Flex>
-            </Box>
-          )
-        }
+        {sessions.map((item, index) =>
+          <SessionCard key={index} connectionID={sessionsConnectionID} query={item.node} />
         )}
       </Stack>
       {hasNext &&

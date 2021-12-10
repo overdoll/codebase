@@ -10,7 +10,7 @@ type Props = {
 
 export default function PagePanelTitle ({ children }: Props): Node {
   return (
-    <Heading color='gray.100' fontSize='lg'>
+    <Heading color='gray.00' fontSize='lg'>
       {children}
     </Heading>
   )

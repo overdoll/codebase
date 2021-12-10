@@ -5,12 +5,20 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
-import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
-import LoginKeys from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
-import ContentBrushPen
-  from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
+import {
+  BirdHouse,
+  ContentBrushPen,
+  InterfaceSettingCog,
+  LoginKeys,
+  ContentBookEdit,
+  FileMultiple,
+  ProgrammingApplicationAdd,
+  SecurityShield,
+  SettingHammer,
+  TimeHourGlass,
+  UserHuman,
+  SettingWrench
+} from '../../../../assets/icons/navigation'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -92,7 +100,7 @@ const routes: Array<Route> = [
           },
           side: {
             title: 'sidebar.mod.queue',
-            icon: LoginKeys
+            icon: FileMultiple
           }
         }
       },
@@ -101,7 +109,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.mod.history',
-            icon: LoginKeys
+            icon: TimeHourGlass
           }
         }
       }
@@ -138,7 +146,7 @@ const routes: Array<Route> = [
           },
           side: {
             title: 'sidebar.manage.create_post',
-            icon: LoginKeys
+            icon: ProgrammingApplicationAdd
           }
         }
       },
@@ -147,7 +155,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.manage.my_posts',
-            icon: LoginKeys
+            icon: ContentBookEdit
           }
         }
       },
@@ -156,7 +164,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.manage.brands',
-            icon: LoginKeys
+            icon: SettingHammer
           }
         }
       }
@@ -187,7 +195,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.settings.profile',
-            icon: LoginKeys
+            icon: UserHuman
           },
           menu: {
             title: 'menu.settings',
@@ -200,7 +208,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.settings.security',
-            icon: LoginKeys
+            icon: SecurityShield
           }
         }
       },
@@ -209,7 +217,7 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.settings.moderation',
-            icon: LoginKeys
+            icon: SettingWrench
           }
         },
         middleware: [

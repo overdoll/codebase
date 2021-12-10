@@ -6,8 +6,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceDeleteBin1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
+import { DeleteBin } from '../../../../../../../assets/icons/interface'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
 
@@ -17,17 +16,17 @@ type Props = {
 }
 
 const SessionGQL = graphql`
-    fragment RevokeSessionFragment on AccountSession {
-        id
-    }
+  fragment RevokeSessionFragment on AccountSession {
+    id
+  }
 `
 
 const DeleteEmailMutationGQL = graphql`
-    mutation RevokeSessionMutation($input: RevokeAccountSessionInput!, $connections: [ID!]!) {
-        revokeAccountSession(input: $input) {
-            accountSessionId @deleteEdge(connections: $connections)
-        }
+  mutation RevokeSessionMutation($input: RevokeAccountSessionInput!, $connections: [ID!]!) {
+    revokeAccountSession(input: $input) {
+      accountSessionId @deleteEdge(connections: $connections)
     }
+  }
 `
 
 export default function RevokeSession ({ connectionID, session }: Props): Node {
@@ -71,7 +70,7 @@ export default function RevokeSession ({ connectionID, session }: Props): Node {
     <MenuItem
       justify='center' isDisabled={isRevokingSession} onClick={onRevokeSession}
     >
-      <Icon pointerEvents='none' icon={InterfaceDeleteBin1} fill='orange.300' w={4} h={4} mr={2} />
+      <Icon pointerEvents='none' icon={DeleteBin} fill='orange.300' w={4} h={4} mr={2} />
       <Text pointerEvents='none' color='orange.300'>{t('security.sessions.revoke')}</Text>
     </MenuItem>
   )

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7b51cb46ea2863b2505c2fd7919a3402
+ * @relayHash 683c8de175ef390fda20751b518d198d
  */
 
 /* eslint-disable */
@@ -44,15 +44,19 @@ fragment RevokeSessionFragment on AccountSession {
   id
 }
 
+fragment SessionCardFragment on AccountSession {
+  ...RevokeSessionFragment
+  userAgent
+  ip
+  created
+  current
+}
+
 fragment SessionsSettingsFragment_2HEEH6 on Account {
   sessions(first: $first, after: $after) {
     edges {
       node {
-        ...RevokeSessionFragment
-        userAgent
-        ip
-        created
-        current
+        ...SessionCardFragment
         id
         __typename
       }
@@ -290,7 +294,7 @@ return {
     ]
   },
   "params": {
-    "id": "7b51cb46ea2863b2505c2fd7919a3402",
+    "id": "683c8de175ef390fda20751b518d198d",
     "metadata": {},
     "name": "SessionsPaginationQuery",
     "operationKind": "query",
@@ -299,5 +303,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '365dcbe4b362aee7bed2a27fc215aff3';
+(node: any).hash = '17c461b08fb41762a12cbf32e9b81755';
 module.exports = node;

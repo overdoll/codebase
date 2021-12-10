@@ -146,10 +146,10 @@
     },
     "sessions": {
       "title": "Sessions",
-      "description": "Here is a list of devices that have logged into your account. You can revoke any that you don't recognize.",
+      "description": "Here is a list of devices that have logged into your account. You can click on one to view the details.",
       "accessed": "Last login on {{date}}",
       "show": "Show IP",
-      "current": "Current Session",
+      "current": "Your Current Session",
       "load": "Load More",
       "revoke": "Revoke",
       "on": "{{browser}} on {{device}}",

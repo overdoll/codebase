@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ca289484fc547ff6d26db5562d2c783a
+ * @relayHash c555bcbeb04d364393aa791c2eb71e8a
  */
 
 /* eslint-disable */
@@ -33,15 +33,19 @@ fragment RevokeSessionFragment on AccountSession {
   id
 }
 
+fragment SessionCardFragment on AccountSession {
+  ...RevokeSessionFragment
+  userAgent
+  ip
+  created
+  current
+}
+
 fragment SessionsSettingsFragment on Account {
   sessions(first: 3) {
     edges {
       node {
-        ...RevokeSessionFragment
-        userAgent
-        ip
-        created
-        current
+        ...SessionCardFragment
         id
         __typename
       }
@@ -241,7 +245,7 @@ return {
     ]
   },
   "params": {
-    "id": "ca289484fc547ff6d26db5562d2c783a",
+    "id": "c555bcbeb04d364393aa791c2eb71e8a",
     "metadata": {},
     "name": "SessionsSettingsQuery",
     "operationKind": "query",

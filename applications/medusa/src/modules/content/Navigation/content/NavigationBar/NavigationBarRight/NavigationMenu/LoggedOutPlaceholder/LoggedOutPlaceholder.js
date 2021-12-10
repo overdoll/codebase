@@ -9,8 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { MenuButton } from '@//:modules/content/Navigation/components'
 import NavLink from '@//:modules/routing/NavLink'
 
-import LoginKey2
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-key-2.svg'
+import { LoginKeys } from '../../../../../../../../assets/icons/navigation'
 
 type Props = {}
 
@@ -20,7 +19,7 @@ export default function LoggedOutPlaceholder (props: Props): Node {
   return (
     <NavLink to='/join'>
       {({ isActive }) => (
-        <MenuButton active={isActive} icon={LoginKey2} color='green.500' label={t('menu.join')} />
+        <MenuButton active={isActive} icon={LoginKeys} color='green.500' label={t('menu.join')} />
       )}
     </NavLink>
   )

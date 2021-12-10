@@ -15,8 +15,7 @@ import {
   SimpleGrid,
   Portal
 } from '@chakra-ui/react'
-import InterfacePageControllerSettings
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-settings.svg'
+import { PageControllerSettings } from '../../../../../../../assets/icons/navigation'
 import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
 import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
 
@@ -39,11 +38,11 @@ export default function NavigationMenu ({ children }: Props): Node {
         <NavigationButton
           w={{ base: '58px', md: '42px' }}
           onClick={onToggle} active={isOpen} label={t('nav.menu')}
-          icon={InterfacePageControllerSettings}
+          icon={PageControllerSettings}
         />
         <Modal isCentered isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent backdropFilter='blur(5px)' bg='dimmers.500' boxShadow='none'>
+          <ModalContent backdropFilter='blur(5px)' bg='gray.800' boxShadow='none'>
             <ModalBody my={4}>
               <SimpleGrid onClick={onClose} spacing={3}>
                 {children}
@@ -61,7 +60,7 @@ export default function NavigationMenu ({ children }: Props): Node {
         <NavigationButton
           w={{ base: '58px', md: '42px' }}
           onClick={onToggleMenu} active={isOpenMenu} label={t('nav.menu')}
-          icon={InterfacePageControllerSettings}
+          icon={PageControllerSettings}
           as={MenuButton}
         />
         <Portal>

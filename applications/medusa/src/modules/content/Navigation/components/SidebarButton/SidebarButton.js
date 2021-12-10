@@ -4,7 +4,7 @@
 import NavLink from '@//:modules/routing/NavLink'
 import Button from '@//:modules/form/Button'
 import ClickableBox from '@//:modules/content/PageLayout/Interactables/ClickableBox/ClickableBox'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Text, Box } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
@@ -16,18 +16,19 @@ type Props = {
 export default function SidebarButton ({ active, title, icon }: Props): Node {
   return (
     <ClickableBox
-      h={9}
+      h={10}
       display='inline'
       color={active ? 'primary.400' : 'gray.300'}
       bg={active ? 'gray.600' : 'transparent'}
     >
-      <Flex align='center'>
+      <Flex h='100%' align='center'>
         {icon &&
-          <Icon
-            mr={3}
-            icon={icon} w='20px' h='20px'
-            fill={active ? 'primary.400' : 'gray.300'}
-          />}
+          <Flex borderRadius='base' align='center' p={1} mr={3} bg={active ? 'primary.400' : 'gray.600'}>
+            <Icon
+              icon={icon} w={4} h={4}
+              fill={active ? 'gray.00' : 'gray.300'}
+            />
+          </Flex>}
         <Heading fontSize='md' fontWeight='semibold'>{title}</Heading>
       </Flex>
     </ClickableBox>

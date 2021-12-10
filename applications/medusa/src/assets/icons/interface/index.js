@@ -1,0 +1,6 @@
+export { default as QrCode } from './normal-bold/qr-code.svg'
+export { default as Barcode } from './normal-bold/barcode.svg'
+export { default as DesktopComputer } from './normal-bold/desktop-computer.svg'
+export { default as MobilePhone } from './normal-bold/mobile-phone.svg'
+export { default as DeleteBin } from './mini-bold/delete-bin.svg'
+export { default as EditView } from './mini-bold/edit-view.svg'

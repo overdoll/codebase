@@ -1,7 +1,10 @@
+export { default as ClickableBox } from './Interactables/ClickableBox/ClickableBox'
+
 export { default as PagePanelWrap } from './Interactables/PagePanel/PagePanelWrap/PagePanelWrap'
 export { default as PagePanelTitle } from './Interactables/PagePanel/PagePanelTitle/PagePanelTitle'
 export { default as PagePanelDescription } from './Interactables/PagePanel/PagePanelDescription/PagePanelDescription'
-export { default as ClickableBox } from './Interactables/ClickableBox/ClickableBox'
+export { default as PagePanelIcon } from './Interactables/PagePanel/PagePanelIcon/PagePanelIcon'
+export { default as PagePanelText } from './Interactables/PagePanel/PagePanelText/PagePanelText'
 
 export { default as PageSectionWrap } from './PageSection/PageSectionWrap/PageSectionWrap'
 export { default as PageSectionDescription } from './PageSection/PageSectionDescription/PageSectionDescription'

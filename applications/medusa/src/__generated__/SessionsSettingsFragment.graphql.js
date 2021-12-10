@@ -7,7 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { RevokeSessionFragment$ref } from "./RevokeSessionFragment.graphql";
+import type { SessionCardFragment$ref } from "./SessionCardFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 import type { SessionsSettingsFragment$ref, SessionsSettingsFragment$fragmentType } from "./SessionsPaginationQuery.graphql";
 export type { SessionsSettingsFragment$ref, SessionsSettingsFragment$fragmentType };
@@ -16,11 +16,7 @@ export type SessionsSettingsFragment = {|
     +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +userAgent: string,
-        +ip: string,
-        +created: string,
-        +current: boolean,
-        +$fragmentRefs: RevokeSessionFragment$ref,
+        +$fragmentRefs: SessionCardFragment$ref
       |}
     |}>,
   |},
@@ -108,41 +104,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "userAgent",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "ip",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "created",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "current",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 },
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "RevokeSessionFragment"
+                  "name": "SessionCardFragment"
                 }
               ],
               "storageKey": null
@@ -210,5 +178,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '365dcbe4b362aee7bed2a27fc215aff3';
+(node: any).hash = '17c461b08fb41762a12cbf32e9b81755';
 module.exports = node;

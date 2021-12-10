@@ -5,7 +5,14 @@
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
-import { PagePanelWrap, PagePanelDescription, PagePanelTitle } from '@//:modules/content/PageLayout'
+import {
+  PagePanelWrap,
+  PagePanelDescription,
+  PagePanelTitle,
+  PagePanelIcon,
+  PagePanelText
+} from '@//:modules/content/PageLayout'
+import { Barcode } from '../../../../../../../assets/icons/interface'
 
 type Props = {
   data: RecoveryCodesSettingsFragment$key
@@ -24,14 +31,13 @@ export default function RecoveryCodesSettings (props: Props): Node {
 
   return (
     <PagePanelWrap path='/configure/multi_factor/recovery_codes'>
-      <PagePanelTitle>
-        {t('security.multi_factor.recovery_codes.title')}
-      </PagePanelTitle>
-      <PagePanelDescription>
-        {data.recoveryCodesGenerated
+      <PagePanelIcon icon={Barcode} colorScheme='orange' />
+      <PagePanelText
+        title={t('security.multi_factor.recovery_codes.title')}
+        description={data.recoveryCodesGenerated
           ? t('security.multi_factor.recovery_codes.description.configured')
           : t('security.multi_factor.recovery_codes.description.not_configured')}
-      </PagePanelDescription>
+      />
     </PagePanelWrap>
   )
 }
