@@ -1,6 +1,6 @@
-import colors from '../index'
-import ColorCircle from '../../../../../.storybook/components/color/color'
-import { Text, Flex, HStack, Heading, Stack } from '@chakra-ui/react'
+import colors from '../index';
+import ColorCircle from '../../../../../.storybook/components/color/color';
+import { Flex, Heading, HStack, Stack, Text } from '@chakra-ui/react';
 
 export default {
   title: 'Molecules/Colors',

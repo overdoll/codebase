@@ -7,35 +7,23 @@ import {
   Text,
   CircularProgress,
   Box,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
   Collapse,
-  SimpleGrid,
   Grid,
   GridItem,
-  Fade,
-  ScaleFade,
   useDisclosure
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
-import InterfaceValidationCheckCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-circle.svg'
-import InterfaceDeleteCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-circle.svg'
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import InterfaceArrowsMoveHorizontalCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-move-horizontal-circle.svg'
-import InterfaceArrowsButtonDown
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-down.svg'
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
-import Button from '@//:modules/form/Button'
 import { ClickableBox } from '@//:modules/content/PageLayout'
+import {
+  ArrowButtonRight,
+  ArrowButtonDown
+} from '../../../../../../assets/icons/navigation'
+import { CheckCircle, DeleteCircle, SwapCircle } from '../../../../../../assets/icons/interface'
 
 type Props = {
   auditLog: AuditCardFragment$key,
@@ -96,7 +84,7 @@ export default function AuditCard ({ auditLog }: Props): Node {
               <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
                 <Box>
                   <Icon
-                    icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'APPROVED' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
+                    icon={data.reverted ? SwapCircle : data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
                     w={4} h={4}
                     fill={data.reverted ? 'purple.500' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
                   />
@@ -114,7 +102,7 @@ export default function AuditCard ({ auditLog }: Props): Node {
             <GridItem align='center' colSpan={1}>
               <Flex w='100%' h='100%' align='center' justify='flex-end'>
                 <Icon
-                  icon={isOpen ? InterfaceArrowsButtonDown : InterfaceArrowsButtonRight} w={4} h={4}
+                  icon={isOpen ? ArrowButtonDown : ArrowButtonRight} w={4} h={4}
                   fill='gray.300'
                 />
               </Flex>

@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
+import type { Node } from 'react';
+import Icon from '@//:modules/content/Icon/Icon';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { useTranslation } from 'react-i18next'
-import { Center, Heading, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import Link from '@//:modules/routing/Link'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { useTranslation } from 'react-i18next';
+import { Center, Heading, Stack } from '@chakra-ui/react';
+import Button from '@//:modules/form/Button';
+import { Helmet } from 'react-helmet-async';
+import { PageWrapper } from '@//:modules/content/PageLayout';
+import Link from '@//:modules/routing/Link';
 
 export default function NotFound (): Node {
   const [t] = useTranslation('empty')

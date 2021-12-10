@@ -1,5 +1,5 @@
-import shadows from '../index'
-import { Stack, Box } from '@chakra-ui/react'
+import shadows from '../index';
+import { Box, Stack } from '@chakra-ui/react';
 
 export default {
   title: 'Molecules/Shadows'

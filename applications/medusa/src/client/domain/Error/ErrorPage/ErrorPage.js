@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import { Heading, Text } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
-import type { Node } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
+import { Heading, Text } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet-async';
+import type { Node } from 'react';
+import Icon from '@//:modules/content/Icon/Icon';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { useTranslation } from 'react-i18next'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { useTranslation } from 'react-i18next';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 type Props = {
   error: Error

@@ -2,17 +2,15 @@
  * @flow
  */
 
-import { Button, Heading, Text, Stack, Flex } from '@chakra-ui/react'
+import { Button, Heading, Text, Stack } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Link } from '@//:modules/routing'
-import InterfaceValidationCheckSquare1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-square-1.svg'
-import EntertainmentControlButtonPauseCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/entertainment/control-buttons/entertainment-control-button-pause-circle.svg'
+
+import { PauseCircle, CheckCircle } from '../../../../../../assets/icons/interface'
 
 type Props = {
   moderator: NoPostsPlaceholderFragment$key
@@ -37,7 +35,7 @@ export default function PostHeader (props: Props): Node {
         <Icon
           w={12} h={12}
           mb={4}
-          icon={EntertainmentControlButtonPauseCircle}
+          icon={PauseCircle}
           fill='orange.300'
         />
         <Heading color='gray.00' fontSize='4xl'>
@@ -60,7 +58,7 @@ export default function PostHeader (props: Props): Node {
   return (
     <Stack align='center'>
       <Icon
-        w={12} h={12} icon={InterfaceValidationCheckSquare1}
+        w={12} h={12} icon={CheckCircle}
         mb={4}
         fill='green.300'
       />

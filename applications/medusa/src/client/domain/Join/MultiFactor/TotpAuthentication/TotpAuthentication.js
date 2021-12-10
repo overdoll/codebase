@@ -1,34 +1,26 @@
 /**
  * @flow
  */
-import { graphql, useMutation, useFragment } from 'react-relay/hooks'
-import { Helmet } from 'react-helmet-async'
+import { graphql, useMutation } from 'react-relay/hooks';
 import {
-  Center,
+  Box,
+  Fade,
   Flex,
   Heading,
-  HStack,
   PinInput,
   PinInputField,
-  Text,
-  Wrap,
-  WrapItem,
-  Fade,
   Spinner,
-  SlideFade,
-  Collapse,
-  Box,
-  useDisclosure,
-  useBreakpointValue, useToast, AlertIcon, AlertDescription, Alert
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+  Text,
+  useBreakpointValue,
+  useToast,
+  Wrap,
+} from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
-import RecoveryCode from '../RecoveryCode/RecoveryCode'
-import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from '@//:modules/routing';
+import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
 
 const SubmitTotpMutationGQL = graphql`
   mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {

@@ -6,8 +6,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorTotpSettingsFragment$key } from '@//:artifacts/MultiFactorTotpSettingsFragment.graphql'
 import {
   PagePanelWrap,
-  PagePanelTitle,
-  PagePanelDescription,
   PagePanelIcon,
   PagePanelText
 } from '@//:modules/content/PageLayout'

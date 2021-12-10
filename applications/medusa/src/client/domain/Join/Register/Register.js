@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
-import { useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
-import type { Node } from 'react'
-import { useHistory } from '@//:modules/routing'
-import Icon from '@//:modules/content/Icon/Icon'
+import { graphql, useMutation } from 'react-relay/hooks';
+import { useToast } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
+import type { Node } from 'react';
+import { useHistory } from '@//:modules/routing';
+import Icon from '@//:modules/content/Icon/Icon';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { Helmet } from 'react-helmet-async'
-import RegisterForm from './RegisterForm/RegisterForm'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { Helmet } from 'react-helmet-async';
+import RegisterForm from './RegisterForm/RegisterForm';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
@@ -57,7 +57,7 @@ export default function Register (): Node {
           .getRoot()
           .getLinkedRecord('viewer')
 
-        if (viewer != null) {
+        if (viewer !== null) {
           viewer.invalidateRecord()
         }
 

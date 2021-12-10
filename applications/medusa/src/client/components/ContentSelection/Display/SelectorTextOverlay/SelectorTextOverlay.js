@@ -3,16 +3,16 @@
  */
 import type { Node } from 'react'
 
-import { Stack, Box, Heading, Text, Wrap, WrapItem, Flex } from '@chakra-ui/react'
+import { Text, Flex } from '@chakra-ui/react'
 
 type Props = {
   label: string,
-  description?: string
+  description?: string,
+  children: Node
 }
 
 export default function SelectorTextOverlay ({ label, children, description }: Props): Node {
   return (
-
     <Flex
       objectFit='cover'
       align='center'

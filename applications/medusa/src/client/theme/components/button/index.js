@@ -1,8 +1,7 @@
 /**
  * @flow
  */
-import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
-import Button from '@//:modules/form/Button'
+import { getColor, mode, transparentize } from '@chakra-ui/theme-tools';
 
 const baseStyle = {
   lineHeight: '1.2',

@@ -1,17 +1,16 @@
 /**
  * @flow
  */
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import type { Node } from 'react'
-import { useCallback, useEffect, useState, Suspense } from 'react'
-import Register from './Register/Register'
-import Lobby from './Lobby/Lobby'
-import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
-import Join from './Join/Join'
-import Grant from './Grant/Grant'
-import MultiFactor from './MultiFactor/MultiFactor'
-import type { JoinRootFragment$key } from '@//:artifacts/JoinRootFragment.graphql'
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { graphql, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks';
+import type { Node } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Register from './Register/Register';
+import Lobby from './Lobby/Lobby';
+import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql';
+import Join from './Join/Join';
+import Grant from './Grant/Grant';
+import MultiFactor from './MultiFactor/MultiFactor';
 
 type Props = {
   prepared: {

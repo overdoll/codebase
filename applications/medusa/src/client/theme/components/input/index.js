@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { getColor, mode } from '@chakra-ui/theme-tools'
+import { getColor, mode } from '@chakra-ui/theme-tools';
 
 const determineBorderWidth = (size) => {
   switch (size) {

@@ -1,18 +1,15 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { Helmet } from 'react-helmet-async'
-import {
-  Box,
-  Stack
-} from '@chakra-ui/react'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
-import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql'
-import RootEmails from './RootEmails/RootEmails'
-import RootUsernames from './RootUsernames/RootUsernames'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import type { Node } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Box, Stack } from '@chakra-ui/react';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql';
+import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql';
+import RootEmails from './RootEmails/RootEmails';
+import RootUsernames from './RootUsernames/RootUsernames';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 type Props = {
   prepared: {

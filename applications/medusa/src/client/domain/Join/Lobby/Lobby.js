@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { Node } from 'react'
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/Icon/Icon'
-import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import { useClickDelay } from '@//:modules/utilities/hooks'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { Node } from 'react';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import Icon from '@//:modules/content/Icon/Icon';
+import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import Button from '@//:modules/form/Button';
+import { useClickDelay } from '@//:modules/utilities/hooks';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql';
 
 type Props = {
   refresh: () => void,

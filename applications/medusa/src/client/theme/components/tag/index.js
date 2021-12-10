@@ -1,4 +1,4 @@
-import Badge from '../badge'
+import Badge from '../badge';
 
 const parts = ['container', 'label', 'closeButton']
 

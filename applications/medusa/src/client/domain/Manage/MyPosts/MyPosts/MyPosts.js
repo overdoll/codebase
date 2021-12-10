@@ -1,18 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import { usePaginationFragment } from 'react-relay'
-import type { MyPostsQuery } from '@//:artifacts/MyPostsQuery.graphql'
-import type { MyPostsFragment$key } from '@//:artifacts/MyPostsFragment.graphql'
-
-import { StringParam, useQueryParam } from 'use-query-params'
-import { ListSpacer, SmallBackgroundBox, ClickableBox } from '@//:modules/content/PageLayout'
-import { Flex, Text } from '@chakra-ui/react'
-import PostStatePreview from './PostStatePreview/PostStatePreview'
-import { useTranslation } from 'react-i18next'
-import { LargeGridItem, GridWrap } from '../../../../components/ContentSelection'
+import type { Node } from 'react';
+import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import { usePaginationFragment } from 'react-relay';
+import type { MyPostsQuery } from '@//:artifacts/MyPostsQuery.graphql';
+import type { MyPostsFragment$key } from '@//:artifacts/MyPostsFragment.graphql';
+import { ClickableBox } from '@//:modules/content/PageLayout';
+import { Text } from '@chakra-ui/react';
+import PostStatePreview from './PostStatePreview/PostStatePreview';
+import { useTranslation } from 'react-i18next';
+import { GridWrap, LargeGridItem } from '../../../../components/ContentSelection';
 
 type Props = {
   query: MyPostsQuery

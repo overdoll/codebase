@@ -1,29 +1,29 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useMutation } from 'react-relay/hooks';
 import {
   Flex,
-  FormLabel,
   FormControl,
   FormErrorMessage,
+  FormLabel,
   Input,
   InputGroup,
   InputRightElement,
-  useToast
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import Button from '@//:modules/form/Button'
-import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi'
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
+  useToast,
+} from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import Button from '@//:modules/form/Button';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
 import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg';
 import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg';
+import { useHistory } from '@//:modules/routing';
+import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
 
 type CodeValues = {
   code: string,

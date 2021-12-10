@@ -4,7 +4,9 @@
 import type { Node } from 'react'
 import { Wrap } from '@chakra-ui/react'
 
-type Props = {}
+type Props = {
+  children: Node
+}
 
 export default function GridWrap ({ children }: Props): Node {
   return (

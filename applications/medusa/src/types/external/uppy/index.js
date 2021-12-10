@@ -6,7 +6,7 @@
  * @flow
  */
 
-import * as UppyUtils from '@uppy/utils'
+import * as UppyUtils from '@uppy/utils';
 
 declare var Uppy: typeof npm$namespace$Uppy
 

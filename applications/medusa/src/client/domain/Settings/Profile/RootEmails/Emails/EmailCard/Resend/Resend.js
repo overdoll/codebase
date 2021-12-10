@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { useTranslation } from 'react-i18next'
-import MailSendEnvelope from '@streamlinehq/streamlinehq/img/streamline-mini-bold/mail/send/mail-send-envelope.svg'
-import { MenuItem, Text } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import type { Node } from 'react';
+import { useTranslation } from 'react-i18next';
+import MailSendEnvelope from '@streamlinehq/streamlinehq/img/streamline-mini-bold/mail/send/mail-send-envelope.svg';
+import { MenuItem, Text } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
 
 type Props = {}
 

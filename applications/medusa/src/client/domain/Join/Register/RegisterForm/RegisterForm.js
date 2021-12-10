@@ -1,27 +1,19 @@
 /**
  * @flow
  */
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  FormErrorMessage
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { useForm } from 'react-hook-form'
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
+import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import { useForm } from 'react-hook-form';
 import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg';
 import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import { joiResolver } from '@hookform/resolvers/joi'
-import type { Node } from 'react'
-import Button from '@//:modules/form/Button'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg';
+import { joiResolver } from '@hookform/resolvers/joi';
+import type { Node } from 'react';
+import Button from '@//:modules/form/Button';
+import { useUsernameFormSchema } from '@//:modules/constants/schemas';
 
 type RegisterValues = {
   username: string,

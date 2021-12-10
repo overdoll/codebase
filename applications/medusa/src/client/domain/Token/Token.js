@@ -1,24 +1,24 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
-import UAParser from 'ua-parser-js'
-import { Helmet } from 'react-helmet-async'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import { Icon } from '@//:modules/content'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, useMutation, usePreloadedQuery, useRelayEnvironment } from 'react-relay/hooks'
+import { useTranslation } from 'react-i18next';
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner';
+import UAParser from 'ua-parser-js';
+import { Helmet } from 'react-helmet-async';
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { Icon } from '@//:modules/content';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { Node, useEffect } from 'react'
-import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
-import Button from '@//:modules/form/Button'
-import { useHistory } from '@//:modules/routing'
-import Confirm from './Confirm/Confirm'
-import Link from '@//:modules/routing/Link'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { StringParam, useQueryParam } from 'use-query-params';
+import { Node, useEffect } from 'react';
+import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
+import Button from '@//:modules/form/Button';
+import { useHistory } from '@//:modules/routing';
+import Confirm from './Confirm/Confirm';
+import Link from '@//:modules/routing/Link';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 type Props = {
   prepared: {

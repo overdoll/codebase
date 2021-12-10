@@ -4,7 +4,9 @@
 import type { Node } from 'react'
 import { Box } from '@chakra-ui/react'
 
-type Props = {}
+type Props = {
+  children: Node
+}
 
 export default function RowItem ({ children, ...rest }: Props): Node {
   return (

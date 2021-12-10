@@ -265,14 +265,6 @@ const routes: Array<Route> = [
             }
           },
           {
-            path: '/manage/create_post',
-            component: JSResource('CreatePostRoot', () =>
-              import(
-                /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
-              )
-            )
-          },
-          {
             path: '/manage/brands',
             component: JSResource('ManageBrandsRoot', () =>
               import(
@@ -460,6 +452,28 @@ const routes: Array<Route> = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/configure/create_post',
+        component: JSResource('CreatePostRoot', () =>
+          import(
+            /* webpackChunkName: "CreatePostRoot" */ './domain/Configure/CreatePost/CreatePost'
+          )
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'posting')) {
               return true
             }
             history.push('/join')

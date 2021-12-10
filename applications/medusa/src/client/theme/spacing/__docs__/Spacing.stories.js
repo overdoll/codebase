@@ -1,5 +1,5 @@
-import { spacing } from '../index'
-import { Text, Flex, Stack, Box } from '@chakra-ui/react'
+import { spacing } from '../index';
+import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 
 export default {
   title: 'Molecules/Spacing'

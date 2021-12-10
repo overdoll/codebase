@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql'
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql';
+import { MenuItem, Text, useToast } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
 import InterfaceDeleteBin1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
-import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg';
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
+import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql';
 
 type Props = {
   connectionID: EmailsSettingsFragment$key,

@@ -1,6 +1,6 @@
-import { mode } from '@chakra-ui/theme-tools'
-import { mergeWith as merge } from '@chakra-ui/utils'
-import Input from '../input'
+import { mode } from '@chakra-ui/theme-tools';
+import { mergeWith as merge } from '@chakra-ui/utils';
+import Input from '../input';
 
 const parts = ['field', 'icon']
 

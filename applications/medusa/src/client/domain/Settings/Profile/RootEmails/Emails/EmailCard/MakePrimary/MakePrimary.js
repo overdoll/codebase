@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql'
-import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql';
+import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql';
 
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import { MenuItem, Text, useToast } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
 import InterfaceSettingWrench
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-wrench.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-wrench.svg';
 
 type Props = {
   emails: MakePrimaryFragment$key

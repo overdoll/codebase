@@ -7,8 +7,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
 import {
   PagePanelWrap,
-  PagePanelDescription,
-  PagePanelTitle,
   PagePanelIcon,
   PagePanelText
 } from '@//:modules/content/PageLayout'

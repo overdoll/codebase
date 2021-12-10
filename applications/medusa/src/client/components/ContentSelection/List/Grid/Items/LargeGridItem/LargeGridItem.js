@@ -4,7 +4,9 @@
 import type { Node } from 'react'
 import { WrapItem } from '@chakra-ui/react'
 
-type Props = {}
+type Props = {
+  children: Node
+}
 
 export default function LargeGridItem ({ children, ...rest }: Props): Node {
   return (

@@ -3,40 +3,29 @@
  */
 import type { Node } from 'react'
 import {
-  InputLeftElement,
-  Input,
-  InputRightElement,
-  IconButton, InputGroup,
-  CloseButton, Flex,
-  Grid,
-  GridItem,
-  SimpleGrid,
-  Progress,
-  Box,
-  Text,
-  Heading,
   CircularProgress,
-  CircularProgressLabel, MenuButton, MenuList, Menu, MenuItem
+  CircularProgressLabel,
+  Flex,
+  Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  SimpleGrid,
+  Text
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import SearchCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/search/search-circle.svg'
-import InterfaceDelete1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-1.svg'
-import { useState } from 'react'
 import { ClickableBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { graphql } from 'react-relay/hooks'
 import type { PostStatePreviewFragment$key } from '@//:artifacts/PostStatePreviewFragment.graphql'
 import { useFragment } from 'react-relay'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import { StringParam, useQueryParam } from 'use-query-params'
 import useCheckRequirements
-  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
+  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
 import progressScore
-  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
-import MakePrimary from '../../../../Settings/Profile/RootEmails/Emails/EmailCard/MakePrimary/MakePrimary'
-import Delete from '../../../../Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete'
+  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
 import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 import InterfaceDeleteBin1
@@ -65,8 +54,6 @@ const PostStatePreviewFragmentGQL = graphql`
 export default function PostStatePreview ({ query }: Props): Node {
   const data = useFragment(PostStatePreviewFragmentGQL, query)
 
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
-
   const history = useHistory()
 
   const [t] = useTranslation('manage')
@@ -78,7 +65,7 @@ export default function PostStatePreview ({ query }: Props): Node {
   const score = progressScore([content, audience, brand, categories, characters])
 
   const selectPost = () => {
-    history.push(`/manage/create_post?id=${data.reference}`)
+    history.push(`/configure/create_post?id=${data.reference}`)
   }
 
   const DisplayContentGrid = () => {

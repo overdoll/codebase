@@ -2,8 +2,8 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useMemo, Fragment } from 'react'
-import { Button, Box, useBreakpointValue, Skeleton } from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { Button, useBreakpointValue, Skeleton } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -26,7 +26,8 @@ import {
   PageContents,
   SimplifiedNavigation,
   Sidebar,
-  SidebarGrouping
+  SidebarGrouping,
+  SiteLinkLogo
 } from '@//:modules/content/Navigation/content'
 import {
   SimpleProfileButton,
@@ -257,9 +258,7 @@ export default function Navigation ({ children, query }: Props): Node {
     <>
       <NavigationBar>
         <NavigationBarLeft>
-          <Link to='/'>
-            <Button textColor='primary.500' variant='link' colorScheme='primary'>{t('title')}</Button>
-          </Link>
+          <SiteLinkLogo />
         </NavigationBarLeft>
         <NavigationBarCenter>
           <NavigationButtons />

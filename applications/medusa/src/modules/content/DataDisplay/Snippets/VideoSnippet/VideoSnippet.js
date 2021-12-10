@@ -3,12 +3,11 @@
  */
 import type { Node } from 'react'
 import type { ResourceUrl } from '@//:types/upload'
-import { Suspense } from 'react'
-import { Skeleton } from '@chakra-ui/react'
 
 type Props = {
   innerRef?: () => void,
-  urls: Array<ResourceUrl>
+  urls: Array<ResourceUrl>,
+  objectFit?: string,
 }
 
 export default function VideoSnippet ({ urls, innerRef, objectFit, ...rest }: Props): Node {

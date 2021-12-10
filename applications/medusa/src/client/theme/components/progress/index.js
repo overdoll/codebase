@@ -1,4 +1,4 @@
-import { generateStripe, getColor, mode } from '@chakra-ui/theme-tools'
+import { generateStripe, getColor, mode } from '@chakra-ui/theme-tools';
 
 const parts = ['track', 'filledTrack', 'label']
 

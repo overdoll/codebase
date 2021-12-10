@@ -1,12 +1,12 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
-import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
-import { useHistory } from '@//:modules/routing'
-import prepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
+import { graphql, useMutation } from 'react-relay/hooks';
+import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { useHistory } from '@//:modules/routing';
+import prepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
 
 const GrantAction = graphql`
   mutation GrantMutation {

@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
-import TotpAuthentication from './TotpAuthentication/TotpAuthentication'
-import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import { Alert, AlertDescription, AlertIcon, Box, Collapse, Flex, useDisclosure, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import RecoveryCode from './RecoveryCode/RecoveryCode'
-import { useTranslation } from 'react-i18next'
+import { graphql, useFragment } from 'react-relay/hooks';
+import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql';
+import TotpAuthentication from './TotpAuthentication/TotpAuthentication';
+import { Helmet } from 'react-helmet-async';
+import { PageWrapper } from '@//:modules/content/PageLayout';
+import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react';
+import Button from '@//:modules/form/Button';
+import RecoveryCode from './RecoveryCode/RecoveryCode';
+import { useTranslation } from 'react-i18next';
 
 const MultiFactorFragmentGQL = graphql`
   fragment MultiFactorFragment on AuthenticationTokenAccountStatus {

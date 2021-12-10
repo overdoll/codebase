@@ -7,7 +7,8 @@ import { ClickableBox } from '@//:modules/content/PageLayout'
 type Props = {
   id: string,
   selected: Array<string>,
-  onSelect: () => void
+  onSelect: () => void,
+  children: Node,
 }
 
 export default function Selector ({ id, selected, onSelect, children, ...rest }: Props): Node {

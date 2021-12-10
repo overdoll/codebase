@@ -8,10 +8,10 @@
   "nav": {
     "home": "Home",
     "mod": "Moderation",
-    "posts": "Posts",
     "profile": "Profile",
     "menu": "Menu",
-    "join": "Join"
+    "join": "Join",
+    "create_post": "Create a Post"
   },
   "sidebar": {
     "mod": {
@@ -28,13 +28,13 @@
     "manage": {
       "title": "Post Management",
       "my_posts": "My Posts",
-      "create_post": "Create a Post",
       "brands": "Manage Brands"
     }
   },
   "menu": {
     "profile": "Go to my profile",
     "settings": "Account Settings",
+    "manage": "My Content",
     "logout": "Log Out",
     "join": "Join The Community"
   }

@@ -10,3 +10,5 @@ export { default as PageContents } from './NavigationContents/PageContents/PageC
 
 export { default as Sidebar } from './NavigationContents/Sidebar/Sidebar'
 export { default as SidebarGrouping } from './NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
+
+export { default as SiteLinkLogo } from './NavigationBar/NavigationBarLeft/SiteLinkLogo/SiteLinkLogo'

@@ -1,5 +1,5 @@
-import { isDark, mode, randomColor } from '@chakra-ui/theme-tools'
-import themeSizes from '../../sizes'
+import { isDark, mode, randomColor } from '@chakra-ui/theme-tools';
+import themeSizes from '../../sizes';
 
 const baseStyleBadge = (props) => {
   return {

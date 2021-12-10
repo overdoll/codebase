@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Flex, HStack, useBreakpointValue, Skeleton } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import type { Node } from 'react'
 
 type Props = {

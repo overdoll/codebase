@@ -1,5 +1,5 @@
-import typography from '../index'
-import { Text, Flex, Heading, Stack } from '@chakra-ui/react'
+import typography from '../index';
+import { Flex, Heading, Stack, Text } from '@chakra-ui/react';
 
 export default {
   title: 'Molecules/Typography'

@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { UppyFile } from '@uppy/core'
+import { UppyFile } from '@uppy/core';
 
 export type Urls = {
   [string]: {

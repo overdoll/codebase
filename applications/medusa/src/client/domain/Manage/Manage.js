@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { Redirect } from 'react-router'
-import { useLocation } from '@//:modules/routing'
+import type { Node } from 'react';
+import { Redirect } from 'react-router';
+import { useLocation } from '@//:modules/routing';
 
 type Props = {
   children: Node

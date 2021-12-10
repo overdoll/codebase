@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
-import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
-import Icon from '@//:modules/content/Icon/Icon'
-import JoinForm from './JoinForm/JoinForm'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import { useTranslation } from 'react-i18next';
+import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet-async';
+import Icon from '@//:modules/content/Icon/Icon';
+import JoinForm from './JoinForm/JoinForm';
 import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
+import { PageWrapper } from '@//:modules/content/PageLayout';
 
 type Props = {
   queryRef: JoinFragment$key,

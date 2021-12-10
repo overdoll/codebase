@@ -13,11 +13,14 @@ import {
   ModalBody,
   ModalOverlay,
   SimpleGrid,
-  Portal
+  Portal,
+  Stack
 } from '@chakra-ui/react'
 import { PageControllerSettings } from '../../../../../../../assets/icons/navigation'
+
 import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
 import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
+import { SiteLinkLogo } from '@//:modules/content/Navigation/content'
 
 type Props = {
   children: Node,
@@ -44,9 +47,12 @@ export default function NavigationMenu ({ children }: Props): Node {
           <ModalOverlay />
           <ModalContent backdropFilter='blur(5px)' bg='gray.800' boxShadow='none'>
             <ModalBody my={4}>
-              <SimpleGrid onClick={onClose} spacing={3}>
-                {children}
-              </SimpleGrid>
+              <Stack onClick={onClose} spacing={4}>
+                <SiteLinkLogo />
+                <SimpleGrid spacing={3}>
+                  {children}
+                </SimpleGrid>
+              </Stack>
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -64,8 +70,8 @@ export default function NavigationMenu ({ children }: Props): Node {
           as={MenuButton}
         />
         <Portal>
-          <MenuList minW='200px' m={0} p={0} boxShadow='lg'>
-            <SimpleGrid p={2} onClick={onCloseMenu} spacing={3}>
+          <MenuList minW='300px' m={0} p={0} boxShadow='lg'>
+            <SimpleGrid p={4} onClick={onCloseMenu} spacing={3}>
               {children}
             </SimpleGrid>
           </MenuList>

@@ -16,11 +16,7 @@ import type { PostsFragment$key } from '@//:artifacts/PostsFragment.graphql'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
-
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import InterfaceArrowsButtonLeft
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
+import { ArrowButtonRight, ArrowButtonLeft } from '../../../../../assets/icons/navigation'
 import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
@@ -158,7 +154,7 @@ export default function Posts (props: Props): Node {
       <Flex>
         {currentIndex !== 0 &&
           <IconButton
-            icon={<Icon icon={InterfaceArrowsButtonLeft} w={4} h={4} fill='gray.300' />}
+            icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.300' />}
             variant='solid'
             mr={2}
             size='lg'
@@ -176,7 +172,7 @@ export default function Posts (props: Props): Node {
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&
           <IconButton
             ml={2}
-            icon={<Icon icon={InterfaceArrowsButtonRight} w={4} h={4} fill='gray.300' />}
+            icon={<Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.300' />}
             variant='solid'
             bg='gray.800'
             size='lg'

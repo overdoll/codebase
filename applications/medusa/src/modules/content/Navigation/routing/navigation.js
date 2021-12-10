@@ -12,7 +12,8 @@ import {
   LoginKeys,
   ContentBookEdit,
   FileMultiple,
-  ProgrammingApplicationAdd,
+  CogDouble,
+  ContentPens,
   SecurityShield,
   SettingHammer,
   TimeHourGlass,
@@ -116,6 +117,29 @@ const routes: Array<Route> = [
     ]
   },
   {
+    path: '/configure/create_post',
+    navigation: {
+      top: {
+        title: 'nav.create_post',
+        icon: ContentBrushPen
+      }
+    },
+    middleware: [
+      ({ environment }) => {
+        const ability = getAbilityFromUser(environment)
+
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
+        if (ability.can('manage', 'posting')) {
+          return true
+        }
+        return false
+      }
+    ]
+  },
+  {
     path: '/manage',
     middleware: [
       ({ environment }) => {
@@ -138,24 +162,15 @@ const routes: Array<Route> = [
     },
     routes: [
       {
-        path: '/manage/create_post',
-        navigation: {
-          top: {
-            title: 'nav.posts',
-            icon: ContentBrushPen
-          },
-          side: {
-            title: 'sidebar.manage.create_post',
-            icon: ProgrammingApplicationAdd
-          }
-        }
-      },
-      {
         path: '/manage/my_posts',
         navigation: {
           side: {
             title: 'sidebar.manage.my_posts',
             icon: ContentBookEdit
+          },
+          menu: {
+            title: 'menu.manage',
+            icon: ContentPens
           }
         }
       },
@@ -199,7 +214,7 @@ const routes: Array<Route> = [
           },
           menu: {
             title: 'menu.settings',
-            icon: InterfaceSettingCog
+            icon: CogDouble
           }
         }
       },

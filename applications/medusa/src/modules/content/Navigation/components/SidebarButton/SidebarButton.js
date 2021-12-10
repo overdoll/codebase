@@ -1,10 +1,8 @@
 /**
  * @flow
  */
-import NavLink from '@//:modules/routing/NavLink'
-import Button from '@//:modules/form/Button'
 import ClickableBox from '@//:modules/content/PageLayout/Interactables/ClickableBox/ClickableBox'
-import { Flex, Heading, Text, Box } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
@@ -29,7 +27,7 @@ export default function SidebarButton ({ active, title, icon }: Props): Node {
               fill={active ? 'gray.00' : 'gray.300'}
             />
           </Flex>}
-        <Heading fontSize='md' fontWeight='semibold'>{title}</Heading>
+        <Heading lineHeight='0.5px' fontSize='md'>{title}</Heading>
       </Flex>
     </ClickableBox>
   )

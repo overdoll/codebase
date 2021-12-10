@@ -7,9 +7,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import type { AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Text,
-  Flex,
-  Stack,
-  Accordion
+  Flex
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
