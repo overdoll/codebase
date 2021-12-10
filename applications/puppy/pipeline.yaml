@@ -1,0 +1,49 @@
+steps:
+  build:
+    targets:
+      - //applications/puppy/internal:internal
+
+  unit_test:
+    coverage:
+      - name: puppy.unit
+        paths:
+          - ./applications/puppy/**/coverage.dat
+    targets:
+      - //applications/puppy/internal/app/...
+      - //applications/puppy/internal/domain/...
+      - //applications/puppy/internal/ports/...
+
+  push_image:
+    targets:
+      - //applications/puppy/internal:publish-testing
+
+  integration_test:
+    coverage:
+      - name: puppy.integration
+        paths:
+          - ./applications/puppy/internal/adapters/**/coverage.dat
+      - name: puppy.component
+        paths:
+          - ./applications/puppy/internal/service/**/coverage.dat
+    setup:
+      dockerfile:
+        - ./applications/puppy/docker-compose.ci.yaml
+    network_dependencies:
+      - host: puppy
+        port: 8000
+    targets:
+      - //applications/puppy/internal/adapters/...
+      - //applications/puppy/internal/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/puppy/docker-compose.ci.yaml
+    network_dependencies:
+      - host: puppy
+        port: 8000
+        priority: 0
+
+  publish_image:
+    targets:
+      - //applications/puppy/internal:publish
