@@ -25,11 +25,13 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 }
 
 func createApplication(ctx context.Context, service eva.EvaClient) *app.Application {
+	ck := securecookie.New([]byte(os.Getenv("COOKIE_KEY")),
+		[]byte(os.Getenv("COOKIE_BLOCK_KEY")))
+	ck.MaxAge(0)
+	ck.MinAge(0)
+
 	return &app.Application{
-		Codecs: securecookie.CodecsFromPairs(
-			[]byte(os.Getenv("COOKIE_KEY")),
-			[]byte(os.Getenv("COOKIE_BLOCK_KEY")),
-		),
+		Cookie:     ck,
 		Repository: adapters.NewEvaGrpcSessionRepository(service),
 	}
 }

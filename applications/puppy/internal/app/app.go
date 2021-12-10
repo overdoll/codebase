@@ -18,7 +18,7 @@ const (
 )
 
 type Application struct {
-	Codecs     []securecookie.Codec
+	Cookie     *securecookie.SecureCookie
 	Repository session.Repository
 }
 
@@ -39,7 +39,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 	c, err := req.Cookie(deviceCookieName)
 
 	if err == nil {
-		if err := securecookie.DecodeMulti(deviceCookieName, c.Value, &deviceId, a.Codecs...); err != nil {
+		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil {
 			return "", "", "", "", err
 		}
 	}
@@ -51,7 +51,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 	c, err = req.Cookie(languageCookieName)
 
 	if err == nil {
-		if err := securecookie.DecodeMulti(languageCookieName, c.Value, &language, a.Codecs...); err != nil {
+		if err := a.Cookie.Decode(languageCookieName, c.Value, &language); err != nil {
 			return "", "", "", "", err
 		}
 	}
@@ -81,7 +81,8 @@ func (a *Application) UpdateDeviceLanguageEvent(ctx context.Context, res *http.R
 	if err != nil {
 		// no device cookie - we will add one
 		if err == http.ErrNoCookie {
-			encoded, err := securecookie.EncodeMulti(languageCookieName, language, a.Codecs...)
+
+			encoded, err := a.Cookie.Encode(languageCookieName, language)
 
 			if err != nil {
 				return err
@@ -115,10 +116,9 @@ func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, stri
 	var accountId string
 
 	if err == nil {
-		if err := securecookie.DecodeMulti(sessionCookieName, c.Value, &sessionId, a.Codecs...); err != nil {
+		if err := a.Cookie.Decode(sessionCookieName, c.Value, &sessionId); err != nil {
 			return "", "", err
 		}
-
 		valid, currentAccountId, err := a.Repository.GetSession(req.Context(), sessionId)
 
 		if err != nil {
@@ -150,7 +150,7 @@ func (a *Application) NewAccountSessionEvent(ctx context.Context, res *http.Resp
 		return err
 	}
 
-	encoded, err := securecookie.EncodeMulti(sessionCookieName, sessionId, a.Codecs...)
+	encoded, err := a.Cookie.Encode(sessionCookieName, sessionId)
 
 	if err != nil {
 		return err
@@ -204,7 +204,8 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 	if err != nil {
 		// no device cookie - we will add one
 		if err == http.ErrNoCookie {
-			encoded, err := securecookie.EncodeMulti(deviceCookieName, passport.FromContext(ctx).DeviceID(), a.Codecs...)
+
+			encoded, err := a.Cookie.Encode(deviceCookieName, passport.FromContext(ctx).DeviceID())
 
 			if err != nil {
 				return err

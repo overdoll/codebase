@@ -13,6 +13,7 @@ import axios from 'axios'
 import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import express from 'express'
+import parseCookies from './Domain/parseCookies'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -42,15 +43,22 @@ async function request (req, res, next) {
         headers[key] = value
       })
 
-      const setCookie = res.getHeader('set-cookie')
-
       // on the server, we need to pass the _csrf cookie as a real cookie or else it bugs out
-      if (setCookie !== undefined) {
-        if (headers.cookie === undefined) {
-          headers.cookie = setCookie
-        } else {
-          headers.cookie += ',' + setCookie
-        }
+      const setCookies = res.getHeader('set-cookie')
+      if (setCookies !== undefined) {
+        setCookies.forEach((setCookie) => {
+          const cookies = parseCookies(setCookie)
+          cookies.forEach((ck) => {
+            if (ck.cookieName === '_csrf') {
+              const actualCookie = '_csrf=' + ck.cookieValue
+              if (headers.cookie === undefined) {
+                headers.cookie = actualCookie
+              } else {
+                headers.cookie += ';' + actualCookie
+              }
+            }
+          })
+        })
       }
 
       const response = await axios.post(

@@ -20,7 +20,7 @@ Cypress.Commands.add('join', (email) => {
     cy.visit(url)
   })
 
-  cy.url().should('include', '/token')
+  cy.url().should('include', '/verify-token')
 
   cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
 
