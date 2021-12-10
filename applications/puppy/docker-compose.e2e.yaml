@@ -9,7 +9,12 @@ services:
       - temporal
     ports:
       - 6060:8000
-      - 6070:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.puppy.rule=PathPrefix(`/api/graphql`)"
+      - "traefik.http.routers.puppy.entrypoints=websecure"
+      - "traefik.http.routers.puppy.tls=true"
+      - "traefik.port=8000"
     deploy:
       restart_policy:
         condition: on-failure
