@@ -124,6 +124,8 @@ _RUNTIME_DEPS = [
     "@npm//date-fns",
     "@npm//js-file-download",
     "@npm//cypress-otp",
+    "@npm//react-cookie",
+    "@npm//universal-cookie",
 ]
 
 TEST_DEPS = [
