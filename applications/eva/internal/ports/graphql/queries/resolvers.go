@@ -2,14 +2,12 @@ package queries
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/cookies"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
@@ -60,27 +58,16 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 	return types.MarshalAccountToGraphQL(acc), nil
 }
 
-func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string) (*types.AuthenticationToken, error) {
+func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk string, secret *string) (*types.AuthenticationToken, error) {
 
-	tokenId := ""
-
-	// check for empty string as well
-	if tk != nil {
-		tokenId = *tk
-	} else {
-		otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-		if err == nil {
-			tokenId = otpCookie.Value
-		}
-	}
-
-	if tokenId == "" {
+	if tk == "" {
 		return nil, nil
 	}
 
-	ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
-		TokenId: tokenId,
+	ck, acc, err := r.App.Queries.ViewAuthenticationToken.Handle(ctx, query.ViewAuthenticationToken{
+		Token:    tk,
+		Secret:   secret,
+		Passport: passport.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -92,7 +79,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string)
 		return nil, err
 	}
 
-	return types.MarshalAuthenticationTokenToGraphQL(ctx, ck), nil
+	return types.MarshalAuthenticationTokenToGraphQL(ctx, ck, acc), nil
 }
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {

@@ -11,6 +11,7 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { PageWrapper } from '../../../components/PageLayout'
+import { useCookies } from 'react-cookie'
 
 type Props = {
   queryRef: JoinFragment$key,
@@ -24,7 +25,8 @@ const JoinAction = graphql`
       authenticationToken {
         id
         email
-        sameSession
+        token
+        sameDevice
       }
     }
   }
@@ -49,23 +51,39 @@ export default function Join ({
 
   const notify = useToast()
 
-  const onSubmit = (val) => {
+  const [cookies, setCookie] = useCookies(['token'])
+
+  const onSubmit = ({ email }) => {
     commit({
       variables: {
         input: {
-          email: val.email
+          email: email
         }
       },
       updater: (store, payload) => {
+        const token = payload.grantAuthenticationToken.authenticationToken.token
+        const id = payload.grantAuthenticationToken.authenticationToken.id
+
         // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
-        const node = store.create(`client:root:viewAuthenticationToken-${payload.grantAuthenticationToken.authenticationToken.id}`, 'AuthenticationToken')
-        node.setValue(payload.grantAuthenticationToken.authenticationToken.email, 'email')
-        node.setValue(payload.grantAuthenticationToken.authenticationToken.id, 'id')
-        node.setValue(payload.grantAuthenticationToken.authenticationToken.sameSession, 'sameSession')
+        const node = store.get(id)
+        node.setValue(email, 'email')
+
+        let tokenCookie = cookies.token
+
+        if (tokenCookie) {
+          tokenCookie = tokenCookie.split(';')[0]
+        }
 
         store
           .getRoot()
-          .setLinkedRecord(node, 'viewAuthenticationToken')
+          .setLinkedRecord(node, `viewAuthenticationToken(token:"${tokenCookie ?? ''}")`)
+
+        // store cookie in token for later
+        setCookie('token', `${token};${email}`, {
+          path: '/',
+          secure: true,
+          sameSite: 'lax'
+        })
       },
       onError (data) {
         console.log(data)

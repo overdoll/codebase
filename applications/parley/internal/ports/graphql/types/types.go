@@ -22,8 +22,8 @@ type Account struct {
 	// Moderator settings and status for this account
 	//
 	// Viewable by the currently authenticated account or staff+
-	Moderator *Moderator `json:"moderator"`
-	ID        relay.ID   `json:"id"`
+	ModeratorSettings *ModeratorSettings `json:"moderatorSettings"`
+	ID                relay.ID           `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -51,6 +51,18 @@ type AccountInfractionHistoryEdge struct {
 	Cursor string                    `json:"cursor"`
 }
 
+// Add moderator to posts queue.
+type AddModeratorToPostQueueInput struct {
+	// The moderator account to take the action on
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Remove moderator from posts queue.
+type AddModeratorToPostQueuePayload struct {
+	// The account that was updated
+	Account *Account `json:"account"`
+}
+
 // Approve the pending post input
 type ApprovePostInput struct {
 	// Pending post to take action against
@@ -63,15 +75,13 @@ type ApprovePostPayload struct {
 	PostAuditLog *PostAuditLog `json:"postAuditLog"`
 }
 
-type Moderator struct {
-	// The ID of the moderator
-	ID relay.ID `json:"id"`
-	// The last time this moderator was selected for a post
-	LastSelected time.Time `json:"lastSelected"`
+// General moderator settings.
+type ModeratorSettings struct {
+	// If this moderator is in queue.
+	IsInModeratorQueue bool `json:"isInModeratorQueue"`
+	// The last time this moderator was selected for a post. Null if moderator not in queue
+	LastSelected *time.Time `json:"lastSelected"`
 }
-
-func (Moderator) IsNode()   {}
-func (Moderator) IsEntity() {}
 
 type Post struct {
 	// Audit logs belonging to this pending post
@@ -227,6 +237,18 @@ type RejectPostPayload struct {
 	PostAuditLog *PostAuditLog `json:"postAuditLog"`
 }
 
+// Remove moderator from posts queue.
+type RemoveModeratorFromPostQueueInput struct {
+	// The moderator account to take the action on
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Remove moderator from posts queue.
+type RemoveModeratorFromPostQueuePayload struct {
+	// The account that was updated
+	Account *Account `json:"account"`
+}
+
 // Moderate the pending post input
 type RemovePostInput struct {
 	// Pending post to take action against
@@ -267,12 +289,6 @@ type RevertPostAuditLogInput struct {
 type RevertPostAuditLogPayload struct {
 	// The new state of the audit log
 	PostAuditLog *PostAuditLog `json:"postAuditLog"`
-}
-
-// Toggle whether or not the moderator will be part of the queue
-type ToggleModeratorSettingsInQueuePayload struct {
-	// The new status of the moderator in queue
-	ModeratorSettingsInQueue *bool `json:"moderatorSettingsInQueue"`
 }
 
 type PostAuditLogAction string

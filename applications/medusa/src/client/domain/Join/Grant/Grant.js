@@ -1,16 +1,23 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import type { Node } from 'react'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../helpers/PrepareViewer'
+import type { GrantFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
+import { useCookies } from 'react-cookie'
+
+type Props = {
+  queryRef: GrantFragment$key,
+}
 
 const GrantAction = graphql`
-  mutation GrantMutation {
-    grantAccountAccessWithAuthenticationToken {
+  mutation GrantMutation($input: GrantAccountAccessWithAuthenticationTokenInput!) {
+    grantAccountAccessWithAuthenticationToken(input: $input) {
       validation
       account {
         id
@@ -19,19 +26,34 @@ const GrantAction = graphql`
   }
 `
 
-export default function Grant (): Node {
+const GrantFragment = graphql`
+  fragment GrantFragment on AuthenticationToken {
+    id
+    token
+  }
+`
+
+export default function Grant ({ queryRef }: Props): Node {
   const [commit] = useMutation(GrantAction)
+
+  const data = useFragment(GrantFragment, queryRef)
 
   const notify = useToast()
 
   const [t] = useTranslation('auth')
+
+  const [, , removeCookie] = useCookies(['token'])
 
   const history = useHistory()
 
   // grant account access
   useEffect(() => {
     commit({
-      variables: {},
+      variables: {
+        input: {
+          token: data.token
+        }
+      },
       onCompleted (data) {
         // If there's an error with the token, bring user back to login page
         if (data.grantAccountAccessWithAuthenticationToken.validation) {
@@ -47,11 +69,13 @@ export default function Grant (): Node {
           title: t('grant.success'),
           isClosable: true
         })
-        history.push('/profile')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         PrepareViewer(store, payload)
+        store.delete(data.id)
+        removeCookie('token')
+        history.push('/profile')
       },
       onError (data) {
         console.log(data)

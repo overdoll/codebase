@@ -11,8 +11,8 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type NoPostsPlaceholderFragment$ref: FragmentReference;
 declare export opaque type NoPostsPlaceholderFragment$fragmentType: NoPostsPlaceholderFragment$ref;
 export type NoPostsPlaceholderFragment = {|
-  +moderator: ?{|
-    +__typename: string
+  +moderatorSettings: {|
+    +isInModeratorQueue: boolean
   |},
   +$refType: NoPostsPlaceholderFragment$ref,
 |};
@@ -33,16 +33,16 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Moderator",
+      "concreteType": "ModeratorSettings",
       "kind": "LinkedField",
-      "name": "moderator",
+      "name": "moderatorSettings",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "__typename",
+          "name": "isInModeratorQueue",
           "storageKey": null
         }
       ],
@@ -53,5 +53,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '9296c79d573fda3122c62317ae2e8f87';
+(node: any).hash = '84d992e4be3665379fff6f8f0bab44c5';
 module.exports = node;

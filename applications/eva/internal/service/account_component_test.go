@@ -9,7 +9,6 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/passport"
 )
 
 func viewerAccount(t *testing.T, client *graphql.Client) ViewerAccount {
@@ -23,9 +22,9 @@ func viewerAccount(t *testing.T, client *graphql.Client) ViewerAccount {
 func TestRedeemCookie_invalid(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getHttpClientWithAuthenticatedAccount(t, "")
 
-	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie")
+	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie", "some random secret")
 
 	// check to make sure its returned as invalid
 	require.Nil(t, redeemToken.VerifyAuthenticationToken.AuthenticationToken, "authentication token is valid")
@@ -35,14 +34,14 @@ func TestRedeemCookie_invalid(t *testing.T) {
 func TestGetAccountAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getHttpClientWithAuthenticatedAccount(t, "")
 
 	query := viewerAccount(t, client)
 
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
 	require.Nil(t, query.Viewer, "no viewer present for no account")
 
-	queryToken := viewAuthenticationToken(t, client)
+	queryToken := viewAuthenticationToken(t, client, "")
 
 	require.Nil(t, queryToken.ViewAuthenticationToken, "no authentication token for empty")
 }
@@ -55,22 +54,18 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 	t.Parallel()
 
 	// userID is from one of our seeders (which will exist during testing)
-	client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	query := viewerAccount(t, client)
 
 	require.Equal(t, "poisonminion", query.Viewer.Username, "correct username for account")
-
-	queryToken := viewAuthenticationToken(t, client)
-
-	require.Nil(t, queryToken.ViewAuthenticationToken, "no authentication token for authenticated account")
 }
 
 // TestAccount_get - test GRPC endpoint for grabbing a user
 func TestAccount_get(t *testing.T) {
 	t.Parallel()
 
-	client := getGrpcClient(t)
+	client, _ := getGrpcClient(t)
 
 	res, err := client.GetAccount(context.Background(), &eva.GetAccountRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
@@ -90,7 +85,7 @@ type UnlockAccount struct {
 func TestAccount_lock_unlock(t *testing.T) {
 	t.Parallel()
 
-	client := getGrpcClient(t)
+	client, _ := getGrpcClient(t)
 
 	// lock account with grpc endpoint
 	res, err := client.LockAccount(context.Background(), &eva.LockAccountRequest{
@@ -103,7 +98,7 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	require.Equal(t, true, res.Locked, "account should be locked")
 
-	gClient, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MIqqnkzew33q4elXuN1Ri27d"))
+	gClient, _ := getHttpClientWithAuthenticatedAccount(t, "1q7MIqqnkzew33q4elXuN1Ri27d")
 
 	var query ViewerAccountLock
 	err = gClient.Query(context.Background(), &query, nil)

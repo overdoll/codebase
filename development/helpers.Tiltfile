@@ -48,17 +48,21 @@ def bazel_buildfile_deps(target):
 
 def build_applications(applications, dependencies):
     for item in applications.keys():
-        # Deploy helm chart for application
-        k8s_yaml(
-            helm(
-                "development/service",
-                name = item,
-                values = ["development/services/" + item + ".yaml"],
-                namespace = ns,
-            ),
-        )
-
         application = applications[item]
+
+        disable_k8s_resource = application["disable_resource"]
+
+        # Deploy helm chart for application
+        if disable_k8s_resource != True:
+            k8s_yaml(
+                helm(
+                    "development/service",
+                    name = item,
+                    values = ["development/services/" + item + ".yaml"],
+                    namespace = ns,
+                ),
+                allow_duplicates = True,
+            )
 
         image_target = application["image_target"]
         bazel_image = application["bazel_image"]

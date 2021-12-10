@@ -28,7 +28,6 @@ type Commands struct {
 	DisableAccountMultiFactor               command.DisableAccountMultiFactorHandler
 	DeleteAccountEmail                      command.DeleteAccountEmailHandler
 	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
-	ReissueAuthenticationToken              command.ReissueAuthenticationTokenHandler
 	IndexAllAccounts                        command.IndexAllAccountsHandler
 
 	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
@@ -40,7 +39,10 @@ type Commands struct {
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
 
 	// operator handlers don't do any permission checks
-	LockAccountOperator command.LockAccountOperatorHandler
+	LockAccountOperator          command.LockAccountOperatorHandler
+	CreateAccountSessionOperator command.CreateAccountSessionOperatorHandler
+	TouchAccountSessionOperator  command.TouchAccountSessionOperatorHandler
+	RevokeAccountSessionOperator command.RevokeAccountSessionOperatorHandler
 }
 
 type Queries struct {
@@ -59,5 +61,5 @@ type Queries struct {
 	AccountSessionsByAccount        query.AccountSessionsByAccountHandler
 	AccountRecoveryCodesByAccount   query.AccountRecoveryCodesByAccountHandler
 	IsAccountMultiFactorTOTPEnabled query.IsAccountMultiFactorTOTPEnabledHandler
-	AuthenticationTokenById         query.AuthenticationTokenByIdHandler
+	ViewAuthenticationToken         query.ViewAuthenticationTokenHandler
 }

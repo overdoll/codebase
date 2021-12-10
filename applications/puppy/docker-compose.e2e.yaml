@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  puppy:
+    image: $CONTAINER_REGISTRY/puppy/dev:$BUILDKITE_COMMIT
+    entrypoint: ""
+    command: /bin/sh -c "/app/applications/puppy/internal/image.binary"
+    env_file: ../../applications/puppy/.env.ci
+    depends_on:
+      - temporal
+    ports:
+      - 6060:8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.puppy.rule=PathPrefix(`/api/graphql`)"
+      - "traefik.http.routers.puppy.entrypoints=websecure"
+      - "traefik.http.routers.puppy.tls=true"
+      - "traefik.port=8000"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 20
+
+  run:
+    depends_on:
+      - puppy

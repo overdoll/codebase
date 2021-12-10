@@ -14,12 +14,14 @@ import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import Display from './Display'
 import { Route, Router as ReactRouter } from 'react-router-dom'
 import { RuntimeProvider } from '@//:modules/runtime'
+import { CookiesProvider } from 'react-cookie'
 
 type Props = {
   environment: IEnvironment,
   i18next: i18next,
   emotionCache: {},
   helmetContext?: {},
+  cookies?: {},
   routerContext: Router,
   flash?: FlashOverride,
   runtimeContext?: {},
@@ -35,6 +37,7 @@ type Props = {
 const Bootstrap = ({
   flash = null,
   runtimeContext = null,
+  cookies = null,
   routerContext,
   emotionCache,
   i18next,
@@ -49,17 +52,19 @@ const Bootstrap = ({
   >
     <RuntimeProvider initial={runtimeContext}>
       <FlashProvider override={flash}>
-        <RelayEnvironmentProvider environment={environment}>
-          <ReactRouter history={routerContext.history}>
-            <QueryParamProvider
-              ReactRouterRoute={Route}
-            >
-              <RoutingContext.Provider value={routerContext}>
-                {children ?? <RouterRenderer />}
-              </RoutingContext.Provider>
-            </QueryParamProvider>
-          </ReactRouter>
-        </RelayEnvironmentProvider>
+        <CookiesProvider cookies={cookies}>
+          <RelayEnvironmentProvider environment={environment}>
+            <ReactRouter history={routerContext.history}>
+              <QueryParamProvider
+                ReactRouterRoute={Route}
+              >
+                <RoutingContext.Provider value={routerContext}>
+                  {children ?? <RouterRenderer />}
+                </RoutingContext.Provider>
+              </QueryParamProvider>
+            </ReactRouter>
+          </RelayEnvironmentProvider>
+        </CookiesProvider>
       </FlashProvider>
     </RuntimeProvider>
   </Display>

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash df1bb1c0b3d007aa2174bed8b2352bea
+ * @relayHash e0eab03a9eb7bac4d8f18fc3b7cd5baf
  */
 
 /* eslint-disable */
@@ -8,8 +8,13 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_EXPIRED" | "%future added value";
-export type GrantMutationVariables = {||};
+export type GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
+export type GrantAccountAccessWithAuthenticationTokenInput = {|
+  token: string
+|};
+export type GrantMutationVariables = {|
+  input: GrantAccountAccessWithAuthenticationTokenInput
+|};
 export type GrantMutationResponse = {|
   +grantAccountAccessWithAuthenticationToken: ?{|
     +validation: ?GrantAccountAccessWithAuthenticationTokenValidation,
@@ -25,8 +30,10 @@ export type GrantMutation = {|
 
 
 /*
-mutation GrantMutation {
-  grantAccountAccessWithAuthenticationToken {
+mutation GrantMutation(
+  $input: GrantAccountAccessWithAuthenticationTokenInput!
+) {
+  grantAccountAccessWithAuthenticationToken(input: $input) {
     validation
     account {
       id
@@ -38,8 +45,21 @@ mutation GrantMutation {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
     "alias": null,
-    "args": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
     "concreteType": "GrantAccountAccessWithAuthenticationTokenPayload",
     "kind": "LinkedField",
     "name": "grantAccountAccessWithAuthenticationToken",
@@ -76,23 +96,23 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "GrantMutation",
-    "selections": (v0/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "GrantMutation",
-    "selections": (v0/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "df1bb1c0b3d007aa2174bed8b2352bea",
+    "id": "e0eab03a9eb7bac4d8f18fc3b7cd5baf",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -101,5 +121,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '5fed83d99a5ead7514e405a9fb5f21da';
+(node: any).hash = '6b2c028444331b480f4d1f2434620388';
 module.exports = node;

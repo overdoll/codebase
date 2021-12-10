@@ -15,7 +15,10 @@ go_library(
         "//applications/eva/internal/app/query",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/config",
         "//libraries/testing_tools",
+        "@com_github_oschwald_geoip2_golang//:geoip2-golang",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
@@ -29,16 +32,16 @@ go_test(
         "language_component_test.go",
         "staff_component_test.go",
     ],
-    data = ["//applications/eva:config.toml"],
+    data = [
+        "//applications/eva:config.toml",
+        "//applications/eva/internal/service/file_fixtures:all",
+    ],
     deps = [
         ":service",
-        "//applications/eva/internal/adapters",
-        "//applications/eva/internal/domain/session",
         "//applications/eva/internal/ports",
         "//applications/eva/internal/ports/graphql/types",
         "//applications/eva/proto:v1_go_proto",
         "//libraries/bootstrap",
-        "//libraries/clients",
         "//libraries/config",
         "//libraries/graphql/relay",
         "//libraries/passport",

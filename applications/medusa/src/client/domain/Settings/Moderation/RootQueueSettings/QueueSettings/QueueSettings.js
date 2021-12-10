@@ -34,9 +34,13 @@ const QueueSettingsFragmentGQL = graphql`
 `
 
 const QueueSettingsMutationGQL = graphql`
-  mutation QueueSettingsMutation {
-    toggleModeratorSettingsInQueue {
-      moderatorSettingsInQueue
+  mutation QueueSettingsMutation($input: RemoveModeratorFromPostQueueInput!) {
+    removeModeratorFromPostQueue(input: $input) {
+      account {
+        moderatorSettings {
+          isInModeratorQueue
+        }
+      }
     }
   }
 `

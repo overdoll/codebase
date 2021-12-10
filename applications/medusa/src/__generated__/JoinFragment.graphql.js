@@ -29,11 +29,16 @@ const node: ReaderFragment = {
   "name": "JoinFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "email",
-      "storageKey": null
+      "kind": "ClientExtension",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        }
+      ]
     }
   ],
   "type": "AuthenticationToken",

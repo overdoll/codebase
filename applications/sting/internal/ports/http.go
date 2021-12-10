@@ -11,44 +11,37 @@ import (
 	"overdoll/applications/sting/internal/app"
 	gen "overdoll/applications/sting/internal/ports/graphql"
 	"overdoll/libraries/graphql"
-	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
 )
 
-// Sting implementation of principal
-// logic is largely the same, but will use a custom query
-func principalToContext(app *app.Application) gin.HandlerFunc {
-	return func(c *gin.Context) {
+type GraphQLServer struct {
+	app *app.Application
+}
 
-		ctx := c.Request.Context()
+func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal.Principal, error) {
 
-		if err := passport.FromContext(ctx).Authenticated(); err != nil {
-			c.Next()
-			return
-		}
+	acc, err := s.app.Queries.PrincipalById.Handle(ctx, id)
 
-		acc, err := app.Queries.PrincipalById.Handle(ctx, passport.FromContext(ctx).AccountID())
-
-		if err != nil {
-			zap.S().Error("unable to get account ", zap.Error(err))
-			c.JSON(401, principal.ErrNotAuthorized)
-			c.Abort()
-			return
-		}
-
-		c.Request = principal.AddPrincipalToRequest(c, acc)
-		c.Next()
+	if err != nil {
+		return nil, err
 	}
+
+	return acc, nil
 }
 
 func NewHttpServer(app *app.Application, client client.Client) http.Handler {
+
 	rtr := router.NewGinRouter()
 
+	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
+
 	// graphql
-	rtr.POST("/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
-		Resolvers: gen.NewResolver(app, client),
-	})))
+	rtr.POST("/api/graphql",
+		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
+			Resolvers: gen.NewResolver(app, client),
+		})),
+	)
 
 	composer, err := app.Commands.TusComposer.Handle(context.Background())
 

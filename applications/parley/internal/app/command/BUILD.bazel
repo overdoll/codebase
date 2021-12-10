@@ -3,14 +3,15 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "add_moderator_to_post_queue.go",
         "approve_post.go",
         "get_next_moderator.go",
         "reject_post.go",
+        "remove_moderator_from_post_queue.go",
         "remove_post.go",
         "report_post.go",
         "revert_moderate_post_audit_log.go",
         "services.go",
-        "toggle_moderator.go",
     ],
     importpath = "overdoll/applications/parley/internal/app/command",
     visibility = ["//visibility:public"],

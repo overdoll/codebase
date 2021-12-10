@@ -14,14 +14,13 @@ import (
 	"overdoll/applications/eva/internal/service"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
 )
 
 const EvaHttpAddr = ":7777"
-const EvaHttpClientAddr = "http://:7777/graphql"
+const EvaHttpClientAddr = "http://:7777/api/graphql"
 
 const EvaGrpcAddr = "localhost:7778"
 const EvaGrpcClientAddr = "localhost:7778"
@@ -76,11 +75,11 @@ type VerifyAuthenticationToken struct {
 	} `graphql:"verifyAuthenticationToken(input: $input)"`
 }
 
-func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) VerifyAuthenticationToken {
+func verifyAuthenticationToken(t *testing.T, client *graphql.Client, token, secret string) VerifyAuthenticationToken {
 	var redeemCookie VerifyAuthenticationToken
 
 	err := client.Mutate(context.Background(), &redeemCookie, map[string]interface{}{
-		"input": types.VerifyAuthenticationTokenInput{AuthenticationTokenID: cookie},
+		"input": types.VerifyAuthenticationTokenInput{Token: token, Secret: secret},
 	})
 
 	require.NoError(t, err, "no error for verifying authentication token")
@@ -94,13 +93,15 @@ type GrantAccountAccessWithAuthenticationToken struct {
 			Username string
 		}
 		Validation *types.GrantAccountAccessWithAuthenticationTokenValidation
-	} `graphql:"grantAccountAccessWithAuthenticationToken()"`
+	} `graphql:"grantAccountAccessWithAuthenticationToken(input: $input)"`
 }
 
-func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Client) GrantAccountAccessWithAuthenticationToken {
+func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Client, token string) GrantAccountAccessWithAuthenticationToken {
 	var redeemCookie GrantAccountAccessWithAuthenticationToken
 
-	err := client.Mutate(context.Background(), &redeemCookie, nil)
+	err := client.Mutate(context.Background(), &redeemCookie, map[string]interface{}{
+		"input": types.GrantAccountAccessWithAuthenticationTokenInput{Token: token},
+	})
 
 	require.NoError(t, err)
 
@@ -108,16 +109,17 @@ func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Cli
 }
 
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
-func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
+func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *passport.Pocket) {
 
-	client, pass := getHttpClient(t, passport.FreshPassport())
+	client, pass := getHttpClient(t)
 
 	authenticate := grantAuthenticationToken(t, client, email)
 
 	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
-	require.Equal(t, email, authenticate.GrantAuthenticationToken.AuthenticationToken.Email)
 
-	ck := verifyAuthenticationToken(t, client, getAuthTokenFromEmail(t, email))
+	token, sec := getAuthTokenAndSecretFromEmail(t, email)
+
+	ck := verifyAuthenticationToken(t, client, token, sec)
 
 	// make sure cookie is valid
 	require.NotNil(t, ck.VerifyAuthenticationToken)
@@ -126,13 +128,15 @@ func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticatio
 }
 
 type ViewAuthenticationToken struct {
-	ViewAuthenticationToken *types.AuthenticationToken
+	ViewAuthenticationToken *types.AuthenticationToken `graphql:"viewAuthenticationToken(token: $token)"`
 }
 
-func viewAuthenticationToken(t *testing.T, client *graphql.Client) ViewAuthenticationToken {
+func viewAuthenticationToken(t *testing.T, client *graphql.Client, token string) ViewAuthenticationToken {
 	var authRedeemed ViewAuthenticationToken
 
-	err := client.Query(context.Background(), &authRedeemed, nil)
+	err := client.Query(context.Background(), &authRedeemed, map[string]interface{}{
+		"token": graphql.String(token),
+	})
 
 	require.NoError(t, err)
 
@@ -151,24 +155,42 @@ func getAccountByUsername(t *testing.T, client *graphql.Client, username string)
 	return accountByUsername.Account
 }
 
-func getAuthTokenFromEmail(t *testing.T, email string) string {
-	res, err := service.GetAuthTokenFromEmail(email)
+func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {
+	token, secret, err := service.GetAuthTokenAndSecretFromEmail(email)
 	require.NoError(t, err)
-	return res
+	return token, secret
 }
 
-func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *clients.ClientPassport) {
+func getHttpClientWithAuthenticatedAccount(t *testing.T, account string) (*graphql.Client, *passport.Pocket) {
 
-	client, transport := clients.NewHTTPClientWithHeaders(pass)
+	client, transport := passport.NewHTTPTestClientWithPassport(&account)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), transport
 }
 
-func getGrpcClient(t *testing.T) eva.EvaClient {
+func getHttpClient(t *testing.T) (*graphql.Client, *passport.Pocket) {
 
-	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+	client, transport := passport.NewHTTPTestClientWithPassport(nil)
 
-	return evaClient
+	return graphql.NewClient(EvaHttpClientAddr, client), transport
+}
+
+func getGrpcClientWithAuthenticatedAccount(t *testing.T, account string) (eva.EvaClient, context.Context) {
+
+	// use a testing utility from passport to add passport to the context
+	conn, ctx, err := passport.NewGrpcTestClientConnection(context.Background(), EvaGrpcClientAddr, &account)
+	require.NoError(t, err)
+
+	return eva.NewEvaClient(conn), ctx
+}
+
+func getGrpcClient(t *testing.T) (eva.EvaClient, context.Context) {
+
+	// use a testing utility from passport to add passport to the context
+	conn, ctx, err := passport.NewGrpcTestClientConnection(context.Background(), EvaGrpcClientAddr, nil)
+	require.NoError(t, err)
+
+	return eva.NewEvaClient(conn), ctx
 }
 
 func startService() bool {

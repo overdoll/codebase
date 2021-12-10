@@ -21,14 +21,16 @@ import (
 )
 
 const ParleyHttpAddr = ":8888"
-const ParleyHttpClientAddr = "http://:8888/graphql"
+const ParleyHttpClientAddr = "http://:8888/api/graphql"
 
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
 
-func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {
+type _Any map[string]interface{}
 
-	client, _ := clients.NewHTTPClientWithHeaders(pass)
+func getHttpClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
+
+	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
 
 	return graphql.NewClient(ParleyHttpClientAddr, client)
 }

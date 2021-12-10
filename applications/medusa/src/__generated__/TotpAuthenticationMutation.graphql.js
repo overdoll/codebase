@@ -8,9 +8,10 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "INVALID_CODE" | "TOKEN_EXPIRED" | "%future added value";
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput = {|
-  code: string
+  token: string,
+  code: string,
 |};
 export type TotpAuthenticationMutationVariables = {|
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput

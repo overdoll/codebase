@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/domain/resource"
@@ -119,7 +120,7 @@ func MarshalBrandToGraphQL(ctx context.Context, result *post.Brand) *Brand {
 
 	return &Brand{
 		ID:        relay.NewID(Brand{}, result.ID()),
-		Name:      result.Name().TranslateFromContext(ctx, ""),
+		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
@@ -135,7 +136,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	return &Audience{
 		ID:        relay.NewID(Brand{}, result.ID()),
-		Title:     result.Title().TranslateFromContext(ctx, ""),
+		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
@@ -151,7 +152,7 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	return &Series{
 		ID:        relay.NewID(Series{}, result.ID()),
-		Title:     result.Title().TranslateFromContext(ctx, ""),
+		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
@@ -169,7 +170,7 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		ID:        relay.NewID(Category{}, result.ID()),
 		Thumbnail: res,
 		Slug:      result.Slug(),
-		Title:     result.Title().TranslateFromContext(ctx, ""),
+		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 	}
 }
 
@@ -183,7 +184,7 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
-		Name:      result.Name().TranslateFromContext(ctx, ""),
+		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 		Series:    MarshalSeriesToGraphQL(ctx, result.Series()),

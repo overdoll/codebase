@@ -9,7 +9,8 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type RevokeAuthenticationTokenInput = {|
-  authenticationTokenId?: ?string
+  token: string,
+  secret?: ?string,
 |};
 export type ConfirmRevokeMutationVariables = {|
   input: RevokeAuthenticationTokenInput

@@ -10,7 +10,8 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type EnrollAccountMultiFactorTotpValidation = "INVALID_CODE" | "%future added value";
 export type EnrollAccountMultiFactorTotpInput = {|
-  code: string
+  id: string,
+  code: string,
 |};
 export type TotpSubmissionFormMutationVariables = {|
   input: EnrollAccountMultiFactorTotpInput

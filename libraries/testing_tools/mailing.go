@@ -13,7 +13,7 @@ import (
 
 const (
 	mailingRedisUtilityPrefix = "email:"
-	mailingRedisDB            = 9
+	mailingRedisDB            = 15
 )
 
 // tools used for "reading" emails in tests - just save to a redis key and read it back later
@@ -25,7 +25,8 @@ type MailingRedisUtility struct {
 
 func NewMailingRedisUtility() *MailingRedisUtility {
 	return &MailingRedisUtility{
-		client:    bootstrap.InitializeRedisSessionWithCustomDB(mailingRedisDB),
+		client: bootstrap.InitializeRedisSessionWithCustomDB(mailingRedisDB),
+		// we use bazel to run tests, so we need an ID that's gonna be unique per test run
 		sessionId: os.Getenv("BAZEL_INTERNAL_INVOCATION_ID"),
 	}
 }
@@ -48,8 +49,6 @@ func (u *MailingRedisUtility) ReadEmail(ctx context.Context, prefix, email strin
 	val, err := u.client.Get(ctx, mailingRedisUtilityPrefix+u.sessionId+":"+prefix+":"+strings.ToLower(email)).Result()
 
 	if err != nil {
-		fmt.Println(val)
-		fmt.Println(err)
 		return nil, err
 	}
 

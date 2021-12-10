@@ -1,0 +1,79 @@
+"""Session belonging to a specific account"""
+type AccountSession implements Node @key(fields: "id") {
+  """ID of the session"""
+  id: ID!
+
+  """The originating user agent device"""
+  device: String!
+
+  """The original IP"""
+  ip: String!
+
+  """Where the session was originally created"""
+  location: Location!
+
+  """When the session was created"""
+  created: Time!
+
+  """When the session was last seen (last API call)"""
+  lastSeen: Time!
+
+  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
+  current: Boolean!
+}
+
+"""Edge of the account session"""
+type AccountSessionEdge {
+  cursor: String!
+  node: AccountSession!
+}
+
+"""Edge of the account session"""
+type AccountSessionConnection {
+  pageInfo: PageInfo!
+  edges: [AccountSessionEdge!]!
+}
+
+"""Payload of the revoked account session"""
+type RevokeAccountSessionPayload {
+  """The ID of the session that was revoked"""
+  accountSessionId: ID!
+}
+
+"""Input for updating an account's username"""
+input RevokeAccountSessionInput {
+  """
+  Session ID that should be revoked
+  """
+  accountSessionId: ID!
+}
+
+extend type Account {
+  """
+  Sessions linked to this account
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection! @goField(forceResolver: true)
+}
+
+extend type Mutation {
+  """
+  Revoke a session for this account
+  """
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
+}

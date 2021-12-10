@@ -1,6 +1,0 @@
-extend type Moderator @key(fields: "id") {
-  id: ID! @external
-
-  """The account linked to this moderator"""
-  account: Account!
-}

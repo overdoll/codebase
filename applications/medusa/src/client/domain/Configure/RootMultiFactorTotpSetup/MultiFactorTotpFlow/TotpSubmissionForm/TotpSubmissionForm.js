@@ -24,16 +24,17 @@ type CodeValues = {
 }
 
 type Props = {
-  setIsSuccessful: () => void
+  setIsSuccessful: () => void,
+  id: string
 }
 
 const TotpSubmissionFormMutationGQL = graphql`
-    mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
-        enrollAccountMultiFactorTotp(input: $input) {
-            validation
-            accountMultiFactorTotpEnabled
-        }
+  mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
+    enrollAccountMultiFactorTotp(input: $input) {
+      validation
+      accountMultiFactorTotpEnabled
     }
+  }
 `
 
 const schema = Joi.object({
@@ -51,7 +52,16 @@ export default function TotpSubmissionForm (props: Props): Node {
 
   const [t] = useTranslation('configure')
 
-  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
+  const {
+    register,
+    setError,
+    handleSubmit,
+    formState: {
+      errors,
+      isDirty,
+      isSubmitted
+    }
+  } = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
@@ -63,7 +73,8 @@ export default function TotpSubmissionForm (props: Props): Node {
     submitTotp({
       variables: {
         input: {
-          code: formData.code
+          code: formData.code,
+          id: props.id
         }
       },
       onCompleted (data) {

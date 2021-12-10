@@ -114,3 +114,10 @@ container_pull(
     repository = "library/golang",
     tag = "1.16",
 )
+
+container_pull(
+    name = "traefik_base_image",
+    registry = "docker.io",
+    repository = "traefik",
+    tag = "2.5",
+)

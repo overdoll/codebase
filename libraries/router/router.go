@@ -2,11 +2,25 @@ package router
 
 import (
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 
 	"github.com/gin-gonic/gin"
 )
 
 func NewGinRouter() *gin.Engine {
+
+	router := NewRawGinRouter()
+
+	router.Use(GinContextToContextMiddleware())
+	router.Use(passport.GinPassportRequestMiddleware())
+	router.Use(CassandraQueryObserverToContext())
+	router.Use(CassandraQueryObserverGetMetrics())
+
+	return router
+}
+
+// Gin router, but without middleware
+func NewRawGinRouter() *gin.Engine {
 
 	router := gin.Default()
 
@@ -15,12 +29,6 @@ func NewGinRouter() *gin.Engine {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
-	router.Use(GinContextToContextMiddleware())
-	router.Use(LanguageToContext())
-	router.Use(PassportToContext())
-	router.Use(CassandraQueryObserverToContext())
-	router.Use(CassandraQueryObserverGetMetrics())
 
 	return router
 }

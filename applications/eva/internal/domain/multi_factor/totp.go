@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"image/png"
+	"overdoll/libraries/crypt"
 	"time"
 
 	"github.com/pquerna/otp"
@@ -15,11 +16,12 @@ import (
 type TOTP struct {
 	secret string
 	name   string
+	// id is basically encrypted secret
+	id string
 }
 
 const (
-	TOTPCookieKey = "enroll-totp"
-	issuer        = "overdoll"
+	issuer = "overdoll"
 )
 
 var (
@@ -32,9 +34,17 @@ var (
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
+
+	val, err := crypt.Encrypt(secret)
+
+	if err != nil {
+		panic(err)
+	}
+
 	return &TOTP{
 		secret: secret,
 		name:   "",
+		id:     val,
 	}
 }
 
@@ -56,6 +66,10 @@ func (c *TOTP) Secret() string {
 	return c.secret
 }
 
+func (c *TOTP) ID() string {
+	return c.id
+}
+
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)
 func (c *TOTP) Image() (string, error) {
 
@@ -63,7 +77,7 @@ func (c *TOTP) Image() (string, error) {
 		Issuer:      issuer,
 		AccountName: c.name,
 		Secret:      []byte(c.secret),
-		Digits:      otp.DigitsEight,
+		Digits:      otp.DigitsSix,
 	})
 
 	img, err := key.Image(100, 100)
@@ -92,17 +106,29 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 	key, _ := totp.Generate(totp.GenerateOpts{
 		Issuer:      issuer,
 		AccountName: username,
-		Digits:      otp.DigitsEight,
 	})
+
+	val, err := crypt.Encrypt(key.Secret())
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &TOTP{
 		secret: key.Secret(),
 		name:   username,
+		id:     val,
 	}, nil
 }
 
 // should be used when enrolling users in OTP
-func EnrollTOTP(recoveryCodes []*RecoveryCode, secret, code string) (*TOTP, error) {
+func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
+
+	secret, err := crypt.Decrypt(id)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if len(recoveryCodes) == 0 {
 		return nil, ErrRecoveryCodesNotConfigured
@@ -114,6 +140,8 @@ func EnrollTOTP(recoveryCodes []*RecoveryCode, secret, code string) (*TOTP, erro
 
 	return &TOTP{
 		secret: secret,
+		name:   "",
+		id:     id,
 	}, nil
 }
 

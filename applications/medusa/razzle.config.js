@@ -32,14 +32,14 @@ module.exports = {
     const config = options.webpackOptions
 
     if (!env.dev && env.target === 'web') {
-      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-
-      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-
-      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      // config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      // config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      //
+      // config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
+      // config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
+      //
+      // config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      // config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
     }
 
     return config

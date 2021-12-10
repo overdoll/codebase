@@ -33,6 +33,10 @@ type Account struct {
 	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
 	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
 	Language *Language `json:"language"`
+	// Sessions linked to this account
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	Sessions *AccountSessionConnection `json:"sessions"`
 	// Maximum amount of usernames that this account can create
 	UsernamesLimit int `json:"usernamesLimit"`
 	// Usernames for account (history)
@@ -43,10 +47,6 @@ type Account struct {
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
 	Emails *AccountEmailConnection `json:"emails"`
-	// Sessions linked to this account
-	//
-	// Only queryable if the currently logged-in account belongs to the requested account
-	Sessions *AccountSessionConnection `json:"sessions"`
 	// Multi factor account settings
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -127,12 +127,16 @@ type AccountMultiFactorSettings struct {
 type AccountSession struct {
 	// ID of the session
 	ID relay.ID `json:"id"`
-	// The user agent who first created the sesssion
-	UserAgent string `json:"userAgent"`
-	// The IP of who first created the session
+	// The originating user agent device
+	Device string `json:"device"`
+	// The original IP
 	IP string `json:"ip"`
+	// Where the session was originally created
+	Location *Location `json:"location"`
 	// When the session was created
-	Created string `json:"created"`
+	Created time.Time `json:"created"`
+	// When the session was last seen (last API call)
+	LastSeen time.Time `json:"lastSeen"`
 	// If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
 	Current bool `json:"current"`
 }
@@ -219,22 +223,22 @@ type AssignAccountStaffRolePayload struct {
 type AuthenticationToken struct {
 	// Unique ID of the token
 	ID relay.ID `json:"id"`
-	// Whether or not the token belongs to the same session as it was created in
-	SameSession bool `json:"sameSession"`
-	// Whether or not the token is verified
+	// Token belong to this authentication token
+	Token string `json:"token"`
+	// When the token is viewed with the correct ID, whether or not the devices match (you cannot use the token unless the device is the same).
+	SameDevice bool `json:"sameDevice"`
+	// Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow).
 	Verified bool `json:"verified"`
 	// Whether or not this token is "secure"
 	// Secure means that the token has been viewed from the same network as originally created
 	// if it wasn't viewed in the same network, the interface should take care and double-check with
 	// the user that they want to verify the token.
 	Secure bool `json:"secure"`
-	// The device this token was created from.
-	Device string `json:"device"`
+	// The userAgent this token was created from.
+	UserAgent string `json:"userAgent"`
 	// The location where this token was created at.
-	Location string `json:"location"`
-	// The email that belongs to this token.
-	Email string `json:"email"`
-	// Once the token is verified, you can see the status of the account
+	Location *Location `json:"location"`
+	// Once the token is verified, you can see the status of the account.
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
 }
 
@@ -259,8 +263,11 @@ type ConfirmAccountEmailPayload struct {
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
 
-// Payload for a created pending post
+// Payload for creating an account with authentication token
 type CreateAccountWithAuthenticationTokenInput struct {
+	// The original token
+	Token string `json:"token"`
+	// The username to create the account with
 	Username string `json:"username"`
 }
 
@@ -270,6 +277,8 @@ type CreateAccountWithAuthenticationTokenPayload struct {
 	Validation *CreateAccountWithAuthenticationTokenValidation `json:"validation"`
 	// The account that was created
 	Account *Account `json:"account"`
+	// A token is revoked once an account is created, this represents it
+	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
 
 // Input for removing an email from an account
@@ -304,6 +313,8 @@ type DisableAccountMultiFactorPayload struct {
 
 // Input for enrolling the account into TOTP
 type EnrollAccountMultiFactorTotpInput struct {
+	// The TOTP ID, sent intially
+	ID string `json:"id"`
 	// The code that the TOTP expects
 	Code string `json:"code"`
 }
@@ -330,6 +341,9 @@ type GenerateAccountMultiFactorTotpPayload struct {
 
 // Payload for granting access to an account using the token and the recovery code
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput struct {
+	// The original token
+	Token string `json:"token"`
+	// Recovery code
 	RecoveryCode string `json:"recoveryCode"`
 }
 
@@ -339,10 +353,15 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload 
 	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
+	// A token is revoked once the account access is granted, this represents it
+	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
 
 // Payload for granting access to an account using the token and the totp code
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput struct {
+	// The original token
+	Token string `json:"token"`
+	// TOTP code
 	Code string `json:"code"`
 }
 
@@ -352,6 +371,14 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload struct {
 	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
+	// A token is revoked once the account access is granted, this represents it
+	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
+}
+
+// Payload for granting account access with the token. Will fail if account has multi-factor auth enabled.
+type GrantAccountAccessWithAuthenticationTokenInput struct {
+	// The original token
+	Token string `json:"token"`
 }
 
 type GrantAccountAccessWithAuthenticationTokenPayload struct {
@@ -359,10 +386,13 @@ type GrantAccountAccessWithAuthenticationTokenPayload struct {
 	Validation *GrantAccountAccessWithAuthenticationTokenValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
+	// A token is revoked once the account access is granted, this represents it
+	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
 
 // Input for granting an authentication token
 type GrantAuthenticationTokenInput struct {
+	// The email that the token will be granted for
 	Email string `json:"email"`
 }
 
@@ -378,13 +408,21 @@ type Language struct {
 	Locale string `json:"locale"`
 }
 
-type Moderator struct {
-	ID relay.ID `json:"id"`
-	// The account linked to this moderator
-	Account *Account `json:"account"`
+// Represents a physical location.
+type Location struct {
+	// City
+	City string `json:"city"`
+	// Country
+	Country string `json:"country"`
+	// Postal Code
+	PostalCode string `json:"postalCode"`
+	// Subdivision
+	Subdivision string `json:"subdivision"`
+	// Latitude
+	Latitude float64 `json:"latitude"`
+	// Longitude
+	Longitude float64 `json:"longitude"`
 }
-
-func (Moderator) IsEntity() {}
 
 // Types of multi factor enabled for this account
 type MultiFactor struct {
@@ -393,18 +431,12 @@ type MultiFactor struct {
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {
+	// The TOTP ID. Should be sent back when creating the TOTP
+	ID string `json:"id"`
 	// The TOTP secret
 	Secret string `json:"secret"`
 	// Always html image compatible. Just set SRC tag to this and it will work!
 	ImageSrc string `json:"imageSrc"`
-}
-
-// Payload re-sending authentication email
-type ReissueAuthenticationTokenPayload struct {
-	// Validation for reissuing authentication token
-	Validation *ReissueAuthenticationTokenValidation `json:"validation"`
-	// The authentication token
-	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
 
 // Payload for revoking the current viewer
@@ -451,10 +483,10 @@ type RevokeAccountStaffRolePayload struct {
 
 // Input for revoking an authentication token
 type RevokeAuthenticationTokenInput struct {
-	// If an ID is specified, the token can be revoked if a proper ID is specified
-	//
-	// If an ID is not specified, a token from the cookie will be used
-	AuthenticationTokenID *string `json:"authenticationTokenId"`
+	// The token to revoke
+	Token string `json:"token"`
+	// The secret associated with this token. Required if revoking the token not on the same device that created it.
+	Secret *string `json:"secret"`
 }
 
 // Payload for revoking the authentication token
@@ -528,9 +560,12 @@ type UpdateLanguagePayload struct {
 	Language *Language `json:"language"`
 }
 
-// Input for verifying token account
+// Input for verifying authentication token
 type VerifyAuthenticationTokenInput struct {
-	AuthenticationTokenID string `json:"authenticationTokenId"`
+	// The original token
+	Token string `json:"token"`
+	// Secret (get it from the email)
+	Secret string `json:"secret"`
 }
 
 // Payload for verifying the authentication token
@@ -711,18 +746,18 @@ type CreateAccountWithAuthenticationTokenValidation string
 const (
 	CreateAccountWithAuthenticationTokenValidationEmailTaken    CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN"
 	CreateAccountWithAuthenticationTokenValidationUsernameTaken CreateAccountWithAuthenticationTokenValidation = "USERNAME_TAKEN"
-	CreateAccountWithAuthenticationTokenValidationTokenExpired  CreateAccountWithAuthenticationTokenValidation = "TOKEN_EXPIRED"
+	CreateAccountWithAuthenticationTokenValidationTokenInvalid  CreateAccountWithAuthenticationTokenValidation = "TOKEN_INVALID"
 )
 
 var AllCreateAccountWithAuthenticationTokenValidation = []CreateAccountWithAuthenticationTokenValidation{
 	CreateAccountWithAuthenticationTokenValidationEmailTaken,
 	CreateAccountWithAuthenticationTokenValidationUsernameTaken,
-	CreateAccountWithAuthenticationTokenValidationTokenExpired,
+	CreateAccountWithAuthenticationTokenValidationTokenInvalid,
 }
 
 func (e CreateAccountWithAuthenticationTokenValidation) IsValid() bool {
 	switch e {
-	case CreateAccountWithAuthenticationTokenValidationEmailTaken, CreateAccountWithAuthenticationTokenValidationUsernameTaken, CreateAccountWithAuthenticationTokenValidationTokenExpired:
+	case CreateAccountWithAuthenticationTokenValidationEmailTaken, CreateAccountWithAuthenticationTokenValidationUsernameTaken, CreateAccountWithAuthenticationTokenValidationTokenInvalid:
 		return true
 	}
 	return false
@@ -793,18 +828,18 @@ func (e EnrollAccountMultiFactorTotpValidation) MarshalGQL(w io.Writer) {
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation string
 
 const (
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired        GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "TOKEN_EXPIRED"
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "INVALID_RECOVERY_CODE"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenInvalid        GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "TOKEN_INVALID"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationRecoveryCodeInvalid GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "RECOVERY_CODE_INVALID"
 )
 
 var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation{
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired,
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenInvalid,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationRecoveryCodeInvalid,
 }
 
 func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation) IsValid() bool {
 	switch e {
-	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode:
+	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenInvalid, GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationRecoveryCodeInvalid:
 		return true
 	}
 	return false
@@ -835,18 +870,18 @@ func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValid
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation string
 
 const (
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "TOKEN_EXPIRED"
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode  GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "INVALID_CODE"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenInvalid GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "TOKEN_INVALID"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationCodeInvalid  GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID"
 )
 
 var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation{
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired,
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenInvalid,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationCodeInvalid,
 }
 
 func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) IsValid() bool {
 	switch e {
-	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode:
+	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenInvalid, GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationCodeInvalid:
 		return true
 	}
 	return false
@@ -876,16 +911,16 @@ func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) M
 type GrantAccountAccessWithAuthenticationTokenValidation string
 
 const (
-	GrantAccountAccessWithAuthenticationTokenValidationTokenExpired GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_EXPIRED"
+	GrantAccountAccessWithAuthenticationTokenValidationTokenInvalid GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_INVALID"
 )
 
 var AllGrantAccountAccessWithAuthenticationTokenValidation = []GrantAccountAccessWithAuthenticationTokenValidation{
-	GrantAccountAccessWithAuthenticationTokenValidationTokenExpired,
+	GrantAccountAccessWithAuthenticationTokenValidationTokenInvalid,
 }
 
 func (e GrantAccountAccessWithAuthenticationTokenValidation) IsValid() bool {
 	switch e {
-	case GrantAccountAccessWithAuthenticationTokenValidationTokenExpired:
+	case GrantAccountAccessWithAuthenticationTokenValidationTokenInvalid:
 		return true
 	}
 	return false
@@ -952,46 +987,6 @@ func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Validation for reissuing authentication token
-type ReissueAuthenticationTokenValidation string
-
-const (
-	ReissueAuthenticationTokenValidationTokenExpired ReissueAuthenticationTokenValidation = "TOKEN_EXPIRED"
-)
-
-var AllReissueAuthenticationTokenValidation = []ReissueAuthenticationTokenValidation{
-	ReissueAuthenticationTokenValidationTokenExpired,
-}
-
-func (e ReissueAuthenticationTokenValidation) IsValid() bool {
-	switch e {
-	case ReissueAuthenticationTokenValidationTokenExpired:
-		return true
-	}
-	return false
-}
-
-func (e ReissueAuthenticationTokenValidation) String() string {
-	return string(e)
-}
-
-func (e *ReissueAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = ReissueAuthenticationTokenValidation(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ReissueAuthenticationTokenValidation", str)
-	}
-	return nil
-}
-
-func (e ReissueAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Validation message for updating account username
 type UpdateAccountUsernameAndRetainPreviousValidation string
 
@@ -1036,16 +1031,16 @@ func (e UpdateAccountUsernameAndRetainPreviousValidation) MarshalGQL(w io.Writer
 type VerifyAuthenticationTokenValidation string
 
 const (
-	VerifyAuthenticationTokenValidationTokenExpired VerifyAuthenticationTokenValidation = "TOKEN_EXPIRED"
+	VerifyAuthenticationTokenValidationTokenInvalid VerifyAuthenticationTokenValidation = "TOKEN_INVALID"
 )
 
 var AllVerifyAuthenticationTokenValidation = []VerifyAuthenticationTokenValidation{
-	VerifyAuthenticationTokenValidationTokenExpired,
+	VerifyAuthenticationTokenValidationTokenInvalid,
 }
 
 func (e VerifyAuthenticationTokenValidation) IsValid() bool {
 	switch e {
-	case VerifyAuthenticationTokenValidationTokenExpired:
+	case VerifyAuthenticationTokenValidationTokenInvalid:
 		return true
 	}
 	return false

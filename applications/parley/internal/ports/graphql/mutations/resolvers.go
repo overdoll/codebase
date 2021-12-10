@@ -14,6 +14,38 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+func (m MutationResolver) AddModeratorToPostQueue(ctx context.Context, input types.AddModeratorToPostQueueInput) (*types.AddModeratorToPostQueuePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := m.App.Commands.AddModeratorToPostQueue.Handle(ctx, command.AddModeratorToPostQueue{
+		Principal: principal.FromContext(ctx),
+		AccountId: input.AccountID.GetID(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.AddModeratorToPostQueuePayload{Account: &types.Account{ID: input.AccountID}}, nil
+}
+
+func (m MutationResolver) RemoveModeratorFromPostQueue(ctx context.Context, input types.RemoveModeratorFromPostQueueInput) (*types.RemoveModeratorFromPostQueuePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := m.App.Commands.RemoveModeratorFromPostQueue.Handle(ctx, command.RemoveModeratorFromPostQueue{
+		Principal: principal.FromContext(ctx),
+		AccountId: input.AccountID.GetID(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.RemoveModeratorFromPostQueuePayload{Account: &types.Account{ID: input.AccountID}}, nil
+}
+
 func (m MutationResolver) ReportPost(ctx context.Context, input types.ReportPostInput) (*types.ReportPostPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -107,21 +139,4 @@ func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.Re
 	}
 
 	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
-}
-
-func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	inQueue, err := m.App.Commands.ToggleModerator.Handle(ctx, command.ToggleModerator{
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.ToggleModeratorSettingsInQueuePayload{ModeratorSettingsInQueue: &inQueue}, nil
 }

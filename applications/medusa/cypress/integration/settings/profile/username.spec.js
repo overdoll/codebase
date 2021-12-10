@@ -32,6 +32,8 @@ describe('Settings - Change Username', () => {
       cy.findByText(newUsername).should('exist')
     })
 
+    cy.get('form').findByRole('textbox', { placeholder: 'Enter a new username' }).should('be.visible').clear().type('0eclipse')
+
     // Check if username is taken here
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
 

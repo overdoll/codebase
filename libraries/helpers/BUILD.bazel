@@ -4,7 +4,6 @@ go_library(
     name = "helpers",
     srcs = [
         "debug.go",
-        "get_ip.go",
         "gin.go",
     ],
     importpath = "overdoll/libraries/helpers",
