@@ -7,7 +7,7 @@ const sign = require('cookie-signature').sign
 
 require('dotenv').config()
 
-// a custom graphql fetcher that implements CSRF, so we dont have to have dumb conditionals everywhere
+// a custom graphql fetcher that implements CSRF, so we can have CSRF always enabled
 async function generate () {
   const tokens = new Tokens()
 
