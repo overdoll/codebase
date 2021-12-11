@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { graphql, useFragment } from 'react-relay/hooks';
-import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql';
-import TotpAuthentication from './TotpAuthentication/TotpAuthentication';
-import { Helmet } from 'react-helmet-async';
-import { PageWrapper } from '@//:modules/content/PageLayout';
-import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react';
-import Button from '@//:modules/form/Button';
-import RecoveryCode from './RecoveryCode/RecoveryCode';
-import { useTranslation } from 'react-i18next';
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
+import TotpAuthentication from './TotpAuthentication/TotpAuthentication'
+import { Helmet } from 'react-helmet-async'
+import { PageWrapper } from '@//:modules/content/PageLayout'
+import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import Button from '@//:modules/form/Button'
+import RecoveryCode from './RecoveryCode/RecoveryCode'
+import { useTranslation } from 'react-i18next'
 
 const MultiFactorFragmentGQL = graphql`
   fragment MultiFactorFragment on AuthenticationToken {
@@ -22,11 +22,11 @@ const MultiFactorFragmentGQL = graphql`
 `
 
 type Props = {
-  queryRef: MultiFactorFragment$key,
+  query: MultiFactorFragment$key,
 }
 
-export default function MultiFactor ({ queryRef }: Props): Node {
-  const data = useFragment(MultiFactorFragmentGQL, queryRef)
+export default function MultiFactor ({ query }: Props): Node {
+  const data = useFragment(MultiFactorFragmentGQL, query)
 
   const [t] = useTranslation('auth')
 
@@ -37,7 +37,7 @@ export default function MultiFactor ({ queryRef }: Props): Node {
       <Helmet title='multifactor authentication' />
       <PageWrapper>
         <Stack spacing={3}>
-          {data.multiFactor.totp && <TotpAuthentication />}
+          {data.multiFactor.totp && <TotpAuthentication query={query} />}
           <Flex justify='center'>
             <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
           </Flex>

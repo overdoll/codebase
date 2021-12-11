@@ -51,7 +51,7 @@ export default function RouterRenderer (): Node {
     // from the hook deps to avoid recomputing the effect after each change
     // triggered by the effect itself.
     // eslint-disable-next-line
-  }, [router])
+  }, [router]);
 
   // The current route value is an array of matching entries - one entry per
   // level of routes (to allow nested routes). We have to map each one to a
@@ -105,7 +105,7 @@ export default function RouterRenderer (): Node {
     <ErrorBoundary>
       <Suspense fallback={
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
-          <Slide direction='top' in={isPending}>
+          <Slide direction='top'>
             <Progress h='3px' borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
           </Slide>
         </chakra.div>

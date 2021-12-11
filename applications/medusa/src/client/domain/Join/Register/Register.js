@@ -8,11 +8,10 @@ import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import type { Node } from 'react'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/Icon/Icon'
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
+import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
 

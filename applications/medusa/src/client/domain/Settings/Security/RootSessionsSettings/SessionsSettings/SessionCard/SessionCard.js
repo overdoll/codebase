@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next';
-import { graphql, useFragment } from 'react-relay/hooks';
-import { Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql';
-import UAParser from 'ua-parser-js';
-import { format } from 'date-fns';
-import { PagePanelWrap } from '@//:modules/content/PageLayout';
-import { DesktopComputer, MobilePhone } from '../../../../../../../assets/icons/interface';
+import { useTranslation } from 'react-i18next'
+import { graphql, useFragment } from 'react-relay/hooks'
+import { Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
+import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql'
+import UAParser from 'ua-parser-js'
+import { format } from 'date-fns'
+import { PagePanelWrap } from '@//:modules/content/PageLayout'
+import { DesktopComputer, MobilePhone } from '../../../../../../../assets/icons/interface'
 
 type Props = {
   connectionID: SessionCardFragment$key,
@@ -19,7 +19,7 @@ type Props = {
 const SessionGQL = graphql`
   fragment SessionCardFragment on AccountSession {
     ...RevokeSessionFragment
-    userAgent
+    device
     ip
     created
     current
@@ -31,7 +31,7 @@ export default function SessionCard ({ connectionID, query }: Props): Node {
   const [t] = useTranslation('settings')
   const { isOpen: isRevealed, onToggle } = useDisclosure()
 
-  const userAgent = UAParser(data.userAgent)
+  const userAgent = UAParser(data.device)
   const formattedDate = format(new Date(data.created), 'LLLL Lo, y')
 
   return (

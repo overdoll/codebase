@@ -7,10 +7,8 @@ import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Flex, Heading, Text } from '@chakra-ui/react'
-import { PageWrapper } from '../../../components/PageLayout'
-
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import { PageWrapper } from '@//:modules/content/PageLayout'
+import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
 

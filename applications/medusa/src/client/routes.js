@@ -412,7 +412,7 @@ const routes: Array<Route> = [
         path: '/configure/multi_factor/totp',
         component: JSResource('TotpSetup', () =>
           import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
+            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
           )
         ),
         prepare: () => {
@@ -447,7 +447,7 @@ const routes: Array<Route> = [
         path: '/configure/multi_factor/recovery_codes',
         component: JSResource('TotpSetup', () =>
           import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
+            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
           )
         ),
         prepare: () => {
@@ -482,7 +482,7 @@ const routes: Array<Route> = [
         path: '/configure/create_post',
         component: JSResource('CreatePostRoot', () =>
           import(
-            /* webpackChunkName: "CreatePostRoot" */ './domain/Configure/CreatePost/CreatePost'
+            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
           )
         ),
         middleware: [

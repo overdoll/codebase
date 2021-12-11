@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c555bcbeb04d364393aa791c2eb71e8a
+ * @relayHash 2b3e418ce481ab862eac458db986b099
  */
 
 /* eslint-disable */
@@ -35,7 +35,7 @@ fragment RevokeSessionFragment on AccountSession {
 
 fragment SessionCardFragment on AccountSession {
   ...RevokeSessionFragment
-  userAgent
+  device
   ip
   created
   current
@@ -145,7 +145,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "userAgent",
+                        "name": "device",
                         "storageKey": null
                       },
                       {
@@ -245,7 +245,7 @@ return {
     ]
   },
   "params": {
-    "id": "c555bcbeb04d364393aa791c2eb71e8a",
+    "id": "2b3e418ce481ab862eac458db986b099",
     "metadata": {},
     "name": "SessionsSettingsQuery",
     "operationKind": "query",

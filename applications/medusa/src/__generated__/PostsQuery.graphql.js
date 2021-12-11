@@ -1,10 +1,6 @@
 /**
  * @flow
-<<<<<<< HEAD
- * @relayHash 8eb2cf546da76ff092c8f7e363c177a7
-=======
- * @relayHash 22d9535cd4b6fea40d059503ad93cb0f
->>>>>>> master
+ * @relayHash 47da91f6447ef732fd8a331e14551a57
  */
 
 /* eslint-disable */
@@ -168,32 +164,28 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-<<<<<<< HEAD
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "mimeType",
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v7 = [
-=======
-v3 = [
->>>>>>> master
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -307,7 +299,7 @@ return {
                         "name": "brand",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -316,7 +308,7 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
-                              (v4/*: any*/),
+                              (v3/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -325,8 +317,8 @@ return {
                                 "name": "urls",
                                 "plural": true,
                                 "selections": [
-                                  (v5/*: any*/),
-                                  (v6/*: any*/)
+                                  (v4/*: any*/),
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -344,14 +336,7 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
-<<<<<<< HEAD
-                        "selections": (v7/*: any*/),
-=======
-                        "selections": [
-                          (v2/*: any*/),
-                          (v1/*: any*/)
-                        ],
->>>>>>> master
+                        "selections": (v6/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -370,11 +355,7 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
-<<<<<<< HEAD
-                            "selections": (v7/*: any*/),
-=======
-                            "selections": (v3/*: any*/),
->>>>>>> master
+                            "selections": (v6/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -388,8 +369,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
-<<<<<<< HEAD
-                        "selections": (v7/*: any*/),
+                        "selections": (v6/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -400,7 +380,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v4/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -409,15 +389,12 @@ return {
                             "name": "urls",
                             "plural": true,
                             "selections": [
-                              (v6/*: any*/),
-                              (v5/*: any*/)
+                              (v5/*: any*/),
+                              (v4/*: any*/)
                             ],
                             "storageKey": null
                           }
                         ],
-=======
-                        "selections": (v3/*: any*/),
->>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -551,11 +528,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "8eb2cf546da76ff092c8f7e363c177a7",
-=======
-    "id": "22d9535cd4b6fea40d059503ad93cb0f",
->>>>>>> master
+    "id": "47da91f6447ef732fd8a331e14551a57",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

@@ -7,10 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-<<<<<<< HEAD
 import type { AuditInspectFragment$ref } from "./AuditInspectFragment.graphql";
-=======
->>>>>>> master
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AuditCardFragment$ref: FragmentReference;

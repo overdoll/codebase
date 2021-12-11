@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 import type { Node } from 'react'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../helpers/PrepareViewer'
-import type { GrantFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
+import prepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
+import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 
 type Props = {
@@ -72,7 +72,7 @@ export default function Grant ({ queryRef }: Props): Node {
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
-        PrepareViewer(store, payload)
+        prepareViewer(store, payload)
         store.delete(data.id)
         removeCookie('token')
         history.push('/profile')

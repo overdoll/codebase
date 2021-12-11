@@ -12,9 +12,9 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type SessionCardFragment$ref: FragmentReference;
 declare export opaque type SessionCardFragment$fragmentType: SessionCardFragment$ref;
 export type SessionCardFragment = {|
-  +userAgent: string,
+  +device: string,
   +ip: string,
-  +created: string,
+  +created: any,
   +current: boolean,
   +$fragmentRefs: RevokeSessionFragment$ref,
   +$refType: SessionCardFragment$ref,
@@ -37,7 +37,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "userAgent",
+      "name": "device",
       "storageKey": null
     },
     {
@@ -71,5 +71,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '6e8925f0e89eeabbd03dda4e64329351';
+(node: any).hash = '71dac3647a93bc7cb5f4e6a59160b02a';
 module.exports = node;

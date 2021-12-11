@@ -1,10 +1,6 @@
 /**
  * @flow
-<<<<<<< HEAD
- * @relayHash 0314a98affcb773c6f4556972b7201bc
-=======
- * @relayHash df4e4d94c79ce096782b4793f13f969b
->>>>>>> master
+ * @relayHash 7f76770c6e8137299f84002649ab53cc
  */
 
 /* eslint-disable */
@@ -513,11 +509,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "0314a98affcb773c6f4556972b7201bc",
-=======
-    "id": "df4e4d94c79ce096782b4793f13f969b",
->>>>>>> master
+    "id": "7f76770c6e8137299f84002649ab53cc",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

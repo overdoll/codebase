@@ -31,11 +31,11 @@ export default function ProfileButton ({ query }: Props): Node {
           <MenuButton active={isActive}>
             <Flex my={1} align='center'>
               <Avatar
-                src={data.avatar} pointerEvents='none' mr={4} borderRadius='25%' w='60px'
+                src={data?.avatar} pointerEvents='none' mr={4} borderRadius='25%' w='60px'
                 h='60px'
               />
               <Flex direction='column'>
-                <Text color='gray.00' fontFamily='mono' fontSize='xl'>{data.username}</Text>
+                <Text color='gray.00' fontFamily='mono' fontSize='xl'>{data?.username}</Text>
                 <Text color='gray.300' fontSize='md'>{t('menu.profile')}</Text>
               </Flex>
             </Flex>

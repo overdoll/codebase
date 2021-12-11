@@ -1,20 +1,20 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { CircularProgress, CircularProgressLabel, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import { ClickableBox, SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout';
-import { graphql } from 'react-relay/hooks';
-import type { PostStatePreviewFragment$key } from '@//:artifacts/PostStatePreviewFragment.graphql';
-import { useFragment } from 'react-relay';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
+import type { Node } from 'react'
+import { CircularProgress, CircularProgressLabel, Flex, Heading, SimpleGrid } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import { ClickableBox, SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout'
+import { graphql } from 'react-relay/hooks'
+import type { PostStatePreviewFragment$key } from '@//:artifacts/PostStatePreviewFragment.graphql'
+import { useFragment } from 'react-relay'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import useCheckRequirements
-  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements';
+  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
 import progressScore
-  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore';
-import { DeleteBin } from '../../../../../../assets/icons/interface';
-import { useHistory } from '@//:modules/routing';
+  from '../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
+import { DeleteBin } from '../../../../../../assets/icons/interface'
+import { useHistory } from '@//:modules/routing'
 
 type Props = {
   query: PostStatePreviewFragment$key,
