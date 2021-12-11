@@ -2,9 +2,9 @@ import express from 'express'
 
 const router = express.Router()
 
-if (process.env.APP_DEBUG) {
+if (process.env.APP_DEBUG != null) {
   router.get('/__coverage__', (req, res) => res.json({
-    coverage: global.__coverage__ || null
+    coverage: global.__coverage__ ?? null
   }))
 }
 

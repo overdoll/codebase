@@ -26,7 +26,8 @@
           "node": "current"
         }
       }
-    ]
+    ],
+    "@babel/preset-typescript"
   ],
   "plugins": [
     [

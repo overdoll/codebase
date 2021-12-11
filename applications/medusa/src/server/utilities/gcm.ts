@@ -34,7 +34,7 @@ export default {
    * @param text
    * @param masterkey
    */
-  encrypt: (text, masterkey) => {
+  encrypt: (text, masterkey): string => {
     // random initialization vector
     const iv = _crypto.randomBytes(12)
 
@@ -53,7 +53,7 @@ export default {
    * @param input
    * @param masterkey
    */
-  decrypt: (input, masterkey) => {
+  decrypt: (input, masterkey): string => {
     // base64 decoding
     const inputBuffer = Buffer.from(input, 'hex')
     const iv = Buffer.allocUnsafe(12)
@@ -69,6 +69,6 @@ export default {
     decipher.setAuthTag(tag)
 
     // encrypt the given text
-    return decipher.update(data, null, 'utf8') + decipher.final('utf8')
+    return decipher.update(data, undefined, 'utf8') + decipher.final('utf8')
   }
 }

@@ -8,7 +8,6 @@
 applications/medusa/src
 
 [libs]
-<PROJECT_ROOT>/applications/medusa/src/types/external
 
 [lints]
 

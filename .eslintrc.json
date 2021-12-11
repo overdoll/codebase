@@ -24,22 +24,23 @@
     }
   ],
   "extends": [
-    "plugin:flowtype/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "standard",
+    "standard-with-typescript",
     "standard-jsx"
   ],
   "plugins": [
-    "flowtype",
     "relay",
     "testing-library"
   ],
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "babelOptions": {
       "configFile": "./applications/medusa/.babelrc"
     },
+    "project": [
+      "./tsconfig.json"
+    ],
     "ecmaFeatures": {
       "jsx": true
     },
@@ -54,16 +55,7 @@
     "relay/must-colocate-fragment-spreads": "warn",
     "relay/no-future-added-value": "warn",
     "relay/unused-fields": "warn",
-    "relay/hook-required-argument": "warn",
-    "flowtype/no-mixed": 2,
-    "flowtype/no-weak-types": [
-      2,
-      {
-        "any": true,
-        "Object": true,
-        "Function": true
-      }
-    ]
+    "relay/hook-required-argument": "warn"
   },
   "env": {
     "browser": true,

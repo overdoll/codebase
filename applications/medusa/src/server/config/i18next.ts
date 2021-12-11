@@ -4,7 +4,7 @@ import i18nextMiddleware from 'i18next-http-middleware'
 import { join } from 'path'
 import { initReactI18next } from 'react-i18next'
 
-i18next
+void i18next
   .use(i18nextMiddleware.LanguageDetector)
   .use(initReactI18next)
   .use(Backend)

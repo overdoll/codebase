@@ -1,12 +1,18 @@
-export default {
+import { Request, Response } from 'express'
+import helmet from 'helmet'
+
+type HelmetOptions = Parameters<typeof helmet>[0]
+
+const options: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
       'default-src': ['\'self\''],
+      // @ts-expect-error
       'script-src': [
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         process.env.NODE_ENV === 'production'
-          ? (req, res) => `'nonce-${res.locals.cspNonce}'`
+          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`
           : '\'unsafe-inline\'',
         '\'unsafe-eval\'',
         process.env.PUBLIC_PATH
@@ -16,7 +22,7 @@ export default {
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         'https://fonts.googleapis.com',
         process.env.NODE_ENV === 'production'
-          ? (req, res) => `'nonce-${res.locals.cspNonce}'`
+          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`
           : '\'unsafe-inline\''
       ],
       'font-src': ['data:', '*'],
@@ -38,3 +44,5 @@ export default {
   },
   hsts: false
 }
+
+export default options

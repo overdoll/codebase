@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@//:modules/*": [
+        "./applications/medusa/src/modules/*"
+      ],
+      "@//:artifacts/*": [
+        "./applications/medusa/src/__generated__/*"
+      ]
+    }
+  },
+  "include": [
+    "./applications/medusa"
+  ],
+  "exclude": [
+    "./applications/medusa/.nyc_output",
+    "./applications/medusa/build",
+    "./applications/medusa/coverage",
+    "./applications/medusa/cache"
+  ]
+}

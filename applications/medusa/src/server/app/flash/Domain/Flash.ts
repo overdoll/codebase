@@ -32,54 +32,53 @@ import { format } from 'util'
  *     req.flash('info', 'email has been sent to %s.', userName);
  *
  * Formatting uses `util.format()`, which is available on Node 0.6+.
- *
- * @param {String} type
- * @param {String} msg
- * @return {Array|Object|Number}
- * @api public
  */
 
 export default class Flash {
+  private msgs: Map<string, unknown>
+  private session: any
+
   constructor (req, options = {}) {
     if (req.session === undefined) throw Error('req.flash() requires sessions')
-    this.msgs = req.session.flash || {}
+    this.msgs = req.session.flash ?? {}
     this.session = req.session
   }
 
-  flush (key) {
-    if (!key) {
+  flush (key?: string): Map<string, unknown> | undefined | string[] {
+    if (key == null) {
       delete this.session.flash
       return this.msgs
     }
 
     const arr = this.msgs[key]
     if (Array.isArray(arr)) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.msgs[key]
       return arr
     }
   }
 
-  push (key, msg) {
-    if (arguments.length > 2 && format) {
+  push (key, msg): Map<string, unknown> | undefined | string[] {
+    if (arguments.length > 2) {
       const args = Array.prototype.slice.call(arguments, 1)
       msg = format.apply(undefined, args)
     } else if (Array.isArray(msg)) {
       msg.forEach(function (val) {
-        (this.msgs[key] = this.msgs[key] || []).push(val)
+        (this.msgs[key] = this.msgs[key] ?? []).push(val)
       })
       this.session.flash = this.msgs
       return this.msgs[key].length
     }
-    const ret = (this.msgs[key] = this.msgs[key] || []).push(msg)
+    const ret = (this.msgs[key] = this.msgs[key] ?? []).push(msg)
     this.session.flash = this.msgs
     return ret
   }
 
-  get (key) {
-    if (!key) {
+  get (key: string): Map<string, unknown> | undefined | string[] {
+    if (key != null || key !== undefined) {
       return this.msgs
     }
 
-    return this.msgs[key] || []
+    return this.msgs[key] ?? []
   }
 }

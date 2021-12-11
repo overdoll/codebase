@@ -6,32 +6,30 @@ import { fetchQuery, loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import type { Resource } from '@//:modules/utilities/JSResource'
 import Cookies from 'universal-cookie'
+import type { History } from 'history'
 
 export type Location = $ReadOnly<{
   pathname: string,
   search: string,
   hash: string,
   key?: string,
-  ...
 }>;
 
 export type LocationShape = {
   pathname?: string,
   search?: string,
   hash?: string,
-  ...
 };
 
 type HistoryAction = 'PUSH' | 'REPLACE' | 'POP';
 
-type Params = { [key: string]: ?string, ... }
+type Params = { [key: string]: ?string }
 
 export type Match = {
   params: Params,
   isExact: boolean,
   path: string,
   url: string,
-  ...
 };
 
 export type RouterHistory = {
@@ -50,7 +48,6 @@ export type RouterHistory = {
   block (
     callback: string | (location: Location, action: HistoryAction) => ?string
   ): () => void,
-  ...
 };
 
 export type Middleware = ({ history: RouterHistory, environment: IEnvironment }) => boolean
@@ -215,7 +212,7 @@ async function createServerRouter (
  */
 function createClientRouter (
   routes: Array<Route>,
-  history: RouterHistory,
+  history: History,
   environment: IEnvironment
 ): RouterInstance {
   // Find the initial match and prepare it

@@ -1,8 +1,4 @@
-/**
- * @flow
- */
 import { createBrowserHistory } from 'history'
-import type { Node } from 'react'
 import { createClientRouter } from '@//:modules/routing/router'
 import routes from './routes'
 import environment from './bootstrap/relay'
@@ -23,9 +19,12 @@ registerUpdateListener(router)
 
 const nonce = document
   .querySelector('meta[name="nonce"]')
-  ?.getAttribute('content')
+  ?.getAttribute('content') as string
 
-const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
+const cache = createCache({
+  key: EMOTION_CACHE_KEY,
+  nonce
+})
 
 window.__webpack_nonce__ = nonce
 
@@ -41,7 +40,7 @@ OverlayScrollbars(document.body, {
   }
 })
 
-export default function App (): Node {
+export default function App (): JSX.Element {
   return (
     <Bootstrap
       routerContext={router.context}
