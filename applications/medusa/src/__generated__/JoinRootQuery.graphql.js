@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f29aa5c89e54296fc3661c4c5ffe8ba2
+ * @relayHash a700502a60f6b8e09862f257b9816e58
  */
 
 /* eslint-disable */
@@ -14,12 +14,13 @@ import type { JoinRootFragment$ref } from "./JoinRootFragment.graphql";
 import type { LobbyFragment$ref } from "./LobbyFragment.graphql";
 import type { MultiFactorFragment$ref } from "./MultiFactorFragment.graphql";
 import type { RegisterFragment$ref } from "./RegisterFragment.graphql";
+import type { TotpAuthenticationFragment$ref } from "./TotpAuthenticationFragment.graphql";
 export type JoinRootQueryVariables = {|
   token: string
 |};
 export type JoinRootQueryResponse = {|
   +viewAuthenticationToken: ?{|
-    +$fragmentRefs: LobbyFragment$ref & JoinRootFragment$ref & JoinFragment$ref & RegisterFragment$ref & MultiFactorFragment$ref & GrantFragment$ref
+    +$fragmentRefs: LobbyFragment$ref & JoinRootFragment$ref & JoinFragment$ref & RegisterFragment$ref & MultiFactorFragment$ref & GrantFragment$ref & TotpAuthenticationFragment$ref
   |}
 |};
 export type JoinRootQuery = {|
@@ -38,6 +39,7 @@ query JoinRootQuery(
     ...RegisterFragment
     ...MultiFactorFragment
     ...GrantFragment
+    ...TotpAuthenticationFragment
     id
   }
 }
@@ -73,6 +75,10 @@ fragment MultiFactorFragment on AuthenticationToken {
 
 fragment RegisterFragment on AuthenticationToken {
   id
+  token
+}
+
+fragment TotpAuthenticationFragment on AuthenticationToken {
   token
 }
 */
@@ -136,6 +142,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "GrantFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "TotpAuthenticationFragment"
           }
         ],
         "storageKey": null
@@ -240,7 +251,7 @@ return {
     ]
   },
   "params": {
-    "id": "f29aa5c89e54296fc3661c4c5ffe8ba2",
+    "id": "a700502a60f6b8e09862f257b9816e58",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -249,5 +260,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '0ea7c758f2a84c47f8f397b9138d8450';
+(node: any).hash = '2881dee4ce33d29801e9be80d03cbccb';
 module.exports = node;

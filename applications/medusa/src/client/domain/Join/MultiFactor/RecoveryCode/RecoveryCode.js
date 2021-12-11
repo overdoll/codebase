@@ -1,29 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import {
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  useToast
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import Button from '@//:modules/form/Button'
-import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi'
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '../../helpers/PrepareViewer'
+import { graphql, useMutation } from 'react-relay/hooks';
+import { Flex, FormControl, FormLabel, useToast } from '@chakra-ui/react';
+import Button from '@//:modules/form/Button';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from '@//:modules/routing';
+import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
+import StyledInput from '@//:modules/form/StyledInput/StyledInput';
 
 type CodeValues = {
   code: string,
@@ -32,7 +19,7 @@ type CodeValues = {
 type Props = {}
 
 const RecoveryCodeMutationGQL = graphql`
-  mutation RecoveryCodeFormMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
+  mutation RecoveryCodeMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
       validation
       account {
@@ -42,39 +29,27 @@ const RecoveryCodeMutationGQL = graphql`
   }
 `
 
-const RecoveryCodeFragment = graphql`
-  fragment RecoveryCodeFragment on AuthenticationToken {
-    id
-  }
-`
-
-const schema = Joi.object({
-  code: Joi
-    .string()
-    .alphanum()
-    .length(8)
-    .required()
-})
-
-export default function RecoveryCode ({ queryRef }: Props): Node {
+export default function RecoveryCode (props: Props): Node {
   const [submitCode, isSubmittingCode] = useMutation(
     RecoveryCodeMutationGQL
   )
 
-  const data = useFragment(RecoveryCodeFragment, queryRef)
-
   const [t] = useTranslation('auth')
 
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<CodeValues>({
+  const schema = Joi.object({
+    code: Joi
+      .string()
+      .alphanum()
+      .length(8)
+      .required()
+      .messages({
+        'string.empty': t('multi_factor.recovery.form.validation.code.empty'),
+        'string.length': t('multi_factor.recovery.form.validation.code.length'),
+        'string.alphanum': t('multi_factor.recovery.form.validation.code.alphanum')
+      })
+  })
+
+  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
@@ -108,8 +83,8 @@ export default function RecoveryCode ({ queryRef }: Props): Node {
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
+
         PrepareViewer(store, payload)
-        store.delete(data.id)
       },
       onError (data) {
         console.log(data)
@@ -132,23 +107,13 @@ export default function RecoveryCode ({ queryRef }: Props): Node {
         >
           <FormLabel>{t('multi_factor.recovery.form.header')}</FormLabel>
           <Flex justify='center'>
-            <InputGroup mr={2} size='sm'>
-              <Input
-                {...register('code')}
-                variant='outline'
-                size='md'
-                placeholder={t('multi_factor.recovery.form.placeholder')}
-              />
-              {(errors.code || success) && (
-                <InputRightElement h='100%' mr={1}>
-                  <Icon
-                    m={2}
-                    icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                    fill={success ? 'green.600' : 'orange.500'}
-                  />
-                </InputRightElement>
-              )}
-            </InputGroup>
+            <StyledInput
+              register={register('code')}
+              success={success}
+              error={errors.code}
+              placeholder={t('multi_factor.recovery.form.placeholder')}
+              errorMessage={errors.code?.message}
+            />
             <Button
               size='md'
               variant='solid'
@@ -156,16 +121,11 @@ export default function RecoveryCode ({ queryRef }: Props): Node {
               colorScheme='gray'
               disabled={errors.code}
               isLoading={isSubmittingCode}
+              ml={2}
             >
               {t('multi_factor.recovery.form.submit')}
             </Button>
           </Flex>
-          <FormErrorMessage>
-            {errors.code && errors.code.type === 'mutation' && errors.code.message}
-            {errors.code && errors.code.type === 'string.empty' && t('multi_factor.recovery.form.validation.code.empty')}
-            {errors.code && errors.code.type === 'string.length' && t('multi_factor.recovery.form.validation.code.length')}
-            {errors.code && errors.code.type === 'string.alphanum' && t('multi_factor.recovery.form.validation.code.alphanum')}
-          </FormErrorMessage>
         </FormControl>
       </form>
     </>

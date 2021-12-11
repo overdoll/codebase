@@ -4,7 +4,11 @@ export default function (props) {
       fontFamily: 'body',
       color: 'gray.100',
       bg: 'gray.900',
-      lineHeight: 'base'
+      lineHeight: 'base',
+      overflow: 'hidden'
+    },
+    '.page-contents': {
+      overflow: 'auto'
     },
     heading: {
       fontWeight: 600
@@ -44,7 +48,8 @@ export default function (props) {
       color: 'gray.800'
     },
     '.os-scrollbar-handle': {
-      opacity: 0.3
+      opacity: 0.3,
+      zIndex: 0
     },
     form: {
       width: '100%'
@@ -54,6 +59,9 @@ export default function (props) {
     },
     '::-moz-selection': {
       background: 'gray.300'
+    },
+    'chakra-progress__track': {
+      stroke: 'gray.700'
     }
   }
 }

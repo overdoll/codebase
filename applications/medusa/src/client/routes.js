@@ -230,7 +230,7 @@ const routes: Array<Route> = [
               return {
                 auditLogsQuery: {
                   query: AuditLogsQuery,
-                  variables: {},
+                  variables: { from: new Date(new Date().setDate(new Date().getDate() - 7)), to: new Date() },
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
@@ -241,13 +241,12 @@ const routes: Array<Route> = [
         ]
       },
       {
-        path: '/upload',
-        component: JSResource('UploadRoot', () =>
+        path: '/manage',
+        component: JSResource('ManageRoot', () =>
           import(
-            /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
+            /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
           )
         ),
-        // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({
             environment,
@@ -255,11 +254,42 @@ const routes: Array<Route> = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'posting')) {
               return true
             }
             history.push('/join')
             return false
+          }
+        ],
+        routes: [
+          {
+            path: '/manage/my_posts',
+            component: JSResource('ManageMyPostsRoot', () =>
+              import(
+                /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
+              )
+            ),
+            prepare: params => {
+              const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+
+              return {
+                myPostsQuery: {
+                  query: MyPostsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/manage/brands',
+            component: JSResource('ManageBrandsRoot', () =>
+              import(
+                /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
+              )
+            )
           }
         ]
       },
@@ -325,9 +355,18 @@ const routes: Array<Route> = [
             prepare: () => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
+              const SessionsQuery = require('@//:artifacts/SessionsSettingsQuery.graphql')
+
               return {
                 multiFactorQuery: {
                   query: MultiFactorQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                },
+                sessionsQuery: {
+                  query: SessionsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -373,7 +412,7 @@ const routes: Array<Route> = [
         path: '/configure/multi_factor/totp',
         component: JSResource('TotpSetup', () =>
           import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
+            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
           )
         ),
         prepare: () => {
@@ -408,7 +447,7 @@ const routes: Array<Route> = [
         path: '/configure/multi_factor/recovery_codes',
         component: JSResource('TotpSetup', () =>
           import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
+            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
           )
         ),
         prepare: () => {
@@ -435,6 +474,86 @@ const routes: Array<Route> = [
               return true
             }
             history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/configure/create_post',
+        component: JSResource('CreatePostRoot', () =>
+          import(
+            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+          )
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'posting')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/locked',
+        exact: true,
+        component: JSResource('LockedRoot', () =>
+          import(
+            /* webpackChunkName: "LockedRoot" */ './domain/Locked/RootLocked'
+          )
+        ),
+        prepare: params => {
+          const LockedQuery = require('@//:artifacts/LockedQuery.graphql')
+
+          return {
+            lockedQuery: {
+              query: LockedQuery,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'locked')) {
+              return true
+            }
+            history.push('/')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/profile',
+        exact: true,
+        component: JSResource('ProfileRoot', () =>
+          import(
+            /* webpackChunkName: "ProfileRoot" */ './domain/Profile/Profile'
+          )
+        ),
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'locked')) {
+              history.push('/locked')
+              return false
+            }
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/')
             return false
           }
         ]

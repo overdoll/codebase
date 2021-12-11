@@ -24,7 +24,6 @@ const baseStyleCloseButton = {
   borderRadius: 'full',
   marginStart: '0.375rem',
   marginEnd: '-1',
-  opacity: 0.5,
   _disabled: {
     opacity: 0.4
   },

@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Stack, Skeleton } from '@chakra-ui/react'
+import { Skeleton, Stack } from '@chakra-ui/react'
 import type { Node } from 'react'
 
 export default function SkeletonStack (): Node {

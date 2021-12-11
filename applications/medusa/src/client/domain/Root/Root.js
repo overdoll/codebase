@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useMemo } from 'react'
+import { useMemo, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet-async'
 import Navigation from '../../../modules/content/Navigation/Navigation'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import { AbilityContext } from './helpers/AbilityContext'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
   prepared: {
@@ -47,8 +48,10 @@ export default function Root (props: Props): Node {
         title='overdoll'
       />
       <AbilityContext.Provider value={ability}>
-        <Navigation rootQuery={data?.viewer}>
-          {props.children}
+        <Navigation query={data?.viewer}>
+          <Suspense fallback={<CenteredSpinner />}>
+            {props.children}
+          </Suspense>
         </Navigation>
       </AbilityContext.Provider>
     </>

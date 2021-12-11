@@ -1,5 +1,5 @@
-import radius from '../index'
-import { Stack, Box } from '@chakra-ui/react'
+import radius from '../index';
+import { Box, Stack } from '@chakra-ui/react';
 
 export default {
   title: 'Molecules/Radius'

@@ -3,7 +3,9 @@
  */
 import type { Node } from 'react'
 import { useEffect } from 'react'
-import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.graphql'
+import type { ModeratePostApproveMutation } from '@//:artifacts/ModeratePostApproveMutation.graphql'
+import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejectMutation.graphql'
+
 import { graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
 import {
@@ -12,6 +14,7 @@ import {
   Flex,
   Heading,
   Fade,
+  Text,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
@@ -19,10 +22,6 @@ import { useTranslation } from 'react-i18next'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
 import type { PostContentFragment$key } from '@//:artifacts/PostContentFragment.graphql'
 import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
-import Icon from '@//:modules/content/Icon/Icon'
-import Close from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/form-validation/close.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import type { PendingPostsFragment$key } from '@//:artifacts/PendingPostsFragment.graphql'
 import Button from '@//:modules/form/Button'
 
@@ -32,71 +31,88 @@ type Props = {
   connectionID: PendingPostsFragment$key,
 }
 
-// const ModeratePostGQL = graphql`
-//   mutation ModeratePostMutation($input: ModeratePostInput!, $connections: [ID!]!) {
-//     moderatePost(input: $input) {
-//       postAuditLog {
-//         id @deleteEdge(connections: $connections)
-//       }
-//     }
-//   }
-// `
+const ModeratePostApproveGQL = graphql`
+  mutation ModeratePostApproveMutation($input: ApprovePostInput!, $connections: [ID!]!) {
+    approvePost(input: $input) {
+      postAuditLog {
+        id
+        post {
+          id @deleteEdge(connections: $connections)
+        }
+      }
+    }
+  }
+`
+
+const ModeratePostRejectGQL = graphql`
+  mutation ModeratePostRejectMutation($input: RejectPostInput!, $connections: [ID!]!) {
+    rejectPost(input: $input) {
+      postAuditLog {
+        id
+        post {
+          id @deleteEdge(connections: $connections)
+        }
+      }
+    }
+  }
+`
 
 const PostIDGQL = graphql`
   fragment ModeratePostFragment on Post {
     id
+    brand {
+      name
+    }
   }
 `
 
 export default function ModeratePost (props: Props): Node {
-  const [t] = useTranslation('moderation')
+  const [approvePost, isApprovingPost] = useMutation<ModeratePostApproveMutation>(
+    ModeratePostApproveGQL
+  )
 
-  const [moderatePost, isModeratingPost] = useMutation<ModeratePostMutation>(
-    nil
+  const [rejectPost, isRejectingPost] = useMutation<ModeratePostRejectMutation>(
+    ModeratePostRejectGQL
   )
 
   const data = useFragment(PostIDGQL, props.postID)
 
-  const notify = useToast()
+  const [t] = useTranslation('moderation')
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  // Close modal if user scrolls to a different post
-  useEffect(() => {
-    onClose()
-  }, [data.id])
+  const notify = useToast()
 
-  const approvePost = () => {
-    moderatePost({
+  const onApprovePost = () => {
+    approvePost({
       variables: {
         input: {
-          postId: data.id,
-          notes: ''
+          postId: data.id
         },
         connections: [props.connectionID]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.approve.query.success', { id: data.id }),
+          title: t('queue.post.actions.approve.query.success', { brand: data.brand.name }),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.approve.query.error', { id: data.id }),
+          title: t('queue.post.actions.approve.query.error', { brand: data.brand.name }),
           isClosable: true
         })
       }
     })
   }
-  const rejectPost = (formData) => {
-    moderatePost({
+  const onRejectPost = (formData) => {
+    rejectPost({
       variables: {
         input: {
           postId: data.id,
-          reasonId: formData.rejectionId,
+          postRejectionReasonId: formData.rejectionId,
           notes: formData.note
         },
         connections: [props.connectionID]
@@ -104,7 +120,7 @@ export default function ModeratePost (props: Props): Node {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.reject.query.success', { id: data.id }),
+          title: t('queue.post.actions.reject.query.success', { brand: data.brand.name }),
           isClosable: true
         })
         onClose()
@@ -112,7 +128,7 @@ export default function ModeratePost (props: Props): Node {
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.reject.query.error', { id: data.id }),
+          title: t('queue.post.actions.reject.query.error', { brand: data.brand.name }),
           isClosable: true
         })
       }
@@ -121,56 +137,34 @@ export default function ModeratePost (props: Props): Node {
 
   return (
     <>
-      <HStack p={6} spacing={8} justify='center'>
-        <Button
-          color='gray.00'
-          bg='orange.500'
-          borderRadius='100%' size='lg' variant='unstyled' colorScheme='orange' isLoading={isModeratingPost}
-          onClick={onOpen} h='85px' w='85px'
-        >
-          <Flex align='center' direction='column'>
-            <Icon
-              w={4} mb={1} h={4} icon={Close}
-              fill='gray.00'
-            />
-            {t('queue.post.actions.reject.button')}
-          </Flex>
+      <HStack spacing={4}>
+        <Button size='md' isDisabled={isApprovingPost} onClick={onOpen} colorScheme='orange' variant='solid'>
+          {t('queue.post.actions.reject.button')}
         </Button>
-        <Button
-          h='85px' w='85px'
-          color='gray.00'
-          bg='green.500'
-          borderRadius='100%' size='lg' variant='unstyled' colorScheme='green' isLoading={isModeratingPost}
-          onClick={approvePost}
-        >
-          <Flex align='center' direction='column'>
-            <Icon
-              w={4} mb={1} h={4} icon={InterfaceValidationCheck}
-              fill='gray.00'
-            />
-            {t('queue.post.actions.approve.button')}
-          </Flex>
+        <Button size='md' isLoading={isApprovingPost} onClick={onApprovePost} colorScheme='green' variant='solid'>
+          {t('queue.post.actions.approve.button')}
         </Button>
       </HStack>
       <Flex
         position='absolute'
         w='100%' h='100%'
+        top={0}
+        left={0}
         pointerEvents={isOpen ? 'initial' : 'none'}
       >
-        <Fade in={isOpen}>
+        <Fade style={{ zIndex: 2 }} in={isOpen}>
           <Flex
             p={4} direction='column' bg='dimmers.900' w='100%' h='100%' position='absolute'
             borderRadius={10} backdropFilter='blur(5px)'
           >
             <Flex align='center' w='100%' justify='space-between'>
-              <Heading fontSize='lg' color='gray.00'>{t('queue.post.actions.reject.modal.title')}</Heading>
-              <CloseButton onClick={onClose} right={0} />
+              <Text fontSize='md' color='gray.100'>{t('queue.post.actions.reject.modal.title')}</Text>
+              <CloseButton isDisabled={isRejectingPost} onClick={onClose} right={0} />
             </Flex>
             <RejectionReasons
               infractions={props.infractions}
-              onSubmit={rejectPost}
-              isModeratingPost={isModeratingPost}
-              moderatePost={moderatePost}
+              onSubmit={onRejectPost}
+              isModeratingPost={isRejectingPost}
             />
           </Flex>
         </Fade>

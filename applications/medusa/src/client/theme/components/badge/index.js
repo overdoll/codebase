@@ -22,7 +22,7 @@ function variantSubtle (props) {
 
   if (c === 'gray') {
     return {
-      bg: mode(`${c}.50`, `${c}.50`)(props),
+      bg: mode(`${c}.50`, `${c}.700`)(props),
       color: mode(`${c}.800`, `${c}.100`)(props)
     }
   }
@@ -38,9 +38,18 @@ function variantOutline (props) {
   const lightColor = getColor(theme, `${c}.500`)
   const color = mode(lightColor, darkColor)(props)
 
+  if (c === 'gray') {
+    const grayColor = transparentize(`${c}.100`, 0.7)(theme)
+    const grayColorBorder = mode(grayColor, grayColor)(props)
+    return {
+      color: grayColor,
+      boxShadow: `inset 0 0 0px 2px ${grayColorBorder}`
+    }
+  }
+
   return {
     color,
-    boxShadow: `inset 0 0 0px 1px ${color}`
+    boxShadow: `inset 0 0 0px 2px ${color}`
   }
 }
 

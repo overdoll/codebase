@@ -7,9 +7,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import type { AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Text,
-  Flex,
-  Stack,
-  Accordion
+  Flex
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
@@ -17,13 +15,14 @@ import Button from '@//:modules/form/Button'
 import { usePreloadedQuery } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { AuditLogsQuery } from '@//:artifacts/AuditLogsQuery.graphql'
+import { ListSpacer } from '@//:modules/content/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<AuditLogsQuery>,
 }
 
 const AuditLogsQueryGQL = graphql`
-  query AuditLogsQuery {
+  query AuditLogsQuery ($from: Time!, $to: Time!) {
     viewer {
       ...AuditLogsFragment
     }
@@ -37,12 +36,11 @@ const AuditLogsGQL = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "AuditLogsPaginationQuery" ) {
-    moderatorPostAuditLogs (first: $first, after: $after, dateRange: { from: 0, to: 0 })
+    moderatorPostAuditLogs (first: $first, after: $after, dateRange: {from: $from, to: $to})
     @connection(key: "AuditLogs_moderatorPostAuditLogs") {
       edges {
         node {
           ...AuditCardFragment
-          ...AuditInspectFragment
         }
       }
     }
@@ -72,15 +70,13 @@ export default function AuditLogs (props: Props): Node {
 
   return (
     <>
-      <Stack mt={2} mb={3}>
-        <Accordion allowToggle>
-          {auditLogs.map((item, index) =>
-            <AuditCard
-              key={index} auditLog={auditLogs[index]?.node}
-            />
-          )}
-        </Accordion>
-      </Stack>
+      <ListSpacer>
+        {auditLogs.map((item, index) =>
+          <AuditCard
+            key={index} auditLog={auditLogs[index]?.node}
+          />
+        )}
+      </ListSpacer>
       <Flex justify='center'>
         {hasNext
           ? <Button

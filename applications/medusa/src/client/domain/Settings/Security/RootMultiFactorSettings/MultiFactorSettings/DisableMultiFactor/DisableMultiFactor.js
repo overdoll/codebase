@@ -2,18 +2,23 @@
  * @flow
  */
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Flex,
   Text,
   Tooltip,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog, useDisclosure, useToast
-} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql'
-import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import Button from '@//:modules/form/Button';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql';
+import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql';
 
 type Props = {
   data: DisableMultiFactorFragment$key
@@ -73,9 +78,17 @@ export default function DisableMultiFactor (props: Props): Node {
 
   return (
     <>
-      <Flex align='center' justify='space-between'>
-        <Flex align='flex-start' justify='center' direction='column'>
-          <Text mb={1} color='gray.100' fontSize='sm'>
+      <Flex w='100%'>
+        <Flex
+          borderRadius='base'
+          borderTopRightRadius={0}
+          borderBottomRightRadius={0}
+          w='100%'
+          px={3} py={2} bg='gray.800'
+          align='center'
+          justify='space-between'
+        >
+          <Text fontFamily='body' fontWeight='semibold' color='gray.200' fontSize='sm'>
             {t('security.multi_factor.disable.title')}
           </Text>
         </Flex>
@@ -84,8 +97,11 @@ export default function DisableMultiFactor (props: Props): Node {
           label={t('security.multi_factor.disable.tooltip')}
         >
           <Button
-            onClick={onOpen} isDisabled={!data.canDisableMultiFactor} variant='outline' colorScheme='orange'
-            size='sm'
+            onClick={onOpen} variant='solid' colorScheme='orange'
+            size='sm' isDisabled={!data.canDisableMultiFactor}
+            borderTopLeftRadius={0}
+            borderBottomLeftRadius={0}
+            h='37px'
           >
             {t('security.multi_factor.disable.button')}
           </Button>
@@ -106,11 +122,11 @@ export default function DisableMultiFactor (props: Props): Node {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button size='lg' onClick={onClose}>
+              <Button size='md' onClick={onClose}>
                 {t('security.multi_factor.disable.modal.cancel')}
               </Button>
               <Button
-                isLoading={isDisablingMultiFactor} size='lg' variant='outline' colorScheme='orange'
+                isLoading={isDisablingMultiFactor} size='md' variant='solid' colorScheme='orange'
                 onClick={onDisable} ml={3}
               >
                 {t('security.multi_factor.disable.modal.confirm')}

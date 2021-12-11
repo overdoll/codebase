@@ -7,26 +7,23 @@ import {
   Text,
   CircularProgress,
   Box,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel
+  Collapse,
+  Grid,
+  GridItem,
+  useDisclosure
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
-import InterfaceValidationCheckCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-circle.svg'
-import InterfaceDeleteCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-circle.svg'
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import InterfaceArrowsMoveHorizontalCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-move-horizontal-circle.svg'
-import InterfaceArrowsButtonDown
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-down.svg'
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
+import { ClickableBox } from '@//:modules/content/PageLayout'
+import {
+  ArrowButtonRight,
+  ArrowButtonDown
+} from '../../../../../../assets/icons/navigation'
+import { CheckCircle, DeleteCircle, SwapCircle } from '../../../../../../assets/icons/interface'
 
 type Props = {
   auditLog: AuditCardFragment$key,
@@ -36,18 +33,21 @@ const AuditCardFragmentGQL = graphql`
   fragment AuditCardFragment on PostAuditLog {
     reverted
     reversibleUntil
-    contributor {
-      username
-    }
     post {
       postedAt
+      brand {
+        name
+      }
     }
     action
+    ...AuditInspectFragment
   }
 `
 
 export default function AuditCard ({ auditLog }: Props): Node {
   const data = useFragment(AuditCardFragmentGQL, auditLog)
+
+  const { isOpen, onToggle } = useDisclosure()
 
   const getMinuteDifference = (date) => {
     const ms = 1000 * 60
@@ -63,47 +63,58 @@ export default function AuditCard ({ auditLog }: Props): Node {
 
   const expiryPercent = (expiryTime / 10) * 100
 
-  const formattedDate = format(new Date(data.post.postedAt), 'eeee h:m aaa')
+  const formattedDate = format(new Date(data.post.postedAt), 'eeee h:mm aaa')
 
   return (
-    <AccordionItem bg='gray.800' borderRadius={5} border='none'>
-      {({ isExpanded }) => (
-        <>
-          <AccordionButton
-            pl={3} pr={3} textAlign='left'
-            borderRadius={5} variant='solid' size='xl' h={12}
-          >
-            <Flex align='center' justify='space-between' w='100%' direction='row'>
-              <Text fontSize='md'>
+    <Box>
+      <ClickableBox h={10} onClick={onToggle}>
+        <Flex>
+          <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
+            <GridItem colSpan={3}>
+              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
                 {formattedDate}
               </Text>
-              <Text fontSize='md'>
-                {data.contributor.username}
+            </GridItem>
+            <GridItem textOverflow='ellipsis' colSpan={3}>
+              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
+                {data.post.brand.name}
               </Text>
-              <Flex align='center' justify='center' position='relative'>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
                 <Box>
                   <Icon
-                    icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'Approved' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
+                    icon={data.reverted ? SwapCircle : data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
                     w={4} h={4}
-                    fill={data.reverted ? 'blue.500' : data.action === 'Approved' ? 'green.500' : 'orange.500'}
+                    fill={data.reverted ? 'purple.500' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
                   />
                 </Box>
                 {(expiryPercent > 0 && !data.reverted) &&
-                  <CircularProgress color='blue.500' position='absolute' value={expiryPercent} size={7} />}
+                  <CircularProgress
+                    trackColor='transparent'
+                    color='teal.500'
+                    position='absolute'
+                    value={expiryPercent}
+                    size={7}
+                  />}
               </Flex>
-            </Flex>
-            <Flex ml={3}>
-              <Icon
-                icon={isExpanded ? InterfaceArrowsButtonDown : InterfaceArrowsButtonRight} w={4} h={4}
-                fill='gray.300'
-              />
-            </Flex>
-          </AccordionButton>
-          <AccordionPanel p={0}>
-            <AuditInspect auditLog={auditLog} />
-          </AccordionPanel>
-        </>
-      )}
-    </AccordionItem>
+            </GridItem>
+            <GridItem align='center' colSpan={1}>
+              <Flex w='100%' h='100%' align='center' justify='flex-end'>
+                <Icon
+                  icon={isOpen ? ArrowButtonDown : ArrowButtonRight} w={4} h={4}
+                  fill='gray.300'
+                />
+              </Flex>
+            </GridItem>
+          </Grid>
+        </Flex>
+      </ClickableBox>
+      <Collapse in={isOpen}>
+        <Box mt={2}>
+          <AuditInspect auditLog={data} />
+        </Box>
+      </Collapse>
+    </Box>
   )
 }

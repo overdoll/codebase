@@ -2,48 +2,37 @@
  * @flow
  */
 import type { Node } from 'react'
-import {
-  Flex,
-  Heading,
-  Stack,
-  useDisclosure,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Text,
-  Collapse,
-  Button as ChakraButton
-} from '@chakra-ui/react'
+import { Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
-import InfoTip from '../../../../../components/InfoTip/InfoTip'
+import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
+import Button from '@//:modules/form/Button'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 const UsernameQueryGQL = graphql`
-    query UsernamesQuery($first: Int) {
-        viewer {
-            ...UsernamesSettingsFragment
-        }
+  query UsernamesQuery($first: Int) {
+    viewer {
+      ...UsernamesSettingsFragment
     }
+  }
 `
 
 const UsernameFragmentGQL = graphql`
-    fragment UsernamesSettingsFragment on Account {
-        username
-        usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
-            __id
-            edges {
-                node {
-                    username
-                }
-            }
+  fragment UsernamesSettingsFragment on Account {
+    username
+    usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
+      __id
+      edges {
+        node {
+          username
         }
+      }
     }
+  }
 `
 
 type Props = {
@@ -60,53 +49,53 @@ export default function Usernames (props: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen: isFormOpen, onToggle: onToggleForm } = useDisclosure()
+
+  const { isOpen: isAliasesOpen, onToggle: onToggleAliases } = useDisclosure()
 
   const usernamesConnectionID = data?.usernames?.__id
 
   return (
     <>
-      <Stack spacing={3}>
-        <Flex direction='column'>
-          <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
-          <Flex align='center' direction='row' justify='space-between'>
-            <Heading size='md' color='primary.500'>{data?.username}</Heading>
-            <ChakraButton onClick={onToggle} size='sm'>{t('profile.username.current.change')}</ChakraButton>
+      <Stack spacing={2}>
+        <SmallBackgroundBox>
+          <Flex justify='center'>
+            <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
+            {data?.usernames.edges.length > 0 &&
+              <>
+                <Spacer />
+                <Button
+                  fontFamily='body'
+                  fontSize='sm'
+                  color='gray.100'
+                  variant='link'
+                  onClick={onToggleAliases}
+                >
+                  {t('profile.username.previous.title', { count: data.usernames.edges.length })}
+                </Button>
+              </>}
           </Flex>
-          <Collapse in={isOpen} animateOpacity>
-            <Flex mt={3}>
-              <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+        </SmallBackgroundBox>
+        <Collapse in={isAliasesOpen} animateOpacity>
+          <SmallBackgroundBox>
+            <Flex>
+              <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
             </Flex>
-          </Collapse>
-        </Flex>
-        {data?.usernames.edges.length > 0 &&
-          <Flex direction='column'>
-            <Accordion allowToggle>
-              <AccordionItem border='none'>
-                <AccordionButton pl={0} pr={0} borderRadius={5} justify='space-between'>
-                  <Flex w='100%'>
-                    <Heading
-                      size='sm'
-                      color='gray.100'
-                    >{t('profile.username.previous.title')} ({data.usernames.edges.length})
-                    </Heading>
-                  </Flex>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pl={0} pr={0}>
-                  <Flex mb={1}>
-                    <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
-                    <InfoTip
-                      text={t('profile.username.previous.tooltip.hint')}
-                    />
-                  </Flex>
-                  {data.usernames.edges.map((item, index) =>
-                    <Text key={index} color='gray.200'>{item.node.username}</Text>
-                  )}
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Flex>}
+            {data.usernames.edges.map((item, index) =>
+              <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
+            )}
+          </SmallBackgroundBox>
+        </Collapse>
+        <Button
+          variant='solid' colorScheme='gray' onClick={onToggleForm}
+          size='sm'
+        >{t('profile.username.current.change')}
+        </Button>
+        <Collapse in={isFormOpen} animateOpacity>
+          <Flex>
+            <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+          </Flex>
+        </Collapse>
       </Stack>
     </>
   )

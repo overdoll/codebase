@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 4736793e2ddb5a843128c385c65e7c87
+ * @relayHash f9be5875e86fa71d29040ea7a5daa5bd
  */
 
 /* eslint-disable */
@@ -9,9 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { EmailsSettingsFragment$ref } from "./EmailsSettingsFragment.graphql";
-export type EmailsQueryVariables = {|
-  first?: ?number
-|};
+export type EmailsQueryVariables = {||};
 export type EmailsQueryResponse = {|
   +viewer: ?{|
     +$fragmentRefs: EmailsSettingsFragment$ref
@@ -24,9 +22,7 @@ export type EmailsQuery = {|
 
 
 /*
-query EmailsQuery(
-  $first: Int
-) {
+query EmailsQuery {
   viewer {
     ...EmailsSettingsFragment
     id
@@ -46,7 +42,7 @@ fragment EmailCardFragment on AccountEmail {
 }
 
 fragment EmailsSettingsFragment on Account {
-  emails(first: $first) {
+  emails(first: 3) {
     edges {
       node {
         ...EmailCardFragment
@@ -60,6 +56,7 @@ fragment EmailsSettingsFragment on Account {
       hasNextPage
     }
   }
+  id
 }
 
 fragment MakePrimaryFragment on AccountEmail {
@@ -71,19 +68,12 @@ fragment MakePrimaryFragment on AccountEmail {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "first"
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
+    "kind": "Literal",
     "name": "first",
-    "variableName": "first"
+    "value": 3
   }
 ],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -92,7 +82,7 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "EmailsQuery",
@@ -119,7 +109,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
     "name": "EmailsQuery",
     "selections": [
@@ -133,7 +123,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
             "name": "emails",
@@ -155,7 +145,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -228,25 +218,25 @@ return {
                 ]
               }
             ],
-            "storageKey": null
+            "storageKey": "emails(first:3)"
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "EmailsSettingsFragment_emails",
             "kind": "LinkedHandle",
             "name": "emails"
           },
-          (v2/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "4736793e2ddb5a843128c385c65e7c87",
+    "id": "f9be5875e86fa71d29040ea7a5daa5bd",
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",
@@ -255,5 +245,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '95e63a9269080eacad1ecc6fdafe28c3';
+(node: any).hash = '79d7c5220cb84bef2977b5f3d3fd23a8';
 module.exports = node;

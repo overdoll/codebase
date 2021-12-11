@@ -5,13 +5,20 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
-import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
-import LoginKeys
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
-import ContentBrushPen
-  from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
+import {
+  BirdHouse,
+  CogDouble,
+  ContentBookEdit,
+  ContentBrushPen,
+  ContentPens,
+  FileMultiple,
+  LoginKeys,
+  SecurityShield,
+  SettingHammer,
+  SettingWrench,
+  TimeHourGlass,
+  UserHuman
+} from '../../../../assets/icons/navigation'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -68,6 +75,10 @@ const routes: Array<Route> = [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
 
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
         if (ability.can('read', 'pendingPosts')) {
           return true
         }
@@ -88,7 +99,8 @@ const routes: Array<Route> = [
             icon: LoginKeys
           },
           side: {
-            title: 'sidebar.mod.queue'
+            title: 'sidebar.mod.queue',
+            icon: FileMultiple
           }
         }
       },
@@ -96,14 +108,90 @@ const routes: Array<Route> = [
         path: '/moderation/history',
         navigation: {
           side: {
-            title: 'sidebar.mod.history'
+            title: 'sidebar.mod.history',
+            icon: TimeHourGlass
           }
         }
       }
     ]
   },
   {
-    path: '/upload',
+    path: '/configure/create_post',
+    navigation: {
+      top: {
+        title: 'nav.create_post',
+        icon: ContentBrushPen
+      }
+    },
+    middleware: [
+      ({ environment }) => {
+        const ability = getAbilityFromUser(environment)
+
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
+        if (ability.can('manage', 'posting')) {
+          return true
+        }
+        return false
+      }
+    ]
+  },
+  {
+    path: '/manage',
+    middleware: [
+      ({ environment }) => {
+        const ability = getAbilityFromUser(environment)
+
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
+        if (ability.can('manage', 'posting')) {
+          return true
+        }
+        return false
+      }
+    ],
+    navigation: {
+      side: {
+        title: 'sidebar.manage.title'
+      }
+    },
+    routes: [
+      {
+        path: '/manage/my_posts',
+        navigation: {
+          side: {
+            title: 'sidebar.manage.my_posts',
+            icon: ContentBookEdit
+          },
+          menu: {
+            title: 'menu.manage',
+            icon: ContentPens
+          }
+        }
+      },
+      {
+        path: '/manage/brands',
+        navigation: {
+          side: {
+            title: 'sidebar.manage.brands',
+            icon: SettingHammer
+          }
+        }
+      }
+    ]
+  },
+  {
+    path: '/settings',
+    navigation: {
+      side: {
+        title: 'sidebar.settings.title',
+        icon: LoginKeys
+      }
+    },
     middleware: [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
@@ -111,33 +199,21 @@ const routes: Array<Route> = [
         if (ability.can('manage', 'account')) {
           return true
         }
+
         return false
       }
     ],
-    navigation: {
-      top: {
-        title: 'nav.upload',
-        icon: ContentBrushPen
-      }
-    }
-  },
-  {
-    path: '/settings',
-    navigation: {
-      side: {
-        title: 'sidebar.settings.title'
-      }
-    },
     routes: [
       {
         path: '/settings/profile',
         navigation: {
           side: {
-            title: 'sidebar.settings.profile'
+            title: 'sidebar.settings.profile',
+            icon: UserHuman
           },
           menu: {
             title: 'menu.settings',
-            icon: InterfaceSettingCog
+            icon: CogDouble
           }
         }
       },
@@ -145,7 +221,8 @@ const routes: Array<Route> = [
         path: '/settings/security',
         navigation: {
           side: {
-            title: 'sidebar.settings.security'
+            title: 'sidebar.settings.security',
+            icon: SecurityShield
           }
         }
       },
@@ -153,7 +230,8 @@ const routes: Array<Route> = [
         path: '/settings/moderation',
         navigation: {
           side: {
-            title: 'sidebar.settings.moderation'
+            title: 'sidebar.settings.moderation',
+            icon: SettingWrench
           }
         },
         middleware: [

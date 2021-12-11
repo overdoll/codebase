@@ -28,6 +28,7 @@ const JoinTokenStatus = graphql`
       ...RegisterFragment
       ...MultiFactorFragment
       ...GrantFragment
+      ...TotpAuthenticationFragment
     }
   }
 `

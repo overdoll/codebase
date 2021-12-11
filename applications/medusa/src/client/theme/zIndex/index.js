@@ -4,6 +4,7 @@ const zIndices = {
   base: 0,
   sidebar: 9,
   docked: 10,
+  scrollbar: 900,
   dropdown: 1000,
   sticky: 1100,
   banner: 1200,

@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import { useQueryLoader } from 'react-relay/hooks'
-import Emails from './Emails/Emails'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
-import { Suspense } from 'react'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import EmailsQuery from '@//:artifacts/EmailsQuery.graphql'
-import type { EmailsQuery as EmailsQueryType } from '@//:artifacts/EmailsQuery.graphql'
-import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { useQueryLoader } from 'react-relay/hooks';
+import Emails from './Emails/Emails';
+import { useTranslation } from 'react-i18next';
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack';
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback';
+import { Suspense } from 'react';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import type { EmailsQuery as EmailsQueryType } from '@//:artifacts/EmailsQuery.graphql';
+import EmailsQuery from '@//:artifacts/EmailsQuery.graphql';
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
 
 type Props = {
   query: PreloadedQueryInner<EmailsQueryType>,

@@ -7,25 +7,23 @@ import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
 import { useTranslation } from 'react-i18next'
+import PostBrand from '../../../../../components/Posts/PostBrand/PostBrand'
 
 type Props = {
-  contributor: PostHeaderFragment$key
+  query: PostHeaderFragment$key
 }
 
 const ContributorFragmentGQL = graphql`
   fragment PostHeaderFragment on Post {
-    contributor {
-      username
-      avatar
-    }
     reassignmentAt
+    ...PostBrandFragment
   }
 `
 
-export default function PostHeader (props: Props): Node {
+export default function PostHeader ({ query }: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const data = useFragment(ContributorFragmentGQL, props.contributor)
+  const data = useFragment(ContributorFragmentGQL, query)
 
   // Get difference in hours so that the moderator can see the reassignment deadline
   const getHourDifference = (date) => {
@@ -55,10 +53,7 @@ export default function PostHeader (props: Props): Node {
 
   return (
     <Flex align='center' w='100%' justify='space-between'>
-      <Flex align='center'>
-        <Avatar src={data?.contributor.avatar} w={10} h={10} mr={2} borderRadius='25%' />
-        <Text color='gray.100' fontWeight='medium' size='md'>{data?.contributor.username}</Text>
-      </Flex>
+      <PostBrand query={data} />
       <Tooltip label={t('queue.post.reassignment')}>
         <Flex align='center'>
           <CircularProgress

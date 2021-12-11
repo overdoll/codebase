@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import { useTranslation } from 'react-i18next'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
-import { Suspense } from 'react'
-import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
-import { useQueryLoader } from 'react-relay/hooks'
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { useQueryLoader } from 'react-relay/hooks';
+import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@//:artifacts/MultiFactorSettingsQuery.graphql';
+import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql';
+import { useTranslation } from 'react-i18next';
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback';
+import { Suspense } from 'react';
+import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings';
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQueryType>,

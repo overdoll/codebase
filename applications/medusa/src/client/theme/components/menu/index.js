@@ -5,7 +5,7 @@ const parts = ['item', 'command', 'list', 'button', 'groupTitle', 'divider']
 function baseStyleList (props) {
   return {
     bg: mode('#fff', 'gray.800')(props),
-    boxShadow: mode('sm', 'dark-lg')(props),
+    boxShadow: mode('sm', 'lg')(props),
     color: 'inherit',
     minW: '4xs',
     py: '2',
@@ -19,6 +19,7 @@ function baseStyleItem (props) {
   return {
     py: '0.4rem',
     px: '0.8rem',
+    letterSpacing: 'wide',
     transition: 'background 50ms ease-in 0s',
     fontWeight: 'semibold',
     _focus: {

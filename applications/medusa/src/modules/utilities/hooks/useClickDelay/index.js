@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 type Props = {
   storageVariableName: string,

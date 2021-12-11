@@ -7,14 +7,17 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type PostContentFragment$ref: FragmentReference;
 declare export opaque type PostContentFragment$fragmentType: PostContentFragment$ref;
 export type PostContentFragment = {|
   +content: $ReadOnlyArray<{|
+    +type: ResourceType,
     +urls: $ReadOnlyArray<{|
-      +url: any
-    |}>
+      +url: any,
+      +mimeType: string,
+    |}>,
   |}>,
   +$refType: PostContentFragment$ref,
 |};
@@ -43,6 +46,13 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "ResourceUrl",
           "kind": "LinkedField",
           "name": "urls",
@@ -53,6 +63,13 @@ const node: ReaderFragment = {
               "args": null,
               "kind": "ScalarField",
               "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mimeType",
               "storageKey": null
             }
           ],
@@ -66,5 +83,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'a5bd43bd0350c63b9575f2dd95c3244a';
+(node: any).hash = '8ed950c515d0415c132538902e16ffbb';
 module.exports = node;
