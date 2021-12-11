@@ -3,12 +3,12 @@
  */
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
-import Totp from './Totp/Totp'
-import RecoveryCode from './RecoveryCode/RecoveryCode'
-import { Alert, AlertDescription, AlertIcon, Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react'
-import { PageWrapper } from '../../../components/PageLayout'
-import Button from '@//:modules/form/Button'
+import TotpAuthentication from './TotpAuthentication/TotpAuthentication'
 import { Helmet } from 'react-helmet-async'
+import { PageWrapper } from '@//:modules/content/PageLayout'
+import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import Button from '@//:modules/form/Button'
+import RecoveryCode from './RecoveryCode/RecoveryCode'
 import { useTranslation } from 'react-i18next'
 
 const MultiFactorFragmentGQL = graphql`
@@ -22,38 +22,37 @@ const MultiFactorFragmentGQL = graphql`
 `
 
 type Props = {
-  queryRef: MultiFactorFragment$key,
+  query: MultiFactorFragment$key,
 }
 
-export default function MultiFactor ({ queryRef }: Props): Node {
-  const data = useFragment(MultiFactorFragmentGQL, queryRef)
-
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
+export default function MultiFactor ({ query }: Props): Node {
+  const data = useFragment(MultiFactorFragmentGQL, query)
 
   const [t] = useTranslation('auth')
 
+  const { isOpen, onToggle } = useDisclosure()
+
   return (
     <>
-      <Helmet title='mfa authentication' />
+      <Helmet title='multifactor authentication' />
       <PageWrapper>
-        {data.multiFactor.totp && <Totp queryRef={queryRef} />}
-        <Flex justify='center'>
-          <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
-        </Flex>
-        <Collapse animateOpacity in={isOpen}>
-          <Box mt={5}>
-            <Alert mb={3} status='info'>
-              <AlertIcon />
-              <AlertDescription align='center' lineHeight={5} fontSize='sm'>
-                {t('multi_factor.recovery.alert.description')}
-              </AlertDescription>
-            </Alert>
-            <RecoveryCode queryRef={queryRef} />
-          </Box>
-        </Collapse>
+        <Stack spacing={3}>
+          {data.multiFactor.totp && <TotpAuthentication query={query} />}
+          <Flex justify='center'>
+            <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
+          </Flex>
+          <Collapse animateOpacity in={isOpen}>
+            <Stack spacing={3}>
+              <Alert status='info'>
+                <AlertIcon />
+                <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+                  {t('multi_factor.recovery.alert.description')}
+                </AlertDescription>
+              </Alert>
+              <RecoveryCode />
+            </Stack>
+          </Collapse>
+        </Stack>
       </PageWrapper>
     </>
   )

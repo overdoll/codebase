@@ -4,11 +4,10 @@
 
 import {
   Flex,
-  Text,
-  IconButton, Box
+  Text, Box, Stack, Skeleton
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { useState } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import { usePaginationFragment, graphql } from 'react-relay'
 import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
@@ -16,15 +15,13 @@ import type { PostsFragment$key } from '@//:artifacts/PostsFragment.graphql'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
-
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import InterfaceArrowsButtonLeft
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
+import { ArrowButtonRight, ArrowButtonLeft } from '../../../../../assets/icons/navigation'
 import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
 import { usePreloadedQuery } from 'react-relay/hooks'
+import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import IconButton from '@//:modules/form/IconButton'
 
 type Props = {
   query: PreloadedQueryInner<PostsQuery>,
@@ -78,8 +75,6 @@ export default function Posts (props: Props): Node {
 
   const [t] = useTranslation('moderation')
 
-  // TODO make pagination more dynamic/flexible because it will probably break when a node is deleted
-
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const currentPost = data?.moderatorPostsQueue.edges[currentIndex]?.node
@@ -107,81 +102,104 @@ export default function Posts (props: Props): Node {
     }
   }
 
-  // If there are no posts in queue, return a placeholder that also shows if they are in queue
-  if (data.moderatorPostsQueue.edges.length < 1) {
+  // If a user approves a post and there are no more in the store but
+  // they are able to load more, we go to next page for them
+  // automatically so the queue can continue
+  useEffect(() => {
+    if (hasNext && data?.moderatorPostsQueue.edges.length < 1) {
+      nextPage()
+    } else if (!currentPost && data.moderatorPostsQueue.edges.length > 0) {
+      previousPage()
+    }
+  }, [data?.moderatorPostsQueue.edges])
+
+  // Make sure we show a placeholder for the above logic
+  // so we can have a loading state
+  if ((data.moderatorPostsQueue.edges.length < 1 && hasNext) || (!currentPost && data.moderatorPostsQueue.edges.length > 0)) {
     return (
-      <Flex
-        flexDirection='column'
-        alignItems='center'
-        justifyContent='center'
-        textAlign='center'
-        height='500px'
-        mt={4}
-        p={12}
-        bg='gray.800'
-        borderRadius={10}
-      >
-        <NoPostsPlaceholder moderator={data} />
-      </Flex>
+      <LargeBackgroundBox>
+        <Skeleton
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          height='500px'
+        />
+      </LargeBackgroundBox>
     )
   }
 
-  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:m aaa')
+  // If there are no posts in queue, return a placeholder that also shows if they are in queue
+  if (data.moderatorPostsQueue.edges.length < 1) {
+    return (
+      <LargeBackgroundBox>
+        <Flex
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          height='500px'
+        >
+          <NoPostsPlaceholder moderator={data} />
+        </Flex>
+      </LargeBackgroundBox>
+    )
+  }
 
-  // Otherwise, show a post queue if the user has one
+  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:mm aaa')
+
+  // Show the posts queue for the user
   return (
-    <>
-      <Flex mt={2}>
+    <Stack spacing={2}>
+      <Flex>
         {currentIndex !== 0 &&
           <IconButton
-            icon={<Icon icon={InterfaceArrowsButtonLeft} w='fill' h='fill' fill='gray.300' />}
-            variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-            h={12}
+            icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.300' />}
+            variant='solid'
             mr={2}
+            size='lg'
             bg='gray.800'
+            borderRadius='base'
             onClick={previousPage}
           />}
-        <Flex
-          borderRadius={5} h={12} pl={2} pr={2} pt={1} pb={1} w='100%' bg='gray.800'
-          justify='center'
-          align='center'
-          position='relative'
-        >
+        <SmallBackgroundBox align='center' w='100%'>
           <Text
-            color='gray.300' fontWeight='medium'
-            size='md'
+            color='gray.300'
+            fontSize='md'
           >{t('queue.post.title', { date: formattedDate })}
           </Text>
-        </Flex>
+        </SmallBackgroundBox>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&
           <IconButton
             ml={2}
-            icon={<Icon icon={InterfaceArrowsButtonRight} w='fill' h='fill' fill='gray.300' />}
-            variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-            h={12}
+            icon={<Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.300' />}
+            variant='solid'
             bg='gray.800'
+            size='lg'
+            borderRadius='base'
             isLoading={isLoadingNext}
             onClick={nextPage}
           />}
       </Flex>
-      <Flex
-        mt={2}
-        bg='gray.800'
-        borderRadius={10}
-        position='relative'
-        direction='column'
-      >
-        <Flex direction='column' p={6}>
-          <PostHeader contributor={currentPost} />
-          <PostPreview post={currentPost} />
-        </Flex>
-        <ModeratePost connectionID={postsConnection} infractions={queryData} postID={currentPost} />
-        <Box pl={1} pr={1}>
-          <Text fontSize='xs' color='gray.500'>
-            {currentPost.id}
-          </Text>
-        </Box>
-      </Flex>
-    </>
+      {data?.moderatorPostsQueue.edges.map((item, index) => {
+        if (index !== currentIndex) {
+          return <Fragment key={index} />
+        }
+        return (
+          <LargeBackgroundBox
+            key={index}
+            position='relative'
+          >
+            <Stack spacing={2}>
+              <PostHeader query={item.node} />
+              <PostPreview query={item.node} />
+            </Stack>
+            <Flex justify='flex-end' mt={4}>
+              <ModeratePost connectionID={postsConnection} infractions={queryData} postID={item.node} />
+            </Flex>
+          </LargeBackgroundBox>
+        )
+      })}
+    </Stack>
   )
 }

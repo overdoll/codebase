@@ -1,18 +1,16 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql'
-import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql'
-
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceSettingWrench
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-wrench.svg'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql';
+import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql';
+import { useToast } from '@chakra-ui/react';
+import { SmallMenuItem } from '@//:modules/content/PageLayout';
+import { SettingWrench } from '../../../../../../../../assets/icons/navigation';
 
 type Props = {
-  emails: MakePrimaryFragment$key
+  query: MakePrimaryFragment$key
 }
 
 const MakePrimaryFragmentGQL = graphql`
@@ -25,30 +23,24 @@ const MakePrimaryFragmentGQL = graphql`
 const MakeEmailPrimaryMutationGQL = graphql`
   mutation MakePrimaryOptionMutation($input: UpdateAccountEmailStatusToPrimaryInput!) {
     updateAccountEmailStatusToPrimary(input: $input) {
+      primaryAccountEmail {
+        id
+        email
+        status
+      }
       updatedAccountEmail {
         id
-        status
         email
-        account {
-          emails {
-            edges {
-              node {
-                id
-                email
-                status
-              }
-            }
-          }
-        }
+        status
       }
     }
   }
 `
 
-export default function MakePrimary ({ emails }: Props): Node {
+export default function MakePrimary ({ query }: Props): Node {
   const [t] = useTranslation('settings')
 
-  const data = useFragment(MakePrimaryFragmentGQL, emails)
+  const data = useFragment(MakePrimaryFragmentGQL, query)
 
   const [makePrimary, isMakingPrimary] = useMutation<MakePrimaryOptionMutation>(
     MakeEmailPrimaryMutationGQL
@@ -82,11 +74,11 @@ export default function MakePrimary ({ emails }: Props): Node {
   }
 
   return (
-    <MenuItem
-      justify='center' isDisabled={isMakingPrimary} onClick={onMakePrimary}
-    >
-      <Icon pointerEvents='none' icon={InterfaceSettingWrench} fill='gray.100' w={4} h={4} mr={2} />
-      <Text pointerEvents='none' color='gray.100'>{t('profile.email.options.set_primary.button')}</Text>
-    </MenuItem>
+    <SmallMenuItem
+      icon={SettingWrench}
+      text={t('profile.email.options.set_primary.button')}
+      isDisabled={isMakingPrimary}
+      onClick={onMakePrimary}
+    />
   )
 }

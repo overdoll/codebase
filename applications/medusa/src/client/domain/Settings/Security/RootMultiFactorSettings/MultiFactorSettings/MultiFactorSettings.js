@@ -1,29 +1,29 @@
 /**
  * @flow
  */
-import { Stack } from '@chakra-ui/react'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings'
-import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor'
+import { Stack } from '@chakra-ui/react';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql';
+import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings';
+import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings';
+import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor';
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQuery>,
 }
 
 const MultiFactorQueryGQL = graphql`
-    query MultiFactorSettingsQuery {
-        viewer {
-            multiFactorSettings {
-                multiFactorTotpConfigured
-                ...DisableMultiFactorFragment
-                ...MultiFactorTotpSettingsFragment
-                ...RecoveryCodesSettingsFragment
-            }
-        }
+  query MultiFactorSettingsQuery {
+    viewer {
+      multiFactorSettings {
+        multiFactorTotpConfigured
+        ...DisableMultiFactorFragment
+        ...MultiFactorTotpSettingsFragment
+        ...RecoveryCodesSettingsFragment
+      }
     }
+  }
 `
 
 export default function MultiFactorSettings (props: Props): Node {
@@ -38,13 +38,11 @@ export default function MultiFactorSettings (props: Props): Node {
   }
 
   return (
-    <>
-      <Stack spacing={2}>
-        <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
-        <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
-        {data?.viewer?.multiFactorSettings.multiFactorTotpConfigured &&
-          <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
-      </Stack>
-    </>
+    <Stack spacing={2}>
+      <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
+      <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
+      {data?.viewer?.multiFactorSettings.multiFactorTotpConfigured &&
+        <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
+    </Stack>
   )
 }

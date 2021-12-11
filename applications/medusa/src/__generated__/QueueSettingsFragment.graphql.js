@@ -12,7 +12,8 @@ declare export opaque type QueueSettingsFragment$ref: FragmentReference;
 declare export opaque type QueueSettingsFragment$fragmentType: QueueSettingsFragment$ref;
 export type QueueSettingsFragment = {|
   +viewer: ?{|
-    +__typename: string
+    +__typename: string,
+    +id: string,
   |},
   +$refType: QueueSettingsFragment$ref,
 |};
@@ -44,6 +45,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "__typename",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -53,5 +61,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'ae2a17311769027df62fcefe59c2fa34';
+(node: any).hash = '2ed1838e8f0b2203db4d3f5e91e038c1';
 module.exports = node;

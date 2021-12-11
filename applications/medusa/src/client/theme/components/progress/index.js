@@ -31,12 +31,14 @@ const baseStyleLabel = {
   lineHeight: '1',
   fontSize: '0.25em',
   fontWeight: 'bold',
-  color: 'white'
+  fontFamily: 'heading',
+  color: 'gray.300'
 }
 
 function baseStyleTrack (props) {
   return {
-    bg: mode('gray.100', 'whiteAlpha.300')(props)
+    borderRadius: 'md',
+    bg: mode('gray.300', 'gray.700')(props)
   }
 }
 
@@ -71,7 +73,7 @@ const sizes = {
 
 const defaultProps = {
   size: 'md',
-  colorScheme: 'blue'
+  colorScheme: 'teal'
 }
 
 export default {

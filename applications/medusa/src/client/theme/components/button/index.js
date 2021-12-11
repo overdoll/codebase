@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
+import { getColor, mode, transparentize } from '@chakra-ui/theme-tools';
 
 const baseStyle = {
   lineHeight: '1.2',
@@ -54,17 +54,17 @@ function variantSolid (props) {
 
   return {
     fontWeight: 'extrabold',
-    bg: mode(bg, 'gray.00')(props),
-    color: mode(color, `${c}.500`)(props),
+    bg: mode(color, `${c}.400`)(props),
+    color: mode(color, `${c}.900`)(props),
     _hover: {
-      bg: mode(bg, transparentize('gray.00', 0.9)(theme))(props),
+      bg: mode(bg, transparentize(`${c}.400`, 0.9)(theme))(props),
       _disabled: {
-        bg: mode(bg, `${c}.100`)(props)
+        bg: mode(bg, `${c}.400`)(props)
       }
     },
     _active: {
-      bg: mode(bg, 'gray.00')(props),
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.500`, 1)(theme))}`
+      bg: mode(color, `${c}.400`)(props),
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(`${c}.600`, 1)(theme))}`
     }
   }
 }
@@ -74,11 +74,16 @@ function variantGhost (props) {
 
   if (c === 'gray') {
     return {
+      bg: 'transparent',
       color: mode('inherit', 'gray.100')(props),
       _hover: {
-        bg: mode('gray.200', 'gray.600')(props)
+        bg: 'transparent',
+        color: mode('gray.200', 'gray.100')(props)
       },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
+      _active: {
+        bg: 'transparent',
+        color: mode('gray.300', 'gray.100')(props)
+      }
     }
   }
 
@@ -86,12 +91,10 @@ function variantGhost (props) {
     color: mode(`${c}.600`, `${c}.300`)(props),
     bg: 'transparent',
     _hover: {
-      color: mode(`${c}.50`, `${c}.200`)(props),
-      bg: mode('gray.200', 'gray.600')(props)
+      color: mode(`${c}.50`, `${c}.200`)(props)
     },
     _active: {
-      color: mode(`${c}.50`, `${c}.500`)(props),
-      bg: mode('gray.200', 'gray.600')(props)
+      color: mode(`${c}.50`, `${c}.500`)(props)
     }
   }
 }
@@ -178,6 +181,7 @@ const accessibleColorMap: { [key: string]: AccessibleColor } = {
 
 function variantLink (props) {
   const { colorScheme: c } = props
+  const { theme } = props
 
   if (c === 'gray') {
     return {
@@ -185,6 +189,8 @@ function variantLink (props) {
       height: 'auto',
       lineHeight: 'normal',
       verticalAlign: 'baseline',
+      fontFamily: 'body',
+      fontWeight: 'normal',
       color: mode(`${c}.500`, 'gray.100')(props),
       _hover: {
         textDecoration: 'underline',
@@ -193,6 +199,7 @@ function variantLink (props) {
         }
       },
       _active: {
+        boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
         color: mode(`${c}.700`, 'gray.200')(props)
       }
     }
@@ -203,15 +210,17 @@ function variantLink (props) {
     height: 'auto',
     lineHeight: 'normal',
     verticalAlign: 'baseline',
-    color: mode(`${c}.500`, `${c}.100`)(props),
+    fontFamily: 'body',
+    fontWeight: 'normal',
+    color: mode(`${c}.500`, `${c}.400`)(props),
     _hover: {
-      textDecoration: 'underline',
       _disabled: {
         textDecoration: 'none'
       }
     },
     _active: {
-      color: mode(`${c}.700`, `${c}.500`)(props)
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
+      color: mode(`${c}.700`, `${c}.600`)(props)
     }
   }
 }
@@ -229,7 +238,7 @@ function variantPanel (props) {
       m: 0,
       p: 3,
       _hover: {
-        bg: mode('gray.200', 'gray.800')(props),
+        bg: mode('gray.200', 'gray.700')(props),
         _disabled: {
           bg
         }
@@ -293,14 +302,13 @@ const sizes = {
     fontSize: '2xl',
     fontWeight: 'extrabold',
     px: 6,
-    borderRadius: 15
-
+    borderRadius: '2xl'
   },
   lg: {
     h: 12,
     minW: 12,
     fontSize: 'lg',
-    borderRadius: 10,
+    borderRadius: 'lg',
     px: 6
   },
   md: {
@@ -308,14 +316,14 @@ const sizes = {
     minW: 10,
     fontSize: 'md',
     px: 5,
-    borderRadius: 7
+    borderRadius: 'semi'
   },
   sm: {
     h: 8,
     minW: 8,
     fontSize: 'sm',
     px: 3,
-    borderRadius: 5,
+    borderRadius: 'base',
     fontWeight: 'normal'
   },
   xs: {
@@ -323,7 +331,7 @@ const sizes = {
     minW: 6,
     fontSize: 'xs',
     px: 2,
-    borderRadius: 5,
+    borderRadius: 'sm',
     fontWeight: 'normal'
   }
 }

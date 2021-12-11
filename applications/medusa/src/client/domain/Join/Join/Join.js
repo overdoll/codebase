@@ -7,10 +7,9 @@ import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chak
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
-import { PageWrapper } from '../../../components/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 
 type Props = {
@@ -102,10 +101,10 @@ export default function Join ({
       <Helmet title='join' />
       <PageWrapper>
         <Icon
-          icon={SignBadgeCircle}
+          icon={BadgeCircle}
           w={100}
           h={100}
-          color='primary.500'
+          fill='primary.500'
           ml='auto'
           mr='auto'
           mb={8}

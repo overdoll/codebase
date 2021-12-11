@@ -6,7 +6,8 @@ import { Suspense, useContext, useEffect, useState } from 'react'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
-import { chakra, Progress, Fade } from '@chakra-ui/react'
+import { chakra, Progress, Slide } from '@chakra-ui/react'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -50,7 +51,7 @@ export default function RouterRenderer (): Node {
     // from the hook deps to avoid recomputing the effect after each change
     // triggered by the effect itself.
     // eslint-disable-next-line
-  }, [router])
+  }, [router]);
 
   // The current route value is an array of matching entries - one entry per
   // level of routes (to allow nested routes). We have to map each one to a
@@ -104,9 +105,9 @@ export default function RouterRenderer (): Node {
     <ErrorBoundary>
       <Suspense fallback={
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
-          <Fade in>
-            <Progress bg='transparent' colorScheme='primary' size='xs' isIndeterminate />
-          </Fade>
+          <Slide direction='top'>
+            <Progress h='3px' borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
+          </Slide>
         </chakra.div>
       }
       >

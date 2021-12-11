@@ -9,7 +9,8 @@
         "change": "Change Username"
       },
       "previous": {
-        "title": "Previous Usernames",
+        "title": "{{count}} alias",
+        "title_plural": "{{count}} aliases",
         "tooltip": {
           "title": "Your old usernames are replaced",
           "hint": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
@@ -86,7 +87,8 @@
           "success": "A confirmation email was sent to {{email}}. Check your inbox/spam!",
           "error": "There was an error adding the email"
         }
-      }
+      },
+      "load": "Load More"
     }
   },
   "moderation": {
@@ -140,6 +142,20 @@
             "error": "There was an error disabling two-factor authentication"
           }
         }
+      }
+    },
+    "sessions": {
+      "title": "Sessions",
+      "description": "Here is a list of devices that have logged into your account. You can click on one to view the details.",
+      "accessed": "Last login on {{date}}",
+      "show": "Show IP",
+      "current": "Your Current Session",
+      "load": "Load More",
+      "revoke": "Revoke",
+      "on": "{{browser}} on {{device}}",
+      "query": {
+        "success": "Session revoked successfully",
+        "error": "There was an error revoking the session"
       }
     }
   }

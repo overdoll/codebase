@@ -1,30 +1,18 @@
 /**
  * @flow
  */
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
-import {
-  FormControl,
-  FormLabel,
-  Flex,
-  Input,
-  InputGroup,
-  InputRightElement,
-  FormErrorMessage, useToast
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { useForm } from 'react-hook-form'
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import { joiResolver } from '@hookform/resolvers/joi'
-import type { Node } from 'react'
-import Button from '@//:modules/form/Button'
-import { graphql, useMutation } from 'react-relay/hooks'
-import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
-import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
+import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import type { Node } from 'react';
+import Button from '@//:modules/form/Button';
+import { graphql, useMutation } from 'react-relay/hooks';
+import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql';
+import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql';
+import { useUsernameFormSchema } from '@//:modules/constants/schemas';
+import StyledInput from '@//:modules/form/StyledInput/StyledInput';
 
 type UsernameValues = {
   username: string,
@@ -35,34 +23,29 @@ type Props = {
 }
 
 const UsernameMutationGQL = graphql`
-    mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
-        updateAccountUsernameAndRetainPrevious(input: $input) {
-            validation
-            accountUsername  {
-                id
-                username
-                account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
-                    id
-                    username
-                }
-            }
+  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
+    updateAccountUsernameAndRetainPrevious(input: $input) {
+      validation
+      accountUsername  {
+        id
+        username
+        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
+          id
+          username
         }
+      }
     }
+  }
 `
-
-// TODO create a username validator so all usernames can't be whatever you want them to be
-
-// TODO look up custom messages for empty and invalid form errors
-
-// TODO no native browser form configuration
-const schema = Joi.object({
-  username: usernameSchema
-})
 
 export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): Node {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
+
+  const schema = Joi.object({
+    username: useUsernameFormSchema()
+  })
 
   const [t] = useTranslation('settings')
 
@@ -116,23 +99,14 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
         id='username'
       >
         <FormLabel>{t('profile.username.modal.header')}</FormLabel>
-        <Flex justify='center'>
-          <InputGroup mr={2} size='sm'>
-            <Input
-              {...register('username')}
-              variant='outline'
-              placeholder={t('profile.username.modal.header')}
-            />
-            {(errors.username || success) && (
-              <InputRightElement mr={1}>
-                <Icon
-                  m={2}
-                  icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                  fill={success ? 'green.600' : 'orange.500'}
-                />
-              </InputRightElement>
-            )}
-          </InputGroup>
+        <HStack align='flex-start'>
+          <StyledInput
+            register={register('username')}
+            success={success}
+            error={errors.username}
+            placeholder={t('profile.username.modal.header')}
+            errorMessage={errors?.username?.message}
+          />
           <Button
             size='sm'
             variant='solid'
@@ -143,14 +117,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
           >
             {t('profile.username.modal.submit')}
           </Button>
-        </Flex>
-        <FormErrorMessage>
-          {errors.username && errors.username.type === 'mutation' && errors.username.message}
-          {errors.username && errors.username.type === 'string.empty' && t('profile.username.modal.form.validation.username.empty')}
-          {errors.username && errors.username.type === 'string.min' && t('profile.username.modal.form.validation.username.min')}
-          {errors.username && errors.username.type === 'string.max' && t('profile.username.modal.form.validation.username.max')}
-          {errors.username && errors.username.type === 'string.alphanum' && t('profile.username.modal.form.validation.username.alphanum')}
-        </FormErrorMessage>
+        </HStack>
       </FormControl>
     </form>
   )

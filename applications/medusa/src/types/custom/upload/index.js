@@ -1,14 +1,32 @@
 /**
  * @flow
  */
-import { UppyFile } from '@uppy/core'
-
-export type Thumbnails = {
-  [string]: string,
-};
+import { UppyFile } from '@uppy/core';
 
 export type Urls = {
-  [string]: string,
+  [string]: {
+    url: string,
+    mimeType: string,
+  },
+};
+
+export type ResourceUrl = {
+  url: string,
+  mimeType: string
+}
+
+export type Content = {
+  id: string,
+  type: string,
+  urls: Array<ResourceUrl>
+}
+
+export type Thumbnails = {
+  [string]: {
+    id: string,
+    type: string,
+    urls: Urls
+  },
 };
 
 export type Progress = {
@@ -18,24 +36,52 @@ export type Progress = {
   },
 };
 
-export type Artist = {
+export type Resource = {
   id?: string,
-  username?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
+}
+
+export type Resources = {
+  [string]: Resource
+}
+
+export type Audience = {
+  id?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
+}
+
+export type Audiences = {
+  [string]: Audience
+}
+
+export type Brand = {
+  id?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
 };
 
-export type Media = {
+export type Brands = {
+  [string]: Brand
+}
+
+export type Series = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   title: string,
-  thumbnail: ?string,
-  request?: boolean,
 };
 
 export type Character = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   name: string,
-  thumbnail: string,
-  request?: boolean,
-  media: Media,
+  series: Series
 };
 
 export type Characters = {
@@ -44,8 +90,9 @@ export type Characters = {
 
 export type Category = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   title: string,
-  thumbnail: string,
 };
 
 export type Categories = {
@@ -56,31 +103,36 @@ export type Submit = {
   review?: boolean,
 };
 
-export type Step = 'REVIEW' | 'ARRANGE' | 'FINISH' | 'TAG';
+export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT';
 
 export type Event =
   | 'thumbnails'
   | 'urls'
   | 'files'
   | 'step'
+  | 'content'
   | 'progress'
   | 'characters'
-  | 'artist'
+  | 'audience'
+  | 'brand'
   | 'categories'
   | 'submit'
   | 'cleanup'
-  | 'arrange_files';
+  | 'isInReview'
 
 export type State = {
   thumbnails: Thumbnails,
   files: Array<UppyFile>,
   urls: Urls,
   step: ?Step,
+  content: Array<Content>,
   progress: Progress,
-  artist: Artist,
+  brand: string,
+  audience: string,
   characters: Characters,
   categories: Categories,
   submit: Submit,
+  isInReview: boolean,
   cleanup: () => void,
 };
 
@@ -92,6 +144,9 @@ export type Action = {
 
   // Will remove the value if true
   remove?: boolean,
+
+  // Will remove all values if true
+  clear?: boolean
 };
 
 export type Dispatch = {

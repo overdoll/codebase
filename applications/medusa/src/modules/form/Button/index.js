@@ -5,11 +5,11 @@ import type { Node } from 'react'
 import { useEffect, useState } from 'react'
 import { Button as ChakraButton } from '@chakra-ui/react'
 
-const AnimatedButton = ChakraButton
-
 type Props = {
   loading?: boolean,
   children?: Node,
+  isDisabled?: boolean,
+  isLoading?: boolean,
   disabled?: boolean,
   type?: string,
 };
@@ -19,6 +19,8 @@ export default function Button ({
   children,
   disabled,
   type,
+  isDisabled,
+  isLoading,
   ...rest
 }: Props): Node {
   const [disableOverride, setDisableOverride] = useState(true)
@@ -30,17 +32,17 @@ export default function Button ({
   }, [])
 
   // for type=submit (forms), we show a loading state
-  const fullDisable = (disableOverride) || (disabled || loading)
-  const fullLoading = type === 'submit' ? (disableOverride || loading) : loading
+  const fullDisable = (disableOverride) || (disabled || isDisabled)
+  const fullLoading = type === 'submit' ? (disableOverride || loading || isLoading) : (loading || isLoading)
 
   return (
-    <AnimatedButton
+    <ChakraButton
       type={type}
       isDisabled={fullDisable}
       isLoading={fullLoading}
       {...rest}
     >
       {children}
-    </AnimatedButton>
+    </ChakraButton>
   )
 }

@@ -49,21 +49,24 @@ const size = {
     fontSize: 'lg',
     px: 4,
     h: 12,
-    borderRadius: 'md'
+    borderRadius: 'md',
+    fontWeight: 'semibold'
   },
 
   md: {
     fontSize: 'md',
     px: 4,
     h: 10,
-    borderRadius: 7
+    borderRadius: 'semi',
+    fontWeight: 'semibold'
   },
 
   sm: {
     fontSize: 'sm',
     px: 3,
     h: 8,
-    borderRadius: 5
+    borderRadius: 'base',
+    fontWeight: 'semibold'
   },
 
   xs: {
@@ -77,7 +80,7 @@ const size = {
 const sizes = {
   xl: {
     field: size.xl,
-    addon: size.lg
+    addon: size.xl
   },
   lg: {
     field: size.lg,
@@ -117,7 +120,7 @@ function variantOutline (props) {
     field: {
       borderWidth: determineBorderWidth(size),
       borderColor: 'gray.500',
-      bg: 'inherit',
+      bg: 'gray.900',
       _hover: {
         borderColor: mode('gray.300', 'gray.300')(props)
       },
@@ -160,10 +163,13 @@ function variantFilled (props) {
       borderStyle: 'solid',
       borderWidth: determineBorderWidth(size),
       borderColor: 'transparent',
-      bg: mode('gray.100', 'whiteAlpha.50')(props),
+      bg: mode('gray.100', 'gray.800')(props),
       _readOnly: {
         boxShadow: 'none !important',
         userSelect: 'all'
+      },
+      _hover: {
+        bg: mode('gray.100', 'gray.700')(props)
       },
       _disabled: {
         opacity: 0.4,
@@ -175,10 +181,9 @@ function variantFilled (props) {
       _focus: {
         zIndex: 1,
         borderColor: getColor(theme, fc),
-        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
         _invalid: {
           borderColor: getColor(theme, ec),
-          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+          boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
         }
       }
     },

@@ -2,24 +2,23 @@ import { createMockEnvironment } from 'relay-test-utils'
 import { render, screen } from '@testing-library/react'
 import withProviders from '@//:modules/testing/withProviders'
 
-import Sidebar from '../components/NavigationContents/Sidebar/Sidebar'
-import SidebarButton from '../components/NavigationContents/Sidebar/SidebarButton/SidebarButton'
-import SidebarGrouping from '../components/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
-import NavigationContents from '../components/NavigationContents/NavigationContents'
-import PageContents from '../components/NavigationContents/PageContents/PageContents'
-import NavigationContainer from '@//:modules/content/Navigation/components/NavigationContainer/NavigationContainer'
-import NavigationLeftBrand
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
-import NavigationCenterItems
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
-import NavigationButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
-import NavigationRightItems
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationRightItems'
-import MenuItemButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuItemButton/MenuItemButton'
+import Sidebar from '../content/NavigationContents/Sidebar/Sidebar'
+import SidebarButton from '../components/SidebarButton/SidebarButton'
+import SidebarGrouping from '../content/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
+import NavigationContents from '../content/NavigationContents/NavigationContents'
+import PageContents from '../content/NavigationContents/PageContents/PageContents'
+import NavigationBar from '@//:modules/content/Navigation/content/NavigationBar/NavigationBar'
+import NavigationBarLeft
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarLeft/NavigationBarLeft'
+import NavigationBarCenter
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationBarCenter'
+import NavigationLink
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationLink/NavigationLink'
+import NavigationBarRight
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationBarRight'
+import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton'
 import NavigationMenu
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationMenu/NavigationMenu'
 
 const routes = []
 
@@ -46,26 +45,26 @@ const SidebarComponent = () => {
 
 const NavigationComponent = () => {
   return (
-    <NavigationContainer>
-      <NavigationLeftBrand>
+    <NavigationBar>
+      <NavigationBarLeft>
         left brand
-      </NavigationLeftBrand>
-      <NavigationCenterItems>
-        <NavigationButton icon={SampleIcon} exact={false} label='navigation path' path='/' />
-      </NavigationCenterItems>
-      <NavigationRightItems>
+      </NavigationBarLeft>
+      <NavigationBarCenter>
+        <NavigationLink icon={SampleIcon} exact={false} label='navigation path' path='/' />
+      </NavigationBarCenter>
+      <NavigationBarRight>
         <>
           right items
         </>
-      </NavigationRightItems>
-    </NavigationContainer>
+      </NavigationBarRight>
+    </NavigationBar>
   )
 }
 
 const NavigationMenuComponent = () => {
   return (
     <NavigationMenu>
-      <MenuItemButton path='/' label='menu path' icon={SampleIcon} />
+      <MenuButton path='/' label='menu path' icon={SampleIcon} />
     </NavigationMenu>
   )
 }

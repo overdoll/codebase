@@ -8,7 +8,7 @@ import { useFragment, graphql } from 'react-relay'
 import type { PostCategoriesFragment$key } from '@//:artifacts/PostCategoriesFragment.graphql'
 
 type Props = {
-  categories: PostCategoriesFragment$key
+  query: PostCategoriesFragment$key
 }
 
 const PostCategoriesFragmentGQL = graphql`
@@ -19,14 +19,14 @@ const PostCategoriesFragmentGQL = graphql`
   }
 `
 
-export default function PostHeader (props: Props): Node {
-  const data = useFragment(PostCategoriesFragmentGQL, props.categories)
+export default function PostCategories ({ query }: Props): Node {
+  const data = useFragment(PostCategoriesFragmentGQL, query)
 
   return (
     <Wrap>
       {data.categories.map((item, index) =>
         <WrapItem key={index}>
-          <Tag size='lg' colorScheme='gray' borderRadius='full'>
+          <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.title}</TagLabel>
           </Tag>
         </WrapItem>

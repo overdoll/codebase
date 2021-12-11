@@ -45,7 +45,8 @@ function SuspenseImage (props: Props): Node {
   })
 
   resource.load()
-  resource.read() // suspends while the image is pending
+  // TODO commenting this out stops the infinite loop so i did it
+  // resource.read() // suspends while the image is pending
 
   return <Image src={src} ignoreFallback {...rest} />
 }

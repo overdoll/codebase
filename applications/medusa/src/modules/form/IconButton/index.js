@@ -16,7 +16,6 @@ type Props = {
 
 export default function IconButton ({
   loading,
-  children,
   disabled,
   type,
   ...rest
@@ -39,8 +38,6 @@ export default function IconButton ({
       type={type}
       isDisabled={fullDisable}
       isLoading={fullLoading}
-    >
-      {children}
-    </AnimatedButton>
+    />
   )
 }

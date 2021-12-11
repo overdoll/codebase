@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 422c803ce92d977af61493e208ea44fa
+ * @relayHash 316939c2647b97f274a36dfd4db78cbf
  */
 
 /* eslint-disable */
@@ -14,6 +14,8 @@ declare export opaque type AuditLogsFragment$fragmentType: AuditLogsFragment$ref
 export type AuditLogsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
+  from: any,
+  to: any,
   id: string,
 |};
 export type AuditLogsPaginationQueryResponse = {|
@@ -31,6 +33,8 @@ export type AuditLogsPaginationQuery = {|
 query AuditLogsPaginationQuery(
   $after: String
   $first: Int = 5
+  $from: Time!
+  $to: Time!
   $id: ID!
 ) {
   node(id: $id) {
@@ -43,15 +47,16 @@ query AuditLogsPaginationQuery(
 fragment AuditCardFragment on PostAuditLog {
   reverted
   reversibleUntil
-  contributor {
-    username
-    id
-  }
   post {
     postedAt
+    brand {
+      name
+      id
+    }
     id
   }
   action
+  ...AuditInspectFragment
 }
 
 fragment AuditInspectFragment on PostAuditLog {
@@ -67,11 +72,10 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment_2HEEH6 on Account {
-  moderatorPostAuditLogs(first: $first, after: $after, dateRange: {from: 0, to: 0}) {
+  moderatorPostAuditLogs(first: $first, after: $after, dateRange: {from: $from, to: $to}) {
     edges {
       node {
         ...AuditCardFragment
-        ...AuditInspectFragment
         id
         __typename
       }
@@ -85,9 +89,9 @@ fragment AuditLogsFragment_2HEEH6 on Account {
   id
 }
 
-fragment PostArtistFragment on Post {
-  brand {
-    name
+fragment PostAudienceFragment on Post {
+  audience {
+    title
     id
   }
 }
@@ -110,91 +114,109 @@ fragment PostCharactersFragment on Post {
   }
 }
 
-fragment PostContentFragment on Post {
+fragment PostGalleryContentFragment on Post {
   content {
+    type
     urls {
       url
+      mimeType
     }
   }
 }
 
 fragment PostPreviewFragment on Post {
-  ...PostContentFragment
-  ...PostArtistFragment
+  ...PostAudienceFragment
   ...PostCharactersFragment
   ...PostCategoriesFragment
+  ...PostGalleryContentFragment
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": 5,
-    "kind": "LocalArgument",
-    "name": "first"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "id"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
+},
+v1 = {
+  "defaultValue": 5,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "from"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "id"
+},
+v4 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "to"
+},
+v5 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
   }
 ],
-v2 = {
+v6 = {
   "kind": "Variable",
   "name": "after",
   "variableName": "after"
 },
-v3 = {
+v7 = {
   "kind": "Variable",
   "name": "first",
   "variableName": "first"
 },
-v4 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v5 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
-  (v2/*: any*/),
+v10 = [
+  (v6/*: any*/),
   {
-    "kind": "Literal",
-    "name": "dateRange",
-    "value": {
-      "from": 0,
-      "to": 0
-    }
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "from",
+        "variableName": "from"
+      },
+      {
+        "kind": "Variable",
+        "name": "to",
+        "variableName": "to"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "dateRange"
   },
-  (v3/*: any*/)
+  (v7/*: any*/)
 ],
-v7 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v8 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -202,18 +224,24 @@ v8 = [
     "name": "title",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v9/*: any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/),
+      (v4/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "AuditLogsPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
@@ -221,8 +249,8 @@ return {
         "selections": [
           {
             "args": [
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "kind": "FragmentSpread",
             "name": "AuditLogsFragment"
@@ -236,26 +264,32 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v4/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Operation",
     "name": "AuditLogsPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v5/*: any*/),
+          (v8/*: any*/),
+          (v9/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v10/*: any*/),
                 "concreteType": "PostAuditLogConnection",
                 "kind": "LinkedField",
                 "name": "moderatorPostAuditLogs",
@@ -294,25 +328,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Account",
-                            "kind": "LinkedField",
-                            "name": "contributor",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "username",
-                                "storageKey": null
-                              },
-                              (v5/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "concreteType": "Post",
                             "kind": "LinkedField",
                             "name": "post",
@@ -325,7 +340,63 @@ return {
                                 "name": "postedAt",
                                 "storageKey": null
                               },
-                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Brand",
+                                "kind": "LinkedField",
+                                "name": "brand",
+                                "plural": false,
+                                "selections": [
+                                  (v11/*: any*/),
+                                  (v9/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              (v9/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Audience",
+                                "kind": "LinkedField",
+                                "name": "audience",
+                                "plural": false,
+                                "selections": (v12/*: any*/),
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Character",
+                                "kind": "LinkedField",
+                                "name": "characters",
+                                "plural": true,
+                                "selections": [
+                                  (v11/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Series",
+                                    "kind": "LinkedField",
+                                    "name": "series",
+                                    "plural": false,
+                                    "selections": (v12/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v9/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Category",
+                                "kind": "LinkedField",
+                                "name": "categories",
+                                "plural": true,
+                                "selections": (v12/*: any*/),
+                                "storageKey": null
+                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -334,6 +405,13 @@ return {
                                 "name": "content",
                                 "plural": true,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "type",
+                                    "storageKey": null
+                                  },
                                   {
                                     "alias": null,
                                     "args": null,
@@ -348,57 +426,18 @@ return {
                                         "kind": "ScalarField",
                                         "name": "url",
                                         "storageKey": null
+                                      },
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "mimeType",
+                                        "storageKey": null
                                       }
                                     ],
                                     "storageKey": null
                                   }
                                 ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Brand",
-                                "kind": "LinkedField",
-                                "name": "brand",
-                                "plural": false,
-                                "selections": [
-                                  (v7/*: any*/),
-                                  (v5/*: any*/)
-                                ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Character",
-                                "kind": "LinkedField",
-                                "name": "characters",
-                                "plural": true,
-                                "selections": [
-                                  (v7/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "Series",
-                                    "kind": "LinkedField",
-                                    "name": "series",
-                                    "plural": false,
-                                    "selections": (v8/*: any*/),
-                                    "storageKey": null
-                                  },
-                                  (v5/*: any*/)
-                                ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Category",
-                                "kind": "LinkedField",
-                                "name": "categories",
-                                "plural": true,
-                                "selections": (v8/*: any*/),
                                 "storageKey": null
                               }
                             ],
@@ -411,7 +450,7 @@ return {
                             "name": "action",
                             "storageKey": null
                           },
-                          (v5/*: any*/),
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -419,7 +458,7 @@ return {
                             "name": "notes",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v8/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -463,7 +502,7 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v10/*: any*/),
                 "filters": [
                   "dateRange"
                 ],
@@ -482,7 +521,7 @@ return {
     ]
   },
   "params": {
-    "id": "422c803ce92d977af61493e208ea44fa",
+    "id": "316939c2647b97f274a36dfd4db78cbf",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -491,5 +530,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '9ee7e0baa40cec68cbced30acbca8b46';
+(node: any).hash = '6db86852053df48207963870e14a4cd2';
 module.exports = node;

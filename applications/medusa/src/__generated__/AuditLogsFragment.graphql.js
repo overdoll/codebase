@@ -8,7 +8,6 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { AuditCardFragment$ref } from "./AuditCardFragment.graphql";
-import type { AuditInspectFragment$ref } from "./AuditInspectFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 import type { AuditLogsFragment$ref, AuditLogsFragment$fragmentType } from "./AuditLogsPaginationQuery.graphql";
 export type { AuditLogsFragment$ref, AuditLogsFragment$fragmentType };
@@ -16,7 +15,7 @@ export type AuditLogsFragment = {|
   +moderatorPostAuditLogs: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +$fragmentRefs: AuditCardFragment$ref & AuditInspectFragment$ref
+        +$fragmentRefs: AuditCardFragment$ref
       |}
     |}>
   |},
@@ -46,6 +45,14 @@ return {
       "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "from"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "to"
     }
   ],
   "kind": "Fragment",
@@ -80,12 +87,20 @@ return {
       "alias": "moderatorPostAuditLogs",
       "args": [
         {
-          "kind": "Literal",
-          "name": "dateRange",
-          "value": {
-            "from": 0,
-            "to": 0
-          }
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "to",
+              "variableName": "to"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "dateRange"
         }
       ],
       "concreteType": "PostAuditLogConnection",
@@ -120,11 +135,6 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "AuditCardFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "AuditInspectFragment"
                 }
               ],
               "storageKey": null
@@ -165,7 +175,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "__AuditLogs_moderatorPostAuditLogs_connection(dateRange:{\"from\":0,\"to\":0})"
+      "storageKey": null
     },
     {
       "alias": null,
@@ -180,5 +190,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '9ee7e0baa40cec68cbced30acbca8b46';
+(node: any).hash = '6db86852053df48207963870e14a4cd2';
 module.exports = node;

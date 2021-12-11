@@ -96,7 +96,7 @@ export default function RejectionReasons (props: Props): Node {
           </FormLabel>
           <Textarea
             resize='none'
-            isInvalid={errors.note} {...register('note')}
+            {...register('note')}
             placeholder={t('queue.post.actions.reject.modal.form.textarea.placeholder')}
           />
           <FormErrorMessage>

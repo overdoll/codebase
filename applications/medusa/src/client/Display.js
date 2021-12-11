@@ -8,6 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme'
 import type { i18next } from 'i18next'
 import { HelmetProvider } from 'react-helmet-async'
+import OverlayScrollbars from 'overlayscrollbars'
 
 type Props = {
   i18next: i18next,

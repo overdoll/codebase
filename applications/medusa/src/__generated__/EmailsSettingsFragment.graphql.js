@@ -9,8 +9,8 @@
 import type { ReaderFragment } from 'relay-runtime';
 import type { EmailCardFragment$ref } from "./EmailCardFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type EmailsSettingsFragment$ref: FragmentReference;
-declare export opaque type EmailsSettingsFragment$fragmentType: EmailsSettingsFragment$ref;
+import type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType } from "./EmailsSettingsPaginationQuery.graphql";
+export type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType };
 export type EmailsSettingsFragment = {|
   +emails: {|
     +__id: string,
@@ -21,6 +21,7 @@ export type EmailsSettingsFragment = {|
       |}
     |}>,
   |},
+  +id: string,
   +$refType: EmailsSettingsFragment$ref,
 |};
 export type EmailsSettingsFragment$data = EmailsSettingsFragment;
@@ -31,10 +32,27 @@ export type EmailsSettingsFragment$key = {
 };
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = [
+  "emails"
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
-      "kind": "RootArgument",
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "after"
+    },
+    {
+      "defaultValue": 3,
+      "kind": "LocalArgument",
       "name": "first"
     }
   ],
@@ -43,13 +61,26 @@ const node: ReaderFragment = {
     "connection": [
       {
         "count": "first",
-        "cursor": null,
+        "cursor": "after",
         "direction": "forward",
-        "path": [
-          "emails"
-        ]
+        "path": (v0/*: any*/)
       }
-    ]
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "first",
+          "cursor": "after"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./EmailsSettingsPaginationQuery.graphql.js'),
+      "identifierField": "id"
+    }
   },
   "name": "EmailsSettingsFragment",
   "selections": [
@@ -77,13 +108,7 @@ const node: ReaderFragment = {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -148,11 +173,13 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    }
+    },
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
+})();
 // prettier-ignore
-(node: any).hash = '406b623f1b92918b91d06bf91c499728';
+(node: any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
 module.exports = node;

@@ -7,13 +7,13 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { AvatarMenuFragment$ref } from "./AvatarMenuFragment.graphql";
 import type { ProfileButtonFragment$ref } from "./ProfileButtonFragment.graphql";
+import type { SimpleProfileButtonFragment$ref } from "./SimpleProfileButtonFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type NavigationFragment$ref: FragmentReference;
 declare export opaque type NavigationFragment$fragmentType: NavigationFragment$ref;
 export type NavigationFragment = {|
-  +$fragmentRefs: AvatarMenuFragment$ref & ProfileButtonFragment$ref,
+  +$fragmentRefs: SimpleProfileButtonFragment$ref & ProfileButtonFragment$ref,
   +$refType: NavigationFragment$ref,
 |};
 export type NavigationFragment$data = NavigationFragment;
@@ -33,7 +33,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AvatarMenuFragment"
+      "name": "SimpleProfileButtonFragment"
     },
     {
       "args": null,
@@ -45,5 +45,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'e55c6c228f07a0cb7fbbc70858f42081';
+(node: any).hash = 'caa555e42cda0b63f24f9388dddd21d9';
 module.exports = node;

@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import { createBrowserHistory } from 'history'
-import type { Node } from 'react'
-import { createClientRouter } from '@//:modules/routing/router'
-import routes from './routes'
-import environment from './bootstrap/relay'
-import i18next from './bootstrap/i18next'
-import Bootstrap from './Bootstrap'
-import { registerUpdateListener } from './bootstrap/update'
-import createCache from '@emotion/cache'
-import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
-import OverlayScrollbars from 'overlayscrollbars'
+import { createBrowserHistory } from 'history';
+import type { Node } from 'react';
+import { createClientRouter } from '@//:modules/routing/router';
+import routes from './routes';
+import environment from './bootstrap/relay';
+import i18next from './bootstrap/i18next';
+import Bootstrap from './Bootstrap';
+import { registerUpdateListener } from './bootstrap/update';
+import createCache from '@emotion/cache';
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion';
+import OverlayScrollbars from 'overlayscrollbars';
 
 const router = createClientRouter(
   routes,

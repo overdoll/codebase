@@ -7,15 +7,13 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { PostBrandFragment$ref } from "./PostBrandFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type PostHeaderFragment$ref: FragmentReference;
 declare export opaque type PostHeaderFragment$fragmentType: PostHeaderFragment$ref;
 export type PostHeaderFragment = {|
-  +contributor: {|
-    +username: string,
-    +avatar: any,
-  |},
   +reassignmentAt: ?any,
+  +$fragmentRefs: PostBrandFragment$ref,
   +$refType: PostHeaderFragment$ref,
 |};
 export type PostHeaderFragment$data = PostHeaderFragment;
@@ -35,39 +33,19 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
-      "kind": "LinkedField",
-      "name": "contributor",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "username",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "avatar",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "kind": "ScalarField",
       "name": "reassignmentAt",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostBrandFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'e245205e79bdb61ef9cf40c2f7b1883c';
+(node: any).hash = 'b8e7fb28012b7383556c5d32b065ad32';
 module.exports = node;

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 855ae9c1fe7deaa2c3c9e312de23343b
+ * @relayHash 0adbc04134718f7c3ac1e7acd83acb03
  */
 
 /* eslint-disable */
@@ -43,17 +43,17 @@ query RootQuery {
   }
 }
 
-fragment AvatarMenuFragment on Account {
-  avatar
-}
-
 fragment NavigationFragment on Account {
-  ...AvatarMenuFragment
+  ...SimpleProfileButtonFragment
   ...ProfileButtonFragment
 }
 
 fragment ProfileButtonFragment on Account {
   username
+  avatar
+}
+
+fragment SimpleProfileButtonFragment on Account {
   avatar
 }
 */
@@ -174,7 +174,7 @@ return {
     ]
   },
   "params": {
-    "id": "855ae9c1fe7deaa2c3c9e312de23343b",
+    "id": "0adbc04134718f7c3ac1e7acd83acb03",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

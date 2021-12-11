@@ -2,12 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import {
-  Heading,
-  useToast,
-  Flex,
-  Text
-} from '@chakra-ui/react'
+import { Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
@@ -29,6 +24,7 @@ const QueueSettingsFragmentGQL = graphql`
   fragment QueueSettingsFragment on Query {
     viewer {
       __typename
+      id
     }
   }
 `
@@ -45,6 +41,9 @@ const QueueSettingsMutationGQL = graphql`
   }
 `
 
+// TODO a new mutation for addmoderatortopostqueue
+// TODO and now you also have to pass in account id
+
 export default function QueueSettings (props: Props): Node {
   const queryData = usePreloadedQuery<QueueSettingsQueryType>(
     PreparedQueueGQL,
@@ -59,7 +58,7 @@ export default function QueueSettings (props: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const status = !!data?.viewer.moderator
+  const status = !!data?.viewer?.moderator
 
   const notify = useToast()
 

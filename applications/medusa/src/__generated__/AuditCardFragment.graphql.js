@@ -7,6 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { AuditInspectFragment$ref } from "./AuditInspectFragment.graphql";
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AuditCardFragment$ref: FragmentReference;
@@ -14,13 +15,14 @@ declare export opaque type AuditCardFragment$fragmentType: AuditCardFragment$ref
 export type AuditCardFragment = {|
   +reverted: boolean,
   +reversibleUntil: any,
-  +contributor: {|
-    +username: string
-  |},
   +post: {|
-    +postedAt: ?any
+    +postedAt: ?any,
+    +brand: ?{|
+      +name: string
+    |},
   |},
   +action: PostAuditLogAction,
+  +$fragmentRefs: AuditInspectFragment$ref,
   +$refType: AuditCardFragment$ref,
 |};
 export type AuditCardFragment$data = AuditCardFragment;
@@ -54,24 +56,6 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
-      "kind": "LinkedField",
-      "name": "contributor",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "username",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Post",
       "kind": "LinkedField",
       "name": "post",
@@ -83,6 +67,24 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "postedAt",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Brand",
+          "kind": "LinkedField",
+          "name": "brand",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "name",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -93,11 +95,16 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "action",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AuditInspectFragment"
     }
   ],
   "type": "PostAuditLog",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '0555b569beb5eb852c0e3c947ec785db';
+(node: any).hash = 'c2603b7112e7aa8ee3c027b24db29fe9';
 module.exports = node;

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9097a2936461090daa359d77db6f3c6e
+ * @relayHash 7280c1350737606b34c5261d6a7a623a
  */
 
 /* eslint-disable */
@@ -8,11 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { RecoveryCodesListFragment$ref } from "./RecoveryCodesListFragment.graphql";
 export type RecoveryCodesSetupQueryVariables = {||};
 export type RecoveryCodesSetupQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: RecoveryCodesListFragment$ref
+    +__id: string,
+    +recoveryCodes: $ReadOnlyArray<{|
+      +__id: string,
+      +code: string,
+    |}>,
+    +multiFactorSettings: {|
+      +__typename: string
+    |},
   |}
 |};
 export type RecoveryCodesSetupQuery = {|
@@ -24,14 +30,13 @@ export type RecoveryCodesSetupQuery = {|
 /*
 query RecoveryCodesSetupQuery {
   viewer {
-    ...RecoveryCodesListFragment
+    recoveryCodes {
+      code
+    }
+    multiFactorSettings {
+      __typename
+    }
     id
-  }
-}
-
-fragment RecoveryCodesListFragment on Account {
-  recoveryCodes {
-    code
   }
 }
 */
@@ -48,6 +53,43 @@ var v0 = {
       "storageKey": null
     }
   ]
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountMultiFactorRecoveryCode",
+  "kind": "LinkedField",
+  "name": "recoveryCodes",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "code",
+      "storageKey": null
+    },
+    (v0/*: any*/)
+  ],
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountMultiFactorSettings",
+  "kind": "LinkedField",
+  "name": "multiFactorSettings",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -64,11 +106,9 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "RecoveryCodesListFragment"
-          }
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
@@ -90,25 +130,8 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountMultiFactorRecoveryCode",
-            "kind": "LinkedField",
-            "name": "recoveryCodes",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "code",
-                "storageKey": null
-              },
-              (v0/*: any*/)
-            ],
-            "storageKey": null
-          },
+          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -123,7 +146,7 @@ return {
     ]
   },
   "params": {
-    "id": "9097a2936461090daa359d77db6f3c6e",
+    "id": "7280c1350737606b34c5261d6a7a623a",
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
@@ -132,5 +155,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '88c415f5d7183030bead5730eb37d3d1';
+(node: any).hash = '0876f9bce52915db3fe9ded92c64ae97';
 module.exports = node;

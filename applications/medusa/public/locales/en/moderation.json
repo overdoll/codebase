@@ -17,10 +17,9 @@
       "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
       "tags": {
         "title": "Post Tags",
-        "artist": "Artist",
+        "audience": "Audience",
         "characters": "Characters",
-        "categories": "Categories",
-        "new": "This is a new tag. If approved, it will be available for anyone to use."
+        "categories": "Categories"
       },
       "actions": {
         "notice": {
@@ -31,8 +30,8 @@
         "approve": {
           "button": "Approve",
           "query": {
-            "success": "Post {{id}} was approved successfully",
-            "error": "There was an error approving post {{id}}"
+            "success": "Post created by {{brand}} was approved successfully",
+            "error": "There was an error approving a post created by {{brand}}"
           }
         },
         "reject": {
@@ -62,8 +61,8 @@
             "infraction": "This rejection reason is an infraction. The poster's account will be temporarily suspended."
           },
           "query": {
-            "success": "Post {{id}} was successfully rejected",
-            "error": "There was an error rejecting post {{id}}"
+            "success": "Post created by {{brand}} was successfully rejected",
+            "error": "There was an error rejecting the post created by {{brand}}"
           }
         }
       }
@@ -71,11 +70,12 @@
   },
   "history": {
     "title": "Moderation History",
+    "description": "Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making them. ",
     "table": {
       "headers": {
         "date": "Date Posted",
         "id": "Request ID",
-        "contributor": "Contributor",
+        "brand": "Brand",
         "status": "Status"
       },
       "load": "Load More",
@@ -89,6 +89,8 @@
       "characters": "Characters",
       "categories": "Categories",
       "revert": {
+        "action": "REVERTED",
+        "description": "Originally {{action}}",
         "query": {
           "success": "This audit log was reverted. The post should appear back in your queue shortly.",
           "failure": "There was an error reverting the audit log"
