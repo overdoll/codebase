@@ -23,7 +23,8 @@ const csrfToken = document
  */
 async function fetchRelay (params, variables) {
   // call an async function to refresh the update timer
-  refreshUpdateTimer().then(() => {})
+  refreshUpdateTimer().then(() => {
+  })
 
   const response = await axios.post(
     '/api/graphql',
@@ -63,11 +64,8 @@ const subscribe = (params, variables) => {
 
   const subscribeObservable = subscriptionClient.request({
     operationName: params.name,
-    extensions: {
-      apq: {
-        hash: params.id
-      }
-    },
+    query: params.text,
+    extensions: {},
     variables,
     csrf: csrfToken
   })

@@ -16,7 +16,6 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 )
 
 type PostModified struct {
@@ -42,7 +41,7 @@ type Post struct {
 
 func getPost(t *testing.T, id string) Post {
 
-	client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var post Post
 
@@ -106,6 +105,18 @@ type SubmitPost struct {
 		Post     *PostModified
 		InReview bool
 	} `graphql:"submitPost(input: $input)"`
+}
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID    string
+			Posts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			} `graphql:"posts(state: $state)"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
 }
 
 func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
@@ -204,6 +215,32 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	require.NotNil(t, updatePostAudience.UpdatePostAudience.Post.Audience)
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
 
+	// check if post is in account's drafts
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
+	require.NoError(t, err)
+
+	var accountPosts AccountPosts
+	err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+			},
+		},
+		"state": types.PostStateDraft,
+	})
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(accountPosts.Entities[0].Account.Posts.Edges), 1)
+
+	// make sure we got an error for viewing a post unauthenticated
+	client2 := getGraphqlClient(t)
+	var post Post
+	err = client2.Query(context.Background(), &post, map[string]interface{}{
+		"reference": graphql.String(newPostReference),
+	})
+	require.Error(t, err)
+
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -239,27 +276,12 @@ type AccountModeratorPosts struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-type AccountPosts struct {
-	Entities []struct {
-		Account struct {
-			ID    string
-			Posts *struct {
-				Edges []*struct {
-					Node PostModified
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
 // TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
 // then, we test our GRPC endpoints for revoking
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var newPostId string
 
@@ -275,7 +297,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 			var accountModeratorPosts AccountModeratorPosts
 
@@ -428,9 +450,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 
@@ -468,9 +488,7 @@ func TestCreatePost_Discard(t *testing.T) {
 func TestCreatePost_Reject_undo_reject(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 
@@ -524,9 +542,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client := getGraphqlClient(t, pass)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	env := getWorkflowEnvironment(t)
 

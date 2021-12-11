@@ -4,7 +4,7 @@
 
 import { Button, Heading, Text, Stack } from '@chakra-ui/react'
 import type { Node } from 'react'
-import { useFragment, graphql } from 'react-relay'
+import { graphql, useFragment } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -18,8 +18,8 @@ type Props = {
 
 const NoPostsPlaceholderFragmentGQL = graphql`
   fragment NoPostsPlaceholderFragment on Account {
-    moderator {
-      __typename
+    moderatorSettings {
+      isInModeratorQueue
     }
   }
 `
@@ -29,7 +29,7 @@ export default function PostHeader (props: Props): Node {
 
   const data = useFragment(NoPostsPlaceholderFragmentGQL, props.moderator)
 
-  if (!data.moderator) {
+  if (!data.moderatorSettings.isInModeratorQueue) {
     return (
       <Stack align='center'>
         <Icon

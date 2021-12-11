@@ -35,7 +35,7 @@ const routes: Array<Route> = [
         /* webpackChunkName: "Root" */ './domain/Root/Root'
       )
     ),
-    prepare: params => {
+    prepare: () => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
       return {
         stateQuery: {
@@ -72,12 +72,25 @@ const routes: Array<Route> = [
             return true
           }
         ],
-        prepare: (params, query) => {
+        prepare: ({
+          params,
+          query,
+          cookies
+        }) => {
           const JoinQuery = require('@//:artifacts/JoinRootQuery.graphql')
+
+          let tokenCookie = cookies.get('token')
+
+          if (tokenCookie) {
+            tokenCookie = tokenCookie.split(';')[0]
+          }
+
           return {
             joinQuery: {
               query: JoinQuery,
-              variables: {},
+              variables: {
+                token: tokenCookie ?? ''
+              },
               options: {
                 fetchPolicy: 'store-or-network'
               }
@@ -86,11 +99,11 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/token',
+        path: '/verify-token',
         exact: true,
-        component: JSResource('TokenRoot', () =>
+        component: JSResource('VerifyToken', () =>
           import(
-            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
+            /* webpackChunkName: "VerifyToken" */ './domain/VerifyToken/VerifyToken'
           )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
@@ -109,12 +122,18 @@ const routes: Array<Route> = [
             return true
           }
         ],
-        prepare: (params, query) => {
-          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
+        prepare: ({
+          params,
+          query
+        }) => {
+          const TokenQuery = require('@//:artifacts/VerifyTokenQuery.graphql')
           return {
             tokenQuery: {
               query: TokenQuery,
-              variables: { token: query.get('id') ?? '' },
+              variables: {
+                token: query.get('token') ?? '',
+                secret: query.get('secret') ?? ''
+              },
               options: {
                 fetchPolicy: 'store-or-network'
               }
@@ -186,7 +205,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/Queue/Queue'
               )
             ),
-            prepare: params => {
+            prepare: () => {
               const PostsQuery = require('@//:artifacts/PostsQuery.graphql')
               return {
                 postsQuery: {
@@ -206,7 +225,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/History/History'
               )
             ),
-            prepare: params => {
+            prepare: () => {
               const AuditLogsQuery = require('@//:artifacts/AuditLogsQuery.graphql')
               return {
                 auditLogsQuery: {
@@ -304,7 +323,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/Profile/Profile'
               )
             ),
-            prepare: params => {
+            prepare: () => {
               const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
               const EmailsQuery = require('@//:artifacts/EmailsQuery.graphql')
 
@@ -333,7 +352,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
               )
             ),
-            prepare: params => {
+            prepare: () => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
               const SessionsQuery = require('@//:artifacts/SessionsSettingsQuery.graphql')
@@ -374,7 +393,7 @@ const routes: Array<Route> = [
                 return false
               }
             ],
-            prepare: (params, query) => {
+            prepare: () => {
               const QueueSettingsQuery = require('@//:artifacts/QueueSettingsQuery.graphql')
               return {
                 queueQuery: {
@@ -396,7 +415,7 @@ const routes: Array<Route> = [
             /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
           )
         ),
-        prepare: params => {
+        prepare: () => {
           const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
 
           return {
@@ -431,7 +450,7 @@ const routes: Array<Route> = [
             /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
           )
         ),
-        prepare: params => {
+        prepare: () => {
           const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
 
           return {

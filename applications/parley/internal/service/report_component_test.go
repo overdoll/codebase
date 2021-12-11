@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 )
 
 type PostReportReasons struct {
@@ -21,7 +20,7 @@ type PostReportReasons struct {
 func TestPostReportReasons(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	var search PostReportReasons
 
@@ -61,7 +60,7 @@ type PostReports struct {
 func TestReportPost(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	// post ID has to be random since we can only report once
 	postId := base64.StdEncoding.EncodeToString([]byte("Post:" + ksuid.New().String()))

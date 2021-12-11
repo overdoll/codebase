@@ -8,9 +8,10 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "INVALID_RECOVERY_CODE" | "TOKEN_EXPIRED" | "%future added value";
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "RECOVERY_CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput = {|
-  recoveryCode: string
+  token: string,
+  recoveryCode: string,
 |};
 export type RecoveryCodeMutationVariables = {|
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput

@@ -19,11 +19,8 @@ go_library(
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
-        "//libraries/cookies",
         "//libraries/graphql/relay",
-        "//libraries/helpers",
         "//libraries/passport",
         "//libraries/principal",
-        "//libraries/translations",
     ],
 )

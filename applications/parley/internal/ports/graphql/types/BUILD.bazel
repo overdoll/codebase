@@ -14,5 +14,6 @@ go_library(
         "//applications/parley/internal/domain/report",
         "//libraries/graphql/relay",
         "//libraries/paging",
+        "//libraries/passport",
     ],
 )

@@ -1,14 +1,12 @@
-import { ApolloGateway, RemoteGraphQLDataSource, LocalGraphQLDataSource } from '@apollo/gateway'
+import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
-import parseCookies from './Domain/parseCookies'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../queries.json'
-import protobuf from 'protobufjs'
-import passportJSON from './passport.json'
-import { gql } from 'apollo-server'
+import { defaultPlaygroundOptions, gql } from 'apollo-server'
 import { graphqlSync, parse, visit } from 'graphql'
 import { buildFederatedSchema } from '@apollo/federation'
+import { renderPlaygroundPage } from '@apollographql/graphql-playground-html'
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -63,23 +61,6 @@ const fromId = (id) => {
   const typename = b.slice(0, i).toString('ascii')
   const key = b.slice(i).toString('ascii')
   return [typename, key]
-}
-
-/**
- * Encodes a typename and key into a global ID
- *
- * @param {string} typename GraphQL typename
- * @param {string | Buffer} key Type-specific identifier
- * @returns {string} Base64 encoded Node ID
- */
-const toId = (typename, key) => {
-  const prefix = Buffer.from(typename + DIVIDER_TOKEN, 'ascii')
-  const keyEncoded = typeof key === 'string' ? Buffer.from(key, 'ascii') : key
-
-  return Buffer.concat(
-    [prefix, keyEncoded],
-    prefix.length + keyEncoded.length
-  ).toString('base64')
 }
 
 /**
@@ -204,13 +185,9 @@ class NodeGateway extends ApolloGateway {
   }
 }
 
-// https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
-// Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
-class CookieDataSource extends RemoteGraphQLDataSource {
-  /**
-   * Processes set-cookie headers from the service back to the
-   * client, so the cookies are set within their browser
-   */
+// Ensures passport is forwarded from downstream services
+class PassportDataSource extends RemoteGraphQLDataSource {
+  // Process passport from response
   async process ({
     request,
     context
@@ -220,109 +197,35 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       context
     })
 
-    const cookie = response.http?.headers.get('set-cookie')
-    const passport = response.http?.headers.get('X-Modified-Passport')
+    // make sure passport is forwarded back in the response as well
+    if (response.passport) {
+      const originalSend = context.res.send
 
-    if (cookie) {
-      const cookies = parseCookies(cookie)
-      cookies.forEach(({
-        cookieName,
-        cookieValue,
-        options
-      }) => {
-        if (context && context.res) {
-          context.res.cookie(cookieName, cookieValue, options)
-        }
-      })
-    }
+      context.res.send = (data) => {
+        const parse = JSON.parse(data)
+        parse.passport = response.passport
+        data = JSON.stringify(parse)
 
-    // empty passport sent back - user needs to be logged out
-    if (passport === '') {
-      await new Promise(resolve => context.req.session.regenerate(resolve))
-      return response
-    }
+        context.res.send = originalSend // set function back to avoid the 'double-send'
 
-    // If the service sends back an X-Modified-Passport, we modify the session's passport
-    // we will validate the passport by parsing it
-    // TODO: passport && sessions for accounts should eventually be handled by an ingress service
-    if (passport) {
-      let validPassport = false
-
-      // if an account modification is made (different ID) we set it in the request object
-      // so the session can be regenerated with this new account ID
-      if (passport !== '') {
-        const root = protobuf.Root.fromJSON(passportJSON)
-
-        const Passport = root.lookupType('libraries.passport.v1.Passport')
-
-        try {
-          const message = Passport.decode(Uint8Array.from(Buffer.from(passport, 'base64').toString(), c => c.charCodeAt(0)))
-
-          const object = Passport.toObject(message, {
-            longs: String,
-            enums: String,
-            bytes: String
-          })
-
-          context.req.accountId = object?.account?.id
-
-          validPassport = true
-        } catch (e) {
-          console.log(e)
-          if (e instanceof protobuf.util.ProtocolError) {
-            // e.instance holds the so far decoded message with missing required fields
-          } else {
-            // wire format is invalid
-          }
-        }
-      }
-
-      if (validPassport) {
-        // await session regeneration or else it bugs out
-        await new Promise(resolve => context.req.session.regenerate(resolve))
-        context.req.session.passport = passport
-        context.req.session.details = {
-          userAgent: context.req.headers['user-agent'],
-          ip: context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress,
-          created: new Date().toISOString()
-        }
+        return context.res.send(data) // just call as normal with data
       }
     }
 
     return response
   }
 
-  /**
-   * Sends any cookies found within the clients request headers then
-   * pushes them to the requested services context
-   */
+  // Send passport from request to body
   willSendRequest (requestContext) {
     if (!requestContext.context.req) {
       return
     }
 
-    // add extensions object if it doesn't exist
-    if (!Object.prototype.hasOwnProperty.call(requestContext.request, 'extensions')) {
-      requestContext.request.extensions = {}
+    const passportForward = requestContext.context.req.body.passport
+
+    if (passportForward) {
+      requestContext.request.passport = passportForward
     }
-
-    // remove "passport" from request in case user sends it (they could impersonate any user otherwise)
-    if (Object.prototype.hasOwnProperty.call(requestContext.request.extensions, 'passport')) {
-      delete requestContext.request.extensions.passport
-    }
-
-    const { passport } = requestContext.context.req.session
-
-    if (passport) {
-      requestContext.request.extensions.passport = passport
-    }
-
-    // Forward all headers
-    Object.entries(
-      requestContext.context.req.headers || {}
-    ).forEach(([key, value]) =>
-      requestContext.request.http?.headers.set(key, value)
-    )
   }
 }
 
@@ -330,7 +233,7 @@ const gateway = new NodeGateway({
   serviceList: services,
   persistedQueries: true,
   buildService ({ url }) {
-    return new CookieDataSource({ url })
+    return new PassportDataSource({ url })
   }
 })
 
@@ -345,18 +248,42 @@ const server = new ApolloServer({
     req,
     res
   }),
-  playground: {
-    settings: {
-      'request.credentials': 'same-origin'
-    }
-  }
+  // disable playground, add middleware for a custom playground
+  playground: false
 })
+
+// custom playground that will add a CSRF token
+// uses the same playground as apollo, we just needed to make these changes to support CSRF
+const renderPlayground = (req, res, next) => {
+  if (req.method !== 'GET') {
+    next()
+    return
+  }
+
+  res.setHeader('Content-Type', 'text/html')
+  res.write(renderPlaygroundPage({
+    endpoint: req.originalUrl,
+    ...defaultPlaygroundOptions,
+    settings: {
+      ...defaultPlaygroundOptions.settings,
+      'request.credentials': 'same-origin'
+    },
+    tabs: [
+      {
+        endpoint: req.originalUrl,
+        name: 'Default',
+        headers: {
+          'X-CSRF-TOKEN': req.csrfToken()
+        }
+      }
+    ]
+  }))
+  res.end()
+}
 
 export default function (index) {
   server.applyMiddleware({
     path: '/api/graphql',
-    app: index.use(matchQueryMiddleware(queryMapJson))
+    app: index.use('/api/graphql', renderPlayground, matchQueryMiddleware(queryMapJson))
   })
-
-  return server
 }

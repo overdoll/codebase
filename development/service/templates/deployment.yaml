@@ -17,11 +17,19 @@ spec:
       labels:
     {{- include "default-service.selectorLabels" . | nindent 8 }}
     spec:
+      # mount data from host
+      volumes:
+        - name: data-mount
+          hostPath:
+            path: /var/data
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
+          volumeMounts:
+            - mountPath: /var/data
+              name: data-mount
           ports:
-          {{- if .Values.grpc }}
+            {{- if .Values.grpc }}
             - name: grpc
               containerPort: 8080
               protocol: TCP
@@ -47,5 +55,5 @@ spec:
                 secretKeyRef:
                   name: {{ $secret }}
                   key: {{ $key | quote }}
-            {{- end }}
-            {{- end }}
+  {{- end }}
+  {{- end }}

@@ -35,8 +35,9 @@ func (s Server) ConfirmAccountEmail(ctx context.Context, request *carrier.Confir
 func (s Server) NewLoginToken(ctx context.Context, request *carrier.NewLoginTokenRequest) (*empty.Empty, error) {
 
 	if err := s.app.Commands.NewLoginToken.Handle(ctx, command.NewLoginToken{
-		Email: request.Email,
-		Token: request.Token,
+		Email:  request.Email,
+		Token:  request.Token,
+		Secret: request.Secret,
 	}); err != nil {
 		return nil, err
 	}

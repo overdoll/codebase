@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 	"time"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -19,7 +20,10 @@ func NewCarrierClient(ctx context.Context, address string) (carrier.CarrierClien
 	carrierConnection, err := grpc.DialContext(ctx, address,
 		grpc.WithInsecure(),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
-		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)))
+		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
+		grpc.WithStreamInterceptor(passport.StreamClientInterceptor()),
+		grpc.WithUnaryInterceptor(passport.UnaryClientInterceptor()),
+	)
 
 	if err != nil {
 		panic(err)

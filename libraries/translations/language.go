@@ -5,10 +5,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-const (
-	cookie = "lang"
-)
-
 var (
 	ErrInvalidLocale = errors.New("invalid locale")
 )
@@ -28,34 +24,30 @@ type Language struct {
 	tag language.Tag
 }
 
-func NewLanguage(locale string) *Language {
-	tag, err := language.Parse(locale)
+func NewLanguage(locale string) (*Language, error) {
+
+	lang, err := language.Parse(locale)
 
 	if err != nil {
-		return &Language{tag: defaultLanguage}
+		return nil, err
 	}
+
+	for _, l := range tags {
+		if l == lang {
+			return &Language{tag: lang}, nil
+		}
+	}
+
+	return nil, ErrInvalidLocale
+}
+
+func NewLanguageWithFallback(locale string) *Language {
+
+	tag, _ := language.MatchStrings(matcher, locale)
 
 	return &Language{tag: tag}
 }
 
 func (p *Language) Locale() string {
 	return p.tag.String()
-}
-
-func (p *Language) SetLocale(locale string) error {
-
-	lang, err := language.Parse(locale)
-
-	if err != nil {
-		return err
-	}
-
-	for _, l := range tags {
-		if l == lang {
-			p.tag = l
-			return nil
-		}
-	}
-
-	return ErrInvalidLocale
 }

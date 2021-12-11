@@ -20,7 +20,7 @@ Cypress.Commands.add('join', (email) => {
     cy.visit(url)
   })
 
-  cy.url().should('include', '/token')
+  cy.url().should('include', '/verify-token')
 
   cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
 
@@ -44,4 +44,4 @@ Cypress.Commands.add('newAccount', (id) => {
   cy.url().should('include', '/profile')
 })
 
-Cypress.Commands.add('preserveAccount', () => Cypress.Cookies.preserveOnce('connect.sid'))
+Cypress.Commands.add('preserveAccount', () => Cypress.Cookies.preserveOnce('od.session'))

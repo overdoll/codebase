@@ -48,7 +48,7 @@ func marshaModeratorToDatabase(mod *mod.Moderator) *moderator {
 func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id string) (*mod.Moderator, error) {
 
 	moderatorQuery := r.session.
-		Query(moderatorTable.Select()).
+		Query(moderatorTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderator{AccountId: id, Bucket: 0})
 

@@ -16,10 +16,17 @@ async function request (err, req, res, next) {
   const helmetContext = {}
   const nonce = res.locals.cspNonce
 
-  const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
+  const cache = createCache({
+    key: EMOTION_CACHE_KEY,
+    nonce
+  })
   const { extractCritical } = createEmotionServer(cache)
 
-  const { html, css, ids } = extractCritical(
+  const {
+    html,
+    css,
+    ids
+  } = extractCritical(
     renderToString(
       <Display
         i18next={i18next}
@@ -51,14 +58,20 @@ export default async function error (err, req, res, next) {
     await request(err, req, res, next)
   } catch (e) {
     if (process.env.APP_DEBUG === 'true') {
-      console.log(err)
       return next(err)
     } else {
       // TODO: report error to sentry
       logger.error({
         http: err.http,
-        logger: { name: logger.name, thread_name: err.process },
-        error: { message: err.message, kind: err.name, stack: err.stack },
+        logger: {
+          name: logger.name,
+          thread_name: err.process
+        },
+        error: {
+          message: err.message,
+          kind: err.name,
+          stack: err.stack
+        },
         message: `${err.name}: ${err.message}`
       })
     }

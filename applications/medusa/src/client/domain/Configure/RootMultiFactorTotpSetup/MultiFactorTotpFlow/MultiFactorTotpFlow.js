@@ -32,6 +32,13 @@ const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
     generateAccountMultiFactorTotp {
       multiFactorTotp {
+        id
+        secret
+        imageSrc
+      }
+  mutation MultiFactorTotpFlowMutation {
+    generateAccountMultiFactorTotp {
+      multiFactorTotp {
         secret
         imageSrc
       }

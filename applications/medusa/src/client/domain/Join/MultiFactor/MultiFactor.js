@@ -12,19 +12,21 @@ import RecoveryCode from './RecoveryCode/RecoveryCode';
 import { useTranslation } from 'react-i18next';
 
 const MultiFactorFragmentGQL = graphql`
-  fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
-    multiFactor {
-      totp
+  fragment MultiFactorFragment on AuthenticationToken {
+    accountStatus {
+      multiFactor {
+        totp
+      }
     }
   }
 `
 
 type Props = {
-  query: MultiFactorFragment$key,
+  queryRef: MultiFactorFragment$key,
 }
 
-export default function MultiFactor (props: Props): Node {
-  const data = useFragment(MultiFactorFragmentGQL, props.query)
+export default function MultiFactor ({ queryRef }: Props): Node {
+  const data = useFragment(MultiFactorFragmentGQL, queryRef)
 
   const [t] = useTranslation('auth')
 

@@ -1,8 +1,6 @@
 package translations
 
 import (
-	"context"
-
 	"go.uber.org/zap"
 )
 
@@ -32,10 +30,6 @@ func (t *Translation) Translate(lang *Language, fallback string) string {
 
 	// fallback if for some reason we dont have english?
 	return fallback
-}
-
-func (t *Translation) TranslateFromContext(ctx context.Context, fallback string) string {
-	return t.Translate(FromContext(ctx), fallback)
 }
 
 func MarshalTranslationToDatabase(t *Translation) map[string]string {

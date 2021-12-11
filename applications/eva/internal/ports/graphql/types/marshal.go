@@ -2,15 +2,15 @@ package types
 
 import (
 	"context"
-	"crypto/sha256"
+	"encoding/hex"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
-	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/translations"
 	"sort"
 	"time"
@@ -35,6 +35,17 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		IsStaff:     result.IsStaff(),
 		IsModerator: result.IsModerator(),
 		Lock:        MarshalAccountLockToGraphQL(result),
+	}
+}
+
+func MarshalLocationToGraphQL(result *location.Location) *Location {
+	return &Location{
+		City:        result.City(),
+		Country:     result.Country(),
+		PostalCode:  result.PostalCode(),
+		Subdivision: result.Subdivision(),
+		Latitude:    result.Latitude(),
+		Longitude:   result.Longitude(),
 	}
 }
 
@@ -149,54 +160,35 @@ func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername 
 	}
 }
 
-func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken) *AuthenticationToken {
+func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken, acc *account.Account) *AuthenticationToken {
+
+	p := passport.FromContext(ctx)
 
 	var accountStatus *AuthenticationTokenAccountStatus
-
-	sameSession := true
-
-	// determine if the cookie is in the same session
-	_, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err == cookies.ErrCookieNotFound {
-		sameSession = false
-	}
-
-	// determine if "secure" (same IP)
-	secure := true
-	ip := helpers.GetIp(ctx)
-
-	if ip != result.IP() {
-		secure = false
-	}
 
 	// only show account status if verified
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
 
 		accountStatus = &AuthenticationTokenAccountStatus{
-			Registered: result.Registered(),
+			Registered: acc != nil,
 		}
 
-		if result.IsTOTPRequired() {
+		if acc != nil && acc.MultiFactorEnabled() {
 			accountStatus.MultiFactor = &MultiFactor{
 				Totp: true,
 			}
 		}
 	}
 
-	// we need to provide a globally-unique ID for the authentication token
-	// however we don't want to reveal the actual value (since it can be used to authenticate people)
-	// so we just hash it
-	hash := sha256.Sum256([]byte(result.Token()))
 	return &AuthenticationToken{
-		ID:            relay.NewID(AuthenticationToken{}, string(hash[:])),
-		SameSession:   sameSession,
+		ID:            relay.NewID(AuthenticationToken{}, result.Token()),
+		Token:         result.Token(),
+		SameDevice:    result.SameDevice(p),
 		Verified:      result.Verified(),
-		Device:        result.Device(),
-		Email:         result.Email(),
-		Location:      result.Location(),
-		Secure:        secure,
+		UserAgent:     result.UserAgent(),
+		Location:      MarshalLocationToGraphQL(result.Location()),
+		Secure:        result.IsSecure(p),
 		AccountStatus: accountStatus,
 	}
 }
@@ -321,11 +313,14 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, curs
 
 func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
 	return &AccountSession{
-		UserAgent: result.UserAgent(),
-		IP:        result.IP(),
-		Created:   result.Created(),
-		ID:        relay.NewID(AccountSession{}, result.ID()),
-		Current:   result.IsCurrent(),
+		// encode session
+		ID:       relay.NewID(AccountSession{}, hex.EncodeToString([]byte(result.ID()))),
+		Device:   result.Device(),
+		IP:       result.IP(),
+		Location: MarshalLocationToGraphQL(result.Location()),
+		Created:  result.Created(),
+		LastSeen: result.LastSeen(),
+		Current:  result.IsCurrent(),
 	}
 }
 

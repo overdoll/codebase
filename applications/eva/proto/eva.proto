@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package applications.grpc.eva.v1;
+import "google/protobuf/empty.proto";
 
 message Account {
   string id = 1;
@@ -31,7 +32,28 @@ message CreateAccountRequest {
   string email = 2;
 }
 
+message SessionRequest {
+  string id = 1;
+}
+
+message SessionResponse {
+  bool valid = 1;
+  string accountId = 2;
+}
+
+message CreateSessionRequest {
+  string accountId = 1;
+}
+
+message CreateSessionResponse {
+  string id = 1;
+}
+
 service Eva {
   rpc LockAccount(LockAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
+
+  rpc GetSession(SessionRequest) returns (SessionResponse);
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc RevokeSession(SessionRequest) returns (google.protobuf.Empty);
 }

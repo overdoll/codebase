@@ -24,18 +24,18 @@ func (c CarrierServiceMock) ConfirmAccountEmail(ctx context.Context, accountId, 
 	return c.util.SendEmail(ctx, confirmEmailPrefix, email, map[string]interface{}{"token": token})
 }
 
-func (c CarrierServiceMock) NewLoginToken(ctx context.Context, email, token, language string) error {
-	return c.util.SendEmail(ctx, tokenEmailPrefix, email, map[string]interface{}{"token": token})
+func (c CarrierServiceMock) NewLoginToken(ctx context.Context, email, token, secret, language string) error {
+	return c.util.SendEmail(ctx, tokenEmailPrefix, email, map[string]interface{}{"token": token, "secret": secret})
 }
 
-func GetAuthTokenFromEmail(email string) (string, error) {
+func GetAuthTokenAndSecretFromEmail(email string) (string, string, error) {
 	util := testing_tools.NewMailingRedisUtility()
 	res, err := util.ReadEmail(context.Background(), tokenEmailPrefix, email)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return res["token"].(string), nil
+	return res["token"].(string), res["secret"].(string), nil
 }
 
 func GetEmailConfirmationTokenFromEmail(email string) (string, error) {

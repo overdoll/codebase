@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/passport"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
@@ -22,14 +23,12 @@ const (
 )
 
 type sessions struct {
-	Passport string `json:"passport"`
-	Details  sessionDetails
-}
-
-type sessionDetails struct {
-	Ip        string `json:"ip"`
+	Location  location.Serializable
 	UserAgent string `json:"userAgent"`
-	Created   string `json:"created"`
+	IP        string `json:"ip"`
+	Created   int64  `json:"created"`
+	LastSeen  int64  `json:"lastSeen"`
+	AccountId string `json:"accountId"`
 }
 
 type SessionRepository struct {
@@ -41,9 +40,9 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 }
 
 // getSessionById - get session by ID
-func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
+func (r SessionRepository) getSessionById(ctx context.Context, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
-	val, err := r.client.Get(ctx, sessionId).Result()
+	val, err := r.client.Get(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 
@@ -55,7 +54,7 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 	}
 
 	// decrypt session - since value is initially encrypted
-	details, err := crypt.DecryptSession(val)
+	details, err := crypt.Decrypt(val)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt session: %v", err)
@@ -67,20 +66,37 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 		return nil, fmt.Errorf("failed to unmarshal session: %v", err)
 	}
 
-	// we want to encrypt our session key
-	encryptedKey, err := crypt.Encrypt(sessionId)
-	if err != nil {
-		return nil, fmt.Errorf("failed to encrypt session id: %v", err)
-	}
-
 	current := false
 
-	if sessionId == passport.SessionId() {
-		current = true
+	if passport != nil {
+		if sessionId == passport.SessionID() {
+			current = true
+		}
 	}
 
-	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created, current)
-	res.Node = paging.NewNode(encryptedKey)
+	res := session.UnmarshalSessionFromDatabase(sessionId,
+		sessionItem.AccountId,
+		sessionItem.UserAgent,
+		sessionItem.IP,
+		sessionItem.Created,
+		sessionItem.LastSeen,
+		current,
+		location.UnmarshalLocationFromSerialized(sessionItem.Location),
+	)
+
+	res.Node = paging.NewNode(sessionId)
+
+	return res, nil
+}
+
+// getSessionById - get session by ID
+func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
+
+	res, err := r.getSessionById(ctx, passport, sessionId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := res.CanView(requester); err != nil {
 		return nil, err
@@ -93,7 +109,7 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 
 	// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
-	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+"*:"+accountPrefix+accountId, 100).Result()
+	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+session.GetSearchTermForAccounts(accountId), 100).Result()
 
 	if err != nil {
 
@@ -112,9 +128,15 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 	var sessions []*session.Session
 
 	for _, sessionID := range keys {
-		sess, err := r.GetSessionById(ctx, requester, passport, sessionID)
+
+		// remove prefix
+		sess, err := r.getSessionById(ctx, passport, strings.TrimLeft(sessionID, sessionPrefix))
 
 		if err != nil {
+			return nil, err
+		}
+
+		if err := sess.CanView(requester); err != nil {
 			return nil, err
 		}
 
@@ -125,27 +147,10 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 }
 
 // RevokeSessionById - revoke session
-func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error {
-
-	// decrypt, since we send it as encrypted
-	key, err := crypt.Decrypt(sessionId)
-
-	if err != nil {
-		return fmt.Errorf("failed to decrypt session id: %v", err)
-	}
-
-	_, err = r.GetSessionById(ctx, requester, passport, key)
-
-	if err != nil {
-		return err
-	}
-
-	if sessionId == passport.SessionId() {
-		return errors.New("cannot revoke session same as logged in account")
-	}
+func (r SessionRepository) revokeSessionById(ctx context.Context, sessionId string) error {
 
 	// make sure that we delete the session that belongs to this user only
-	_, err = r.client.Del(ctx, key).Result()
+	_, err := r.client.Del(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 
@@ -159,27 +164,43 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *pri
 	return nil
 }
 
-// CreateSessionForAccount - create a session for the account
-// NOTE: only use for tests! sessions are created and managed by express-session
-func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session *session.Session) error {
+// RevokeSessionById - revoke session
+func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) error {
 
-	sessionData := &sessions{
-		Passport: session.Passport().SerializeToBaseString(),
-		Details:  sessionDetails{Ip: session.IP(), UserAgent: session.UserAgent(), Created: session.Created()},
-	}
-
-	val, err := json.Marshal(sessionData)
+	ss, err := r.GetSessionById(ctx, requester, passport, sessionId)
 
 	if err != nil {
 		return err
 	}
 
-	valReal, err := crypt.EncryptSession(string(val))
+	if err := ss.CanRevoke(requester); err != nil {
+		return err
+	}
+
+	return r.revokeSessionById(ctx, sessionId)
+}
+
+func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *session.Session) error {
+
+	val, err := json.Marshal(&sessions{
+		Location:  location.Serialize(session.Location()),
+		UserAgent: session.Device(),
+		IP:        session.IP(),
+		Created:   session.Created().Unix(),
+		LastSeen:  session.LastSeen().Unix(),
+		AccountId: session.AccountID(),
+	})
+
 	if err != nil {
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, sessionPrefix+ksuid.New().String()+":"+accountPrefix+session.Passport().AccountID(), valReal, time.Hour*24).Result()
+	valReal, err := crypt.Encrypt(string(val))
+	if err != nil {
+		return err
+	}
+
+	ok, err := r.client.SetNX(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
 		return err
@@ -190,4 +211,47 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 	}
 
 	return nil
+}
+
+func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId string, updateFn func(session *session.Session) error) (*session.Session, error) {
+
+	session, err := r.getSessionById(ctx, nil, sessionId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := updateFn(session); err != nil {
+		return nil, err
+	}
+
+	val, err := json.Marshal(&sessions{
+		Location:  location.Serialize(session.Location()),
+		UserAgent: session.Device(),
+		IP:        session.IP(),
+		Created:   session.Created().Unix(),
+		LastSeen:  session.LastSeen().Unix(),
+		AccountId: session.AccountID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	valReal, err := crypt.Encrypt(string(val))
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.client.Set(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return session, nil
+}
+
+func (r SessionRepository) RevokeSessionOperator(ctx context.Context, sessionId string) error {
+	return r.revokeSessionById(ctx, sessionId)
 }

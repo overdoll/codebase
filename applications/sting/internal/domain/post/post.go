@@ -383,6 +383,11 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 func (p *Post) CanView(requester *principal.Principal) error {
 
 	if !p.IsPublished() {
+
+		if requester == nil {
+			return principal.ErrNotAuthorized
+		}
+
 		if requester.IsStaff() || requester.IsModerator() {
 			return nil
 		}

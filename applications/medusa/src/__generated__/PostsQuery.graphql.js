@@ -1,6 +1,10 @@
 /**
  * @flow
+<<<<<<< HEAD
  * @relayHash 8eb2cf546da76ff092c8f7e363c177a7
+=======
+ * @relayHash 22d9535cd4b6fea40d059503ad93cb0f
+>>>>>>> master
  */
 
 /* eslint-disable */
@@ -41,9 +45,8 @@ fragment ModeratePostFragment on Post {
 }
 
 fragment NoPostsPlaceholderFragment on Account {
-  moderator {
-    __typename
-    id
+  moderatorSettings {
+    isInModeratorQueue
   }
 }
 
@@ -144,13 +147,13 @@ fragment RejectionReasonsFragment on Query {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
+var v0 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 1
+  }
+],
 v1 = {
   "alias": null,
   "args": null,
@@ -158,20 +161,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 1
-  }
-],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
+<<<<<<< HEAD
 v4 = {
   "alias": null,
   "args": null,
@@ -194,6 +191,9 @@ v6 = {
   "storageKey": null
 },
 v7 = [
+=======
+v3 = [
+>>>>>>> master
   {
     "alias": null,
     "args": null,
@@ -252,19 +252,24 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Moderator",
+            "concreteType": "ModeratorSettings",
             "kind": "LinkedField",
-            "name": "moderator",
+            "name": "moderatorSettings",
             "plural": false,
             "selections": [
-              (v0/*: any*/),
-              (v1/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isInModeratorQueue",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "moderatorPostsQueue",
@@ -339,7 +344,14 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
+<<<<<<< HEAD
                         "selections": (v7/*: any*/),
+=======
+                        "selections": [
+                          (v2/*: any*/),
+                          (v1/*: any*/)
+                        ],
+>>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -350,7 +362,7 @@ return {
                         "name": "characters",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -358,7 +370,11 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
+<<<<<<< HEAD
                             "selections": (v7/*: any*/),
+=======
+                            "selections": (v3/*: any*/),
+>>>>>>> master
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -372,6 +388,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
+<<<<<<< HEAD
                         "selections": (v7/*: any*/),
                         "storageKey": null
                       },
@@ -398,6 +415,9 @@ return {
                             "storageKey": null
                           }
                         ],
+=======
+                        "selections": (v3/*: any*/),
+>>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -407,7 +427,13 @@ return {
                         "name": "postedAt",
                         "storageKey": null
                       },
-                      (v0/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -463,7 +489,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "Posts_moderatorPostsQueue",
@@ -525,7 +551,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "8eb2cf546da76ff092c8f7e363c177a7",
+=======
+    "id": "22d9535cd4b6fea40d059503ad93cb0f",
+>>>>>>> master
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

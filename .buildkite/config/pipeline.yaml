@@ -25,7 +25,8 @@ steps:
         LIBWEBP_VERSION: 1.1.0
         COOKIE_KEY: AES256Key-32Characters1234567890
         COOKIE_BLOCK_KEY: AES256Key-32Characters1234567890
-        COOKIE_INSECURE: "true"
         SENDGRID_API_KEY: ${SENDGRID_API_KEY}
         TESTMAIL_API_KEY: ${TESTMAIL_API_KEY}
+        PASSPORT_SECRET: passport_secret
         TESTMAIL_NAMESPACE: ${TESTMAIL_NAMESPACE}
+        GEOIP_DATABASE_LOCATION: internal/service/file_fixtures/GeoIP2-City-Test.mmdb

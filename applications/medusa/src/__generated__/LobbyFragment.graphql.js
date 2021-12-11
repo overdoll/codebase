@@ -11,6 +11,7 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type LobbyFragment$ref: FragmentReference;
 declare export opaque type LobbyFragment$fragmentType: LobbyFragment$ref;
 export type LobbyFragment = {|
+  +id: string,
   +email: string,
   +$refType: LobbyFragment$ref,
 |};
@@ -32,13 +33,25 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "email",
+      "name": "id",
       "storageKey": null
+    },
+    {
+      "kind": "ClientExtension",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        }
+      ]
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'dd3825df27d62b77d75d5deef1aa2f66';
+(node: any).hash = '68ca6dfa74f40fbaee95e8fa127113ff';
 module.exports = node;

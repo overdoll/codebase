@@ -21,7 +21,8 @@ type CodeValues = {
 }
 
 type Props = {
-  setIsSuccessful: () => void
+  setIsSuccessful: () => void,
+  id: string
 }
 
 const TotpSubmissionFormMutationGQL = graphql`
@@ -65,7 +66,8 @@ export default function TotpSubmissionForm (props: Props): Node {
     submitTotp({
       variables: {
         input: {
-          code: formData.code
+          code: formData.code,
+          id: props.id
         }
       },
       onCompleted (data) {

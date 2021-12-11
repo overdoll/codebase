@@ -3,13 +3,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "principal",
     srcs = [
-        "middleware.go",
+        "context.go",
+        "http_middleware.go",
         "principal.go",
     ],
     importpath = "overdoll/libraries/principal",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",
+        "@org_uber_go_zap//:zap",
     ],
 )

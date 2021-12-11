@@ -3,8 +3,6 @@ package graphql
 import (
 	"context"
 	"errors"
-	"overdoll/libraries/helpers"
-
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
@@ -14,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
+	"overdoll/libraries/helpers"
 )
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {

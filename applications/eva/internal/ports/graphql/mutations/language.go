@@ -7,18 +7,17 @@ import (
 	"overdoll/libraries/principal"
 
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/translations"
 )
 
 func (r *MutationResolver) UpdateLanguage(ctx context.Context, input types.UpdateLanguageInput) (*types.UpdateLanguagePayload, error) {
 
-	lang := translations.FromContext(ctx)
-
-	if err := translations.MutateLanguageLocaleContext(ctx, lang, input.Locale); err != nil {
+	if err := passport.MutatePassport(ctx, func(p *passport.Passport) error {
+		return p.UpdateDeviceLanguage(input.Locale)
+	}); err != nil {
 		return nil, err
 	}
 
-	return &types.UpdateLanguagePayload{Language: types.MarshalLanguageToGraphQL(lang)}, nil
+	return &types.UpdateLanguagePayload{Language: types.MarshalLanguageToGraphQL(passport.FromContext(ctx).Language())}, nil
 }
 
 func (r *MutationResolver) UpdateAccountLanguage(ctx context.Context, input types.UpdateAccountLanguageInput) (*types.UpdateAccountLanguagePayload, error) {

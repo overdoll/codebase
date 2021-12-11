@@ -20,7 +20,6 @@ go_library(
         "//applications/sting/proto:v1_go_proto",
         "//libraries/clients",
         "//libraries/graphql",
-        "//libraries/passport",
         "//libraries/principal",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",

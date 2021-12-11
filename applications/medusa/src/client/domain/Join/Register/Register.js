@@ -1,17 +1,24 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks';
-import { useToast } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
-import type { Node } from 'react';
-import { useHistory } from '@//:modules/routing';
-import Icon from '@//:modules/content/Icon/Icon';
-import { Helmet } from 'react-helmet-async';
-import RegisterForm from './RegisterForm/RegisterForm';
-import { PageWrapper } from '@//:modules/content/PageLayout';
-import { BadgeCircle } from '../../../../assets/icons/navigation';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
+import type { Node } from 'react'
+import { useHistory } from '@//:modules/routing'
+import Icon from '@//:modules/content/Icon/Icon'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import { Helmet } from 'react-helmet-async'
+import RegisterForm from './RegisterForm/RegisterForm'
+import { PageWrapper } from '../../../components/PageLayout'
+import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
+import { useCookies } from 'react-cookie'
+
+type Props = {
+  queryRef: RegisterFragment$key,
+};
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
@@ -24,13 +31,24 @@ const RegisterMutationGQL = graphql`
   }
 `
 
-export default function Register (): Node {
+const RegisterFragment = graphql`
+  fragment RegisterFragment on AuthenticationToken {
+    id
+    token
+  }
+`
+
+export default function Register ({ queryRef }: Props): Node {
   const [commit, isInFlight] = useMutation<RegisterMutation>(
     RegisterMutationGQL
   )
 
+  const data = useFragment(RegisterFragment, queryRef)
+
   const notify = useToast()
   const [t] = useTranslation('auth')
+
+  const [, , removeCookie] = useCookies(['token'])
 
   const history = useHistory()
 
@@ -38,7 +56,8 @@ export default function Register (): Node {
     commit({
       variables: {
         input: {
-          username: val.username
+          username: val.username,
+          token: data.token
         }
       },
       updater: (store, payload) => {
@@ -59,8 +78,10 @@ export default function Register (): Node {
         if (viewer !== null) {
           viewer.invalidateRecord()
         }
-
+        store.delete(data.id)
+        removeCookie('token')
         history.push('/profile')
+
         notify({
           status: 'success',
           title: t('register.success'),

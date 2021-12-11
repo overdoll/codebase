@@ -107,6 +107,7 @@ _RUNTIME_DEPS = [
     "@npm//connect-redis",
     "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
+    "@npm//universal-cookie-express",
     "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
     "@npm//joi",
@@ -124,6 +125,8 @@ _RUNTIME_DEPS = [
     "@npm//date-fns",
     "@npm//js-file-download",
     "@npm//cypress-otp",
+    "@npm//react-cookie",
+    "@npm//universal-cookie",
 ]
 
 TEST_DEPS = [

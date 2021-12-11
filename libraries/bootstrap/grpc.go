@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"overdoll/libraries/passport"
 	"syscall"
 	"time"
 
@@ -17,17 +18,19 @@ import (
 
 func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
-	// TODO: logger too verbose in dev, should be improved?
 	// Make sure that log statements internal to gRPC library are logged using the zapLogger as well.
 	//grpc_zap.ReplaceGrpcLoggerV2(zap.L())
 
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			passport.UnaryServerInterceptor(),
 			//	grpc_zap.UnaryServerInterceptor(zap.L()),
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			passport.StreamServerInterceptor(),
+			// TODO: logs too much??
 			//	grpc_zap.StreamServerInterceptor(zap.L()),
 		),
 	)

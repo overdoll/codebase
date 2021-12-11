@@ -33,6 +33,27 @@ type Account implements Node {
   """
   language: Language!
 
+  """
+  Sessions linked to this account
+  
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection!
+
   """Maximum amount of usernames that this account can create"""
   usernamesLimit: Int!
 
@@ -76,27 +97,6 @@ type Account implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): AccountEmailConnection!
-
-  """
-  Sessions linked to this account
-  
-  Only queryable if the currently logged-in account belongs to the requested account
-  """
-  sessions(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountSessionConnection!
 
   """
   Multi factor account settings
@@ -238,7 +238,7 @@ type Account implements Node {
   
   Viewable by the currently authenticated account or staff+
   """
-  moderator: Moderator
+  moderatorSettings: ModeratorSettings!
 }
 
 """Connection of the account"""
@@ -349,14 +349,20 @@ type AccountSession implements Node {
   """ID of the session"""
   id: ID!
 
-  """The user agent who first created the sesssion"""
-  userAgent: String!
+  """The originating user agent device"""
+  device: String!
 
-  """The IP of who first created the session"""
+  """The original IP"""
   ip: String!
 
+  """Where the session was originally created"""
+  location: Location!
+
   """When the session was created"""
-  created: String!
+  created: Time!
+
+  """When the session was last seen (last API call)"""
+  lastSeen: Time!
 
   """
   If the session belongs to the currently authenticated account. This means that
@@ -419,6 +425,18 @@ type AddAccountEmailPayload {
 """Validation message for adding account email"""
 enum AddAccountEmailValidation {
   INVALID_EMAIL
+}
+
+"""Add moderator to posts queue."""
+input AddModeratorToPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+type AddModeratorToPostQueuePayload {
+  """The account that was updated"""
+  account: Account
 }
 
 """Approve the pending post input"""
@@ -533,12 +551,19 @@ type AuthenticationToken {
   """Unique ID of the token"""
   id: ID!
 
-  """
-  Whether or not the token belongs to the same session as it was created in
-  """
-  sameSession: Boolean!
+  """Token belong to this authentication token"""
+  token: String!
 
-  """Whether or not the token is verified"""
+  """
+  When the token is viewed with the correct ID, whether or not the devices match
+  (you cannot use the token unless the device is the same).
+  """
+  sameDevice: Boolean!
+
+  """
+  Whether or not the token is verified (required in order to see account status,
+  and to use it for completing the auth flow).
+  """
   verified: Boolean!
 
   """
@@ -549,16 +574,13 @@ type AuthenticationToken {
   """
   secure: Boolean!
 
-  """The device this token was created from."""
-  device: String!
+  """The userAgent this token was created from."""
+  userAgent: String!
 
   """The location where this token was created at."""
-  location: String!
+  location: Location!
 
-  """The email that belongs to this token."""
-  email: String!
-
-  """Once the token is verified, you can see the status of the account"""
+  """Once the token is verified, you can see the status of the account."""
   accountStatus: AuthenticationTokenAccountStatus
 }
 
@@ -808,8 +830,12 @@ enum ConfirmAccountEmailValidation {
   EMAIL_TAKEN
 }
 
-"""Payload for a created pending post"""
+"""Payload for creating an account with authentication token"""
 input CreateAccountWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
+
+  """The username to create the account with"""
   username: String!
 }
 
@@ -820,13 +846,16 @@ type CreateAccountWithAuthenticationTokenPayload {
 
   """The account that was created"""
   account: Account
+
+  """A token is revoked once an account is created, this represents it"""
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for creating an account with an authentication token"""
 enum CreateAccountWithAuthenticationTokenValidation {
   EMAIL_TAKEN
   USERNAME_TAKEN
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }
 
 """Payload for a created pending post"""
@@ -867,6 +896,9 @@ type DisableAccountMultiFactorPayload {
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
+  """The TOTP ID, sent intially"""
+  id: String!
+
   """The code that the TOTP expects"""
   code: String!
 }
@@ -901,6 +933,10 @@ type GenerateAccountMultiFactorTotpPayload {
 Payload for granting access to an account using the token and the recovery code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
+  """The original token"""
+  token: String!
+
+  """Recovery code"""
   recoveryCode: String!
 }
 
@@ -913,18 +949,27 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload 
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
-  TOKEN_EXPIRED
-  INVALID_RECOVERY_CODE
+  TOKEN_INVALID
+  RECOVERY_CODE_INVALID
 }
 
 """
 Payload for granting access to an account using the token and the totp code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
+  """The original token"""
+  token: String!
+
+  """TOTP code"""
   code: String!
 }
 
@@ -937,12 +982,25 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
-  TOKEN_EXPIRED
-  INVALID_CODE
+  TOKEN_INVALID
+  CODE_INVALID
+}
+
+"""
+Payload for granting account access with the token. Will fail if account has multi-factor auth enabled.
+"""
+input GrantAccountAccessWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
 }
 
 type GrantAccountAccessWithAuthenticationTokenPayload {
@@ -951,14 +1009,20 @@ type GrantAccountAccessWithAuthenticationTokenPayload {
 
   """The account that granted access to"""
   account: Account
+
+  """
+  A token is revoked once the account access is granted, this represents it
+  """
+  revokedAuthenticationTokenId: ID!
 }
 
 enum GrantAccountAccessWithAuthenticationTokenValidation {
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }
 
 """Input for granting an authentication token"""
 input GrantAuthenticationTokenInput {
+  """The email that the token will be granted for"""
   email: String!
 }
 
@@ -980,15 +1044,36 @@ type Language {
   locale: BCP47!
 }
 
-type Moderator implements Node {
-  """The ID of the moderator"""
-  id: ID!
+"""Represents a physical location."""
+type Location {
+  """City"""
+  city: String!
 
-  """The last time this moderator was selected for a post"""
-  lastSelected: Time!
+  """Country"""
+  country: String!
 
-  """The account linked to this moderator"""
-  account: Account!
+  """Postal Code"""
+  postalCode: String!
+
+  """Subdivision"""
+  subdivision: String!
+
+  """Latitude"""
+  latitude: Float!
+
+  """Longitude"""
+  longitude: Float!
+}
+
+"""General moderator settings."""
+type ModeratorSettings {
+  """If this moderator is in queue."""
+  isInModeratorQueue: Boolean!
+
+  """
+  The last time this moderator was selected for a post. Null if moderator not in queue
+  """
+  lastSelected: Time
 }
 
 """Types of multi factor enabled for this account"""
@@ -998,6 +1083,9 @@ type MultiFactor {
 
 """TOTP secret + image combination"""
 type MultiFactorTotp {
+  """The TOTP ID. Should be sent back when creating the TOTP"""
+  id: String!
+
   """The TOTP secret"""
   secret: String!
 
@@ -1024,6 +1112,9 @@ type Mutation {
   """
   updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
 
+  """Revoke a session for this account"""
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
+
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
@@ -1041,9 +1132,6 @@ type Mutation {
   Will retain the old username
   """
   updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
-
-  """Revoke a session for this account"""
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
   Update the account email status to primary
@@ -1099,8 +1187,6 @@ type Mutation {
   
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
@@ -1111,22 +1197,8 @@ type Mutation {
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
 
-  """
-  Create an account using the current authentication token
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
+  """Create an account using the current authentication token"""
   createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
-
-  """Logout the current account"""
-  revokeAccountAccess: RevokeAccountAccessPayload
-
-  """
-  Re-issue an authentication token based on the current one
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
-  reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
   Grant account access with authentication token
@@ -1134,14 +1206,12 @@ type Mutation {
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
   verified first
   """
-  grantAccountAccessWithAuthenticationToken: GrantAccountAccessWithAuthenticationTokenPayload
+  grantAccountAccessWithAuthenticationToken(input: GrantAccountAccessWithAuthenticationTokenInput!): GrantAccountAccessWithAuthenticationTokenPayload
 
   """
   Grant account access using an authentication token and a multi factor option
   
   Set "code" when authenticating with a TOTP code
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
@@ -1149,24 +1219,16 @@ type Mutation {
   Grant account access using an authentication token and a multi factor option
   
   Set "recoveryCode" when authenticating with a recovery code
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
-  Will verify the authentication token.
-  
-  If token does not exist in the cookie, it will only verify
-  
-  If the token exists in the cookie, it will also attempt to grant access to the account associated
-  to this token
-  
-  If no account exists,
-  
-  Note: the actual authentication token is opaque (set & read from cookies)
+  Will verify the authentication token. Requires the secret (sent in an email)
   """
   verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+
+  """Logout the current account"""
+  revokeAccountAccess: RevokeAccountAccessPayload
 
   """Create a new post"""
   createPost: CreatePostPayload
@@ -1207,14 +1269,11 @@ type Mutation {
   """
   revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
-  """
-  Toggle moderator status
-  
-  Will remove or add the moderator from the queue
-  
-  Current status can be queried from moderatorSettings of the account
-  """
-  toggleModeratorSettingsInQueue: ToggleModeratorSettingsInQueuePayload
+  """Add moderator to posts queue"""
+  addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
+
+  """Remove moderator from posts queue"""
+  removeModeratorFromPostQueue(input: RemoveModeratorFromPostQueueInput!): RemoveModeratorFromPostQueuePayload
 
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
@@ -1541,11 +1600,10 @@ type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
   
-  If "token" is not provided, it will attempt to read the opaque token
-  
-  However, if the token is provided, and the ID is valid, it will show the token
+  Note: you can only view the authentication token if you're the originating
+  device or you have entered a valid secret (not from same device)
   """
-  viewAuthenticationToken(token: String): AuthenticationToken
+  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
 
   """Search all audiences."""
   audiences(
@@ -1805,20 +1863,6 @@ type Query {
   node(id: ID!): Node
 }
 
-"""Payload re-sending authentication email"""
-type ReissueAuthenticationTokenPayload {
-  """Validation for reissuing authentication token"""
-  validation: ReissueAuthenticationTokenValidation
-
-  """The authentication token"""
-  authenticationToken: AuthenticationToken
-}
-
-"""Validation for reissuing authentication token"""
-enum ReissueAuthenticationTokenValidation {
-  TOKEN_EXPIRED
-}
-
 """Moderate the pending post input"""
 input RejectPostInput {
   """Pending post to take action against"""
@@ -1835,6 +1879,18 @@ input RejectPostInput {
 type RejectPostPayload {
   """The audit log generated by the pending post"""
   postAuditLog: PostAuditLog
+}
+
+"""Remove moderator from posts queue."""
+input RemoveModeratorFromPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+type RemoveModeratorFromPostQueuePayload {
+  """The account that was updated"""
+  account: Account
 }
 
 """Moderate the pending post input"""
@@ -1950,12 +2006,13 @@ type RevokeAccountStaffRolePayload {
 
 """Input for revoking an authentication token"""
 input RevokeAuthenticationTokenInput {
+  """The token to revoke"""
+  token: String!
+
   """
-  If an ID is specified, the token can be revoked if a proper ID is specified
-  
-  If an ID is not specified, a token from the cookie will be used
+  The secret associated with this token. Required if revoking the token not on the same device that created it.
   """
-  authenticationTokenId: String
+  secret: String
 }
 
 """Payload for revoking the authentication token"""
@@ -2051,12 +2108,6 @@ type SubmitPostPayload {
 }
 
 scalar Time
-
-"""Toggle whether or not the moderator will be part of the queue"""
-type ToggleModeratorSettingsInQueuePayload {
-  """The new status of the moderator in queue"""
-  moderatorSettingsInQueue: Boolean
-}
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
@@ -2209,9 +2260,13 @@ type UpdatePostContentPayload {
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
 
-"""Input for verifying token account"""
+"""Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
-  authenticationTokenId: String!
+  """The original token"""
+  token: String!
+
+  """Secret (get it from the email)"""
+  secret: String!
 }
 
 """Payload for verifying the authentication token"""
@@ -2225,5 +2280,5 @@ type VerifyAuthenticationTokenPayload {
 
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
-  TOKEN_EXPIRED
+  TOKEN_INVALID
 }

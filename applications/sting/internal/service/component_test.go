@@ -28,15 +28,22 @@ import (
 )
 
 const StingHttpAddr = ":6666"
-const StingGraphqlClientAddr = "http://:6666/graphql"
+const StingGraphqlClientAddr = "http://:6666/api/graphql"
 const StingTusClientAddr = "http://:6666/api/upload/"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
-func getGraphqlClient(t *testing.T, pass *passport.Passport) *graphql.Client {
+func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
-	client, _ := clients.NewHTTPClientWithHeaders(pass)
+	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
+
+	return graphql.NewClient(StingGraphqlClientAddr, client)
+}
+
+func getGraphqlClient(t *testing.T) *graphql.Client {
+
+	client, _ := passport.NewHTTPTestClientWithPassport(nil)
 
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }

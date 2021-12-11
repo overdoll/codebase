@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8e30dfd46ad67a5e8620e1341c669528
+ * @relayHash f29aa5c89e54296fc3661c4c5ffe8ba2
  */
 
 /* eslint-disable */
@@ -8,13 +8,18 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+import type { GrantFragment$ref } from "./GrantFragment.graphql";
 import type { JoinFragment$ref } from "./JoinFragment.graphql";
 import type { JoinRootFragment$ref } from "./JoinRootFragment.graphql";
 import type { LobbyFragment$ref } from "./LobbyFragment.graphql";
-export type JoinRootQueryVariables = {||};
+import type { MultiFactorFragment$ref } from "./MultiFactorFragment.graphql";
+import type { RegisterFragment$ref } from "./RegisterFragment.graphql";
+export type JoinRootQueryVariables = {|
+  token: string
+|};
 export type JoinRootQueryResponse = {|
   +viewAuthenticationToken: ?{|
-    +$fragmentRefs: LobbyFragment$ref & JoinRootFragment$ref & JoinFragment$ref
+    +$fragmentRefs: LobbyFragment$ref & JoinRootFragment$ref & JoinFragment$ref & RegisterFragment$ref & MultiFactorFragment$ref & GrantFragment$ref
   |}
 |};
 export type JoinRootQuery = {|
@@ -24,52 +29,79 @@ export type JoinRootQuery = {|
 
 
 /*
-query JoinRootQuery {
-  viewAuthenticationToken {
+query JoinRootQuery(
+  $token: String!
+) {
+  viewAuthenticationToken(token: $token) {
     ...LobbyFragment
     ...JoinRootFragment
-    ...JoinFragment
+    ...RegisterFragment
+    ...MultiFactorFragment
+    ...GrantFragment
     id
   }
 }
 
-fragment JoinFragment on AuthenticationToken {
-  email
+fragment GrantFragment on AuthenticationToken {
+  id
+  token
 }
 
 fragment JoinRootFragment on AuthenticationToken {
   verified
-  sameSession
+  token
+  sameDevice
   accountStatus {
     registered
     multiFactor {
       totp
     }
-    ...MultiFactorFragment
   }
 }
 
 fragment LobbyFragment on AuthenticationToken {
-  email
+  id
 }
 
-fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
-  multiFactor {
-    totp
+fragment MultiFactorFragment on AuthenticationToken {
+  accountStatus {
+    multiFactor {
+      totp
+    }
   }
+}
+
+fragment RegisterFragment on AuthenticationToken {
+  id
+  token
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "token"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "token",
+    "variableName": "token"
+  }
+];
+return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "JoinRootQuery",
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "concreteType": "AuthenticationToken",
         "kind": "LinkedField",
         "name": "viewAuthenticationToken",
@@ -89,6 +121,21 @@ const node: ConcreteRequest = {
             "args": null,
             "kind": "FragmentSpread",
             "name": "JoinFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RegisterFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MultiFactorFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "GrantFragment"
           }
         ],
         "storageKey": null
@@ -99,13 +146,13 @@ const node: ConcreteRequest = {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "JoinRootQuery",
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "concreteType": "AuthenticationToken",
         "kind": "LinkedField",
         "name": "viewAuthenticationToken",
@@ -115,7 +162,7 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "email",
+            "name": "id",
             "storageKey": null
           },
           {
@@ -129,7 +176,14 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "sameSession",
+            "name": "token",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameDevice",
             "storageKey": null
           },
           {
@@ -169,11 +223,16 @@ const node: ConcreteRequest = {
             "storageKey": null
           },
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "email",
+                "storageKey": null
+              }
+            ]
           }
         ],
         "storageKey": null
@@ -181,13 +240,14 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "8e30dfd46ad67a5e8620e1341c669528",
+    "id": "f29aa5c89e54296fc3661c4c5ffe8ba2",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
     "text": null
   }
 };
+})();
 // prettier-ignore
-(node: any).hash = 'bfb99643cfaca3b38b1c778fcaeaf828';
+(node: any).hash = '0ea7c758f2a84c47f8f397b9138d8450';
 module.exports = node;

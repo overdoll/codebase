@@ -2,14 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react'
+import { Suspense, useContext, useEffect, useState } from 'react'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
 import { chakra, Progress, Slide } from '@chakra-ui/react'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
-
-const SUSPENSE_CONFIG = { timeoutMs: 2000 }
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -23,7 +21,6 @@ export default function RouterRenderer (): Node {
   // Improve the route transition UX by delaying transitions: show the previous route entry
   // for a brief period while the next route is being prepared. See
   // https://reactjs.org/docs/concurrent-mode-patterns.html#transitions
-  const [startTransition, isPending] = useTransition(SUSPENSE_CONFIG)
 
   // Store the active entry in state - this allows the renderer to use features like
   // useTransition to delay when state changes become visible to the user.
@@ -45,9 +42,8 @@ export default function RouterRenderer (): Node {
       // startTransition() delays the effect of the setRouteEntry (setState) call
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.
-      startTransition(() => {
-        setRouteEntry(nextEntry)
-      })
+      // TODO: transitions are buggy - getting rid of them for now
+      setRouteEntry(nextEntry)
     })
     return () => dispose()
 
@@ -55,7 +51,7 @@ export default function RouterRenderer (): Node {
     // from the hook deps to avoid recomputing the effect after each change
     // triggered by the effect itself.
     // eslint-disable-next-line
-  }, [router, startTransition]);
+  }, [router])
 
   // The current route value is an array of matching entries - one entry per
   // level of routes (to allow nested routes). We have to map each one to a
@@ -107,13 +103,15 @@ export default function RouterRenderer (): Node {
   // Routes can suspend, so wrap in <Suspense>
   return (
     <ErrorBoundary>
-      <Suspense fallback={<CenteredSpinner />}>
-        {routeComponent}
+      <Suspense fallback={
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
           <Slide direction='top' in={isPending}>
             <Progress h='3px' borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
           </Slide>
         </chakra.div>
+      }
+      >
+        {routeComponent}
       </Suspense>
     </ErrorBoundary>
   )

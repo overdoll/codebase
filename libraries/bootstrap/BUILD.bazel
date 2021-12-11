@@ -17,6 +17,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/helpers",
+        "//libraries/passport",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/credentials",
         "@com_github_aws_aws_sdk_go//aws/session",

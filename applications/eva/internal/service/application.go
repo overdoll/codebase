@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/oschwald/geoip2-golang"
+	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/app"
@@ -9,6 +11,7 @@ import (
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/config"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -40,14 +43,18 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	client := bootstrap.InitializeElasticSearchSession()
 
-	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
-	redis2 := bootstrap.InitializeRedisSessionWithCustomDB(0)
+	db, err := geoip2.Open(config.GetFilePath(os.Getenv("GEOIP_DATABASE_LOCATION")))
+
+	if err != nil {
+		zap.S().Fatal("failed to open database", zap.Error(err))
+	}
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
-	sessionRepo := adapters.NewSessionRepository(redis2)
+	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
+	locationRepo := adapters.NewLocationMaxmindRepository(db)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -55,7 +62,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
-			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, carrier),
+			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccountOperator:                       command.NewLockAccountOperatorHandler(accountRepo),
 			UnlockAccount:                             command.NewUnlockUserHandler(accountRepo),
 			AddAccountEmail:                           command.NewAddAccountEmailHandler(accountRepo, carrier),
@@ -70,13 +77,16 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
-			ReissueAuthenticationToken:                command.NewReissueAuthenticationTokenHandler(tokenRepo, carrier),
 			IndexAllAccounts:                          command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
 
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
 			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
 			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
+
+			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, locationRepo),
+			TouchAccountSessionOperator:  command.NewTouchAccountSessionOperatorHandler(sessionRepo),
+			RevokeAccountSessionOperator: command.NewRevokeAccountSessionOperatorHandler(sessionRepo),
 		},
 		Queries: app.Queries{
 			SearchAccounts:                  query.NewSearchAccountsHandler(accountIndexRepo),
@@ -92,7 +102,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			AccountSessionsByAccount:        query.NewAccountSessionsByAccountHandler(sessionRepo),
 			AccountRecoveryCodesByAccount:   query.NewAccountRecoveryCodesByAccountHandler(mfaRepo),
 			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountMultiFactorTOTPEnabledHandler(mfaRepo),
-			AuthenticationTokenById:         query.NewAuthenticationTokenByIdHandler(tokenRepo, accountRepo, mfaRepo),
+			ViewAuthenticationToken:         query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			AccountUsernamesLimit:           query.NewAccountUsernamesLimitHandler(accountRepo),
 			AccountEmailsLimit:              query.NewAccountEmailsLimitHandler(accountRepo),
 		},
