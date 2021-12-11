@@ -37,7 +37,7 @@ export default function StyledInput ({ register, success, error, placeholder, er
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage fontSize={size}>
+      <FormErrorMessage fontSize={size || 'sm'}>
         {errorMessage}
       </FormErrorMessage>
     </Box>
