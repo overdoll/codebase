@@ -30,7 +30,7 @@ export default function StyledInput ({ register, success, error, placeholder, er
           <InputRightElement mr={2} h='100%' pointerEvents='none'>
             <Icon
               h='100%'
-              p={2}
+              p={3}
               icon={success ? CheckMark : WarningTriangle}
               fill={success ? 'green.500' : 'orange.500'}
             />

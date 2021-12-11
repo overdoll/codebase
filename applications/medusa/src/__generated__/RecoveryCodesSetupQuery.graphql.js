@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d659ceb54b09f8d4df5d0b249e40119c
+ * @relayHash 7280c1350737606b34c5261d6a7a623a
  */
 
 /* eslint-disable */
@@ -16,6 +16,9 @@ export type RecoveryCodesSetupQueryResponse = {|
       +__id: string,
       +code: string,
     |}>,
+    +multiFactorSettings: {|
+      +__typename: string
+    |},
   |}
 |};
 export type RecoveryCodesSetupQuery = {|
@@ -29,6 +32,9 @@ query RecoveryCodesSetupQuery {
   viewer {
     recoveryCodes {
       code
+    }
+    multiFactorSettings {
+      __typename
     }
     id
   }
@@ -66,6 +72,24 @@ v1 = {
     (v0/*: any*/)
   ],
   "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountMultiFactorSettings",
+  "kind": "LinkedField",
+  "name": "multiFactorSettings",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -83,6 +107,7 @@ return {
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          (v2/*: any*/),
           (v0/*: any*/)
         ],
         "storageKey": null
@@ -106,6 +131,7 @@ return {
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -120,7 +146,7 @@ return {
     ]
   },
   "params": {
-    "id": "d659ceb54b09f8d4df5d0b249e40119c",
+    "id": "7280c1350737606b34c5261d6a7a623a",
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
@@ -129,5 +155,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '49e6c015be3f175b95ab88a3ac4023ec';
+(node: any).hash = '0876f9bce52915db3fe9ded92c64ae97';
 module.exports = node;

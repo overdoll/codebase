@@ -192,7 +192,10 @@ export default function MultiFactorTotpFlow (props: Props): Node {
             <Text mb={2} color='gray.100' fontSize='sm'>
               {t('totp.flow.code_step.description')}
             </Text>
-            <TotpSubmissionForm id={totp.id} setIsSuccessful={() => setIsSuccessful(true)} />
+            <TotpSubmissionForm
+              id={totp.generateAccountMultiFactorTotp.multiFactorTotp.id}
+              setIsSuccessful={() => setIsSuccessful(true)}
+            />
           </Box>
         </Flex>
       </SmallBackgroundBox>

@@ -39,6 +39,9 @@ const RecoveryCodesSetupQueryGQL = graphql`
         __id
         code
       }
+      multiFactorSettings {
+        __typename
+      }
     }
   }
 `
@@ -103,7 +106,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
           })
         },
         updater: (store) => {
-          const node = store.get(data.__id)
+          const node = store.get(data.viewer.__id)
           const payload = store.getRootField('generateAccountMultiFactorRecoveryCodes').getLinkedRecords('accountMultiFactorRecoveryCodes')
           node.setLinkedRecords(payload, 'recoveryCodes')
 
