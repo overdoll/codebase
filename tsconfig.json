@@ -20,6 +20,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": [
+      "react-dom/next"
+    ],
     "paths": {
       "@//:modules/*": [
         "./applications/medusa/src/modules/*"

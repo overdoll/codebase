@@ -18,15 +18,14 @@ interface Context {
 
 interface Props {
   context: Context
-  loc: Location
+  location: Location
 }
 
 export default function createMockHistory ({
   context = {},
-  loc
+  location: loc
 }: Props): History {
   if (typeof loc === 'string') loc = parsePath(loc)
-
   const action = 'POP'
   const location = {
     pathname: loc.pathname ?? '/',
