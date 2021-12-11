@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Context } from 'react'
-import { createContext, useContext } from 'react'
-import type { Router } from './router'
+import type { Context } from 'react';
+import { createContext, useContext } from 'react';
+import type { Router } from './router';
 
 const RoutingContext: Context<Router> = createContext({})
 

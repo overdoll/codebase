@@ -2,18 +2,17 @@
  * @flow
  */
 
-import type { Node } from 'react'
-import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceSettingMenuVerticalAlternate from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
-import { useTranslation } from 'react-i18next'
+import type { Node } from 'react';
+import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   disabled: boolean
 }
 
-export default function PostMenu ({ disabled }: Props): Node {
-  const [t] = useTranslation('general')
+export default function PostMenu({ disabled }: Props): Node {
+  const [t] = useTranslation('general');
 
   return (
     <Menu>
@@ -28,7 +27,7 @@ export default function PostMenu ({ disabled }: Props): Node {
           <Icon
             w='inherit'
             h='inherit'
-            icon={InterfaceSettingMenuVerticalAlternate}
+            icon={}
             fill='gray.500'
           />
         }
@@ -38,5 +37,5 @@ export default function PostMenu ({ disabled }: Props): Node {
         <MenuItem>{t('menu.copy_link')}</MenuItem>
       </MenuList>
     </Menu>
-  )
+  );
 }

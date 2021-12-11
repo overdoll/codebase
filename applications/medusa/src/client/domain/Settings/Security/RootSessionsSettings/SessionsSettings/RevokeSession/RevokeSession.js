@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { DeleteBin } from '../../../../../../../assets/icons/interface'
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
-import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql';
+import { MenuItem, Text, useToast } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import { DeleteBin } from '../../../../../../../assets/icons/interface';
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
+import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql';
 
 type Props = {
   connectionID: EmailsSettingsFragment$key,

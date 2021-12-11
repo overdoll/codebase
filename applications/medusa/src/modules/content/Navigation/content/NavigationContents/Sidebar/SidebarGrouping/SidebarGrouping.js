@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import { Text } from '@chakra-ui/react'
-import type { Node } from 'react'
+import { Text } from '@chakra-ui/react';
+import type { Node } from 'react';
 
 type Props = {
   children: Node,

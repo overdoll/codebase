@@ -3,20 +3,14 @@
  */
 
 import {
-  Box,
-  Flex,
   Text,
-  Heading,
   Stack,
   useToast
-
 } from '@chakra-ui/react'
 import type { Node } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditInspectFragment$key } from '@//:artifacts/AuditInspectFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
 import { useTranslation } from 'react-i18next'
-import RotateBack from '@streamlinehq/streamlinehq/img/streamline-bold/design/rotate/rotate-back.svg'
 import { useMutation } from 'react-relay/hooks'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
 import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
@@ -110,9 +104,6 @@ export default function AuditInspect ({ auditLog }: Props): Node {
         <PostPreview query={data.post} />
         {canRevert &&
           <Button
-            rightIcon={
-              <Icon w={4} h={4} icon={RotateBack} fill='purple.900' />
-          }
             size='md'
             variant='solid'
             colorScheme='purple'

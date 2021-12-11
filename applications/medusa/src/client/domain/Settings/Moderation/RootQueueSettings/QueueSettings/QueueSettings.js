@@ -1,19 +1,14 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import {
-  Heading,
-  useToast,
-  Flex,
-  Text
-} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
-import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
-import type { QueueSettingsMutation } from '@//:artifacts/QueueSettingsMutation.graphql'
-import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
-import Switch from '@//:modules/form/Switch'
+import type { Node } from 'react';
+import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks';
+import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql';
+import type { QueueSettingsMutation } from '@//:artifacts/QueueSettingsMutation.graphql';
+import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql';
+import Switch from '@//:modules/form/Switch';
 
 type Props = {
   query: QueueSettingsFragment$key

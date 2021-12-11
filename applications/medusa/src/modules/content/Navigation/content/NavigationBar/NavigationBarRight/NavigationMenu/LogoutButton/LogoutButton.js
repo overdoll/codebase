@@ -1,15 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import { graphql, useMutation } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
-import { SafetyExitDoorLeft } from '../../../../../../../../assets/icons/navigation'
-import { useHistory } from '@//:modules/routing'
-import { ClickableBox } from '@//:modules/content/PageLayout'
-import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton'
+import type { Node } from 'react';
+import { useToast } from '@chakra-ui/react';
+import { graphql, useMutation } from 'react-relay/hooks';
+import { useTranslation } from 'react-i18next';
+import { SafetyExitDoorLeft } from '../../../../../../../../assets/icons/navigation';
+import { useHistory } from '@//:modules/routing';
+import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton';
 
 const LogoutButtonGQL = graphql`
   mutation LogoutButtonMutation {

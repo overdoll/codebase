@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import ClickableBox from '@//:modules/content/PageLayout/Interactables/ClickableBox/ClickableBox'
-import { Flex, Heading } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import ClickableBox from '@//:modules/content/PageLayout/Interactables/ClickableBox/ClickableBox';
+import { Flex, Heading } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
 
 type Props = {
   active: boolean,

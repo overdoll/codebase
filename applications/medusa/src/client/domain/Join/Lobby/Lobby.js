@@ -10,9 +10,7 @@ import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import Button from '@//:modules/form/Button';
 import { useClickDelay } from '@//:modules/utilities/hooks';
 import { PageWrapper } from '@//:modules/content/PageLayout';
-
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { BadgeCircle } from '../../../../assets/icons/navigation';
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql';
 
 type Props = {
@@ -94,10 +92,10 @@ export default function Lobby ({
   return (
     <PageWrapper>
       <Icon
-        icon={SignBadgeCircle}
+        icon={BadgeCircle}
         w={100}
         h={100}
-        color='purple.300'
+        fill='purple.300'
         ml='auto'
         mr='auto'
         mb={8}

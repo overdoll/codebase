@@ -1,13 +1,12 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { Avatar, Flex, Heading, MenuDivider, MenuItem, Text } from '@chakra-ui/react'
-import NavLink from '@//:modules/routing/NavLink'
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { ProfileButtonFragment$key } from '@//:artifacts/ProfileButtonFragment.graphql'
-import { ClickableBox } from '@//:modules/content/PageLayout'
-import { MenuButton } from '@//:modules/content/Navigation/components'
+import { useTranslation } from 'react-i18next';
+import { Avatar, Flex, Text } from '@chakra-ui/react';
+import NavLink from '@//:modules/routing/NavLink';
+import { graphql, useFragment } from 'react-relay/hooks';
+import type { ProfileButtonFragment$key } from '@//:artifacts/ProfileButtonFragment.graphql';
+import { MenuButton } from '@//:modules/content/Navigation/components';
 
 type Props = {
   query: ProfileButtonFragment$key

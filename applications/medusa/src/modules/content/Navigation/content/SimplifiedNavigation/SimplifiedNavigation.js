@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import { Button, Flex, IconButton, Spacer } from '@chakra-ui/react'
-import type { Node } from 'react'
-import Link from '@//:modules/routing/Link'
-import Icon from '@//:modules/content/Icon/Icon'
-import { useHistory } from '@//:modules/routing'
-import { useTranslation } from 'react-i18next'
-import InterfaceArrowsTurnBackward
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-turn-backward.svg'
+import { Button, Flex, Spacer } from '@chakra-ui/react';
+import type { Node } from 'react';
+import Link from '@//:modules/routing/Link';
+import Icon from '@//:modules/content/Icon/Icon';
+import { useHistory } from '@//:modules/routing';
+import { useTranslation } from 'react-i18next';
+import { ArrowButtonUndo } from '../../../../../assets/icons/navigation';
+import IconButton from '@//:modules/form/IconButton';
 
 type Props = {
   children: Node
@@ -40,7 +40,7 @@ export default function SimplifiedNavigation ({ children }: Props): Node {
           mr={2}
           icon={
             <Icon
-              icon={InterfaceArrowsTurnBackward} m={2} w='fill' h='fill' p={1}
+              icon={ArrowButtonUndo} m={2} w='fill' h='fill' p={1}
               fill='gray.100'
             />
           }

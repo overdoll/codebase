@@ -1,12 +1,12 @@
-import Link from '@//:modules/routing/Link'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import JSResource from '@//:modules/utilities/JSResource'
-import { createMockEnvironment } from 'relay-test-utils'
-import { createClientRouter } from '@//:modules/routing/router'
-import { createMemoryHistory } from 'history'
-import RoutingContext from '@//:modules/routing/RoutingContext'
-import RouterRenderer from '../RouteRenderer'
+import Link from '@//:modules/routing/Link';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import JSResource from '@//:modules/utilities/JSResource';
+import { createMockEnvironment } from 'relay-test-utils';
+import { createClientRouter } from '@//:modules/routing/router';
+import { createMemoryHistory } from 'history';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import RouterRenderer from '../RouteRenderer';
 
 // components to help with testing
 const LinkComponent = () => {

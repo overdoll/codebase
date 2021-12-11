@@ -1,26 +1,26 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import {
   Menu,
   MenuButton,
   MenuList,
   Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Portal,
+  SimpleGrid,
+  Stack,
   useBreakpointValue,
   useDisclosure,
-  ModalContent,
-  ModalBody,
-  ModalOverlay,
-  SimpleGrid,
-  Portal,
-  Stack
-} from '@chakra-ui/react'
-import { PageControllerSettings } from '../../../../../../../assets/icons/navigation'
+} from '@chakra-ui/react';
+import { PageControllerSettings } from '../../../../../../../assets/icons/navigation';
 
-import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
-import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
-import { SiteLinkLogo } from '@//:modules/content/Navigation/content'
+import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton';
+import { useHistoryDisclosure } from '@//:modules/utilities/hooks';
+import { SiteLinkLogo } from '@//:modules/content/Navigation/content';
 
 type Props = {
   children: Node,

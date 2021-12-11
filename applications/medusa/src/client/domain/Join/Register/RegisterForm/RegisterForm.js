@@ -3,17 +3,13 @@
  */
 import Joi from 'joi';
 import { useTranslation } from 'react-i18next';
-import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
+import { FormControl, FormLabel, Stack } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg';
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg';
 import { joiResolver } from '@hookform/resolvers/joi';
 import type { Node } from 'react';
 import Button from '@//:modules/form/Button';
 import { useUsernameFormSchema } from '@//:modules/constants/schemas';
+import StyledInput from '@//:modules/form/StyledInput/StyledInput';
 
 type RegisterValues = {
   username: string,
@@ -41,53 +37,41 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl
-        isInvalid={errors.username}
-        id='username'
-      >
-        <FormLabel
-          htmlFor='username'
-          variant='float'
-          color={!success
-            ? errors.username
-              ? 'orange.500'
-              : 'gray.200'
-            : 'green.600'}
+      <Stack spacing={6}>
+        <FormControl
+          isInvalid={errors.username}
+          id='username'
         >
-          {t('register.form.username.title')}
-        </FormLabel>
-        <InputGroup size='xl'>
-          <Input
-            {...register('username')}
-            variant='filled'
+          <FormLabel
+            htmlFor='username'
+            variant='float'
+            color={!success
+              ? errors.username
+                ? 'orange.500'
+                : 'gray.200'
+              : 'green.600'}
+          >
+            {t('register.form.username.title')}
+          </FormLabel>
+          <StyledInput
+            register={register('username')}
+            success={success}
+            error={errors.username}
             placeholder={t('register.form.username.placeholder')}
+            errorMessage={errors.username?.message}
           />
-          {(errors.username || success) && (
-            <InputRightElement>
-              <Icon
-                w={6}
-                h={6}
-                icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-                fill={success ? 'green.600' : 'orange.500'}
-              />
-            </InputRightElement>
-          )}
-        </InputGroup>
-        <FormHelperText>
-          {errors.username && errors.username.message}
-        </FormHelperText>
-      </FormControl>
-      <Button
-        size='xl'
-        variant='outline'
-        type='submit'
-        loading={loading}
-        colorScheme='green'
-        w='100%'
-        mt={2}
-      >
-        {t('register.form.submit')}
-      </Button>
+        </FormControl>
+        <Button
+          size='xl'
+          variant='outline'
+          type='submit'
+          loading={loading}
+          colorScheme='green'
+          w='100%'
+        >
+          {t('register.form.submit')}
+        </Button>
+      </Stack>
     </form>
   )
 }

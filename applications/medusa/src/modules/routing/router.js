@@ -1,10 +1,10 @@
 /**
  * @flow
  */
-import { matchRoutes } from 'react-router-config'
-import { fetchQuery, loadQuery } from 'react-relay/hooks'
-import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
-import type { Resource } from '@//:modules/utilities/JSResource'
+import { matchRoutes } from 'react-router-config';
+import { fetchQuery, loadQuery } from 'react-relay/hooks';
+import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes';
+import type { Resource } from '@//:modules/utilities/JSResource';
 
 export type Location = $ReadOnly<{
   pathname: string,

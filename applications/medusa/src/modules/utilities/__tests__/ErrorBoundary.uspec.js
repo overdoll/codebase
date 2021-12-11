@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import userEvent from '@testing-library/user-event'
+import { render, screen, waitFor } from '@testing-library/react';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import userEvent from '@testing-library/user-event';
 
 const Client = () => {
   throw new Error('error')

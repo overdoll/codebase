@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { Suspense } from 'react'
-import JSResource from './JSResource'
-import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import { Image, Img } from '@chakra-ui/react'
+import type { Node } from 'react';
+import { Suspense } from 'react';
+import JSResource from './JSResource';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import { Image, Img } from '@chakra-ui/react';
 
 type Props = {
   src: string,

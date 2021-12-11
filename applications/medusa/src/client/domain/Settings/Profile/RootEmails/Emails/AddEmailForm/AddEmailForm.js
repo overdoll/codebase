@@ -2,36 +2,19 @@
  * @flow
  */
 
-import { graphql, useMutation } from 'react-relay/hooks'
-import {
-  Flex,
-  FormControl,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement, useToast,
-  FormLabel, FormErrorMessage,
-  HStack
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
-import Button from '@//:modules/form/Button'
-
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import InterfaceArrowsRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-right.svg'
-import MailSignAt from '@streamlinehq/streamlinehq/img/streamline-mini-bold/mail/signs/mail-sign-at.svg'
-import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi'
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
-import IconButton from '@//:modules/form/IconButton'
-import { useEmailFormSchema } from '@//:modules/constants/schemas'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { graphql, useMutation } from 'react-relay/hooks';
+import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql';
+import { ArrowButtonRight } from '../../../../../../../assets/icons/navigation';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
+import IconButton from '@//:modules/form/IconButton';
+import { useEmailFormSchema } from '@//:modules/constants/schemas';
+import StyledInput from '@//:modules/form/StyledInput/StyledInput';
 
 type EmailValues = {
   email: string,
@@ -71,8 +54,6 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
   const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
     AddEmailMutationGQL
   )
-
-  const formReveal = errors.email || success
 
   const notify = useToast()
 
@@ -123,7 +104,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
               <Icon
                 w={3}
                 h={3}
-                icon={InterfaceArrowsRight}
+                icon={ArrowButtonRight}
                 fill='gray.100'
               />
             }

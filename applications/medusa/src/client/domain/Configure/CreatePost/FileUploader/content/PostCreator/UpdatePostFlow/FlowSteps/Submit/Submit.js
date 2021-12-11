@@ -1,12 +1,12 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
-import { Flex, Heading, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import type { Node } from 'react';
+import type { Uppy } from '@uppy/core';
+import type { Dispatch, State } from '@//:types/upload';
+import { Flex, Heading, Text } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout';
 
 type Props = {
   uppy: Uppy,

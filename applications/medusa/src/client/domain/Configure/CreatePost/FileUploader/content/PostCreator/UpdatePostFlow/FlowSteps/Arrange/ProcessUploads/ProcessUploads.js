@@ -16,8 +16,7 @@ import { EVENTS } from '../../../../../../constants/constants';
 import Button from '@//:modules/form/Button';
 import Icon from '@//:modules/content/Icon/Icon';
 import FilePicker from '../../../../../../components/FilePicker/FilePicker';
-import InterfaceUploadBox2
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg';
+import { FileUpload } from '../../../../../../../../../../../assets/icons/interface';
 
 type Props = {
   uppy: Uppy,
@@ -150,7 +149,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
             w='100%'
             variant='solid'
             size='md'
-            rightIcon={<Icon h={3} w={3} icon={InterfaceUploadBox2} fill='gray.100' />}
+            rightIcon={<Icon h={3} w={3} icon={FileUpload} fill='gray.100' />}
           >{t('create_post.flow.steps.arrange.uploader.picker')}
           </Button>
         </Flex>

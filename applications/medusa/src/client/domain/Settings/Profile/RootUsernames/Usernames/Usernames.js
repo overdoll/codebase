@@ -1,30 +1,17 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import {
-  Flex,
-  Heading,
-  Stack,
-  useDisclosure,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Text,
-  Collapse,
-  Spacer
-} from '@chakra-ui/react'
+import type { Node } from 'react';
+import { Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react';
 
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
-import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
-import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
-import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip'
-import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
-import Button from '@//:modules/form/Button'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks';
+import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql';
+import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm';
+import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip';
+import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql';
+import Button from '@//:modules/form/Button';
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout';
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery($first: Int) {

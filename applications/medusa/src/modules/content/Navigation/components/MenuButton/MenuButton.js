@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import { Flex, Heading } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { Flex, Heading } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import { ClickableBox } from '@//:modules/content/PageLayout';
 
 type Props = {
   label?: string,

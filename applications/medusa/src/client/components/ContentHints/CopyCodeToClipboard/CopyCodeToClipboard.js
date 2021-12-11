@@ -3,15 +3,10 @@
  */
 
 import type { Node } from 'react'
-import { useState } from 'react'
-import { useClipboard, useToast, Box, Text, Flex, Code } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
+import { Flex, Code } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceFileText
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/files-folders/interface-file-text.svg'
-import InterfaceFileCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/files-folders/interface-file-check.svg'
+import { CopyCheck, CopyText } from '../../../../assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/utilities/hooks'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 
@@ -45,7 +40,7 @@ export default function CopyCodeToClipboard ({ children, ...rest }: Props): Node
         >
           {children}
         </Code>
-        <Icon ml={2} w={4} h={4} icon={hasCopied ? InterfaceFileCheck : InterfaceFileText} fill='teal.50' />
+        <Icon ml={2} w={4} h={4} icon={hasCopied ? CopyCheck : CopyText} fill='teal.50' />
       </Flex>
     </ClickableBox>
   )

@@ -1,13 +1,10 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { FormErrorMessage, Input, InputGroup, InputRightElement, Box } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+import type { Node } from 'react';
+import { Box, FormErrorMessage, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import { CheckMark, WarningTriangle } from '../../../assets/icons/interface';
 
 type Props = {
   register: string,
@@ -30,17 +27,17 @@ export default function StyledInput ({ register, success, error, placeholder, er
           placeholder={placeholder}
         />
         {(error || success) && (
-          <InputRightElement h='100%' pointerEvents='none'>
+          <InputRightElement mr={2} h='100%' pointerEvents='none'>
             <Icon
-              h={4}
-              w={4}
-              icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
-              fill={success ? 'gray.100' : 'orange.500'}
+              h='100%'
+              p={2}
+              icon={success ? CheckMark : WarningTriangle}
+              fill={success ? 'green.500' : 'orange.500'}
             />
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage>
+      <FormErrorMessage fontSize='size'>
         {errorMessage}
       </FormErrorMessage>
     </Box>

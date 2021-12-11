@@ -16,8 +16,7 @@ import {
   Wrap,
 } from '@chakra-ui/react';
 import Icon from '@//:modules/content/Icon/Icon';
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { BadgeCircle } from '../../../../../assets/icons/navigation';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
@@ -88,10 +87,10 @@ export default function TotpAuthentication (props: Props): Node {
     <>
       <Box>
         <Icon
-          icon={SignBadgeCircle}
+          icon={BadgeCircle}
           w={100}
           h={100}
-          color='primary.500'
+          fill='primary.500'
           ml='auto'
           mr='auto'
           mb={8}

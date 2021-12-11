@@ -16,3 +16,6 @@ export { default as RenderOnDesktop } from './BuildingBlocks/RenderOnDesktop/Ren
 export { default as RenderOnMobile } from './BuildingBlocks/RenderOnMobile/RenderOnMobile'
 
 export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/ListSpacer'
+
+export { default as SmallMenuButton } from './Interactables/Menus/SmallMenuButton/SmallMenuButton'
+export { default as SmallMenuItem } from './Interactables/Menus/SmallMenuItem/SmallMenuItem'

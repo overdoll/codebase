@@ -2,7 +2,7 @@
  * @flow
  */
 
-import importedRoutes from '../routing/navigation'
+import importedRoutes from '../routing/navigation';
 
 // Determine if route is valid by calling the middleware function in the route
 const isRouteValid = (data, route) => {

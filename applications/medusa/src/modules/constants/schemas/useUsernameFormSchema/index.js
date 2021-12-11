@@ -2,8 +2,8 @@
  * @flow
  */
 
-import { useTranslation } from 'react-i18next'
-import Joi from 'joi'
+import { useTranslation } from 'react-i18next';
+import Joi from 'joi';
 
 export default function useUsernameFormSchema () {
   const [t] = useTranslation('auth')

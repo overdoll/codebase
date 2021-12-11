@@ -9,8 +9,7 @@ import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, u
 import { Icon } from '@//:modules/content';
 import type { PreloadedQueryInner } from 'react-relay/hooks';
 import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks';
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { BadgeCircle } from '../../../assets/icons/navigation';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { Node, useEffect } from 'react';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
@@ -167,10 +166,10 @@ export default function Token ({ prepared }: Props): Node {
       <Helmet title='complete' />
       <PageWrapper>
         <Icon
-          icon={SignBadgeCircle}
+          icon={BadgeCircle}
           w={100}
           h={100}
-          color='green.500'
+          fill='green.500'
           ml='auto'
           mr='auto'
           mb={8}

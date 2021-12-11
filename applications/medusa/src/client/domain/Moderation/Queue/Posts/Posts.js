@@ -4,8 +4,7 @@
 
 import {
   Flex,
-  Text,
-  IconButton, Box, Stack, Skeleton
+  Text, Box, Stack, Skeleton
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useState, Fragment, useEffect } from 'react'
@@ -22,6 +21,7 @@ import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
 import { usePreloadedQuery } from 'react-relay/hooks'
 import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import IconButton from '@//:modules/form/IconButton'
 
 type Props = {
   query: PreloadedQueryInner<PostsQuery>,

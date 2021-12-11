@@ -1,23 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import {
-  Badge, Box,
-  Flex, Heading, IconButton, Menu, MenuButton, MenuList, Text, Stack, Spacer
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
-import { useTranslation } from 'react-i18next'
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
-import type { EmailCardFragment$key } from '@//:artifacts/EmailCardFragment.graphql'
-import MakePrimary from './MakePrimary/MakePrimary'
-import Delete from './Delete/Delete'
-import { graphql } from 'react-relay'
-import { useFragment } from 'react-relay/hooks'
-import Resend from './Resend/Resend'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import type { Node } from 'react';
+import { Badge, Box, Flex, Spacer, Stack, Text } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
+import type { EmailCardFragment$key } from '@//:artifacts/EmailCardFragment.graphql';
+import MakePrimary from './MakePrimary/MakePrimary';
+import Delete from './Delete/Delete';
+import { graphql } from 'react-relay';
+import { useFragment } from 'react-relay/hooks';
+import { SmallBackgroundBox, SmallMenuButton } from '@//:modules/content/PageLayout';
 
 type Props = {
   emails: EmailCardFragment$key,
@@ -71,23 +64,10 @@ export default function EmailCard ({ emails, connectionID }: Props): Node {
           </Badge>
           <Spacer />
           {data.status === 'CONFIRMED' &&
-            <Menu mt={1} autoSelect={false}>
-              <MenuButton
-                bg='transparent'
-                size='xs'
-                as={IconButton}
-                icon={
-                  <Icon
-                    icon={InterfaceSettingCog} w={4}
-                    fill='gray.300' h={4}
-                  />
-              }
-              />
-              <MenuList boxShadow='lg'>
-                <MakePrimary emails={data} connectionID={connectionID} />
-                <Delete emails={data} connectionID={connectionID} />
-              </MenuList>
-            </Menu>}
+            <SmallMenuButton>
+              <MakePrimary query={data} connectionID={connectionID} />
+              <Delete query={data} connectionID={connectionID} />
+            </SmallMenuButton>}
         </Flex>
       </Flex>
     </SmallBackgroundBox>

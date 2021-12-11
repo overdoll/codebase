@@ -29,5 +29,8 @@
   },
   "confirm": {
     "cancel": "Are you sure you would like to cancel?"
+  },
+  "upload": {
+    "drag_over": "Drag and drop to upload"
   }
 }

@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import { Stack } from '@chakra-ui/react'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings'
-import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor'
+import { Stack } from '@chakra-ui/react';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql';
+import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings';
+import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings';
+import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor';
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQuery>,

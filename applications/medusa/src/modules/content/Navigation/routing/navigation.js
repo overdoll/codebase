@@ -1,25 +1,24 @@
 /**
  * @flow
  */
-import type { Route } from '@//:modules/routing/router'
-import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
-import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
+import type { Route } from '@//:modules/routing/router';
+import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility';
+import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment';
 
 import {
   BirdHouse,
-  ContentBrushPen,
-  InterfaceSettingCog,
-  LoginKeys,
-  ContentBookEdit,
-  FileMultiple,
   CogDouble,
+  ContentBookEdit,
+  ContentBrushPen,
   ContentPens,
+  FileMultiple,
+  LoginKeys,
   SecurityShield,
   SettingHammer,
+  SettingWrench,
   TimeHourGlass,
   UserHuman,
-  SettingWrench
-} from '../../../../assets/icons/navigation'
+} from '../../../../assets/icons/navigation';
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))

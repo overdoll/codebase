@@ -1,36 +1,20 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import {
-  CircularProgress,
-  CircularProgressLabel,
-  Flex,
-  Heading,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  SimpleGrid,
-  Text
-} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/Icon/Icon'
-import { ClickableBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { graphql } from 'react-relay/hooks'
-import type { PostStatePreviewFragment$key } from '@//:artifacts/PostStatePreviewFragment.graphql'
-import { useFragment } from 'react-relay'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import type { Node } from 'react';
+import { CircularProgress, CircularProgressLabel, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { ClickableBox, SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout';
+import { graphql } from 'react-relay/hooks';
+import type { PostStatePreviewFragment$key } from '@//:artifacts/PostStatePreviewFragment.graphql';
+import { useFragment } from 'react-relay';
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
 import useCheckRequirements
-  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
+  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements';
 import progressScore
-  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
-import InterfaceDeleteBin1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
-import { useHistory } from '@//:modules/routing'
+  from '../../../../Configure/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore';
+import { DeleteBin } from '../../../../../../assets/icons/interface';
+import { useHistory } from '@//:modules/routing';
 
 type Props = {
   query: PostStatePreviewFragment$key,
@@ -121,27 +105,13 @@ export default function PostStatePreview ({ query }: Props): Node {
           w='100%'
         >
           <Flex h='100%' align='center' justify='flex-end'>
-            <Menu autoSelect={false}>
-              <MenuButton
-                bg='transparent'
-                size='xs'
-                as={IconButton}
-                icon={
-                  <Icon
-                    icon={InterfaceSettingCog} w={4}
-                    fill='gray.300' h={4}
-                  />
-                }
+            <SmallMenuButton>
+              <SmallMenuItem
+                icon={DeleteBin}
+                text={t('create_post.flow.drafts.delete')}
+                color='orange.300'
               />
-              <MenuList boxShadow='lg'>
-                <MenuItem
-                  justify='center'
-                >
-                  <Icon pointerEvents='none' icon={InterfaceDeleteBin1} fill='orange.300' w={4} h={4} mr={2} />
-                  <Text pointerEvents='none' color='orange.300'>{t('create_post.flow.drafts.delete')}</Text>
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            </SmallMenuButton>
           </Flex>
         </SmallBackgroundBox>
       </Flex>

@@ -1,26 +1,19 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { useEffect } from 'react'
-import {
-  Divider,
-  Flex,
-  Heading,
-  Box,
-  Stack, useToast
-} from '@chakra-ui/react'
-import AddEmailForm from './AddEmailForm/AddEmailForm'
-import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
-import EmailCard from './EmailCard/EmailCard'
-import { useFlash } from '@//:modules/flash'
-import type { EmailsQuery } from '@//:artifacts/EmailsQuery.graphql'
-import { ListSpacer } from '@//:modules/content/PageLayout'
-import { usePaginationFragment } from 'react-relay'
-import type { SessionsSettingsFragment$key } from '@//:artifacts/SessionsSettingsFragment.graphql'
-import Button from '@//:modules/form/Button'
-import { useTranslation } from 'react-i18next'
+import type { Node } from 'react';
+import { useEffect } from 'react';
+import { Flex, Stack, useToast } from '@chakra-ui/react';
+import AddEmailForm from './AddEmailForm/AddEmailForm';
+import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
+import EmailCard from './EmailCard/EmailCard';
+import { useFlash } from '@//:modules/flash';
+import type { EmailsQuery } from '@//:artifacts/EmailsQuery.graphql';
+import { ListSpacer } from '@//:modules/content/PageLayout';
+import { usePaginationFragment } from 'react-relay';
+import Button from '@//:modules/form/Button';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   query: EmailsSettingsFragment$key

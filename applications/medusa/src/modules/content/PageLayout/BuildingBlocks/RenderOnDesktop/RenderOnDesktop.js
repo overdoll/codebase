@@ -1,9 +1,7 @@
 /**
  * @flow
  */
-import {
-  Box
-} from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react';
 
 type Props = {
   children: Node,

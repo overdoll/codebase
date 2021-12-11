@@ -1,25 +1,15 @@
 /**
  * @flow
  */
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import { usePaginationFragment } from 'react-relay'
-import { useState } from 'react'
-import type { SessionsSettingsFragment$key } from '@//:artifacts/SessionsSettingsFragment.graphql'
-import {
-  Stack, Box, Flex, Heading, Text, Menu, MenuButton, IconButton, MenuList, useDisclosure
-} from '@chakra-ui/react'
-import UAParser from 'ua-parser-js'
-import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
-import RevokeSession from './RevokeSession/RevokeSession'
-import Button from '@//:modules/form/Button'
-import SpoilerText from '../../../../../components/ContentHints/SpoilerText/SpoilerText'
-import SessionCard from './SessionCard/SessionCard'
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql';
+import { usePaginationFragment } from 'react-relay';
+import type { SessionsSettingsFragment$key } from '@//:artifacts/SessionsSettingsFragment.graphql';
+import { Flex, Stack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import Button from '@//:modules/form/Button';
+import SessionCard from './SessionCard/SessionCard';
 
 type Props = {
   query: PreloadedQueryInner<SessionsSettingsQuery>,

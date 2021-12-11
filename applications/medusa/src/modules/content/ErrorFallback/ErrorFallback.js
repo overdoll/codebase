@@ -1,13 +1,12 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import type { Error } from '@//:modules/utilities/ErrorBoundary'
-import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
-import ButtonRefreshArrows
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/multimedia-controls/button-refresh-arrows.svg'
-import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/Icon/Icon'
+import type { Node } from 'react';
+import type { Error } from '@//:modules/utilities/ErrorBoundary';
+import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react';
+import { ArrowButtonRefresh } from '../../../assets/icons/navigation';
+import { useTranslation } from 'react-i18next';
+import Icon from '@//:modules/content/Icon/Icon';
 
 type Props = {
   error?: Error,
@@ -37,7 +36,7 @@ export default function ErrorFallback ({ error, reset, refetch }: Props): Node {
           </AlertDescription>
         </Flex>
         <Button
-          onClick={onReset} size='sm' leftIcon={<Icon icon={ButtonRefreshArrows} w={4} h={4} fill='orange.900' />}
+          onClick={onReset} size='sm' leftIcon={<Icon icon={ArrowButtonRefresh} w={4} h={4} fill='orange.900' />}
           colorScheme='orange' variant='solid'
         >{t('fallback.button')}
         </Button>

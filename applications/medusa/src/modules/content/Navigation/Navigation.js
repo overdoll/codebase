@@ -1,42 +1,41 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { useMemo } from 'react'
-import { Button, useBreakpointValue, Skeleton } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { useLocation } from '@//:modules/routing'
-import { graphql, useFragment } from 'react-relay/hooks'
-import { useAbility } from '@//:modules/utilities/hooks'
-import Link from '@//:modules/routing/Link'
-import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
-import { useRelayEnvironment } from 'react-relay'
-import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
-import getBasePath from './helpers/getBasePath'
-import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
-import { RenderOnMobile, RenderOnDesktop } from '@//:modules/content/PageLayout'
-import NavLink from '@//:modules/routing/NavLink'
-import { SidebarButton, NavigationButton, MenuButton } from '@//:modules/content/Navigation/components'
+import type { Node } from 'react';
+import { useMemo } from 'react';
+import { Skeleton, useBreakpointValue } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from '@//:modules/routing';
+import { graphql, useFragment } from 'react-relay/hooks';
+import { useAbility } from '@//:modules/utilities/hooks';
+import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes';
+import { useRelayEnvironment } from 'react-relay';
+import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql';
+import getBasePath from './helpers/getBasePath';
+import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner';
+import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout';
+import NavLink from '@//:modules/routing/NavLink';
+import { MenuButton, NavigationButton, SidebarButton } from '@//:modules/content/Navigation/components';
 import {
-  NavigationBarCenter,
-  NavigationContents,
   NavigationBar,
+  NavigationBarCenter,
   NavigationBarLeft,
   NavigationBarRight,
+  NavigationContents,
   PageContents,
-  SimplifiedNavigation,
   Sidebar,
   SidebarGrouping,
-  SiteLinkLogo
-} from '@//:modules/content/Navigation/content'
+  SimplifiedNavigation,
+  SiteLinkLogo,
+} from '@//:modules/content/Navigation/content';
 import {
-  SimpleProfileButton,
   LoggedOutPlaceholder,
-  SimpleLoginButton,
   LogoutButton,
   NavigationMenu,
-  ProfileButton
-} from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight'
+  ProfileButton,
+  SimpleLoginButton,
+  SimpleProfileButton,
+} from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight';
 
 type Props = {
   children: Node,

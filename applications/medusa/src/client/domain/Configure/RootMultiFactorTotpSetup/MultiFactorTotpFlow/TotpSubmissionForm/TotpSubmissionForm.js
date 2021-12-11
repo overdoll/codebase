@@ -5,19 +5,15 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpSubmissionFormMutation } from '@//:artifacts/TotpSubmissionFormMutation.graphql'
 import {
-  Flex,
-  useToast, FormControl, InputGroup, Input, InputRightElement, FormErrorMessage, HStack
+  useToast,
+  FormControl,
+  HStack
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type CodeValues = {
@@ -122,6 +118,7 @@ export default function TotpSubmissionForm (props: Props): Node {
             size='md'
             variant='solid'
             type='submit'
+            ml={2}
             colorScheme='primary'
             disabled={errors.code}
             isLoading={isSubmittingTotp}

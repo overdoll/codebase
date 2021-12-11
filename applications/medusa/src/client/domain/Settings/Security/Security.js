@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { Helmet } from 'react-helmet-async'
-import RootMultiFactorSettings from './RootMultiFactorSettings/RootMultiFactorSettings'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import { Stack, Box } from '@chakra-ui/react'
-import RootSessionsSettings from './RootSessionsSettings/RootSessionsSettings'
+import type { Node } from 'react';
+import { Helmet } from 'react-helmet-async';
+import RootMultiFactorSettings from './RootMultiFactorSettings/RootMultiFactorSettings';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
+import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql';
+import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql';
+import { PageWrapper } from '@//:modules/content/PageLayout';
+import { Box, Stack } from '@chakra-ui/react';
+import RootSessionsSettings from './RootSessionsSettings/RootSessionsSettings';
 
 type Props = {
   prepared: {

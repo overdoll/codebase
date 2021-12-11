@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useState } from 'react';
-import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
-import Icon from '@//:modules/content/Icon/Icon';
-import InterfaceContentArchive
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/content/interface-content-archive.svg';
+import type { Node } from 'react'
+import { useState } from 'react'
+import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import Icon from '@//:modules/content/Icon/Icon'
+import { FileUpload } from '../../../../../../../assets/icons/interface'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
@@ -16,6 +16,8 @@ type Props = {
 };
 
 export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): Node {
+  const [t] = useTranslation('auth')
+
   const notify = useToast()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -81,8 +83,8 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
         bg='dimmers.900' align='center' justify='center' borderStyle='dashed' borderColor='green.500' direction='column'
         borderWidth={4} pointerEvents='none' display={isOpen ? 'flex' : 'none'}
       >
-        <Icon m={4} w={10} h={10} icon={InterfaceContentArchive} fill='green.500' />
-        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>begin.dropper
+        <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
+        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>{t('upload.drag_over')}
         </Heading>
       </Flex>
     </Flex>

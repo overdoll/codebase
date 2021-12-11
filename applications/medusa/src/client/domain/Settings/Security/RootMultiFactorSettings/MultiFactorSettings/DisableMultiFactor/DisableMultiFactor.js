@@ -2,19 +2,23 @@
  * @flow
  */
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Flex,
   Text,
   Tooltip,
-  Heading,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog, useDisclosure, useToast
-} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql'
-import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import Button from '@//:modules/form/Button';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
+import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql';
+import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql';
 
 type Props = {
   data: DisableMultiFactorFragment$key

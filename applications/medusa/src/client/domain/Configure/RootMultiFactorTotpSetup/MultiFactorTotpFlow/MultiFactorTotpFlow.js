@@ -13,16 +13,15 @@ import {
   Text,
   List,
   ListItem,
-  Divider, Skeleton, Code, Spinner, Alert, AlertIcon, AlertDescription
+  Skeleton, Spinner, Alert, AlertIcon, AlertDescription
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import ExternalLink from '../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 import CopyCodeToClipboard from '../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import Typing from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-edition/typing.svg'
-import PhoneActionDownload
-  from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'
+import { MobilePhone, Barcode } from '../../../../../assets/icons/interface'
+
 import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
@@ -118,7 +117,7 @@ export default function MultiFactorTotpFlow (props: Props): Node {
         <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
           <Flex m={2} justify='center' align='center'>
             <Box borderRadius={5} h={32} w={32} p={6} bg='gray.900'>
-              <Icon icon={PhoneActionDownload} color='gray.100' />
+              <Icon icon={MobilePhone} color='gray.100' />
             </Box>
           </Flex>
           <Box m={2}>
@@ -182,7 +181,7 @@ export default function MultiFactorTotpFlow (props: Props): Node {
         <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
           <Flex m={2} justify='center' align='center'>
             <Box borderRadius={5} h={32} w={32} p={6} bg='gray.900'>
-              <Icon icon={Typing} color='gray.100' />
+              <Icon icon={Barcode} color='gray.100' />
             </Box>
           </Flex>
           <Box m={2}>

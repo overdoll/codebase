@@ -1,22 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { useState } from 'react'
-import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Text, Wrap } from '@chakra-ui/react'
-import Gallery from './components/gallery/Gallery'
-import Indexer from './components/indexer/Indexer'
-import VoteMenu from './components/vote/VoteMenu'
-import TagInfo from './components/info/TagInfo'
-
-import TravelPlacesTheaterMask
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/maps-travel/places/travel-places-theater-mask.svg'
-import ShoppingStoreSignage1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/money-shopping/building-store/shopping-store-signage-1.svg'
-import InterfaceSettingMenuVerticalAlternate
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
-import Icon from '@//:modules/content/Icon/Icon'
-import Element from '../../Element/Element'
+import type { Node } from 'react';
+import { useState } from 'react';
+import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Text, Wrap } from '@chakra-ui/react';
+import Gallery from './components/gallery/Gallery';
+import Indexer from './components/indexer/Indexer';
+import VoteMenu from './components/vote/VoteMenu';
+import TagInfo from './components/info/TagInfo';
 
 type Props = {
   artist: {
@@ -47,19 +38,19 @@ type Props = {
   disableContext?: boolean,
 };
 
-export default function FullPost ({ artist, files, urls, characters, categories, voteCount, thumbnails, hasVoted, disableContext, ...rest }: Props): Node {
-  const [voted, setVoted] = useState(hasVoted)
+export default function FullPost({ artist, files, urls, characters, categories, voteCount, thumbnails, hasVoted, disableContext, ...rest }: Props): Node {
+  const [voted, setVoted] = useState(hasVoted);
 
-  const [swiperIndex, setSwiperIndex] = useState(0)
+  const [swiperIndex, setSwiperIndex] = useState(0);
 
   const setSwiper = (swiper) => {
-    setSwiperIndex(swiper.activeIndex)
-  }
+    setSwiperIndex(swiper.activeIndex);
+  };
 
   const onVote = () => {
     // TODO handle voting on the backend here
-    setVoted(!voted)
-  }
+    setVoted(!voted);
+  };
 
   return (
     <>
@@ -109,7 +100,7 @@ export default function FullPost ({ artist, files, urls, characters, categories,
                       p={2}
                       w='inherit'
                       h='inherit'
-                      icon={InterfaceSettingMenuVerticalAlternate}
+                      icon={}
                       fill='gray.500'
                     />
                   }
@@ -124,32 +115,21 @@ export default function FullPost ({ artist, files, urls, characters, categories,
           >
             <TagInfo
               count={Object.keys(characters).length}
-              icon={TravelPlacesTheaterMask}
+              icon={}
             >
               <Wrap justify='center'>
                 {Object.keys(characters).map(item => (
-                  <Element
-                    key={characters[item].id}
-                    selected={false}
-                    title={characters[item].name}
-                    subheader={characters[item].media.title}
-                    thumbnail={characters[item].thumbnail}
-                  />
+                  <></>
                 ))}
               </Wrap>
             </TagInfo>
             <TagInfo
               count={Object.keys(categories).length}
-              icon={ShoppingStoreSignage1}
+              icon={}
             >
               <Wrap justify='center'>
                 {Object.keys(categories).map(item => (
-                  <Element
-                    key={categories[item].id}
-                    selected={false}
-                    title={categories[item].title}
-                    thumbnail={categories[item].thumbnail}
-                  />
+                  <></>
                 ))}
               </Wrap>
             </TagInfo>
@@ -157,10 +137,10 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         </Flex>
       </Flex>
     </>
-  )
+  );
 }
 FullPost.defaultProps = {
   disableContext: false,
   hasVoted: false,
-  voteCount: 0
-}
+  voteCount: 0,
+};

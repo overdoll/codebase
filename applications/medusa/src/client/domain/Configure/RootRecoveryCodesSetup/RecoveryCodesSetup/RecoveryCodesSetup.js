@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { useFragment, graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import {
   Alert,
@@ -21,9 +21,7 @@ import {
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
 import Icon from '@//:modules/content/Icon/Icon'
-import CopyCodeToClipboard from '../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import DownloadDashArrow
-  from '@streamlinehq/streamlinehq/img/streamline-bold/internet-networks-servers/upload-download/download-dash-arrow.svg'
+import { DownloadArrow } from '../../../../../assets/icons/interface'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'
 import CopyToClipboardButton from '../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
@@ -173,7 +171,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
               </CopyToClipboardButton>
               <Button
                 onClick={onDownloadCodes}
-                rightIcon={<Icon w={3} h={3} icon={DownloadDashArrow} fill='gray.100' />} size='sm'
+                rightIcon={<Icon w={3} h={3} icon={DownloadArrow} fill='gray.100' />} size='sm'
               >{t('recovery_codes.exists.download.button')}
               </Button>
             </ButtonGroup>

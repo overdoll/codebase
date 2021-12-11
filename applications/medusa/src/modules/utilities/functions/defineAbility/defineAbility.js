@@ -1,4 +1,4 @@
-import { Ability, AbilityBuilder } from '@casl/ability'
+import { Ability, AbilityBuilder } from '@casl/ability';
 
 export default function defineAbility (user) {
   const { can, cannot, build } = new AbilityBuilder(Ability)

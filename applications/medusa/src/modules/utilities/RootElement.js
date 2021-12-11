@@ -1,4 +1,4 @@
-import CanUseDOM from '@//:modules/utilities/CanUseDOM'
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 
 let RootElement = null
 

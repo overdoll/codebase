@@ -1,30 +1,15 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
-import {
-  Box,
-  Flex,
-  Heading,
-  Menu,
-  MenuButton,
-  MenuItem, MenuList,
-  Text,
-  useDisclosure,
-  useToast
-} from '@chakra-ui/react'
-import { ArrowButtonRight, InterfaceSettingCog } from '../../../../../../../assets/icons/navigation'
-import Icon from '@//:modules/content/Icon/Icon'
-import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql'
-import UAParser from 'ua-parser-js'
-import { format } from 'date-fns'
-import SpoilerText from '../../../../../../components/ContentHints/SpoilerText/SpoilerText'
-import RevokeSession from '../RevokeSession/RevokeSession'
-import { SmallBackgroundBox, ClickableBox, PagePanelWrap } from '@//:modules/content/PageLayout'
-import { MobilePhone, DesktopComputer } from '../../../../../../../assets/icons/interface'
-import IconButton from '@//:modules/form/IconButton'
+import { useTranslation } from 'react-i18next';
+import { graphql, useFragment } from 'react-relay/hooks';
+import { Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react';
+import Icon from '@//:modules/content/Icon/Icon';
+import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql';
+import UAParser from 'ua-parser-js';
+import { format } from 'date-fns';
+import { PagePanelWrap } from '@//:modules/content/PageLayout';
+import { DesktopComputer, MobilePhone } from '../../../../../../../assets/icons/interface';
 
 type Props = {
   connectionID: SessionCardFragment$key,

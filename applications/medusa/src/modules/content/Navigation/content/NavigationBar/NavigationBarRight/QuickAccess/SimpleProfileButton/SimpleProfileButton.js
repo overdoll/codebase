@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import { Avatar, Flex } from '@chakra-ui/react'
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { Node } from 'react'
-import { useTranslation } from 'react-i18next'
-import NavLink from '@//:modules/routing/NavLink'
-import type { SimpleProfileButtonFragment$key } from '@//:artifacts/SimpleProfileButtonFragment.graphql'
-import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
+import { Avatar, Flex } from '@chakra-ui/react';
+import { graphql, useFragment } from 'react-relay/hooks';
+import type { Node } from 'react';
+import { useTranslation } from 'react-i18next';
+import NavLink from '@//:modules/routing/NavLink';
+import type { SimpleProfileButtonFragment$key } from '@//:artifacts/SimpleProfileButtonFragment.graphql';
+import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton';
 
 type Props = {
   query: SimpleProfileButtonFragment$key,

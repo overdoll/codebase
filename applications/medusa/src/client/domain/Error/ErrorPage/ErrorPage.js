@@ -5,8 +5,7 @@ import { Heading, Text } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet-async';
 import type { Node } from 'react';
 import Icon from '@//:modules/content/Icon/Icon';
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg';
+import { BadgeCircle } from '../../../../assets/icons/navigation';
 import { useTranslation } from 'react-i18next';
 import { PageWrapper } from '@//:modules/content/PageLayout';
 
@@ -29,8 +28,8 @@ export default function ErrorDisplay ({ error }: Props): Node {
       <Helmet title='error' />
       <PageWrapper>
         <Icon
-          icon={SignBadgeCircle}
-          color='primary.500'
+          icon={BadgeCircle}
+          fill='primary.500'
           w={100}
           h={100}
           ml='auto'

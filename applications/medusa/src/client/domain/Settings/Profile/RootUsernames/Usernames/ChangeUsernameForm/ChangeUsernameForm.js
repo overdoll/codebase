@@ -1,31 +1,18 @@
 /**
  * @flow
  */
-import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
-import {
-  FormControl,
-  FormLabel,
-  Flex,
-  Input,
-  InputGroup,
-  InputRightElement,
-  FormErrorMessage, useToast, HStack
-} from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { useForm } from 'react-hook-form'
-import InterfaceAlertWarningTriangle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import { joiResolver } from '@hookform/resolvers/joi'
-import type { Node } from 'react'
-import Button from '@//:modules/form/Button'
-import { graphql, useMutation } from 'react-relay/hooks'
-import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import Joi from 'joi';
+import { useTranslation } from 'react-i18next';
+import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import type { Node } from 'react';
+import Button from '@//:modules/form/Button';
+import { graphql, useMutation } from 'react-relay/hooks';
+import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql';
+import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql';
+import { useUsernameFormSchema } from '@//:modules/constants/schemas';
+import StyledInput from '@//:modules/form/StyledInput/StyledInput';
 
 type UsernameValues = {
   username: string,
