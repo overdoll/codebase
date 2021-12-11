@@ -2,9 +2,9 @@
  * @flow
  */
 
-import { Box, Tooltip } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import { ClickableBox } from '@//:modules/content/PageLayout';
+import { Box, Tooltip } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   icon?: () => void,

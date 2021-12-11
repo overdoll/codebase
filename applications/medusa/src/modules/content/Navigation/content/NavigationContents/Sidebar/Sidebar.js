@@ -2,8 +2,8 @@
  * @flow
  */
 
-import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react';
-import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout';
+import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
+import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: Node,

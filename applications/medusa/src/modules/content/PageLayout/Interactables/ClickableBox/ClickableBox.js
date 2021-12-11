@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Button from '@//:modules/form/Button';
+import type { Node } from 'react'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   children: string,

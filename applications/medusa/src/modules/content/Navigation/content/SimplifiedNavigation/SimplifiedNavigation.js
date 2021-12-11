@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import { Button, Flex, Spacer } from '@chakra-ui/react';
-import type { Node } from 'react';
-import Link from '@//:modules/routing/Link';
-import Icon from '@//:modules/content/Icon/Icon';
-import { useHistory } from '@//:modules/routing';
-import { useTranslation } from 'react-i18next';
-import { ArrowButtonUndo } from '../../../../../assets/icons/navigation';
-import IconButton from '@//:modules/form/IconButton';
+import { Button, Flex, Spacer } from '@chakra-ui/react'
+import type { Node } from 'react'
+import Link from '@//:modules/routing/Link'
+import Icon from '@//:modules/content/Icon/Icon'
+import { useHistory } from '@//:modules/routing'
+import { useTranslation } from 'react-i18next'
+import { ArrowButtonUndo } from '../../../../../assets/icons/navigation'
+import IconButton from '@//:modules/form/IconButton'
 
 type Props = {
   children: Node

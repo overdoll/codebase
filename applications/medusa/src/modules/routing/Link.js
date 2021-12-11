@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import type { Node } from 'react';
-import { useCallback, useContext } from 'react';
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import type { Node } from 'react'
+import { useCallback, useContext } from 'react'
 
 type Props = {
   children: Node,

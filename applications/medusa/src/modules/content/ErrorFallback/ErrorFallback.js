@@ -1,12 +1,12 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Error } from '@//:modules/utilities/ErrorBoundary';
-import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react';
-import { ArrowButtonRefresh } from '../../../assets/icons/navigation';
-import { useTranslation } from 'react-i18next';
-import Icon from '@//:modules/content/Icon/Icon';
+import type { Node } from 'react'
+import type { Error } from '@//:modules/utilities/ErrorBoundary'
+import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
+import { ArrowButtonRefresh } from '../../../assets/icons/navigation'
+import { useTranslation } from 'react-i18next'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   error?: Error,

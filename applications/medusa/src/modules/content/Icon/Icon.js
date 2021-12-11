@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { chakra } from '@chakra-ui/react';
+import type { Node } from 'react'
+import { chakra } from '@chakra-ui/react'
 
 type Props = {
   fill?: string,

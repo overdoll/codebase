@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { ResourceUrl } from '@//:types/upload';
-import { Flex } from '@chakra-ui/react';
-import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet';
-import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet';
+import type { Node } from 'react'
+import type { ResourceUrl } from '@//:types/upload'
+import { Flex } from '@chakra-ui/react'
+import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet'
+import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet'
 
 type Props = {
   type: string,

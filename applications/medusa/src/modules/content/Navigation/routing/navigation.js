@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Route } from '@//:modules/routing/router';
-import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility';
-import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment';
+import type { Route } from '@//:modules/routing/router'
+import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
+import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 import {
   BirdHouse,
@@ -17,8 +17,8 @@ import {
   SettingHammer,
   SettingWrench,
   TimeHourGlass,
-  UserHuman,
-} from '../../../../assets/icons/navigation';
+  UserHuman
+} from '../../../../assets/icons/navigation'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))

@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import { Flex, HStack } from '@chakra-ui/react';
-import type { Node } from 'react';
+import { Flex, HStack } from '@chakra-ui/react'
+import type { Node } from 'react'
 
 type Props = {
   children: Node

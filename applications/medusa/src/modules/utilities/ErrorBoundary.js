@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { ComponentType, Node } from 'react';
-import { Component } from 'react';
+import type { ComponentType, Node } from 'react'
+import { Component } from 'react'
 
 type Props = {
   children: Node,

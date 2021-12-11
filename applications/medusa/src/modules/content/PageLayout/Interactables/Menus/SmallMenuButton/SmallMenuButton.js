@@ -1,10 +1,10 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import { SettingCog } from '../../../../../../assets/icons/navigation';
+import type { Node } from 'react'
+import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
+import { SettingCog } from '../../../../../../assets/icons/navigation'
 
 type Props = {
   children: Node

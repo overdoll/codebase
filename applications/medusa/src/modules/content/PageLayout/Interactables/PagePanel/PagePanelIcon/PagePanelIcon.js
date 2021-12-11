@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Flex } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
+import type { Node } from 'react'
+import { Flex } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   icon: () => void,

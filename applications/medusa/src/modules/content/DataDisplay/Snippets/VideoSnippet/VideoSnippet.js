@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { ResourceUrl } from '@//:types/upload';
+import type { Node } from 'react'
+import type { ResourceUrl } from '@//:types/upload'
 
 type Props = {
   innerRef?: () => void,

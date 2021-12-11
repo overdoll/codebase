@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 import {
   Menu,
   MenuButton,
@@ -14,13 +14,13 @@ import {
   SimpleGrid,
   Stack,
   useBreakpointValue,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { PageControllerSettings } from '../../../../../../../assets/icons/navigation';
+  useDisclosure
+} from '@chakra-ui/react'
+import { PageControllerSettings } from '../../../../../../../assets/icons/navigation'
 
-import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton';
-import { useHistoryDisclosure } from '@//:modules/utilities/hooks';
-import { SiteLinkLogo } from '@//:modules/content/Navigation/content';
+import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
+import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
+import { SiteLinkLogo } from '@//:modules/content/Navigation/content'
 
 type Props = {
   children: Node,

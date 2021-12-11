@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import { useState } from 'react';
-import { useClipboard, useToast } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'
+import { useClipboard, useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   text: string

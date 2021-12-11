@@ -1,21 +1,21 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useMemo } from 'react';
-import { Skeleton, useBreakpointValue } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from '@//:modules/routing';
-import { graphql, useFragment } from 'react-relay/hooks';
-import { useAbility } from '@//:modules/utilities/hooks';
-import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes';
-import { useRelayEnvironment } from 'react-relay';
-import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql';
-import getBasePath from './helpers/getBasePath';
-import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner';
-import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout';
-import NavLink from '@//:modules/routing/NavLink';
-import { MenuButton, NavigationButton, SidebarButton } from '@//:modules/content/Navigation/components';
+import type { Node } from 'react'
+import { useMemo } from 'react'
+import { Skeleton, useBreakpointValue } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import { useLocation } from '@//:modules/routing'
+import { graphql, useFragment } from 'react-relay/hooks'
+import { useAbility } from '@//:modules/utilities/hooks'
+import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
+import { useRelayEnvironment } from 'react-relay'
+import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
+import getBasePath from './helpers/getBasePath'
+import LockedAccountBanner from './content/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
+import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
+import NavLink from '@//:modules/routing/NavLink'
+import { MenuButton, NavigationButton, SidebarButton } from '@//:modules/content/Navigation/components'
 import {
   NavigationBar,
   NavigationBarCenter,
@@ -26,16 +26,16 @@ import {
   Sidebar,
   SidebarGrouping,
   SimplifiedNavigation,
-  SiteLinkLogo,
-} from '@//:modules/content/Navigation/content';
+  SiteLinkLogo
+} from '@//:modules/content/Navigation/content'
 import {
   LoggedOutPlaceholder,
   LogoutButton,
   NavigationMenu,
   ProfileButton,
   SimpleLoginButton,
-  SimpleProfileButton,
-} from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight';
+  SimpleProfileButton
+} from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight'
 
 type Props = {
   children: Node,

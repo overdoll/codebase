@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import type { PreparedEntry, RouterInit } from '@//:modules/routing/router';
-import { chakra, Progress, Slide } from '@chakra-ui/react';
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner';
+import type { Node } from 'react'
+import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react'
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
+import { chakra, Progress, Slide } from '@chakra-ui/react'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
 

@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import { Flex, Spinner } from '@chakra-ui/react';
-import type { Node } from 'react';
+import { Flex, Spinner } from '@chakra-ui/react'
+import type { Node } from 'react'
 
 export default function CenteredSpinner (): Node {
   return (

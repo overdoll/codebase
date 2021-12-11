@@ -1,24 +1,24 @@
-import { createMockEnvironment } from 'relay-test-utils';
-import { render, screen } from '@testing-library/react';
-import withProviders from '@//:modules/testing/withProviders';
+import { createMockEnvironment } from 'relay-test-utils'
+import { render, screen } from '@testing-library/react'
+import withProviders from '@//:modules/testing/withProviders'
 
-import Sidebar from '../content/NavigationContents/Sidebar/Sidebar';
-import SidebarButton from '../components/SidebarButton/SidebarButton';
-import SidebarGrouping from '../content/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping';
-import NavigationContents from '../content/NavigationContents/NavigationContents';
-import PageContents from '../content/NavigationContents/PageContents/PageContents';
-import NavigationBar from '@//:modules/content/Navigation/content/NavigationBar/NavigationBar';
+import Sidebar from '../content/NavigationContents/Sidebar/Sidebar'
+import SidebarButton from '../components/SidebarButton/SidebarButton'
+import SidebarGrouping from '../content/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
+import NavigationContents from '../content/NavigationContents/NavigationContents'
+import PageContents from '../content/NavigationContents/PageContents/PageContents'
+import NavigationBar from '@//:modules/content/Navigation/content/NavigationBar/NavigationBar'
 import NavigationBarLeft
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarLeft/NavigationBarLeft';
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarLeft/NavigationBarLeft'
 import NavigationBarCenter
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationBarCenter';
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationBarCenter'
 import NavigationLink
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationLink/NavigationLink';
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationLink/NavigationLink'
 import NavigationBarRight
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationBarRight';
-import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton';
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationBarRight'
+import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton'
 import NavigationMenu
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationMenu/NavigationMenu';
+  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationMenu/NavigationMenu'
 
 const routes = []
 

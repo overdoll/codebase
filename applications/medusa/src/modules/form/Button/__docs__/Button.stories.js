@@ -1,5 +1,5 @@
-import Button from '../';
-import { Center, Stack } from '@chakra-ui/react';
+import Button from '../'
+import { Center, Stack } from '@chakra-ui/react'
 
 export default {
   title: 'Form/Button',

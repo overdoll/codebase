@@ -2,14 +2,14 @@
  * @flow
  */
 
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import type { Node } from 'react';
-import { useContext } from 'react';
-import { matchPath } from 'react-router';
-import Link from './Link';
-import { createLocation } from 'history';
-import getBasePath from '@//:modules/content/Navigation/helpers/getBasePath';
-import { useLocation } from '@//:modules/routing/useLocation';
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import type { Node } from 'react'
+import { useContext } from 'react'
+import { matchPath } from 'react-router'
+import Link from './Link'
+import { createLocation } from 'history'
+import getBasePath from '@//:modules/content/Navigation/helpers/getBasePath'
+import { useLocation } from '@//:modules/routing/useLocation'
 
 type Props = {
   children: Node,

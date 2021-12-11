@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import { Flex, HStack } from '@chakra-ui/react';
-import type { Node } from 'react';
-import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout';
+import { Flex, HStack } from '@chakra-ui/react'
+import type { Node } from 'react'
+import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: Node

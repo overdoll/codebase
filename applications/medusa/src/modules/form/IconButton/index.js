@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect, useState } from 'react';
-import { IconButton as ChakraButton } from '@chakra-ui/react';
+import type { Node } from 'react'
+import { useEffect, useState } from 'react'
+import { IconButton as ChakraButton } from '@chakra-ui/react'
 
 const AnimatedButton = ChakraButton
 

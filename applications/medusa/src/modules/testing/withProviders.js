@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import { createMemoryHistory } from 'history';
-import type { ComponentType } from 'react';
-import type { Route, RouterInstance } from '@//:modules/routing/router';
-import { createClientRouter } from '@//:modules/routing/router';
-import Bootstrap from '../../client/Bootstrap';
-import i18n from 'i18next';
-import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes';
-import createCache from '@emotion/cache';
-import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion';
+import { createMemoryHistory } from 'history'
+import type { ComponentType } from 'react'
+import type { Route, RouterInstance } from '@//:modules/routing/router'
+import { createClientRouter } from '@//:modules/routing/router'
+import Bootstrap from '../../client/Bootstrap'
+import i18n from 'i18next'
+import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
+import createCache from '@emotion/cache'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 type WithProviders = {
   environment: IEnvironment,

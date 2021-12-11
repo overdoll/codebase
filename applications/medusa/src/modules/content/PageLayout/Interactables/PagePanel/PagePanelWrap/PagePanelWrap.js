@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Flex, HStack } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import Link from '@//:modules/routing/Link';
-import { ArrowButtonRight } from '../../../../../../assets/icons/navigation';
+import type { Node } from 'react'
+import { Flex, HStack } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
+import Link from '@//:modules/routing/Link'
+import { ArrowButtonRight } from '../../../../../../assets/icons/navigation'
 
-import { ClickableBox } from '@//:modules/content/PageLayout';
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: string,

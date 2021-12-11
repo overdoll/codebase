@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import { useCallback } from 'react';
+import { useCallback } from 'react'
 
-import { useRoutingContext } from './RoutingContext';
+import { useRoutingContext } from './RoutingContext'
 
 export default function usePreloadRoute (to: string): [() => void, () => void] {
   const router = useRoutingContext()

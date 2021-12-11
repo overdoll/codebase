@@ -9,7 +9,7 @@
  * must have stored the previous result somewhere.
  *
  */
-import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 const resourceMap = new Map()
 

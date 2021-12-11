@@ -2,8 +2,8 @@
  * @flow
  */
 
-import { useRoutingContext } from './RoutingContext';
-import type { RouterHistory } from '@//:modules/routing/router';
+import { useRoutingContext } from './RoutingContext'
+import type { RouterHistory } from '@//:modules/routing/router'
 
 export const useParams = (): RouterHistory => {
   const context = useRoutingContext()
