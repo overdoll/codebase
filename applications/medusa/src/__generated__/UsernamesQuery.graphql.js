@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6fdd71db6b8be5a80b955e67dd5659b9
+ * @relayHash 2a8ea06bacafa813c12cc6ffc4857fe7
  */
 
 /* eslint-disable */
@@ -33,12 +33,18 @@ query UsernamesQuery(
   }
 }
 
+fragment UsernameAliasCard on AccountUsername {
+  id
+  username
+}
+
 fragment UsernamesSettingsFragment on Account {
   username
   usernames(first: $first) {
     edges {
       node {
         username
+        ...UsernameAliasCard
         id
         __typename
       }
@@ -225,7 +231,7 @@ return {
     ]
   },
   "params": {
-    "id": "6fdd71db6b8be5a80b955e67dd5659b9",
+    "id": "2a8ea06bacafa813c12cc6ffc4857fe7",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",

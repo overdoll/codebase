@@ -2,19 +2,20 @@
  * @flow
  */
 
-import { graphql, useMutation } from 'react-relay/hooks';
-import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql';
-import { ArrowButtonRight } from '../../../../../../../assets/icons/navigation';
-import { useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import Joi from 'joi';
-import { useTranslation } from 'react-i18next';
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
-import IconButton from '@//:modules/form/IconButton';
-import { useEmailFormSchema } from '@//:modules/constants/schemas';
-import StyledInput from '@//:modules/form/StyledInput/StyledInput';
+import { graphql, useMutation } from 'react-relay/hooks'
+import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
+import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
+import { ArrowButtonRight } from '../../../../../../../assets/icons/navigation'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import Joi from 'joi'
+import { useTranslation } from 'react-i18next'
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
+import IconButton from '@//:modules/form/IconButton'
+import { useEmailFormSchema } from '@//:modules/constants/schemas'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import Button from '@//:modules/form/Button'
 
 type EmailValues = {
   email: string,
@@ -95,20 +96,16 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
             placeholder={t('profile.email.add.placeholder')}
             errorMessage={errors?.email?.message}
           />
-          <IconButton
-            aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
-            isLoading={isAddingEmail}
+          <Button
             size='sm'
-            borderRadius='base'
-            icon={
-              <Icon
-                w={3}
-                h={3}
-                icon={ArrowButtonRight}
-                fill='gray.100'
-              />
-            }
-          />
+            variant='solid'
+            type='submit'
+            colorScheme='gray'
+            disabled={errors.email}
+            isLoading={isAddingEmail}
+          >
+            {t('profile.email.add.button')}
+          </Button>
         </HStack>
       </FormControl>
     </form>

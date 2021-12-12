@@ -17,6 +17,13 @@ type Props = {
 };
 
 export default function StyledInput ({ register, success, error, placeholder, errorMessage, size, variant }: Props): Node {
+  const determinePadding = () => {
+    if (['xl', 'lg'].includes(size)) {
+      return 3
+    }
+    return 2
+  }
+
   return (
     <Box w='100%'>
       <InputGroup>
@@ -27,10 +34,9 @@ export default function StyledInput ({ register, success, error, placeholder, er
           placeholder={placeholder}
         />
         {(error || success) && (
-          <InputRightElement mr={2} h='100%' pointerEvents='none'>
+          <InputRightElement p={determinePadding()} h='100%' pointerEvents='none'>
             <Icon
               h='100%'
-              p={3}
               icon={success ? CheckMark : WarningTriangle}
               fill={success ? 'green.500' : 'orange.500'}
             />

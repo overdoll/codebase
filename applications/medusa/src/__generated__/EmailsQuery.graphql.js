@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f9be5875e86fa71d29040ea7a5daa5bd
+ * @relayHash 02cf39b3bec444e33bcb96e4186f88cb
  */
 
 /* eslint-disable */
@@ -42,7 +42,7 @@ fragment EmailCardFragment on AccountEmail {
 }
 
 fragment EmailsSettingsFragment on Account {
-  emails(first: 3) {
+  emails(first: 5) {
     edges {
       node {
         ...EmailCardFragment
@@ -70,7 +70,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 3
+    "value": 5
   }
 ],
 v1 = {
@@ -218,7 +218,7 @@ return {
                 ]
               }
             ],
-            "storageKey": "emails(first:3)"
+            "storageKey": "emails(first:5)"
           },
           {
             "alias": null,
@@ -236,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "id": "f9be5875e86fa71d29040ea7a5daa5bd",
+    "id": "02cf39b3bec444e33bcb96e4186f88cb",
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",

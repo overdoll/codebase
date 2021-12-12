@@ -86,13 +86,13 @@ export default function AuditCard ({ auditLog }: Props): Node {
                   <Icon
                     icon={data.reverted ? SwapCircle : data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
                     w={4} h={4}
-                    fill={data.reverted ? 'purple.500' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
+                    fill={data.reverted ? 'purple.400' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
                   />
                 </Box>
                 {(expiryPercent > 0 && !data.reverted) &&
                   <CircularProgress
                     trackColor='transparent'
-                    color='teal.500'
+                    color='purple.400'
                     position='absolute'
                     value={expiryPercent}
                     size={7}

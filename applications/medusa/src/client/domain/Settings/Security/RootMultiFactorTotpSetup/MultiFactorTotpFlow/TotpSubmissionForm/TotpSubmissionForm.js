@@ -38,7 +38,6 @@ export default function TotpSubmissionForm (props: Props): Node {
   const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionFormMutation>(
     TotpSubmissionFormMutationGQL
   )
-  console.log(props.id)
 
   const [t] = useTranslation('configure')
 

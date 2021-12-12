@@ -34,10 +34,10 @@ export default function IconButton ({
 
   return (
     <AnimatedButton
-      {...rest}
       type={type}
       isDisabled={fullDisable}
       isLoading={fullLoading}
+      {...rest}
     />
   )
 }

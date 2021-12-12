@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 77b121a45a09c73a4032c34a97eebe8f
+ * @relayHash c7c5b4b6cd478514a64eb4441d66a352
  */
 
 /* eslint-disable */
@@ -30,7 +30,7 @@ export type EmailsSettingsPaginationQuery = {|
 /*
 query EmailsSettingsPaginationQuery(
   $after: String
-  $first: Int = 3
+  $first: Int = 5
   $id: ID!
 ) {
   node(id: $id) {
@@ -84,7 +84,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 3,
+    "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -285,7 +285,7 @@ return {
     ]
   },
   "params": {
-    "id": "77b121a45a09c73a4032c34a97eebe8f",
+    "id": "c7c5b4b6cd478514a64eb4441d66a352",
     "metadata": {},
     "name": "EmailsSettingsPaginationQuery",
     "operationKind": "query",
@@ -294,5 +294,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
+(node: any).hash = 'b5bbb9742c3a365d6034821cf56d836b';
 module.exports = node;

@@ -7,6 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { UsernameAliasCard$ref } from "./UsernameAliasCard.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type UsernamesSettingsFragment$ref: FragmentReference;
 declare export opaque type UsernamesSettingsFragment$fragmentType: UsernamesSettingsFragment$ref;
@@ -16,7 +17,8 @@ export type UsernamesSettingsFragment = {|
     +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +username: string
+        +username: string,
+        +$fragmentRefs: UsernameAliasCard$ref,
       |}
     |}>,
   |},
@@ -92,6 +94,11 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "UsernameAliasCard"
                 }
               ],
               "storageKey": null
@@ -152,5 +159,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'bace2e572b5d38453f17fbfbd02ce968';
+(node: any).hash = 'cc77d6ea0d55a6d0b7fdb34008e8ae6f';
 module.exports = node;

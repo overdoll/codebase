@@ -1,21 +1,22 @@
 /**
  * @flow
  */
-import Joi from 'joi';
-import { useTranslation } from 'react-i18next';
-import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import type { Node } from 'react';
-import Button from '@//:modules/form/Button';
-import { graphql, useMutation } from 'react-relay/hooks';
-import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql';
-import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql';
-import { useUsernameFormSchema } from '@//:modules/constants/schemas';
-import StyledInput from '@//:modules/form/StyledInput/StyledInput';
+import Joi from 'joi'
+import { useTranslation } from 'react-i18next'
+import { Alert, AlertDescription, AlertIcon, FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import type { Node } from 'react'
+import Button from '@//:modules/form/Button'
+import { graphql, useMutation } from 'react-relay/hooks'
+import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
+import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
+import { useUsernameFormSchema } from '@//:modules/constants/schemas'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type UsernameValues = {
   username: string,
+  isDisabled: () => void,
 };
 
 type Props = {
@@ -38,7 +39,7 @@ const UsernameMutationGQL = graphql`
   }
 `
 
-export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): Node {
+export default function ChangeUsernameForm ({ usernamesConnectionID, isDisabled }: Props): Node {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
@@ -57,6 +58,8 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
 
   const notify = useToast()
 
+  console.log(errors)
+
   const onChangeUsername = (formData) => {
     changeUsername({
       variables: {
@@ -68,7 +71,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
       onCompleted (data) {
         if (data.updateAccountUsernameAndRetainPrevious.validation) {
           setError('username', {
-            type: 'mutation',
+            type: 'validation',
             message: data.updateAccountUsernameAndRetainPrevious.validation
           })
           return
@@ -82,7 +85,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
       onError () {
         notify({
           status: 'error',
-          title: t('profile.username.modal.query.error'),
+          title: t('profile.username.modal.query.error.unknown'),
           isClosable: true
         })
       }
@@ -98,6 +101,13 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
         isInvalid={errors.username}
         id='username'
       >
+        {isDisabled &&
+          <Alert mb={1} status='warning'>
+            <AlertIcon />
+            <AlertDescription fontSize='sm'>
+              {t('profile.username.modal.warning')}
+            </AlertDescription>
+          </Alert>}
         <FormLabel>{t('profile.username.modal.header')}</FormLabel>
         <HStack align='flex-start'>
           <StyledInput
@@ -112,7 +122,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
             variant='solid'
             type='submit'
             colorScheme='gray'
-            disabled={errors.username}
+            disabled={errors.username || isDisabled}
             isLoading={isChangingUsername}
           >
             {t('profile.username.modal.submit')}

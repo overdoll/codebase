@@ -30,8 +30,8 @@
         "approve": {
           "button": "Approve",
           "query": {
-            "success": "Post created by {{brand}} was approved successfully",
-            "error": "There was an error approving a post created by {{brand}}"
+            "success": "Post submitted by {{brand}} was approved successfully",
+            "error": "There was an error approving a post submitted by {{brand}}"
           }
         },
         "reject": {
@@ -61,8 +61,8 @@
             "infraction": "This rejection reason is an infraction. The poster's account will be temporarily suspended."
           },
           "query": {
-            "success": "Post created by {{brand}} was successfully rejected",
-            "error": "There was an error rejecting the post created by {{brand}}"
+            "success": "Post submitted by {{brand}} was successfully rejected",
+            "error": "There was an error rejecting the post submitted by {{brand}}"
           }
         }
       }

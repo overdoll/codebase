@@ -87,7 +87,7 @@ export default function AuditInspect ({ auditLog }: Props): Node {
       <Stack spacing={3}>
         {data.reverted
           ? <SmallBackgroundBox bg='purple.50' align='center' justify='center'>
-            <Text color='purple.500' fontSize='2xl' fontFamily='mono'>
+            <Text color='purple.400' fontSize='2xl' fontFamily='mono'>
               {t('history.inspect.revert.action')}
             </Text>
             <Text>{t('history.inspect.revert.description', { action: data.action })}</Text>

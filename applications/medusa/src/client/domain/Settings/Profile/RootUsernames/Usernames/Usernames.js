@@ -2,16 +2,16 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Badge, Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
-import InfoTip from '../../../../../components/ContentHints/InfoTip/InfoTip'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import Button from '@//:modules/form/Button'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { SmallBackgroundBox, ClickableBox, SmallMenuButton, ListSpacer } from '@//:modules/content/PageLayout'
+import UsernameAliasCard from './UsernameAliasCard/UsernameAliasCard'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery($first: Int) {
@@ -29,6 +29,7 @@ const UsernameFragmentGQL = graphql`
       edges {
         node {
           username
+          ...UsernameAliasCard
         }
       }
     }
@@ -55,36 +56,29 @@ export default function Usernames (props: Props): Node {
 
   const usernamesConnectionID = data?.usernames?.__id
 
+  const currentUsernames = data.usernames.edges.filter((item) => item.node.username !== data.username)
+
   return (
     <>
-      <Stack spacing={2}>
+      <ListSpacer>
         <SmallBackgroundBox>
-          <Flex justify='center'>
+          <Flex align='center'>
             <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
-            {data?.usernames.edges.length > 0 &&
+            {currentUsernames.length > 0 &&
               <>
                 <Spacer />
-                <Button
-                  fontFamily='body'
-                  fontSize='sm'
-                  color='gray.100'
-                  variant='link'
-                  onClick={onToggleAliases}
-                >
-                  {t('profile.username.previous.title', { count: data.usernames.edges.length })}
+                <Button variant='link' onClick={onToggleAliases}>
+                  {t('profile.username.previous.title', { count: currentUsernames.length })}
                 </Button>
               </>}
           </Flex>
         </SmallBackgroundBox>
         <Collapse in={isAliasesOpen} animateOpacity>
-          <SmallBackgroundBox>
-            <Flex>
-              <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
-            </Flex>
-            {data.usernames.edges.map((item, index) =>
-              <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
+          <ListSpacer>
+            {currentUsernames.map((item, index) =>
+              <UsernameAliasCard usernamesConnectionID={usernamesConnectionID} query={item.node} key={index} />
             )}
-          </SmallBackgroundBox>
+          </ListSpacer>
         </Collapse>
         <Button
           variant='solid' colorScheme='gray' onClick={onToggleForm}
@@ -93,10 +87,13 @@ export default function Usernames (props: Props): Node {
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Flex>
-            <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+            <ChangeUsernameForm
+              isDisabled={currentUsernames.length === 4}
+              usernamesConnectionID={usernamesConnectionID}
+            />
           </Flex>
         </Collapse>
-      </Stack>
+      </ListSpacer>
     </>
   )
 }

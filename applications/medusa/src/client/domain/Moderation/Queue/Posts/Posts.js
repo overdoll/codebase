@@ -82,7 +82,7 @@ export default function Posts (props: Props): Node {
   const postsConnection = data?.moderatorPostsQueue?.__id
 
   const nextPage = () => {
-    if (currentIndex + 1 === data?.moderatorPostsQueue.edges.length) {
+    if (currentIndex + 1 >= data?.moderatorPostsQueue.edges.length) {
       loadNext(
         1,
         {
