@@ -106,15 +106,10 @@ module.exports = {
       // saving stats file to build folder
       // without this, stats files will go into
       // build/public folder
-      config.plugins.push(
-        new LoadableWebpackPlugin({
-          outputAsset: false,
-          writeToDisk: { filename }
-        })
-      )
+      config.plugins.push(key, value)
 
       if (process.env.ANALYZE_BUNDLE === 'true') {
-        config.plugins.push(new BundleAnalyzerPlugin())
+        config.plugins.push(key, value)
       }
     }
 

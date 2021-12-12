@@ -12,7 +12,7 @@ const options: HelmetOptions = {
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         process.env.NODE_ENV === 'production'
-          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`
+          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`
           : '\'unsafe-inline\'',
         '\'unsafe-eval\'',
         process.env.PUBLIC_PATH
@@ -22,7 +22,7 @@ const options: HelmetOptions = {
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         'https://fonts.googleapis.com',
         process.env.NODE_ENV === 'production'
-          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`
+          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`
           : '\'unsafe-inline\''
       ],
       'font-src': ['data:', '*'],

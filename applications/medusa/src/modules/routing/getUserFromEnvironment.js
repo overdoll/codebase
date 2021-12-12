@@ -3,13 +3,13 @@ export default function getUserFromEnvironment (environment) {
   const viewerRef = environment
     .getStore()
     .getSource()
-    .get('client:root')
+    .get(key)
 
   if (viewerRef.viewer) {
     return environment
       .getStore()
       .getSource()
-      .get(viewerRef.viewer.__ref)
+      .get(key)
   }
 
   return null

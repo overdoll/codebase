@@ -80,7 +80,7 @@ export default function TotpAuthentication ({ query }: Props): Node {
         })
       },
       updater: (store) => {
-        history.push('/profile')
+        history.push(key, value)
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
         prepareViewer(store, payload)
       },
@@ -107,22 +107,35 @@ export default function TotpAuthentication ({ query }: Props): Node {
           mr='auto'
           mb={8}
         />
-        <Heading align='center' fontSize='xl' color='gray.00'>
+        <Heading
+          align='center'
+          fontSize='xl'
+          color='gray.00'
+        >
           {t('multi_factor.header')}
         </Heading>
-        <Text align='center' fontSize='sm' color='gray.200'>
+        <Text
+          align='center'
+          fontSize='sm'
+          color='gray.200'
+        >
           {t('multi_factor.subheader')}
         </Text>
       </Box>
-      <Flex position='relative' justify='center'>
+      <Flex
+        position='relative'
+        justify='center'
+      >
         <form style={{ width: '100%' }}>
           <Flex justify='center'>
             <Wrap>
               <PinInput
                 onComplete={(value) => {
                   onSubmitTotp(value)
-                }} isDisabled={isSubmittingTotp}
-                size={breakPoint || 'md'} otp
+                }}
+                isDisabled={isSubmittingTotp}
+                size={breakPoint || 'md'}
+                otp
               >
                 <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
                 <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
@@ -136,22 +149,30 @@ export default function TotpAuthentication ({ query }: Props): Node {
         </form>
         <Flex
           position='absolute'
-          w='100%' h='100%'
+          w='100%'
+          h='100%'
           pointerEvents={isSubmittingTotp ? 'initial' : 'none'}
         >
           <Fade in={isSubmittingTotp}>
             <Flex
               p={4}
-              w='100%' h='100%'
+              w='100%'
+              h='100%'
               position='absolute'
               align='center'
               justify='center'
               direction='row'
             >
-              <Text mr={2} color='gray.00'>
+              <Text
+                mr={2}
+                color='gray.00'
+              >
                 {t('multi_factor.submit.form.submitting')}
               </Text>
-              <Spinner color='gray.00' size='sm' />
+              <Spinner
+                color='gray.00'
+                size='sm'
+              />
             </Flex>
           </Fade>
         </Flex>

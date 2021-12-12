@@ -38,7 +38,7 @@ const RegisterFragment = graphql`
 `
 
 export default function Register ({ queryRef }: Props): Node {
-  const [commit, isInFlight] = useMutation<RegisterMutation>(
+  const [commit, isInFlight] = useMutation < RegisterMutation > (
     RegisterMutationGQL
   )
 
@@ -79,7 +79,7 @@ export default function Register ({ queryRef }: Props): Node {
         }
         store.delete(data.id)
         removeCookie('token')
-        history.push('/profile')
+        history.push(key, value)
 
         notify({
           status: 'success',
@@ -110,7 +110,10 @@ export default function Register ({ queryRef }: Props): Node {
           mr='auto'
           mb={8}
         />
-        <RegisterForm onSubmit={onSubmit} loading={isInFlight} />
+        <RegisterForm
+          onSubmit={onSubmit}
+          loading={isInFlight}
+        />
       </PageWrapper>
     </>
   )

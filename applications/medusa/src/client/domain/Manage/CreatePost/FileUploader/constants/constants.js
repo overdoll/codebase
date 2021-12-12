@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import type { State } from '@//:types/upload';
+import type { State } from '../../../../../../types/upload'
 
 const STEPS = {
   ARRANGE: 'ARRANGE',

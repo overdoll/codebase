@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
-import { graphql, useMutation } from 'react-relay/hooks';
-import { StringParam, useQueryParam } from 'use-query-params';
-import { useTranslation } from 'react-i18next';
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout';
-import DragOverFileInput from '../../../components/DragOverFileInput/DragOverFileInput';
-import FilePicker from '../../../components/FilePicker/FilePicker';
-import { FileUpload } from '../../../../../../../../assets/icons/interface';
-import Icon from '@//:modules/content/Icon/Icon';
+import type { Node } from 'react'
+import { useEffect } from 'react'
+import type { Dispatch, State } from '../../../../../../../../types/upload'
+import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import { graphql, useMutation } from 'react-relay/hooks'
+import { StringParam, useQueryParam } from 'use-query-params'
+import { useTranslation } from 'react-i18next'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import DragOverFileInput from '../../../components/DragOverFileInput/DragOverFileInput'
+import FilePicker from '../../../components/FilePicker/FilePicker'
+import { FileUpload } from '../../../../../../../../assets/icons/interface'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   uppy: Uppy,

@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks';
-import { Flex, FormControl, FormLabel, useToast } from '@chakra-ui/react';
-import Button from '@//:modules/form/Button';
-import { useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import Joi from 'joi';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from '@//:modules/routing';
-import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer';
-import StyledInput from '@//:modules/form/StyledInput/StyledInput';
+import { graphql, useMutation } from 'react-relay/hooks'
+import { Flex, FormControl, FormLabel, useToast } from '@chakra-ui/react'
+import Button from '@//:modules/form/Button'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import Joi from 'joi'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from '@//:modules/routing'
+import PrepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type CodeValues = {
   code: string,
@@ -49,7 +49,7 @@ export default function RecoveryCode (props: Props): Node {
       })
   })
 
-  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<CodeValues>({
+  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm < CodeValues > ({
     resolver: joiResolver(
       schema
     )
@@ -79,7 +79,7 @@ export default function RecoveryCode (props: Props): Node {
           isClosable: true,
           title: t('multi_factor.recovery.form.query.success')
         })
-        history.push('/profile')
+        history.push(key, value)
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
@@ -101,7 +101,10 @@ export default function RecoveryCode (props: Props): Node {
 
   return (
     <>
-      <form noValidate onSubmit={handleSubmit(onSubmitCode)}>
+      <form
+        noValidate
+        onSubmit={handleSubmit(onSubmitCode)}
+      >
         <FormControl
           isInvalid={errors.code}
         >

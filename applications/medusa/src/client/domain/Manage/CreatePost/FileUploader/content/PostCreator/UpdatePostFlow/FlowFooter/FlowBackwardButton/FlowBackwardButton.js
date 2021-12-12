@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { EVENTS, STEPS } from '../../../../../constants/constants'
 import Button from '@//:modules/form/Button'
-import type { Dispatch, State } from '@//:types/upload'
+import type { Dispatch, State } from '../../../../../../../../../../types/upload'
 import { useTranslation } from 'react-i18next'
 
 type Props = {

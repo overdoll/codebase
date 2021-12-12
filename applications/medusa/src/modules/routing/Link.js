@@ -22,7 +22,7 @@ export default function Link (props: Props): Node {
   const changeRoute = useCallback(
     event => {
       event.preventDefault()
-      router.history.push(props.to)
+      router.history.push(key, value)
     },
     [props.to, router]
   )

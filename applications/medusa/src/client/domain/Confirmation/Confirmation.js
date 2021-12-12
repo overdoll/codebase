@@ -47,17 +47,17 @@ export default function Confirmation (props: Props): Node {
 
         if (!data.accountEmail) {
           flash('confirmation.error', t('error'))
-          history.push('/settings/profile')
+          history.push(key, value)
         }
 
         if (data.accountEmail) {
           flash('confirmation.success', t('success', { email: data.accountEmail.email }))
-          history.push('/settings/profile')
+          history.push(key, value)
         }
       },
       onError () {
         flash('confirmation.error', t('error'))
-        history.push('/settings/profile')
+        history.push(key, value)
       }
     })
   }
@@ -67,10 +67,30 @@ export default function Confirmation (props: Props): Node {
   }, [])
 
   return (
-    <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
-      <Spinner mb={6} thickness={4} size='xl' color='primary.500' />
-      <Heading mb={1} size='md' color='gray.00'>{t('header')}</Heading>
-      <Text size='sm' color='gray.100'>{t('subheader')}</Text>
+    <Flex
+      mt={40}
+      h='100%'
+      align='center'
+      justify='center'
+      direction='column'
+    >
+      <Spinner
+        mb={6}
+        thickness={4}
+        size='xl'
+        color='primary.500'
+      />
+      <Heading
+        mb={1}
+        size='md'
+        color='gray.00'
+      >{t('header')}
+      </Heading>
+      <Text
+        size='sm'
+        color='gray.100'
+      >{t('subheader')}
+      </Text>
     </Flex>
   )
 }

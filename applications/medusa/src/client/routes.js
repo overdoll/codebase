@@ -65,7 +65,7 @@ const routes: Array<Route> = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
-              history.push('/profile')
+              history.push(key, value)
               return false
             }
 
@@ -79,7 +79,7 @@ const routes: Array<Route> = [
         }) => {
           const JoinQuery = require('@//:artifacts/JoinRootQuery.graphql')
 
-          let tokenCookie = cookies.get('token')
+          let tokenCookie = cookies.get(key)
 
           if (tokenCookie) {
             tokenCookie = tokenCookie.split(';')[0]
@@ -115,7 +115,7 @@ const routes: Array<Route> = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'account')) {
-              history.push('/profile')
+              history.push(key, value)
               return false
             }
 
@@ -131,8 +131,8 @@ const routes: Array<Route> = [
             tokenQuery: {
               query: TokenQuery,
               variables: {
-                token: query.get('token') ?? '',
-                secret: query.get('secret') ?? ''
+                token: query.get(key) ?? '',
+                secret: query.get(key) ?? ''
               },
               options: {
                 fetchPolicy: 'store-or-network'
@@ -158,7 +158,7 @@ const routes: Array<Route> = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.cannot('manage', 'account')) {
-              history.push('/')
+              history.push(key, value)
               return false
             }
 
@@ -193,7 +193,7 @@ const routes: Array<Route> = [
             if (ability.can('read', 'pendingPosts')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ],
@@ -257,7 +257,7 @@ const routes: Array<Route> = [
             if (ability.can('manage', 'posting')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ],
@@ -311,7 +311,7 @@ const routes: Array<Route> = [
             if (ability.can('manage', 'account')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ],
@@ -438,7 +438,7 @@ const routes: Array<Route> = [
             if (ability.can('manage', 'account')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ]
@@ -473,7 +473,7 @@ const routes: Array<Route> = [
             if (ability.can('manage', 'account')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ]
@@ -495,7 +495,7 @@ const routes: Array<Route> = [
             if (ability.can('manage', 'posting')) {
               return true
             }
-            history.push('/join')
+            history.push(key, value)
             return false
           }
         ]
@@ -528,7 +528,7 @@ const routes: Array<Route> = [
             if (ability.can('read', 'locked')) {
               return true
             }
-            history.push('/')
+            history.push(key, value)
             return false
           }
         ]
@@ -546,14 +546,14 @@ const routes: Array<Route> = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('read', 'locked')) {
-              history.push('/locked')
+              history.push(key, value)
               return false
             }
 
             if (ability.can('manage', 'account')) {
               return true
             }
-            history.push('/')
+            history.push(key, value)
             return false
           }
         ]

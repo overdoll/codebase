@@ -2,15 +2,15 @@
  * @flow
  */
 
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { useUpdateAudienceFragment$key } from '@//:artifacts/useUpdateAudienceFragment.graphql';
-import { graphql, useMutation } from 'react-relay/hooks';
-import type useUpdateAudienceMutation from '@//:artifacts/useUpdateAudienceMutation.graphql';
-import { useFragment } from 'react-relay';
-import { EVENTS, STEPS } from '../../../../../../../constants/constants';
-import { useToast } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../../../types/upload'
+import type { useUpdateAudienceFragment$key } from '@//:artifacts/useUpdateAudienceFragment.graphql'
+import { graphql, useMutation } from 'react-relay/hooks'
+import type useUpdateAudienceMutation from '@//:artifacts/useUpdateAudienceMutation.graphql'
+import { useFragment } from 'react-relay'
+import { EVENTS, STEPS } from '../../../../../../../constants/constants'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
@@ -42,7 +42,7 @@ const Mutation = graphql`
 export default function useUpdateAudience ({ uppy, dispatch, state, query }: Props) {
   const data = useFragment(Fragment, query)
 
-  const [updateAudience, isUpdatingAudience] = useMutation<useUpdateAudienceMutation>(Mutation)
+  const [updateAudience, isUpdatingAudience] = useMutation < useUpdateAudienceMutation > (Mutation)
 
   const [t] = useTranslation('manage')
 

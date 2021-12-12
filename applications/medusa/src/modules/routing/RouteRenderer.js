@@ -24,12 +24,12 @@ export default function RouterRenderer (): Node {
 
   // Store the active entry in state - this allows the renderer to use features like
   // useTransition to delay when state changes become visible to the user.
-  const [routeEntry, setRouteEntry] = useState<RouterInit>(router.get())
+  const [routeEntry, setRouteEntry] = useState < RouterInit > (router.get(key))
 
   // On mount subscribe for route changes
   useEffect(() => {
     // Check if the route has changed between the last render and commit:
-    const currentEntry = router.get()
+    const currentEntry = router.get(key)
     if (currentEntry !== routeEntry) {
       // if there was a concurrent modification, rerender and exit
       setRouteEntry(currentEntry)
@@ -104,9 +104,22 @@ export default function RouterRenderer (): Node {
   return (
     <ErrorBoundary>
       <Suspense fallback={
-        <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
+        <chakra.div
+          zIndex='banner'
+          position='fixed'
+          w='100%'
+          top='0'
+        >
           <Slide direction='top'>
-            <Progress h='3px' borderRadius='none' hasStripe isAnimated colorScheme='primary' size='xs' value={100} />
+            <Progress
+              h='3px'
+              borderRadius='none'
+              hasStripe
+              isAnimated
+              colorScheme='primary'
+              size='xs'
+              value={100}
+            />
           </Slide>
         </chakra.div>
       }
@@ -136,7 +149,10 @@ function RouteComponent ({
 }: PreparedEntry): Node {
   const Component = component.read()
   return (
-    <Component routeData={routeData} prepared={prepared}>
+    <Component
+      routeData={routeData}
+      prepared={prepared}
+    >
       {children}
     </Component>
   )

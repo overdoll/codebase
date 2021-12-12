@@ -185,7 +185,7 @@ async function request (req, res, next) {
   })
 
   // Get any extra assets we need to load, so that we dont have to import them in-code
-  const assets = router.context.get().entries.map(entry => entry.id)
+  const assets = router.context.get(key).entries.map(entry => entry.id)
 
   // Set up our chunk extractor, so that we can preload our resources
   const extractor = new ChunkExtractor({

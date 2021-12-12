@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect, useState } from 'react';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { CharacterFragment$key } from '@//:artifacts/CharacterFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import { useTranslation } from 'react-i18next';
-import { EVENTS } from '../../../../../constants/constants';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
-import SearchInput from '../../../SearchInput/SearchInput';
-import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react';
-import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters';
+import type { Node } from 'react'
+import { useEffect, useState } from 'react'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { CharacterFragment$key } from '@//:artifacts/CharacterFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import { useTranslation } from 'react-i18next'
+import { EVENTS } from '../../../../../constants/constants'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import SearchInput from '../../../SearchInput/SearchInput'
+import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
+import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'
 
 type Props = {
   uppy: Uppy,

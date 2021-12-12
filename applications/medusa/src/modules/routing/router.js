@@ -334,7 +334,7 @@ function prepareMatches (matches, prepareOptions, relayEnvironment) {
       }
     )
 
-    const Component = route.component.get()
+    const Component = route.component.get(key)
     if (!Component) {
       route.component.load() // eagerly load
     }

@@ -2,15 +2,15 @@
  * @flow
  */
 
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { useUpdateBrandFragment$key } from '@//:artifacts/useUpdateBrandFragment.graphql';
-import { graphql, useMutation } from 'react-relay/hooks';
-import type useUpdateBrandMutation from '@//:artifacts/useUpdateBrandMutation.graphql';
-import { useFragment } from 'react-relay';
-import { EVENTS, STEPS } from '../../../../../../../constants/constants';
-import { useToast } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../../../types/upload'
+import type { useUpdateBrandFragment$key } from '@//:artifacts/useUpdateBrandFragment.graphql'
+import { graphql, useMutation } from 'react-relay/hooks'
+import type useUpdateBrandMutation from '@//:artifacts/useUpdateBrandMutation.graphql'
+import { useFragment } from 'react-relay'
+import { EVENTS, STEPS } from '../../../../../../../constants/constants'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
@@ -42,7 +42,7 @@ const Mutation = graphql`
 export default function useUpdateBrand ({ uppy, dispatch, state, query }: Props) {
   const data = useFragment(Fragment, query)
 
-  const [updateBrand, isUpdatingBrand] = useMutation<useUpdateBrandMutation>(Mutation)
+  const [updateBrand, isUpdatingBrand] = useMutation < useUpdateBrandMutation > (Mutation)
 
   const [t] = useTranslation('manage')
 

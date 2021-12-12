@@ -6738,7 +6738,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/relay-runtime@*":
+"@types/relay-runtime@*", "@types/relay-runtime@^12.0.1":
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-12.0.1.tgz#a25a9755f7925a202a7ec3a49857de46943ecf02"
   integrity sha512-zYhQjy7FtTb6cgGuwBT09NLL308GIlo/tcnsfmZ095l/135TD8VladcOkowK/3o8jDAbQ2uLsMJ4No2tcxRenA==
@@ -12619,6 +12619,11 @@ eslint-config-standard-jsx@10.0.0, eslint-config-standard-jsx@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/eslint-config-standard-jsx/-/eslint-config-standard-jsx-10.0.0.tgz#dc24992661325a2e480e2c3091d669f19034e18d"
   integrity sha512-hLeA2f5e06W1xyr/93/QJulN/rLbUVUmqTlexv9PRKHFwEC9ffJcH2LvJhMoEqYQBEYafedgGZXH2W8NUpt5lA==
+
+eslint-config-standard-react@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-standard-react/-/eslint-config-standard-react-11.0.1.tgz#1f488e0062c1e21c4c8584551619f11750658f55"
+  integrity sha512-4WlBynOqBZJRaX81CBcIGDHqUiqxvw4j/DbEIICz8QkMs3xEncoPgAoysiqCSsg71X92uhaBc8sgqB96smaMmg==
 
 eslint-config-standard-with-typescript@^21.0.1:
   version "21.0.1"
@@ -21451,6 +21456,13 @@ relay-compiler-language-js-flow-uncommented@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/relay-compiler-language-js-flow-uncommented/-/relay-compiler-language-js-flow-uncommented-2.0.0.tgz#e31522fff3f070d6465cfdd0b1a85c910b8655d9"
   integrity sha512-yyTB0ZaHwUahGukYNH7wR/nQccoBHZ3vCmVpIGDAbt+8H7y3wyJbRW4R6a8/85a8ycV2CLEo+gK8UVWNpFck9g==
+
+relay-compiler-language-typescript@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/relay-compiler-language-typescript/-/relay-compiler-language-typescript-15.0.0.tgz#565900106eeb7150d70c5792ef092a2807a8e25e"
+  integrity sha512-vx6V+uBJLIyzTFz1fFiuS0J+L81juGUComb5emKNaYGZRWOPSalxyS+0/I6umrNChNDFB5uLuTnAqxia4+ZMBg==
+  dependencies:
+    invariant "^2.2.4"
 
 relay-compiler-plus@^1.8.3:
   version "1.8.3"
