@@ -13,10 +13,10 @@ import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFra
 import type ProcessUploadsMutation from '@//:artifacts/ProcessUploadsMutation.graphql'
 import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../../constants/constants'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/Icon/Icon'
 import FilePicker from '../../../../../../components/FilePicker/FilePicker'
-import { FileUpload } from '../../../../../../../../../../../assets/icons/interface'
+import { FileUpload } from '@//:assets/icons/interface'
 
 type Props = {
   uppy: Uppy,
@@ -163,8 +163,11 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
         {state.files.map((file, index) => {
           return (
             <File
-              disabled={isUpdatingContent} key={index} uppy={uppy}
-              state={state} file={file}
+              disabled={isUpdatingContent}
+              key={index}
+              uppy={uppy}
+              state={state}
+              file={file}
               dispatch={dispatch}
             />
           )

@@ -1,14 +1,14 @@
 import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   icon?: FunctionComponent<any>
   label: string
   active: boolean
   onClick?: () => void
-  children?: JSX.Element
+  children?: ReactNode
 }
 
 export default function NavigationButton ({

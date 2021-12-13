@@ -1,11 +1,7 @@
-/**
- * @flow
- */
-
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import { CopyCheck, CopyText } from '../../../../assets/icons/interface'
+import { CopyCheck, CopyText } from '@//:assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/utilities/hooks'
 
 interface Props {

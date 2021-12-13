@@ -1,14 +1,11 @@
-/**
- * @flow
- */
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Switch as ChakraSwitch, SwitchProps } from '@chakra-ui/react'
 
 const AnimatedSwitch = ChakraSwitch
 
 interface Props extends SwitchProps {
   loading?: boolean
-  children?: JSX.Element
+  children?: ReactNode
   disabled?: boolean
 }
 

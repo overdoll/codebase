@@ -8,8 +8,8 @@ export interface Urls {
 }
 
 export interface ResourceUrl {
-  url: string
-  mimeType: string
+  readonly url: string | unknown
+  readonly mimeType: string
 }
 
 export interface Content {

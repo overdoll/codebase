@@ -1,8 +1,9 @@
 import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: Node
+  children: ReactNode
   title: string
 }
 

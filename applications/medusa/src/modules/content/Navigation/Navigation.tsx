@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Skeleton, useBreakpointValue } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
@@ -34,7 +34,7 @@ import {
 } from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
   query: NavigationFragment$key
 }
 

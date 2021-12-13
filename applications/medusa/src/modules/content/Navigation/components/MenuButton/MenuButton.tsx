@@ -1,7 +1,7 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 
 interface Props {
   label?: string
@@ -10,7 +10,7 @@ interface Props {
   onClick?: () => void
   isDisabled?: boolean
   color?: string
-  children?: JSX.Element
+  children?: ReactNode
 }
 
 export default function MenuButton ({

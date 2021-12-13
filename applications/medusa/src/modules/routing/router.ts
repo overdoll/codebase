@@ -36,6 +36,7 @@ export interface Route {
   exact?: boolean
   routes?: Route[]
   path?: string
+  hidden?: boolean
 }
 
 export interface RouteMatch {

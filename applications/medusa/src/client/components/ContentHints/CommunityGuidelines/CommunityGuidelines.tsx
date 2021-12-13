@@ -1,7 +1,4 @@
-/**
- * @flow
- */
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
 import { ButtonProps } from '@chakra-ui/react'

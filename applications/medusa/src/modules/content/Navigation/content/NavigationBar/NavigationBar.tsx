@@ -1,7 +1,8 @@
 import { Flex } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: Node
+  children: ReactNode
 }
 
 export default function NavigationBar ({ children }: Props): JSX.Element {

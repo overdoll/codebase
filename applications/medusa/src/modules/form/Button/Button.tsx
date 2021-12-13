@@ -1,9 +1,9 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, ReactNode, useEffect, useState } from 'react'
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   loading?: boolean
-  children?: JSX.Element
+  children?: ReactNode
   disabled?: boolean
 }
 

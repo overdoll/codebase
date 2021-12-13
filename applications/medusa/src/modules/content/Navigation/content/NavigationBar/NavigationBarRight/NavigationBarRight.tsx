@@ -1,7 +1,8 @@
 import { Flex, HStack } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: Node
+  children: ReactNode
 }
 
 export default function NavigationBarRight ({ children }: Props): JSX.Element {

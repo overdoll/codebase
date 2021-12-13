@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/Icon/Icon'
-import { FileUpload } from '../../../../../../../assets/icons/interface'
+import { FileUpload } from '@//:assets/icons/interface'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -73,15 +73,28 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
   return (
     <Flex w='100%' h='100%' position='relative'>
       <Flex
-        w='100%' onDrop={handleDrop} onDragOver={onDragOver}
-        onDragEnter={onDragLeave} {...rest}
+        w='100%'
+        onDrop={handleDrop}
+        onDragOver={onDragOver}
+        onDragEnter={onDragLeave}
+        {...rest}
       >
         {children}
       </Flex>
       <Flex
-        borderRadius={15} w='100%' h='100%' position='absolute'
-        bg='dimmers.900' align='center' justify='center' borderStyle='dashed' borderColor='green.500' direction='column'
-        borderWidth={4} pointerEvents='none' display={isOpen ? 'flex' : 'none'}
+        borderRadius={15}
+        w='100%'
+        h='100%'
+        position='absolute'
+        bg='dimmers.900'
+        align='center'
+        justify='center'
+        borderStyle='dashed'
+        borderColor='green.500'
+        direction='column'
+        borderWidth={4}
+        pointerEvents='none'
+        display={isOpen ? 'flex' : 'none'}
       >
         <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
         <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>{t('upload.drag_over')}

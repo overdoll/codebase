@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '../../../../assets/icons/navigation'
+import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
 

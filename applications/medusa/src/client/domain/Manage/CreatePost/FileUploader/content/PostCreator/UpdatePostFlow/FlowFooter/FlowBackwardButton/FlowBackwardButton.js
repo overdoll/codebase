@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { EVENTS, STEPS } from '../../../../../constants/constants'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import type { Dispatch, State } from '../../../../../../../../../../types/upload'
 import { useTranslation } from 'react-i18next'
 
@@ -45,7 +45,8 @@ export default function FlowBackwardButton ({ dispatch, state }: Props): Node {
     default:
       return (
         <Button
-          colorScheme='gray' size='lg'
+          colorScheme='gray'
+          size='lg'
           onClick={goBack}
         >{t('create_post.flow.steps.footer.back')}
         </Button>

@@ -3,7 +3,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { DeleteBin } from '../../../../../../../assets/icons/interface'
+import { DeleteBin } from '@//:assets/icons/interface'
 import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
 
 interface Props {

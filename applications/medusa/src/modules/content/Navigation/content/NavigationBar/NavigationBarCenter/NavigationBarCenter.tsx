@@ -1,8 +1,9 @@
 import { Flex, HStack } from '@chakra-ui/react'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: Node
+  children: ReactNode
 }
 
 export default function NavigationBarCenter ({ children }: Props): JSX.Element {

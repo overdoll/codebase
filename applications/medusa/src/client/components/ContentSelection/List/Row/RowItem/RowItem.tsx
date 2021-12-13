@@ -1,13 +1,9 @@
-import { Box } from '@chakra-ui/react'
-
-interface Props {
-  children: JSX.Element
-}
+import { Box, BoxProps } from '@chakra-ui/react'
 
 export default function RowItem ({
   children,
   ...rest
-}: Props): JSX.Element {
+}: BoxProps): JSX.Element {
   return (
     <Box
       w='100%'

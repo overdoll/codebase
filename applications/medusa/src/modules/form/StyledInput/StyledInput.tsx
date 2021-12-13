@@ -1,6 +1,6 @@
 import { Box, FormErrorMessage, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { CheckMark, WarningTriangle } from '../../../assets/icons/interface'
+import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
 
 interface Props {
   register: any

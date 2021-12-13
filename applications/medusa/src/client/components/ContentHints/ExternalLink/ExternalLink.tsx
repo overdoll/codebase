@@ -1,7 +1,7 @@
 import { Link } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import Button from '@//:modules/form/Button'
-import { ShareExternalLink } from '../../../../assets/icons/interface'
+import Button from '@//:modules/form/Button/Button'
+import { ShareExternalLink } from '@//:assets/icons/interface'
 
 interface Props {
   path: string

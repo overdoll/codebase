@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { IconButton as ChakraButton } from '@chakra-ui/react'
 import { IconButtonProps } from '@chakra-ui/button/dist/types/icon-button'
 
@@ -6,7 +6,7 @@ const AnimatedButton = ChakraButton
 
 interface Props extends IconButtonProps {
   loading?: boolean
-  children?: JSX.Element
+  children?: ReactNode
   disabled?: boolean
 }
 

@@ -1,10 +1,10 @@
-import { createContext, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 
 interface Props {
   initial?: {} | null
-  children: JSX.Element
+  children: ReactNode
 }
 
 interface RTContext {

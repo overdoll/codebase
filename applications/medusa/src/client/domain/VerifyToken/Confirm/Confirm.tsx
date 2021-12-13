@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { Box, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { ConfirmRevokeMutation } from '@//:artifacts/ConfirmRevokeMutation.graphql'
 
 interface Props {
@@ -75,7 +75,8 @@ export default function Confirm ({
           <Center>
             <Stack spacing={4} direction='row' align='center'>
               <Button
-                size='md' variant='ghost'
+                size='md'
+                variant='ghost'
                 disabled={isVerifying}
                 loading={isRevokingToken}
                 onClick={revoke}
@@ -83,7 +84,8 @@ export default function Confirm ({
                 {t('confirm.revoke')}
               </Button>
               <Button
-                size='md' colorScheme='pink'
+                size='md'
+                colorScheme='pink'
                 disabled={isRevokingToken}
                 loading={isVerifying}
                 onClick={verify}

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 
@@ -17,7 +17,7 @@ interface FlashOverride {
 interface Props {
   // No flow typings exist for flush (yet) so we create some
   override?: FlashOverride
-  children: JSX.Element
+  children: ReactNode
 }
 
 const FlashContext = createContext({})

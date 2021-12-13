@@ -1,7 +1,8 @@
 import { WrapItem } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function SmallGridItem ({

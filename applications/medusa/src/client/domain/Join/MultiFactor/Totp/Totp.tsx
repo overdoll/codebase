@@ -13,7 +13,7 @@ import {
   Wrap
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import { BadgeCircle } from '../../../../../assets/icons/navigation'
+import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import prepareViewer from '@//:modules/utilities/functions/prepareViewer/prepareViewer'

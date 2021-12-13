@@ -13,7 +13,7 @@ import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
@@ -104,7 +104,10 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
         )}
       >
         <UpdatePostFlow
-          uppy={uppy} state={state} dispatch={dispatch} query={data}
+          uppy={uppy}
+          state={state}
+          dispatch={dispatch}
+          query={data}
         />
       </ErrorBoundary>
     </Suspense>

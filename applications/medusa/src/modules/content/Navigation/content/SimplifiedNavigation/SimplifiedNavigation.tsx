@@ -4,10 +4,11 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { useHistory } from '@//:modules/routing'
 import { useTranslation } from 'react-i18next'
 import { ArrowButtonUndo } from '@//:assets/icons/navigation'
-import IconButton from '@//:modules/form/IconButton'
+import IconButton from '@//:modules/form/IconButton/IconButton'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function SimplifiedNavigation ({ children }: Props): JSX.Element {

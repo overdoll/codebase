@@ -5,7 +5,7 @@ import { ResourceUrl } from '@//:types/upload'
 
 interface Props {
   type: string
-  urls: ResourceUrl[]
+  urls: readonly ResourceUrl[]
 }
 
 export default function ResourceItem ({

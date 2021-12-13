@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorTotpSettingsFragment$key } from '@//:artifacts/MultiFactorTotpSettingsFragment.graphql'
 import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
-import { QrCode } from '../../../../../../../assets/icons/interface'
+import { QrCode } from '@//:assets/icons/interface'
 
 interface Props {
   data: MultiFactorTotpSettingsFragment$key

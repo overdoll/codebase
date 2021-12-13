@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chak
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
-import { BadgeCircle } from '../../../../assets/icons/navigation'
+import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'

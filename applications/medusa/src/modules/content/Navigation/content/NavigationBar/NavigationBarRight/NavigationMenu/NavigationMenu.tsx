@@ -17,9 +17,10 @@ import { PageControllerSettings } from '@//:assets/icons/navigation'
 import NavigationButton from '@//:modules/content/Navigation/components/NavigationButton/NavigationButton'
 import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
 import { SiteLinkLogo } from '@//:modules/content/Navigation/content'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function NavigationMenu ({ children }: Props): JSX.Element {

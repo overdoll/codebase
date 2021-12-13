@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import DragOverFileInput from '../../../components/DragOverFileInput/DragOverFileInput'
 import FilePicker from '../../../components/FilePicker/FilePicker'
-import { FileUpload } from '../../../../../../../../assets/icons/interface'
+import { FileUpload } from '@//:assets/icons/interface'
 import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
@@ -92,7 +92,8 @@ export default function CreatePostFlow ({ uppy, state, dispatch }: Props): Node 
             h={400}
           >
             <Icon
-              w={12} h={12}
+              w={12}
+              h={12}
               mb={4}
               icon={FileUpload}
               fill='teal.300'

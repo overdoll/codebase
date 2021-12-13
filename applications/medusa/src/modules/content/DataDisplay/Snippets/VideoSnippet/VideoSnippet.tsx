@@ -1,10 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { ResourceUrl } from '@//:types/upload'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   innerRef?: () => void
-  urls: ResourceUrl[]
-  objectFit?: string
+  urls: readonly ResourceUrl[]
 }
 
 export default function VideoSnippet ({
@@ -32,6 +31,7 @@ export default function VideoSnippet ({
       {urls.map((item, index) => (
         <source
           key={index}
+          // @ts-expect-error
           src={item.url}
           type={item.mimeType}
         />)

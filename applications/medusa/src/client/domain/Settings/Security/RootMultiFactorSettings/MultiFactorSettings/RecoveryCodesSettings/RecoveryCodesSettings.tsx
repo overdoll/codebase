@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
 import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
-import { Barcode } from '../../../../../../../assets/icons/interface'
+import { Barcode } from '@//:assets/icons/interface'
 
 interface Props {
   data: RecoveryCodesSettingsFragment$key

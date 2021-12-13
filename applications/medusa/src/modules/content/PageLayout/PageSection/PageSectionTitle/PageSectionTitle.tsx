@@ -1,7 +1,8 @@
 import { Heading } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function PageSectionTitle ({ children }: Props): JSX.Element {

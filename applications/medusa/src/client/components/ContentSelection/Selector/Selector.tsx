@@ -1,10 +1,11 @@
 import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
   id: string
   selected: string[]
   onSelect: (id: string) => void
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function Selector ({

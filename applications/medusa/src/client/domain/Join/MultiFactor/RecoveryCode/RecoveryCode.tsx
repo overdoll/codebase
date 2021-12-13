@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Flex, FormControl, FormLabel, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'

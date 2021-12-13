@@ -1,4 +1,4 @@
-import Button from '../'
+import Button from '../Button'
 import { Center, Stack } from '@chakra-ui/react'
 
 export default {

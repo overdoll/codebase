@@ -4,7 +4,7 @@ import Totp from './Totp/Totp'
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import RecoveryCode from './RecoveryCode/RecoveryCode'
 import { useTranslation } from 'react-i18next'
 

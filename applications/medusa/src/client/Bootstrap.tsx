@@ -16,6 +16,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme'
 import { EmotionCache } from '@emotion/css'
 import { i18n } from 'i18next'
+import { ReactNode } from 'react'
 
 interface Props {
   environment: IEnvironment
@@ -26,7 +27,7 @@ interface Props {
   routerContext: Router
   flash?: FlashOverride
   runtimeContext?: {}
-  children?: JSX.Element
+  children?: ReactNode
 }
 
 /**

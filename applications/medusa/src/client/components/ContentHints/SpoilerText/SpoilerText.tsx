@@ -1,5 +1,5 @@
 import { Flex, Text, useDisclosure } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { useTranslation } from 'react-i18next'
 
 interface Props {

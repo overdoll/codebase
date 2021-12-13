@@ -1,8 +1,9 @@
 import { Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  supplement?: JSX.Element
-  children: JSX.Element
+  supplement?: ReactNode
+  children: ReactNode
   isOpen: boolean
   onClose: () => void
 }

@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import Link from '@//:modules/routing/Link'
 
 export default function LockedAccountBanner (): JSX.Element {

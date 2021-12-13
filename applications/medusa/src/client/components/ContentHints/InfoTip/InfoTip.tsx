@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { InfoCircle } from '@//:assets/icons/interface'
-import IconButton from '@//:modules/form/IconButton'
+import IconButton from '@//:modules/form/IconButton/IconButton'
 
 interface Props {
   text: string

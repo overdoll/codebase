@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { EVENTS, STEPS } from '../../../../../constants/constants'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '../../../../../../../../../../types/upload'
 import { useTranslation } from 'react-i18next'
@@ -155,7 +155,8 @@ export default function FlowForwardButton ({ uppy, dispatch, state, query }: Pro
     case STEPS.REVIEW:
       return (
         <Button
-          colorScheme='primary' size='lg'
+          colorScheme='primary'
+          size='lg'
           isDisabled={buttonDisabled()}
           isLoading={buttonLoading()}
           onClick={onSubmitPost}
@@ -167,7 +168,8 @@ export default function FlowForwardButton ({ uppy, dispatch, state, query }: Pro
     default:
       return (
         <Button
-          colorScheme='gray' size='lg'
+          colorScheme='gray'
+          size='lg'
           isDisabled={buttonDisabled()}
           isLoading={buttonLoading()}
           onClick={goForward}

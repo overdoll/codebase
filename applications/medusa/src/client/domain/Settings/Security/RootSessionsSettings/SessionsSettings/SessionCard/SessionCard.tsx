@@ -6,7 +6,7 @@ import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.
 import UAParser from 'ua-parser-js'
 import { format } from 'date-fns'
 import { PagePanelWrap } from '@//:modules/content/PageLayout'
-import { DesktopComputer, MobilePhone } from '../../../../../../../assets/icons/interface'
+import { DesktopComputer, MobilePhone } from '@//:assets/icons/interface'
 
 interface Props {
   connectionID: string
