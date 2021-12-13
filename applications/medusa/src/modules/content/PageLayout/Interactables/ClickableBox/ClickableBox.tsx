@@ -1,4 +1,4 @@
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {

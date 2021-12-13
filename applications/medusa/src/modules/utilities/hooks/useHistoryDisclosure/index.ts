@@ -6,25 +6,33 @@ import { useHistory } from '@//:modules/routing'
 // identical entry into history is added and
 // when the back button is pressed its closed
 
-export default function useHistoryDisclosure () {
+interface HistoryDisclosure {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+
+  onToggle: () => void
+
+}
+
+export default function useHistoryDisclosure (): HistoryDisclosure {
   const {
     isOpen,
     onOpen: onOpenAction,
-    onClose: onCloseAction,
-    onToggle: onToggleAction
+    onClose: onCloseAction
   } = useDisclosure()
 
   const history = useHistory()
 
   const onOpen = (): void => {
     const currentLocation = history.location.pathname
-    history.push(key, value)
+    history.push(currentLocation, { hasModal: true })
     onOpenAction()
   }
 
   const onClose = (): void => {
     const currentHistory = history.location
-    if (currentHistory.state?.hasModal) {
+    if (currentHistory.state?.hasModal === true) {
       history.goBack()
     }
     onCloseAction()

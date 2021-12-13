@@ -22,7 +22,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "types": [
-      "react-dom/next"
+      "react-dom/next",
+      "webpack-env",
+      "cypress"
     ],
     "paths": {
       "@//:modules/*": [

@@ -1,11 +1,11 @@
-import { Code, Flex } from '@chakra-ui/react'
+import { ButtonProps, Code, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { CopyCheck, CopyText } from '../../../../assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/utilities/hooks'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 
-interface Props {
+interface Props extends ButtonProps {
   children: string
 }
 

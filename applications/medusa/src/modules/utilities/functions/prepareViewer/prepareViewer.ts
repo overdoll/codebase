@@ -8,7 +8,7 @@ export default function prepareViewer (store, payload): void {
   // Link the viewer to the payload so ability can run without refresh
   if (viewer !== null) {
     viewer.invalidateRecord()
-  } else if (!viewer) {
+  } else {
     root.setLinkedRecord(payload, 'viewer')
   }
 

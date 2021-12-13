@@ -1,6 +1,14 @@
 // TODO: should clean up code
 // https://github.com/marmelab/battery-friendly-timer
 class BatteryFriendlyTimer {
+  private readonly win: any
+  private isFetching: boolean
+  private latestId: number
+  private readonly timeouts: {}
+  private readonly forceTimeouts: {}
+  private readonly intervals: {}
+  private readonly forceIntervals: {}
+
   constructor (win) {
     this.win = win
     this.isFetching = false
@@ -11,7 +19,7 @@ class BatteryFriendlyTimer {
     this.forceIntervals = {}
   }
 
-  fetchHappens () {
+  fetchHappens (): void {
     if (this.isFetching) {
       return
     }
@@ -34,7 +42,7 @@ class BatteryFriendlyTimer {
     this.isFetching = false
   }
 
-  setTimeout (callback, tryDelay, forceDelay) {
+  setTimeout (callback, tryDelay, forceDelay): number {
     const latestId = ++this.latestId
     this.timeouts[latestId] = {
       from: Date.now(),
@@ -45,13 +53,15 @@ class BatteryFriendlyTimer {
     return latestId
   }
 
-  clearTimeout (id) {
+  clearTimeout (id): void {
     this.win.clearTimeout(this.forceTimeouts[id])
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.timeouts[id]
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.forceTimeouts[id]
   }
 
-  setInterval (callback, tryDelay, forceDelay) {
+  setInterval (callback, tryDelay, forceDelay): number {
     const latestId = ++this.latestId
     let now = Date.now()
     const interval = {
@@ -72,9 +82,11 @@ class BatteryFriendlyTimer {
     return latestId
   }
 
-  clearInterval (id) {
+  clearInterval (id): void {
     this.win.clearInterval(this.forceIntervals[id])
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.intervals[id]
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.forceIntervals[id]
   }
 }

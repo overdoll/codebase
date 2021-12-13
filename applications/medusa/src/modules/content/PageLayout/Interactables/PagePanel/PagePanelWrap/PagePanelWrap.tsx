@@ -3,9 +3,10 @@ import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 import { ArrowButtonRight } from '@//:assets/icons/navigation'
 import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: string
+  children: ReactNode
   path: string
   disabled?: boolean
 }

@@ -1,9 +1,9 @@
 import { Suspense } from 'react'
 import JSResource from './JSResource'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import { Image, Img } from '@chakra-ui/react'
+import { Image, ImageProps, Img } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends ImageProps {
   src?: string
   fallback: JSX.Element
 }

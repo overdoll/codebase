@@ -5,7 +5,7 @@ import { useHistory } from '@//:modules/routing'
 import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
 import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
-import { ConfirmationMutation } from '@//:artifacts/ConfirmationMutation.graphql'
+import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -22,7 +22,7 @@ const ConfirmEmailMutationGQL = graphql`
 export default function ConfirmEmail (): JSX.Element {
   const [queryToken] = useQueryParam<string>('id')
 
-  const [commit] = useMutation<ConfirmationMutation>(
+  const [commit] = useMutation<ConfirmEmailMutation>(
     ConfirmEmailMutationGQL
   )
 
@@ -46,9 +46,7 @@ export default function ConfirmEmail (): JSX.Element {
           if (data.accountEmail == null) {
             flash('confirmation.error', t('error'))
             history.push('/settings/profile')
-          }
-
-          if (data.accountEmail != null) {
+          } else {
             flash('confirmation.success', t('success', { email: data.accountEmail.email }))
             history.push('/settings/profile')
           }

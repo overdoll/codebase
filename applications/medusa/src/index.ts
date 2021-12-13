@@ -14,9 +14,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let app = require('./server').default
 
-// @ts-expect-error
 if (module.hot != null) {
-  // @ts-expect-error
   module.hot.accept('./server', function () {
     console.log('🔁  HMR Reloading `./server`...')
     try {

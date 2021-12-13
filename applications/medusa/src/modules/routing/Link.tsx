@@ -1,8 +1,8 @@
-import RoutingContext from '@//:modules/routing/RoutingContext'
-import { useCallback, useContext } from 'react'
+import RoutingContext, { useRoutingContext } from '@//:modules/routing/RoutingContext'
+import { ReactNode, useCallback, useContext } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
   disabled?: boolean
   to: string
 }
@@ -16,7 +16,7 @@ export default function Link ({
   disabled = false,
   to
 }: Props): JSX.Element {
-  const router = useContext(RoutingContext)
+  const router = useRoutingContext()
 
   // When the user clicks, change route
   const changeRoute = useCallback(

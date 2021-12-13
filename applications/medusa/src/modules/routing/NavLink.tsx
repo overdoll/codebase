@@ -1,26 +1,31 @@
-import RoutingContext from '@//:modules/routing/RoutingContext'
-import { useContext } from 'react'
+import { useRoutingContext } from '@//:modules/routing/RoutingContext'
 import { matchPath } from 'react-router'
 import Link from './Link'
 import { createLocation } from 'history'
 import getBasePath from '@//:modules/content/Navigation/helpers/getBasePath'
 import { useLocation } from '@//:modules/routing/useLocation'
+import { ReactNode } from 'react'
+
+interface ChildrenCallable {
+  isActive: boolean
+  isActiveBasePath: boolean
+}
 
 interface Props {
-  children: JSX.Element
+  children: (ChildrenCallable: ChildrenCallable) => ReactNode
   to: string
   exact?: boolean
   strict?: boolean
   sensitive?: boolean
-  isActiveProp?: (t1: string, t2: string) => boolean | null
+  isActiveProp?: ((t1: string, t2: any) => boolean)
 }
 
-const resolveToLocation = (to: string, currentLocation: string): string =>
+const resolveToLocation = (to: any, currentLocation: any): string =>
   typeof to === 'function' ? to(currentLocation) : to
 
-const normalizeToLocation = (to: string, currentLocation: string): Location => {
+const normalizeToLocation = (to: any, currentLocation: any): Location => {
   return typeof to === 'string'
-    ? createLocation(to, null, null, currentLocation)
+    ? createLocation(to, undefined, undefined, currentLocation)
     : to
 }
 
@@ -33,10 +38,10 @@ const NavLink = ({
   exact = false,
   strict = false,
   sensitive = false,
-  isActiveProp = null,
+  isActiveProp,
   ...rest
-}: Props): JSX.Element => {
-  const router = useContext(RoutingContext)
+}: Props): JSX.Element | null => {
+  const router = useRoutingContext()
 
   const location = useLocation()
 
@@ -49,11 +54,11 @@ const NavLink = ({
   const { pathname: path } = toLocation
 
   const escapedPath =
-    path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
+    (path !== '') && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
 
   const isActiveBasePath = getBasePath(location.pathname) === getBasePath(path)
 
-  const match = escapedPath
+  const match = escapedPath != null
     ? matchPath(currentLocation.pathname, {
       path: escapedPath,
       exact,
@@ -62,9 +67,17 @@ const NavLink = ({
     })
     : null
 
-  const isActive = !!(isActiveProp != null
-    ? isActiveProp(match, currentLocation)
-    : match)
+  let isActive
+
+  if (isActiveProp != null) {
+    isActive = isActiveProp(match, currentLocation)
+  } else {
+    isActive = match
+  }
+
+  if (children == null) {
+    return null
+  }
 
   return (
     <Link

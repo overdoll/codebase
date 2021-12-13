@@ -4,7 +4,7 @@ import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 
 interface Flash {
   flash: (key: string, value: string) => void
-  read: (key: string, first: boolean) => string[] | string
+  read: (key: string, first?: boolean) => string[] | string | null
   flush: (key: string) => void
 }
 
@@ -54,12 +54,12 @@ function FlashProvider ({
   }
 
   // Read will read the value. By default, returns the first value, but can return an array as well
-  const read = (key?: string, first: boolean = true): string[] | string => {
+  const read = (key?: string, first: boolean = true): string[] | string | null => {
     let result
 
     if (override != null) {
       result = (key != null) ? override.get(key) : override.get()
-    } else {
+    } else if (key != null) {
       result = Object.prototype.hasOwnProperty.call(flashState, key) as boolean ? flashState[key] : []
     }
 

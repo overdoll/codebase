@@ -9,9 +9,7 @@ void loadableReady().then(() => {
   root.render(<App />)
 })
 
-// @ts-expect-error
 if (module.hot != null) {
-  // @ts-expect-error
   module.hot.accept('./App', () => {
     // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
     const NextRoot = require('./App').default

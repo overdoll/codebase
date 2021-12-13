@@ -1,9 +1,10 @@
 import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { SettingCog } from '@//:assets/icons/navigation'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function SmallMenuButton ({ children }: Props): JSX.Element {

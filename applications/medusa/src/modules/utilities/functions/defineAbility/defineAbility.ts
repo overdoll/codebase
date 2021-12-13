@@ -1,6 +1,7 @@
 import { Ability, AbilityBuilder } from '@casl/ability'
+import { RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
 
-export default function defineAbility (user) {
+export default function defineAbility (user: RootQueryResponse['viewer']): Ability<any> {
   const {
     can,
     cannot,
@@ -8,7 +9,7 @@ export default function defineAbility (user) {
   } = new AbilityBuilder(Ability)
 
   // Check if user is logged in
-  if (user) {
+  if (user != null) {
     can('manage', 'account')
     can('manage', 'posting')
 
@@ -24,7 +25,7 @@ export default function defineAbility (user) {
     }
 
     // Check if the user is banned
-    if (user.lock) {
+    if (user.lock != null) {
       can('read', 'locked')
       cannot('manage', 'posting')
     }

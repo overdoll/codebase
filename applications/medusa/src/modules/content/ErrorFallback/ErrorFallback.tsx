@@ -1,4 +1,3 @@
-import type { Error } from '@//:modules/utilities/ErrorBoundary'
 import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'

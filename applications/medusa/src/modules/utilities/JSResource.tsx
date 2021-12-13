@@ -9,7 +9,7 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 const resourceMap = new Map()
 
-type Loader = () => Promise<string>
+type Loader = () => Promise<any>
 
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
@@ -90,6 +90,7 @@ class Resource {
     } else if (this._error !== null) {
       throw this._error
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw this._promise
     }
   }
@@ -108,21 +109,17 @@ class Resource {
  *    const Foo = resource.read();
  *    return <Foo ... />;
  * ```
- *
- * @param {*} moduleId A globally unique identifier for the resource used for caching
- * @param {*} loader A method to load the resource's data if necessary
- * @param {*} hot a boolean which will force load it everytime
  */
 export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
-  if (!CanUseDOM || module.hot) {
+  if (!CanUseDOM || module.hot != null) {
     return new Resource(loader, moduleId)
   }
 
   // If in webpack HMR mode, update the resource map everytime
   let resource = resourceMap.get(moduleId)
 
-  if (!resource) {
+  if (resource == null) {
     resource = new Resource(loader, moduleId)
     resourceMap.set(moduleId, resource)
   }
