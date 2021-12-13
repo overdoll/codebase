@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
-import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
+import CanUseDOM from '@//:modules/operations/CanUseDOM'
+import SafeJSONParse from '@//:modules/operations/SafeJSONParse'
 
 interface Flash {
   flash: (key: string, value: string) => void

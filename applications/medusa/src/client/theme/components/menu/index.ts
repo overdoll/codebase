@@ -1,8 +1,7 @@
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, PartsStyleFunction, SystemStyleFunction, SystemStyleObject } from '@chakra-ui/theme-tools'
+import { menuAnatomy as parts } from '@chakra-ui/anatomy'
 
-const parts = ['item', 'command', 'list', 'button', 'groupTitle', 'divider']
-
-function baseStyleList (props) {
+const baseStyleList: SystemStyleFunction = (props) => {
   return {
     bg: mode('#fff', 'gray.800')(props),
     boxShadow: mode('sm', 'lg')(props),
@@ -15,7 +14,7 @@ function baseStyleList (props) {
   }
 }
 
-function baseStyleItem (props) {
+const baseStyleItem: SystemStyleFunction = (props) => {
   return {
     py: '0.4rem',
     px: '0.8rem',
@@ -38,18 +37,18 @@ function baseStyleItem (props) {
   }
 }
 
-const baseStyleGroupTitle = {
+const baseStyleGroupTitle: SystemStyleObject = {
   mx: 4,
   my: 2,
   fontWeight: 'semibold',
   fontSize: 'sm'
 }
 
-const baseStyleCommand = {
+const baseStyleCommand: SystemStyleObject = {
   opacity: 0.6
 }
 
-const baseStyleDivider = {
+const baseStyleDivider: SystemStyleObject = {
   border: 0,
   borderBottom: '1px solid',
   borderColor: 'inherit',
@@ -57,7 +56,7 @@ const baseStyleDivider = {
   opacity: 0.6
 }
 
-const baseStyle = (props) => ({
+const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   list: baseStyleList(props),
   item: baseStyleItem(props),
   groupTitle: baseStyleGroupTitle,

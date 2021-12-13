@@ -1,4 +1,4 @@
-export default function (props) {
+export default function (props): any {
   return {
     body: {
       fontFamily: 'body',

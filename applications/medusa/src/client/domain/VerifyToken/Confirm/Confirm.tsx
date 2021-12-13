@@ -9,7 +9,7 @@ import { ConfirmRevokeMutation } from '@//:artifacts/ConfirmRevokeMutation.graph
 interface Props {
   verify: () => void
   isVerifying: boolean
-  device: string
+  device: JSX.Element
   location: string
 }
 

@@ -1,7 +1,15 @@
-import { isDark, mode, randomColor } from '@chakra-ui/theme-tools'
+import {
+  isDark,
+  mode,
+  PartsStyleFunction,
+  PartsStyleObject,
+  randomColor,
+  SystemStyleFunction
+} from '@chakra-ui/theme-tools'
+import { avatarAnatomy as parts } from '@chakra-ui/anatomy'
 import themeSizes from '../../sizes'
 
-const baseStyleBadge = (props): any => {
+const baseStyleBadge: SystemStyleFunction = (props) => {
   return {
     transform: 'translate(25%, 25%)',
     border: '0.2em solid',
@@ -9,18 +17,18 @@ const baseStyleBadge = (props): any => {
   }
 }
 
-const baseStyleExcessLabel = (props): any => {
+const baseStyleExcessLabel: SystemStyleFunction = (props) => {
   return {
     bg: mode('gray.200', 'whiteAlpha.400')(props)
   }
 }
 
-const baseStyleContainer = (props): any => {
+const baseStyleContainer: SystemStyleFunction = (props) => {
   const {
     name,
     theme
   } = props
-  const bg = name ? randomColor({ string: name }) : 'gray.400'
+  const bg = ((name as string) !== '') ? randomColor({ string: name }) : 'gray.400'
   const isBgDark = isDark(bg)(theme)
 
   let color = 'white'
@@ -36,26 +44,26 @@ const baseStyleContainer = (props): any => {
   }
 }
 
-const baseStyle = (props): any => ({
+const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   badge: baseStyleBadge(props),
   excessLabel: baseStyleExcessLabel(props),
   container: baseStyleContainer(props)
 })
 
-function getSize (size): any {
+function getSize (size: string): PartsStyleObject<typeof parts> {
   const themeSize = themeSizes[size]
   return {
     container: {
       width: size,
       height: size,
-      fontSize: `calc(${themeSize ?? size} / 2.5)`
+      fontSize: `calc(${themeSize as string ?? size} / 2.5)`
     },
     excessLabel: {
       width: size,
       height: size
     },
     label: {
-      fontSize: `calc(${themeSize ?? size} / 2.5)`,
+      fontSize: `calc(${themeSize as string ?? size} / 2.5)`,
       lineHeight: size !== '100%' ? themeSize ?? size : undefined
     }
   }

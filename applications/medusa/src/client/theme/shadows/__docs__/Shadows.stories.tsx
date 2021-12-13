@@ -1,11 +1,11 @@
-import shadows from '../index';
-import { Box, Stack } from '@chakra-ui/react';
+import shadows from '../index'
+import { Box, Stack } from '@chakra-ui/react'
 
 export default {
   title: 'Molecules/Shadows'
 }
 
-const Template = () => {
+const Template = (): JSX.Element => {
   return (
     <Stack spacing={12} align='center'>
       {Object.keys(shadows).map(shadow => (

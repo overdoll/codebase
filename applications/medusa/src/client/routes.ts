@@ -1,6 +1,6 @@
-import JSResource from '@//:modules/utilities/JSResource'
+import JSResource from '@//:modules/operations/JSResource'
 import type { Route } from '@//:modules/routing/router'
-import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
+import defineAbility from '@//:modules/support/defineAbility/defineAbility'
 import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 import { Ability } from '@casl/ability'
 

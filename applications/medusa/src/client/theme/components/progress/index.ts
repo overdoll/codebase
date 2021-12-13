@@ -1,9 +1,22 @@
-import { generateStripe, getColor, mode } from '@chakra-ui/theme-tools'
+import {
+  generateStripe,
+  getColor,
+  mode,
+  PartsStyleFunction,
+  PartsStyleObject,
+  StyleFunctionProps,
+  SystemStyleFunction,
+  SystemStyleObject
+} from '@chakra-ui/theme-tools'
+import { progressAnatomy as parts } from '@chakra-ui/anatomy'
 
-const parts = ['track', 'filledTrack', 'label']
-
-function filledStyle (props) {
-  const { colorScheme: c, theme: t, isIndeterminate, hasStripe } = props
+function filledStyle (props: StyleFunctionProps): SystemStyleObject {
+  const {
+    colorScheme: c,
+    theme: t,
+    isIndeterminate,
+    hasStripe
+  } = props
 
   const stripeStyle = mode(
     generateStripe(),
@@ -15,19 +28,19 @@ function filledStyle (props) {
   const gradient = `linear-gradient(
     to right,
     transparent 0%,
-    ${getColor(t, bgColor)} 50%,
+    ${getColor(t, bgColor) as string} 50%,
     transparent 100%
   )`
 
-  const addStripe = !isIndeterminate && hasStripe
+  const addStripe = !(isIndeterminate as boolean) && (hasStripe as boolean)
 
   return {
     ...(addStripe && stripeStyle),
-    ...(isIndeterminate ? { bgImage: gradient } : { bgColor })
+    ...((isIndeterminate as boolean) ? { bgImage: gradient } : { bgColor })
   }
 }
 
-const baseStyleLabel = {
+const baseStyleLabel: SystemStyleObject = {
   lineHeight: '1',
   fontSize: '0.25em',
   fontWeight: 'bold',
@@ -35,14 +48,14 @@ const baseStyleLabel = {
   color: 'gray.300'
 }
 
-function baseStyleTrack (props) {
+const baseStyleTrack: SystemStyleFunction = (props) => {
   return {
     borderRadius: 'md',
     bg: mode('gray.300', 'gray.700')(props)
   }
 }
 
-function baseStyleFilledTrack (props) {
+const baseStyleFilledTrack: SystemStyleFunction = (props) => {
   return {
     transitionProperty: 'common',
     transitionDuration: 'slow',
@@ -50,13 +63,13 @@ function baseStyleFilledTrack (props) {
   }
 }
 
-const baseStyle = (props) => ({
+const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   label: baseStyleLabel,
   filledTrack: baseStyleFilledTrack(props),
   track: baseStyleTrack(props)
 })
 
-const sizes = {
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   xs: {
     track: { h: '0.25rem' }
   },

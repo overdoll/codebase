@@ -4,7 +4,7 @@ import type { SessionsSettingsQuery as SessionsSettingsQueryType } from '@//:art
 import SessionsSettingsQuery from '@//:artifacts/SessionsSettingsQuery.graphql'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'

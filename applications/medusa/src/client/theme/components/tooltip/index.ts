@@ -1,9 +1,9 @@
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, SystemStyleFunction } from '@chakra-ui/theme-tools'
 
-function baseStyle (props) {
+const baseStyle: SystemStyleFunction = (props) => {
   const bg = mode('gray.700', 'gray.500')(props)
   return {
-    '--tooltip-bg': `colors.${bg}`,
+    '--tooltip-bg': `colors.${bg as string}`,
     px: '8px',
     py: '2px',
     bg: 'var(--tooltip-bg)',

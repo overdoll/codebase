@@ -40,6 +40,7 @@ export default function SimplifiedNavigation ({ children }: Props): JSX.Element 
         </Link>
         <Spacer />
         <IconButton
+          aria-label='simple'
           onClick={() => history.goBack()}
           variant='solid'
           colorScheme='gray'

@@ -1,15 +1,16 @@
-import { spacing } from '../index';
-import { Box, Flex, Stack, Text } from '@chakra-ui/react';
+import { spacing } from '../index'
+import { Box, Flex, Stack, Text } from '@chakra-ui/react'
 
 export default {
   title: 'Molecules/Spacing'
 }
 
-const Template = () => {
+const Template = (): JSX.Element => {
   return (
     <Stack spacing={4}>
       {Object.keys(spacing)
         .sort((a, b) => {
+          // @ts-expect-error
           return a - b
         })
         .map(size => (

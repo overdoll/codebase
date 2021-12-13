@@ -1,6 +1,5 @@
-import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
-
-const parts = ['container', 'title', 'description', 'icon']
+import { getColor, mode, PartsStyleFunction, StyleFunctionProps, transparentize } from '@chakra-ui/theme-tools'
+import { alertAnatomy as parts } from '@chakra-ui/anatomy'
 
 const baseStyle = {
   container: {
@@ -24,27 +23,28 @@ const baseStyle = {
   }
 }
 
-function getBg (props): any {
+function getBg (props: StyleFunctionProps): string {
   const {
     theme,
     colorScheme: c
   } = props
-  const lightBg = getColor(theme, `${c as string}.100`, c)
-  const darkBg = transparentize(`${c as string}.300`, 0.10)(theme)
+
+  const lightBg = getColor(theme, `${c}.100`, c)
+  const darkBg = transparentize(`${c}.300`, 0.10)(theme)
   return mode(lightBg, darkBg)(props)
 }
 
-function getBorder (props): any {
+function getBorder (props: StyleFunctionProps): string {
   const {
     theme,
     colorScheme: c
   } = props
-  const lightBg = getColor(theme, `${c as string}.100`, c)
-  const darkBg = transparentize(`${c as string}.300`, 0.5)(theme)
+  const lightBg = getColor(theme, `${c}.100`, c)
+  const darkBg = transparentize(`${c}.300`, 0.5)(theme)
   return mode(lightBg, darkBg)(props)
 }
 
-function variantSubtle (props): any {
+const variantSubtle: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
@@ -52,69 +52,69 @@ function variantSubtle (props): any {
       borderWidth: 2,
       borderColor: getBorder(props)
     },
-    icon: { color: mode(`${c as string}.500`, `${c as string}.300`)(props) },
+    icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
     title: {
-      color: mode(`${c as string}.500`, `${c as string}.300`)(props)
+      color: mode(`${c}.500`, `${c}.300`)(props)
     },
     description: {
-      color: mode(`${c as string}.500`, `${c as string}.300`)(props)
+      color: mode(`${c}.500`, `${c}.300`)(props)
     }
   }
 }
 
-function variantLeftAccent (props): any {
+const variantLeftAccent: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
       paddingStart: 3,
       borderStartWidth: '4px',
-      borderStartColor: mode(`${c as string}.500`, `${c as string}.200`)(props),
+      borderStartColor: mode(`${c}.500`, `${c}.200`)(props),
       bg: getBg(props)
     },
     icon: {
-      color: mode(`${c as string}.500`, `${c as string}.200`)(props)
+      color: mode(`${c}.500`, `${c}.200`)(props)
     }
   }
 }
 
-function variantTopAccent (props): any {
+const variantTopAccent: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
       pt: 2,
       borderTopWidth: '4px',
-      borderTopColor: mode(`${c as string}.500`, `${c as string}.200`)(props),
+      borderTopColor: mode(`${c}.500`, `${c}.200`)(props),
       bg: getBg(props)
     },
     icon: {
-      color: mode(`${c as string}.500`, `${c as string}.200`)(props)
+      color: mode(`${c}.500`, `${c}.200`)(props)
     }
   }
 }
 
-function variantSolidOriginal (props): any {
+const variantSolidOriginal: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
-      bg: mode(`${c as string}.500`, `${c as string}.200`)(props),
+      bg: mode(`${c}.500`, `${c}.200`)(props),
       color: mode('white', 'gray.900')(props)
     }
   }
 }
 
-function variantSolid (props): any {
+const variantSolid: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     boxShadow: 'none',
     container: {
       paddingStart: 3,
       borderStartWidth: '4px',
-      borderStartColor: mode(`${c as string}.500`, `${c as string}.500`)(props),
-      bg: mode(`${c as string}.500`, 'gray.800')(props),
+      borderStartColor: mode(`${c}.500`, `${c}.500`)(props),
+      bg: mode(`${c}.500`, 'gray.800')(props),
       color: mode('white', 'gray.00')(props)
     },
     icon: {
-      color: mode(`${c as string}.500`, `${c as string}.500`)(props),
+      color: mode(`${c}.500`, `${c}.500`)(props),
       width: 4,
       height: 4,
       marginTop: 1

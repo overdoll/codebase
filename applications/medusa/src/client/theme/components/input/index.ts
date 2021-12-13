@@ -1,10 +1,8 @@
-/**
- * @flow
- */
-
+import type { PartsStyleFunction, PartsStyleObject, SystemStyleObject } from '@chakra-ui/theme-tools'
 import { getColor, mode } from '@chakra-ui/theme-tools'
+import { inputAnatomy as parts } from '@chakra-ui/anatomy'
 
-const determineBorderWidth = (size) => {
+const determineBorderWidth = (size): number => {
   switch (size) {
     case 'xs':
       return 1
@@ -21,9 +19,7 @@ const determineBorderWidth = (size) => {
   }
 }
 
-const parts = ['field', 'addon']
-
-const baseStyle = {
+const baseStyle: PartsStyleObject<typeof parts> = {
   field: {
     width: '100%',
     minWidth: 0,
@@ -34,8 +30,7 @@ const baseStyle = {
   }
 }
 
-const size = {
-
+const size: Record<string, SystemStyleObject> = {
   xl: {
     fontSize: 'xl',
     pt: 5,
@@ -77,7 +72,7 @@ const size = {
   }
 }
 
-const sizes = {
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   xl: {
     field: size.xl,
     addon: size.xl
@@ -104,17 +99,26 @@ const sizes = {
 // focusBorderColor: 'gray.300',
 // borderColor: 'gray.800'
 
-function getDefaults (props) {
-  const { focusBorderColor: fc, errorBorderColor: ec } = props
+function getDefaults (props: Record<string, any>): Record<string, string> {
+  const {
+    focusBorderColor: fc,
+    errorBorderColor: ec
+  } = props
   return {
-    focusBorderColor: fc || mode('blue.700', 'pink.500')(props),
-    errorBorderColor: ec || mode('red.500', 'orange.500')(props)
+    focusBorderColor: fc ?? mode('blue.700', 'pink.500')(props),
+    errorBorderColor: ec ?? mode('red.500', 'orange.500')(props)
   }
 }
 
-function variantOutline (props) {
-  const { theme, size } = props
-  const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
+const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
+  const {
+    theme,
+    size
+  } = props
+  const {
+    focusBorderColor: fc,
+    errorBorderColor: ec
+  } = getDefaults(props)
 
   return {
     field: {
@@ -134,15 +138,15 @@ function variantOutline (props) {
       },
       _invalid: {
         borderColor: getColor(theme, ec),
-        boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
+        boxShadow: `0 0 0 0.5px ${getColor(theme, ec) as string}`
       },
       _focus: {
         zIndex: 1,
         borderColor: getColor(theme, fc),
-        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
+        boxShadow: `0 0 0 0.5px ${getColor(theme, fc) as string}`,
         _invalid: {
           borderColor: getColor(theme, ec),
-          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+          boxShadow: `0 0 0 1px ${getColor(theme, ec) as string}`
         }
       }
     },
@@ -154,9 +158,15 @@ function variantOutline (props) {
   }
 }
 
-function variantFilled (props) {
-  const { theme, size } = props
-  const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
+const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
+  const {
+    theme,
+    size
+  } = props
+  const {
+    focusBorderColor: fc,
+    errorBorderColor: ec
+  } = getDefaults(props)
 
   return {
     field: {
@@ -183,7 +193,7 @@ function variantFilled (props) {
         borderColor: getColor(theme, fc),
         _invalid: {
           borderColor: getColor(theme, ec),
-          boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
+          boxShadow: `0 0 0 0.5px ${getColor(theme, ec) as string}`
         }
       }
     },
@@ -195,9 +205,12 @@ function variantFilled (props) {
   }
 }
 
-function variantFlushed (props) {
+const variantFlushed: PartsStyleFunction<typeof parts> = (props) => {
   const { theme } = props
-  const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
+  const {
+    focusBorderColor: fc,
+    errorBorderColor: ec
+  } = getDefaults(props)
 
   return {
     field: {
@@ -212,11 +225,11 @@ function variantFlushed (props) {
       },
       _invalid: {
         borderColor: getColor(theme, ec),
-        boxShadow: `0px 1px 0px 0px ${getColor(theme, ec)}`
+        boxShadow: `0px 1px 0px 0px ${getColor(theme, ec) as string}`
       },
       _focus: {
         borderColor: getColor(theme, fc),
-        boxShadow: `0px 1px 0px 0px ${getColor(theme, fc)}`
+        boxShadow: `0px 1px 0px 0px ${getColor(theme, fc) as string}`
       }
     },
     addon: {

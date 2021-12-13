@@ -1,6 +1,6 @@
 import { matchRoutes } from 'react-router-config'
 import { fetchQuery, loadQuery, PreloadedQuery } from 'react-relay/hooks'
-import type { Resource } from '@//:modules/utilities/JSResource'
+import type { Resource } from '@//:modules/operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'

@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRoutingContext } from '@//:modules/routing/RoutingContext'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
 import { chakra, Progress, Slide } from '@chakra-ui/react'
 

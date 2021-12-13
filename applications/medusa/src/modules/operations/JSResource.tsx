@@ -5,7 +5,7 @@
  * must have stored the previous result somewhere.
  *
  */
-import CanUseDOM from '@//:modules/utilities/CanUseDOM'
+import CanUseDOM from '@//:modules/operations/CanUseDOM'
 
 const resourceMap = new Map()
 

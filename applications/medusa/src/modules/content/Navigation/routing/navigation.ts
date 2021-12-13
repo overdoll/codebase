@@ -1,5 +1,5 @@
-import type { Route } from '@//:modules/routing/router'
-import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
+import type { Middleware } from '@//:modules/routing/router'
+import defineAbility from '@//:modules/support/defineAbility/defineAbility'
 import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 import {
@@ -17,6 +17,7 @@ import {
   UserHuman
 } from '@//:assets/icons/navigation'
 import { Ability } from '@casl/ability'
+import { FunctionComponent } from 'react'
 
 const getAbilityFromUser = (environment): Ability<any> => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -48,7 +49,31 @@ const getAbilityFromUser = (environment): Ability<any> => {
  * like the right menu
  */
 
-const routes: Route[] = [
+interface NavigationBlock {
+  top?: {
+    title: string
+    icon?: FunctionComponent
+  }
+  side?: {
+    title: string
+    icon?: FunctionComponent
+  }
+  menu?: {
+    title: string
+    icon?: FunctionComponent
+  }
+}
+
+interface NavigationRoute {
+  path: string
+  hidden?: boolean
+  exact?: boolean
+  middleware?: Middleware[]
+  navigation?: NavigationBlock
+  routes?: NavigationRoute[]
+}
+
+const routes: NavigationRoute[] = [
   {
     path: '/join',
     hidden: true

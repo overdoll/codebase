@@ -1,8 +1,7 @@
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, PartsStyleFunction, PartsStyleObject, SystemStyleObject } from '@chakra-ui/theme-tools'
+import { tableAnatomy as parts } from '@chakra-ui/anatomy'
 
-const parts = ['table', 'thead', 'tbody', 'tr', 'th', 'td', 'caption']
-
-const baseStyle = {
+const baseStyle: PartsStyleObject<typeof parts> = {
   table: {
     fontVariantNumeric: 'lining-nums tabular-nums',
     borderCollapse: 'collapse',
@@ -26,13 +25,13 @@ const baseStyle = {
   }
 }
 
-const numericStyles = {
+const numericStyles: SystemStyleObject = {
   '&[data-is-numeric=true]': {
     textAlign: 'end'
   }
 }
 
-const simpleVariant = (props) => {
+const simpleVariant: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
 
   return {
@@ -60,7 +59,7 @@ const simpleVariant = (props) => {
   }
 }
 
-const stripedVariant = (props) => {
+const stripedVariant: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
 
   return {

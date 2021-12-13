@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from 'react'
-import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
+import CanUseDOM from '@//:modules/operations/CanUseDOM'
+import SafeJSONParse from '@//:modules/operations/SafeJSONParse'
 
 interface Props {
   initial?: {} | null

@@ -15,6 +15,10 @@ interface HistoryDisclosure {
 
 }
 
+interface HistoryDisclosureState {
+  hasModal?: boolean
+}
+
 export default function useHistoryDisclosure (): HistoryDisclosure {
   const {
     isOpen,
@@ -32,7 +36,8 @@ export default function useHistoryDisclosure (): HistoryDisclosure {
 
   const onClose = (): void => {
     const currentHistory = history.location
-    if (currentHistory.state?.hasModal === true) {
+    const state = currentHistory.state as HistoryDisclosureState
+    if (state.hasModal === true) {
       history.goBack()
     }
     onCloseAction()

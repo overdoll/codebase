@@ -1,8 +1,13 @@
-import { mode } from '@chakra-ui/theme-tools'
+import {
+  mode,
+  PartsStyleFunction,
+  PartsStyleObject,
+  SystemStyleFunction,
+  SystemStyleObject
+} from '@chakra-ui/theme-tools'
+import { switchAnatomy as parts } from '@chakra-ui/anatomy'
 
-const parts = ['container', 'track', 'thumb']
-
-function baseStyleTrack (props) {
+const baseStyleTrack: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
 
   return {
@@ -26,7 +31,7 @@ function baseStyleTrack (props) {
   }
 }
 
-const baseStyleThumb = {
+const baseStyleThumb: SystemStyleObject = {
   bg: 'white',
   transitionProperty: 'transform',
   transitionDuration: 'normal',
@@ -38,7 +43,7 @@ const baseStyleThumb = {
   }
 }
 
-const baseStyle = (props) => ({
+const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   container: {
     '--slider-track-diff':
       'calc(var(--slider-track-width) - var(--slider-track-height))',
@@ -51,7 +56,7 @@ const baseStyle = (props) => ({
   thumb: baseStyleThumb
 })
 
-const sizes = {
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   sm: {
     container: {
       '--slider-track-width': '1.375rem',

@@ -1,11 +1,11 @@
-import typography from '../index';
-import { Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import typography from '../index'
+import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
 
 export default {
   title: 'Molecules/Typography'
 }
 
-const Template = () => {
+const Template = (): JSX.Element => {
   return (
     <Stack spacing={20}>
       <Flex direction='column'>

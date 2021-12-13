@@ -1,11 +1,11 @@
-import radius from '../index';
-import { Box, Stack } from '@chakra-ui/react';
+import radius from '../index'
+import { Box, Stack } from '@chakra-ui/react'
 
 export default {
   title: 'Molecules/Radius'
 }
 
-const Template = () => {
+const Template = (): JSX.Element => {
   return (
     <Stack spacing={12} align='center'>
       {Object.keys(radius).map(radius => (

@@ -18,7 +18,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import ExternalLink from '../../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
-import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+import SuspenseImage from '@//:modules/operations/SuspenseImage'
 import CopyCodeToClipboard from '../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 

@@ -8,7 +8,7 @@ import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import Posts from './Posts/Posts'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 

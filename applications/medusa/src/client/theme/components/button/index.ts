@@ -1,9 +1,7 @@
-/**
- * @flow
- */
-import { getColor, mode, transparentize } from '@chakra-ui/theme-tools';
+import type { SystemStyleFunction, SystemStyleObject } from '@chakra-ui/theme-tools'
+import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
 
-const baseStyle = {
+const baseStyle: SystemStyleObject = {
   lineHeight: '1.2',
   borderRadius: 'md',
   fontWeight: 'bold',
@@ -23,7 +21,7 @@ const baseStyle = {
   }
 }
 
-function variantSolid (props) {
+const variantSolid: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
   const { theme } = props
 
@@ -50,7 +48,7 @@ function variantSolid (props) {
   const {
     bg = `${c}.500`,
     color = 'white'
-  } = accessibleColorMap[c] || {}
+  } = accessibleColorMap[c] ?? {}
 
   return {
     fontWeight: 'extrabold',
@@ -64,12 +62,12 @@ function variantSolid (props) {
     },
     _active: {
       bg: mode(color, `${c}.400`)(props),
-      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(`${c}.600`, 1)(theme))}`
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(`${c}.600`, 1)(theme)) as string}`
     }
   }
 }
 
-function variantGhost (props) {
+const variantGhost: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
 
   if (c === 'gray') {
@@ -99,13 +97,16 @@ function variantGhost (props) {
   }
 }
 
-function variantOutline (props) {
-  const { colorScheme: c, size } = props
+const variantOutline: SystemStyleFunction = (props) => {
+  const {
+    colorScheme: c,
+    size
+  } = props
   const { theme } = props
   const borderColor = mode('gray.200', 'gray.300')(props)
   const combinedColor = mode(`${c}.200`, `${c}.500`)(props)
 
-  const determineBorderWidth = (size) => {
+  const determineBorderWidth = (size): number => {
     switch (size) {
       case 'xs':
         return 1
@@ -148,7 +149,7 @@ function variantOutline (props) {
     _active: {
       color: mode(`${c}.100`, `${c}.500`)(props),
       bg: 'transparent',
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`
     },
     _disabled: {
       borderStyle: 'dashed'
@@ -156,12 +157,12 @@ function variantOutline (props) {
   }
 }
 
-type AccessibleColor = {
-  bg?: string,
-  color?: string,
-  hoverBg?: string,
-  activeBg?: string,
-};
+interface AccessibleColor {
+  bg?: string
+  color?: string
+  hoverBg?: string
+  activeBg?: string
+}
 
 /** Accessible color overrides for less accessible colors. */
 const accessibleColorMap: { [key: string]: AccessibleColor } = {
@@ -179,7 +180,7 @@ const accessibleColorMap: { [key: string]: AccessibleColor } = {
   }
 }
 
-function variantLink (props) {
+const variantLink: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
   const { theme } = props
 
@@ -199,7 +200,7 @@ function variantLink (props) {
         }
       },
       _active: {
-        boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
+        boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`,
         color: mode(`${c}.700`, 'gray.200')(props)
       }
     }
@@ -219,13 +220,13 @@ function variantLink (props) {
       }
     },
     _active: {
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`,
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`,
       color: mode(`${c}.700`, `${c}.600`)(props)
     }
   }
 }
 
-function variantPanel (props) {
+const variantPanel: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
 
   if (c === 'gray') {
@@ -252,7 +253,7 @@ function variantPanel (props) {
     color = 'white',
     hoverBg = `${c}.600`,
     activeBg = `${c}.700`
-  } = accessibleColorMap[c] || {}
+  } = accessibleColorMap[c] ?? {}
 
   const background = mode(bg, 'gray.800')(props)
 

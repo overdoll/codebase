@@ -1,6 +1,6 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import axios from 'axios'
-import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
+import SafeJSONParse from '@//:modules/operations/SafeJSONParse'
 import { refreshUpdateTimer } from '../update'
 
 // Get hydrated data from store

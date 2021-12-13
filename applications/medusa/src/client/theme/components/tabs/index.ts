@@ -1,17 +1,25 @@
-import { getColor, mode } from '@chakra-ui/theme-tools'
+import {
+  getColor,
+  mode,
+  PartsStyleFunction,
+  PartsStyleObject,
+  SystemStyleFunction,
+  SystemStyleObject
+} from '@chakra-ui/theme-tools'
+import { tabsAnatomy as parts } from '@chakra-ui/anatomy'
 
-const baseStyleRoot = (props) => {
+const baseStyleRoot: SystemStyleFunction = (props) => {
   const { orientation } = props
   return {
     display: orientation === 'vertical' ? 'flex' : 'block'
   }
 }
 
-const baseStyleTab = (props) => {
+const baseStyleTab: SystemStyleFunction = (props) => {
   const { isFitted } = props
 
   return {
-    flex: isFitted ? 1 : undefined,
+    flex: isFitted as boolean ? 1 : undefined,
     transitionProperty: 'common',
     transitionDuration: 'normal',
     _focus: {
@@ -21,8 +29,11 @@ const baseStyleTab = (props) => {
   }
 }
 
-const baseStyleTablist = (props) => {
-  const { align = 'start', orientation } = props
+const baseStyleTablist: SystemStyleFunction = (props) => {
+  const {
+    align = 'start',
+    orientation
+  } = props
 
   const alignments = {
     end: 'flex-end',
@@ -36,18 +47,18 @@ const baseStyleTablist = (props) => {
   }
 }
 
-const baseStyleTabpanel = {
+const baseStyleTabpanel: SystemStyleObject = {
   p: 4
 }
 
-const baseStyle = (props) => ({
+const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   root: baseStyleRoot(props),
   tab: baseStyleTab(props),
   tablist: baseStyleTablist(props),
   tabpanel: baseStyleTabpanel
 })
 
-const sizes = {
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   sm: {
     tab: {
       py: 1,
@@ -71,8 +82,11 @@ const sizes = {
   }
 }
 
-const variantLine = (props) => {
-  const { colorScheme: c, orientation } = props
+const variantLine: PartsStyleFunction<typeof parts> = (props) => {
+  const {
+    colorScheme: c,
+    orientation
+  } = props
   const isVertical = orientation === 'vertical'
   const borderProp = orientation === 'vertical' ? 'borderStart' : 'borderBottom'
   const marginProp = isVertical ? 'marginStart' : 'marginBottom'
@@ -101,7 +115,7 @@ const variantLine = (props) => {
   }
 }
 
-const variantEnclosed = (props) => {
+const variantEnclosed: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     tab: {
@@ -123,7 +137,7 @@ const variantEnclosed = (props) => {
   }
 }
 
-const variantEnclosedColored = (props) => {
+const variantEnclosedColored: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     tab: {
@@ -150,8 +164,11 @@ const variantEnclosedColored = (props) => {
   }
 }
 
-const variantSoftRounded = (props) => {
-  const { colorScheme: c, theme } = props
+const variantSoftRounded: PartsStyleFunction<typeof parts> = (props) => {
+  const {
+    colorScheme: c,
+    theme
+  } = props
   return {
     tab: {
       borderRadius: 'md',
@@ -166,7 +183,7 @@ const variantSoftRounded = (props) => {
   }
 }
 
-const variantSolidRounded = (props) => {
+const variantSolidRounded: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     tab: {
