@@ -142,11 +142,11 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/confirmation',
+        path: '/confirm-email',
         exact: true,
-        component: JSResource('ConfirmationRoot', () =>
+        component: JSResource('ConfirmEmailRoot', () =>
           import(
-            /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
+            /* webpackChunkName: "ConfirmEmailRoot" */ './domain/ConfirmEmail/ConfirmEmail'
           )
         ),
         // When user is logged in, we don't want them to be able to redeem any other tokens
@@ -230,7 +230,10 @@ const routes: Array<Route> = [
               return {
                 auditLogsQuery: {
                   query: AuditLogsQuery,
-                  variables: { from: new Date(new Date().setDate(new Date().getDate() - 7)), to: new Date() },
+                  variables: {
+                    from: new Date(new Date().setDate(new Date().getDate() - 7)),
+                    to: new Date()
+                  },
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
@@ -522,7 +525,10 @@ const routes: Array<Route> = [
           }
         },
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('read', 'locked')) {
@@ -542,7 +548,10 @@ const routes: Array<Route> = [
           )
         ),
         middleware: [
-          ({ environment, history }) => {
+          ({
+            environment,
+            history
+          }) => {
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('read', 'locked')) {

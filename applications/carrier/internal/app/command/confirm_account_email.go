@@ -38,7 +38,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "confirmation")
+	u.Path = path.Join(u.Path, "confirm-email")
 
 	q := u.Query()
 	q.Set("id", cmd.EmailToken)

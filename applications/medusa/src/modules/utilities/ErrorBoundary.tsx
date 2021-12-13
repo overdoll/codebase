@@ -1,9 +1,14 @@
-import type { ComponentType } from 'react'
+import type { ReactNode } from 'react'
 import { Component } from 'react'
 
+interface PossibleActions {
+  error: Error
+  reset: () => void
+}
+
 interface Props {
-  children: JSX.Element
-  fallback?: ComponentType
+  children: ReactNode
+  fallback?: ReactNode | PossibleActions
 }
 
 interface State {
@@ -29,14 +34,14 @@ export default class ErrorBoundary extends Component<Props, State> {
     this.setState({ error: null })
   }
 
-  render (): JSX.Element {
+  render (): ReactNode {
     if (this.state.error !== null) {
       if (this.props.fallback != null) {
         const Component = this.props.fallback
 
         return (
+          // @ts-expect-error
           <Component
-            // @ts-expect-error
             error={this.state.error}
             reset={this.reset}
           />

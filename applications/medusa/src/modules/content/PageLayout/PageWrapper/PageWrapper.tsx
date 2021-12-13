@@ -1,7 +1,8 @@
 import { Box, Center } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: JSX.Element
+  children: ReactNode
 }
 
 export default function PageWrapper ({ children }: Props): JSX.Element {

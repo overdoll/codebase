@@ -1,7 +1,8 @@
 import Button from '@//:modules/form/Button'
+import { ButtonProps } from '@chakra-ui/react'
 
-interface Props {
-  children: string
+interface Props extends ButtonProps {
+  children: JSX.Element
 }
 
 export default function ClickableBox ({

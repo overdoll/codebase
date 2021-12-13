@@ -3,11 +3,11 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { CheckMark, WarningTriangle } from '../../../assets/icons/interface'
 
 interface Props {
-  register: string
+  register: any
   success: boolean
   error: boolean
   placeholder: string
-  errorMessage: string
+  errorMessage?: string
   size?: string
   variant?: string
 }
