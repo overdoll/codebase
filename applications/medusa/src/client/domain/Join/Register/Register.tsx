@@ -7,7 +7,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '.@//:assets/icons/navigation'
+import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
 

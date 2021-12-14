@@ -1,23 +1,23 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { usePaginationFragment } from 'react-relay';
-import { useTranslation } from 'react-i18next';
-import type { SearchCategoriesFragment } from '@//:artifacts/SearchCategoriesFragment.graphql';
+import type { Node } from 'react'
+import { usePaginationFragment } from 'react-relay'
+import { useTranslation } from 'react-i18next'
+import type { SearchCategoriesFragment } from '@//:artifacts/SearchCategoriesFragment.graphql'
 
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import { Flex, Text } from '@chakra-ui/react';
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
   Selector,
   SelectorTextOverlay,
-  SmallGridItem,
-} from '../../../../../../../../../../../components/ContentSelection';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
-import { removeNode } from '@//:modules/utilities/functions';
-import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql';
-import { ClickableBox } from '@//:modules/content/PageLayout';
+  SmallGridItem
+} from '../../../../../../../../../../../components/ContentSelection'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { removeNode } from '@//:modules/support'
+import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   selected: Array<string>,
@@ -65,13 +65,13 @@ const SearchCategoriesFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery<SearchCategoriesQuery>(
+  const queryData = useLazyLoadQuery < SearchCategoriesQuery > (
     SearchCategoriesQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCategoriesFragment>(
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCategoriesFragment > (
     SearchCategoriesFragmentGQL,
     queryData
   )
@@ -102,7 +102,9 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {categories.map((item, index) => (
           <SmallGridItem key={index}>
             <Selector
-              onSelect={onChangeSelection} selected={selected} id={item.id}
+              onSelect={onChangeSelection}
+              selected={selected}
+              id={item.id}
             >
               <SelectorTextOverlay label={item.title}>
                 <ResourceItem
@@ -117,7 +119,8 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {hasNext &&
           <SmallGridItem h='inherit'>
             <ClickableBox
-              h='100%' w='100%'
+              h='100%'
+              w='100%'
               align='center'
               justify='center'
               onClick={() => loadNext(5)}

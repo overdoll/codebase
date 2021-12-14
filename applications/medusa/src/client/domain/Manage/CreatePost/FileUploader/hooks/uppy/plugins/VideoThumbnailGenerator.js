@@ -56,7 +56,7 @@ VideoThumbnails.prototype = {
     if (!this.events.hasOwnProperty(event)) {
       this.events[event] = []
     }
-    this.events[event].push(key, value)
+    this.events[event].push(callback)
   },
 
   /**

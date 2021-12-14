@@ -18,7 +18,7 @@ import {
   useUpdateCharacter,
   useUpdateContent
 } from './queries'
-import { compareTwoArrayOrders, compareTwoArrays } from '@//:modules/utilities/functions'
+import { compareTwoArrayOrders, compareTwoArrays } from '@//:modules/operations/functions'
 
 type Props = {
   uppy: Uppy,

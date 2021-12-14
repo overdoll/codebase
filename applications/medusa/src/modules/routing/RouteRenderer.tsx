@@ -66,13 +66,13 @@ export default function RouterRenderer (): JSX.Element {
   // To achieve this, we reverse the list so we can start at the bottom-most
   // component, and iteratively construct parent components w the previous
   // value as the child of the next one:
-  const reversedItems: PreparedEntry[] = [].concat(routeEntry.entries).reverse() // reverse is in place, but we want a copy so concat
+  const reversedItems: PreparedEntry[] = ([] as PreparedEntry[]).concat(routeEntry.entries).reverse() // reverse is in place, but we want a copy so concat
 
   const firstItem = reversedItems[0]
 
   // the bottom-most component is special since it will have no children
   // (though we could probably just pass null children to it)
-  let routeComponent = (
+  let routeComponent: JSX.Element = (
     <RouteComponent
       id={firstItem.id}
       component={firstItem.component}
@@ -144,6 +144,7 @@ function RouteComponent ({
 }: PreparedEntry): JSX.Element {
   const Component = component.read()
   return (
+    // @ts-expect-error
     <Component
       routeData={routeData}
       prepared={prepared}

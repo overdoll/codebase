@@ -14,7 +14,7 @@ const isRouteValid = (data, route): boolean => {
 const groupByKey = (object, key) => {
   return object.reduce((accumulator, currentValue) => {
     accumulator[currentValue.navigation[key]] = accumulator[currentValue.navigation[key]] || []
-    accumulator[currentValue.navigation[key]].push(key, value)
+    accumulator[currentValue.navigation[key]].push(currentValue)
     return accumulator
   }, {})
 }

@@ -241,59 +241,59 @@ const routes: Route[] = [
           }
         ]
       },
-      {
-        path: '/manage',
-        component: JSResource('ManageRoot', async () =>
-          await import(
-            /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'posting')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ],
-        routes: [
-          {
-            path: '/manage/my_posts',
-            component: JSResource('ManageMyPostsRoot', async () =>
-              await import(
-                /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
-              )
-            ),
-            prepare: params => {
-              const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
-
-              return {
-                myPostsQuery: {
-                  query: MyPostsQuery,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
-          },
-          {
-            path: '/manage/brands',
-            component: JSResource('ManageBrandsRoot', async () =>
-              await import(
-                /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
-              )
-            )
-          }
-        ]
-      },
+      // {
+      //   path: '/manage',
+      //   component: JSResource('ManageRoot', async () =>
+      //     await import(
+      //       /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
+      //     )
+      //   ),
+      //   middleware: [
+      //     ({
+      //       environment,
+      //       history
+      //     }) => {
+      //       const ability = getAbilityFromUser(environment)
+      //
+      //       if (ability.can('manage', 'posting')) {
+      //         return true
+      //       }
+      //       history.push('/join')
+      //       return false
+      //     }
+      //   ],
+      //   routes: [
+      //     {
+      //       path: '/manage/my_posts',
+      //       component: JSResource('ManageMyPostsRoot', async () =>
+      //         await import(
+      //           /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
+      //         )
+      //       ),
+      //       prepare: params => {
+      //         const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+      //
+      //         return {
+      //           myPostsQuery: {
+      //             query: MyPostsQuery,
+      //             variables: {},
+      //             options: {
+      //               fetchPolicy: 'store-or-network'
+      //             }
+      //           }
+      //         }
+      //       }
+      //     },
+      //     {
+      //       path: '/manage/brands',
+      //       component: JSResource('ManageBrandsRoot', async () =>
+      //         await import(
+      //           /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
+      //         )
+      //       )
+      //     }
+      //   ]
+      // },
       {
         path: '/settings',
         component: JSResource('SettingsRoot', async () =>
@@ -479,28 +479,28 @@ const routes: Route[] = [
           }
         ]
       },
-      {
-        path: '/configure/create_post',
-        component: JSResource('CreatePostRoot', async () =>
-          await import(
-            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'posting')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ]
-      },
+      // {
+      //   path: '/configure/create_post',
+      //   component: JSResource('CreatePostRoot', async () =>
+      //     await import(
+      //       /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+      //     )
+      //   ),
+      //   middleware: [
+      //     ({
+      //       environment,
+      //       history
+      //     }) => {
+      //       const ability = getAbilityFromUser(environment)
+      //
+      //       if (ability.can('manage', 'posting')) {
+      //         return true
+      //       }
+      //       history.push('/join')
+      //       return false
+      //     }
+      //   ]
+      // },
       {
         path: '/locked',
         exact: true,

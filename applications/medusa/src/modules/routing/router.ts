@@ -46,13 +46,14 @@ export interface RouteMatch {
 
 export type Preload = (pathname: string) => void
 
-export type Subscribe = (sb: () => void) => () => void
+export type Subscribe = (sb: (sb) => void) => () => void
 
 export interface PreparedEntry {
-  component: Node
+  component: Resource
   prepared: Params
   routeData: Match
   id: string
+  children?: JSX.Element
 }
 
 export interface RouterInit {
@@ -171,7 +172,7 @@ async function createServerRouter (
 
       prepareMatches(matchRoutes(routes, pathname), prepareOptions, environment)
     },
-    subscribe (sb: () => void) {
+    subscribe (sb: (sb) => void) {
       return () => {
       }
     }

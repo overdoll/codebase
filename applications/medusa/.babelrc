@@ -15,7 +15,7 @@
     }
   },
   "presets": [
-    "@babel/preset-flow",
+    "@babel/preset-typescript",
     "@babel/preset-react",
     [
       "@babel/preset-env",
@@ -24,8 +24,7 @@
           "node": "current"
         }
       }
-    ],
-    "@babel/preset-typescript"
+    ]
   ],
   "plugins": [
     [

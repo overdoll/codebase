@@ -10,24 +10,29 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Start the joining session for an account with an email.
+       * Start the joining session for an account that already exists in the system.
        *
-       * Must chain with existingAccount() or newAccount() after
-       * @example cy.join('test.123@testmail.app')
+       * All you need to provide is the "name" and it will append the proper email variables
+       * @example cy.joinWithExistingAccount('poisonminion')
        */
-      join: (email: string) => Chainable<Element>
+      joinWithExistingAccount: (name: string) => Chainable<Element>
 
       /**
-       * The account exists already, so do the existing account flow
-       * @example cy.join('test.123@testmail.app').existingAccount()
+       * Do a joining session with a new account.
+       *
+       * All you need to provide is the "name" and it will create the proper email and username
+       * @example cy.joinWithNewAccount('poisonminion')
        */
-      existingAccount: () => Chainable<Element>
+      joinWithNewAccount: (name: string) => Chainable<Element>
 
       /**
-       * Finish joining session by creating an account with email + username combo
-       * @example cy.join('test.123@testmail.app').newAccount('new-username-123')
+       * Do a joining session with a new account, with random username + email
+       *
+       * Can optionally add a prefix
+       *
+       * @example cy.joinWithNewRandomAccount()
        */
-      newAccount: (username: string) => Chainable<Element>
+      joinWithNewRandomAccount: (prefix?: string) => Chainable<Element>
 
       /**
        * Preserve the currently-authenticated account

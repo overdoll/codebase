@@ -1,15 +1,12 @@
 describe('Settings - Configure Two-Factor', () => {
-  const username = cy.account.username()
-  const email = cy.account.email(username)
-
-  const gotoSettingsPage = () => {
+  const gotoSettingsPage = (): void => {
     cy.visit('/settings/security')
     cy.findByText(/Two-factor Authentication/).should('exist')
     cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
   }
 
   before(() => {
-    cy.join(email).newAccount(username)
+    cy.joinWithNewRandomAccount()
   })
 
   beforeEach(() => {
@@ -60,7 +57,7 @@ describe('Settings - Configure Two-Factor', () => {
 
       // Use a plugin to generate a one time password using the secret
       cy.task('generateOTP', secret).then(token => {
-        cy.get('form').findByRole('textbox', { placeholder: '123456' }).type(token)
+        cy.get('form').findByPlaceholderText('123456').type(token as string)
         cy.findByRole('button', { name: /Activate/iu }).click()
         cy.findByText(/You have successfully set up/iu).should('exist')
       })
@@ -72,8 +69,14 @@ describe('Settings - Configure Two-Factor', () => {
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
       cy.task('generateOTP', cookie?.value).then(token => {
         cy.waitUntil(() => cy.get('[aria-label="Please enter your pin code"]').should('not.be.disabled')).then(element => {
-          cy.get(element[0]).type(token as string)
-          cy.url().should('include', '/profile')
+          if (element != null) {
+            const elem = element[0]
+
+            if (elem != null) {
+              cy.get(elem).type(token as string)
+              cy.url().should('include', '/profile')
+            }
+          }
         })
       })
     })
@@ -85,7 +88,7 @@ describe('Settings - Configure Two-Factor', () => {
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
       cy.findByRole('button', { name: /I lost access/iu }).click()
-      cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByRole('textbox', { placeholder: /recovery code/iu }).type(cookie?.value as string)
+      cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)
       cy.findByRole('button', { name: /Submit/iu }).click()
       cy.url().should('include', '/profile')
     })

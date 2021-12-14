@@ -1,10 +1,12 @@
+import ChanceJS from 'chance'
+
+const chance = new ChanceJS()
+
 describe('Settings - Change Username', () => {
-  const username = cy.account.username()
-  const newUsername = cy.account.username('new')
-  const email = cy.account.email(username)
+  const currentUsername = 'poisonminion'
 
   before(() => {
-    cy.join(email).newAccount(username)
+    cy.joinWithExistingAccount('poisonminion')
   })
 
   beforeEach(() => {
@@ -19,7 +21,12 @@ describe('Settings - Change Username', () => {
   })
 
   it('should be able to change username and cannot change to a taken username', () => {
-    cy.get('form').findByRole('textbox', { placeholder: 'Enter a new username' }).should('be.visible').type(newUsername)
+    const newUsername = chance.string({
+      length: 12,
+      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+    })
+
+    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').type(newUsername)
 
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
 
@@ -29,11 +36,11 @@ describe('Settings - Change Username', () => {
     cy.findByText(/Previous Usernames/iu).click()
 
     cy.findByText(/Previous Usernames/iu).parent('div').parent('button').parent('div').within(() => {
-      cy.findByText(username).should('exist')
+      cy.findByText(currentUsername).should('exist')
       cy.findByText(newUsername).should('exist')
     })
 
-    cy.get('form').findByRole('textbox', { placeholder: 'Enter a new username' }).should('be.visible').clear().type('0eclipse')
+    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').clear().type('0eclipse')
 
     // Check if username is taken here
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()

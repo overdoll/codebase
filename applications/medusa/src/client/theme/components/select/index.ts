@@ -41,7 +41,7 @@ const sizes = merge({}, Input.sizes, {
 })
 
 export default {
-  parts,
+  parts: parts.keys,
   baseStyle,
   sizes,
   variants: Input.variants,

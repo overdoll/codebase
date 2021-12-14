@@ -1,5 +1,4 @@
 import { GraphQLClient } from '@testmail.app/graphql-request'
-import ChanceJS from 'chance'
 
 const testmailClient = new GraphQLClient(
   // API endpoint:
@@ -10,7 +9,17 @@ const testmailClient = new GraphQLClient(
 
 const startTimestamp = Date.now()
 
-const chance = new ChanceJS()
+interface InboxEmail {
+  html: string
+}
+
+interface InboxEmailResponse {
+  inbox: {
+    result: string
+    count: number
+    emails: InboxEmail[]
+  }
+}
 
 Cypress.Commands.add('displayLastEmail', (alias: string, email: string) => {
   // grab "tag" from email
@@ -26,7 +35,7 @@ Cypress.Commands.add('displayLastEmail', (alias: string, email: string) => {
     .as(`Awaiting ${alias} - ${email}`)
     .then({ timeout: 1000 * 60 * 5 }, async () => {
       try {
-        const res = await testmailClient.request(
+        const res = await testmailClient.request<InboxEmailResponse>(
           `{
             inbox (
               namespace:"${Cypress.env('TESTMAIL_NAMESPACE') as string}"
@@ -52,18 +61,8 @@ Cypress.Commands.add('displayLastEmail', (alias: string, email: string) => {
 
         cy.document().invoke('write', inbox.emails[0].html)
       } catch (e) {
-        const message = `Failed "${alias}" due to ${e}`
+        const message = `Failed "${alias}" due to ${e as string}`
         throw new Error(message)
       }
     })
 })
-
-cy.account = {
-  email: (name: string) => `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`,
-  username: (prefix = '') => `${prefix}${
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
-  }`
-}

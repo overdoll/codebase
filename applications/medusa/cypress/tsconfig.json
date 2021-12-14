@@ -5,7 +5,8 @@
       "cypress",
       "@testing-library/cypress",
       "node"
-    ]
+    ],
+    "isolatedModules": false
   },
   "exclude": [],
   "include": [

@@ -17,7 +17,7 @@ import Button from '@//:modules/form/Button/Button'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 
 type Props = {

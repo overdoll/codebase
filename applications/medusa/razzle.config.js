@@ -72,7 +72,8 @@ module.exports = {
 
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
-      '@//:artifacts': path.resolve(__dirname, 'src/__generated__')
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
+      '@//:assets': path.resolve(__dirname, 'src/assets')
     }
 
     if (opts.env.target === 'node') {
@@ -106,10 +107,15 @@ module.exports = {
       // saving stats file to build folder
       // without this, stats files will go into
       // build/public folder
-      config.plugins.push(key, value)
+      config.plugins.push(
+        new LoadableWebpackPlugin({
+          outputAsset: false,
+          writeToDisk: { filename }
+        })
+      )
 
       if (process.env.ANALYZE_BUNDLE === 'true') {
-        config.plugins.push(key, value)
+        config.plugins.push(new BundleAnalyzerPlugin())
       }
     }
 
