@@ -146,6 +146,7 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-relay": "^11.0.3",
     "@types/relay-runtime": "^12.0.1",
+    "@types/relay-test-utils": "^6.0.5",
     "@types/webpack-env": "^1.16.3",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",

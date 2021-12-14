@@ -3,24 +3,27 @@ import ChanceJS from 'chance'
 const chance = new ChanceJS()
 
 describe('Settings - Change Username', () => {
-  const currentUsername = 'poisonminion'
+  const currentUsername =
+    chance.string({
+      length: 12,
+      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+    })
 
   before(() => {
-    cy.joinWithExistingAccount('poisonminion')
+    cy.cleanup()
+    cy.joinWithNewAccount(currentUsername)
   })
 
   beforeEach(() => {
     cy.preserveAccount()
-
-    cy.visit('/settings/profile')
-    cy.findByText(/Current Username/iu).should('exist')
-    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Change Username/iu })
-      .click()
-    cy.findByText(/Enter a new username/iu)
   })
 
   it('should be able to change username and cannot change to a taken username', () => {
+    cy.visit('/settings/profile')
+    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
+
+    cy.findByRole('button', { name: /Change Username/iu }).click()
+
     const newUsername = chance.string({
       length: 12,
       pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
@@ -30,15 +33,10 @@ describe('Settings - Change Username', () => {
 
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
 
+    // expand current usernames
+    cy.findByText(/2 aliases/iu).click()
+
     cy.waitUntil(() => cy.findAllByText(newUsername).should('exist'))
-
-    // Find all previous usernames and check if the change went through
-    cy.findByText(/Previous Usernames/iu).click()
-
-    cy.findByText(/Previous Usernames/iu).parent('div').parent('button').parent('div').within(() => {
-      cy.findByText(currentUsername).should('exist')
-      cy.findByText(newUsername).should('exist')
-    })
 
     cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').clear().type('0eclipse')
 

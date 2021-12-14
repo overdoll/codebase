@@ -6,7 +6,8 @@
       "@testing-library/cypress",
       "node"
     ],
-    "isolatedModules": false
+    "isolatedModules": false,
+    "target": "ES2018"
   },
   "exclude": [],
   "include": [

@@ -61,6 +61,7 @@ export default function RegisterForm ({
             {t('register.form.username.title')}
           </FormLabel>
           <StyledInput
+            size='xl'
             register={register('username')}
             success={success}
             error={errors.username != null}

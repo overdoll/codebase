@@ -167,6 +167,7 @@ it('mouse down on the link will load code and data', async () => {
 
   // expect that relay has the current query in the store (preload function worked correctly)
   Environment.mock.findOperation(
-    data => data.request.node.hash === RootQuery.hash
+    // @ts-expect-error
+    data => data.request.node.hash === `${RootQuery.default.hash as string}`
   )
 })

@@ -7,8 +7,6 @@ const testmailClient = new GraphQLClient(
   { headers: { Authorization: `Bearer ${Cypress.env('TESTMAIL_API_KEY') as string}` } }
 )
 
-const startTimestamp = Date.now()
-
 interface InboxEmail {
   html: string
 }
@@ -21,7 +19,7 @@ interface InboxEmailResponse {
   }
 }
 
-Cypress.Commands.add('displayLastEmail', (alias: string, email: string) => {
+Cypress.Commands.add('displayLastEmail', (startTimestamp: number, alias: string, email: string) => {
   // grab "tag" from email
 
   // should only be a testmail email

@@ -23,7 +23,7 @@ const expo = {
     ]
   },
   testEnvironment: 'jest-environment-jsdom-sixteen',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
 }
 
 if (process.env.COVERAGE_OUTPUT_FILE) {

@@ -1,4 +1,14 @@
+import ChanceJS from 'chance'
+
+const chance = new ChanceJS()
+
 describe('Settings - Configure Two-Factor', () => {
+  const name =
+    chance.string({
+      length: 12,
+      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+    })
+
   const gotoSettingsPage = (): void => {
     cy.visit('/settings/security')
     cy.findByText(/Two-factor Authentication/).should('exist')
@@ -6,15 +16,16 @@ describe('Settings - Configure Two-Factor', () => {
   }
 
   before(() => {
-    cy.joinWithNewRandomAccount()
+    cy.cleanup()
+    cy.joinWithNewAccount(name)
   })
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
+    cy.preserveAccount()
   })
 
   it('can set up recovery codes', () => {
-    cy.preserveAccount()
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -26,7 +37,6 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('can generate new recovery codes', () => {
-    cy.preserveAccount()
     gotoSettingsPage()
 
     // Generate new codes and check to see if they are equal to the new ones
@@ -44,7 +54,6 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('can set up authenticator app', () => {
-    cy.preserveAccount()
     gotoSettingsPage()
 
     // Set up authenticator app
@@ -65,6 +74,11 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('login using one time password', () => {
+    // logout first
+    cy.logout()
+    // then join with an existing account
+    cy.join(name)
+
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
       cy.task('generateOTP', cookie?.value).then(token => {
@@ -83,6 +97,11 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   it('login using a recovery code and disable two factor', () => {
+    // logout first
+    cy.logout()
+    // then join with an existing account
+    cy.join(name)
+
     // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
