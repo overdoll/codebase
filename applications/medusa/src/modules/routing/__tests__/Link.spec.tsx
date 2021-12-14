@@ -1,7 +1,7 @@
 import Link from '@//:modules/routing/Link'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import JSResource from '@//:modules/utilities/JSResource'
+import JSResource from '@//:modules/operations/JSResource'
 import { createMockEnvironment } from 'relay-test-utils'
 import { createClientRouter } from '@//:modules/routing/router'
 import { createMemoryHistory } from 'history'
@@ -9,11 +9,11 @@ import RoutingContext from '@//:modules/routing/RoutingContext'
 import RouterRenderer from '../RouteRenderer'
 
 // components to help with testing
-const LinkComponent = () => {
+const LinkComponent = (): JSX.Element => {
   return <Link to='/test'>test</Link>
 }
 
-const Component = () => {
+const Component = (): string => {
   return 'rendering component'
 }
 
@@ -21,7 +21,7 @@ const Empty = {
   path: '*',
   component: JSResource(
     'LinkComponent',
-    () => new Promise(resolve => resolve(LinkComponent))
+    async () => await new Promise(resolve => resolve(LinkComponent))
   )
 }
 
@@ -33,7 +33,7 @@ it('clicking on the link directs to the route', async () => {
       exact: true,
       component: JSResource(
         'Component',
-        () => new Promise(resolve => resolve(Component))
+        async () => await new Promise(resolve => resolve(Component))
       )
     },
     Empty
@@ -74,8 +74,8 @@ it('hovering over the link will preload the component', async () => {
       exact: true,
       component: JSResource(
         'Component2',
-        () =>
-          new Promise(resolve => {
+        async () =>
+          await new Promise(resolve => {
             func()
             resolve(Component)
           })
@@ -121,8 +121,8 @@ it('mouse down on the link will load code and data', async () => {
       exact: true,
       component: JSResource(
         'Component3',
-        () =>
-          new Promise(resolve => {
+        async () =>
+          await new Promise(resolve => {
             func()
             resolve(Component)
           })

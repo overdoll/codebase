@@ -9,9 +9,11 @@ const expo = {
       projectRoot: '../../'
     }]
   ],
+  preset: 'ts-jest',
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
+    '^@//:assets(.*)$': '<rootDir>/src/assets$1',
     '\\.(scss|sass|css)$': 'identity-obj-proxy'
   },
   transform: {

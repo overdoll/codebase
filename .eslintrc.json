@@ -2,30 +2,37 @@
   "overrides": [
     {
       "extends": [
-        "plugin:cypress/recommended"
+        "plugin:cypress/recommended",
+        "plugin:testing-library/recommended"
       ],
       "plugins": [
         "cypress"
       ],
       "files": [
-        "applications/medusa/cypress/**/*.js"
-      ]
+        "applications/medusa/cypress/**/*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "applications/medusa/cypress/tsconfig.json"
+        ]
+      }
     },
     {
       "extends": [
-        "plugin:jest/recommended"
+        "plugin:jest/recommended",
+        "plugin:testing-library/recommended",
+        "plugin:testing-library/react"
       ],
       "plugins": [
         "jest"
       ],
       "files": [
-        "applications/medusa/src/**/*.js"
+        "applications/medusa/src/**/*.spec.tsx",
+        "applications/medusa/src/**/*.spec.ts"
       ]
     }
   ],
   "extends": [
-    "plugin:testing-library/recommended",
-    "plugin:testing-library/react",
     "standard-with-typescript",
     "standard-jsx",
     "standard-react"

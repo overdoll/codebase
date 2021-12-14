@@ -5,14 +5,14 @@ const testmailClient = new GraphQLClient(
   // API endpoint:
   'https://api.testmail.app/api/graphql',
   // Use your API key:
-  { headers: { Authorization: `Bearer ${Cypress.env('TESTMAIL_API_KEY')}` } }
+  { headers: { Authorization: `Bearer ${Cypress.env('TESTMAIL_API_KEY') as string}` } }
 )
 
 const startTimestamp = Date.now()
 
 const chance = new ChanceJS()
 
-Cypress.Commands.add('displayLastEmail', (alias, email) => {
+Cypress.Commands.add('displayLastEmail', (alias: string, email: string) => {
   // grab "tag" from email
 
   // should only be a testmail email
@@ -29,7 +29,7 @@ Cypress.Commands.add('displayLastEmail', (alias, email) => {
         const res = await testmailClient.request(
           `{
             inbox (
-              namespace:"${Cypress.env('TESTMAIL_NAMESPACE')}"
+              namespace:"${Cypress.env('TESTMAIL_NAMESPACE') as string}"
               tag:"${tag}"
               timestamp_from:${startTimestamp}
               livequery:true
@@ -59,7 +59,7 @@ Cypress.Commands.add('displayLastEmail', (alias, email) => {
 })
 
 cy.account = {
-  email: (name) => `${Cypress.env('TESTMAIL_NAMESPACE')}.${name}@inbox.testmail.app`,
+  email: (name: string) => `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`,
   username: (prefix = '') => `${prefix}${
     chance.string({
       length: 12,

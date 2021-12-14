@@ -133,8 +133,8 @@ export default function Navigation ({
   }
 
   // Buttons that appear at the top of the navigation
-  const NavigationButtons = () => {
-    const NavigationButtonSkeleton = () =>
+  const NavigationButtons = (): JSX.Element => {
+    const NavigationButtonSkeleton = (): JSX.Element =>
       <Skeleton
         startColor='gray.600'
         w='58px'
@@ -148,7 +148,7 @@ export default function Navigation ({
         }}
       />
 
-    if (!display) {
+    if (display == null) {
       return (
         <>
           <NavigationButtonSkeleton />
@@ -216,8 +216,8 @@ export default function Navigation ({
   }
 
   // A component to display the quick access buttons on desktop
-  const QuickAccessHandler = () => {
-    const NavigationButtonSkeleton = () =>
+  const QuickAccessHandler = (): JSX.Element => {
+    const NavigationButtonSkeleton = (): JSX.Element =>
       <Skeleton
         startColor='gray.600'
         w='42px'
@@ -235,7 +235,7 @@ export default function Navigation ({
       )
     }
 
-    const QuickAccessButtons = () => {
+    const QuickAccessButtons = (): JSX.Element => {
       if (ability.can('manage', 'account')) {
         return <SimpleProfileButton query={data} />
       }
@@ -258,7 +258,7 @@ export default function Navigation ({
   }
 
   // A banner that can be displayed for the user to see as soon as they log in
-  const BannerHandler = () => {
+  const BannerHandler = (): JSX.Element => {
     if (ability.can('read', 'locked') && getBasePath(location.pathname) !== '/locked') {
       return <LockedAccountBanner />
     }

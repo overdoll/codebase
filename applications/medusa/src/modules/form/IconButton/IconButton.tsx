@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { IconButton as ChakraButton } from '@chakra-ui/react'
-import { IconButtonProps } from '@chakra-ui/button/dist/types/icon-button'
+import { IconButton as ChakraButton, IconButtonProps } from '@chakra-ui/react'
 
 const AnimatedButton = ChakraButton
 

@@ -70,9 +70,9 @@ describe('Settings - Configure Two-Factor', () => {
   it('login using one time password', () => {
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
-      cy.task('generateOTP', cookie.value).then(token => {
+      cy.task('generateOTP', cookie?.value).then(token => {
         cy.waitUntil(() => cy.get('[aria-label="Please enter your pin code"]').should('not.be.disabled')).then(element => {
-          cy.get(element[0]).type(token)
+          cy.get(element[0]).type(token as string)
           cy.url().should('include', '/profile')
         })
       })
@@ -85,7 +85,7 @@ describe('Settings - Configure Two-Factor', () => {
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
       cy.findByRole('button', { name: /I lost access/iu }).click()
-      cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByRole('textbox', { placeholder: /recovery code/iu }).type(cookie.value)
+      cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByRole('textbox', { placeholder: /recovery code/iu }).type(cookie?.value as string)
       cy.findByRole('button', { name: /Submit/iu }).click()
       cy.url().should('include', '/profile')
     })

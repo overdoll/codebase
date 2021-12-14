@@ -24,7 +24,7 @@
     "types": [
       "react-dom/next",
       "webpack-env",
-      "cypress"
+      "jest"
     ],
     "paths": {
       "@//:modules/*": [
@@ -49,6 +49,7 @@
     "./applications/medusa/build",
     "./applications/medusa/coverage",
     "./applications/medusa/cache",
+    "./applications/medusa/cypress",
     "node_modules"
   ]
 }

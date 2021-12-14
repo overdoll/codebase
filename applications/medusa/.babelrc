@@ -7,8 +7,6 @@
           {
             "exclude": [
               "**/*.spec.js",
-              "**/*.ispec.js",
-              "**/*.uspec.js",
               "**/*.stories.js"
             ]
           }

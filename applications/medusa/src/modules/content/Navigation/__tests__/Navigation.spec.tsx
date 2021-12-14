@@ -8,12 +8,9 @@ import SidebarGrouping from '../content/NavigationContents/Sidebar/SidebarGroupi
 import NavigationContents from '../content/NavigationContents/NavigationContents'
 import PageContents from '../content/NavigationContents/PageContents/PageContents'
 import NavigationBar from '@//:modules/content/Navigation/content/NavigationBar/NavigationBar'
-import NavigationBarLeft
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarLeft/NavigationBarLeft'
+import NavigationBarLeft from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarLeft/NavigationBarLeft'
 import NavigationBarCenter
   from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationBarCenter'
-import NavigationLink
-  from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarCenter/NavigationLink/NavigationLink'
 import NavigationBarRight
   from '@//:modules/content/Navigation/content/NavigationBar/NavigationBarRight/NavigationBarRight'
 import MenuButton from '@//:modules/content/Navigation/components/MenuButton/MenuButton'
@@ -22,18 +19,18 @@ import NavigationMenu
 
 const routes = []
 
-const SampleIcon = () => {
+const SampleIcon = (): JSX.Element => {
   return (
     <svg />
   )
 }
 
-const SidebarComponent = () => {
+const SidebarComponent = (): JSX.Element => {
   return (
     <NavigationContents>
       <Sidebar title='sidebar title'>
         <SidebarGrouping label='sidebar grouping'>
-          <SidebarButton path='/' title='sidebar path' />
+          <SidebarButton active title='sidebar path' />
         </SidebarGrouping>
       </Sidebar>
       <PageContents>
@@ -43,14 +40,14 @@ const SidebarComponent = () => {
   )
 }
 
-const NavigationComponent = () => {
+const NavigationComponent = (): JSX.Element => {
   return (
     <NavigationBar>
       <NavigationBarLeft>
         left brand
       </NavigationBarLeft>
       <NavigationBarCenter>
-        <NavigationLink icon={SampleIcon} exact={false} label='navigation path' path='/' />
+        {/* <NavigationLink icon={SampleIcon} exact={false} label='navigation path' path='/' /> */}
       </NavigationBarCenter>
       <NavigationBarRight>
         <>
@@ -61,10 +58,10 @@ const NavigationComponent = () => {
   )
 }
 
-const NavigationMenuComponent = () => {
+const NavigationMenuComponent = (): JSX.Element => {
   return (
     <NavigationMenu>
-      <MenuButton path='/' label='menu path' icon={SampleIcon} />
+      <MenuButton label='menu path' icon={SampleIcon} />
     </NavigationMenu>
   )
 }

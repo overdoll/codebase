@@ -1,5 +1,5 @@
 import { createMemoryHistory } from 'history'
-import type { ComponentType } from 'react'
+import type { ComponentType, ReactElement } from 'react'
 import type { Route, RouterInstance } from '@//:modules/routing/router'
 import { createClientRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../client/Bootstrap'
@@ -31,7 +31,7 @@ export default function withProviders ({
   environment,
   Component = () => null,
   routes = []
-}: WithProviders): [ComponentType<Node>, RouterInstance] {
+}: WithProviders): [((props) => JSX.Element), RouterInstance] {
   const router = createClientRouter(
     routes,
     createMemoryHistory({

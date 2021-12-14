@@ -61,7 +61,6 @@ _RUNTIME_DEPS = [
     "@npm//relay-compiler-webpack-plugin",
     "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
-    "@npm//subscriptions-transport-ws",
     "@npm//razzle",
     "@npm//react-ssr-prepass",
     "@npm//axios",
@@ -89,7 +88,6 @@ _RUNTIME_DEPS = [
     "@npm//@uppy/thumbnail-generator",
     "@npm//@uppy/react",
     "@npm//react-beautiful-dnd",
-    "@npm//dexie",
     "@npm//use-query-params",
     "@npm//query-string",
     "@npm//webpack-bundle-analyzer",
@@ -97,7 +95,6 @@ _RUNTIME_DEPS = [
     "@npm//@chakra-ui/react",
     "@npm//@emotion/styled",
     "@npm//framer-motion",
-    "@npm//@streamlinehq/streamlinehq",
     "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
     "@npm//i18next-http-backend",
@@ -117,10 +114,8 @@ _RUNTIME_DEPS = [
     "@npm//overlayscrollbars",
     "@npm//overlayscrollbars-react",
     "@npm//numbro",
-    "@npm//protobufjs",
     "@npm//@casl/ability",
     "@npm//@casl/react",
-    "@npm//mime-types",
     "@npm//apollo-server",
     "@npm//date-fns",
     "@npm//js-file-download",
@@ -171,20 +166,7 @@ jest_test(
             "src/modules/**/*",
         ],
     ),
-    file_extension = ".uspec.js",
-    jest_config = "jest.config.js",
-    deps = TEST_DEPS,
-)
-
-jest_test(
-    name = "integration",
-    srcs = glob(
-        [
-            "src/client/**/*",
-            "src/modules/**/*",
-        ],
-    ),
-    file_extension = ".ispec.js",
+    file_extension = ".spec.js",
     jest_config = "jest.config.js",
     deps = TEST_DEPS,
 )

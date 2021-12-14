@@ -1,16 +1,25 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import userEvent from '@testing-library/user-event'
 
-const Client = () => {
+const Client = (): JSX.Element => {
   throw new Error('error')
 }
 
-const Fallback = () => <>fallback</>
+const Fallback = (): JSX.Element => <>fallback</>
+
+interface ResetProps {
+  reset: () => void
+  error: Error
+}
 
 // a helper fallback component that will display a fallback if reset was called
-const Reset = ({ error, reset }) => {
-  const onClick = () => {
+// eslint-disable-next-line node/handle-callback-err
+const Reset = ({
+  error,
+  reset
+}: ResetProps): JSX.Element => {
+  const onClick = (): void => {
     reset()
   }
 
@@ -21,7 +30,7 @@ const Reset = ({ error, reset }) => {
 let expectedErrors = 0
 let actualErrors = 0
 
-function onError (e) {
+function onError (e): void {
   e.preventDefault()
   actualErrors++
 }
@@ -41,7 +50,7 @@ afterEach(() => {
 it('should catch error when thrown', async () => {
   expectedErrors = 1
 
-  const Root = () => (
+  const Root = (): JSX.Element => (
     <ErrorBoundary>
       <Client />
     </ErrorBoundary>
@@ -56,7 +65,7 @@ it('should catch error when thrown', async () => {
 it('should render fallback when error is thrown', async () => {
   expectedErrors = 1
 
-  const Root = () => (
+  const Root = (): JSX.Element => (
     <ErrorBoundary fallback={Fallback}>
       <Client />
     </ErrorBoundary>
@@ -71,7 +80,7 @@ it('should render fallback when error is thrown', async () => {
 it('should reset error when pressed', async () => {
   expectedErrors = 2
 
-  const Root = () => (
+  const Root = (): JSX.Element => (
     <ErrorBoundary fallback={Reset}>
       <Client />
     </ErrorBoundary>

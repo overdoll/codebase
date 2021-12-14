@@ -8,12 +8,8 @@ steps:
       - name: medusa.unit
         paths:
           - ./applications/medusa/unit/coverage.dat
-      - name: medusa.integration
-        paths:
-          - ./applications/medusa/integration/coverage.dat
     targets:
       - //applications/medusa:unit
-      - //applications/medusa:integration
 
   push_image:
     targets:
