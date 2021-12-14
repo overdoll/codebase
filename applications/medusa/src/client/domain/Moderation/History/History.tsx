@@ -27,7 +27,6 @@ export default function History (props: Props): JSX.Element | null {
   const [t] = useTranslation('moderation')
 
   const refetch = (): void => {
-    // TODO: assign proper refetch variables
     loadQuery({
       from: new Date(new Date().setDate(new Date().getDate() - 7)),
       to: new Date()
