@@ -1,8 +1,8 @@
 import importedRoutes from '../routing/navigation'
 
 // Determine if route is valid by calling the middleware function in the route
-const isRouteValid = (data, route): boolean => {
-  if (Object.prototype.hasOwnProperty.call(route, 'middleware') as boolean) {
+const isRouteValid = (data, route) => {
+  if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
     for (let i = 0; i < route.middleware.length; i++) {
       if (!route.middleware[i](data)) return false
     }

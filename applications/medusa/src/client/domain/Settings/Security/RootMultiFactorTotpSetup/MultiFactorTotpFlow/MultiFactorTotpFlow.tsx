@@ -221,7 +221,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
               {t('totp.flow.code_step.description')}
             </Text>
             <TotpSubmissionForm
-              id={totp?.generateAccountMultiFactorTotp?.multiFactorTotp?.id}
+              id={totp?.generateAccountMultiFactorTotp?.multiFactorTotp?.id as string}
               setIsSuccessful={() => setIsSuccessful(true)}
             />
           </Box>

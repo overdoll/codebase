@@ -35,7 +35,7 @@ import {
 
 interface Props {
   children: ReactNode
-  query: NavigationFragment$key
+  query: NavigationFragment$key | null
 }
 
 const NavigationFragmentGQL = graphql`

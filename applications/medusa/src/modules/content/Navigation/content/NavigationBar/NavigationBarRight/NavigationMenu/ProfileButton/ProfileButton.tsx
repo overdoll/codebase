@@ -31,7 +31,7 @@ export default function ProfileButton ({ query }: Props): JSX.Element {
               align='center'
             >
               <Avatar
-                src={data?.avatar}
+                src={data?.avatar as string}
                 pointerEvents='none'
                 mr={4}
                 borderRadius='25%'

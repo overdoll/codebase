@@ -1,10 +1,7 @@
-/**
- * @flow
- */
 import { Heading, Text } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
-import { BadgeCircle } from '.@//:assets/icons/navigation'
+import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useTranslation } from 'react-i18next'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 

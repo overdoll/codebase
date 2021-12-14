@@ -29,8 +29,8 @@ export default function History (props: Props): JSX.Element | null {
   const refetch = (): void => {
     // TODO: assign proper refetch variables
     loadQuery({
-      from: '',
-      to: ''
+      from: new Date(new Date().setDate(new Date().getDate() - 7)),
+      to: new Date()
     })
   }
 

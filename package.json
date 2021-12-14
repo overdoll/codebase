@@ -72,6 +72,7 @@
     "winston": "^3.3.3"
   },
   "scripts": {
+    "start:tsc": "tsc -b -w --preserveWatchOutput",
     "docs": "docsify serve docs",
     "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && wait-port --wait-for-dns parley:8000 && wait-port --wait-for-dns puppy:8000 && cd ./applications/medusa && razzle start",
     "relay": "cd ./applications/medusa && relay-compiler",

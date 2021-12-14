@@ -1,7 +1,8 @@
-import type { Location, RouterInstance } from '@//:modules/routing/router'
+import type { RouterInstance } from '@//:modules/routing/router'
 import BatteryFriendlyTimer from './timer'
 import { getEnv } from '@//:modules/runtime'
 import axios from 'axios'
+import { Location } from 'history'
 
 const timer = new BatteryFriendlyTimer(window)
 
@@ -31,7 +32,7 @@ export async function refreshUpdateTimer (): Promise<void> {
 // It just sets the location to where the user was originally supposed to go
 // Return false makes it so that history won't do it's usual navigation
 function performUpdate (location: Location): boolean {
-  window.location.href = `${location.pathname as string}${location.search as string}`
+  window.location.href = `${location.pathname}${location.search}`
   return false
 }
 
@@ -51,6 +52,7 @@ function checkForUpdate (router: RouterInstance): void {
         // Block the history
         // When blocked, the function in the callback will be called next time a route
         // change is supposed to happen
+        // @ts-expect-error
         router.context.history.block(performUpdate)
         return
       }

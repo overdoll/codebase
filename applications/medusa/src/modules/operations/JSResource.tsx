@@ -38,12 +38,10 @@ class Resource {
     if (promise === null) {
       promise = this._loader()
         .then(result => {
-          console.log(result.default)
           this._result = result.default ?? result
           return result
         })
         .catch(error => {
-          console.log(error)
           this._error = error
           throw error
         })

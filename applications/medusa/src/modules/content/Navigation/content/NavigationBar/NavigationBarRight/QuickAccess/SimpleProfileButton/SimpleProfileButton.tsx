@@ -34,7 +34,7 @@ export default function SimpleProfileButton ({ query }: Props): JSX.Element {
           >
             <Avatar
               borderRadius='25%'
-              src={data.avatar}
+              src={data.avatar as string}
               m={0}
               h='42px'
               w='42px'

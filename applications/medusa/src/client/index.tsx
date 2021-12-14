@@ -1,4 +1,5 @@
-import { createRoot } from 'react-dom'
+// @ts-expect-error
+import { unstable_createRoot as createRoot } from 'react-dom'
 import { loadableReady } from '@loadable/component'
 import App from './App'
 
