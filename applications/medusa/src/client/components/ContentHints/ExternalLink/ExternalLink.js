@@ -12,10 +12,10 @@ type Props = {
   children: string,
 };
 
-export default function ExternalLink ({ path, children }: Props): Node {
+export default function ExternalLink ({ path, children, ...rest }: Props): Node {
   return (
     <Link href={path} isExternal>
-      <Button size='sm' colorScheme='primary' variant='link'>
+      <Button {...rest} size='sm' colorScheme='primary' variant='link'>
         {children}
         <Icon mb={1} ml={1} icon={ShareExternalLink} h={2} fill='primary.400' />
       </Button>

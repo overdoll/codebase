@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import Joi from 'joi';
-import { useTranslation } from 'react-i18next';
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import type { Node } from 'react';
-import Button from '@//:modules/form/Button';
-import { useUsernameFormSchema } from '@//:modules/constants/schemas';
-import StyledInput from '@//:modules/form/StyledInput/StyledInput';
+import Joi from 'joi'
+import { useTranslation } from 'react-i18next'
+import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import type { Node } from 'react'
+import Button from '@//:modules/form/Button'
+import { useUsernameFormSchema } from '@//:modules/constants/schemas'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type RegisterValues = {
   username: string,
@@ -23,8 +23,10 @@ type Props = {
 export default function RegisterForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
+  const [usernameSchema] = useUsernameFormSchema()
+
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: usernameSchema
   })
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<RegisterValues>({
@@ -43,17 +45,19 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           id='username'
         >
           <FormLabel
+            zIndex={1}
             htmlFor='username'
             variant='float'
             color={!success
               ? errors.username
                 ? 'orange.500'
                 : 'gray.200'
-              : 'green.600'}
+              : 'teal.600'}
           >
             {t('register.form.username.title')}
           </FormLabel>
           <StyledInput
+            size='xl'
             register={register('username')}
             success={success}
             error={errors.username}

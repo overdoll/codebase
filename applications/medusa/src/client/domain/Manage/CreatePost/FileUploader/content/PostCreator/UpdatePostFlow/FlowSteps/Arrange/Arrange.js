@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect } from 'react';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import { graphql, useFragment } from 'react-relay/hooks';
-import { useTranslation } from 'react-i18next';
-import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql';
-import ProcessUploads from './ProcessUploads/ProcessUploads';
-import ArrangeUploads from './ArrangeUploads/ArrangeUploads';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
+import type { Node } from 'react'
+import { useEffect } from 'react'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '@//:types/upload'
+import { graphql, useFragment } from 'react-relay/hooks'
+import { useTranslation } from 'react-i18next'
+import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql'
+import ProcessUploads from './ProcessUploads/ProcessUploads'
+import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,

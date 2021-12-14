@@ -20,7 +20,7 @@ export default function useHistoryDisclosure () {
   const history = useHistory()
 
   const onOpen = () => {
-    const currentLocation = history.location.pathname
+    const currentLocation = `${history.location.pathname}${history.location?.search}`
     history.push(currentLocation, { hasModal: true })
     onOpenAction()
   }

@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import { useTranslation } from 'react-i18next';
-import { graphql, useFragment, useMutation } from 'react-relay/hooks';
-import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql';
-import { useToast } from '@chakra-ui/react';
-import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql';
-import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql';
-import { SmallMenuItem } from '@//:modules/content/PageLayout';
-import { DeleteBin } from '../../../../../../../../assets/icons/interface';
+import { useTranslation } from 'react-i18next'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql'
+import { useToast } from '@chakra-ui/react'
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
+import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql'
+import { SmallMenuItem } from '@//:modules/content/PageLayout'
+import { DeleteBin } from '../../../../../../../../assets/icons/interface'
 
 type Props = {
   connectionID: EmailsSettingsFragment$key,
@@ -72,6 +72,7 @@ export default function Delete ({ connectionID, query }: Props): Node {
       isDisabled={isDeletingEmail}
       onClick={onDeleteEmail}
       icon={DeleteBin}
+      color='orange.300'
       text={t('profile.email.options.delete.button')}
     />
   )

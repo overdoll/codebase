@@ -16,7 +16,8 @@ import {
   useToast,
   Heading,
   Skeleton,
-  Stack
+  Stack,
+  Box
 } from '@chakra-ui/react'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
@@ -122,15 +123,15 @@ export default function RecoveryCodesSetup (props: Props): Node {
     return (
       <>
         <Flex direction='column' align='center'>
-          <Alert mb={3} status='warning'>
+          <Alert mb={3} status='info'>
             <AlertIcon />
             <AlertDescription>
               {t('recovery_codes.empty.alert')}
             </AlertDescription>
           </Alert>
           <Button
-            isLoading={isGeneratingCodes} onClick={onGenerateCodes} colorScheme='gray'
-            size='lg'
+            isLoading={isGeneratingCodes} onClick={onGenerateCodes} colorScheme='teal'
+            size='md'
           >{t('recovery_codes.empty.button')}
           </Button>
         </Flex>
@@ -140,9 +141,9 @@ export default function RecoveryCodesSetup (props: Props): Node {
 
   return (
     <Stack>
-      <SmallBackgroundBox bg='gray.900'>
+      <SmallBackgroundBox>
         <Stack spacing={4}>
-          <Text fontSize='lg' color='gray.00'>{t('recovery_codes.exists.title')}</Text>
+          <Heading fontSize='xl' color='gray.00'>{t('recovery_codes.exists.title')}</Heading>
           <Alert status='warning'>
             <Flex align='center' direction='column'>
               <AlertIcon mb={2} />
@@ -158,8 +159,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
                   {isGeneratingCodes
                     ? <Skeleton w='100%' h='100%' />
                     : <Code
-                        data-cy='recovery-code'
-                        colorScheme='gray'
+                        colorScheme='teal'
                         fontSize='lg'
                       >{item.code}
                     </Code>}
@@ -181,7 +181,6 @@ export default function RecoveryCodesSetup (props: Props): Node {
           </Flex>
         </Stack>
       </SmallBackgroundBox>
-
       <Flex align='flex-start' direction='column'>
         <Heading fontSize='lg' color='gray.00'>{t('recovery_codes.exists.generate.title')}</Heading>
         <Text mb={2} fontSize='sm' color='gray.100'>{t('recovery_codes.exists.generate.description')}</Text>

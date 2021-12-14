@@ -49,7 +49,7 @@ export default function PostStatePreview ({ query }: Props): Node {
   const score = progressScore([content, audience, brand, categories, characters])
 
   const selectPost = () => {
-    history.push(`/configure/create_post?id=${data.reference}`)
+    history.push(`/configure/create-post?id=${data.reference}`)
   }
 
   const DisplayContentGrid = () => {

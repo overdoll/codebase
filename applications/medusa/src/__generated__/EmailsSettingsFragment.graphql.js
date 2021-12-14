@@ -8,6 +8,7 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { EmailCardFragment$ref } from "./EmailCardFragment.graphql";
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 import type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType } from "./EmailsSettingsPaginationQuery.graphql";
 export type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType };
@@ -16,7 +17,7 @@ export type EmailsSettingsFragment = {|
     +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +id: string,
+        +status: AccountEmailStatus,
         +$fragmentRefs: EmailCardFragment$ref,
       |}
     |}>,
@@ -35,14 +36,7 @@ export type EmailsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "emails"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -108,7 +102,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "status",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -174,12 +174,18 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 // prettier-ignore
-(node: any).hash = 'b5bbb9742c3a365d6034821cf56d836b';
+(node: any).hash = '61647e9f7d6b3b803b4605825e973488';
 module.exports = node;

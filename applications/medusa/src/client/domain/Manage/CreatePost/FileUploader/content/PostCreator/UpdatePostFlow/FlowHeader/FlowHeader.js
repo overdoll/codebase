@@ -1,18 +1,31 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Box, CloseButton, Flex, Heading, Progress, Text } from '@chakra-ui/react';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import { StringParam, useQueryParam } from 'use-query-params';
-import type { Uppy } from '@uppy/core';
-import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import useCheckRequirements from './useCheckRequirements';
-import progressScore from './progressScore';
+import type { Node } from 'react'
+import { useRef, createRef } from 'react'
+import type { Dispatch, State } from '@//:types/upload'
+import {
+  Box, CloseButton, Flex, Heading, Progress, Text,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogCloseButton,
+  AlertDialogBody,
+  AlertDialogFooter
+} from '@chakra-ui/react'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import { StringParam, useQueryParam } from 'use-query-params'
+import type { Uppy } from '@uppy/core'
+import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import useCheckRequirements from './useCheckRequirements'
+import progressScore from './progressScore'
+import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
+import Button from '@//:modules/form/Button'
+import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
 
 type Props = {
   uppy: Uppy,
@@ -33,9 +46,13 @@ const FlowHeaderFragmentGQL = graphql`
 export default function FlowHeader ({ state, uppy, dispatch, query }: Props): Node {
   const data = useFragment(FlowHeaderFragmentGQL, query)
 
+  const cancelButtonRef = useRef()
+
   const [t] = useTranslation('manage')
 
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
+  const { isOpen, onToggle, onClose } = useHistoryDisclosure()
+
+  const [, setPostReference] = useQueryParam('id', StringParam)
 
   const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data.post })
 
@@ -69,19 +86,47 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
   }
 
   return (
-    <Box>
-      <Flex align='center' justify='space-between' mb={2}>
-        <Flex direction='column'>
-          <Heading color='gray.00' fontSize='2xl'>
-            {findText()[0]}
-          </Heading>
-          <Text color='gray.100' fontSize='md'>
-            {findText()[1]}
-          </Text>
+    <>
+      <Box>
+        <Flex align='center' justify='space-between' mb={2}>
+          <Flex direction='column'>
+            <Heading color='gray.00' fontSize='2xl'>
+              {findText()[0]}
+            </Heading>
+            <Text color='gray.100' fontSize='md'>
+              {findText()[1]}
+            </Text>
+          </Flex>
+          <CloseButton size='lg' onClick={onToggle} />
         </Flex>
-        <CloseButton size='lg' onClick={onCleanup} />
-      </Flex>
-      <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
-    </Box>
+        <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
+      </Box>
+      <AlertDialog leastDestructiveRef={cancelButtonRef} isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            {t('create_post.flow.steps.header.modal.header')}
+          </AlertDialogHeader>
+          <AlertDialogCloseButton />
+          <AlertDialogBody>
+            {t('create_post.flow.steps.header.modal.body.start')}
+            <ExternalLink
+              mx={2}
+              path='/manage/my-posts'
+            >{t('create_post.flow.steps.header.modal.body.middle')}
+            </ExternalLink>
+            {t('create_post.flow.steps.header.modal.body.end')}
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button variant='solid' size='lg' forwardRef={cancelButtonRef} onClick={onClose}>
+              {t('create_post.flow.steps.header.modal.cancel')}
+            </Button>
+            <Button onClick={onCleanup} ml={3} size='lg' colorScheme='orange' variant='solid'>
+              {t('create_post.flow.steps.header.modal.confirm')}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

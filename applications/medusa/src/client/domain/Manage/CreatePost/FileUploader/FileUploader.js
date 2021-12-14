@@ -1,14 +1,14 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect, useReducer } from 'react';
-import type { Action, State } from '@//:types/upload';
-import { EVENTS, INITIAL_STATE } from './constants/constants';
-import reducer from './reducer';
-import useUpload from './hooks';
-import { useToast } from '@chakra-ui/react';
-import PostCreator from './content/PostCreator/PostCreator';
+import type { Node } from 'react'
+import { useEffect, useReducer } from 'react'
+import type { Action, State } from '@//:types/upload'
+import { EVENTS, INITIAL_STATE } from './constants/constants'
+import reducer from './reducer'
+import useUpload from './hooks'
+import { useToast } from '@chakra-ui/react'
+import PostCreator from './content/PostCreator/PostCreator'
 
 type Props = {}
 
@@ -69,7 +69,7 @@ export default function FileUploader (props: Props): Node {
         isClosable: true
       })
     })
-  }, [notify, uppy])
+  }, [uppy])
 
   return (
     <PostCreator uppy={uppy} state={state} dispatch={dispatch} />

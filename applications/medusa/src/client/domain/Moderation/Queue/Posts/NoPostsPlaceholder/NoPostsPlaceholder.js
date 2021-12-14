@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Button, Heading, Text, Stack } from '@chakra-ui/react'
+import { Button, Heading, Text, Stack, Box } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
@@ -31,23 +31,24 @@ export default function PostHeader (props: Props): Node {
 
   if (!data.moderatorSettings.isInModeratorQueue) {
     return (
-      <Stack align='center'>
+      <Stack spacing={4} align='center'>
         <Icon
           w={12} h={12}
-          mb={4}
           icon={PauseCircle}
           fill='orange.300'
         />
-        <Heading color='gray.00' fontSize='4xl'>
-          {t('queue.paused.header')}
-        </Heading>
-        <Text color='gray.200'>
-          {t('queue.paused.subheader')}
-        </Text>
+        <Box>
+          <Heading color='gray.00' fontSize='4xl'>
+            {t('queue.paused.header')}
+          </Heading>
+          <Text color='gray.200'>
+            {t('queue.paused.subheader')}
+          </Text>
+        </Box>
         <Link to='/settings/moderation'>
           <Button
-            colorScheme='gray' variant='ghost'
-            size='md'
+            colorScheme='gray' variant='solid'
+            size='lg'
           >{t('queue.paused.unpause')}
           </Button>
         </Link>
@@ -56,18 +57,19 @@ export default function PostHeader (props: Props): Node {
   }
 
   return (
-    <Stack align='center'>
+    <Stack spacing={4} align='center'>
       <Icon
         w={12} h={12} icon={CheckCircle}
-        mb={4}
         fill='green.300'
       />
-      <Heading color='gray.00' fontSize='4xl'>
-        {t('queue.empty.header')}
-      </Heading>
-      <Text color='gray.200'>
-        {t('queue.empty.subheader')}
-      </Text>
+      <Box>
+        <Heading color='gray.00' fontSize='4xl'>
+          {t('queue.empty.header')}
+        </Heading>
+        <Text color='gray.200'>
+          {t('queue.empty.subheader')}
+        </Text>
+      </Box>
     </Stack>
   )
 }

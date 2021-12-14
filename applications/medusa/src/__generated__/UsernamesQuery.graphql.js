@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2a8ea06bacafa813c12cc6ffc4857fe7
+ * @relayHash 8236bfe9d667180e0daecf28e6693652
  */
 
 /* eslint-disable */
@@ -14,7 +14,8 @@ export type UsernamesQueryVariables = {|
 |};
 export type UsernamesQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: UsernamesSettingsFragment$ref
+    +usernamesLimit: number,
+    +$fragmentRefs: UsernamesSettingsFragment$ref,
   |}
 |};
 export type UsernamesQuery = {|
@@ -29,6 +30,7 @@ query UsernamesQuery(
 ) {
   viewer {
     ...UsernamesSettingsFragment
+    usernamesLimit
     id
   }
 }
@@ -70,17 +72,24 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "usernamesLimit",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "username",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "kind": "Variable",
     "name": "first",
     "variableName": "first"
   }
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -102,6 +111,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -128,10 +138,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "concreteType": "AccountUsernameConnection",
             "kind": "LinkedField",
             "name": "usernames",
@@ -153,8 +163,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -217,21 +227,22 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "UsernamesSettingsFragment_usernames",
             "kind": "LinkedHandle",
             "name": "usernames"
           },
-          (v3/*: any*/)
+          (v1/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "2a8ea06bacafa813c12cc6ffc4857fe7",
+    "id": "8236bfe9d667180e0daecf28e6693652",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",
@@ -240,5 +251,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '55b4b82bf6b6fc004e5ca92273a7d969';
+(node: any).hash = '16ae99eac1572a04a2d01555a46f28c5';
 module.exports = node;

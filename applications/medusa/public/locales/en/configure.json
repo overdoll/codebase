@@ -63,7 +63,10 @@
           "submit": "Activate",
           "query": {
             "success": "Two-factor authentication was successfully set up",
-            "error": "There was an error setting up two-factor authentication"
+            "error": {
+              "message": "There was an error setting up two-factor authentication",
+              "INVALID_CODE": "The code you entered is invalid. Try another one?"
+            }
           },
           "validation": {
             "empty": "Please enter a 6-digit authentication code",

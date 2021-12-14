@@ -79,7 +79,7 @@ export default function VerifyToken ({ prepared }: Props): Node {
         if (payload.verifyAuthenticationToken.validation) {
           notify({
             status: 'error',
-            title: payload.verifyAuthenticationToken.validation,
+            title: t(`error.${payload.verifyAuthenticationToken.validation}`),
             isClosable: true
           })
         }

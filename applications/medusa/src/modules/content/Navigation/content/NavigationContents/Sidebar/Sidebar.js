@@ -3,7 +3,7 @@
  */
 
 import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   children: Node,
@@ -19,17 +19,14 @@ export default function Sidebar (props: Props): Node {
           pl={[1, 0]}
           pr={[1, 0]}
           direction='column'
-          bg='gray.800'
           borderRadius='base'
         >
-          <SmallBackgroundBox>
-            <PageSectionWrap>
-              <PageSectionTitle>{props.title}</PageSectionTitle>
-            </PageSectionWrap>
-            <Stack spacing={2}>
-              {props.children}
-            </Stack>
+          <SmallBackgroundBox mb={2}>
+            <PageSectionTitle>{props.title}</PageSectionTitle>
           </SmallBackgroundBox>
+          <Stack spacing={2}>
+            {props.children}
+          </Stack>
         </Flex>
       </Center>
       <Box

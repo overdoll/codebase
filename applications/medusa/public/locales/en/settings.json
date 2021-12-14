@@ -34,14 +34,11 @@
         "header": "Enter a new username",
         "input_title": "Username",
         "submit": "Change",
-        "warning": "You can only have a maximum of 5 usernames. You have to remove at least one alias before you can change your username to a new one.",
+        "warning": "You have added the maximum number of usernames. You have to remove at least one alias before you can change your username to a new one.",
         "query": {
           "success": "Username changed successfully",
           "error": {
-            "unknown": "There was an error changing your username",
-            "validation": {
-              "USERNAME_TAKEN": "Sorry, this username is already taken"
-            }
+            "unknown": "There was an error changing your username"
           }
         },
         "form": {
@@ -95,11 +92,13 @@
         "title": "Add an email",
         "button": "Add",
         "placeholder": "Enter an email address",
+        "alert": "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another.",
         "form": {
           "validation": {
             "email": {
               "empty": "Please enter an email address",
-              "pattern": "Please enter a valid email address"
+              "pattern": "Please enter a valid email address",
+              "INVALID_EMAIL": "This email is invalid. Try a different one?"
             }
           }
         },
@@ -108,7 +107,8 @@
           "error": "There was an error adding the email"
         }
       },
-      "load": "Load More"
+      "load": "Load More",
+      "open": "Add Email"
     }
   },
   "moderation": {

@@ -17,7 +17,7 @@ export default function SidebarButton ({ active, title, icon }: Props): Node {
       h={10}
       display='inline'
       color={active ? 'primary.400' : 'gray.300'}
-      bg={active ? 'gray.600' : 'transparent'}
+      bg={active ? 'gray.600' : 'gray.800'}
     >
       <Flex h='100%' align='center'>
         {icon &&

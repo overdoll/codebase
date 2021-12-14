@@ -263,7 +263,7 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/manage/my_posts',
+            path: '/manage/my-posts',
             component: JSResource('ManageMyPostsRoot', () =>
               import(
                 /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
@@ -479,7 +479,7 @@ const routes: Array<Route> = [
         ]
       },
       {
-        path: '/configure/create_post',
+        path: '/configure/create-post',
         component: JSResource('CreatePostRoot', () =>
           import(
             /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'

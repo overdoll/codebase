@@ -44,8 +44,10 @@ export default function ChangeUsernameForm ({ usernamesConnectionID, isDisabled 
     UsernameMutationGQL
   )
 
+  const [usernameSchema, getValidationError] = useUsernameFormSchema()
+
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: usernameSchema
   })
 
   const [t] = useTranslation('settings')
@@ -57,8 +59,6 @@ export default function ChangeUsernameForm ({ usernamesConnectionID, isDisabled 
   })
 
   const notify = useToast()
-
-  console.log(errors)
 
   const onChangeUsername = (formData) => {
     changeUsername({
@@ -72,7 +72,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID, isDisabled 
         if (data.updateAccountUsernameAndRetainPrevious.validation) {
           setError('username', {
             type: 'validation',
-            message: data.updateAccountUsernameAndRetainPrevious.validation
+            message: getValidationError(data.updateAccountUsernameAndRetainPrevious.validation)
           })
           return
         }

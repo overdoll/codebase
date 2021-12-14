@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c7c5b4b6cd478514a64eb4441d66a352
+ * @relayHash b8a050d5b709f771a1a0e52b957919fc
  */
 
 /* eslint-disable */
@@ -57,6 +57,7 @@ fragment EmailsSettingsFragment_2HEEH6 on Account {
     edges {
       node {
         ...EmailCardFragment
+        status
         id
         __typename
       }
@@ -285,7 +286,7 @@ return {
     ]
   },
   "params": {
-    "id": "c7c5b4b6cd478514a64eb4441d66a352",
+    "id": "b8a050d5b709f771a1a0e52b957919fc",
     "metadata": {},
     "name": "EmailsSettingsPaginationQuery",
     "operationKind": "query",
@@ -294,5 +295,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'b5bbb9742c3a365d6034821cf56d836b';
+(node: any).hash = '61647e9f7d6b3b803b4605825e973488';
 module.exports = node;

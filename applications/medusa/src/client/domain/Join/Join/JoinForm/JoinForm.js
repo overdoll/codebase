@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import Joi from 'joi';
-import { useTranslation } from 'react-i18next';
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import type { Node } from 'react';
-import Button from '@//:modules/form/Button';
-import { useEmailFormSchema } from '@//:modules/constants/schemas';
-import StyledInput from '@//:modules/form/StyledInput/StyledInput';
+import Joi from 'joi'
+import { useTranslation } from 'react-i18next'
+import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import type { Node } from 'react'
+import Button from '@//:modules/form/Button'
+import { useEmailFormSchema } from '@//:modules/constants/schemas'
+import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 
 type JoinValues = {
   email: string,
@@ -23,8 +23,10 @@ type Props = {
 export default function JoinForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
+  const [emailSchema] = useEmailFormSchema()
+
   const schema = Joi.object({
-    email: useEmailFormSchema()
+    email: emailSchema
   })
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<JoinValues>({

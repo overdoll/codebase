@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0d258f26ce3e9ebb86453f51934cda7f
+ * @relayHash 4ae8e80978f0275f9c0c071404e0706b
  */
 
 /* eslint-disable */
@@ -8,6 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+export type GrantAuthenticationTokenValidation = "INVALID_EMAIL" | "%future added value";
 export type GrantAuthenticationTokenInput = {|
   email: string
 |};
@@ -16,12 +17,13 @@ export type JoinMutationVariables = {|
 |};
 export type JoinMutationResponse = {|
   +grantAuthenticationToken: ?{|
+    +validation: ?GrantAuthenticationTokenValidation,
     +authenticationToken: ?{|
       +id: string,
       +email: string,
       +token: string,
       +sameDevice: boolean,
-    |}
+    |},
   |}
 |};
 export type JoinMutation = {|
@@ -35,6 +37,7 @@ mutation JoinMutation(
   $input: GrantAuthenticationTokenInput!
 ) {
   grantAuthenticationToken(input: $input) {
+    validation
     authenticationToken {
       id
       token
@@ -67,6 +70,13 @@ v1 = [
     "name": "grantAuthenticationToken",
     "plural": false,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "validation",
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -133,7 +143,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "0d258f26ce3e9ebb86453f51934cda7f",
+    "id": "4ae8e80978f0275f9c0c071404e0706b",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
@@ -142,5 +152,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'dfbb9dcad2c34353462472c64a19af2b';
+(node: any).hash = '97b943350137135d4bae42d7cd9bcdad';
 module.exports = node;

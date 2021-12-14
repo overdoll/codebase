@@ -14,6 +14,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
+import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 
 type Props = {
   queryRef: RegisterFragment$key,
@@ -49,6 +50,8 @@ export default function Register ({ queryRef }: Props): Node {
 
   const [, , removeCookie] = useCookies(['token'])
 
+  const [, getValidationError] = useUsernameFormSchema()
+
   const history = useHistory()
 
   const onSubmit = val => {
@@ -63,7 +66,7 @@ export default function Register ({ queryRef }: Props): Node {
         if (payload.createAccountWithAuthenticationToken.validation) {
           notify({
             status: 'error',
-            title: payload.createAccountWithAuthenticationToken.validation,
+            title: getValidationError(payload.createAccountWithAuthenticationToken.validation),
             isClosable: true
           })
           return

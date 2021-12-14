@@ -23,15 +23,15 @@ export default function MenuButton ({ label, icon, active, onClick, isDisabled, 
     >
       <Flex align='center'>
         {icon &&
-          <Flex borderRadius='md' align='center' p={1} mr={3} bg={active ? 'gray.00' : 'gray.500'}>
+          <Flex borderRadius='md' align='center' p={1} mr={3} bg={active ? 'primary.400' : 'gray.500'}>
             <Icon
               icon={icon} w='26px' h='26px' p={1}
-              fill={color || (active ? 'primary.400' : 'gray.100')}
+              fill={color || (active ? 'gray.00' : 'gray.100')}
             />
           </Flex>}
         {label &&
           <Heading
-            color={color || (active ? 'gray.00' : 'gray.100')}
+            color={color || (active ? 'primary.400' : 'gray.100')}
             fontSize='lg'
           >
             {label}

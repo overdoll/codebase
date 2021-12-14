@@ -74,7 +74,7 @@ export default function TotpSubmissionForm (props: Props): Node {
         if (data.enrollAccountMultiFactorTotp.validation) {
           setError('code', {
             type: 'mutation',
-            message: data.enrollAccountMultiFactorTotp.validation
+            message: t(`totp.flow.code_step.form.query.error.${data.enrollAccountMultiFactorTotp.validation}`)
           })
           return
         }
@@ -92,7 +92,7 @@ export default function TotpSubmissionForm (props: Props): Node {
       onError () {
         notify({
           status: 'error',
-          title: t('totp.flow.code_step.form.query.error'),
+          title: t('totp.flow.code_step.form.query.error.message'),
           isClosable: true
         })
       }

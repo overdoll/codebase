@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Badge, Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
-
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
@@ -17,6 +17,7 @@ const UsernameQueryGQL = graphql`
   query UsernamesQuery($first: Int) {
     viewer {
       ...UsernamesSettingsFragment
+      usernamesLimit
     }
   }
 `
@@ -56,27 +57,42 @@ export default function Usernames (props: Props): Node {
 
   const usernamesConnectionID = data?.usernames?.__id
 
-  const currentUsernames = data.usernames.edges.filter((item) => item.node.username !== data.username)
+  const disableUsernameAdd = data.usernames.edges.length >= queryData.viewer.usernamesLimit
+
+  const showAliases = data.usernames.edges.length > 1
 
   return (
     <>
       <ListSpacer>
-        <SmallBackgroundBox>
-          <Flex align='center'>
-            <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
-            {currentUsernames.length > 0 &&
-              <>
-                <Spacer />
-                <Button variant='link' onClick={onToggleAliases}>
-                  {t('profile.username.previous.title', { count: currentUsernames.length })}
-                </Button>
-              </>}
-          </Flex>
-        </SmallBackgroundBox>
-        <Collapse in={isAliasesOpen} animateOpacity>
+        <Flex>
+          <SmallBackgroundBox
+            borderTopRightRadius={showAliases && 0}
+            borderBottomRightRadius={showAliases && 0}
+            w='100%'
+            h='60px'
+          >
+            <Flex align='center'>
+              <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
+            </Flex>
+          </SmallBackgroundBox>
+          {showAliases &&
+            <Button
+              borderTopLeftRadius={0}
+              borderBottomLeftRadius={0}
+              colorScheme='teal' variant='solid'
+              onClick={onToggleAliases}
+              h='60px'
+            >
+              {t('profile.username.previous.title', { count: data.usernames.edges.length - 1 })}
+            </Button>}
+        </Flex>
+        <Collapse in={isAliasesOpen && showAliases} animateOpacity>
           <ListSpacer>
-            {currentUsernames.map((item, index) =>
-              <UsernameAliasCard usernamesConnectionID={usernamesConnectionID} query={item.node} key={index} />
+            {data.usernames.edges.map((item, index) =>
+              <UsernameAliasCard
+                disabled={item.node.username === data.username}
+                usernamesConnectionID={usernamesConnectionID} query={item.node} key={index}
+              />
             )}
           </ListSpacer>
         </Collapse>
@@ -88,7 +104,7 @@ export default function Usernames (props: Props): Node {
         <Collapse in={isFormOpen} animateOpacity>
           <Flex>
             <ChangeUsernameForm
-              isDisabled={currentUsernames.length === 4}
+              isDisabled={disableUsernameAdd}
               usernamesConnectionID={usernamesConnectionID}
             />
           </Flex>

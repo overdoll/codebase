@@ -2,11 +2,11 @@
  * @flow
  */
 
-import { useTranslation } from 'react-i18next';
-import { graphql, useFragment } from 'react-relay/hooks';
-import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql';
-import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout';
-import { Barcode } from '../../../../../../../assets/icons/interface';
+import { useTranslation } from 'react-i18next'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
+import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
+import { Barcode } from '../../../../../../../assets/icons/interface'
 
 type Props = {
   data: RecoveryCodesSettingsFragment$key
@@ -25,7 +25,7 @@ export default function RecoveryCodesSettings (props: Props): Node {
 
   return (
     <PagePanelWrap path='/configure/multi_factor/recovery_codes'>
-      <PagePanelIcon icon={Barcode} colorScheme='orange' />
+      <PagePanelIcon icon={Barcode} colorScheme='teal' />
       <PagePanelText
         title={t('security.multi_factor.recovery_codes.title')}
         description={data.recoveryCodesGenerated

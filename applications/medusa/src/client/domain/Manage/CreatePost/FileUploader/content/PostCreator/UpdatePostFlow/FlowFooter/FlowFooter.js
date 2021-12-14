@@ -1,18 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Flex, Spacer } from '@chakra-ui/react';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import type { Uppy } from '@uppy/core';
-import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton';
-import FlowForwardButton from './FlowForwardButton/FlowForwardButton';
-import Button from '@//:modules/form/Button';
-import { graphql } from 'react-relay/hooks';
-import type { FlowFooterFragment$key } from '@//:artifacts/FlowFooterFragment.graphql';
-import { useFragment } from 'react-relay';
+import type { Node } from 'react'
+import type { Dispatch, State } from '@//:types/upload'
+import { Flex, Spacer } from '@chakra-ui/react'
+import { STEPS } from '../../../../constants/constants'
+import type { Uppy } from '@uppy/core'
+import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
+import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
+import { graphql } from 'react-relay/hooks'
+import type { FlowFooterFragment$key } from '@//:artifacts/FlowFooterFragment.graphql'
+import { useFragment } from 'react-relay'
 
 type Props = {
   uppy: Uppy,
@@ -32,8 +30,6 @@ const FlowFooterFragmentGQL = graphql`
 export default function FlowFooter ({ state, uppy, dispatch, query }: Props): Node {
   const data = useFragment(FlowFooterFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
   if (state.step !== STEPS.SUBMIT) {
     return (
       <Flex w='100%' bottom={0} position='sticky'>
@@ -44,12 +40,6 @@ export default function FlowFooter ({ state, uppy, dispatch, query }: Props): No
     )
   }
   return (
-    <Button
-      colorScheme='gray' size='lg' onClick={() => dispatch({
-        type: EVENTS.CLEANUP,
-        value: INITIAL_STATE
-      })}
-    >{t('create_post.flow.steps.footer.retry')}
-    </Button>
+    <></>
   )
 }

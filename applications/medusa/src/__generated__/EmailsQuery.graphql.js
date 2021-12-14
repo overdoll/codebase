@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 02cf39b3bec444e33bcb96e4186f88cb
+ * @relayHash a516d9806a1edda7403c4fadd48b96ca
  */
 
 /* eslint-disable */
@@ -12,7 +12,8 @@ import type { EmailsSettingsFragment$ref } from "./EmailsSettingsFragment.graphq
 export type EmailsQueryVariables = {||};
 export type EmailsQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: EmailsSettingsFragment$ref
+    +emailsLimit: number,
+    +$fragmentRefs: EmailsSettingsFragment$ref,
   |}
 |};
 export type EmailsQuery = {|
@@ -25,6 +26,7 @@ export type EmailsQuery = {|
 query EmailsQuery {
   viewer {
     ...EmailsSettingsFragment
+    emailsLimit
     id
   }
 }
@@ -46,6 +48,7 @@ fragment EmailsSettingsFragment on Account {
     edges {
       node {
         ...EmailCardFragment
+        status
         id
         __typename
       }
@@ -66,14 +69,21 @@ fragment MakePrimaryFragment on AccountEmail {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "emailsLimit",
+  "storageKey": null
+},
+v1 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 5
   }
 ],
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -95,6 +105,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -123,7 +134,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
             "name": "emails",
@@ -145,7 +156,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -222,21 +233,22 @@ return {
           },
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "EmailsSettingsFragment_emails",
             "kind": "LinkedHandle",
             "name": "emails"
           },
-          (v1/*: any*/)
+          (v2/*: any*/),
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "02cf39b3bec444e33bcb96e4186f88cb",
+    "id": "a516d9806a1edda7403c4fadd48b96ca",
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",
@@ -245,5 +257,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '79d7c5220cb84bef2977b5f3d3fd23a8';
+(node: any).hash = '54c667dc8800618fc0ee75cf884ffa56';
 module.exports = node;

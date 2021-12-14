@@ -11,6 +11,7 @@ import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
+import { useEmailFormSchema } from '@//:modules/constants/schemas'
 
 type Props = {
   queryRef: JoinFragment$key,
@@ -21,6 +22,7 @@ type Props = {
 const JoinAction = graphql`
   mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
     grantAuthenticationToken(input: $input) {
+      validation
       authenticationToken {
         id
         email
@@ -52,6 +54,8 @@ export default function Join ({
 
   const [cookies, setCookie] = useCookies(['token'])
 
+  const [, getValidationError] = useEmailFormSchema()
+
   const onSubmit = ({ email }) => {
     commit({
       variables: {
@@ -60,6 +64,15 @@ export default function Join ({
         }
       },
       updater: (store, payload) => {
+        if (payload.grantAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: getValidationError(payload.grantAuthenticationToken.validation),
+            isClosable: true
+          })
+          return
+        }
+
         const token = payload.grantAuthenticationToken.authenticationToken.token
         const id = payload.grantAuthenticationToken.authenticationToken.id
 

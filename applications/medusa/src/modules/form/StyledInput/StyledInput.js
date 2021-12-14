@@ -17,11 +17,25 @@ type Props = {
 };
 
 export default function StyledInput ({ register, success, error, placeholder, errorMessage, size, variant }: Props): Node {
-  const determinePadding = () => {
+  const determineMargin = () => {
     if (['xl', 'lg'].includes(size)) {
+      return 2
+    }
+    return 0
+  }
+
+  const determinePadding = () => {
+    if (['md'].includes(size)) {
       return 3
     }
     return 2
+  }
+
+  const determineTextSizing = () => {
+    if (['xs', 'sm', 'md'].includes(size)) {
+      return 'sm'
+    }
+    return size
   }
 
   return (
@@ -34,7 +48,7 @@ export default function StyledInput ({ register, success, error, placeholder, er
           placeholder={placeholder}
         />
         {(error || success) && (
-          <InputRightElement p={determinePadding()} h='100%' pointerEvents='none'>
+          <InputRightElement p={determinePadding() || 2} mr={determineMargin() || 0} h='100%' pointerEvents='none'>
             <Icon
               h='100%'
               icon={success ? CheckMark : WarningTriangle}
@@ -43,7 +57,7 @@ export default function StyledInput ({ register, success, error, placeholder, er
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage fontSize={size || 'sm'}>
+      <FormErrorMessage fontSize={determineTextSizing() || 'sm'}>
         {errorMessage}
       </FormErrorMessage>
     </Box>

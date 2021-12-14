@@ -116,7 +116,7 @@ const routes: Array<Route> = [
     ]
   },
   {
-    path: '/configure/create_post',
+    path: '/configure/create-post',
     navigation: {
       top: {
         title: 'nav.create_post',
@@ -161,7 +161,7 @@ const routes: Array<Route> = [
     },
     routes: [
       {
-        path: '/manage/my_posts',
+        path: '/manage/my-posts',
         navigation: {
           side: {
             title: 'sidebar.manage.my_posts',

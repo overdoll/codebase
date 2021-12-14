@@ -1,24 +1,27 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Suspense } from 'react';
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import type { Dispatch, State } from '@//:types/upload';
-import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
-import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow';
-import { StringParam, useQueryParam } from 'use-query-params';
-import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines';
-import Button from '@//:modules/form/Button';
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout';
-import CreatePostFlow from './CreatePostFlow/CreatePostFlow';
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback';
+import type { Node } from 'react'
+import { Suspense } from 'react'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import type { Dispatch, State } from '@//:types/upload'
+import { Box, Flex, Heading, Skeleton, Stack, Text } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
+import { StringParam, useQueryParam } from 'use-query-params'
+import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
+import Button from '@//:modules/form/Button'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import Icon from '@//:modules/content/Icon/Icon'
+import { PauseCircle } from '../../../../../../../assets/icons/interface'
+import { Link } from '@//:modules/routing'
 
 type Props = {
   uppy: Uppy,
@@ -83,13 +86,31 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
   if (postData?.state !== 'DRAFT' && state.step !== STEPS.SUBMIT) {
     return (
       <LargeBackgroundBox>
-        <Flex h={400} direction='column' justify='center' align='center'>
-          <Heading mb={8} textAlign='center' color='gray.00' fontSize='2xl'>
-            {t('create_post.flow.create.not_draft.title')}
-          </Heading>
-          <Button variant='solid' colorScheme='primary' onClick={onCleanup} size='lg'>
-            {t('create_post.flow.create.not_draft.button')}
-          </Button>
+        <Flex
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          textAlign='center'
+          height='500px'
+        >
+          <Stack spacing={4} align='center'>
+            <Icon
+              w={12} h={12}
+              icon={PauseCircle}
+              fill='orange.300'
+            />
+            <Box>
+              <Heading color='gray.00' fontSize='4xl'>
+                {t('create_post.flow.create.not_draft.title')}
+              </Heading>
+            </Box>
+            <Button
+              colorScheme='gray' variant='solid'
+              size='lg'
+              onClick={onCleanup}
+            >{t('create_post.flow.create.not_draft.button')}
+            </Button>
+          </Stack>
         </Flex>
       </LargeBackgroundBox>
     )

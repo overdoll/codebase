@@ -14,7 +14,8 @@ const baseStyle = {
     marginEnd: 2
   },
   description: {
-    lineHeight: 6
+    lineHeight: 5,
+    fontSize: 'sm'
   },
   icon: {
     flexShrink: 0,
@@ -99,7 +100,6 @@ function variantSolidOriginal (props) {
 function variantSolid (props) {
   const { colorScheme: c } = props
   return {
-    boxShadow: 'none',
     container: {
       paddingStart: 3,
       borderStartWidth: '4px',

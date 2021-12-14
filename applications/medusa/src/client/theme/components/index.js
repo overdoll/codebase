@@ -21,6 +21,7 @@ import heading from './heading'
 import avatar from './avatar'
 import tabs from './tabs'
 import popover from './popover'
+import modal from './modal'
 
 export default {
   Menu: menu,
@@ -45,5 +46,6 @@ export default {
   Heading: heading,
   Avatar: avatar,
   Tabs: tabs,
-  Popover: popover
+  Popover: popover,
+  Modal: modal
 }

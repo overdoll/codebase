@@ -6,11 +6,13 @@ import type { Node } from 'react'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Text, Stack } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '../../../../assets/icons/navigation'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
+import { useHistory } from '@//:modules/routing'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   refresh: () => void,
@@ -57,27 +59,29 @@ export default function Lobby ({
 
   return (
     <PageWrapper>
-      <Icon
-        icon={BadgeCircle}
-        w={100}
-        h={100}
-        fill='purple.300'
-        ml='auto'
-        mr='auto'
-        mb={8}
-      />
-      <Heading mb={8} align='center' size='md' color='gray.00'>
-        {t('lobby.header')}
-      </Heading>
-      <Flex
-        justify='center' wordBreak='break-all' mb={8} pt={3} pb={3} pr={2} borderRadius={5}
-        bg='gray.800'
-        w='100%'
-      >
-        <Text fontSize='lg' color='purple.300'>
-          {email || data.email}
-        </Text>
-      </Flex>
+      <Stack spacing={8}>
+        <Icon
+          icon={BadgeCircle}
+          w={100}
+          h={100}
+          fill='purple.300'
+          ml='auto'
+          mr='auto'
+
+        />
+        <Heading align='center' size='md' color='gray.00'>
+          {t('lobby.header')}
+        </Heading>
+        <Flex
+          justify='center' wordBreak='break-all' pt={3} pb={3} pr={2} borderRadius={5}
+          bg='gray.800'
+          w='100%'
+        >
+          <Text fontSize='lg' color='purple.300'>
+            {email || data.email}
+          </Text>
+        </Flex>
+      </Stack>
     </PageWrapper>
   )
 }

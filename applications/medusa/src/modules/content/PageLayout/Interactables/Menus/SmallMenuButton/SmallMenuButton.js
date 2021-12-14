@@ -24,7 +24,7 @@ export default function SmallMenuButton ({ children }: Props): Node {
           />
         }
       />
-      <MenuList boxShadow='lg'>
+      <MenuList boxShadow='outline'>
         {children}
       </MenuList>
     </Menu>

@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { useEffect } from 'react'
-import { Flex, Stack, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure, useToast } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
@@ -23,6 +23,7 @@ const EmailsQueryGQL = graphql`
   query EmailsQuery {
     viewer {
       ...EmailsSettingsFragment
+      emailsLimit
     }
   }
 `
@@ -40,7 +41,7 @@ const EmailsFragmentGQL = graphql`
       edges {
         node {
           ...EmailCardFragment
-          id
+          status
         }
       }
     }
@@ -62,6 +63,12 @@ export default function Emails (props: Props): Node {
   const [t] = useTranslation('settings')
 
   const emailsConnectionID = data?.emails?.__id
+
+  const currentEmails = data.emails.edges.filter((item) => item.node.status !== 'UNCONFIRMED')
+
+  const disableEmailAdd = currentEmails.length >= queryData.viewer.emailsLimit
+
+  const { isOpen: isFormOpen, onToggle: onToggleForm } = useDisclosure()
 
   const { read, flush } = useFlash()
 
@@ -93,7 +100,7 @@ export default function Emails (props: Props): Node {
   }, [confirmationError, confirmationSuccess])
 
   return (
-    <Stack spacing={3}>
+    <ListSpacer>
       <ListSpacer>
         {data?.emails.edges.map((item, index) => {
           return (
@@ -113,7 +120,14 @@ export default function Emails (props: Props): Node {
           >{t('profile.email.load')}
           </Button>
         </Flex>}
-      <AddEmailForm connectionID={emailsConnectionID} />
-    </Stack>
+      <Button
+        variant='solid' colorScheme='gray' onClick={onToggleForm}
+        size='sm'
+      >{t('profile.email.open')}
+      </Button>
+      <Collapse in={isFormOpen} animateOpacity>
+        <AddEmailForm isDisabled={disableEmailAdd} connectionID={emailsConnectionID} />
+      </Collapse>
+    </ListSpacer>
   )
 }

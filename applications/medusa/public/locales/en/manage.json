@@ -6,7 +6,8 @@
         "title": "Create Post",
         "creating": "Creating your draft post",
         "uploader": {
-          "title": "Upload one or more files",
+          "title": "Upload Files",
+          "description": "Upload one or more files by clicking or dragging and dropping them",
           "rules": {
             "heading": "As a reminder of the guidelines...",
             "rule_one": "Nothing extremely offensive or shocking",
@@ -30,11 +31,23 @@
         "delete": "Delete"
       },
       "steps": {
+        "header": {
+          "modal": {
+            "header": "Exit Post Creator",
+            "body": {
+              "start": "Are you sure you'd like to exit the post creator? You can resume your progress from your",
+              "middle": "My Content",
+              "end": "page at any time."
+            },
+            "confirm": "Yes, exit",
+            "cancel": "No, go back"
+          }
+        },
         "footer": {
           "forward": "Next",
           "back": "Back",
           "submit": "Submit",
-          "retry": "Post Again",
+          "retry": "Post again",
           "required": "Why is this required?"
         },
         "arrange": {
@@ -138,7 +151,7 @@
             "title": "Your post has been submitted",
             "description": "The post is now visible to the public"
           },
-          "button": "Upload Again"
+          "button": "Upload again"
         }
       }
     }

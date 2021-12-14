@@ -12,6 +12,7 @@ type Props = {
   isLoading?: boolean,
   disabled?: boolean,
   type?: string,
+  forwardRef?: () => void,
 };
 
 export default function Button ({
@@ -21,6 +22,7 @@ export default function Button ({
   type,
   isDisabled,
   isLoading,
+  forwardRef,
   ...rest
 }: Props): Node {
   const [disableOverride, setDisableOverride] = useState(true)
@@ -41,6 +43,7 @@ export default function Button ({
       isDisabled={fullDisable}
       isLoading={fullLoading}
       {...rest}
+      ref={forwardRef}
     >
       {children}
     </ChakraButton>
