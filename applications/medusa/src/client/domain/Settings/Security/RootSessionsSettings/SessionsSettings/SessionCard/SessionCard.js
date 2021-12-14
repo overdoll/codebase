@@ -21,7 +21,7 @@ const SessionGQL = graphql`
     ...RevokeSessionFragment
     device
     ip
-    created
+    lastSeen
     current
   }
 `
@@ -32,7 +32,7 @@ export default function SessionCard ({ connectionID, query }: Props): Node {
   const { isOpen: isRevealed, onToggle } = useDisclosure()
 
   const userAgent = UAParser(data.device)
-  const formattedDate = format(new Date(data.created), 'LLLL Lo, y')
+  const formattedDate = format(new Date(data.lastSeen), 'LLLL Lo, y')
 
   return (
     <PagePanelWrap path='/'>

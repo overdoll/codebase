@@ -43,9 +43,9 @@ export default function NavigationMenu ({ children }: Props): Node {
           onClick={onToggle} active={isOpen} label={t('nav.menu')}
           icon={PageControllerSettings}
         />
-        <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <Modal preserveScrollBarGap isCentered isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent backdropFilter='blur(5px)' bg='gray.800' boxShadow='none'>
+          <ModalContent bg='gray.800'>
             <ModalBody my={4}>
               <Stack onClick={onClose} spacing={4}>
                 <SiteLinkLogo />
@@ -62,7 +62,7 @@ export default function NavigationMenu ({ children }: Props): Node {
 
   return (
     <>
-      <Menu flip preventOverflow isOpen={isOpenMenu} onClose={onCloseMenu}>
+      <Menu offset={[-10, 20]} flip preventOverflow isOpen={isOpenMenu} onClose={onCloseMenu}>
         <NavigationButton
           w={{ base: '58px', md: '42px' }}
           onClick={onToggleMenu} active={isOpenMenu} label={t('nav.menu')}
@@ -70,7 +70,7 @@ export default function NavigationMenu ({ children }: Props): Node {
           as={MenuButton}
         />
         <Portal>
-          <MenuList minW='300px' m={0} p={0} boxShadow='lg'>
+          <MenuList minW='300px' m={0} p={0} boxShadow='outline'>
             <SimpleGrid p={4} onClick={onCloseMenu} spacing={3}>
               {children}
             </SimpleGrid>

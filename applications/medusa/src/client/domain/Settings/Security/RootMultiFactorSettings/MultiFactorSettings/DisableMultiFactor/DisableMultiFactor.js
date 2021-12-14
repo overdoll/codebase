@@ -12,13 +12,14 @@ import {
   Text,
   Tooltip,
   useDisclosure,
-  useToast,
-} from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import Button from '@//:modules/form/Button';
-import { graphql, useFragment, useMutation } from 'react-relay/hooks';
-import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql';
-import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql';
+  useToast
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import Button from '@//:modules/form/Button'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql'
+import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
+import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
 
 type Props = {
   data: DisableMultiFactorFragment$key
@@ -46,8 +47,7 @@ export default function DisableMultiFactor (props: Props): Node {
   )
 
   const [t] = useTranslation('settings')
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useHistoryDisclosure()
 
   const notify = useToast()
 
@@ -108,6 +108,8 @@ export default function DisableMultiFactor (props: Props): Node {
         </Tooltip>
       </Flex>
       <AlertDialog
+        preserveScrollBarGap
+        isCentered
         isOpen={isOpen}
         onClose={onClose}
       >
@@ -116,11 +118,9 @@ export default function DisableMultiFactor (props: Props): Node {
             <AlertDialogHeader fontSize='lg'>
               {t('security.multi_factor.disable.modal.header')}
             </AlertDialogHeader>
-
             <AlertDialogBody>
               {t('security.multi_factor.disable.modal.description')}
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button size='md' onClick={onClose}>
                 {t('security.multi_factor.disable.modal.cancel')}

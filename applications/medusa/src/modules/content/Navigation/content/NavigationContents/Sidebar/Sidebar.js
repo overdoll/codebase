@@ -8,7 +8,10 @@ import { PageSectionTitle, SmallBackgroundBox } from '@//:modules/content/PageLa
 type Props = {
   children: Node,
   title: string,
+
 }
+
+//       <Box pl={2} pr={4} h='calc(100vh - 54px)' w='290px' display={{ base: 'none', md: 'initial', xl: 'none' }} />
 
 export default function Sidebar (props: Props): Node {
   return (
@@ -31,7 +34,7 @@ export default function Sidebar (props: Props): Node {
       </Center>
       <Box
         bg='gray.800'
-        w='260px'
+        w={260}
         h='calc(100vh - 54px)'
         pr={4}
         pb={6}
@@ -55,7 +58,6 @@ export default function Sidebar (props: Props): Node {
           {props.children}
         </Stack>
       </Box>
-      <Box pl={2} pr={4} h='calc(100vh - 54px)' w='290px' display={{ base: 'none', md: 'initial', xl: 'none' }} />
     </>
   )
 }

@@ -167,7 +167,7 @@
     "sessions": {
       "title": "Sessions",
       "description": "Here is a list of devices that have logged into your account. You can click on one to view the details.",
-      "accessed": "Last login on {{date}}",
+      "accessed": "Last seen on {{date}}",
       "show": "Show IP",
       "current": "Your Current Session",
       "load": "Load More",

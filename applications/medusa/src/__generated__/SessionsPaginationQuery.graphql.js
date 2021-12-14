@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b2c4e8c675065fcdb94bc47cbc710041
+ * @relayHash d86c6c03f405ce1a989c32aec83f1fa5
  */
 
 /* eslint-disable */
@@ -48,7 +48,7 @@ fragment SessionCardFragment on AccountSession {
   ...RevokeSessionFragment
   device
   ip
-  created
+  lastSeen
   current
 }
 
@@ -211,7 +211,7 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "created",
+                            "name": "lastSeen",
                             "storageKey": null
                           },
                           {
@@ -294,7 +294,7 @@ return {
     ]
   },
   "params": {
-    "id": "b2c4e8c675065fcdb94bc47cbc710041",
+    "id": "d86c6c03f405ce1a989c32aec83f1fa5",
     "metadata": {},
     "name": "SessionsPaginationQuery",
     "operationKind": "query",

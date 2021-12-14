@@ -50,7 +50,7 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
 
   const [t] = useTranslation('manage')
 
-  const { isOpen, onToggle, onClose } = useHistoryDisclosure()
+  const { isOpen, onOpen, onClose } = useHistoryDisclosure()
 
   const [, setPostReference] = useQueryParam('id', StringParam)
 
@@ -97,11 +97,14 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
               {findText()[1]}
             </Text>
           </Flex>
-          <CloseButton size='lg' onClick={onToggle} />
+          <CloseButton size='lg' onClick={onOpen} />
         </Flex>
         <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
       </Box>
-      <AlertDialog leastDestructiveRef={cancelButtonRef} isOpen={isOpen} onClose={onClose}>
+      <AlertDialog
+        preserveScrollBarGap isCentered leastDestructiveRef={cancelButtonRef} isOpen={isOpen}
+        onClose={onClose}
+      >
         <AlertDialogOverlay />
         <AlertDialogContent>
           <AlertDialogHeader>

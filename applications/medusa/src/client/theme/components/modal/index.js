@@ -1,7 +1,7 @@
 import { mode } from '@chakra-ui/theme-tools'
 
 const baseStyleOverlay = {
-  bg: 'blackAlpha.600',
+  bg: 'dimmers.500',
   zIndex: 'modal'
 }
 
@@ -26,8 +26,7 @@ const baseStyleDialog = (props) => {
     color: 'inherit',
     my: '3.75rem',
     zIndex: 'modal',
-    maxH: scrollBehavior === 'inside' ? 'calc(100% - 7.5rem)' : undefined,
-    boxShadow: mode('lg', 'dark-lg')(props)
+    maxH: scrollBehavior === 'inside' ? 'calc(100% - 7.5rem)' : undefined
   }
 }
 

@@ -14,7 +14,7 @@ declare export opaque type SessionCardFragment$fragmentType: SessionCardFragment
 export type SessionCardFragment = {|
   +device: string,
   +ip: string,
-  +created: any,
+  +lastSeen: any,
   +current: boolean,
   +$fragmentRefs: RevokeSessionFragment$ref,
   +$refType: SessionCardFragment$ref,
@@ -51,7 +51,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "created",
+      "name": "lastSeen",
       "storageKey": null
     },
     {
@@ -71,5 +71,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '71dac3647a93bc7cb5f4e6a59160b02a';
+(node: any).hash = '2fb00be7c28f0b05ef29b2943cb430d3';
 module.exports = node;

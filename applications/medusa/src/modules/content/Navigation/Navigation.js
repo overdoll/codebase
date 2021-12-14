@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { useMemo } from 'react'
-import { Skeleton, useBreakpointValue } from '@chakra-ui/react'
+import { Skeleton, useBreakpointValue, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from '@//:modules/routing'
 import { graphql, useFragment } from 'react-relay/hooks'
