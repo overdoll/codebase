@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Box, CloseButton, Flex, Heading, Progress, Text } from '@chakra-ui/react';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import { StringParam, useQueryParam } from 'use-query-params';
-import type { Uppy } from '@uppy/core';
-import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import useCheckRequirements from './useCheckRequirements';
-import progressScore from './progressScore';
+import type { Node } from 'react'
+import type { Dispatch, State } from '../../../../../../../../../types/upload'
+import { Box, CloseButton, Flex, Heading, Progress, Text } from '@chakra-ui/react'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import { StringParam, useQueryParam } from 'use-query-params'
+import type { Uppy } from '@uppy/core'
+import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import useCheckRequirements from './useCheckRequirements'
+import progressScore from './progressScore'
 
 type Props = {
   uppy: Uppy,

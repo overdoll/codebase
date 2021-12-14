@@ -2,44 +2,53 @@
   "overrides": [
     {
       "extends": [
-        "plugin:cypress/recommended"
+        "plugin:cypress/recommended",
+        "plugin:testing-library/recommended"
       ],
       "plugins": [
         "cypress"
       ],
       "files": [
-        "applications/medusa/cypress/**/*.js"
-      ]
+        "applications/medusa/cypress/**/*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "applications/medusa/cypress/tsconfig.json"
+        ]
+      }
     },
     {
       "extends": [
-        "plugin:jest/recommended"
+        "plugin:jest/recommended",
+        "plugin:testing-library/recommended",
+        "plugin:testing-library/react"
       ],
       "plugins": [
         "jest"
       ],
       "files": [
-        "applications/medusa/src/**/*.js"
+        "applications/medusa/src/**/*.spec.tsx",
+        "applications/medusa/src/**/*.spec.ts"
       ]
     }
   ],
   "extends": [
-    "plugin:flowtype/recommended",
-    "plugin:testing-library/recommended",
-    "plugin:testing-library/react",
-    "standard",
-    "standard-jsx"
+    "standard-with-typescript",
+    "standard-jsx",
+    "standard-react"
   ],
   "plugins": [
-    "flowtype",
     "relay",
     "testing-library"
   ],
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "babelOptions": {
       "configFile": "./applications/medusa/.babelrc"
     },
+    "project": [
+      "./tsconfig.json"
+    ],
     "ecmaFeatures": {
       "jsx": true
     },
@@ -50,18 +59,18 @@
     "relay/graphql-syntax": "error",
     "relay/compat-uses-vars": "warn",
     "relay/graphql-naming": "error",
-    "relay/generated-flow-types": "warn",
-    "relay/must-colocate-fragment-spreads": "warn",
+    "relay/generated-flow-types": "off",
+    "relay/must-colocate-fragment-spreads": "error",
     "relay/no-future-added-value": "warn",
     "relay/unused-fields": "warn",
-    "relay/hook-required-argument": "warn",
-    "flowtype/no-mixed": 2,
-    "flowtype/no-weak-types": [
-      2,
+    "relay/hook-required-argument": "error",
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "react/jsx-max-props-per-line": [
+      1,
       {
-        "any": true,
-        "Object": true,
-        "Function": true
+        "maximum": 1,
+        "when": "multiline"
       }
     ]
   },

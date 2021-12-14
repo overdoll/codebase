@@ -9,9 +9,11 @@ const expo = {
       projectRoot: '../../'
     }]
   ],
+  preset: 'ts-jest',
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
+    '^@//:assets(.*)$': '<rootDir>/src/assets$1',
     '\\.(scss|sass|css)$': 'identity-obj-proxy'
   },
   transform: {
@@ -21,7 +23,7 @@ const expo = {
     ]
   },
   testEnvironment: 'jest-environment-jsdom-sixteen',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
 }
 
 if (process.env.COVERAGE_OUTPUT_FILE) {

@@ -72,7 +72,8 @@ module.exports = {
 
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
-      '@//:artifacts': path.resolve(__dirname, 'src/__generated__')
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
+      '@//:assets': path.resolve(__dirname, 'src/assets')
     }
 
     if (opts.env.target === 'node') {

@@ -1,16 +1,11 @@
 version = 1
 
 test_patterns = [
-    "**/*.ispec.js",
-    "**/*.uspec.js",
     "**/*.spec.js",
     "**/*/*.spec.js",
-    "**/*/*.ispec.js",
-    "**/*/*.uspec.js",
     "**/__tests__/**",
     "tests/*_test.go",
     "**/*_test.go",
-    "applications/medusa/src/modules/utilities/__tests__/ErrorBoundary.uspec.js"
 ]
 
 exclude_patterns = [

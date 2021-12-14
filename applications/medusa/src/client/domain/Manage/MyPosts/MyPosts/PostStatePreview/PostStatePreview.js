@@ -54,12 +54,27 @@ export default function PostStatePreview ({ query }: Props): Node {
 
   const DisplayContentGrid = () => {
     return (
-      <SimpleGrid h='100%' spacing={0} columns={limitedContent.length > 1 ? 2 : 1}>
+      <SimpleGrid
+        h='100%'
+        spacing={0}
+        columns={limitedContent.length > 1 ? 2 : 1}
+      >
         {limitedContent.map((item, index) =>
-          <ResourceItem h='100%' key={index} type={item.type} urls={item.urls} />
+          <ResourceItem
+            h='100%'
+            key={index}
+            type={item.type}
+            urls={item.urls}
+          />
         )}
-        {data.content.length > 4 && (<Flex align='center' justify='center'>
-          <Heading color='gray.200' fontSize='lg'>
+        {data.content.length > 4 && (<Flex
+          align='center'
+          justify='center'
+                                     >
+          <Heading
+            color='gray.200'
+            fontSize='lg'
+          >
             +{data.content.length - limitedContent.length}
           </Heading>
         </Flex>)}
@@ -68,8 +83,14 @@ export default function PostStatePreview ({ query }: Props): Node {
   }
 
   return (
-    <Flex h='100%' direction='column'>
-      <Flex direction='column' h='78%'>
+    <Flex
+      h='100%'
+      direction='column'
+    >
+      <Flex
+        direction='column'
+        h='78%'
+      >
         <ClickableBox
           borderBottomLeftRadius={0}
           borderBottomRightRadius={0}
@@ -79,9 +100,21 @@ export default function PostStatePreview ({ query }: Props): Node {
           position='relative'
           h='100%'
         >
-          <Flex h='100%' position='relative' direction='column' justify='space-between'>
+          <Flex
+            h='100%'
+            position='relative'
+            direction='column'
+            justify='space-between'
+          >
             <DisplayContentGrid />
-            <Flex bg='dimmers.400' h='100%' w='100%' justify='center' align='center' position='absolute'>
+            <Flex
+              bg='dimmers.400'
+              h='100%'
+              w='100%'
+              justify='center'
+              align='center'
+              position='absolute'
+            >
               <CircularProgress
                 color={score >= 100 ? 'green.500' : 'primary.500'}
                 size={28}
@@ -89,7 +122,10 @@ export default function PostStatePreview ({ query }: Props): Node {
                 thickness={6}
                 value={score}
               >
-                <CircularProgressLabel color='gray.00' fontSize='xl'>
+                <CircularProgressLabel
+                  color='gray.00'
+                  fontSize='xl'
+                >
                   {score}%
                 </CircularProgressLabel>
               </CircularProgress>
@@ -97,14 +133,22 @@ export default function PostStatePreview ({ query }: Props): Node {
           </Flex>
         </ClickableBox>
       </Flex>
-      <Flex align='center' justify='flex-end' h='22%'>
+      <Flex
+        align='center'
+        justify='flex-end'
+        h='22%'
+      >
         <SmallBackgroundBox
           borderTopLeftRadius={0}
           borderTopRightRadius={0}
           h='100%'
           w='100%'
         >
-          <Flex h='100%' align='center' justify='flex-end'>
+          <Flex
+            h='100%'
+            align='center'
+            justify='flex-end'
+          >
             <SmallMenuButton>
               <SmallMenuItem
                 icon={DeleteBin}

@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { STEPS } from '../../../constants/constants';
-import { graphql } from 'react-relay/hooks';
-import type { Dispatch, State } from '@//:types/upload';
-import { Box, Flex, Stack } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
-import FlowHeader from './FlowHeader/FlowHeader';
-import FlowSteps from './FlowSteps/FlowSteps';
-import { useFragment } from 'react-relay';
-import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql';
+import type { Node } from 'react'
+import { STEPS } from '../../../constants/constants'
+import { graphql } from 'react-relay/hooks'
+import type { Dispatch, State } from '../../../../../../../../types/upload'
+import { Box, Flex, Stack } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import FlowHeader from './FlowHeader/FlowHeader'
+import FlowSteps from './FlowSteps/FlowSteps'
+import { useFragment } from 'react-relay'
+import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 
-import FlowFooter from './FlowFooter/FlowFooter';
+import FlowFooter from './FlowFooter/FlowFooter'
 
 type Props = {
   uppy: Uppy,

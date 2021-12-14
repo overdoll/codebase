@@ -1,22 +1,22 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect, useState } from 'react';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import { Alert, AlertDescription, AlertIcon, Flex, Stack } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import File from './File/File';
-import { graphql, useMutation } from 'react-relay/hooks';
-import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql';
-import type ProcessUploadsMutation from '@//:artifacts/ProcessUploadsMutation.graphql';
-import { useFragment } from 'react-relay';
-import { EVENTS } from '../../../../../../constants/constants';
-import Button from '@//:modules/form/Button';
-import Icon from '@//:modules/content/Icon/Icon';
-import FilePicker from '../../../../../../components/FilePicker/FilePicker';
-import { FileUpload } from '../../../../../../../../../../../assets/icons/interface';
+import type { Node } from 'react'
+import { useEffect, useState } from 'react'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../../types/upload'
+import { Alert, AlertDescription, AlertIcon, Flex, Stack } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import File from './File/File'
+import { graphql, useMutation } from 'react-relay/hooks'
+import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql'
+import type ProcessUploadsMutation from '@//:artifacts/ProcessUploadsMutation.graphql'
+import { useFragment } from 'react-relay'
+import { EVENTS } from '../../../../../../constants/constants'
+import Button from '@//:modules/form/Button/Button'
+import Icon from '@//:modules/content/Icon/Icon'
+import FilePicker from '../../../../../../components/FilePicker/FilePicker'
+import { FileUpload } from '@//:assets/icons/interface'
 
 type Props = {
   uppy: Uppy,
@@ -59,7 +59,7 @@ const ProcessUploadsMutationGQL = graphql`
 export default function ProcessUploads ({ state, dispatch, uppy, query }: Props): Node {
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
-  const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
+  const [updateContent, isUpdatingContent] = useMutation < ProcessUploadsMutation > (ProcessUploadsMutationGQL)
 
   const [t] = useTranslation('manage')
 
@@ -163,8 +163,11 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
         {state.files.map((file, index) => {
           return (
             <File
-              disabled={isUpdatingContent} key={index} uppy={uppy}
-              state={state} file={file}
+              disabled={isUpdatingContent}
+              key={index}
+              uppy={uppy}
+              state={state}
+              file={file}
               dispatch={dispatch}
             />
           )

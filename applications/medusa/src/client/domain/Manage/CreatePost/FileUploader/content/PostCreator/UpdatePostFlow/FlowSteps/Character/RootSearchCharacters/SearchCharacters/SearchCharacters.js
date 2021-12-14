@@ -1,21 +1,21 @@
 /**
  * @flow
  */
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import type SearchCharactersQuery from '@//:artifacts/SearchCharactersQuery.graphql';
-import { usePaginationFragment } from 'react-relay';
-import type { SearchCharactersFragment$key } from '@//:artifacts/SearchCharactersFragment.graphql';
-import { useTranslation } from 'react-i18next';
-import { removeNode } from '@//:modules/utilities/functions';
-import { Flex, Text } from '@chakra-ui/react';
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import type SearchCharactersQuery from '@//:artifacts/SearchCharactersQuery.graphql'
+import { usePaginationFragment } from 'react-relay'
+import type { SearchCharactersFragment$key } from '@//:artifacts/SearchCharactersFragment.graphql'
+import { useTranslation } from 'react-i18next'
+import { removeNode } from '@//:modules/support'
+import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
   LargeGridItem,
   Selector,
-  SelectorTextOverlay,
-} from '../../../../../../../../../../../components/ContentSelection';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
-import { ClickableBox } from '@//:modules/content/PageLayout';
+  SelectorTextOverlay
+} from '../../../../../../../../../../../components/ContentSelection'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   selected: Array<string>,
@@ -66,13 +66,13 @@ const SearchCharactersFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery<SearchCharactersQuery>(
+  const queryData = useLazyLoadQuery < SearchCharactersQuery > (
     SearchCharactersQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCharactersFragment$key>(
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCharactersFragment$key > (
     SearchCharactersFragmentGQL,
     queryData
   )
@@ -103,7 +103,9 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {characters.map((item, index) => (
           <LargeGridItem key={index}>
             <Selector
-              onSelect={onChangeSelection} selected={selected} id={item.id}
+              onSelect={onChangeSelection}
+              selected={selected}
+              id={item.id}
             >
               <SelectorTextOverlay label={item.name} description={item.series.title}>
                 <ResourceItem

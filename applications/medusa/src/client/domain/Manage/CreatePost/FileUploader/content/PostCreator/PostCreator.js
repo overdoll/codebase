@@ -1,24 +1,24 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Suspense } from 'react';
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import type { Dispatch, State } from '@//:types/upload';
-import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
-import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow';
-import { StringParam, useQueryParam } from 'use-query-params';
-import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines';
-import Button from '@//:modules/form/Button';
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout';
-import CreatePostFlow from './CreatePostFlow/CreatePostFlow';
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback';
+import type { Node } from 'react'
+import { Suspense } from 'react'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import type { Dispatch, State } from '../../../../../../../types/upload'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
+import { StringParam, useQueryParam } from 'use-query-params'
+import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
+import Button from '@//:modules/form/Button/Button'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 
 type Props = {
   uppy: Uppy,
@@ -39,7 +39,7 @@ const Query = graphql`
 export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-  const data = useLazyLoadQuery<PostCreatorQuery>(
+  const data = useLazyLoadQuery < PostCreatorQuery > (
     Query,
     { reference: postReference || '' }
   )
@@ -104,7 +104,10 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
         )}
       >
         <UpdatePostFlow
-          uppy={uppy} state={state} dispatch={dispatch} query={data}
+          uppy={uppy}
+          state={state}
+          dispatch={dispatch}
+          query={data}
         />
       </ErrorBoundary>
     </Suspense>

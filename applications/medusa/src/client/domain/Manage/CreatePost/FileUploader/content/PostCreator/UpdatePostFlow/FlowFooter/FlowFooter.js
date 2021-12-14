@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Flex, Spacer } from '@chakra-ui/react';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import type { Uppy } from '@uppy/core';
-import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton';
-import FlowForwardButton from './FlowForwardButton/FlowForwardButton';
-import Button from '@//:modules/form/Button';
-import { graphql } from 'react-relay/hooks';
-import type { FlowFooterFragment$key } from '@//:artifacts/FlowFooterFragment.graphql';
-import { useFragment } from 'react-relay';
+import type { Node } from 'react'
+import type { Dispatch, State } from '../../../../../../../../../types/upload'
+import { Flex, Spacer } from '@chakra-ui/react'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import type { Uppy } from '@uppy/core'
+import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
+import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
+import Button from '@//:modules/form/Button/Button'
+import { graphql } from 'react-relay/hooks'
+import type { FlowFooterFragment$key } from '@//:artifacts/FlowFooterFragment.graphql'
+import { useFragment } from 'react-relay'
 
 type Props = {
   uppy: Uppy,
@@ -45,7 +45,9 @@ export default function FlowFooter ({ state, uppy, dispatch, query }: Props): No
   }
   return (
     <Button
-      colorScheme='gray' size='lg' onClick={() => dispatch({
+      colorScheme='gray'
+      size='lg'
+      onClick={() => dispatch({
         type: EVENTS.CLEANUP,
         value: INITIAL_STATE
       })}

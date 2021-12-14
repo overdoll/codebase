@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Content as ContentType } from '@//:types/upload';
-import { CloseButton, Flex, Heading } from '@chakra-ui/react';
-import { Draggable } from 'react-beautiful-dnd';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
+import type { Node } from 'react'
+import type { Content as ContentType } from '../../../../../../../../../../../../types/upload'
+import { CloseButton, Flex, Heading } from '@chakra-ui/react'
+import { Draggable } from 'react-beautiful-dnd'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 
 type Props = {
   content: Array<ContentType>,

@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react';
 import { useEffect, useReducer } from 'react';
-import type { Action, State } from '@//:types/upload';
+import type { Action, State } from '../../../../../types/upload';
 import { EVENTS, INITIAL_STATE } from './constants/constants';
 import reducer from './reducer';
 import useUpload from './hooks';

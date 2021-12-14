@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "sourceMap": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext",
+      "ES6"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": [
+      "react-dom/next",
+      "webpack-env",
+      "jest"
+    ],
+    "paths": {
+      "@//:modules/*": [
+        "applications/medusa/src/modules/*"
+      ],
+      "@//:artifacts/*": [
+        "applications/medusa/src/__generated__/*"
+      ],
+      "@//:types/*": [
+        "applications/medusa/src/types/*"
+      ],
+      "@//:assets/*": [
+        "applications/medusa/src/assets/*"
+      ]
+    }
+  },
+  "include": [
+    "./applications/medusa/**/*"
+  ],
+  "exclude": [
+    "./applications/medusa/.nyc_output",
+    "./applications/medusa/build",
+    "./applications/medusa/coverage",
+    "./applications/medusa/cache",
+    "./applications/medusa/cypress",
+    "node_modules"
+  ]
+}

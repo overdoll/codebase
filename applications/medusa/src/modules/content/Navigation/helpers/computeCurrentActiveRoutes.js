@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-
 import importedRoutes from '../routing/navigation'
 
 // Determine if route is valid by calling the middleware function in the route
@@ -25,7 +21,10 @@ const groupByKey = (object, key) => {
 
 // Function for omitting a key from an object
 const omitKeyFromObject = (key, object) => {
-  const { [key]: omit, ...rest } = object
+  const {
+    [key]: omit,
+    ...rest
+  } = object
   return rest
 }
 
@@ -52,7 +51,9 @@ export default function computeCurrentActiveRoutes ({ environment }) {
   // Filter for all disabled routes
   const navigationDisabled = (routes) => {
     const disabled = routes.filter((item) => item.hidden)
-    return disabled.map((item) => { return item.path }
+    return disabled.map((item) => {
+      return item.path
+    }
     )
   }
 

@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
-import { Stack } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import PostGalleryContent from '../../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent';
-import PostBrand from '../../../../../../../../../components/Posts/PostBrand/PostBrand';
+import type { Node } from 'react'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Stack } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import PostGalleryContent from '../../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostBrand from '../../../../../../../../../components/Posts/PostBrand/PostBrand'
 
 type Props = {
   uppy: Uppy,
