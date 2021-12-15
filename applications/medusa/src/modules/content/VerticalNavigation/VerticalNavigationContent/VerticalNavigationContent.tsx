@@ -1,5 +1,5 @@
 import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '../../PageLayout'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   title: string
 }
 
-export default function Sidebar (props: Props): JSX.Element {
+export default function VerticalNavigationContent (props: Props): JSX.Element {
   return (
     <>
       <Center

@@ -1,4 +1,4 @@
-import { CogDouble, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
+import { CogDouble, ContentPens, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { useTranslation } from 'react-i18next'
@@ -50,6 +50,11 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         {isLoggedIn && (
           <>
             <DropdownMenuButtonProfile queryRef={queryRef} />
+            <HorizontalNavigationDropdownMenu.Button
+              to='/manage/my_posts'
+              icon={ContentPens}
+              label={t('menu.manage')}
+            />
             <HorizontalNavigationDropdownMenu.Button
               to='/settings/profile'
               icon={CogDouble}

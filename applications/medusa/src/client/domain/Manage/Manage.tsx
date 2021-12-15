@@ -1,35 +1,34 @@
 import { Redirect } from 'react-router'
 import { useLocation } from '@//:modules/routing'
-import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
-import { FileMultiple, TimeHourGlass } from '@//:assets/icons/navigation'
+import { ContentBookEdit, SettingHammer } from '@//:assets/icons/navigation'
 import { useTranslation } from 'react-i18next'
 
 interface Props {
-  children: ReactNode
+  children: Node
 }
 
-export default function Moderation ({ children }: Props): JSX.Element {
+export default function Manage ({ children }: Props): JSX.Element {
   const location = useLocation()
 
   const [t] = useTranslation('navigation')
 
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content title={t('sidebar.mod.title')}>
+      <VerticalNavigation.Content title={t('sidebar.manage.title')}>
         <VerticalNavigation.Button
-          to='/moderation/queue'
-          title={t('sidebar.mod.queue')}
-          icon={FileMultiple}
+          to='/manage/my_posts'
+          title={t('sidebar.manage.my_posts')}
+          icon={ContentBookEdit}
         />
         <VerticalNavigation.Button
-          to='/moderation/history'
-          title={t('sidebar.mod.history')}
-          icon={TimeHourGlass}
+          to='/manage/brands'
+          title={t('sidebar.manage.brand')}
+          icon={SettingHammer}
         />
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
-        {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}
+        {location.pathname === '/manage' ? <Redirect to='/manage/posts' /> : children}
       </VerticalNavigation.Page>
     </VerticalNavigation>
   )
