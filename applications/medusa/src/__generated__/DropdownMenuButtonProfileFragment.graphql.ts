@@ -4,15 +4,15 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type QuickAccessMenuProfileFragment = {
+export type DropdownMenuButtonProfileFragment = {
     readonly username: string;
     readonly avatar: unknown;
-    readonly " $refType": "QuickAccessMenuProfileFragment";
+    readonly " $refType": "DropdownMenuButtonProfileFragment";
 };
-export type QuickAccessMenuProfileFragment$data = QuickAccessMenuProfileFragment;
-export type QuickAccessMenuProfileFragment$key = {
-    readonly " $data"?: QuickAccessMenuProfileFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"QuickAccessMenuProfileFragment">;
+export type DropdownMenuButtonProfileFragment$data = DropdownMenuButtonProfileFragment;
+export type DropdownMenuButtonProfileFragment$key = {
+    readonly " $data"?: DropdownMenuButtonProfileFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment">;
 };
 
 
@@ -21,7 +21,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "QuickAccessMenuProfileFragment",
+  "name": "DropdownMenuButtonProfileFragment",
   "selections": [
     {
       "alias": null,
@@ -41,5 +41,5 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'e9868fc6e3c80fa6b6af02c2c198fb54';
+(node as any).hash = '291730f3ad925ce9c8fe367b212efc9e';
 export default node;

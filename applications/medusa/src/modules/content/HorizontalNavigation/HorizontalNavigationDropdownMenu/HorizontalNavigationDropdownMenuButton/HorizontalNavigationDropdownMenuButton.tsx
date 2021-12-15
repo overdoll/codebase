@@ -14,7 +14,7 @@ interface Props {
   children?: ReactNode
 }
 
-export default function HorizontalNavigationMenuButton ({
+export default function HorizontalNavigationDropdownMenuButton ({
   label,
   icon,
   onClick,
@@ -57,12 +57,10 @@ export default function HorizontalNavigationMenuButton ({
                 {label}
               </Heading>
             )}
-            {((icon == null) && label == null) && children}
+            {(icon == null) && children}
           </Flex>
         </ClickableBox>
       )}
-
     </NavLink>
-
   )
 }

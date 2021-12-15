@@ -20,7 +20,8 @@ const RootQueryGQL = graphql`
     viewer {
       isModerator
       isStaff
-      ...QuickAccessMenuProfileFragment
+      ...DropdownMenuButtonProfileFragment
+      ...QuickAccessButtonProfileFragment
       ...LockedAccountBannerFragment
     }
   }

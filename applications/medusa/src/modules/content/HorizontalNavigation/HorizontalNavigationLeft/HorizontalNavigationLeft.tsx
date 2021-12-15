@@ -8,10 +8,6 @@ interface Props {
 export default function HorizontalNavigationLeft ({ children }: Props): JSX.Element {
   return (
     <Flex
-      display={{
-        base: 'none',
-        md: 'flex'
-      }}
       left={0}
       ml={3}
     >

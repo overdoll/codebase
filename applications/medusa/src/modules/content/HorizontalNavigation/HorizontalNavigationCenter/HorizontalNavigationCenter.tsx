@@ -26,13 +26,12 @@ export default function HorizontalNavigationCenter ({ children }: Props): JSX.El
           {children}
         </HStack>
       </RenderOnDesktop>
-      <RenderOnMobile w='100%'>
-        <Flex
-          w='100%'
-          justify='space-evenly'
+      <RenderOnMobile>
+        <HStack
+          spacing={7}
         >
           {children}
-        </Flex>
+        </HStack>
       </RenderOnMobile>
     </Flex>
   )

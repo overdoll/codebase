@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e5fd753a586b7e9dc001d9ccdec844bb */
+/* @relayHash 5f002172202e9ae46f16bebbf914eaf3 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,7 +10,7 @@ export type RootQueryResponse = {
     readonly viewer: {
         readonly isModerator: boolean;
         readonly isStaff: boolean;
-        readonly " $fragmentRefs": FragmentRefs<"QuickAccessMenuProfileFragment" | "LockedAccountBannerFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment" | "LockedAccountBannerFragment">;
     } | null;
 };
 export type RootQuery = {
@@ -25,10 +25,16 @@ query RootQuery {
   viewer {
     isModerator
     isStaff
-    ...QuickAccessMenuProfileFragment
+    ...DropdownMenuButtonProfileFragment
+    ...QuickAccessButtonProfileFragment
     ...LockedAccountBannerFragment
     id
   }
+}
+
+fragment DropdownMenuButtonProfileFragment on Account {
+  username
+  avatar
 }
 
 fragment LockedAccountBannerFragment on Account {
@@ -38,8 +44,7 @@ fragment LockedAccountBannerFragment on Account {
   }
 }
 
-fragment QuickAccessMenuProfileFragment on Account {
-  username
+fragment QuickAccessButtonProfileFragment on Account {
   avatar
 }
 */
@@ -79,7 +84,12 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "QuickAccessMenuProfileFragment"
+            "name": "DropdownMenuButtonProfileFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "QuickAccessButtonProfileFragment"
           },
           {
             "args": null,
@@ -161,7 +171,7 @@ return {
     ]
   },
   "params": {
-    "id": "e5fd753a586b7e9dc001d9ccdec844bb",
+    "id": "5f002172202e9ae46f16bebbf914eaf3",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -169,5 +179,5 @@ return {
   }
 };
 })();
-(node as any).hash = '620e03a45c45502be4447d26def82e81';
+(node as any).hash = '00440f75efef7eea73caa733c28e90d3';
 export default node;

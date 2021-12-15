@@ -1,24 +1,24 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 13f63aef0ada507d83aafe9e471b0b12 */
+/* @relayHash 9b3058588d919a9986393650f19533cd */
 
 import { ConcreteRequest } from "relay-runtime";
-export type QuickAccessMenuLogoutMutationVariables = {};
-export type QuickAccessMenuLogoutMutationResponse = {
+export type DropdownMenuButtonLogoutMutationVariables = {};
+export type DropdownMenuButtonLogoutMutationResponse = {
     readonly revokeAccountAccess: {
         readonly revokedAccountId: string;
     } | null;
 };
-export type QuickAccessMenuLogoutMutation = {
-    readonly response: QuickAccessMenuLogoutMutationResponse;
-    readonly variables: QuickAccessMenuLogoutMutationVariables;
+export type DropdownMenuButtonLogoutMutation = {
+    readonly response: DropdownMenuButtonLogoutMutationResponse;
+    readonly variables: DropdownMenuButtonLogoutMutationVariables;
 };
 
 
 
 /*
-mutation QuickAccessMenuLogoutMutation {
+mutation DropdownMenuButtonLogoutMutation {
   revokeAccountAccess {
     revokedAccountId
   }
@@ -51,7 +51,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "QuickAccessMenuLogoutMutation",
+    "name": "DropdownMenuButtonLogoutMutation",
     "selections": (v0/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -60,17 +60,17 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "QuickAccessMenuLogoutMutation",
+    "name": "DropdownMenuButtonLogoutMutation",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "13f63aef0ada507d83aafe9e471b0b12",
+    "id": "9b3058588d919a9986393650f19533cd",
     "metadata": {},
-    "name": "QuickAccessMenuLogoutMutation",
+    "name": "DropdownMenuButtonLogoutMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = '7dadec09c322895a440bd36bb0f80690';
+(node as any).hash = '2e4a3e63e5df325dc6af7ebf702a6aa7';
 export default node;

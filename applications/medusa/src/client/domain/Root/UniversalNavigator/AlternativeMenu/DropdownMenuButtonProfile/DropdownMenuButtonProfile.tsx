@@ -1,30 +1,29 @@
 import { useTranslation } from 'react-i18next'
 import { Avatar, Flex, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
-import HorizontalNavigationMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationMenu/HorizontalNavigationMenu'
-import { QuickAccessMenuProfileFragment$key } from '@//:artifacts/QuickAccessMenuProfileFragment.graphql'
+import HorizontalNavigationDropdownMenu
+  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 
 interface Props {
-  queryRef: QuickAccessMenuProfileFragment$key
+  queryRef: DropdownMenuButtonProfileFragment$key | null
 }
 
-const ProfileButtonFragmentGQL = graphql`
-  fragment QuickAccessMenuProfileFragment on Account {
+const DropdownMenuButtonProfileGQL = graphql`
+  fragment DropdownMenuButtonProfileFragment on Account {
     username
     avatar
   }
 `
 
-export default function QuickAccessMenuProfile ({ queryRef }: Props): JSX.Element {
+export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Element {
   const [t] = useTranslation('navigation')
 
-  const data = useFragment(ProfileButtonFragmentGQL, queryRef)
+  const data = useFragment(DropdownMenuButtonProfileGQL, queryRef)
 
   return (
-    <HorizontalNavigationMenu.Button
+    <HorizontalNavigationDropdownMenu.Button
       to='/profile'
-      label={t('nav.profile')}
     >
       <Flex
         my={1}
@@ -54,6 +53,6 @@ export default function QuickAccessMenuProfile ({ queryRef }: Props): JSX.Elemen
           </Text>
         </Flex>
       </Flex>
-    </HorizontalNavigationMenu.Button>
+    </HorizontalNavigationDropdownMenu.Button>
   )
 }

@@ -7,7 +7,7 @@ import NavLink from '../../../routing/NavLink'
 interface Props extends HTMLChakraProps<any> {
   icon?: FunctionComponent<any>
   label: string
-  exact: boolean
+  exact?: boolean
   to: string
   onClick?: () => void
   children?: ReactNode
@@ -22,7 +22,7 @@ export default function HorizontalNavigationButton ({
   h,
   as,
   to,
-  exact
+  exact = false
 }: Props): JSX.Element {
   return (
     <NavLink
@@ -67,6 +67,5 @@ export default function HorizontalNavigationButton ({
         </Tooltip>
       )}
     </NavLink>
-
   )
 }

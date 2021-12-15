@@ -37,7 +37,7 @@ export default function useHistoryDisclosure (): HistoryDisclosure {
   const onClose = (): void => {
     const currentHistory = history.location
     const state = currentHistory.state as HistoryDisclosureState
-    if (state.hasModal === true) {
+    if (state?.hasModal === true) {
       history.goBack()
     }
     onCloseAction()

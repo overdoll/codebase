@@ -1,11 +1,11 @@
-import { PreloadedQuery } from 'react-relay/hooks'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import SiteLinkLogo from './SiteLinkLogo/SiteLinkLogo'
-import { RootQuery } from '@//:artifacts/RootQuery.graphql'
-import QuickAccessMenu from './QuickAccessMenu/QuickAccessMenu'
-import DryMenu from './DryMenu/DryMenu'
+import MainMenu from './MainMenu/MainMenu'
 import { useLocation } from '@//:modules/routing'
 import getBasePath from '@//:modules/routing/getBasePath'
+import { PreloadedQuery } from 'react-relay/hooks'
+import { RootQuery } from '@//:artifacts/RootQuery.graphql'
+import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
 
 interface Props {
   queryRef: PreloadedQuery<RootQuery>
@@ -29,11 +29,11 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
       </HorizontalNavigation.Left>
       {!isHidden && (
         <HorizontalNavigation.Center>
-          <DryMenu />
+          <MainMenu />
         </HorizontalNavigation.Center>
       )}
       <HorizontalNavigation.Right>
-        <QuickAccessMenu queryRef={queryRef} />
+        <AlternativeMenu queryRef={queryRef} />
       </HorizontalNavigation.Right>
     </HorizontalNavigation>
   )

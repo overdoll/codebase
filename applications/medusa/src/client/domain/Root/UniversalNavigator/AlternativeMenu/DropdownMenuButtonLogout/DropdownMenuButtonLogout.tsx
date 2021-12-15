@@ -3,18 +3,18 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
-import HorizontalNavigationMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationMenu/HorizontalNavigationMenu'
+import HorizontalNavigationDropdownMenu
+  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 
 const LogoutButtonGQL = graphql`
-  mutation QuickAccessMenuLogoutMutation {
+  mutation DropdownMenuButtonLogoutMutation {
     revokeAccountAccess {
       revokedAccountId
     }
   }
 `
 
-export default function QuickAccessMenuLogout (): JSX.Element {
+export default function DropdownMenuButtonLogout (): JSX.Element {
   const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
 
   const [t] = useTranslation('navigation')
@@ -56,7 +56,7 @@ export default function QuickAccessMenuLogout (): JSX.Element {
   const notify = useToast()
 
   return (
-    <HorizontalNavigationMenu.Button
+    <HorizontalNavigationDropdownMenu.Button
       onClick={() => onLogout()}
       isDisabled={isLoggingOut}
       color='orange.300'

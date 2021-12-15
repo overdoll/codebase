@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import useAbility from '@//:modules/authorization/useAbility'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 
-export default function DryMenu (): JSX.Element {
+export default function MainMenu (): JSX.Element {
   const [t] = useTranslation('navigation')
 
   const ability = useAbility()

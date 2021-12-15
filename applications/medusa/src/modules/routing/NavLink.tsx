@@ -2,9 +2,9 @@ import { useRoutingContext } from '@//:modules/routing/RoutingContext'
 import { matchPath } from 'react-router'
 import Link from './Link'
 import { createLocation } from 'history'
-import getBasePath from '@//:modules/content/HorizontalNavigation/helpers/getBasePath'
 import { useLocation } from '@//:modules/routing/useLocation'
 import { ReactNode } from 'react'
+import getBasePath from './getBasePath'
 
 interface ChildrenCallable {
   isActive: boolean
