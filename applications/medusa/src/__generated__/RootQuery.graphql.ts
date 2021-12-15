@@ -1,22 +1,16 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0adbc04134718f7c3ac1e7acd83acb03 */
+/* @relayHash e5fd753a586b7e9dc001d9ccdec844bb */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type AccountLockReason = "POST_INFRACTION" | "%future added value";
 export type RootQueryVariables = {};
 export type RootQueryResponse = {
     readonly viewer: {
-        readonly id: string;
         readonly isModerator: boolean;
         readonly isStaff: boolean;
-        readonly lock: {
-            readonly reason: AccountLockReason;
-            readonly expires: unknown;
-        } | null;
-        readonly " $fragmentRefs": FragmentRefs<"NavigationFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"QuickAccessMenuProfileFragment" | "LockedAccountBannerFragment">;
     } | null;
 };
 export type RootQuery = {
@@ -29,28 +23,23 @@ export type RootQuery = {
 /*
 query RootQuery {
   viewer {
-    id
-    ...NavigationFragment
     isModerator
     isStaff
-    lock {
-      reason
-      expires
-    }
+    ...QuickAccessMenuProfileFragment
+    ...LockedAccountBannerFragment
+    id
   }
 }
 
-fragment NavigationFragment on Account {
-  ...SimpleProfileButtonFragment
-  ...ProfileButtonFragment
+fragment LockedAccountBannerFragment on Account {
+  lock {
+    reason
+    expires
+  }
 }
 
-fragment ProfileButtonFragment on Account {
+fragment QuickAccessMenuProfileFragment on Account {
   username
-  avatar
-}
-
-fragment SimpleProfileButtonFragment on Account {
   avatar
 }
 */
@@ -60,46 +49,14 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "isModerator",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "isStaff",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AccountLock",
-  "kind": "LinkedField",
-  "name": "lock",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reason",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "expires",
-      "storageKey": null
-    }
-  ],
   "storageKey": null
 };
 return {
@@ -119,12 +76,15 @@ return {
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "NavigationFragment"
+            "name": "QuickAccessMenuProfileFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -148,6 +108,14 @@ return {
         "plural": false,
         "selections": [
           (v0/*: any*/),
+          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -158,20 +126,42 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "username",
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reason",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
-          (v1/*: any*/),
-          (v2/*: any*/),
-          (v3/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "0adbc04134718f7c3ac1e7acd83acb03",
+    "id": "e5fd753a586b7e9dc001d9ccdec844bb",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -179,5 +169,5 @@ return {
   }
 };
 })();
-(node as any).hash = '042a913a555a0211a5b396045227a1c5';
+(node as any).hash = '620e03a45c45502be4447d26def82e81';
 export default node;
