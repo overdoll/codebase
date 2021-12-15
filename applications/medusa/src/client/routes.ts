@@ -1,8 +1,25 @@
 import JSResource from '@//:modules/operations/JSResource'
 import type { Route } from '@//:modules/routing/router'
-import defineAbility from '@//:modules/support/defineAbility/defineAbility'
-import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
+import defineAbility from '@//:modules/authorization/defineAbility'
 import { Ability } from '@casl/ability'
+import { RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
+
+// hacky way to get the current viewer
+function getUserFromEnvironment (environment): RootQueryResponse['viewer'] | null {
+  const viewerRef = environment
+    .getStore()
+    .getSource()
+    .get('client:root')
+
+  if (viewerRef.viewer != null) {
+    return environment
+      .getStore()
+      .getSource()
+      .get(viewerRef.viewer.__ref)
+  }
+
+  return null
+}
 
 const getAbilityFromUser = (environment): Ability<any> => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -387,11 +404,7 @@ const routes: Route[] = [
               ({ environment }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('manage', 'pendingPosts')) {
-                  return true
-                }
-
-                return false
+                return ability.can('manage', 'pendingPosts')
               }
             ],
             prepare: () => {

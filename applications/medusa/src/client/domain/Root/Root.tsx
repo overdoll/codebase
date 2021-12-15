@@ -1,12 +1,12 @@
-import { ReactNode, Suspense, useMemo } from 'react'
+import { ReactNode } from 'react'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
-import Navigation from '../../../modules/content/Navigation/Navigation'
-import defineAbility from '@//:modules/support/defineAbility/defineAbility'
-import { AbilityContext } from './helpers/AbilityContext'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import LockedAccountBanner from './LockedAccountBanner/LockedAccountBanner'
+import PageContents from './PageContents/PageContents'
+import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
+import AbilityProvider from '@//:modules/authorization/AbilityProvider'
 
 interface Props {
   prepared: {
@@ -18,14 +18,11 @@ interface Props {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
-      id
-      ...NavigationFragment
       isModerator
       isStaff
-      lock {
-        reason
-        expires
-      }
+      ...DropdownMenuButtonProfileFragment
+      ...QuickAccessButtonProfileFragment
+      ...LockedAccountBannerFragment
     }
   }
 `
@@ -36,20 +33,18 @@ export default function Root (props: Props): JSX.Element {
     props.prepared.stateQuery
   )
 
-  const ability = useMemo(() => defineAbility(data?.viewer), [data?.viewer])
-
   return (
     <>
       <Helmet
         title='overdoll'
       />
-      <AbilityContext.Provider value={ability}>
-        <Navigation query={data?.viewer}>
-          <Suspense fallback={<CenteredSpinner />}>
-            {props.children}
-          </Suspense>
-        </Navigation>
-      </AbilityContext.Provider>
+      <AbilityProvider data={data}>
+        <LockedAccountBanner queryRef={data?.viewer} />
+        <UniversalNavigator queryRef={data?.viewer} />
+        <PageContents>
+          {props.children}
+        </PageContents>
+      </AbilityProvider>
     </>
   )
 }
