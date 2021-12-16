@@ -1,11 +1,11 @@
-import Link from '@//:modules/routing/Link'
+import Link from '../Link'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import JSResource from '@//:modules/operations/JSResource'
+import JSResource from '../../operations/JSResource'
 import { createMockEnvironment } from 'relay-test-utils'
-import { createClientRouter } from '@//:modules/routing/router'
+import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
-import RoutingContext from '@//:modules/routing/RoutingContext'
+import RoutingContext from '../RoutingContext'
 import RouterRenderer from '../RouteRenderer'
 
 // components to help with testing

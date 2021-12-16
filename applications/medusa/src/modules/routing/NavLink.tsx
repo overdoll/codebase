@@ -1,8 +1,8 @@
-import { useRoutingContext } from '@//:modules/routing/RoutingContext'
+import { useRoutingContext } from './RoutingContext'
 import { matchPath } from 'react-router'
 import Link from './Link'
 import { createLocation } from 'history'
-import { useLocation } from '@//:modules/routing/useLocation'
+import { useLocation } from './useLocation'
 import { ReactNode } from 'react'
 import getBasePath from './getBasePath'
 

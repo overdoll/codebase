@@ -1,16 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5f002172202e9ae46f16bebbf914eaf3 */
+/* @relayHash 75c46edf798defcfe53af01cba26361f */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type RootQueryVariables = {};
 export type RootQueryResponse = {
     readonly viewer: {
-        readonly isModerator: boolean;
-        readonly isStaff: boolean;
-        readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment" | "LockedAccountBannerFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment" | "LockedAccountBannerFragment">;
     } | null;
 };
 export type RootQuery = {
@@ -23,13 +21,20 @@ export type RootQuery = {
 /*
 query RootQuery {
   viewer {
-    isModerator
-    isStaff
+    ...AccountAuthorizerFragment
     ...DropdownMenuButtonProfileFragment
     ...QuickAccessButtonProfileFragment
     ...LockedAccountBannerFragment
     id
   }
+}
+
+fragment AccountAuthorizerFragment on Account {
+  lock {
+    __typename
+  }
+  isModerator
+  isStaff
 }
 
 fragment DropdownMenuButtonProfileFragment on Account {
@@ -49,22 +54,7 @@ fragment QuickAccessButtonProfileFragment on Account {
 }
 */
 
-const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isStaff",
-  "storageKey": null
-};
-return {
+const node: ConcreteRequest = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -79,8 +69,11 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountAuthorizerFragment"
+          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -117,22 +110,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "username",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "avatar",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -141,6 +118,13 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -162,6 +146,34 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "isModerator",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "avatar",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "id",
             "storageKey": null
           }
@@ -171,13 +183,12 @@ return {
     ]
   },
   "params": {
-    "id": "5f002172202e9ae46f16bebbf914eaf3",
+    "id": "75c46edf798defcfe53af01cba26361f",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
-})();
-(node as any).hash = '00440f75efef7eea73caa733c28e90d3';
+(node as any).hash = 'b9f7191f62c533b774b9bf3bd05f0d6a';
 export default node;

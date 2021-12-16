@@ -1,8 +1,5 @@
-/**
- * @flow
- */
 import { MenuItem, Text } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import { Icon } from '../../../../index'
 import { FunctionComponent } from 'react'
 
 interface Props {

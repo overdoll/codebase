@@ -6,7 +6,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
 
 interface Props {
-  queryRef: LockedAccountBannerFragment$key
+  queryRef: LockedAccountBannerFragment$key | null
 }
 
 const LockedAccountBannerGQL = graphql`

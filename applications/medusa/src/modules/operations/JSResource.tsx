@@ -5,7 +5,8 @@
  * must have stored the previous result somewhere.
  *
  */
-import CanUseDOM from '@//:modules/operations/CanUseDOM'
+
+import CanUseDOM from './CanUseDOM'
 
 const resourceMap = new Map()
 
@@ -16,7 +17,7 @@ type Loader = () => Promise<any>
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: Error | null
+  _error: null
   _loader: Loader
   _promise: Promise<string> | null
   _result: JSX.Element | null

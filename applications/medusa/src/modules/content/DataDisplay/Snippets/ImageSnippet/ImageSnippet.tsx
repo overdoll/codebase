@@ -1,6 +1,6 @@
 import { Box, ImageProps, Skeleton } from '@chakra-ui/react'
 import { ResourceUrl } from '@//:types/upload'
-import SuspenseImage from '@//:modules/operations/SuspenseImage'
+import SuspenseImage from '../../../../operations/SuspenseImage'
 
 interface Props extends ImageProps {
   urls: readonly ResourceUrl[]

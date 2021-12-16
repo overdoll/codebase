@@ -1,11 +1,10 @@
 import { createMemoryHistory } from 'history'
-import type { ComponentType, ReactElement } from 'react'
-import type { Route, RouterInstance } from '@//:modules/routing/router'
-import { createClientRouter } from '@//:modules/routing/router'
+import type { ComponentType } from 'react'
+import { createClientRouter, Route, RouterInstance } from '../routing/router'
 import Bootstrap from '../../client/Bootstrap'
 import i18n from 'i18next'
 import createCache from '@emotion/cache'
-import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
+import { EMOTION_CACHE_KEY } from '../constants/emotion'
 import { IEnvironment } from 'relay-runtime'
 
 interface WithProviders {

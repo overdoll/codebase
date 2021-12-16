@@ -1,8 +1,8 @@
 import { Flex, HStack } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import Link from '@//:modules/routing/Link'
+import Icon from '../../../../Icon/Icon'
+import { Link } from '../../../../../routing'
 import { ArrowButtonRight } from '@//:assets/icons/navigation'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ClickableBox } from '../../../index'
 import { ReactNode } from 'react'
 
 interface Props {
