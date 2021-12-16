@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.js
-/**
- * @flow
- * @relayHash ae7000c58bcf1e078dc9d0733b17ff0c
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash 9a5b39f5f881102e2dbe7ea464f82b45 */
@@ -46,14 +38,8 @@ query SessionsPaginationQuery(
 fragment SessionCardFragment on AccountSession {
   device
   ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
   created
+  current
 }
 
 fragment SessionsSettingsFragment_2HEEH6 on Account {
@@ -213,40 +199,8 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Location",
-                            "kind": "LinkedField",
-                            "name": "location",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "city",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "country",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "subdivision",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "kind": "ScalarField",
-                            "name": "lastSeen",
+                            "name": "created",
                             "storageKey": null
                           },
                           {
@@ -256,17 +210,7 @@ return {
                             "name": "current",
                             "storageKey": null
                           },
-<<<<<<< HEAD:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.js
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "created",
-                            "storageKey": null
-                          },
-=======
                           (v4/*: any*/),
->>>>>>> master:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.ts
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -340,11 +284,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.js
-    "id": "ae7000c58bcf1e078dc9d0733b17ff0c",
-=======
     "id": "9a5b39f5f881102e2dbe7ea464f82b45",
->>>>>>> master:applications/medusa/src/__generated__/SessionsPaginationQuery.graphql.ts
     "metadata": {},
     "name": "SessionsPaginationQuery",
     "operationKind": "query",

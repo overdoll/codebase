@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/UsernamesQuery.graphql.js
-/**
- * @flow
- * @relayHash 8236bfe9d667180e0daecf28e6693652
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/UsernamesQuery.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash 6fdd71db6b8be5a80b955e67dd5659b9 */
@@ -26,24 +18,6 @@ export type UsernamesQuery = {
     readonly variables: UsernamesQueryVariables;
 };
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/UsernamesQuery.graphql.js
-import type { ConcreteRequest } from 'relay-runtime';
-import type { UsernamesSettingsFragment$ref } from "./UsernamesSettingsFragment.graphql";
-export type UsernamesQueryVariables = {|
-  first?: ?number
-|};
-export type UsernamesQueryResponse = {|
-  +viewer: ?{|
-    +usernamesLimit: number,
-    +$fragmentRefs: UsernamesSettingsFragment$ref,
-  |}
-|};
-export type UsernamesQuery = {|
-  variables: UsernamesQueryVariables,
-  response: UsernamesQueryResponse,
-|};
-=======
->>>>>>> master:applications/medusa/src/__generated__/UsernamesQuery.graphql.ts
 
 
 /*
@@ -52,14 +26,8 @@ query UsernamesQuery(
 ) {
   viewer {
     ...UsernamesSettingsFragment
-    usernamesLimit
     id
   }
-}
-
-fragment UsernameAliasCard on AccountUsername {
-  id
-  username
 }
 
 fragment UsernamesSettingsFragment on Account {
@@ -68,7 +36,6 @@ fragment UsernamesSettingsFragment on Account {
     edges {
       node {
         username
-        ...UsernameAliasCard
         id
         __typename
       }
@@ -94,24 +61,17 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "usernamesLimit",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "username",
   "storageKey": null
 },
-v3 = [
+v2 = [
   {
     "kind": "Variable",
     "name": "first",
     "variableName": "first"
   }
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -133,7 +93,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -160,10 +119,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
-            "args": (v3/*: any*/),
+            "args": (v2/*: any*/),
             "concreteType": "AccountUsernameConnection",
             "kind": "LinkedField",
             "name": "usernames",
@@ -185,8 +144,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
-                      (v4/*: any*/),
+                      (v1/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -249,22 +208,21 @@ return {
           },
           {
             "alias": null,
-            "args": (v3/*: any*/),
+            "args": (v2/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "UsernamesSettingsFragment_usernames",
             "kind": "LinkedHandle",
             "name": "usernames"
           },
-          (v1/*: any*/),
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "8236bfe9d667180e0daecf28e6693652",
+    "id": "6fdd71db6b8be5a80b955e67dd5659b9",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",
@@ -272,11 +230,5 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/UsernamesQuery.graphql.js
-// prettier-ignore
-(node: any).hash = '16ae99eac1572a04a2d01555a46f28c5';
-module.exports = node;
-=======
 (node as any).hash = '55b4b82bf6b6fc004e5ca92273a7d969';
 export default node;
->>>>>>> master:applications/medusa/src/__generated__/UsernamesQuery.graphql.ts

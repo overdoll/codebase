@@ -1,4 +1,7 @@
-const baseStyleContainer = {
+import { accordionAnatomy as parts } from '@chakra-ui/anatomy'
+import type { PartsStyleObject, SystemStyleObject } from '@chakra-ui/theme-tools'
+
+const baseStyleContainer: SystemStyleObject = {
   borderWidth: 0,
   borderColor: 'inherit',
   _last: {
@@ -6,7 +9,7 @@ const baseStyleContainer = {
   }
 }
 
-const baseStyleButton = {
+const baseStyleButton: SystemStyleObject = {
   transitionProperty: 'common',
   transitionDuration: 'normal',
   bg: 'gray.800',
@@ -25,29 +28,25 @@ const baseStyleButton = {
   p: 3
 }
 
-const baseStylePanel = {
+const baseStylePanel: SystemStyleObject = {
   mt: 2,
   p: 3,
   bg: 'gray.800',
   borderRadius: 'base'
 }
 
-const baseStyleIcon = {
+const baseStyleIcon: SystemStyleObject = {
   fontSize: '1.25em'
 }
 
-const baseStyle = {
+const baseStyle: PartsStyleObject<typeof parts> = {
   container: baseStyleContainer,
   button: baseStyleButton,
   panel: baseStylePanel,
   icon: baseStyleIcon
 }
 
-const defaultProps = {
-  allowToggle: true
-}
-
 export default {
-  baseStyle,
-  defaultProps
+  parts: parts.keys,
+  baseStyle
 }

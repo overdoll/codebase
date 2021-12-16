@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/SessionsSettingsQuery.graphql.js
-/**
- * @flow
- * @relayHash 130698080719633b36562e8e9539ba10
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/SessionsSettingsQuery.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash cee8e6f09f6a7eeed9a585e81e9c6fcc */
@@ -37,14 +29,8 @@ query SessionsSettingsQuery {
 fragment SessionCardFragment on AccountSession {
   device
   ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
   created
+  current
 }
 
 fragment SessionsSettingsFragment on Account {
@@ -163,40 +149,8 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Location",
-                        "kind": "LinkedField",
-                        "name": "location",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "city",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "country",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "subdivision",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "kind": "ScalarField",
-                        "name": "lastSeen",
+                        "name": "created",
                         "storageKey": null
                       },
                       {
@@ -207,13 +161,6 @@ return {
                         "storageKey": null
                       },
                       (v1/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "created",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -290,11 +237,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD:applications/medusa/src/__generated__/SessionsSettingsQuery.graphql.js
-    "id": "130698080719633b36562e8e9539ba10",
-=======
     "id": "cee8e6f09f6a7eeed9a585e81e9c6fcc",
->>>>>>> master:applications/medusa/src/__generated__/SessionsSettingsQuery.graphql.ts
     "metadata": {},
     "name": "SessionsSettingsQuery",
     "operationKind": "query",

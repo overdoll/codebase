@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/JoinMutation.graphql.js
-/**
- * @flow
- * @relayHash 4ae8e80978f0275f9c0c071404e0706b
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/JoinMutation.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash 0d258f26ce3e9ebb86453f51934cda7f */
@@ -33,32 +25,6 @@ export type JoinMutation = {
     readonly variables: JoinMutationVariables;
 };
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/JoinMutation.graphql.js
-import type { ConcreteRequest } from 'relay-runtime';
-export type GrantAuthenticationTokenValidation = "INVALID_EMAIL" | "%future added value";
-export type GrantAuthenticationTokenInput = {|
-  email: string
-|};
-export type JoinMutationVariables = {|
-  input: GrantAuthenticationTokenInput
-|};
-export type JoinMutationResponse = {|
-  +grantAuthenticationToken: ?{|
-    +validation: ?GrantAuthenticationTokenValidation,
-    +authenticationToken: ?{|
-      +id: string,
-      +email: string,
-      +token: string,
-      +sameDevice: boolean,
-    |},
-  |}
-|};
-export type JoinMutation = {|
-  variables: JoinMutationVariables,
-  response: JoinMutationResponse,
-|};
-=======
->>>>>>> master:applications/medusa/src/__generated__/JoinMutation.graphql.ts
 
 
 /*
@@ -66,7 +32,6 @@ mutation JoinMutation(
   $input: GrantAuthenticationTokenInput!
 ) {
   grantAuthenticationToken(input: $input) {
-    validation
     authenticationToken {
       id
       token
@@ -99,13 +64,6 @@ v1 = [
     "name": "grantAuthenticationToken",
     "plural": false,
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "validation",
-        "storageKey": null
-      },
       {
         "alias": null,
         "args": null,
@@ -172,7 +130,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "4ae8e80978f0275f9c0c071404e0706b",
+    "id": "0d258f26ce3e9ebb86453f51934cda7f",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
@@ -180,11 +138,5 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/JoinMutation.graphql.js
-// prettier-ignore
-(node: any).hash = '97b943350137135d4bae42d7cd9bcdad';
-module.exports = node;
-=======
 (node as any).hash = 'dfbb9dcad2c34353462472c64a19af2b';
 export default node;
->>>>>>> master:applications/medusa/src/__generated__/JoinMutation.graphql.ts

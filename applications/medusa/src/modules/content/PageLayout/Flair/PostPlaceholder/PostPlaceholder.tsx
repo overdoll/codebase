@@ -1,15 +1,11 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { Flex, Stack } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
-type Props = {
+interface Props {
   children: string
-};
+}
 
-export default function PostPlaceholder ({ children, ...rest }: Props): Node {
+export default function PostPlaceholder ({ children, ...rest }: Props): JSX.Element {
   return (
     <LargeBackgroundBox>
       <Flex

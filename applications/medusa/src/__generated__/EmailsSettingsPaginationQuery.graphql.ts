@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsSettingsPaginationQuery.graphql.js
-/**
- * @flow
- * @relayHash b8a050d5b709f771a1a0e52b957919fc
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/EmailsSettingsPaginationQuery.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash 77b121a45a09c73a4032c34a97eebe8f */
@@ -33,7 +25,7 @@ export type EmailsSettingsPaginationQuery = {
 /*
 query EmailsSettingsPaginationQuery(
   $after: String
-  $first: Int = 5
+  $first: Int = 3
   $id: ID!
 ) {
   node(id: $id) {
@@ -60,7 +52,6 @@ fragment EmailsSettingsFragment_2HEEH6 on Account {
     edges {
       node {
         ...EmailCardFragment
-        status
         id
         __typename
       }
@@ -88,7 +79,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 5,
+    "defaultValue": 3,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -289,7 +280,7 @@ return {
     ]
   },
   "params": {
-    "id": "b8a050d5b709f771a1a0e52b957919fc",
+    "id": "77b121a45a09c73a4032c34a97eebe8f",
     "metadata": {},
     "name": "EmailsSettingsPaginationQuery",
     "operationKind": "query",
@@ -297,11 +288,5 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsSettingsPaginationQuery.graphql.js
-// prettier-ignore
-(node: any).hash = '61647e9f7d6b3b803b4605825e973488';
-module.exports = node;
-=======
 (node as any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
 export default node;
->>>>>>> master:applications/medusa/src/__generated__/EmailsSettingsPaginationQuery.graphql.ts

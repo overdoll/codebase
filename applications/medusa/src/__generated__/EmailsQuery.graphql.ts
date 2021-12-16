@@ -1,12 +1,4 @@
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsQuery.graphql.js
-/**
- * @flow
- * @relayHash a516d9806a1edda7403c4fadd48b96ca
- */
-
-=======
 /* tslint:disable */
->>>>>>> master:applications/medusa/src/__generated__/EmailsQuery.graphql.ts
 /* eslint-disable */
 // @ts-nocheck
 /* @relayHash f9be5875e86fa71d29040ea7a5daa5bd */
@@ -24,29 +16,12 @@ export type EmailsQuery = {
     readonly variables: EmailsQueryVariables;
 };
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsQuery.graphql.js
-import type { ConcreteRequest } from 'relay-runtime';
-import type { EmailsSettingsFragment$ref } from "./EmailsSettingsFragment.graphql";
-export type EmailsQueryVariables = {||};
-export type EmailsQueryResponse = {|
-  +viewer: ?{|
-    +emailsLimit: number,
-    +$fragmentRefs: EmailsSettingsFragment$ref,
-  |}
-|};
-export type EmailsQuery = {|
-  variables: EmailsQueryVariables,
-  response: EmailsQueryResponse,
-|};
-=======
->>>>>>> master:applications/medusa/src/__generated__/EmailsQuery.graphql.ts
 
 
 /*
 query EmailsQuery {
   viewer {
     ...EmailsSettingsFragment
-    emailsLimit
     id
   }
 }
@@ -64,11 +39,10 @@ fragment EmailCardFragment on AccountEmail {
 }
 
 fragment EmailsSettingsFragment on Account {
-  emails(first: 5) {
+  emails(first: 3) {
     edges {
       node {
         ...EmailCardFragment
-        status
         id
         __typename
       }
@@ -89,21 +63,14 @@ fragment MakePrimaryFragment on AccountEmail {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "emailsLimit",
-  "storageKey": null
-},
-v1 = [
+var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 5
+    "value": 3
   }
 ],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -125,7 +92,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -154,7 +120,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
             "name": "emails",
@@ -176,7 +142,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -249,26 +215,25 @@ return {
                 ]
               }
             ],
-            "storageKey": "emails(first:5)"
+            "storageKey": "emails(first:3)"
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "EmailsSettingsFragment_emails",
             "kind": "LinkedHandle",
             "name": "emails"
           },
-          (v2/*: any*/),
-          (v0/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "a516d9806a1edda7403c4fadd48b96ca",
+    "id": "f9be5875e86fa71d29040ea7a5daa5bd",
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",
@@ -276,11 +241,5 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsQuery.graphql.js
-// prettier-ignore
-(node: any).hash = '54c667dc8800618fc0ee75cf884ffa56';
-module.exports = node;
-=======
 (node as any).hash = '79d7c5220cb84bef2977b5f3d3fd23a8';
 export default node;
->>>>>>> master:applications/medusa/src/__generated__/EmailsQuery.graphql.ts

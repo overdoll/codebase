@@ -2,29 +2,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsSettingsFragment.graphql.js
-'use strict';
-
-import type { ReaderFragment } from 'relay-runtime';
-import type { EmailCardFragment$ref } from "./EmailCardFragment.graphql";
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
-import type { FragmentReference } from "relay-runtime";
-import type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType } from "./EmailsSettingsPaginationQuery.graphql";
-export type { EmailsSettingsFragment$ref, EmailsSettingsFragment$fragmentType };
-export type EmailsSettingsFragment = {|
-  +emails: {|
-    +__id: string,
-    +edges: $ReadOnlyArray<{|
-      +node: {|
-        +status: AccountEmailStatus,
-        +$fragmentRefs: EmailCardFragment$ref,
-      |}
-    |}>,
-  |},
-  +id: string,
-  +$refType: EmailsSettingsFragment$ref,
-|};
-=======
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type EmailsSettingsFragment = {
@@ -40,7 +17,6 @@ export type EmailsSettingsFragment = {
     readonly id: string;
     readonly " $refType": "EmailsSettingsFragment";
 };
->>>>>>> master:applications/medusa/src/__generated__/EmailsSettingsFragment.graphql.ts
 export type EmailsSettingsFragment$data = EmailsSettingsFragment;
 export type EmailsSettingsFragment$key = {
     readonly " $data"?: EmailsSettingsFragment$data | undefined;
@@ -52,7 +28,14 @@ export type EmailsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "emails"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -61,7 +44,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 5,
+      "defaultValue": 3,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -118,13 +101,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "status",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -190,23 +167,11 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/EmailsSettingsFragment.graphql.js
-// prettier-ignore
-(node: any).hash = '61647e9f7d6b3b803b4605825e973488';
-module.exports = node;
-=======
 (node as any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
 export default node;
->>>>>>> master:applications/medusa/src/__generated__/EmailsSettingsFragment.graphql.ts

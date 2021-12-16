@@ -1,9 +1,9 @@
-import { Flex } from '@chakra-ui/react'
-import { ReactNode } from 'react'
-import HorizontalNavigationCenter from './HorizontalNavigationCenter/HorizontalNavigationCenter'
-import HorizontalNavigationLeft from './HorizontalNavigationLeft/HorizontalNavigationLeft'
-import HorizontalNavigationRight from './HorizontalNavigationRight/HorizontalNavigationRight'
-import HorizontalNavigationButton from './HorizontalNavigationButton/HorizontalNavigationButton'
+import { Flex } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import HorizontalNavigationCenter from './HorizontalNavigationCenter/HorizontalNavigationCenter';
+import HorizontalNavigationLeft from './HorizontalNavigationLeft/HorizontalNavigationLeft';
+import HorizontalNavigationRight from './HorizontalNavigationRight/HorizontalNavigationRight';
+import HorizontalNavigationButton from './HorizontalNavigationButton/HorizontalNavigationButton';
 
 interface Props {
   children: ReactNode
@@ -11,9 +11,9 @@ interface Props {
 }
 
 const HorizontalNavigation = ({
-  children,
-  transparent = false
-}: Props): JSX.Element => {
+                                children,
+                                transparent = false,
+                              }: Props): JSX.Element => {
   return (
     <>
       <Flex
@@ -37,12 +37,12 @@ const HorizontalNavigation = ({
         {children}
       </Flex>
     </>
-  )
-}
+  );
+};
 
 export default Object.assign(HorizontalNavigation, {
   Center: HorizontalNavigationCenter,
   Left: HorizontalNavigationLeft,
   Right: HorizontalNavigationRight,
-  Button: HorizontalNavigationButton
-})
+  Button: HorizontalNavigationButton,
+});
