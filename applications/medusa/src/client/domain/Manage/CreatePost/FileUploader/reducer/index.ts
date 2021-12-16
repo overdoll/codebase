@@ -1,7 +1,4 @@
-/**
- * @flow
- */
-import type { Action, State } from '../../../../../../types/upload'
+import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
 
 // reducer maintains the whole state of the upload form
@@ -15,7 +12,8 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.PROGRESS: {
       const id: string = Object.keys(action.value)[0]
 
-      if (action.remove) {
+      if (action.remove === true) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete copy[id]
 
         return { ...state, [act]: copy }
@@ -27,12 +25,13 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.CATEGORIES: {
       const id: string = action.value.id
 
-      if (action.remove) {
+      if (action.remove === true) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete copy[id]
 
         return { ...state, [act]: copy }
       }
-      if (action.clear) {
+      if (action.clear === true) {
         return { ...state, [act]: {} }
       }
 
@@ -41,7 +40,8 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.CONTENT: {
       let content = state.content
 
-      if (action.remove) {
+      if (action.remove === true) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         const id: string = action.value
 
         content = content.filter(item => item.id !== id)
@@ -49,7 +49,7 @@ const reducer: {} = (state: State, action: Action): State => {
         return { ...state, [act]: content }
       }
 
-      if (action.clear) {
+      if (action.clear === true) {
         return { ...state, [act]: null }
       }
 
@@ -59,7 +59,7 @@ const reducer: {} = (state: State, action: Action): State => {
       }
     }
     case EVENTS.AUDIENCE: {
-      if (action.remove) {
+      if (action.remove === true) {
         return {
           ...state,
           [act]: null
@@ -72,7 +72,7 @@ const reducer: {} = (state: State, action: Action): State => {
       }
     }
     case EVENTS.BRAND: {
-      if (action.remove) {
+      if (action.remove === true) {
         return {
           ...state,
           [act]: null
@@ -90,7 +90,7 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.FILES: {
       let files = [...state.files]
 
-      if (action.remove) {
+      if (action.remove === true) {
         const id: string = action.value.id
 
         files = files.filter(file => file.id !== id)

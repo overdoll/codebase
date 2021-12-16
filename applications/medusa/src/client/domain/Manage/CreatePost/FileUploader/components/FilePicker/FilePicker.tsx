@@ -1,25 +1,27 @@
-/**
- * @flow
- */
-import type { Node } from 'react';
-import { useRef } from 'react';
-import { Flex, useToast } from '@chakra-ui/react';
-import type { Uppy } from '@uppy/core';
+import { ChangeEvent, useRef } from 'react'
+import { Flex, useToast } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
 
-type Props = {
-  uppy: Uppy,
-  onSelect?: () => void,
+interface Props {
+  uppy: Uppy
+  onSelect?: () => void
   children: Node
-};
+}
 
 /**
  * File picker - select files and add them to the list
  */
-export default function FilePicker ({ uppy, onSelect, children, ...rest }: Props): Node {
+export default function FilePicker ({ uppy, onSelect, children, ...rest }: Props): JSX.Element {
   const notify = useToast()
 
-  const onChange = e => {
-    const files = Array.from(e.target.files)
+  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const input = e.target
+
+    if ((input.files?.length) == null) {
+      return
+    }
+
+    const files = Array.from(input.files)
     files.forEach(file => {
       try {
         uppy.addFile({
@@ -38,10 +40,10 @@ export default function FilePicker ({ uppy, onSelect, children, ...rest }: Props
     })
   }
 
-  const fileInput = useRef(null)
+  const fileInput = useRef<HTMLInputElement>(null)
 
-  const uploadClick = () => {
-    fileInput.current.click()
+  const uploadClick = (): void => {
+    fileInput?.current?.click()
   }
 
   return (

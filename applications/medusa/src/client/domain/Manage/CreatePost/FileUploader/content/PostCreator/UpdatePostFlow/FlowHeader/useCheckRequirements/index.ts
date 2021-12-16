@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { useCheckRequirementsFragment$key } from '@//:artifacts/useCheckRequirementsFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
+import type { useCheckRequirementsFragment$key } from '@//:artifacts/useCheckRequirementsFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
 
-type Props = {
+interface Props {
   query: useCheckRequirementsFragment$key
 }
 
@@ -29,14 +29,14 @@ const Fragment = graphql`
   }
 `
 
-export default function useCheckRequirements ({ query }: Props) {
+export default function useCheckRequirements ({ query }: Props): [boolean, boolean, boolean, boolean, boolean] {
   const data = useFragment(Fragment, query)
 
   const contentRequirements = data.content.length > 0
 
-  const audienceRequirements = !!data.audience
+  const audienceRequirements = !(data.audience == null)
 
-  const brandRequirements = !!data.brand
+  const brandRequirements = !(data.brand == null)
 
   const categoriesRequirements = data.categories.length >= 3
 

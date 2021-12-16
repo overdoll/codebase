@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { STEPS } from '../../../../constants/constants'
 import Arrange from './Arrange/Arrange'
 import Audience from './Audience/Audience'
@@ -11,17 +7,17 @@ import Character from './Character/Character'
 import Review from './Review/Review'
 import Submit from './Submit/Submit'
 import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '../../../../../../../../../types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { graphql } from 'react-relay/hooks'
 import type { FlowStepsFragment$key } from '@//:artifacts/FlowStepsFragment.graphql'
 import { useFragment } from 'react-relay'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: FlowStepsFragment$key,
-};
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: FlowStepsFragment$key
+}
 
 const FlowStepsFragmentGQL = graphql`
   fragment FlowStepsFragment on Query {
@@ -34,7 +30,7 @@ const FlowStepsFragmentGQL = graphql`
   }
 `
 
-export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Node {
+export default function FlowSteps ({ uppy, dispatch, state, query }: Props): JSX.Element {
   const data = useFragment(FlowStepsFragmentGQL, query)
 
   switch (state.step) {

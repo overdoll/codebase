@@ -1,10 +1,6 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { STEPS } from '../../../constants/constants'
 import { graphql } from 'react-relay/hooks'
-import type { Dispatch, State } from '../../../../../../../../types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { Box, Flex, Stack } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import FlowHeader from './FlowHeader/FlowHeader'
@@ -14,12 +10,14 @@ import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFra
 
 import FlowFooter from './FlowFooter/FlowFooter'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: UpdatePostFlowFragment$key,
-};
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: UpdatePostFlowFragment$key
+}
+
+// TODO change fragments to spread on post
 
 const UpdatePostFlowFragmentGQL = graphql`
   fragment UpdatePostFlowFragment on Query {
@@ -29,7 +27,7 @@ const UpdatePostFlowFragmentGQL = graphql`
   }
 `
 
-export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
+export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): JSX.Element {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
 
   return (

@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useEffect } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -22,11 +18,11 @@ import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceI
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: AudienceFragment$key,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: AudienceFragment$key
 }
 
 const AudienceFragmentGQL = graphql`
@@ -55,14 +51,14 @@ const AudienceFragmentGQL = graphql`
   }
 `
 
-export default function Audience ({ uppy, state, dispatch, query }: Props): Node {
+export default function Audience ({ uppy, state, dispatch, query }: Props): JSX.Element {
   const data = useFragment(AudienceFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
   const audiences = data.audiences.edges
 
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data.post.audience?.id })
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.post?.audience?.id as string })
 
   useEffect(() => {
     dispatch({
@@ -85,10 +81,12 @@ export default function Audience ({ uppy, state, dispatch, query }: Props): Node
         {audiences.map((item, index) => (
           <RowItem key={index}>
             <Selector
-              onSelect={setCurrentSelection} selected={[currentSelection]} id={item.node.id}
+              onSelect={setCurrentSelection}
+              selected={(currentSelection != null) ? [currentSelection] : []}
+              id={item.node.id}
             >
               <SelectorTextOverlay label={item.node.title}>
-                <ResourceItem type={item.node.thumbnail.type} urls={item.node.thumbnail.urls} />
+                <ResourceItem type={item?.node?.thumbnail?.type} urls={item?.node?.thumbnail?.urls} />
               </SelectorTextOverlay>
             </Selector>
           </RowItem>

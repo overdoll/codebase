@@ -1,9 +1,16 @@
-/**
- * @flow
- */
-import type { State } from '../../../../../../types/upload'
+import type { Event, State, Step } from '@//:types/upload'
 
-const STEPS = {
+interface steps {
+  ARRANGE: Step
+  AUDIENCE: Step
+  BRAND: Step
+  CATEGORY: Step
+  CHARACTER: Step
+  REVIEW: Step
+  SUBMIT: Step
+}
+
+const STEPS: steps = {
   ARRANGE: 'ARRANGE',
   AUDIENCE: 'AUDIENCE',
   BRAND: 'BRAND',
@@ -13,7 +20,21 @@ const STEPS = {
   SUBMIT: 'SUBMIT'
 }
 
-const EVENTS = {
+interface events {
+  URLS: Event
+  FILES: Event
+  CONTENT: Event
+  STEP: Event
+  PROGRESS: Event
+  AUDIENCE: Event
+  BRAND: Event
+  CHARACTERS: Event
+  CATEGORIES: Event
+  CLEANUP: Event
+  IN_REVIEW: Event
+}
+
+const EVENTS: events = {
   URLS: 'urls',
   FILES: 'files',
   CONTENT: 'content',
@@ -30,15 +51,17 @@ const EVENTS = {
 const INITIAL_STATE: State = {
   files: [],
   urls: {},
-  content: null,
+  content: [],
   step: STEPS.ARRANGE,
   progress: {},
   audience: null,
-  brands: null,
+  brand: null,
   characters: {},
   categories: {},
-  cleanup: null,
-  isInReview: false
+  cleanup: () => {
+  },
+  isInReview: false,
+  thumbnails: {}
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

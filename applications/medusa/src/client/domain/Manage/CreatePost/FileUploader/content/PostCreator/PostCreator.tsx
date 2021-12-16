@@ -1,33 +1,29 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
-import { Box, Flex, Heading, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
-import { StringParam, useQueryParam } from 'use-query-params'
-import type PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql'
-import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
+import { useQueryParam } from 'use-query-params'
+import type { PostCreatorQuery } from '@//:artifacts/PostCreatorQuery.graphql'
+import { STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import Icon from '@//:modules/content/Icon/Icon'
 import { PauseCircle } from '../../../../../../../assets/icons/interface'
-import { Link, useHistory } from '@//:modules/routing'
+import { useHistory } from '@//:modules/routing'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
+interface Props {
+  uppy: Uppy
+  state: State
   dispatch: Dispatch
-};
+}
 
 const Query = graphql`
   query PostCreatorQuery ($reference: String!) {
@@ -35,16 +31,17 @@ const Query = graphql`
       __typename
       state
     }
+    
     ...UpdatePostFlowFragment
   }
 `
 
-export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
+export default function PostCreator ({ uppy, state, dispatch }: Props): JSX.Element {
+  const [postReference] = useQueryParam<string>('id')
 
-  const data = useLazyLoadQuery < PostCreatorQuery > (
+  const data = useLazyLoadQuery<PostCreatorQuery>(
     Query,
-    { reference: postReference || '' }
+    { reference: postReference }
   )
 
   const [t] = useTranslation('manage')
@@ -53,14 +50,8 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
 
   const postData = data.post
 
-  const onCleanup = () => {
-    uppy.reset()
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
-    setPostReference(undefined)
-  }
-
   // If there is no post found from the URL parameter, show create post initiator
-  if (!postData && (state.step !== STEPS.SUBMIT)) {
+  if (postData == null && (state.step !== STEPS.SUBMIT)) {
     return (
       <Stack spacing={4}>
         <CreatePostFlow uppy={uppy} state={state} dispatch={dispatch} />
@@ -97,7 +88,8 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
         >
           <Stack spacing={4} align='center'>
             <Icon
-              w={12} h={12}
+              w={12}
+              h={12}
               icon={PauseCircle}
               fill='orange.300'
             />
@@ -107,7 +99,8 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
               </Heading>
             </Box>
             <Button
-              colorScheme='orange' variant='solid'
+              colorScheme='orange'
+              variant='solid'
               size='lg'
               onClick={() => history.goBack()}
             >{t('create_post.flow.create.not_draft.button')}

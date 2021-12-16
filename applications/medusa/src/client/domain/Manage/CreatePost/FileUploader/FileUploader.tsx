@@ -1,8 +1,4 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
-import { useEffect, useReducer } from 'react'
+import { Reducer, useEffect, useReducer } from 'react'
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE } from './constants/constants'
 import reducer from './reducer'
@@ -10,14 +6,13 @@ import useUpload from './hooks'
 import { useToast } from '@chakra-ui/react'
 import PostCreator from './content/PostCreator/PostCreator'
 
-type Props = {}
-
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
-export default function FileUploader (props: Props): Node {
-  const [state, dispatch] = useReducer<State, Action>(
+export default function FileUploader (): JSX.Element {
+  const [state, dispatch] = useReducer<Reducer<State, Action>>(
     reducer,
-    INITIAL_STATE
+    INITIAL_STATE,
+    undefined
   )
 
   // hook controls lifecycle of uppy
@@ -30,7 +25,7 @@ export default function FileUploader (props: Props): Node {
     uppy.on('upload-success', (file, response) => {
       // only want the ID from URL
       if (file.source !== 'already-uploaded') {
-        const url = response.uploadURL
+        const url = response.uploadURL as string
         const fileId = url.substring(url.lastIndexOf('/') + 1)
         dispatch({ type: EVENTS.URLS, value: { [file.id]: fileId } })
       }
@@ -60,6 +55,8 @@ export default function FileUploader (props: Props): Node {
   useEffect(() => {
     uppy.on('info-visible', () => {
       const info = uppy.getState().info
+
+      if (info == null) return
 
       const message = `${info.message}`
 

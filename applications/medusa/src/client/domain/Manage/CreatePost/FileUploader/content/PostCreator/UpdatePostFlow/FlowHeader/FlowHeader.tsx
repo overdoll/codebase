@@ -1,37 +1,38 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
-import { useRef, createRef } from 'react'
+import { useRef } from 'react'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  Box, CloseButton, Flex, Heading, Progress, Text,
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
   AlertDialogBody,
-  AlertDialogFooter
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  CloseButton,
+  Flex,
+  Heading,
+  Progress,
+  Text
 } from '@chakra-ui/react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
 import { useTranslation } from 'react-i18next'
-import { StringParam, useQueryParam } from 'use-query-params'
+import { useQueryParam } from 'use-query-params'
 import type { Uppy } from '@uppy/core'
 import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import useCheckRequirements from './useCheckRequirements'
 import progressScore from './progressScore'
-import { useHistoryDisclosure } from '@//:modules/utilities/hooks'
-import Button from '@//:modules/form/Button'
+import { useHistoryDisclosure } from '@//:modules/hooks'
+import Button from '@//:modules/form/Button/Button'
 import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: FlowHeaderFragment$key,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: FlowHeaderFragment$key
 }
 
 const FlowHeaderFragmentGQL = graphql`
@@ -43,7 +44,7 @@ const FlowHeaderFragmentGQL = graphql`
   }
 `
 
-export default function FlowHeader ({ state, uppy, dispatch, query }: Props): Node {
+export default function FlowHeader ({ state, uppy, dispatch, query }: Props): JSX.Element {
   const data = useFragment(FlowHeaderFragmentGQL, query)
 
   const cancelButtonRef = useRef()
@@ -52,7 +53,7 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
 
   const { isOpen, onOpen, onClose } = useHistoryDisclosure()
 
-  const [, setPostReference] = useQueryParam('id', StringParam)
+  const [, setPostReference] = useQueryParam<string>('id')
 
   const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data.post })
 
@@ -102,7 +103,10 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): No
         <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
       </Box>
       <AlertDialog
-        preserveScrollBarGap isCentered leastDestructiveRef={cancelButtonRef} isOpen={isOpen}
+        preserveScrollBarGap
+        isCentered
+        leastDestructiveRef={cancelButtonRef}
+        isOpen={isOpen}
         onClose={onClose}
       >
         <AlertDialogOverlay />

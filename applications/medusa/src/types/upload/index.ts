@@ -113,7 +113,6 @@ export type Event =
   | 'audience'
   | 'brand'
   | 'categories'
-  | 'submit'
   | 'cleanup'
   | 'isInReview'
 
@@ -121,14 +120,13 @@ export interface State {
   thumbnails: Thumbnails
   files: UppyFile[]
   urls: Urls
-  step: Step | null
+  step: Step
   content: Content[]
   progress: Progress
-  brand: string
-  audience: string
+  brand: string | null
+  audience: string | null
   characters: Characters
   categories: Categories
-  submit: Submit
   isInReview: boolean
   cleanup: () => void
 }
@@ -137,7 +135,7 @@ export interface Action {
   type: Event
 
   // Type hinted as "any" but its actually any value in "State" or state itself
-  value: {}
+  value: any | null
 
   // Will remove the value if true
   remove?: boolean

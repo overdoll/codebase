@@ -8,6 +8,8 @@ interface Props {
   urls: readonly ResourceUrl[]
 }
 
+// TODO convert to fragment
+
 export default function ResourceItem ({
   urls,
   type,

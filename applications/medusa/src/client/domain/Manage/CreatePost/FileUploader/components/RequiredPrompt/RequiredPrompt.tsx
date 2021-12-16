@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react';
 import {
   Box,
   Heading,
@@ -10,15 +6,15 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
-  PopoverTrigger,
-} from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+  PopoverTrigger
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
-type Props = {
-  children: string,
-};
+interface Props {
+  children: string
+}
 
-export default function RequiredPrompt ({ children }: Props): Node {
+export default function RequiredPrompt ({ children }: Props): JSX.Element {
   const [t] = useTranslation('manage')
 
   return (

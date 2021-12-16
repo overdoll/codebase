@@ -1,31 +1,29 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
+import type { DragEvent, ReactNode } from 'react'
 import { useState } from 'react'
 import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { useTranslation } from 'react-i18next'
+import Timeout = NodeJS.Timeout
 
-type Props = {
-  uppy: Uppy,
-  onSelect?: () => void,
-  children: Node
-};
+interface Props {
+  uppy: Uppy
+  onSelect?: () => void
+  children: ReactNode
+}
 
-export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): Node {
+export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): JSX.Element {
   const [t] = useTranslation('general')
 
   const notify = useToast()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const [timeOut, changeTimeOut] = useState(null)
+  const [timeOut, changeTimeOut] = useState<Timeout>(setTimeout(() => ({})))
 
   // when an item is dropped into the area
-  const handleDrop = e => {
+  const handleDrop = (e: DragEvent): void => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -52,18 +50,21 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
   }
 
   // when an item is hovered over the drop area - you want to show the user this is a "droppable" area
-  const onDragOver = e => {
+  const onDragOver = (e: DragEvent): void => {
     e.preventDefault()
     e.stopPropagation()
+
     clearInterval(timeOut)
+
     onOpen()
   }
 
-  const onDragLeave = e => {
+  const onDragLeave = (e: DragEvent): void => {
     e.preventDefault()
     e.stopPropagation()
 
     clearInterval(timeOut)
+
     const timedOut = setTimeout(() => {
       onClose()
     }, 50)

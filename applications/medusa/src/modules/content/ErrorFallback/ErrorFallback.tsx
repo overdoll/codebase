@@ -6,7 +6,7 @@ import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
 interface Props {
   error?: Error
   reset?: () => void
-  refetch: () => void
+  refetch?: () => void
 }
 
 // eslint-disable-next-line node/handle-callback-err
@@ -18,7 +18,9 @@ export default function ErrorFallback ({
   const [t] = useTranslation('error')
 
   const onReset = (): void => {
-    refetch()
+    if (refetch != null) {
+      refetch()
+    }
 
     if (reset != null) {
       reset()

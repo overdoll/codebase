@@ -6,6 +6,8 @@ interface Props extends HTMLChakraProps<any> {
   urls: readonly ResourceUrl[]
 }
 
+// TODO use a fragment here
+
 export default function VideoSnippet ({
   urls,
   innerRef,

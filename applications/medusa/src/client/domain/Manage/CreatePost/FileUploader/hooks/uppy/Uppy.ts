@@ -1,14 +1,10 @@
-/**
- * @flow
- */
-
 import type { Uppy as UppyType } from '@uppy/core'
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
 
-const U: UppyType = new Uppy({
+const U: UppyType = Uppy({
   id: 'posts',
   restrictions: {
     maxNumberOfFiles: 10,
