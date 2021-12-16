@@ -5,8 +5,8 @@ import JSResource from '../../operations/JSResource'
 import { createMockEnvironment } from 'relay-test-utils'
 import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
-import RoutingContext from '../RoutingContext'
 import RouterRenderer from '../RouteRenderer'
+import RoutingProvider from '../RoutingProvider'
 
 // components to help with testing
 const LinkComponent = (): JSX.Element => {
@@ -49,9 +49,9 @@ it('clicking on the link directs to the route', async () => {
   )
 
   render(
-    <RoutingContext.Provider value={router.context}>
+    <RoutingProvider router={router.context}>
       <RouterRenderer />
-    </RoutingContext.Provider>
+    </RoutingProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
@@ -94,9 +94,9 @@ it('hovering over the link will preload the component', async () => {
   )
 
   render(
-    <RoutingContext.Provider value={router.context}>
+    <RoutingProvider router={router.context}>
       <RouterRenderer />
-    </RoutingContext.Provider>
+    </RoutingProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
@@ -152,9 +152,9 @@ it('mouse down on the link will load code and data', async () => {
   )
 
   render(
-    <RoutingContext.Provider value={router.context}>
+    <RoutingProvider router={router.context}>
       <RouterRenderer />
-    </RoutingContext.Provider>
+    </RoutingProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())

@@ -20,7 +20,7 @@ interface Props {
   children: ReactNode
 }
 
-const FlashContext = createContext({})
+const FlashContext = createContext<Flash | undefined>(undefined)
 
 // On the client, we will attempt to read the flash store from the document
 const initialState = SafeJSONParse(
@@ -92,7 +92,13 @@ function FlashProvider ({
 }
 
 const useFlash = (): Flash => {
-  return useContext(FlashContext) as Flash
+  const context = useContext(FlashContext)
+
+  if (context === undefined) {
+    throw new Error('useFlash must be used within a FlashContext')
+  }
+
+  return context
 }
 
 export { useFlash, FlashProvider }

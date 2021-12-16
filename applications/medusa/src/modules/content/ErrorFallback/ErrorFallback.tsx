@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { Icon } from '../index'
+import Icon from '../Icon/Icon'
 import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
 
 interface Props {

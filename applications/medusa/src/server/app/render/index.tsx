@@ -163,8 +163,6 @@ async function request (req, res): Promise<void> {
     'private, no-cache, no-store, must-revalidate'
   )
 
-  console.log(context)
-
   // check for another redirect, this time by the body of the whole app
   if (context.url != null) {
     res.redirect(301, context.url)

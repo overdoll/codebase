@@ -1,9 +1,10 @@
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button/Button'
-import Link from '@//:modules/routing/Link'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
+import { useHistoryDisclosure } from '@//:modules/hooks'
+import LockedAccountModal from './LockedAccountModal/LockedAccountModal'
 
 interface Props {
   queryRef: LockedAccountBannerFragment$key | null
@@ -12,8 +13,7 @@ interface Props {
 const LockedAccountBannerGQL = graphql`
   fragment LockedAccountBannerFragment on Account {
     lock {
-      reason
-      expires
+      ...LockedAccountModalFragment
     }
   }
 `
@@ -22,6 +22,12 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
   const [t] = useTranslation('locked')
 
   const data = useFragment(LockedAccountBannerGQL, queryRef)
+
+  const {
+    isOpen,
+    onToggle,
+    onClose
+  } = useHistoryDisclosure()
 
   if (data?.lock == null) {
     return null
@@ -33,6 +39,9 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
       borderRadius='none'
       border='none'
       status='warning'
+      zIndex='docked'
+      position='fixed'
+      bottom={0}
     >
       <Flex
         w='100%'
@@ -45,15 +54,19 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
             {t('banner.description')}
           </AlertDescription>
         </Flex>
-        <Link to='/locked'>
-          <Button
-            size='sm'
-            colorScheme='orange'
-            variant='solid'
-          >
-            {t('banner.button')}
-          </Button>
-        </Link>
+        <Button
+          size='sm'
+          colorScheme='orange'
+          variant='solid'
+          onClick={onToggle}
+        >
+          {t('banner.button')}
+        </Button>
+        <LockedAccountModal
+          queryRef={data.lock}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
       </Flex>
     </Alert>
   )

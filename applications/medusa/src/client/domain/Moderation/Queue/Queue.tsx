@@ -7,10 +7,9 @@ import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import Posts from './Posts/Posts'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   prepared: {
@@ -26,12 +25,6 @@ export default function Queue (props: Props): JSX.Element | null {
 
   const [t] = useTranslation('moderation')
 
-  const refetch = (): void => {
-    loadQuery({})
-  }
-
-  if (queryRef == null) return null
-
   return (
     <>
       <Helmet title='queue' />
@@ -45,24 +38,13 @@ export default function Queue (props: Props): JSX.Element | null {
           </PageSectionDescription>
           <CommunityGuidelines />
         </PageSectionWrap>
-        <Suspense fallback={<SkeletonStack />}>
-          <ErrorBoundary
-            fallback={({
-              error,
-              reset
-            }) => (
-              <ErrorFallback
-                error={error}
-                reset={reset}
-                refetch={refetch}
-              />
-            )}
-          >
+        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+          <Suspense fallback={<SkeletonStack />}>
             <Posts
-              query={queryRef}
+              query={queryRef as PreloadedQuery<PostsQueryType>}
             />
-          </ErrorBoundary>
-        </Suspense>
+          </Suspense>
+        </QueryErrorBoundary>
       </PageWrapper>
     </>
   )

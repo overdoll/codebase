@@ -17,7 +17,7 @@ type Loader = () => Promise<any>
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: null
+  _error: Error | null
   _loader: Loader
   _promise: Promise<string> | null
   _result: JSX.Element | null

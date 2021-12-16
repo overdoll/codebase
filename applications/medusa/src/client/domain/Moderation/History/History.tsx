@@ -8,9 +8,8 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { AuditLogsQuery as AuditLogsQueryType } from '@//:artifacts/AuditLogsQuery.graphql'
 import AuditLogsQuery from '@//:artifacts/AuditLogsQuery.graphql'
 import AuditLogs from './AuditLogs/AuditLogs'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   prepared: {
@@ -25,15 +24,6 @@ export default function History (props: Props): JSX.Element | null {
   )
 
   const [t] = useTranslation('moderation')
-
-  const refetch = (): void => {
-    loadQuery({
-      from: new Date(new Date().setDate(new Date().getDate() - 7)),
-      to: new Date()
-    })
-  }
-
-  if (queryRef == null) return null
 
   return (
     <>
@@ -66,22 +56,18 @@ export default function History (props: Props): JSX.Element | null {
             </GridItem>
             <GridItem colSpan={1} />
           </Grid>
-          <Suspense fallback={<SkeletonStack />}>
-            <ErrorBoundary
-              fallback={({
-                error,
-                reset
-              }) => (
-                <ErrorFallback
-                  error={error}
-                  reset={reset}
-                  refetch={refetch}
-                />
-              )}
-            >
-              <AuditLogs query={queryRef} />
-            </ErrorBoundary>
-          </Suspense>
+          <QueryErrorBoundary loadQuery={
+            () => loadQuery({
+              from: new Date(new Date().setDate(new Date().getDate() - 7)),
+              to: new Date()
+            })
+          }
+          >
+            <Suspense fallback={<SkeletonStack />}>
+              <AuditLogs query={queryRef as PreloadedQuery<AuditLogsQueryType>} />
+            </Suspense>
+          </QueryErrorBoundary>
+
         </Stack>
       </PageWrapper>
     </>

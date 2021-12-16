@@ -4,19 +4,28 @@ import HorizontalNavigationDropdownMenu
 import { useTranslation } from 'react-i18next'
 import { RenderOnDesktop } from '@//:modules/content/PageLayout'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
-import { PreloadedQuery } from 'react-relay/hooks'
-import { RootQuery } from '@//:artifacts/RootQuery.graphql'
+import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
 import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuButtonLogout'
 import Can from '@//:modules/authorization/Can'
+import { AlternativeMenuFragment, AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 
 interface Props {
-  queryRef: PreloadedQuery<RootQuery>
+  queryRef: AlternativeMenuFragment$key | null
 }
+
+const AlternativeMenuGQL = graphql`
+  fragment AlternativeMenuFragment on Account {
+    ...DropdownMenuButtonProfileFragment
+    ...QuickAccessButtonProfileFragment
+  }
+`
 
 export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
   const [t] = useTranslation('navigation')
+
+  const data = useFragment(AlternativeMenuGQL, queryRef)
 
   return (
     <>
@@ -30,7 +39,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         </Can>
         <Can I='manage' a='Account'>
-          <QuickAccessButtonProfile queryRef={queryRef} />
+          <QuickAccessButtonProfile queryRef={data as AlternativeMenuFragment} />
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
@@ -46,7 +55,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         </Can>
         <Can I='manage' a='Account'>
-          <DropdownMenuButtonProfile queryRef={queryRef} />
+          <DropdownMenuButtonProfile queryRef={data as AlternativeMenuFragment} />
           <HorizontalNavigationDropdownMenu.Button
             to='/manage/my_posts'
             icon={ContentPens}

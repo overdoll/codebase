@@ -19,8 +19,7 @@ const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
       ...AccountAuthorizerFragment
-      ...DropdownMenuButtonProfileFragment
-      ...QuickAccessButtonProfileFragment
+      ...UniversalNavigatorFragment
       ...LockedAccountBannerFragment
     }
   }

@@ -5,10 +5,9 @@ import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
 import QueueSettings from './QueueSettings/QueueSettings'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   query: PreloadedQuery<QueueSettingsQueryType>
@@ -22,33 +21,16 @@ export default function RootQueueSettings (props: Props): JSX.Element | null {
 
   const [t] = useTranslation('settings')
 
-  const refetch = (): void => {
-    loadQuery({})
-  }
-
-  if (queryRef == null) return null
-
   return (
     <>
       <PageSectionWrap>
         <PageSectionTitle>{t('moderation.queue.title')}</PageSectionTitle>
       </PageSectionWrap>
-      <Suspense fallback={<SkeletonStack />}>
-        <ErrorBoundary
-          fallback={({
-            error,
-            reset
-          }) => (
-            <ErrorFallback
-              error={error}
-              reset={reset}
-              refetch={refetch}
-            />
-          )}
-        >
-          <QueueSettings query={queryRef} />
-        </ErrorBoundary>
-      </Suspense>
+      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+        <Suspense fallback={<SkeletonStack />}>
+          <QueueSettings query={queryRef as PreloadedQuery<QueueSettingsQueryType>} />
+        </Suspense>
+      </QueryErrorBoundary>
     </>
   )
 }

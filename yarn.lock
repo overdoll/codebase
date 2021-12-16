@@ -7024,6 +7024,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/loadable__server@^5.12.6":
+  version "5.12.6"
+  resolved "https://registry.yarnpkg.com/@types/loadable__server/-/loadable__server-5.12.6.tgz#5a64eed56f8d0c5d1e3f636e231f30da20d9eb8d"
+  integrity sha512-LgO5aUQJYFQY5bLuAef4anCZ/SwsEo2hG/D4zfREgUGDXjezBjZCwlUmmpfIQLsR64reLTCijS0m7gsd1k9cKA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/lodash.mergewith@4.6.6":
   version "4.6.6"
   resolved "https://registry.yarnpkg.com/@types/lodash.mergewith/-/lodash.mergewith-4.6.6.tgz#c4698f5b214a433ff35cb2c75ee6ec7f99d79f10"
@@ -7184,7 +7191,16 @@
     "@types/react" "*"
     "@types/relay-runtime" "*"
 
-"@types/react-router@^5.1.17":
+"@types/react-router-dom@^5.3.2":
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.3.2.tgz#ebd8e145cf056db5c66eb1dac63c72f52e8542ee"
+  integrity sha512-ELEYRUie2czuJzaZ5+ziIp9Hhw+juEw8b7C11YNA4QdLCVbQ3qLi2l4aq8XnlqM7V31LZX8dxUuFUCrzHm6sqQ==
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*", "@types/react-router@^5.1.17":
   version "5.1.17"
   resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-5.1.17.tgz#087091006213b11042f39570e5cd414863693968"
   integrity sha512-RNSXOyb3VyRs/EOGmjBhhGKTbnN6fHWvy5FNLzWfOWOGjgVUKqJZXfpKzLmgoU8h6Hj8mpALj/mbXQASOb92wQ==
@@ -7216,6 +7232,14 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
+
+"@types/relay-compiler@^8.0.2":
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-8.0.2.tgz#d26af2fca384584c965379288eaa5980c1549596"
+  integrity sha512-Sj6p61kEHhDmogNnSlYHMXlvWOBSXcScB7rRmTirDGiSZcNJwRZdznOyhDT+4LIT51RptazzZFgDskurTQM6hQ==
+  dependencies:
+    "@types/relay-runtime" "*"
+    graphql "^14.5.3"
 
 "@types/relay-runtime@*", "@types/relay-runtime@^12.0.1":
   version "12.0.1"
@@ -14899,7 +14923,7 @@ graphql@^0.13.2:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.5.0.tgz#39d19494dbe69d1ea719915b578bf920344a69d5"
   integrity sha512-OmaM7y0kaK31NKG31q4YbD2beNYa6jBBKtMFT6gLYJljHLJr42IqJ8KX08u3Li/0ifzTU5HjmoOOrwa5BRLeDA==
 
-graphql@^14.0.2, graphql@^14.5.8:
+graphql@^14.0.2, graphql@^14.5.3, graphql@^14.5.8:
   version "14.7.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.7.0.tgz#7fa79a80a69be4a31c27dda824dc04dac2035a72"
   integrity sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==

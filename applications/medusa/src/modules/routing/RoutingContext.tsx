@@ -1,8 +1,7 @@
-import type { Context } from 'react'
 import { createContext, useContext } from 'react'
 import type { Router } from './router'
 
-const RoutingContext: Context<Router> = createContext({})
+const RoutingContext = createContext<Router | undefined>(undefined)
 
 /**
  * A custom context instance for our router type
@@ -10,5 +9,11 @@ const RoutingContext: Context<Router> = createContext({})
 export default RoutingContext
 
 export const useRoutingContext = (): Router => {
-  return useContext<Router>(RoutingContext)
+  const context = useContext(RoutingContext)
+
+  if (context === undefined) {
+    throw new Error('useRoutingContext must be used within a RoutingContext')
+  }
+
+  return context
 }

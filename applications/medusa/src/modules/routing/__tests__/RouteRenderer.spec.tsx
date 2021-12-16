@@ -4,7 +4,7 @@ import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
 import { createMockEnvironment } from 'relay-test-utils'
 import RouterRenderer from '../RouteRenderer'
-import RoutingContext from '../RoutingContext'
+import RoutingProvider from '../RoutingProvider'
 
 it('renders a root component with children', async () => {
   const routes = [
@@ -39,9 +39,9 @@ it('renders a root component with children', async () => {
   )
 
   render(
-    <RoutingContext.Provider value={router.context}>
+    <RoutingProvider router={router.context}>
       <RouterRenderer />
-    </RoutingContext.Provider>
+    </RoutingProvider>
   )
 
   await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument())

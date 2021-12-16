@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-
 import { useRoutingContext } from './RoutingContext'
 import { Params } from './router'
 

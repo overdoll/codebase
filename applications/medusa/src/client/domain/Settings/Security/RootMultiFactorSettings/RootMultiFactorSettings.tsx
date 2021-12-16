@@ -4,11 +4,10 @@ import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   query: PreloadedQuery<MultiFactorSettingsQueryType>
@@ -22,34 +21,17 @@ export default function RootMultiFactorSettings (props: Props): JSX.Element | nu
 
   const [t] = useTranslation('settings')
 
-  const refetch = (): void => {
-    loadQuery({})
-  }
-
-  if (queryRef == null) return null
-
   return (
     <>
       <PageSectionWrap>
         <PageSectionTitle>{t('security.multi_factor.title')}</PageSectionTitle>
         <PageSectionDescription>{t('security.multi_factor.description')}</PageSectionDescription>
       </PageSectionWrap>
-      <Suspense fallback={<SkeletonStack />}>
-        <ErrorBoundary
-          fallback={({
-            error,
-            reset
-          }) => (
-            <ErrorFallback
-              error={error}
-              reset={reset}
-              refetch={refetch}
-            />
-          )}
-        >
-          <MultiFactorSettings query={queryRef} />
-        </ErrorBoundary>
-      </Suspense>
+      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+        <Suspense fallback={<SkeletonStack />}>
+          <MultiFactorSettings query={queryRef as PreloadedQuery<MultiFactorSettingsQueryType>} />
+        </Suspense>
+      </QueryErrorBoundary>
     </>
   )
 }

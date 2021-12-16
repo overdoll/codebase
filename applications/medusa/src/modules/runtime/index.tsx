@@ -7,15 +7,11 @@ interface Props {
   children: ReactNode
 }
 
-interface RTContext {
+interface Runtime {
   getEnv: typeof getEnv
 }
 
-const RuntimeContext = createContext<RTContext>({
-  getEnv (key: string, fallback: any | undefined, stateOverride: any | undefined): string {
-    return ''
-  }
-})
+const RuntimeContext = createContext<Runtime | undefined>(undefined)
 
 // Read the runtime store from the DOM on the client
 const initialState = SafeJSONParse(
@@ -46,8 +42,13 @@ function RuntimeProvider ({
 }
 
 const useRuntime = (): [typeof getEnv] => {
-  const values = useContext(RuntimeContext)
-  return [values.getEnv]
+  const context = useContext(RuntimeContext)
+
+  if (context === undefined) {
+    throw new Error('useRuntime must be used within a RuntimeProvider')
+  }
+
+  return [context.getEnv]
 }
 
 export { useRuntime, RuntimeProvider, getEnv }
