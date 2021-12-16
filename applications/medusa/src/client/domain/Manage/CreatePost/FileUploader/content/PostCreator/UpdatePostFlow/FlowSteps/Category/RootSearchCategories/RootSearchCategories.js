@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback';
-import SearchCategories from './SearchCategories/SearchCategories';
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner';
+import { Suspense, useCallback, useEffect, useState } from 'react'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import SearchCategories from './SearchCategories/SearchCategories'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
   search?: string,

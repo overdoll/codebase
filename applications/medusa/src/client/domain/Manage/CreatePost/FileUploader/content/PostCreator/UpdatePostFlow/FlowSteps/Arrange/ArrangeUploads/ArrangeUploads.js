@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Dispatch, State } from '@//:types/upload';
-import { Flex, Stack, Text } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import type { Uppy } from '@uppy/core';
-import { graphql, useFragment } from 'react-relay/hooks';
-import type { ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql';
-import { EVENTS } from '../../../../../../constants/constants';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import Content from './Content/Content';
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout';
+import type { Node } from 'react'
+import type { Dispatch, State } from '../../../../../../../../../../../types/upload'
+import { Flex, Stack, Text } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import type { Uppy } from '@uppy/core'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
+import { EVENTS } from '../../../../../../constants/constants'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import Content from './Content/Content'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,

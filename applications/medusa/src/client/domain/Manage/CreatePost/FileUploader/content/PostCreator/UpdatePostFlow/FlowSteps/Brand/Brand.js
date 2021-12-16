@@ -1,20 +1,20 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect } from 'react';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { BrandFragment$key } from '@//:artifacts/BrandFragment.graphql';
-import { useTranslation } from 'react-i18next';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../../../../../../components/ContentSelection';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt';
-import { EVENTS } from '../../../../../constants/constants';
+import type { Node } from 'react'
+import { useEffect } from 'react'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { BrandFragment$key } from '@//:artifacts/BrandFragment.graphql'
+import { useTranslation } from 'react-i18next'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../../../../../../components/ContentSelection'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
+import { EVENTS } from '../../../../../constants/constants'
 
 type Props = {
   uppy: Uppy,

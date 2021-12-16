@@ -2,7 +2,6 @@ package entities
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/domain/post"

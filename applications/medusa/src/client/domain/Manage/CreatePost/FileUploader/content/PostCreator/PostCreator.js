@@ -42,7 +42,7 @@ const Query = graphql`
 export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-  const data = useLazyLoadQuery<PostCreatorQuery>(
+  const data = useLazyLoadQuery < PostCreatorQuery > (
     Query,
     { reference: postReference || '' }
   )
@@ -127,7 +127,10 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
         )}
       >
         <UpdatePostFlow
-          uppy={uppy} state={state} dispatch={dispatch} query={data}
+          uppy={uppy}
+          state={state}
+          dispatch={dispatch}
+          query={data}
         />
       </ErrorBoundary>
     </Suspense>

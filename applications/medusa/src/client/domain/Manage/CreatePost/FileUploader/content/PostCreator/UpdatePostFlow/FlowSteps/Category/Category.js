@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect, useState } from 'react';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
-import { useFragment } from 'react-relay';
-import { useTranslation } from 'react-i18next';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react';
-import { EVENTS } from '../../../../../constants/constants';
-import SearchInput from '../../../SearchInput/SearchInput';
-import RootSearchCategories from './RootSearchCategories/RootSearchCategories';
+import type { Node } from 'react'
+import { useEffect, useState } from 'react'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { useFragment } from 'react-relay'
+import { useTranslation } from 'react-i18next'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
+import { EVENTS } from '../../../../../constants/constants'
+import SearchInput from '../../../SearchInput/SearchInput'
+import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
 
 type Props = {
   uppy: Uppy,

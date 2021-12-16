@@ -59,7 +59,7 @@ const ProcessUploadsMutationGQL = graphql`
 export default function ProcessUploads ({ state, dispatch, uppy, query }: Props): Node {
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
-  const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
+  const [updateContent, isUpdatingContent] = useMutation < ProcessUploadsMutation > (ProcessUploadsMutationGQL)
 
   const [t] = useTranslation('manage')
 
@@ -163,8 +163,11 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
         {state.files.map((file, index) => {
           return (
             <File
-              disabled={isUpdatingContent} key={index} uppy={uppy}
-              state={state} file={file}
+              disabled={isUpdatingContent}
+              key={index}
+              uppy={uppy}
+              state={state}
+              file={file}
               dispatch={dispatch}
             />
           )

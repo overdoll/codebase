@@ -65,13 +65,13 @@ const SearchCategoriesFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery<SearchCategoriesQuery>(
+  const queryData = useLazyLoadQuery < SearchCategoriesQuery > (
     SearchCategoriesQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCategoriesFragment>(
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCategoriesFragment > (
     SearchCategoriesFragmentGQL,
     queryData
   )
@@ -102,7 +102,9 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {categories.map((item, index) => (
           <SmallGridItem key={index}>
             <Selector
-              onSelect={onChangeSelection} selected={selected} id={item.id}
+              onSelect={onChangeSelection}
+              selected={selected}
+              id={item.id}
             >
               <SelectorTextOverlay label={item.title}>
                 <ResourceItem
@@ -117,7 +119,8 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {hasNext &&
           <SmallGridItem h='inherit'>
             <ClickableBox
-              h='100%' w='100%'
+              h='100%'
+              w='100%'
               align='center'
               justify='center'
               onClick={() => loadNext(5)}

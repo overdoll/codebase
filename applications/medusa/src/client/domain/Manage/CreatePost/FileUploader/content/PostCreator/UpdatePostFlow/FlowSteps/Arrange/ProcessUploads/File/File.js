@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { Uppy } from '@uppy/core';
-import { UppyFile } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import { CloseButton, HStack, Progress } from '@chakra-ui/react';
-import { EVENTS } from '../../../../../../../constants/constants';
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout';
+import type { Node } from 'react'
+import type { Uppy } from '@uppy/core'
+import { UppyFile } from '@uppy/core'
+import type { Dispatch, State } from '../../../../../../../../../../../../types/upload'
+import { CloseButton, HStack, Progress } from '@chakra-ui/react'
+import { EVENTS } from '../../../../../../../constants/constants'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   uppy: Uppy,

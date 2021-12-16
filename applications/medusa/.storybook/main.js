@@ -5,6 +5,9 @@ const path = require('path')
 const toPath = _path => path.join(process.cwd(), _path)
 
 module.exports = {
+  typescript: {
+    reactDocgen: 'none',
+  },
   stories: [
     './stories/**/*.stories.mdx',
     './stories/**/*.stories.@(js|jsx|ts|tsx)',
@@ -18,9 +21,11 @@ module.exports = {
   ],
   babel: async config => ({
     ...config,
-    plugins: [...config.plugins],
+    plugins: [...config.plugins, [
+      '@babel/plugin-proposal-class-properties',
+      { loose: true }
+    ]],
   }),
-
   webpackFinal: async config => {
     return {
       ...config,

@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { Action, State } from '@//:types/upload';
-import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants';
+import type { Action, State } from '../../../../../../types/upload'
+import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
 
 // reducer maintains the whole state of the upload form
 const reducer: {} = (state: State, action: Action): State => {

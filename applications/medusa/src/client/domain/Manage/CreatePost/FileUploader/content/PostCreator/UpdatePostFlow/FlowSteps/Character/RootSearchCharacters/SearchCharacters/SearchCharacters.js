@@ -66,13 +66,13 @@ const SearchCharactersFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery<SearchCharactersQuery>(
+  const queryData = useLazyLoadQuery < SearchCharactersQuery > (
     SearchCharactersQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCharactersFragment$key>(
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCharactersFragment$key > (
     SearchCharactersFragmentGQL,
     queryData
   )
@@ -103,7 +103,9 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
         {characters.map((item, index) => (
           <LargeGridItem key={index}>
             <Selector
-              onSelect={onChangeSelection} selected={selected} id={item.id}
+              onSelect={onChangeSelection}
+              selected={selected}
+              id={item.id}
             >
               <SelectorTextOverlay label={item.name} description={item.series.title}>
                 <ResourceItem

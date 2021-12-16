@@ -8,7 +8,7 @@ module.exports = {
     'src/server/queries.json'
   ),
   watch: true,
-  language: 'js-flow-uncommented',
+  language: 'typescript',
   artifactDirectory: resolve(
     __dirname,
     'src/__generated__'

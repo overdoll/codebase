@@ -3,7 +3,6 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 
 exports_files([
     "package.json",
-    "streamlinehq.json",
 ])
 
 package(default_visibility = ["//visibility:public"])

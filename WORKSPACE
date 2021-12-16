@@ -72,14 +72,14 @@ http_archive(
     name = "build_bazel_rules_nodejs",
     patch_args = ["-p1"],
     patches = ["//.patches:coverage.patch"],
-    sha256 = "bfacf15161d96a6a39510e7b3d3b522cf61cb8b82a31e79400a84c5abcab5347",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.2.1/rules_nodejs-3.2.1.tar.gz"],
+    sha256 = "65067dcad93a61deb593be7d3d9a32a4577d09665536d8da536d731da5cd15e2",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.4.2/rules_nodejs-3.4.2.tar.gz"],
 )
 
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
 node_repositories(
-    node_version = "12.13.0",
+    node_version = "16.0.0",
     yarn_version = "1.19.1",
 )
 
@@ -100,9 +100,6 @@ yarn_install(
     args = [
         "--target_arch=x64",
         "--target_platform=linux",
-    ],
-    data = [
-        "//:streamlinehq.json",
     ],
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
