@@ -21,6 +21,9 @@ import { format } from 'date-fns'
 import { PagePanelWrap, ListSpacer } from '@//:modules/content/PageLayout'
 import { DesktopComputer, MobilePhone } from '../../../../../../../assets/icons/interface'
 import { ArrowButtonDown, ArrowButtonRight, ArrowButtonUp } from '../../../../../../../assets/icons/navigation'
+import RevokeSession from './RevokeSession/RevokeSession'
+import Review
+  from '../../../../../Manage/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowSteps/Review/Review'
 
 type Props = {
   connectionID: SessionCardFragment$key,
@@ -122,6 +125,7 @@ export default function SessionCard ({ connectionID, query }: Props): Node {
                   {signedInDate}
                 </Text>
               </Box>
+              {!data.current && <RevokeSession connectionID={connectionID} session={data} />}
             </ListSpacer>
           </AccordionPanel>
         </>
@@ -129,23 +133,3 @@ export default function SessionCard ({ connectionID, query }: Props): Node {
     </AccordionItem>
   )
 }
-
-// this is for the new session query
-/*
-{data.current &&
-            <Menu autoSelect={false}>
-              {({ isOpen }) => (
-                <>
-                  <MenuButton
-                    bg='transparent'
-                    size='xs'
-                    as={IconButton}
-                    icon={<Icon icon={InterfaceSettingCog} w='fill' h='fill' fill='gray.300' m={1} />}
-                  />
-                  <MenuList display={isOpen ? 'block' : 'none'} boxShadow='lg'>
-                    <RevokeSession session={data} connectionID={connectionID} />
-                  </MenuList>
-                </>
-              )}
-            </Menu>}
- */

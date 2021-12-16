@@ -171,7 +171,7 @@
       "show": "Show IP",
       "current": "Your Current Session",
       "load": "Load More",
-      "revoke": "Revoke",
+      "revoke": "Revoke Session",
       "on": "{{browser}} on {{device}}",
       "panel": {
         "ip": "IP Address",
