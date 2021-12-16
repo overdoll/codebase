@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ae7000c58bcf1e078dc9d0733b17ff0c
+ * @relayHash 674ae527347f7bd0b364d40f1d70560d
  */
 
 /* eslint-disable */
@@ -9,60 +9,42 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type SessionsSettingsFragment$ref: FragmentReference;
-declare export opaque type SessionsSettingsFragment$fragmentType: SessionsSettingsFragment$ref;
-export type SessionsPaginationQueryVariables = {|
+declare export opaque type PostStateReviewFragment$ref: FragmentReference;
+declare export opaque type PostStateReviewFragment$fragmentType: PostStateReviewFragment$ref;
+export type ReviewPostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
   id: string,
 |};
-export type SessionsPaginationQueryResponse = {|
+export type ReviewPostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: SessionsSettingsFragment$ref
+    +$fragmentRefs: PostStateReviewFragment$ref
   |}
 |};
-export type SessionsPaginationQuery = {|
-  variables: SessionsPaginationQueryVariables,
-  response: SessionsPaginationQueryResponse,
+export type ReviewPostsPaginationQuery = {|
+  variables: ReviewPostsPaginationQueryVariables,
+  response: ReviewPostsPaginationQueryResponse,
 |};
 
 
 /*
-query SessionsPaginationQuery(
+query ReviewPostsPaginationQuery(
   $after: String
   $first: Int = 3
   $id: ID!
 ) {
   node(id: $id) {
     __typename
-    ...SessionsSettingsFragment_2HEEH6
+    ...PostStateReviewFragment_2HEEH6
     id
   }
 }
 
-fragment RevokeSessionFragment on AccountSession {
-  id
-}
-
-fragment SessionCardFragment on AccountSession {
-  ...RevokeSessionFragment
-  device
-  ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
-  created
-}
-
-fragment SessionsSettingsFragment_2HEEH6 on Account {
-  sessions(first: $first, after: $after) {
+fragment PostStateReviewFragment_2HEEH6 on Account {
+  reviewPosts: posts(first: $first, after: $after, state: REVIEW) {
     edges {
       node {
-        ...SessionCardFragment
+        ...PostStateReviewPreviewFragment
         id
         __typename
       }
@@ -74,6 +56,19 @@ fragment SessionsSettingsFragment_2HEEH6 on Account {
     }
   }
   id
+}
+
+fragment PostStateReviewPreviewFragment on Post {
+  id
+  reference
+  postedAt
+  content {
+    type
+    urls {
+      url
+      mimeType
+    }
+  }
 }
 */
 
@@ -102,38 +97,45 @@ v1 = [
     "variableName": "id"
   }
 ],
-v2 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  }
-],
+v2 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v3 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "first"
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v6 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "REVIEW"
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SessionsPaginationQuery",
+    "name": "ReviewPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -144,9 +146,12 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": (v2/*: any*/),
+            "args": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
             "kind": "FragmentSpread",
-            "name": "SessionsSettingsFragment"
+            "name": "PostStateReviewFragment"
           }
         ],
         "storageKey": null
@@ -159,7 +164,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SessionsPaginationQuery",
+    "name": "ReviewPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -169,23 +174,23 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
-                "alias": null,
-                "args": (v2/*: any*/),
-                "concreteType": "AccountSessionConnection",
+                "alias": "reviewPosts",
+                "args": (v6/*: any*/),
+                "concreteType": "PostConnection",
                 "kind": "LinkedField",
-                "name": "sessions",
+                "name": "posts",
                 "plural": false,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "AccountSessionEdge",
+                    "concreteType": "PostEdge",
                     "kind": "LinkedField",
                     "name": "edges",
                     "plural": true,
@@ -193,80 +198,70 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "AccountSession",
+                        "concreteType": "Post",
                         "kind": "LinkedField",
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v4/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "device",
+                            "name": "reference",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "ip",
+                            "name": "postedAt",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Location",
+                            "concreteType": "Resource",
                             "kind": "LinkedField",
-                            "name": "location",
-                            "plural": false,
+                            "name": "content",
+                            "plural": true,
                             "selections": [
                               {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "city",
+                                "name": "type",
                                 "storageKey": null
                               },
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "country",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "subdivision",
+                                "concreteType": "ResourceUrl",
+                                "kind": "LinkedField",
+                                "name": "urls",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "url",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               }
                             ],
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "lastSeen",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "current",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "created",
-                            "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -304,30 +299,20 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "kind": "ClientExtension",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__id",
-                        "storageKey": null
-                      }
-                    ]
                   }
                 ],
                 "storageKey": null
               },
               {
-                "alias": null,
-                "args": (v2/*: any*/),
-                "filters": null,
+                "alias": "reviewPosts",
+                "args": (v6/*: any*/),
+                "filters": [
+                  "state"
+                ],
                 "handle": "connection",
-                "key": "sessions_sessions",
+                "key": "ReviewPostsPaginationQuery_reviewPosts",
                 "kind": "LinkedHandle",
-                "name": "sessions"
+                "name": "posts"
               }
             ],
             "type": "Account",
@@ -339,14 +324,14 @@ return {
     ]
   },
   "params": {
-    "id": "ae7000c58bcf1e078dc9d0733b17ff0c",
+    "id": "674ae527347f7bd0b364d40f1d70560d",
     "metadata": {},
-    "name": "SessionsPaginationQuery",
+    "name": "ReviewPostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '17c461b08fb41762a12cbf32e9b81755';
+(node: any).hash = '5d8e4692f626f8476dadb2e7fa0aa69d';
 module.exports = node;

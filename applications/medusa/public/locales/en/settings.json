@@ -173,6 +173,11 @@
       "load": "Load More",
       "revoke": "Revoke",
       "on": "{{browser}} on {{device}}",
+      "panel": {
+        "ip": "IP Address",
+        "location": "Last Location",
+        "login": "Signed In"
+      },
       "query": {
         "success": "Session revoked successfully",
         "error": "There was an error revoking the session"

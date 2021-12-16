@@ -7,32 +7,32 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { PostStatePreviewFragment$ref } from "./PostStatePreviewFragment.graphql";
+import type { PostStatePublishedPreviewFragment$ref } from "./PostStatePublishedPreviewFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
-import type { MyPostsFragment$ref, MyPostsFragment$fragmentType } from "./OpenDraftPostsPaginationQuery.graphql";
-export type { MyPostsFragment$ref, MyPostsFragment$fragmentType };
-export type MyPostsFragment = {|
-  +posts: {|
+import type { PostStatePublishedFragment$ref, PostStatePublishedFragment$fragmentType } from "./PublishedPostsPaginationQuery.graphql";
+export type { PostStatePublishedFragment$ref, PostStatePublishedFragment$fragmentType };
+export type PostStatePublishedFragment = {|
+  +publishedPosts: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +$fragmentRefs: PostStatePreviewFragment$ref
+        +$fragmentRefs: PostStatePublishedPreviewFragment$ref
       |}
     |}>
   |},
   +id: string,
-  +$refType: MyPostsFragment$ref,
+  +$refType: PostStatePublishedFragment$ref,
 |};
-export type MyPostsFragment$data = MyPostsFragment;
-export type MyPostsFragment$key = {
-  +$data?: MyPostsFragment$data,
-  +$fragmentRefs: MyPostsFragment$ref,
+export type PostStatePublishedFragment$data = PostStatePublishedFragment;
+export type PostStatePublishedFragment$key = {
+  +$data?: PostStatePublishedFragment$data,
+  +$fragmentRefs: PostStatePublishedFragment$ref,
   ...
 };
 
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "posts"
+  "publishedPosts"
 ];
 return {
   "argumentDefinitions": [
@@ -69,18 +69,24 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./OpenDraftPostsPaginationQuery.graphql.js'),
+      "operation": require('./PublishedPostsPaginationQuery.graphql.js'),
       "identifierField": "id"
     }
   },
-  "name": "MyPostsFragment",
+  "name": "PostStatePublishedFragment",
   "selections": [
     {
-      "alias": "posts",
-      "args": null,
+      "alias": "publishedPosts",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "state",
+          "value": "PUBLISHED"
+        }
+      ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__OpenDraftPostsPaginationQuery_posts_connection",
+      "name": "__PublishedPostsPaginationQuery_publishedPosts_connection",
       "plural": false,
       "selections": [
         {
@@ -109,7 +115,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "PostStatePreviewFragment"
+                  "name": "PostStatePublishedPreviewFragment"
                 }
               ],
               "storageKey": null
@@ -150,7 +156,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "__PublishedPostsPaginationQuery_publishedPosts_connection(state:\"PUBLISHED\")"
     },
     {
       "alias": null,
@@ -165,5 +171,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '521c69852656e43cddbd0ddc1f6f015d';
+(node: any).hash = 'f6d6b10ada5bbf89118eb4a7abf1520b';
 module.exports = node;

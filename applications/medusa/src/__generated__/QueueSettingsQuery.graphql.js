@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d7c65b4fa9fe3846a5044beb756865e3
+ * @relayHash b362964b720ce01b03d1ca29b8bb9e55
  */
 
 /* eslint-disable */
@@ -11,7 +11,9 @@ import type { ConcreteRequest } from 'relay-runtime';
 import type { QueueSettingsFragment$ref } from "./QueueSettingsFragment.graphql";
 export type QueueSettingsQueryVariables = {||};
 export type QueueSettingsQueryResponse = {|
-  +$fragmentRefs: QueueSettingsFragment$ref
+  +viewer: ?{|
+    +$fragmentRefs: QueueSettingsFragment$ref
+  |}
 |};
 export type QueueSettingsQuery = {|
   variables: QueueSettingsQueryVariables,
@@ -21,13 +23,16 @@ export type QueueSettingsQuery = {|
 
 /*
 query QueueSettingsQuery {
-  ...QueueSettingsFragment
+  viewer {
+    ...QueueSettingsFragment
+    id
+  }
 }
 
-fragment QueueSettingsFragment on Query {
-  viewer {
-    __typename
-    id
+fragment QueueSettingsFragment on Account {
+  id
+  moderatorSettings {
+    isInModeratorQueue
   }
 }
 */
@@ -40,9 +45,20 @@ const node: ConcreteRequest = {
     "name": "QueueSettingsQuery",
     "selections": [
       {
+        "alias": null,
         "args": null,
-        "kind": "FragmentSpread",
-        "name": "QueueSettingsFragment"
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "QueueSettingsFragment"
+          }
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -66,14 +82,25 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "__typename",
+            "name": "id",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
+            "concreteType": "ModeratorSettings",
+            "kind": "LinkedField",
+            "name": "moderatorSettings",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isInModeratorQueue",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -82,7 +109,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "d7c65b4fa9fe3846a5044beb756865e3",
+    "id": "b362964b720ce01b03d1ca29b8bb9e55",
     "metadata": {},
     "name": "QueueSettingsQuery",
     "operationKind": "query",
@@ -90,5 +117,5 @@ const node: ConcreteRequest = {
   }
 };
 // prettier-ignore
-(node: any).hash = 'afb665c2f2aab07307e71326e449ddf6';
+(node: any).hash = '87666487e59d3d0b0ad33448974d6d75';
 module.exports = node;

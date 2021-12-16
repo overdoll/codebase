@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ae7000c58bcf1e078dc9d0733b17ff0c
+ * @relayHash 3caf72e8edf1e2d215397edf50a54857
  */
 
 /* eslint-disable */
@@ -9,60 +9,42 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type SessionsSettingsFragment$ref: FragmentReference;
-declare export opaque type SessionsSettingsFragment$fragmentType: SessionsSettingsFragment$ref;
-export type SessionsPaginationQueryVariables = {|
+declare export opaque type PostStateDraftFragment$ref: FragmentReference;
+declare export opaque type PostStateDraftFragment$fragmentType: PostStateDraftFragment$ref;
+export type DraftPostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
   id: string,
 |};
-export type SessionsPaginationQueryResponse = {|
+export type DraftPostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: SessionsSettingsFragment$ref
+    +$fragmentRefs: PostStateDraftFragment$ref
   |}
 |};
-export type SessionsPaginationQuery = {|
-  variables: SessionsPaginationQueryVariables,
-  response: SessionsPaginationQueryResponse,
+export type DraftPostsPaginationQuery = {|
+  variables: DraftPostsPaginationQueryVariables,
+  response: DraftPostsPaginationQueryResponse,
 |};
 
 
 /*
-query SessionsPaginationQuery(
+query DraftPostsPaginationQuery(
   $after: String
   $first: Int = 3
   $id: ID!
 ) {
   node(id: $id) {
     __typename
-    ...SessionsSettingsFragment_2HEEH6
+    ...PostStateDraftFragment_2HEEH6
     id
   }
 }
 
-fragment RevokeSessionFragment on AccountSession {
-  id
-}
-
-fragment SessionCardFragment on AccountSession {
-  ...RevokeSessionFragment
-  device
-  ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
-  created
-}
-
-fragment SessionsSettingsFragment_2HEEH6 on Account {
-  sessions(first: $first, after: $after) {
+fragment PostStateDraftFragment_2HEEH6 on Account {
+  draftPosts: posts(first: $first, after: $after, state: DRAFT) {
     edges {
       node {
-        ...SessionCardFragment
+        ...PostStateDraftPreviewFragment
         id
         __typename
       }
@@ -74,6 +56,41 @@ fragment SessionsSettingsFragment_2HEEH6 on Account {
     }
   }
   id
+}
+
+fragment PostStateDraftPreviewFragment on Post {
+  id
+  reference
+  ...useCheckRequirementsFragment
+  content {
+    type
+    urls {
+      url
+      mimeType
+    }
+  }
+}
+
+fragment useCheckRequirementsFragment on Post {
+  content {
+    __typename
+  }
+  audience {
+    __typename
+    id
+  }
+  brand {
+    __typename
+    id
+  }
+  categories {
+    __typename
+    id
+  }
+  characters {
+    __typename
+    id
+  }
 }
 */
 
@@ -102,38 +119,49 @@ v1 = [
     "variableName": "id"
   }
 ],
-v2 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  }
-],
+v2 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v3 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "first"
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v6 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "DRAFT"
+  }
+],
+v7 = [
+  (v4/*: any*/),
+  (v5/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SessionsPaginationQuery",
+    "name": "DraftPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -144,9 +172,12 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": (v2/*: any*/),
+            "args": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
             "kind": "FragmentSpread",
-            "name": "SessionsSettingsFragment"
+            "name": "PostStateDraftFragment"
           }
         ],
         "storageKey": null
@@ -159,7 +190,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SessionsPaginationQuery",
+    "name": "DraftPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -169,23 +200,23 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
-                "alias": null,
-                "args": (v2/*: any*/),
-                "concreteType": "AccountSessionConnection",
+                "alias": "draftPosts",
+                "args": (v6/*: any*/),
+                "concreteType": "PostConnection",
                 "kind": "LinkedField",
-                "name": "sessions",
+                "name": "posts",
                 "plural": false,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "AccountSessionEdge",
+                    "concreteType": "PostEdge",
                     "kind": "LinkedField",
                     "name": "edges",
                     "plural": true,
@@ -193,53 +224,58 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "AccountSession",
+                        "concreteType": "Post",
                         "kind": "LinkedField",
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v4/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "device",
+                            "name": "reference",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "ip",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Location",
+                            "concreteType": "Resource",
                             "kind": "LinkedField",
-                            "name": "location",
-                            "plural": false,
+                            "name": "content",
+                            "plural": true,
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "city",
+                                "name": "type",
                                 "storageKey": null
                               },
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "country",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "subdivision",
+                                "concreteType": "ResourceUrl",
+                                "kind": "LinkedField",
+                                "name": "urls",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "url",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -248,25 +284,44 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "lastSeen",
+                            "concreteType": "Audience",
+                            "kind": "LinkedField",
+                            "name": "audience",
+                            "plural": false,
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "current",
+                            "concreteType": "Brand",
+                            "kind": "LinkedField",
+                            "name": "brand",
+                            "plural": false,
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "created",
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "categories",
+                            "plural": true,
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": (v7/*: any*/),
+                            "storageKey": null
+                          },
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -304,30 +359,20 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "kind": "ClientExtension",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__id",
-                        "storageKey": null
-                      }
-                    ]
                   }
                 ],
                 "storageKey": null
               },
               {
-                "alias": null,
-                "args": (v2/*: any*/),
-                "filters": null,
+                "alias": "draftPosts",
+                "args": (v6/*: any*/),
+                "filters": [
+                  "state"
+                ],
                 "handle": "connection",
-                "key": "sessions_sessions",
+                "key": "DraftPostsPaginationQuery_draftPosts",
                 "kind": "LinkedHandle",
-                "name": "sessions"
+                "name": "posts"
               }
             ],
             "type": "Account",
@@ -339,14 +384,14 @@ return {
     ]
   },
   "params": {
-    "id": "ae7000c58bcf1e078dc9d0733b17ff0c",
+    "id": "3caf72e8edf1e2d215397edf50a54857",
     "metadata": {},
-    "name": "SessionsPaginationQuery",
+    "name": "DraftPostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '17c461b08fb41762a12cbf32e9b81755';
+(node: any).hash = '0963bc9d66dc0f15483eedd686e24359';
 module.exports = node;

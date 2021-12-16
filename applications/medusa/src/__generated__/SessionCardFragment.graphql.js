@@ -14,8 +14,14 @@ declare export opaque type SessionCardFragment$fragmentType: SessionCardFragment
 export type SessionCardFragment = {|
   +device: string,
   +ip: string,
+  +location: {|
+    +city: string,
+    +country: string,
+    +subdivision: string,
+  |},
   +lastSeen: any,
   +current: boolean,
+  +created: any,
   +$fragmentRefs: RevokeSessionFragment$ref,
   +$refType: SessionCardFragment$ref,
 |};
@@ -50,6 +56,38 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "Location",
+      "kind": "LinkedField",
+      "name": "location",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "subdivision",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
       "name": "lastSeen",
       "storageKey": null
@@ -62,6 +100,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "created",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RevokeSessionFragment"
@@ -71,5 +116,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '2fb00be7c28f0b05ef29b2943cb430d3';
+(node: any).hash = '7fe86353f01c06925816f5a505244077';
 module.exports = node;

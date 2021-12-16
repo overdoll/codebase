@@ -6,7 +6,7 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import type { SessionsSettingsFragment$key } from '@//:artifacts/SessionsSettingsFragment.graphql'
-import { Flex, Stack } from '@chakra-ui/react'
+import { Flex, Stack, Accordion } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
 import SessionCard from './SessionCard/SessionCard'
@@ -62,11 +62,13 @@ export default function MultiFactorSettings (props: Props): Node {
 
   return (
     <>
-      <Stack mb={3}>
-        {sessions.map((item, index) =>
-          <SessionCard key={index} connectionID={sessionsConnectionID} query={item.node} />
-        )}
-      </Stack>
+      <Accordion allowToggle>
+        <Stack mb={3}>
+          {sessions.map((item, index) =>
+            <SessionCard key={index} connectionID={sessionsConnectionID} query={item.node} />
+          )}
+        </Stack>
+      </Accordion>
       {hasNext &&
         <Flex justify='center'>
           <Button

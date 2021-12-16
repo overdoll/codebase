@@ -21,7 +21,7 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import Icon from '@//:modules/content/Icon/Icon'
 import { PauseCircle } from '../../../../../../../assets/icons/interface'
-import { Link } from '@//:modules/routing'
+import { Link, useHistory } from '@//:modules/routing'
 
 type Props = {
   uppy: Uppy,
@@ -48,6 +48,8 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
   )
 
   const [t] = useTranslation('manage')
+
+  const history = useHistory()
 
   const postData = data.post
 
@@ -105,9 +107,9 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): Node {
               </Heading>
             </Box>
             <Button
-              colorScheme='gray' variant='solid'
+              colorScheme='orange' variant='solid'
               size='lg'
-              onClick={onCleanup}
+              onClick={() => history.goBack()}
             >{t('create_post.flow.create.not_draft.button')}
             </Button>
           </Stack>

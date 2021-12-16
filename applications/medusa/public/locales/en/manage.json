@@ -157,6 +157,45 @@
     }
   },
   "my_posts": {
-    "title": "My Posts"
+    "title": "My Posts",
+    "drafts": {
+      "tab": "Drafts",
+      "discard": "Discard",
+      "load": "Load More",
+      "description": "Click on a draft post to continue editing it.",
+      "empty": {
+        "title": "No Draft Posts",
+        "button": "Create a post"
+      }
+    },
+    "review": {
+      "tab": "In Review",
+      "load": "Load More",
+      "posted": "Posted on {{date}}",
+      "description": "These posts will be reviewed to ensure they comply with our community guidelines before going live.",
+      "empty": {
+        "title": "No Posts in Review",
+        "description": "When you submit a post, it'll appear here if it needs to be reviewed."
+      }
+    },
+    "published": {
+      "tab": "Published",
+      "load": "Load More",
+      "description": "Click on a published post to see it live.",
+      "empty": {
+        "title": "No Published Posts",
+        "button": "Create a post"
+      }
+    },
+    "rejected": {
+      "tab": "Rejected",
+      "load": "Load More",
+      "description": "These posts were rejected from being visible to the public for violating the community guidelines.",
+      "rejected": "Rejected",
+      "empty": {
+        "title": "No Rejected Posts",
+        "description": "If one of your posts is rejected"
+      }
+    }
   }
 }

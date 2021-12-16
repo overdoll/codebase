@@ -83,36 +83,34 @@ export default function AuditInspect ({ auditLog }: Props): Node {
   const canRevert = new Date(data?.reversibleUntil) > new Date() && !data.reverted
 
   return (
-    <LargeBackgroundBox>
-      <Stack spacing={3}>
-        {data.reverted
-          ? <SmallBackgroundBox bg='purple.50' align='center' justify='center'>
-            <Text color='purple.400' fontSize='2xl' fontFamily='mono'>
-              {t('history.inspect.revert.action')}
-            </Text>
-            <Text>{t('history.inspect.revert.description', { action: data.action })}</Text>
-          </SmallBackgroundBox>
-          : <SmallBackgroundBox
-              bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'} align='center'
-              justify='center'
-            >
-            <Text color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'} fontSize='2xl' fontFamily='mono'>
-              {data.action}
-            </Text>
-            {data.notes && <Text>{data.notes}</Text>}
-          </SmallBackgroundBox>}
-        <PostPreview query={data.post} />
-        {canRevert &&
-          <Button
-            size='md'
-            variant='solid'
-            colorScheme='purple'
-            disabled={data.reverted || !canRevert} isLoading={isRevertingPost}
-            onClick={revertLog}
+    <Stack spacing={3}>
+      {data.reverted
+        ? <SmallBackgroundBox bg='purple.50' align='center' justify='center'>
+          <Text color='purple.400' fontSize='2xl' fontFamily='mono'>
+            {t('history.inspect.revert.action')}
+          </Text>
+          <Text>{t('history.inspect.revert.description', { action: data.action })}</Text>
+        </SmallBackgroundBox>
+        : <SmallBackgroundBox
+            bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'} align='center'
+            justify='center'
           >
-            {t('history.inspect.revert.button.action')}
-          </Button>}
-      </Stack>
-    </LargeBackgroundBox>
+          <Text color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'} fontSize='2xl' fontFamily='mono'>
+            {data.action}
+          </Text>
+          {data.notes && <Text>{data.notes}</Text>}
+        </SmallBackgroundBox>}
+      <PostPreview query={data.post} />
+      {canRevert &&
+        <Button
+          size='md'
+          variant='solid'
+          colorScheme='purple'
+          disabled={data.reverted || !canRevert} isLoading={isRevertingPost}
+          onClick={revertLog}
+        >
+          {t('history.inspect.revert.button.action')}
+        </Button>}
+    </Stack>
   )
 }

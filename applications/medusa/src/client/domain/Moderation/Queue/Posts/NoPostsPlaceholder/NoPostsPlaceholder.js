@@ -31,7 +31,7 @@ export default function PostHeader (props: Props): Node {
 
   if (!data.moderatorSettings.isInModeratorQueue) {
     return (
-      <Stack spacing={4} align='center'>
+      <>
         <Icon
           w={12} h={12}
           icon={PauseCircle}
@@ -52,12 +52,12 @@ export default function PostHeader (props: Props): Node {
           >{t('queue.paused.unpause')}
           </Button>
         </Link>
-      </Stack>
+      </>
     )
   }
 
   return (
-    <Stack spacing={4} align='center'>
+    <>
       <Icon
         w={12} h={12} icon={CheckCircle}
         fill='green.300'
@@ -70,6 +70,6 @@ export default function PostHeader (props: Props): Node {
           {t('queue.empty.subheader')}
         </Text>
       </Box>
-    </Stack>
+    </>
   )
 }

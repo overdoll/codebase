@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 838e899942671b54bb8793e1ec14ec9c
+ * @relayHash 130698080719633b36562e8e9539ba10
  */
 
 /* eslint-disable */
@@ -37,8 +37,14 @@ fragment SessionCardFragment on AccountSession {
   ...RevokeSessionFragment
   device
   ip
+  location {
+    city
+    country
+    subdivision
+  }
   lastSeen
   current
+  created
 }
 
 fragment SessionsSettingsFragment on Account {
@@ -158,6 +164,38 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "Location",
+                        "kind": "LinkedField",
+                        "name": "location",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "city",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "country",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "subdivision",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "kind": "ScalarField",
                         "name": "lastSeen",
                         "storageKey": null
@@ -167,6 +205,13 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "current",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "created",
                         "storageKey": null
                       },
                       {
@@ -245,7 +290,7 @@ return {
     ]
   },
   "params": {
-    "id": "838e899942671b54bb8793e1ec14ec9c",
+    "id": "130698080719633b36562e8e9539ba10",
     "metadata": {},
     "name": "SessionsSettingsQuery",
     "operationKind": "query",

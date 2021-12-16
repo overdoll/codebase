@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 586a5bca26e9743a8ebf48af2c2ad423
+ * @relayHash 79b324740b847e49907a94484f962413
  */
 
 /* eslint-disable */
@@ -9,42 +9,42 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type MyPostsFragment$ref: FragmentReference;
-declare export opaque type MyPostsFragment$fragmentType: MyPostsFragment$ref;
-export type OpenDraftPostsPaginationQueryVariables = {|
+declare export opaque type PostStateRejectedFragment$ref: FragmentReference;
+declare export opaque type PostStateRejectedFragment$fragmentType: PostStateRejectedFragment$ref;
+export type RejectedPostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
   id: string,
 |};
-export type OpenDraftPostsPaginationQueryResponse = {|
+export type RejectedPostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: MyPostsFragment$ref
+    +$fragmentRefs: PostStateRejectedFragment$ref
   |}
 |};
-export type OpenDraftPostsPaginationQuery = {|
-  variables: OpenDraftPostsPaginationQueryVariables,
-  response: OpenDraftPostsPaginationQueryResponse,
+export type RejectedPostsPaginationQuery = {|
+  variables: RejectedPostsPaginationQueryVariables,
+  response: RejectedPostsPaginationQueryResponse,
 |};
 
 
 /*
-query OpenDraftPostsPaginationQuery(
+query RejectedPostsPaginationQuery(
   $after: String
   $first: Int = 3
   $id: ID!
 ) {
   node(id: $id) {
     __typename
-    ...MyPostsFragment_2HEEH6
+    ...PostStateRejectedFragment_2HEEH6
     id
   }
 }
 
-fragment MyPostsFragment_2HEEH6 on Account {
-  posts(first: $first, after: $after) {
+fragment PostStateRejectedFragment_2HEEH6 on Account {
+  rejectedPosts: posts(first: $first, after: $after, state: REJECTED) {
     edges {
       node {
-        ...PostStatePreviewFragment
+        ...PostStateRejectedPreviewFragment
         id
         __typename
       }
@@ -58,38 +58,16 @@ fragment MyPostsFragment_2HEEH6 on Account {
   id
 }
 
-fragment PostStatePreviewFragment on Post {
+fragment PostStateRejectedPreviewFragment on Post {
   id
   reference
-  ...useCheckRequirementsFragment
+  postedAt
   content {
     type
     urls {
       url
       mimeType
     }
-  }
-}
-
-fragment useCheckRequirementsFragment on Post {
-  content {
-    __typename
-  }
-  audience {
-    __typename
-    id
-  }
-  brand {
-    __typename
-    id
-  }
-  categories {
-    __typename
-    id
-  }
-  characters {
-    __typename
-    id
   }
 }
 */
@@ -119,42 +97,45 @@ v1 = [
     "variableName": "id"
   }
 ],
-v2 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  }
-],
+v2 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v3 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "first"
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v6 = [
+  (v2/*: any*/),
   (v3/*: any*/),
-  (v4/*: any*/)
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "REJECTED"
+  }
 ];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "OpenDraftPostsPaginationQuery",
+    "name": "RejectedPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -165,9 +146,12 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": (v2/*: any*/),
+            "args": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
             "kind": "FragmentSpread",
-            "name": "MyPostsFragment"
+            "name": "PostStateRejectedFragment"
           }
         ],
         "storageKey": null
@@ -180,7 +164,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "OpenDraftPostsPaginationQuery",
+    "name": "RejectedPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -190,14 +174,14 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
-                "alias": null,
-                "args": (v2/*: any*/),
+                "alias": "rejectedPosts",
+                "args": (v6/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
                 "name": "posts",
@@ -219,7 +203,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v4/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -230,12 +214,18 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "postedAt",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "Resource",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v3/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -271,47 +261,7 @@ return {
                             ],
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Audience",
-                            "kind": "LinkedField",
-                            "name": "audience",
-                            "plural": false,
-                            "selections": (v5/*: any*/),
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Brand",
-                            "kind": "LinkedField",
-                            "name": "brand",
-                            "plural": false,
-                            "selections": (v5/*: any*/),
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Category",
-                            "kind": "LinkedField",
-                            "name": "categories",
-                            "plural": true,
-                            "selections": (v5/*: any*/),
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Character",
-                            "kind": "LinkedField",
-                            "name": "characters",
-                            "plural": true,
-                            "selections": (v5/*: any*/),
-                            "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -354,11 +304,13 @@ return {
                 "storageKey": null
               },
               {
-                "alias": null,
-                "args": (v2/*: any*/),
-                "filters": null,
+                "alias": "rejectedPosts",
+                "args": (v6/*: any*/),
+                "filters": [
+                  "state"
+                ],
                 "handle": "connection",
-                "key": "OpenDraftPostsPaginationQuery_posts",
+                "key": "RejectedPostsPaginationQuery_rejectedPosts",
                 "kind": "LinkedHandle",
                 "name": "posts"
               }
@@ -372,14 +324,14 @@ return {
     ]
   },
   "params": {
-    "id": "586a5bca26e9743a8ebf48af2c2ad423",
+    "id": "79b324740b847e49907a94484f962413",
     "metadata": {},
-    "name": "OpenDraftPostsPaginationQuery",
+    "name": "RejectedPostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '521c69852656e43cddbd0ddc1f6f015d';
+(node: any).hash = '4a4efe16905fec5ed900ca7dc8cf96c0';
 module.exports = node;

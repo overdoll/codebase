@@ -1,23 +1,23 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { usePaginationFragment } from 'react-relay';
-import { useTranslation } from 'react-i18next';
-import type { SearchCategoriesFragment } from '@//:artifacts/SearchCategoriesFragment.graphql';
+import type { Node } from 'react'
+import { usePaginationFragment } from 'react-relay'
+import { useTranslation } from 'react-i18next'
+import type { SearchCategoriesFragment } from '@//:artifacts/SearchCategoriesFragment.graphql'
 
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import { Flex, Text } from '@chakra-ui/react';
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
   Selector,
   SelectorTextOverlay,
-  SmallGridItem,
-} from '../../../../../../../../../../../components/ContentSelection';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
-import { removeNode } from '@//:modules/utilities/functions';
-import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql';
-import { ClickableBox } from '@//:modules/content/PageLayout';
+  SmallGridItem
+} from '../../../../../../../../../../../components/ContentSelection'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { removeNode } from '@//:modules/utilities/functions'
+import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
+import { ClickableBox } from '@//:modules/content/PageLayout'
 
 type Props = {
   selected: Array<string>,

@@ -37,7 +37,8 @@ const baseStyleTablist = (props) => {
 }
 
 const baseStyleTabpanel = {
-  p: 4
+  p: 0,
+  mt: 4
 }
 
 const baseStyle = (props) => ({
@@ -154,7 +155,7 @@ const variantSoftRounded = (props) => {
   const { colorScheme: c, theme } = props
   return {
     tab: {
-      borderRadius: 'md',
+      borderRadius: 'base',
       fontWeight: 'semibold',
       mx: 1,
       color: 'gray.200',

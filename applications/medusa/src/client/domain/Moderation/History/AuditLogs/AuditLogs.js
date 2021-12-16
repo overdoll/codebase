@@ -7,7 +7,8 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import type { AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Text,
-  Flex
+  Flex,
+  Accordion
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
@@ -70,13 +71,15 @@ export default function AuditLogs (props: Props): Node {
 
   return (
     <>
-      <ListSpacer>
-        {auditLogs.map((item, index) =>
-          <AuditCard
-            key={index} auditLog={auditLogs[index]?.node}
-          />
-        )}
-      </ListSpacer>
+      <Accordion allowToggle>
+        <ListSpacer>
+          {auditLogs.map((item, index) =>
+            <AuditCard
+              key={index} auditLog={auditLogs[index]?.node}
+            />
+          )}
+        </ListSpacer>
+      </Accordion>
       <Flex justify='center'>
         {hasNext
           ? <Button

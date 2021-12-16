@@ -20,7 +20,7 @@ import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
 import { usePreloadedQuery } from 'react-relay/hooks'
-import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox, SmallBackgroundBox, PostPlaceholder } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton'
 
 type Props = {
@@ -132,17 +132,9 @@ export default function Posts (props: Props): Node {
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
   if (data.moderatorPostsQueue.edges.length < 1) {
     return (
-      <LargeBackgroundBox>
-        <Flex
-          flexDirection='column'
-          alignItems='center'
-          justifyContent='center'
-          textAlign='center'
-          height='500px'
-        >
-          <NoPostsPlaceholder moderator={data} />
-        </Flex>
-      </LargeBackgroundBox>
+      <PostPlaceholder>
+        <NoPostsPlaceholder moderator={data} />
+      </PostPlaceholder>
     )
   }
 

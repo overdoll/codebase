@@ -1,26 +1,26 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useEffect } from 'react';
-import type { Uppy } from '@uppy/core';
-import type { Dispatch, State } from '@//:types/upload';
-import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphql';
-import { graphql } from 'react-relay/hooks';
-import { useFragment } from 'react-relay';
-import { Flex } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import type { Node } from 'react'
+import { useEffect } from 'react'
+import type { Uppy } from '@uppy/core'
+import type { Dispatch, State } from '@//:types/upload'
+import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphql'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import { Flex } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 import {
   RowItem,
   RowWrap,
   Selector,
   SelectorTextOverlay,
-  useSingleSelector,
-} from '../../../../../../../../../components/ContentSelection';
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout';
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem';
-import { EVENTS } from '../../../../../constants/constants';
-import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt';
+  useSingleSelector
+} from '../../../../../../../../../components/ContentSelection'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { EVENTS } from '../../../../../constants/constants'
+import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
 
 type Props = {
   uppy: Uppy,

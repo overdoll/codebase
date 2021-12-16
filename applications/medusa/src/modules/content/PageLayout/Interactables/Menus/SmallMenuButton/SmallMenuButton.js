@@ -10,7 +10,7 @@ type Props = {
   children: Node
 };
 
-export default function SmallMenuButton ({ children }: Props): Node {
+export default function SmallMenuButton ({ children, ...rest }: Props): Node {
   return (
     <Menu autoSelect={false}>
       <MenuButton
@@ -23,6 +23,7 @@ export default function SmallMenuButton ({ children }: Props): Node {
             fill='gray.300' h={4}
           />
         }
+        {...rest}
       />
       <MenuList boxShadow='outline'>
         {children}

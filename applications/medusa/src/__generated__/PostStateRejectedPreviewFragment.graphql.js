@@ -7,14 +7,14 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { useCheckRequirementsFragment$ref } from "./useCheckRequirementsFragment.graphql";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type PostStatePreviewFragment$ref: FragmentReference;
-declare export opaque type PostStatePreviewFragment$fragmentType: PostStatePreviewFragment$ref;
-export type PostStatePreviewFragment = {|
+declare export opaque type PostStateRejectedPreviewFragment$ref: FragmentReference;
+declare export opaque type PostStateRejectedPreviewFragment$fragmentType: PostStateRejectedPreviewFragment$ref;
+export type PostStateRejectedPreviewFragment = {|
   +id: string,
   +reference: string,
+  +postedAt: ?any,
   +content: $ReadOnlyArray<{|
     +type: ResourceType,
     +urls: $ReadOnlyArray<{|
@@ -22,13 +22,12 @@ export type PostStatePreviewFragment = {|
       +mimeType: string,
     |}>,
   |}>,
-  +$fragmentRefs: useCheckRequirementsFragment$ref,
-  +$refType: PostStatePreviewFragment$ref,
+  +$refType: PostStateRejectedPreviewFragment$ref,
 |};
-export type PostStatePreviewFragment$data = PostStatePreviewFragment;
-export type PostStatePreviewFragment$key = {
-  +$data?: PostStatePreviewFragment$data,
-  +$fragmentRefs: PostStatePreviewFragment$ref,
+export type PostStateRejectedPreviewFragment$data = PostStateRejectedPreviewFragment;
+export type PostStateRejectedPreviewFragment$key = {
+  +$data?: PostStateRejectedPreviewFragment$data,
+  +$fragmentRefs: PostStateRejectedPreviewFragment$ref,
   ...
 };
 
@@ -37,7 +36,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostStatePreviewFragment",
+  "name": "PostStateRejectedPreviewFragment",
   "selections": [
     {
       "alias": null,
@@ -51,6 +50,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "reference",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "postedAt",
       "storageKey": null
     },
     {
@@ -95,16 +101,11 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "useCheckRequirementsFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '20fa0cbedf0fc73c9353e32c71254c80';
+(node: any).hash = '763cc67ba34715aeb23ba8b1e926b99a';
 module.exports = node;

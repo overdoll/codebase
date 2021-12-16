@@ -11,9 +11,9 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type QueueSettingsFragment$ref: FragmentReference;
 declare export opaque type QueueSettingsFragment$fragmentType: QueueSettingsFragment$ref;
 export type QueueSettingsFragment = {|
-  +viewer: ?{|
-    +__typename: string,
-    +id: string,
+  +id: string,
+  +moderatorSettings: {|
+    +isInModeratorQueue: boolean
   |},
   +$refType: QueueSettingsFragment$ref,
 |};
@@ -34,32 +34,32 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ModeratorSettings",
       "kind": "LinkedField",
-      "name": "viewer",
+      "name": "moderatorSettings",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
+          "name": "isInModeratorQueue",
           "storageKey": null
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Account",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '2ed1838e8f0b2203db4d3f5e91e038c1';
+(node: any).hash = 'd3c67b9890964a2024059300c14fb725';
 module.exports = node;
