@@ -5,7 +5,6 @@ import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { useTranslation } from 'react-i18next'
-import Timeout = NodeJS.Timeout
 
 interface Props {
   uppy: Uppy
@@ -20,7 +19,7 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const [timeOut, changeTimeOut] = useState<Timeout>(setTimeout(() => ({})))
+  const [timeOut, changeTimeOut] = useState<ReturnType<typeof setTimeout>>(setTimeout(() => ({})))
 
   // when an item is dropped into the area
   const handleDrop = (e: DragEvent): void => {

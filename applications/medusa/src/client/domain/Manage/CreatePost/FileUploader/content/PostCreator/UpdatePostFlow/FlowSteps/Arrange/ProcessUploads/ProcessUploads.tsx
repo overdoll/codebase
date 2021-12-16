@@ -13,17 +13,17 @@ import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFra
 import type ProcessUploadsMutation from '@//:artifacts/ProcessUploadsMutation.graphql'
 import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../../constants/constants'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/Icon/Icon'
 import FilePicker from '../../../../../../components/FilePicker/FilePicker'
 import { FileUpload } from '../../../../../../../../../../../assets/icons/interface'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
   query: ProcessUploadsFragment$key
-};
+}
 
 const ProcessUploadsFragmentGQL = graphql`
   fragment ProcessUploadsFragment on Post {
@@ -59,7 +59,7 @@ const ProcessUploadsMutationGQL = graphql`
 export default function ProcessUploads ({ state, dispatch, uppy, query }: Props): Node {
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
-  const [updateContent, isUpdatingContent] = useMutation < ProcessUploadsMutation > (ProcessUploadsMutationGQL)
+  const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
 
   const [t] = useTranslation('manage')
 

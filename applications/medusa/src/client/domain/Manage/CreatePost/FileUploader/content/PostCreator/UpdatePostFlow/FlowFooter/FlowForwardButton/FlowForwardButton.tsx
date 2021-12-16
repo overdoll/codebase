@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { EVENTS, STEPS } from '../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
 import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { useTranslation } from 'react-i18next'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
@@ -18,12 +18,12 @@ import {
   useUpdateCharacter,
   useUpdateContent
 } from './queries'
-import { compareTwoArrayOrders, compareTwoArrays } from '@//:modules/operations/functions'
+import { compareTwoArrayOrders, compareTwoArrays } from '@//:modules/support'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
   query: FlowForwardButtonFragment$key
 }
 

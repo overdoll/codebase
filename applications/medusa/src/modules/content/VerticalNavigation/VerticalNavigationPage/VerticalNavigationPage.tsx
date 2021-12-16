@@ -8,7 +8,11 @@ interface Props {
 export default function VerticalNavigationPage ({ children }: Props): JSX.Element {
   return (
     <Box
-      className='page-contents'
+      ml={{
+        base: 0,
+        md: 290,
+        xl: 0
+      }}
       w='100%'
     >
       {children}

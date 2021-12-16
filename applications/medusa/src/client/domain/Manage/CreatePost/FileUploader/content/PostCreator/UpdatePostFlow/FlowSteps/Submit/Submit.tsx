@@ -4,15 +4,15 @@
 import type { Node } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
-import { Flex, Heading, Text, Box } from '@chakra-ui/react'
+import { Box, Heading, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { LargeBackgroundBox, PostPlaceholder } from '@//:modules/content/PageLayout'
+import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import { EVENTS, INITIAL_STATE } from '../../../../../constants/constants'
-import Button from '@//:modules/form/Button'
+import Button from '@//:modules/form/Button/Button'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
+interface Props {
+  uppy: Uppy
+  state: State
   dispatch: Dispatch
 }
 
@@ -38,7 +38,10 @@ export default function Submit ({ uppy, state, dispatch }: Props): Node {
           </Text>
         </Box>
         <Button
-          variant='solid' colorScheme='primary' size='lg' onClick={onRetry}
+          variant='solid'
+          colorScheme='primary'
+          size='lg'
+          onClick={onRetry}
         >{t('create_post.flow.steps.footer.retry')}
         </Button>
       </PostPlaceholder>
@@ -56,7 +59,10 @@ export default function Submit ({ uppy, state, dispatch }: Props): Node {
         </Text>
       </Box>
       <Button
-        variant='solid' colorScheme='primary' size='lg' onClick={onRetry}
+        variant='solid'
+        colorScheme='primary'
+        size='lg'
+        onClick={onRetry}
       >{t('create_post.flow.steps.footer.retry')}
       </Button>
     </PostPlaceholder>

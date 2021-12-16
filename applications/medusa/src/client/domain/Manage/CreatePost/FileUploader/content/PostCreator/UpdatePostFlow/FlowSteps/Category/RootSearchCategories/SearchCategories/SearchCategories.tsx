@@ -15,14 +15,14 @@ import {
   SmallGridItem
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import { removeNode } from '@//:modules/utilities/functions'
+import { removeNode } from '@//:modules/support'
 import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 
-type Props = {
-  selected: Array<string>,
-  onSelect: () => void,
-  queryArgs: () => void,
+interface Props {
+  selected: string[]
+  onSelect: () => void
+  queryArgs: () => void
 }
 
 const SearchCategoriesQueryGQL = graphql`
@@ -65,13 +65,13 @@ const SearchCategoriesFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery < SearchCategoriesQuery > (
+  const queryData = useLazyLoadQuery<SearchCategoriesQuery>(
     SearchCategoriesQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCategoriesFragment > (
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCategoriesFragment>(
     SearchCategoriesFragmentGQL,
     queryData
   )

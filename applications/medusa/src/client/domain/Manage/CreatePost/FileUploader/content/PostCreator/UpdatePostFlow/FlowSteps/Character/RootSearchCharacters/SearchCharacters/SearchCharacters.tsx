@@ -6,7 +6,7 @@ import type SearchCharactersQuery from '@//:artifacts/SearchCharactersQuery.grap
 import { usePaginationFragment } from 'react-relay'
 import type { SearchCharactersFragment$key } from '@//:artifacts/SearchCharactersFragment.graphql'
 import { useTranslation } from 'react-i18next'
-import { removeNode } from '@//:modules/utilities/functions'
+import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
@@ -17,10 +17,10 @@ import {
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 
-type Props = {
-  selected: Array<string>,
-  onSelect: () => void,
-  queryArgs: () => void,
+interface Props {
+  selected: string[]
+  onSelect: () => void
+  queryArgs: () => void
 }
 
 const SearchCharactersQueryGQL = graphql`
@@ -66,13 +66,13 @@ const SearchCharactersFragmentGQL = graphql`
 `
 
 export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
-  const queryData = useLazyLoadQuery < SearchCharactersQuery > (
+  const queryData = useLazyLoadQuery<SearchCharactersQuery>(
     SearchCharactersQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment < SearchCharactersFragment$key > (
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCharactersFragment$key>(
     SearchCharactersFragmentGQL,
     queryData
   )

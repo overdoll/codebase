@@ -31,17 +31,17 @@ const Query = graphql`
       __typename
       state
     }
-    
+
     ...UpdatePostFlowFragment
   }
 `
 
 export default function PostCreator ({ uppy, state, dispatch }: Props): JSX.Element {
-  const [postReference] = useQueryParam<string>('id')
+  const [postReference] = useQueryParam<string | null>('id')
 
   const data = useLazyLoadQuery<PostCreatorQuery>(
     Query,
-    { reference: postReference }
+    { reference: postReference ?? '' }
   )
 
   const [t] = useTranslation('manage')
