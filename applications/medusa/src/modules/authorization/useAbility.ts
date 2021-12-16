@@ -1,7 +1,7 @@
 import { AbilityContext } from './AbilityContext'
 import { useContext } from 'react'
-import { Ability } from '@casl/ability'
+import { AppAbility } from './types'
 
-export default function useAbility (): Ability<any> {
-  return useContext(AbilityContext)
+export default function useAbility (): AppAbility {
+  return useContext<AppAbility>(AbilityContext)
 }

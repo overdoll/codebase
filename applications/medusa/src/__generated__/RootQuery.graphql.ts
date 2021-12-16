@@ -1,16 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5f002172202e9ae46f16bebbf914eaf3 */
+/* @relayHash 3e75e00d7cb0c0f12535a57e7f8f3319 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type RootQueryVariables = {};
 export type RootQueryResponse = {
     readonly viewer: {
-        readonly isModerator: boolean;
-        readonly isStaff: boolean;
-        readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment" | "LockedAccountBannerFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
     } | null;
 };
 export type RootQuery = {
@@ -23,13 +21,24 @@ export type RootQuery = {
 /*
 query RootQuery {
   viewer {
-    isModerator
-    isStaff
-    ...DropdownMenuButtonProfileFragment
-    ...QuickAccessButtonProfileFragment
+    ...AccountAuthorizerFragment
+    ...UniversalNavigatorFragment
     ...LockedAccountBannerFragment
     id
   }
+}
+
+fragment AccountAuthorizerFragment on Account {
+  lock {
+    __typename
+  }
+  isModerator
+  isStaff
+}
+
+fragment AlternativeMenuFragment on Account {
+  ...DropdownMenuButtonProfileFragment
+  ...QuickAccessButtonProfileFragment
 }
 
 fragment DropdownMenuButtonProfileFragment on Account {
@@ -39,32 +48,25 @@ fragment DropdownMenuButtonProfileFragment on Account {
 
 fragment LockedAccountBannerFragment on Account {
   lock {
-    reason
-    expires
+    ...LockedAccountModalFragment
   }
+}
+
+fragment LockedAccountModalFragment on AccountLock {
+  reason
+  expires
 }
 
 fragment QuickAccessButtonProfileFragment on Account {
   avatar
 }
+
+fragment UniversalNavigatorFragment on Account {
+  ...AlternativeMenuFragment
+}
 */
 
-const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isStaff",
-  "storageKey": null
-};
-return {
+const node: ConcreteRequest = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -79,17 +81,15 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "DropdownMenuButtonProfileFragment"
+            "name": "AccountAuthorizerFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "QuickAccessButtonProfileFragment"
+            "name": "UniversalNavigatorFragment"
           },
           {
             "args": null,
@@ -117,22 +117,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "username",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "avatar",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -141,6 +125,13 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -162,6 +153,34 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "isModerator",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "avatar",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "id",
             "storageKey": null
           }
@@ -171,13 +190,12 @@ return {
     ]
   },
   "params": {
-    "id": "5f002172202e9ae46f16bebbf914eaf3",
+    "id": "3e75e00d7cb0c0f12535a57e7f8f3319",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
-})();
-(node as any).hash = '00440f75efef7eea73caa733c28e90d3';
+(node as any).hash = '9b7394548800e79519014f7ed7ed8263';
 export default node;

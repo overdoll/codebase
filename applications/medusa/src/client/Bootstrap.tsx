@@ -1,7 +1,6 @@
 import { RelayEnvironmentProvider } from 'react-relay/hooks'
 import type { FlashOverride } from '@//:modules/flash'
 import { FlashProvider } from '@//:modules/flash'
-import RoutingContext from '@//:modules/routing/RoutingContext'
 import { QueryParamProvider } from 'use-query-params'
 import RouterRenderer from '@//:modules/routing/RouteRenderer'
 import type { Router } from '@//:modules/routing/router'
@@ -17,6 +16,7 @@ import theme from './theme'
 import { EmotionCache } from '@emotion/css'
 import { i18n } from 'i18next'
 import { ReactNode } from 'react'
+import RoutingProvider from '@//:modules/routing/RoutingProvider'
 
 interface Props {
   environment: IEnvironment
@@ -59,9 +59,9 @@ const Bootstrap = ({
                     <QueryParamProvider
                       ReactRouterRoute={Route}
                     >
-                      <RoutingContext.Provider value={routerContext}>
+                      <RoutingProvider router={routerContext}>
                         {children ?? <RouterRenderer />}
-                      </RoutingContext.Provider>
+                      </RoutingProvider>
                     </QueryParamProvider>
                   </ReactRouter>
                 </RelayEnvironmentProvider>

@@ -1,11 +1,11 @@
 import JSResource from '@//:modules/operations/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
-import { Ability } from '@casl/ability'
-import { RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
+import { AppAbility } from '@//:modules/authorization/types'
+import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
 
 // hacky way to get the current viewer
-function getUserFromEnvironment (environment): RootQueryResponse['viewer'] | null {
+function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
   const viewerRef = environment
     .getStore()
     .getSource()
@@ -21,8 +21,15 @@ function getUserFromEnvironment (environment): RootQueryResponse['viewer'] | nul
   return null
 }
 
-const getAbilityFromUser = (environment): Ability<any> => {
-  return defineAbility(getUserFromEnvironment(environment))
+const getAbilityFromUser = (environment): AppAbility => {
+  const account = getAccountFromEnvironment(environment)
+  return defineAbility(account != null
+    ? {
+        isModerator: account.isModerator,
+        isStaff: account.isStaff,
+        isLocked: account.lock != null
+      }
+    : null)
 }
 
 /**
@@ -79,7 +86,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               history.push('/profile')
               return false
             }
@@ -129,7 +136,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               history.push('/profile')
               return false
             }
@@ -172,7 +179,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.cannot('manage', 'account')) {
+            if (ability.cannot('manage', 'Account')) {
               history.push('/')
               return false
             }
@@ -205,7 +212,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('read', 'pendingPosts')) {
+            if (ability.can('moderate', 'Post')) {
               return true
             }
             history.push('/join')
@@ -326,7 +333,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               return true
             }
             history.push('/join')
@@ -404,7 +411,7 @@ const routes: Route[] = [
               ({ environment }) => {
                 const ability = getAbilityFromUser(environment)
 
-                return ability.can('manage', 'pendingPosts')
+                return ability.can('moderate', 'Post')
               }
             ],
             prepare: () => {
@@ -449,7 +456,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               return true
             }
             history.push('/join')
@@ -484,7 +491,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               return true
             }
             history.push('/join')
@@ -515,42 +522,6 @@ const routes: Route[] = [
       //   ]
       // },
       {
-        path: '/locked',
-        exact: true,
-        component: JSResource('LockedRoot', async () =>
-          await import(
-            /* webpackChunkName: "LockedRoot" */ './domain/Locked/RootLocked'
-          )
-        ),
-        prepare: params => {
-          const LockedQuery = require('@//:artifacts/LockedQuery.graphql')
-
-          return {
-            lockedQuery: {
-              query: LockedQuery,
-              variables: {},
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('read', 'locked')) {
-              return true
-            }
-            history.push('/locked')
-            return false
-          }
-        ]
-      },
-      {
         path: '/profile',
         exact: true,
         component: JSResource('ProfileRoot', async () =>
@@ -565,12 +536,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('read', 'locked')) {
-              history.push('/locked')
-              return false
-            }
-
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'Account')) {
               return true
             }
             history.push('/')

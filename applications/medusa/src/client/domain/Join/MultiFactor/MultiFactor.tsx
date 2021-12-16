@@ -45,7 +45,8 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
               onClick={onToggle}
               size='md'
               variant='link'
-            >{t('multi_factor.recovery.button')}
+            >
+              {t('multi_factor.recovery.button')}
             </Button>
           </Flex>
           <Collapse

@@ -23,8 +23,8 @@ import CopyCodeToClipboard from '../../../../../components/ContentHints/CopyCode
 import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 
 import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {

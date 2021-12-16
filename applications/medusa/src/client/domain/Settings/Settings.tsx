@@ -4,7 +4,7 @@ import { Redirect } from 'react-router'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { useTranslation } from 'react-i18next'
 import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'
-import useAbility from '@//:modules/authorization/useAbility'
+import Can from '@//:modules/authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -14,10 +14,6 @@ export default function Settings ({ children }: Props): JSX.Element {
   const location = useLocation()
 
   const [t] = useTranslation('navigation')
-
-  const ability = useAbility()
-
-  const canAccessPendingPosts = ability.can('manage', 'pendingPosts')
 
   return (
     <VerticalNavigation>
@@ -32,13 +28,13 @@ export default function Settings ({ children }: Props): JSX.Element {
           title={t('sidebar.settings.security')}
           icon={SecurityShield}
         />
-        {canAccessPendingPosts && (
+        <Can I='moderate' a='Post'>
           <VerticalNavigation.Button
             to='/settings/moderation'
             title={t('sidebar.settings.moderation')}
             icon={SettingWrench}
           />
-        )}
+        </Can>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {location.pathname === '/settings' ? <Redirect to='/settings/profile' /> : children}

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
+import ErrorBoundary from '../ErrorBoundary'
 import userEvent from '@testing-library/user-event'
 
 const Client = (): JSX.Element => {

@@ -3,13 +3,19 @@ import SiteLinkLogo from './SiteLinkLogo/SiteLinkLogo'
 import MainMenu from './MainMenu/MainMenu'
 import { useLocation } from '@//:modules/routing'
 import getBasePath from '@//:modules/routing/getBasePath'
-import { PreloadedQuery } from 'react-relay/hooks'
-import { RootQuery } from '@//:artifacts/RootQuery.graphql'
+import { graphql, useFragment } from 'react-relay/hooks'
 import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
+import { UniversalNavigatorFragment$key } from '@//:artifacts/UniversalNavigatorFragment.graphql'
 
 interface Props {
-  queryRef: PreloadedQuery<RootQuery>
+  queryRef: UniversalNavigatorFragment$key | null
 }
+
+const UniversalNavigatorGQL = graphql`
+  fragment UniversalNavigatorFragment on Account {
+    ...AlternativeMenuFragment
+  }
+`
 
 // on these routes, the nav is simplified (main items hidden)
 const hidden = [
@@ -22,6 +28,8 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
 
   const isHidden = hidden.includes(getBasePath(location.pathname))
 
+  const data = useFragment(UniversalNavigatorGQL, queryRef)
+
   return (
     <HorizontalNavigation transparent={isHidden}>
       <HorizontalNavigation.Left>
@@ -33,7 +41,7 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
         </HorizontalNavigation.Center>
       )}
       <HorizontalNavigation.Right>
-        <AlternativeMenu queryRef={queryRef} />
+        <AlternativeMenu queryRef={data} />
       </HorizontalNavigation.Right>
     </HorizontalNavigation>
   )

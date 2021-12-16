@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async'
 import LockedAccountBanner from './LockedAccountBanner/LockedAccountBanner'
 import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
-import AbilityProvider from '@//:modules/authorization/AbilityProvider'
+import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 
 interface Props {
   prepared: {
@@ -18,10 +18,8 @@ interface Props {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
-      isModerator
-      isStaff
-      ...DropdownMenuButtonProfileFragment
-      ...QuickAccessButtonProfileFragment
+      ...AccountAuthorizerFragment
+      ...UniversalNavigatorFragment
       ...LockedAccountBannerFragment
     }
   }
@@ -38,13 +36,13 @@ export default function Root (props: Props): JSX.Element {
       <Helmet
         title='overdoll'
       />
-      <AbilityProvider data={data}>
-        <LockedAccountBanner queryRef={data?.viewer} />
-        <UniversalNavigator queryRef={data?.viewer} />
+      <AccountAuthorizer queryRef={data.viewer}>
+        <LockedAccountBanner queryRef={data.viewer} />
+        <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
           {props.children}
         </PageContents>
-      </AbilityProvider>
+      </AccountAuthorizer>
     </>
   )
 }

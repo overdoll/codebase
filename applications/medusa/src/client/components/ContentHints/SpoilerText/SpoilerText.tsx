@@ -34,7 +34,7 @@ export default function SpoilerText ({
           color='gray.200'
           fontSize='sm'
         >
-          {isOpen ? children : (text || t('button.reveal'))}
+          {isOpen ? children : (text !== '' ? text : t('button.reveal'))}
         </Text>
       </Flex>
     </Button>

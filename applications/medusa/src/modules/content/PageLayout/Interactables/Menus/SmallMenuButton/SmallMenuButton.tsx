@@ -1,7 +1,7 @@
 import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { SettingCog } from '@//:assets/icons/navigation'
+import { Icon } from '../../../../index'
 import { ReactNode } from 'react'
+import { SettingCog } from '@//:assets/icons/navigation'
 
 interface Props {
   children: ReactNode

@@ -1,5 +1,5 @@
 import { Flex, HStack } from '@chakra-ui/react'
-import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
+import { RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
 import { ReactNode } from 'react'
 
 interface Props {

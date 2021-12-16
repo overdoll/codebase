@@ -6,7 +6,7 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
-import PrepareViewer from '@//:modules/support/prepareViewer/prepareViewer'
+import { prepareViewer } from '../../support'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql'
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
@@ -103,7 +103,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
 
-        PrepareViewer(store, payload)
+        prepareViewer(store, payload)
       },
       onError (data) {
         console.log(data)

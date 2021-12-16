@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import JSResource from './JSResource'
-import CanUseDOM from '@//:modules/operations/CanUseDOM'
+import CanUseDOM from './CanUseDOM'
 import { Image, ImageProps, Img } from '@chakra-ui/react'
 
 interface Props extends ImageProps {
@@ -8,7 +8,7 @@ interface Props extends ImageProps {
   fallback: JSX.Element
 }
 
-function SuspenseImage (props: Props): JSX.Element {
+function SuspenseImageWrap (props: Props): JSX.Element {
   const {
     fallback,
     src,
@@ -62,10 +62,10 @@ function SuspenseImage (props: Props): JSX.Element {
   )
 }
 
-export default function SuspenseImageWrapper (props: Props): JSX.Element {
+export default function SuspenseImage (props: Props): JSX.Element {
   return (
     <Suspense fallback={props.fallback}>
-      <SuspenseImage {...props} />
+      <SuspenseImageWrap {...props} />
     </Suspense>
   )
 }

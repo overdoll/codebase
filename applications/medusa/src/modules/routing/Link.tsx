@@ -1,4 +1,4 @@
-import { useRoutingContext } from '@//:modules/routing/RoutingContext'
+import { useRoutingContext } from './RoutingContext'
 import { ReactNode, useCallback } from 'react'
 
 interface Props {

@@ -16,7 +16,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
-import prepareViewer from '@//:modules/support/prepareViewer/prepareViewer'
+import { prepareViewer } from '../../support'
 import type { TotpFragment$key } from '@//:artifacts/TotpFragment.graphql'
 import { TotpMutation } from '@//:artifacts/TotpMutation.graphql'
 

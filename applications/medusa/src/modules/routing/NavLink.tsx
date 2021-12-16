@@ -1,8 +1,8 @@
-import { useRoutingContext } from '@//:modules/routing/RoutingContext'
+import { useRoutingContext } from './RoutingContext'
 import { matchPath } from 'react-router'
 import Link from './Link'
 import { createLocation } from 'history'
-import { useLocation } from '@//:modules/routing/useLocation'
+import { useLocation } from './useLocation'
 import { ReactNode } from 'react'
 import getBasePath from './getBasePath'
 
@@ -17,7 +17,6 @@ interface Props {
   exact?: boolean
   strict?: boolean
   sensitive?: boolean
-  isActiveProp?: ((t1: string, t2: any) => boolean)
 }
 
 const resolveToLocation = (to: any, currentLocation: any): string =>
@@ -38,7 +37,6 @@ const NavLink = ({
   exact = false,
   strict = false,
   sensitive = false,
-  isActiveProp,
   ...rest
 }: Props): JSX.Element | null => {
   const router = useRoutingContext()
@@ -60,20 +58,14 @@ const NavLink = ({
 
   const match = escapedPath != null
     ? matchPath(currentLocation.pathname, {
-      path: escapedPath,
+      path: escapedPath as string,
       exact,
       sensitive,
       strict
     })
     : null
 
-  let isActive
-
-  if (isActiveProp != null) {
-    isActive = isActiveProp(match, currentLocation)
-  } else {
-    isActive = match
-  }
+  const isActive = match != null
 
   if (children == null) {
     return null

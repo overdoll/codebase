@@ -3,8 +3,6 @@ import { Helmet } from 'react-helmet-async'
 import { Flex } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { RecoveryCodesSetupQuery as RecoveryCodesSetupQueryType } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import RecoveryCodesSetupQuery from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
@@ -12,6 +10,7 @@ import Button from '@//:modules/form/Button/Button'
 import Link from '@//:modules/routing/Link'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   prepared: {
@@ -27,12 +26,6 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
 
   const [t] = useTranslation('configure')
 
-  const refetch = (): void => {
-    loadQuery({})
-  }
-
-  if (queryRef == null) return null
-
   return (
     <>
       <Helmet title='recovery setup' />
@@ -41,22 +34,11 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
           <PageSectionTitle>{t('recovery_codes.title')}</PageSectionTitle>
           <PageSectionDescription>{t('recovery_codes.description')}</PageSectionDescription>
         </PageSectionWrap>
-        <Suspense fallback={<SkeletonStack />}>
-          <ErrorBoundary
-            fallback={({
-              error,
-              reset
-            }) => (
-              <ErrorFallback
-                error={error}
-                reset={reset}
-                refetch={refetch}
-              />
-            )}
-          >
-            <RecoveryCodesSetup query={queryRef} />
-          </ErrorBoundary>
-        </Suspense>
+        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+          <Suspense fallback={<SkeletonStack />}>
+            <RecoveryCodesSetup query={queryRef as PreloadedQuery<RecoveryCodesSetupQueryType>} />
+          </Suspense>
+        </QueryErrorBoundary>
         <Flex justify='center'>
           <Link to='/settings/security'>
             <Button w='100%' mt={8} size='sm' variant='link'>{t('recovery_codes.back')}</Button>

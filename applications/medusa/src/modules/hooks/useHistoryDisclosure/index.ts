@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDisclosure } from '@chakra-ui/react'
-import { useHistory } from '@//:modules/routing'
+import { useHistory } from '../../routing'
 
 // useDisclosure hook modified so that when it is opened
 // identical entry into history is added and

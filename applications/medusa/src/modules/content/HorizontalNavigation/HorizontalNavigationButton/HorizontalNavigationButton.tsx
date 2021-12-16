@@ -1,6 +1,6 @@
 import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { Icon } from '../../index'
+import { ClickableBox } from '../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
 
