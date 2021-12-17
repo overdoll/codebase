@@ -14,13 +14,15 @@ import { HelmetProvider } from 'react-helmet-async'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme'
 import { EmotionCache } from '@emotion/css'
-import { i18n } from 'i18next'
+import { i18n as i18n_old } from 'i18next'
+import { i18n } from '@lingui/core'
 import { ReactNode } from 'react'
 import RoutingProvider from '@//:modules/routing/RoutingProvider'
+import { en } from 'make-plural'
 
 interface Props {
   environment: IEnvironment
-  i18next: i18n
+  i18next: i18n_old
   emotionCache: EmotionCache
   helmetContext?: {}
   cookies?: Cookies
@@ -29,6 +31,10 @@ interface Props {
   runtimeContext?: {}
   children?: ReactNode
 }
+
+i18n.loadLocaleData({
+  'en-US': { plurals: en }
+})
 
 /**
  * Default Providers

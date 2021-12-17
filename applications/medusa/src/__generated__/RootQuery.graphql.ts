@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3e75e00d7cb0c0f12535a57e7f8f3319 */
+/* @relayHash c7ca6e0ad30a1014d6f972b91d0a8e92 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,6 +10,7 @@ export type RootQueryResponse = {
     readonly viewer: {
         readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
     } | null;
+    readonly " $fragmentRefs": FragmentRefs<"LocaleCreatorFragment">;
 };
 export type RootQuery = {
     readonly response: RootQueryResponse;
@@ -26,6 +27,7 @@ query RootQuery {
     ...LockedAccountBannerFragment
     id
   }
+  ...LocaleCreatorFragment
 }
 
 fragment AccountAuthorizerFragment on Account {
@@ -44,6 +46,12 @@ fragment AlternativeMenuFragment on Account {
 fragment DropdownMenuButtonProfileFragment on Account {
   username
   avatar
+}
+
+fragment LocaleCreatorFragment on Query {
+  language {
+    locale
+  }
 }
 
 fragment LockedAccountBannerFragment on Account {
@@ -98,6 +106,11 @@ const node: ConcreteRequest = {
           }
         ],
         "storageKey": null
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "LocaleCreatorFragment"
       }
     ],
     "type": "Query",
@@ -186,16 +199,34 @@ const node: ConcreteRequest = {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Language",
+        "kind": "LinkedField",
+        "name": "language",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "locale",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "3e75e00d7cb0c0f12535a57e7f8f3319",
+    "id": "c7ca6e0ad30a1014d6f972b91d0a8e92",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
-(node as any).hash = '9b7394548800e79519014f7ed7ed8263';
+(node as any).hash = 'a195c4d06b26e499ec1f7d17bebbf39f';
 export default node;

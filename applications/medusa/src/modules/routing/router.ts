@@ -4,6 +4,7 @@ import { Resource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'
+import { i18n } from '@lingui/core'
 
 export interface LocationShape {
   pathname?: string
@@ -31,6 +32,7 @@ export type Middleware = (props: MiddlewareT) => boolean
 
 export interface Route {
   component: Resource
+  translations?: Resource
   prepare?: (Params) => {}
   middleware?: Middleware[]
   exact?: boolean
@@ -50,6 +52,7 @@ export type Subscribe = (sb: (sb) => void) => () => void
 
 export interface PreparedEntry {
   component: Resource
+  translations?: Resource
   prepared: Params
   routeData: Match
   id: string
@@ -159,18 +162,8 @@ async function createServerRouter (
       }
     },
     preloadCode (pathname) {
-      const matches: RouteMatch[] = matchRoutes(routes, pathname)
-      matches.forEach(({ route }) => {
-        void route.component.load()
-      })
     },
     preload (pathname) {
-      const prepareOptions = {
-        query: new URLSearchParams(pathname),
-        cookies: new Cookies(req.headers.cookie)
-      }
-
-      prepareMatches(matchRoutes(routes, pathname), prepareOptions, environment)
     },
     subscribe (sb: (sb) => void) {
       return () => {
@@ -253,6 +246,10 @@ function createClientRouter (
       const matches: RouteMatch[] = matchRoutes(routes, pathname)
       matches.forEach(({ route }) => {
         void route.component.load()
+
+        if (route.translations != null) {
+          void route.translations.load(i18n.locale).then(({ messages }) => i18n._load(i18n.locale, messages))
+        }
       })
     },
     preload (pathname) {
@@ -326,8 +323,21 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       route.component.load() // eagerly load
     }
 
+    if (route.translations != null) {
+      const translations = route.translations.get()
+
+      // on client, translations will be loaded async
+      // on server, they are already available
+      if (translations == null) {
+        route.translations.load(i18n.locale).then(({ messages }) => i18n._load(i18n.locale, messages))
+      } else {
+        i18n._load(i18n.locale, translations.messages)
+      }
+    }
+
     return {
       component: route.component,
+      translations: route.translations,
       prepared,
       routeData: matchData,
       id: route.component.getModuleId()

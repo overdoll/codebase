@@ -3,6 +3,8 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
+import { LocaleCreatorFragment$data } from '@//:artifacts/LocaleCreatorFragment.graphql'
+import { i18n } from '@lingui/core'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -19,6 +21,13 @@ function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data
   }
 
   return null
+}
+
+function getLanguageFromEnvironment (environment): LocaleCreatorFragment$data['language'] | null {
+  return environment
+    .getStore()
+    .getSource()
+    .get('client:root:language')
 }
 
 const getAbilityFromUser = (environment): AppAbility => {
@@ -69,6 +78,12 @@ const routes: Route[] = [
         }
       }
     },
+    middleware: [
+      ({ environment }) => {
+        i18n._locale = getLanguageFromEnvironment(environment)?.locale as string
+        return true
+      }
+    ],
     routes: [
       {
         path: '/join',
@@ -265,59 +280,64 @@ const routes: Route[] = [
           }
         ]
       },
-      // {
-      //   path: '/manage',
-      //   component: JSResource('ManageRoot', async () =>
-      //     await import(
-      //       /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
-      //     )
-      //   ),
-      //   middleware: [
-      //     ({
-      //       environment,
-      //       history
-      //     }) => {
-      //       const ability = getAbilityFromUser(environment)
-      //
-      //       if (ability.can('manage', 'posting')) {
-      //         return true
-      //       }
-      //       history.push('/join')
-      //       return false
-      //     }
-      //   ],
-      //   routes: [
-      //     {
-      //       path: '/manage/my_posts',
-      //       component: JSResource('ManageMyPostsRoot', async () =>
-      //         await import(
-      //           /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
-      //         )
-      //       ),
-      //       prepare: params => {
-      //         const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
-      //
-      //         return {
-      //           myPostsQuery: {
-      //             query: MyPostsQuery,
-      //             variables: {},
-      //             options: {
-      //               fetchPolicy: 'store-or-network'
-      //             }
-      //           }
-      //         }
-      //       }
-      //     },
-      //     {
-      //       path: '/manage/brands',
-      //       component: JSResource('ManageBrandsRoot', async () =>
-      //         await import(
-      //           /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
-      //         )
-      //       )
-      //     }
-      //   ]
-      // },
+      {
+        path: '/manage',
+        translations: JSResource('ManageRoot_Translations', async (locale) =>
+          await import(
+            /* webpackChunkName: "ManageRoot_Translations_[request]" */ `./domain/Manage/__locale__/${locale}`
+          )
+        ),
+        component: JSResource('ManageRoot', async () =>
+          await import(
+            /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
+          )
+        )
+        // middleware: [
+        //   ({
+        //     environment,
+        //     history
+        //   }) => {
+        //     const ability = getAbilityFromUser(environment)
+        //
+        //     if (ability.can('manage', 'posting')) {
+        //       return true
+        //     }
+        //     history.push('/join')
+        //     return false
+        //   }
+        // ],
+        // routes: [
+        //   {
+        //     path: '/manage/my_posts',
+        //     component: JSResource('ManageMyPostsRoot', async () =>
+        //       await import(
+        //         /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
+        //       )
+        //     ),
+        //     prepare: params => {
+        //       const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+        //
+        //       return {
+        //         myPostsQuery: {
+        //           query: MyPostsQuery,
+        //           variables: {},
+        //           options: {
+        //             fetchPolicy: 'store-or-network'
+        //           }
+        //         }
+        //       }
+        //     }
+        //   },
+        //   {
+        //     path: '/manage/brands',
+        //     component: JSResource('ManageBrandsRoot', async () =>
+        //       await import(
+        //         /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
+        //       )
+        //     )
+        //   }
+        // ]
+      },
       {
         path: '/settings',
         component: JSResource('SettingsRoot', async () =>

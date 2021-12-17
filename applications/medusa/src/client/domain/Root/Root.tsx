@@ -7,6 +7,7 @@ import LockedAccountBanner from './LockedAccountBanner/LockedAccountBanner'
 import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
+import LocaleCreator from './LocaleCreator/LocaleCreator'
 
 interface Props {
   prepared: {
@@ -22,6 +23,7 @@ const RootQueryGQL = graphql`
       ...UniversalNavigatorFragment
       ...LockedAccountBannerFragment
     }
+    ...LocaleCreatorFragment
   }
 `
 
@@ -32,7 +34,7 @@ export default function Root (props: Props): JSX.Element {
   )
 
   return (
-    <>
+    <LocaleCreator queryRef={data}>
       <Helmet
         title='overdoll'
       />
@@ -43,6 +45,7 @@ export default function Root (props: Props): JSX.Element {
           {props.children}
         </PageContents>
       </AccountAuthorizer>
-    </>
+    </LocaleCreator>
+
   )
 }

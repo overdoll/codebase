@@ -10,7 +10,7 @@ import CanUseDOM from './CanUseDOM'
 
 const resourceMap = new Map()
 
-type Loader = () => Promise<any>
+type Loader = (...args: string[]) => Promise<any>
 
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
@@ -33,11 +33,13 @@ class Resource {
 
   /**
    * Loads the resource if necessary.
+   *
+   * Optionally pass arguments
    */
-  async load (): Promise<string> {
+  async load (...args: string[]): Promise<any> {
     let promise = this._promise
     if (promise === null) {
-      promise = this._loader()
+      promise = this._loader(...args)
         .then(result => {
           this._result = result.default ?? result
           return result
@@ -85,7 +87,7 @@ class Resource {
    * - Throw an error if the resource failed to load.
    * - Return the data of the resource if available.
    */
-  read (): JSX.Element | null | Promise<string> {
+  read (): JSX.Element | null | Promise<string> | any {
     if (this._result !== null) {
       return this._result
     } else if (this._error !== null) {

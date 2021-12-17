@@ -7,7 +7,7 @@ import Bootstrap from './Bootstrap'
 import { registerUpdateListener } from './bootstrap/update'
 import createCache from '@emotion/cache'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
-import OverlayScrollbars from 'overlayscrollbars'
+import './bootstrap/i18n'
 
 declare global {
   interface Window {
@@ -33,18 +33,6 @@ const cache = createCache({
 })
 
 window.__webpack_nonce__ = nonce
-
-OverlayScrollbars(document.body, {
-  className: 'os-theme-light',
-  sizeAutoCapable: false,
-  nativeScrollbarsOverlaid: {
-    initialize: true
-  },
-  scrollbars: {
-    autoHide: 'move',
-    autoHideDelay: 50
-  }
-})
 
 export default function App (): JSX.Element {
   return (

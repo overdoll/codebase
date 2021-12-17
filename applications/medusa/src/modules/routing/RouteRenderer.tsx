@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRoutingContext } from './RoutingContext'
-import { RouterInit, PreparedEntry } from './router'
+import { PreparedEntry, RouterInit } from './router'
 import ErrorBoundary from '../operations/ErrorBoundary'
 import { chakra, Progress, Slide } from '@chakra-ui/react'
 
@@ -76,6 +76,7 @@ export default function RouterRenderer (): JSX.Element {
     <RouteComponent
       id={firstItem.id}
       component={firstItem.component}
+      translations={firstItem.translations}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
     />
@@ -84,9 +85,10 @@ export default function RouterRenderer (): JSX.Element {
     const nextItem = reversedItems[ii]
     routeComponent = (
       <RouteComponent
-        id={firstItem.id}
+        id={nextItem.id}
         component={nextItem.component}
         prepared={nextItem.prepared}
+        translations={nextItem.translations}
         routeData={nextItem.routeData}
       >
         {routeComponent}
@@ -140,11 +142,14 @@ function RouteComponent ({
   children,
   routeData,
   component,
+  translations,
   prepared
 }: PreparedEntry): JSX.Element {
+  if (translations != null) {
+    translations.read()
+  }
   const Component = component.read()
   return (
-    // @ts-expect-error
     <Component
       routeData={routeData}
       prepared={prepared}

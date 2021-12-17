@@ -12,7 +12,6 @@ void loadableReady().then(() => {
 
 if (module.hot != null) {
   module.hot.accept('./App', () => {
-    // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
     const NextRoot = require('./App').default
     root.render(<NextRoot />)
   })

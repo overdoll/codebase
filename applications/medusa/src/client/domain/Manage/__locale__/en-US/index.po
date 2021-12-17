@@ -1,0 +1,12 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-12-17 16:59-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en-US\n"
+
+#: src/client/domain/Manage/Manage.tsx:29
+msgid "Hello there"
+msgstr ""

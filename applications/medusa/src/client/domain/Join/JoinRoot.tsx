@@ -35,6 +35,8 @@ const JoinTokenStatus = graphql`
   }
 `
 
+// import translation and load the resource
+
 export default function JoinRoot (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader<JoinRootQuery>(
     JoinTokenStatus,

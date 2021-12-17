@@ -15,6 +15,7 @@ import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import express from 'express'
 import parseCookies from './Domain/parseCookies'
 import { HelmetData } from 'react-helmet-async'
+import { i18n } from '@lingui/core'
 
 interface Context {
   url?: undefined | string
@@ -195,12 +196,20 @@ async function request (req, res): Promise<void> {
   })
 
   // Get any extra assets we need to load, so that we dont have to import them in-code
-  const assets = router.context.get().entries.map(entry => entry.id)
+  const componentAssets = router.context.get().entries.map(entry => entry.component.getModuleId())
+
+  // Translation assets - also load them
+  const translationAssets = router
+    .context
+    .get()
+    .entries
+    .filter(entry => entry.translations != null)
+    .map(entry => `${entry.translations?.getModuleId() as string}_${i18n._locale}`)
 
   // Set up our chunk extractor, so that we can preload our resources
   const extractor = new ChunkExtractor({
     statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-    entrypoints: ['client', ...assets]
+    entrypoints: ['client', ...componentAssets, ...translationAssets]
   })
 
   const {

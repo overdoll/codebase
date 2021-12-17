@@ -7,6 +7,7 @@ import { prepareViewer } from '../support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -109,13 +110,17 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         size='md'
         color='gray.00'
       >
-        {t('grant.header')}
+        <Trans>
+          Logging in
+        </Trans>
       </Heading>
       <Text
         size='sm'
         color='gray.100'
       >
-        {t('grant.subheader')}
+        <Trans>
+          Please wait while we log you in...
+        </Trans>
       </Text>
     </Flex>
   )
