@@ -5,6 +5,7 @@ import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
 import { LocaleCreatorFragment$data } from '@//:artifacts/LocaleCreatorFragment.graphql'
 import { i18n } from '@lingui/core'
+import { setDefaultLocale } from '@//:modules/date'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -59,6 +60,19 @@ const getAbilityFromUser = (environment): AppAbility => {
  *
  */
 
+const mapping = {
+  en: 'en-US'
+}
+
+// dateFNS has weird mapping - so we check to make sure its proper here
+function getDateFnsLocale (locale: string): string {
+  if (mapping[locale] != null) {
+    return mapping[locale]
+  }
+
+  return locale
+}
+
 const routes: Route[] = [
   {
     component: JSResource('Root', async () =>
@@ -66,6 +80,16 @@ const routes: Route[] = [
         /* webpackChunkName: "Root" */ './domain/Root/Root'
       )
     ),
+    dependencies: [
+      {
+        resource: JSResource('DateFns_Locale', async () => (
+          await import(
+            /* webpackChunkName: "DateFns_Locale_[request]" */ `date-fns/locale/${getDateFnsLocale(i18n._locale)}`
+          )
+        )),
+        then: (data) => setDefaultLocale(data)
+      }
+    ],
     prepare: () => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
       return {
@@ -282,11 +306,16 @@ const routes: Route[] = [
       },
       {
         path: '/manage',
-        translations: JSResource('ManageRoot_Locale', async (locale) =>
-          await import(
-            /* webpackChunkName: "ManageRoot_Locale_[request]" */ `./domain/Manage/__locale__/${locale}`
-          )
-        ),
+        dependencies: [
+          {
+            resource: JSResource('ManageRoot_Locale', async () =>
+              await import(
+                /* webpackChunkName: "ManageRoot_Locale_[request]" */ `./domain/Manage/__locale__/${i18n._locale}`
+              )
+            ),
+            then: ({ messages }) => i18n.load(i18n._locale, messages)
+          }
+        ],
         component: JSResource('ManageRoot', async () =>
           await import(
             /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'

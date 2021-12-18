@@ -46,6 +46,7 @@ export default function LanguageManager (): JSX.Element {
       },
       updater (store, payload) {
         const locale = payload.updateLanguage?.language
+
         if (locale == null) return
 
         const root = store.getRoot()

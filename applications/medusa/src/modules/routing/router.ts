@@ -4,7 +4,6 @@ import { Resource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'
-import { i18n } from '@lingui/core'
 
 export interface LocationShape {
   pathname?: string
@@ -30,9 +29,14 @@ interface MiddlewareT {
 
 export type Middleware = (props: MiddlewareT) => boolean
 
+interface ResourceDependency {
+  resource: Resource
+  then: (data: any) => void
+}
+
 export interface Route {
   component: Resource
-  translations?: Resource
+  dependencies?: ResourceDependency[]
   prepare?: (Params) => {}
   middleware?: Middleware[]
   exact?: boolean
@@ -52,7 +56,7 @@ export type Subscribe = (sb: (sb) => void) => () => void
 
 export interface PreparedEntry {
   component: Resource
-  translations?: Resource
+  dependencies?: ResourceDependency[]
   prepared: Params
   routeData: Match
   id: string
@@ -247,8 +251,10 @@ function createClientRouter (
       matches.forEach(({ route }) => {
         void route.component.load()
 
-        if (route.translations != null) {
-          void route.translations.load(i18n.locale).then(({ messages }) => i18n.load(i18n.locale, messages))
+        if (route.dependencies != null) {
+          route.dependencies.forEach(locale => {
+            void locale.resource.load().then(locale.then)
+          })
         }
       })
     },
@@ -304,10 +310,8 @@ function matchRouteWithFilter (routes, history, location, data): RouteMatch[] {
  */
 function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEntry[] {
   return matches.map((match, index) => {
-    const {
-      route,
-      match: matchData
-    } = match
+    const matchData = match.match
+    const route: Route = match.route
 
     const prepared = convertPreparedToQueries(
       relayEnvironment,
@@ -320,24 +324,26 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
 
     const Component = route.component.get()
     if (Component == null) {
-      route.component.load() // eagerly load
+      void route.component.load() // eagerly load
     }
 
-    if (route.translations != null) {
-      const translations = route.translations.get()
+    if (route.dependencies != null) {
+      route.dependencies.forEach(locale => {
+        const result = locale.resource.get()
 
-      // on client, translations will be loaded async
-      // on server, they are already available
-      if (translations == null) {
-        route.translations.load(i18n.locale).then(({ messages }) => i18n.load(i18n.locale, messages))
-      } else {
-        i18n.load(i18n.locale, translations.messages)
-      }
+        // on client, locale will be loaded async
+        // on server, they are already available
+        if (result == null) {
+          void locale.resource.load().then(locale.then)
+        } else {
+          locale.then(result)
+        }
+      })
     }
 
     return {
       component: route.component,
-      translations: route.translations,
+      dependencies: route.dependencies,
       prepared,
       routeData: matchData,
       id: route.component.getModuleId()
@@ -378,18 +384,27 @@ function convertPreparedToQueries (environment, prepare, prepareOptions): Prepar
   return prepared
 }
 
-// pass a new locale, routes and a history object in order to dispose correctly
-function disposeRouteLocalesAndLoad (newLocale: string, routes: Route[], history: History<any>): Array<Promise<any>> {
+// dispose of any dependencies on the route
+function disposeDependenciesAndReload (newLocale: string, routes: Route[], history: History<any>): Array<Promise<any>> {
   const matches = matchRoutes(routes, history.location.pathname)
-  return matches.filter(match => match.route.translations != null).map((match) => {
-    // first, dispose
-    match.route.translations?.dispose()
 
-    // then, load new translations
-    return match.route.translations?.load(newLocale).then(({ messages }) => {
-      i18n.load(newLocale, messages)
-    })
+  const promises: Array<Promise<any>> = []
+
+  matches.forEach((match) => {
+    const route: Route = match.route
+
+    if (route.dependencies != null) {
+      route.dependencies.forEach(dep => {
+        // dispose of dependency
+        dep.resource.dispose()
+
+        // push new promise
+        promises.push(dep.resource.load().then(dep.then))
+      })
+    }
   })
+
+  return promises
 }
 
-export { createClientRouter, createServerRouter, disposeRouteLocalesAndLoad }
+export { createClientRouter, createServerRouter, disposeDependenciesAndReload }

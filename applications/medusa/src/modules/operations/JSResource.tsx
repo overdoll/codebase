@@ -20,7 +20,7 @@ class Resource {
   _error: Error | null
   _loader: Loader
   _promise: Promise<string> | null
-  _result: JSX.Element | null
+  _result: JSX.Element | null | any
   _moduleId: string
 
   constructor (loader: Loader, moduleId: string) {
@@ -36,13 +36,13 @@ class Resource {
    *
    * Optionally pass arguments
    */
-  async load (...args: string[]): Promise<any> {
+  async load (...args: string[]): Promise<JSX.Element | null | any> {
     let promise = this._promise
     if (promise === null) {
       promise = this._loader(...args)
         .then(result => {
           this._result = result.default ?? result
-          return result
+          return this._result
         })
         .catch(error => {
           this._error = error

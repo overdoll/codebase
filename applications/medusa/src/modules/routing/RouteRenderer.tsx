@@ -76,7 +76,7 @@ export default function RouterRenderer (): JSX.Element {
     <RouteComponent
       id={firstItem.id}
       component={firstItem.component}
-      translations={firstItem.translations}
+      dependencies={firstItem.dependencies}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
     />
@@ -88,7 +88,7 @@ export default function RouterRenderer (): JSX.Element {
         id={nextItem.id}
         component={nextItem.component}
         prepared={nextItem.prepared}
-        translations={nextItem.translations}
+        dependencies={firstItem.dependencies}
         routeData={nextItem.routeData}
       >
         {routeComponent}
@@ -142,11 +142,12 @@ function RouteComponent ({
   children,
   routeData,
   component,
-  translations,
+  dependencies,
   prepared
 }: PreparedEntry): JSX.Element {
-  if (translations != null) {
-    translations.read()
+  // make sure localization files are loaded
+  if (dependencies != null) {
+    dependencies.forEach(res => res.resource.read())
   }
   const Component = component.read()
   return (

@@ -24,7 +24,6 @@ import {
   startOfWeek as _startOfWeek,
   startOfWeekYear as _startOfWeekYear
 } from 'date-fns'
-import { enUS } from 'date-fns/locale'
 
 export * from 'date-fns'
 
@@ -53,7 +52,7 @@ export const setWeekYear = wrap(_setWeekYear)
 export const startOfWeek = wrap(_startOfWeek)
 export const startOfWeekYear = wrap(_startOfWeekYear)
 
-const defaultLocale: { current: Locale } = { current: enUS }
+const defaultLocale: { current: Locale } = { current: {} }
 
 export function setDefaultLocale (next: Locale): void {
   defaultLocale.current = next
