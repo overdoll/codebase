@@ -6,7 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type LocaleCreatorFragment = {
     readonly language: {
-        readonly locale: unknown;
+        readonly locale: string;
     };
     readonly " $refType": "LocaleCreatorFragment";
 };

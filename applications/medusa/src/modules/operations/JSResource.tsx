@@ -54,10 +54,19 @@ class Resource {
   }
 
   /**
+   * Dispose of the JSResource like it was never loaded
+   *
+   */
+  dispose (): void {
+    this._promise = null
+    this._error = null
+  }
+
+  /**
    * Returns the result, if available. This can be useful to check if the value
    * is resolved yet.
    */
-  get (): JSX.Element | null {
+  get (): JSX.Element | null | any {
     if (this._result !== null) {
       return this._result
     }

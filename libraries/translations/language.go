@@ -3,6 +3,7 @@ package translations
 import (
 	"errors"
 	"golang.org/x/text/language"
+	"golang.org/x/text/language/display"
 )
 
 var (
@@ -43,11 +44,15 @@ func NewLanguage(locale string) (*Language, error) {
 
 func NewLanguageWithFallback(locale string) *Language {
 
-	tag, _ := language.MatchStrings(matcher, locale)
+	_, i := language.MatchStrings(matcher, locale)
 
-	return &Language{tag: tag}
+	return SupportedLanguages[i]
 }
 
 func (p *Language) Locale() string {
 	return p.tag.String()
+}
+
+func (p *Language) Name() string {
+	return display.Self.Name(p.tag)
 }

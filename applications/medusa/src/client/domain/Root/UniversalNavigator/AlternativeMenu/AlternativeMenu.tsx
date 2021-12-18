@@ -10,6 +10,8 @@ import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuB
 import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuButtonLogout'
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment, AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
+import LanguageManager from './LanguageManager/LanguageManager'
+import { MenuDivider } from '@chakra-ui/react'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -69,6 +71,8 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
           <DropdownMenuButtonLogout />
         </Can>
+        <MenuDivider />
+        <LanguageManager />
       </HorizontalNavigationDropdownMenu>
     </>
   )

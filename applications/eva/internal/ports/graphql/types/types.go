@@ -405,7 +405,10 @@ type GrantAuthenticationTokenPayload struct {
 }
 
 type Language struct {
+	// BCP47 locale
 	Locale string `json:"locale"`
+	// Fully qualified name
+	Name string `json:"name"`
 }
 
 // Represents a physical location.

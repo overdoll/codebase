@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type QuickAccessButtonProfileFragment = {
-    readonly avatar: unknown;
+    readonly avatar: string;
     readonly " $refType": "QuickAccessButtonProfileFragment";
 };
 export type QuickAccessButtonProfileFragment$data = QuickAccessButtonProfileFragment;

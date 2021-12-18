@@ -1,7 +1,16 @@
 export default {
   locales: [
-    'en-US',
-    'ru'
+    'en',
+    'ru',
+    'es',
+    'fr',
+    'it',
+    'pt',
+    'ko',
+    'de',
+    'ja',
+    'zh',
+    'cs'
   ],
   catalogs: [
     {
@@ -11,6 +20,6 @@ export default {
   ],
   format: 'po',
   fallbackLocales: {
-    default: 'en-US'
+    default: 'en'
   }
 }

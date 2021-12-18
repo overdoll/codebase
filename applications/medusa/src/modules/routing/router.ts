@@ -248,7 +248,7 @@ function createClientRouter (
         void route.component.load()
 
         if (route.translations != null) {
-          void route.translations.load(i18n.locale).then(({ messages }) => i18n._load(i18n.locale, messages))
+          void route.translations.load(i18n.locale).then(({ messages }) => i18n.load(i18n.locale, messages))
         }
       })
     },
@@ -329,9 +329,9 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       // on client, translations will be loaded async
       // on server, they are already available
       if (translations == null) {
-        route.translations.load(i18n.locale).then(({ messages }) => i18n._load(i18n.locale, messages))
+        route.translations.load(i18n.locale).then(({ messages }) => i18n.load(i18n.locale, messages))
       } else {
-        i18n._load(i18n.locale, translations.messages)
+        i18n.load(i18n.locale, translations.messages)
       }
     }
 
@@ -378,4 +378,18 @@ function convertPreparedToQueries (environment, prepare, prepareOptions): Prepar
   return prepared
 }
 
-export { createClientRouter, createServerRouter }
+// pass a new locale, routes and a history object in order to dispose correctly
+function disposeRouteLocalesAndLoad (newLocale: string, routes: Route[], history: History<any>): Array<Promise<any>> {
+  const matches = matchRoutes(routes, history.location.pathname)
+  return matches.filter(match => match.route.translations != null).map((match) => {
+    // first, dispose
+    match.route.translations?.dispose()
+
+    // then, load new translations
+    return match.route.translations?.load(newLocale).then(({ messages }) => {
+      i18n.load(newLocale, messages)
+    })
+  })
+}
+
+export { createClientRouter, createServerRouter, disposeRouteLocalesAndLoad }

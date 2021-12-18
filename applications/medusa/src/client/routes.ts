@@ -282,9 +282,9 @@ const routes: Route[] = [
       },
       {
         path: '/manage',
-        translations: JSResource('ManageRoot_Translations', async (locale) =>
+        translations: JSResource('ManageRoot_Locale', async (locale) =>
           await import(
-            /* webpackChunkName: "ManageRoot_Translations_[request]" */ `./domain/Manage/__locale__/${locale}`
+            /* webpackChunkName: "ManageRoot_Locale_[request]" */ `./domain/Manage/__locale__/${locale}`
           )
         ),
         component: JSResource('ManageRoot', async () =>

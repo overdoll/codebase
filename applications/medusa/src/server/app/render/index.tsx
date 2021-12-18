@@ -16,6 +16,7 @@ import express from 'express'
 import parseCookies from './Domain/parseCookies'
 import { HelmetData } from 'react-helmet-async'
 import { i18n } from '@lingui/core'
+import { loadServerLocale } from '../../../client/bootstrap/i18n'
 
 interface Context {
   url?: undefined | string
@@ -133,6 +134,11 @@ async function request (req, res): Promise<void> {
     req
   )
 
+  const locale = i18n._locale
+
+  // load locales for the server
+  await loadServerLocale(locale)
+
   const helmetContext: Helmet = {}
   const nonce = res.locals.cspNonce
 
@@ -204,7 +210,7 @@ async function request (req, res): Promise<void> {
     .get()
     .entries
     .filter(entry => entry.translations != null)
-    .map(entry => `${entry.translations?.getModuleId() as string}_${i18n._locale}`)
+    .map(entry => `${entry.translations?.getModuleId() as string}_${locale}`)
 
   // Set up our chunk extractor, so that we can preload our resources
   const extractor = new ChunkExtractor({
@@ -241,7 +247,7 @@ async function request (req, res): Promise<void> {
     runtimeStore: serialize(runtime),
     i18nextStore: serialize(initialI18nStore),
     flashStore: serialize(req.flash.flush()),
-    i18nextLang: req.i18n.language
+    language: locale
   })
 }
 

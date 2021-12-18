@@ -1,3 +1,4 @@
+import { loadClientLocale } from './bootstrap/i18n'
 import { createBrowserHistory } from 'history'
 import { createClientRouter } from '@//:modules/routing/router'
 import routes from './routes'
@@ -7,13 +8,14 @@ import Bootstrap from './Bootstrap'
 import { registerUpdateListener } from './bootstrap/update'
 import createCache from '@emotion/cache'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
-import './bootstrap/i18n'
 
 declare global {
   interface Window {
     __webpack_nonce__: string
   }
 }
+
+loadClientLocale()
 
 const router = createClientRouter(
   routes,
