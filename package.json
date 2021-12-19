@@ -80,7 +80,7 @@
     "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && wait-port --wait-for-dns parley:8000 && wait-port --wait-for-dns puppy:8000 && cd ./applications/medusa && razzle start",
     "relay": "cd ./applications/medusa && relay-compiler",
     "graphql": "cd ./applications/medusa && NODE_TLS_REJECT_UNAUTHORIZED=0 node get-graphql-schema.js -r dotenv/config",
-    "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build",
+    "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build --noninteractive",
     "proxy:medusa": "telepresence intercept medusa --port 8081 -- yarn run service:medusa",
     "service:medusa": "cd ./applications/medusa && razzle start",
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",

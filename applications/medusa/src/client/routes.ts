@@ -1,4 +1,4 @@
-import loadable from '@//:modules/operations/JSResource'
+import { loadable } from '@//:modules/operations/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'

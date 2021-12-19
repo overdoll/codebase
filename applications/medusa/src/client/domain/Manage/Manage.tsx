@@ -3,6 +3,9 @@ import { useLocation } from '@//:modules/routing'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { ContentBookEdit, SettingHammer } from '@//:assets/icons/navigation'
 import { Trans } from '@lingui/macro'
+import { formatDistance } from 'date-fns'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   children: Node
@@ -10,6 +13,8 @@ interface Props {
 
 export default function Manage ({ children }: Props): JSX.Element {
   const location = useLocation()
+
+  const { i18n } = useLingui()
 
   return (
     <VerticalNavigation>
@@ -27,6 +32,7 @@ export default function Manage ({ children }: Props): JSX.Element {
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         <Trans comment='yes this is a comment' id='known'>Hello theres2d</Trans>
+        {formatDistance(new Date(), new Date().getTime() + 6000000, { locale: dateFnsLocaleFromI18n(i18n) })}
         {location.pathname === '/manage' ? <Redirect to='/manage/posts' /> : children}
       </VerticalNavigation.Page>
     </VerticalNavigation>

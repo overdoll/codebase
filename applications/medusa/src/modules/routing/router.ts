@@ -1,6 +1,6 @@
 import { matchRoutes } from 'react-router-config'
 import { fetchQuery, loadQuery, PreloadedQuery } from 'react-relay/hooks'
-import { Resource } from '../operations/JSResource'
+import { ClientResource, PromisedResource, ServerResource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'
@@ -32,12 +32,12 @@ interface MiddlewareT {
 export type Middleware = (props: MiddlewareT) => boolean
 
 interface ResourceDependency {
-  resource: Resource
+  resource: ClientResource | ServerResource | PromisedResource
   then: (data: any) => void
 }
 
 export interface Route {
-  component: Resource
+  component: ClientResource | ServerResource | PromisedResource
   dependencies?: ResourceDependency[]
   prepare?: (Params) => {}
   middleware?: Middleware[]
@@ -57,7 +57,7 @@ export type Preload = (pathname: string) => void
 export type Subscribe = (sb: (sb) => void) => () => void
 
 export interface PreparedEntry {
-  component: Resource
+  component: ClientResource
   dependencies?: ResourceDependency[]
   prepared: Params
   routeData: Match
@@ -344,14 +344,11 @@ async function prepareMatchesServer (matches, prepareOptions, relayEnvironment, 
   for (const match of matches) {
     const route: Route = match.route
 
-    // load synchronously on the server
-    await route.component.load()
-
     trackedModules.push(route.component.getModuleId(relayEnvironment))
 
     if (route.dependencies != null) {
       for (const dep of route.dependencies) {
-        const result = await dep.resource.load(relayEnvironment)
+        const result = dep.resource.get(relayEnvironment)
         // const res = dep.resource.loadSync(relayEnvironment)
         dep.then({
           data: result,
@@ -377,7 +374,7 @@ function prepareMatchesClient (matches, prepareOptions, relayEnvironment): Prepa
     // load synchronously on the server
     const Component = route.component.get()
     if (Component == null) {
-      void route.component.load() // eagerly load
+      void route.component.load(relayEnvironment) // eagerly load
     }
 
     if (route.dependencies != null) {
