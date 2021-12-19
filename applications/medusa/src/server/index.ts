@@ -4,7 +4,6 @@ import express from 'express'
 import hbs from 'express-handlebars'
 import session from 'express-session'
 import helmet from 'helmet'
-import i18nextMiddleware from 'i18next-http-middleware'
 import path from 'path'
 import universalCookies from 'universal-cookie-express'
 import coverage from './app/coverage'
@@ -18,7 +17,6 @@ import cookieConfig from './config/cookie'
 import csrfConfig from './config/csrf'
 import hbsConfig from './config/hbs'
 import helmetConfig from './config/helmet'
-import i18next from './config/i18next'
 import sessionCfg from './config/session'
 
 const index = express()
@@ -36,9 +34,6 @@ index.engine('hbs', hbs(hbsConfig))
 index
   .set('views', path.join(__dirname, '../src/server/views'))
   .set('view engine', 'hbs')
-
-// Add i18next middleware
-index.use(i18nextMiddleware.handle(i18next))
 
 // cookie-parser
 index.use(cookieParser(cookieConfig))

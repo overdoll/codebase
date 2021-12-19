@@ -14,6 +14,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. yes this is a comment
-#: src/client/domain/Manage/Manage.tsx:30
+#: src/client/domain/Manage/Manage.tsx:29
 msgid "known"
 msgstr ""

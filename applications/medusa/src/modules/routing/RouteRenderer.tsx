@@ -3,6 +3,8 @@ import { useRoutingContext } from './RoutingContext'
 import { PreparedEntry, RouterInit } from './router'
 import ErrorBoundary from '../operations/ErrorBoundary'
 import { chakra, Progress, Slide } from '@chakra-ui/react'
+// @ts-expect-error
+import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from '@loadable/component'
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -149,7 +151,9 @@ function RouteComponent ({
   if (dependencies != null) {
     dependencies.forEach(res => res.resource.read())
   }
+
   const Component = component.read()
+
   return (
     <Component
       routeData={routeData}

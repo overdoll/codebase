@@ -9,20 +9,18 @@ import { Route, Router as ReactRouter } from 'react-router-dom'
 import { RuntimeProvider } from '@//:modules/runtime'
 import { Cookies, CookiesProvider } from 'react-cookie'
 import { CacheProvider } from '@emotion/react'
-import { I18nextProvider } from 'react-i18next'
 import { HelmetProvider } from 'react-helmet-async'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme'
 import { EmotionCache } from '@emotion/css'
-import { i18n as i18n_old } from 'i18next'
 import { ReactNode } from 'react'
 import RoutingProvider from '@//:modules/routing/RoutingProvider'
 import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
+import type { i18n } from '@lingui/core'
 
 interface Props {
   environment: IEnvironment
-  i18next: i18n_old
+  i18n: typeof i18n
   emotionCache: EmotionCache
   helmetContext?: {}
   cookies?: Cookies
@@ -44,36 +42,34 @@ const Bootstrap = ({
   cookies,
   routerContext,
   emotionCache,
-  i18next,
   environment,
   helmetContext = {},
+  i18n,
   children
 }: Props): JSX.Element => (
   <CacheProvider value={emotionCache}>
     <I18nProvider i18n={i18n}>
-      <I18nextProvider i18n={i18next}>
-        <HelmetProvider context={helmetContext}>
-          <ChakraProvider theme={theme}>
-            <RuntimeProvider initial={runtimeContext}>
-              <FlashProvider override={flash}>
-                <CookiesProvider cookies={cookies}>
-                  <RelayEnvironmentProvider environment={environment}>
-                    <ReactRouter history={routerContext.history}>
-                      <QueryParamProvider
-                        ReactRouterRoute={Route}
-                      >
-                        <RoutingProvider router={routerContext}>
-                          {children ?? <RouterRenderer />}
-                        </RoutingProvider>
-                      </QueryParamProvider>
-                    </ReactRouter>
-                  </RelayEnvironmentProvider>
-                </CookiesProvider>
-              </FlashProvider>
-            </RuntimeProvider>
-          </ChakraProvider>
-        </HelmetProvider>
-      </I18nextProvider>
+      <HelmetProvider context={helmetContext}>
+        <ChakraProvider theme={theme}>
+          <RuntimeProvider initial={runtimeContext}>
+            <FlashProvider override={flash}>
+              <CookiesProvider cookies={cookies}>
+                <RelayEnvironmentProvider environment={environment}>
+                  <ReactRouter history={routerContext.history}>
+                    <QueryParamProvider
+                      ReactRouterRoute={Route}
+                    >
+                      <RoutingProvider router={routerContext}>
+                        {children ?? <RouterRenderer />}
+                      </RoutingProvider>
+                    </QueryParamProvider>
+                  </ReactRouter>
+                </RelayEnvironmentProvider>
+              </CookiesProvider>
+            </FlashProvider>
+          </RuntimeProvider>
+        </ChakraProvider>
+      </HelmetProvider>
     </I18nProvider>
   </CacheProvider>
 )

@@ -3,6 +3,9 @@ const LoadableWebpackPlugin = require('@loadable/webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const path = require('path')
+const webpack = require('webpack')
+
+const supportedLocales = require('./locales.config')
 
 module.exports = {
   experimental: {
@@ -73,7 +76,8 @@ module.exports = {
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
-      '@//:assets': path.resolve(__dirname, 'src/assets')
+      '@//:assets': path.resolve(__dirname, 'src/assets'),
+      '@//:types': path.resolve(__dirname, 'src/types')
     }
 
     if (opts.env.target === 'node') {
@@ -104,6 +108,14 @@ module.exports = {
         }
       }
 
+      // cacheGroups: {
+      //   dateFns: {
+      //     test: /[\\/]node_modules[\\/](date-fns)[\\/]/,
+      //       name: 'dateFns',
+      //       chunks: 'all'
+      //   }
+      // }
+
       // saving stats file to build folder
       // without this, stats files will go into
       // build/public folder
@@ -112,6 +124,17 @@ module.exports = {
           outputAsset: false,
           writeToDisk: { filename }
         })
+      )
+
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /\.js\.flow|\.po|\.ts\.flow/,
+          contextRegExp: /date\-fns[\/\\]/
+        })
+      )
+
+      config.plugins.push(
+        new webpack.ContextReplacementPlugin(/date\-fns[\/\\]/, new RegExp(`[/\\\\\](${supportedLocales.join('|')}|en-US)[/\\\\\]`))
       )
 
       if (process.env.ANALYZE_BUNDLE === 'true') {

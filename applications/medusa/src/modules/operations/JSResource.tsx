@@ -6,10 +6,6 @@
  *
  */
 
-import CanUseDOM from './CanUseDOM'
-
-const resourceMap = new Map()
-
 type Loader = (...args: string[]) => Promise<any>
 
 /**
@@ -18,14 +14,18 @@ type Loader = (...args: string[]) => Promise<any>
  */
 class Resource {
   _error: Error | null
-  _loader: Loader
+  _asyncLoader: Loader
+  _syncLoader: any
+  _resolve: any
   _promise: Promise<string> | null
   _result: JSX.Element | null | any
-  _moduleId: string
+  _moduleId: (...args: string[]) => string
 
-  constructor (loader: Loader, moduleId: string) {
+  constructor (asyncLoader: Loader, syncLoader: any, resolve: any, moduleId: (...args: string[]) => string) {
     this._error = null
-    this._loader = loader
+    this._asyncLoader = asyncLoader
+    this._syncLoader = syncLoader
+    this._resolve = resolve
     this._promise = null
     this._result = null
     this._moduleId = moduleId
@@ -36,10 +36,10 @@ class Resource {
    *
    * Optionally pass arguments
    */
-  async load (...args: string[]): Promise<JSX.Element | null | any> {
+  async load (...args: any[]): Promise<JSX.Element | null | any> {
     let promise = this._promise
     if (promise === null) {
-      promise = this._loader(...args)
+      promise = this._asyncLoader(...args)
         .then(result => {
           this._result = result.default ?? result
           return this._result
@@ -53,13 +53,27 @@ class Resource {
     return await promise
   }
 
+  async loadAsync (...args: any[]): Promise<JSX.Element | null | any> {
+    return await this._asyncLoader(...args)
+  }
+
+  loadSync (...args: any[]): any {
+    this._result = this._syncLoader(args)
+    return this._result
+  }
+
   /**
    * Dispose of the JSResource like it was never loaded
    *
    */
   dispose (): void {
     this._promise = null
+    this._result = null
     this._error = null
+  }
+
+  resolve (): any {
+    return this._resolve
   }
 
   /**
@@ -67,7 +81,7 @@ class Resource {
    * is resolved yet.
    */
   get (): JSX.Element | null | any {
-    if (this._result !== null) {
+    if (this._result != null) {
       return this._result
     }
 
@@ -77,15 +91,8 @@ class Resource {
   /**
    * Returns the module identification.
    */
-  getModuleId (): string {
-    return this._moduleId
-  }
-
-  /**
-   * Returns the module if it's required.
-   */
-  getModuleIfRequired (): JSX.Element | null {
-    return this.get()
+  getModuleId (...args: any[]): string {
+    return this._moduleId(...args)
   }
 
   /**
@@ -108,35 +115,27 @@ class Resource {
   }
 }
 
-/**
- * A helper method to create a resource, intended for dynamically loading code.
- *
- * Example:
- * ```
- *    // Before rendering, ie in an event handler:
- *    const resource = JSResource('Foo', () => import('./Foo.js));
- *    resource.load();
- *
- *    // in a React component:
- *    const Foo = resource.read();
- *    return <Foo ... />;
- * ```
- */
-export default function JSResource (moduleId: string, loader: Loader): Resource {
-  // On the server side, we want to always create a new instance, because it won't refresh with changes
-  if (!CanUseDOM || module.hot != null) {
-    return new Resource(loader, moduleId)
+const resolveConstructor = (ctor) => {
+  if (typeof ctor === 'function') {
+    return {
+      requireAsync: ctor,
+      resolve () {
+        return undefined
+      },
+      chunkName () {
+        return undefined
+      }
+    }
   }
 
-  // If in webpack HMR mode, update the resource map everytime
-  let resource = resourceMap.get(moduleId)
-
-  if (resource == null) {
-    resource = new Resource(loader, moduleId)
-    resourceMap.set(moduleId, resource)
-  }
-
-  return resource
+  return ctor
 }
+
+const loadable = (loader: Loader): Resource => {
+  const t = resolveConstructor(loader)
+  return new Resource(t.importAsync, t.requireSync, t.resolve, t.chunkName)
+}
+
+export default loadable
 
 export type { Resource }

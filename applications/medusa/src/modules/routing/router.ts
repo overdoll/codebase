@@ -4,6 +4,7 @@ import { Resource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'
+import { i18n } from '@lingui/core'
 
 export interface LocationShape {
   pathname?: string
@@ -25,6 +26,7 @@ export interface Match {
 interface MiddlewareT {
   history: History
   environment: IEnvironment
+  i18n: typeof i18n
 }
 
 export type Middleware = (props: MiddlewareT) => boolean
@@ -106,7 +108,8 @@ async function createServerRouter (
   routes: Route[],
   history: History,
   environment: IEnvironment,
-  req
+  req,
+  trackedModules: string[]
 ): Promise<RouterInstance> {
   // Before going further and creating
   // our router, we pre-emptively resolve the RootQuery routes, so that the user object
@@ -138,7 +141,8 @@ async function createServerRouter (
 
   const data = {
     environment,
-    flash: req.flash
+    flash: req.flash,
+    i18n: req.i18n
   }
 
   // Find the initial match and prepare it
@@ -154,7 +158,7 @@ async function createServerRouter (
     cookies: new Cookies(req.headers.cookie)
   }
 
-  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
+  const initialEntries = await prepareMatchesServer(initialMatches, prepareOptions, environment, req.i18n, trackedModules)
 
   // The actual object that will be passed on the RoutingContext.
   const context = {
@@ -205,7 +209,7 @@ function createClientRouter (
     cookies: new Cookies()
   }
 
-  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
+  const initialEntries = prepareMatchesClient(initialMatches, prepareOptions, environment)
 
   let currentEntry: RouterInit = {
     location: history.location,
@@ -230,7 +234,7 @@ function createClientRouter (
       cookies: new Cookies()
     }
 
-    const entries = prepareMatches(matches, prepareOptions, environment)
+    const entries = prepareMatchesClient(matches, prepareOptions, environment)
     const nextEntry = {
       location,
       entries
@@ -249,11 +253,15 @@ function createClientRouter (
       // preload just the code for a route, without storing the result
       const matches: RouteMatch[] = matchRoutes(routes, pathname)
       matches.forEach(({ route }) => {
-        void route.component.load()
+        void route.component.load(environment)
 
         if (route.dependencies != null) {
-          route.dependencies.forEach(locale => {
-            void locale.resource.load().then(locale.then)
+          route.dependencies.forEach(dep => {
+            void dep.resource.load(environment).then(data => dep.then({
+              data,
+              environment,
+              i18n: i18n
+            }))
           })
         }
       })
@@ -267,7 +275,7 @@ function createClientRouter (
         cookies: new Cookies()
       }
 
-      prepareMatches(matches, prepareOptions, environment)
+      prepareMatchesClient(matches, prepareOptions, environment)
     },
     subscribe (cb) {
       const id = nextId++
@@ -303,11 +311,6 @@ function matchRouteWithFilter (routes, history, location, data): RouteMatch[] {
   )
 }
 
-/**
- * Load the data for the matched route, given the params extracted from the route
- *
- * Inject RelayEnvironment
- */
 function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEntry[] {
   return matches.map((match, index) => {
     const matchData = match.match
@@ -322,25 +325,6 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       }
     )
 
-    const Component = route.component.get()
-    if (Component == null) {
-      void route.component.load() // eagerly load
-    }
-
-    if (route.dependencies != null) {
-      route.dependencies.forEach(locale => {
-        const result = locale.resource.get()
-
-        // on client, locale will be loaded async
-        // on server, they are already available
-        if (result == null) {
-          void locale.resource.load().then(locale.then)
-        } else {
-          locale.then(result)
-        }
-      })
-    }
-
     return {
       component: route.component,
       dependencies: route.dependencies,
@@ -349,6 +333,75 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       id: route.component.getModuleId()
     }
   })
+}
+
+/**
+ * Load the data for the matched route, given the params extracted from the route
+ *
+ * Inject RelayEnvironment
+ */
+async function prepareMatchesServer (matches, prepareOptions, relayEnvironment, i18n, trackedModules): Promise<PreparedEntry[]> {
+  for (const match of matches) {
+    const route: Route = match.route
+
+    // load synchronously on the server
+    await route.component.load()
+
+    trackedModules.push(route.component.getModuleId(relayEnvironment))
+
+    if (route.dependencies != null) {
+      for (const dep of route.dependencies) {
+        const result = await dep.resource.load(relayEnvironment)
+        // const res = dep.resource.loadSync(relayEnvironment)
+        dep.then({
+          data: result,
+          environment: relayEnvironment,
+          i18n
+        })
+        trackedModules.push(dep.resource.getModuleId(relayEnvironment))
+      }
+    }
+  }
+
+  return prepareMatches(matches, prepareOptions, relayEnvironment)
+}
+
+/**
+ * Load the data for the matched route, given the params extracted from the route
+ *
+ * Inject RelayEnvironment
+ */
+function prepareMatchesClient (matches, prepareOptions, relayEnvironment): PreparedEntry[] {
+  for (const match of matches) {
+    const route: Route = match.route
+    // load synchronously on the server
+    const Component = route.component.get()
+    if (Component == null) {
+      void route.component.load() // eagerly load
+    }
+
+    if (route.dependencies != null) {
+      route.dependencies.forEach(dep => {
+        const result = dep.resource.get()
+
+        if (result == null) {
+          void dep.resource.load(relayEnvironment).then(data => dep.then({
+            data,
+            environment: relayEnvironment,
+            i18n: i18n
+          }))
+        } else {
+          dep.then({
+            data: result,
+            environment: relayEnvironment,
+            i18n: i18n
+          })
+        }
+      })
+    }
+  }
+
+  return prepareMatches(matches, prepareOptions, relayEnvironment)
 }
 
 /**
@@ -384,27 +437,4 @@ function convertPreparedToQueries (environment, prepare, prepareOptions): Prepar
   return prepared
 }
 
-// dispose of any dependencies on the route
-function disposeDependenciesAndReload (newLocale: string, routes: Route[], history: History<any>): Array<Promise<any>> {
-  const matches = matchRoutes(routes, history.location.pathname)
-
-  const promises: Array<Promise<any>> = []
-
-  matches.forEach((match) => {
-    const route: Route = match.route
-
-    if (route.dependencies != null) {
-      route.dependencies.forEach(dep => {
-        // dispose of dependency
-        dep.resource.dispose()
-
-        // push new promise
-        promises.push(dep.resource.load().then(dep.then))
-      })
-    }
-  })
-
-  return promises
-}
-
-export { createClientRouter, createServerRouter, disposeDependenciesAndReload }
+export { createClientRouter, createServerRouter }

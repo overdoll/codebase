@@ -3,7 +3,6 @@ import { LanguageManagerQuery } from '@//:artifacts/LanguageManagerQuery.graphql
 import { ChangeEvent } from 'react'
 import { Select } from '@chakra-ui/react'
 import { LanguageManagerMutation } from '@//:artifacts/LanguageManagerMutation.graphql'
-import { disposeAndLoadClient } from '../../../../../bootstrap/i18n'
 import { useHistory } from '@//:modules/routing'
 
 const LanguageManagerGQL = graphql`
@@ -53,12 +52,7 @@ export default function LanguageManager (): JSX.Element {
 
         if (root == null) return
 
-        root.getLinkedRecord('language')?.setValue(locale.locale, 'locale')
-        root.getLinkedRecord('language')?.setValue(locale.name, 'name')
-
-        // dispose and reload locale files
-        // once this is done, we update the store
-        void disposeAndLoadClient(locale.locale, history)
+        history.go(0)
       }
     })
   }
