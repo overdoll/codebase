@@ -6,15 +6,14 @@ const path = require('path')
 const webpack = require('webpack')
 
 const supportedLocales = require('./locales.config')
+const unlikelyToChangeChunk = ['react', 'react-dom', 'react-relay', 'relay-runtime', '@lingui', 'make-plural', 'history', '@casl', 'axios']
 
 module.exports = {
-  experimental: {
-    newExternals: true,
-    reactRefresh: true
-  },
   options: {
     cssPrefix: 'css',
-    jsPrefix: 'js'
+    jsPrefix: 'js',
+    enableReactRefresh: true
+
   },
   modifyPaths ({
     webpackObject, // the imported webpack node module
@@ -33,16 +32,17 @@ module.exports = {
     options
   }) {
     const config = options.webpackOptions
+    config.stats = 'verbose'
 
     if (!env.dev && env.target === 'web') {
-      // config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      // config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      //
-      // config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      // config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      //
-      // config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      // config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
+      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
+
+      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
+
+      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
     }
 
     return config
@@ -80,6 +80,13 @@ module.exports = {
       '@//:types': path.resolve(__dirname, 'src/types')
     }
 
+    if (!opts.env.dev) {
+      config.cache = {
+        type: 'filesystem',
+        store: 'pack'
+      }
+    }
+
     if (opts.env.target === 'node') {
       if (!opts.env.dev) {
         config.externals = {}
@@ -98,13 +105,30 @@ module.exports = {
         config.devServer.index = ''
         config.devServer.public = process.env.URL
         config.devServer.hot = true
-      }
-
-      config.optimization = {
-        moduleIds: 'size',
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all'
+        config.optimization = {
+          moduleIds: 'size',
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all'
+          }
+        }
+      } else {
+        config.optimization = {
+          // TODO: when switching to webpack 5, change to deterministic
+          // cannot switch because hot reload becomes 10x slower?
+          moduleIds: 'hashed',
+          chunkIds: 'size',
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+              bootstrap: {
+                test: new RegExp(`[\\/]node_modules[\\/](${unlikelyToChangeChunk.join('|')})[\\/]`),
+                name: 'bootstrap',
+                chunks: 'all'
+              }
+            }
+          }
         }
       }
 

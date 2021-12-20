@@ -1,4 +1,3 @@
-import { Redirect } from 'react-router'
 import { useLocation } from '@//:modules/routing'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { ContentBookEdit, SettingHammer } from '@//:assets/icons/navigation'
@@ -6,6 +5,7 @@ import { Trans } from '@lingui/macro'
 import { formatDistance } from 'date-fns'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import Redirect from '@//:modules/routing/Redirect'
 
 interface Props {
   children: Node

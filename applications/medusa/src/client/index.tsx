@@ -4,7 +4,7 @@ import { loadableReady } from '@loadable/component'
 import App from './App'
 
 // create the root, and hydrate from our server
-const root = createRoot(document.getElementById('root') as HTMLElement, { hydrate: true })
+const root = createRoot(document.getElementById('root'), { hydrate: true })
 
 void loadableReady().then(() => {
   root.render(<App />)

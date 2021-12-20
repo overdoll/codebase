@@ -1,4 +1,4 @@
-import { Redirect } from 'react-router'
+import Redirect from '@//:modules/routing/Redirect'
 import { useLocation } from '@//:modules/routing'
 import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'

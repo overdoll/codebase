@@ -2,29 +2,16 @@ import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
 import { createClientRouter, Route, RouterInstance } from '../routing/router'
 import Bootstrap from '../../client/Bootstrap'
-import i18n from 'i18next'
 import createCache from '@emotion/cache'
 import { EMOTION_CACHE_KEY } from '../constants/emotion'
 import { IEnvironment } from 'relay-runtime'
+import { i18n } from '@lingui/core'
 
 interface WithProviders {
   environment: IEnvironment
   Component: ComponentType
   routes: Route[]
 }
-
-// i18n specifically used for testing - no translations are provided here
-void i18n.init({
-  lng: 'en',
-  fallbackLng: 'en',
-  ns: ['translations'],
-  defaultNS: 'translations',
-  debug: false,
-  interpolation: {
-    escapeValue: false
-  },
-  resources: { en: {} }
-})
 
 export default function withProviders ({
   environment,
@@ -49,7 +36,7 @@ export default function withProviders ({
           emotionCache={cache}
           routerContext={router.context}
           environment={environment}
-          i18next={i18n}
+          i18n={i18n}
         >
           <Component {...props} />
         </Bootstrap>

@@ -4,6 +4,7 @@ import { ChangeEvent } from 'react'
 import { Select } from '@chakra-ui/react'
 import { LanguageManagerMutation } from '@//:artifacts/LanguageManagerMutation.graphql'
 import { useHistory } from '@//:modules/routing'
+import { RenderOnDesktop } from '@//:modules/content/PageLayout'
 
 const LanguageManagerGQL = graphql`
   query LanguageManagerQuery {
@@ -58,21 +59,23 @@ export default function LanguageManager (): JSX.Element {
   }
 
   return (
-    <Select
-      variant='filled'
-      size='lg'
-      isDisabled={isInFlight}
-      defaultValue={query.language.locale}
-      onChange={onChange}
-    >
-      {query.languages.map(lang => (
-        <option
-          key={lang.locale}
-          value={lang.locale}
-        >
-          {lang.name}
-        </option>
-      ))}
-    </Select>
+    <RenderOnDesktop>
+      <Select
+        variant='filled'
+        size='lg'
+        isDisabled={isInFlight}
+        defaultValue={query.language.locale}
+        onChange={onChange}
+      >
+        {query.languages.map(lang => (
+          <option
+            key={lang.locale}
+            value={lang.locale}
+          >
+            {lang.name}
+          </option>
+        ))}
+      </Select>
+    </RenderOnDesktop>
   )
 }

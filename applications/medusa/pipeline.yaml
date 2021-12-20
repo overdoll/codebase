@@ -1,5 +1,8 @@
 steps:
   build:
+    commands:
+      # compile localization files
+      - yarn run locale:compile
     targets:
       - //applications/medusa:bundle
 

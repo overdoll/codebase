@@ -44,7 +44,7 @@ window.__webpack_nonce__ = nonce
 export default function App (): JSX.Element {
   return (
     <Bootstrap
-      routerContext={router.context}
+      router={router.context}
       emotionCache={cache}
       environment={environment}
       i18n={i18n}

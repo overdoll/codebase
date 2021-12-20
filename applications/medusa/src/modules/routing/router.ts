@@ -1,4 +1,4 @@
-import { matchRoutes } from 'react-router-config'
+import matchRoutes from './matchRoutes'
 import { fetchQuery, loadQuery, PreloadedQuery } from 'react-relay/hooks'
 import { ClientResource, PromisedResource, ServerResource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
@@ -202,7 +202,7 @@ function createClientRouter (
   environment: IEnvironment
 ): RouterInstance {
   // Find the initial match and prepare it
-  const initialMatches = matchRoutes(routes, history.location.pathname)
+  const initialMatches = matchRoutes(routes as any, history.location.pathname)
 
   const prepareOptions = {
     query: new URLSearchParams(history.location.search),
@@ -227,7 +227,7 @@ function createClientRouter (
     if (location.pathname === currentEntry.location.pathname) {
       return
     }
-    const matches = matchRoutes(routes, history.location.pathname)
+    const matches = matchRoutes(routes as any, history.location.pathname)
 
     const prepareOptions = {
       query: new URLSearchParams(history.location.search),
@@ -251,7 +251,7 @@ function createClientRouter (
     },
     preloadCode (pathname) {
       // preload just the code for a route, without storing the result
-      const matches: RouteMatch[] = matchRoutes(routes, pathname)
+      const matches: RouteMatch[] = matchRoutes(routes as any, pathname) as unknown as RouteMatch[]
       matches.forEach(({ route }) => {
         void route.component.load(environment)
 
@@ -268,7 +268,7 @@ function createClientRouter (
     },
     preload (pathname) {
       // preload the code and data for a route, without storing the result
-      const matches = matchRoutes(routes, pathname)
+      const matches = matchRoutes(routes as any, pathname)
 
       const prepareOptions = {
         query: new URLSearchParams(pathname),
@@ -298,7 +298,7 @@ function createClientRouter (
  * Match the current location to the corresponding route entry.
  */
 function matchRouteWithFilter (routes, history, location, data): RouteMatch[] {
-  const unparsedRoutes: RouteMatch[] = matchRoutes(routes, location.pathname)
+  const unparsedRoutes: RouteMatch[] = matchRoutes(routes, location.pathname) as unknown as RouteMatch[]
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useLocation } from '@//:modules/routing'
-import { Redirect } from 'react-router'
+import Redirect from '@//:modules/routing/Redirect'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { useTranslation } from 'react-i18next'
 import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'

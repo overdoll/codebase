@@ -74,12 +74,10 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <MenuDivider />
         <Suspense fallback={
-          (
-            <Skeleton
-              borderRadius={5}
-              h={12}
-            />
-          )
+          <Skeleton
+            borderRadius={5}
+            h={12}
+          />
         }
         >
           <LanguageManager />

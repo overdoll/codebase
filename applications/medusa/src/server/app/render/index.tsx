@@ -159,7 +159,7 @@ async function request (req, res): Promise<void> {
       environment={environment}
       i18n={i18n}
       emotionCache={cache}
-      routerContext={router.context}
+      router={router.context}
       runtimeContext={runtime}
       helmetContext={helmetContext}
       flash={req.flash}
