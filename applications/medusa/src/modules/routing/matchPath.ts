@@ -1,4 +1,5 @@
 import pathToRegexp from 'path-to-regexp'
+import { Match } from './router'
 
 // taken from https://github.com/remix-run/react-router/blob/v5.3.0/packages/react-router/modules/matchPath.js
 
@@ -6,11 +7,29 @@ const cache = {}
 const cacheLimit = 10000
 let cacheCount = 0
 
-function compilePath (path, options) {
-  const cacheKey = `${options.end}${options.strict}${options.sensitive}`
-  const pathCache = cache[cacheKey] || (cache[cacheKey] = {})
+interface Key {
+  name: string
+}
 
-  if (pathCache[path]) return pathCache[path]
+interface Compiled {
+  regexp: RegExp
+  keys: Key[]
+}
+
+interface Options {
+  end?: boolean
+  strict?: boolean
+  sensitive?: boolean
+  exact?: boolean
+  path?: string | string[] | any
+}
+
+const compilePath = (path: string, options: Options): Compiled => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const cacheKey = `${options?.end}${options?.strict}${options?.sensitive}`
+  const pathCache = cache[cacheKey] ?? (cache[cacheKey] = {})
+
+  if (pathCache[path] != null) return pathCache[path]
 
   const keys = []
   const regexp = pathToRegexp(path, keys, options)
@@ -27,7 +46,7 @@ function compilePath (path, options) {
   return result
 }
 
-function matchPath (pathname, options = {}) {
+function matchPath (pathname: string, options: Options = {}): Match | null {
   if (typeof options === 'string' || Array.isArray(options)) {
     options = { path: options }
   }
@@ -43,7 +62,7 @@ function matchPath (pathname, options = {}) {
 
   return paths.reduce((matched, path) => {
     if (!path && path !== '') return null
-    if (matched) return matched
+    if (matched != null) return matched
 
     const {
       regexp,
@@ -55,7 +74,7 @@ function matchPath (pathname, options = {}) {
     })
     const match = regexp.exec(pathname)
 
-    if (!match) return null
+    if (match == null) return null
 
     const [url, ...values] = match
     const isExact = pathname === url
