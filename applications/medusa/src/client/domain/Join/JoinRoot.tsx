@@ -6,6 +6,7 @@ import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
 import Join from './Join/Join'
 import Grant from './Grant/Grant'
 import MultiFactor from './MultiFactor/MultiFactor'
+import { useCookies } from 'react-cookie'
 
 interface Props {
   prepared: {

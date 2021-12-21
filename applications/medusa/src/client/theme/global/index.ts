@@ -5,10 +5,8 @@ export default function global (props): any {
       color: 'gray.100',
       bg: 'gray.900',
       lineHeight: 'base',
-      overflow: 'hidden'
-    },
-    '.page-contents': {
-      overflow: 'auto'
+      overflow: 'hidden',
+      position: 'initial'
     },
     heading: {
       fontWeight: 600

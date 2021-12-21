@@ -690,28 +690,28 @@ const routes: Route[] = [
           }
         ]
       },
-      // {
-      //   path: '/configure/create_post',
-      //   component: JSResource('CreatePostRoot', async () =>
-      //     await import(
-      //       /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
-      //     )
-      //   ),
-      //   middleware: [
-      //     ({
-      //       environment,
-      //       history
-      //     }) => {
-      //       const ability = getAbilityFromUser(environment)
-      //
-      //       if (ability.can('manage', 'posting')) {
-      //         return true
-      //       }
-      //       history.push('/join')
-      //       return false
-      //     }
-      //   ]
-      // },
+      {
+        path: '/configure/create-post',
+        component: JSResource('CreatePostRoot', async () =>
+          await import(
+            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+          )
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('create', 'Post')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ]
+      },
       {
         path: '/profile',
         exact: true,

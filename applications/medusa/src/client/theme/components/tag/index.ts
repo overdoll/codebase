@@ -1,8 +1,9 @@
 import Badge from '../badge'
 
-const parts = ['container', 'label', 'closeButton']
+import { tagAnatomy as parts } from '@chakra-ui/anatomy'
+import type { PartsStyleInterpolation, PartsStyleObject, SystemStyleObject } from '@chakra-ui/theme-tools'
 
-const baseStyleContainer = {
+const baseStyleContainer: SystemStyleObject = {
   fontWeight: 'medium',
   lineHeight: 1.2,
   outline: 0,
@@ -11,11 +12,11 @@ const baseStyleContainer = {
   }
 }
 
-const baseStyleLabel = {
+const baseStyleLabel: SystemStyleObject = {
   lineHeight: 1.2
 }
 
-const baseStyleCloseButton = {
+const baseStyleCloseButton: SystemStyleObject = {
   fontSize: '18px',
   w: '1.25rem',
   h: '1.25rem',
@@ -35,13 +36,13 @@ const baseStyleCloseButton = {
   _active: { opacity: 1 }
 }
 
-const baseStyle = {
+const baseStyle: PartsStyleObject<typeof parts> = {
   container: baseStyleContainer,
   label: baseStyleLabel,
   closeButton: baseStyleCloseButton
 }
 
-const sizes = {
+const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   sm: {
     container: {
       minH: '1.25rem',
@@ -75,7 +76,7 @@ const sizes = {
   }
 }
 
-const variants = {
+const variants: Record<string, PartsStyleInterpolation<typeof parts>> = {
   subtle: (props) => ({
     container: Badge.variants.subtle(props)
   }),

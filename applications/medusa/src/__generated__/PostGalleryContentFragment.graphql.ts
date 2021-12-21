@@ -8,10 +8,7 @@ export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type PostGalleryContentFragment = {
     readonly content: ReadonlyArray<{
         readonly type: ResourceType;
-        readonly urls: ReadonlyArray<{
-            readonly url: string;
-            readonly mimeType: string;
-        }>;
+        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
     }>;
     readonly " $refType": "PostGalleryContentFragment";
 };
@@ -45,29 +42,14 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
-          "alias": null,
           "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "mimeType",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ImageSnippetFragment"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "VideoSnippetFragment"
         }
       ],
       "storageKey": null
@@ -76,5 +58,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '319464ef55f5ff77e2a4ae4625bffc30';
+(node as any).hash = '821dbfdf89aad6f0e49f941182ae7f14';
 export default node;

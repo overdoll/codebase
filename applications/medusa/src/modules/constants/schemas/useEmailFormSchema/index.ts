@@ -1,8 +1,14 @@
+import { useTranslation } from 'react-i18next'
 import Joi from 'joi'
-import { t } from '@lingui/macro'
 
 export default function useEmailFormSchema (): Joi.Schema {
-  return Joi
+  const [t] = useTranslation('settings')
+
+  const getValidationError = (error) => {
+    return t(`profile.email.add.form.validation.email.${error}`)
+  }
+
+  const schema = Joi
     .string()
     .email({
       minDomainSegments: 2,
@@ -10,7 +16,9 @@ export default function useEmailFormSchema (): Joi.Schema {
     })
     .required()
     .messages({
-      'string.empty': t`Please enter an email address`,
-      'string.email': t`Please enter a valid email address`
+      'string.empty': t('profile.email.add.form.validation.email.empty'),
+      'string.email': t('profile.email.add.form.validation.email.pattern')
     })
+
+  return [schema, getValidationError]
 }

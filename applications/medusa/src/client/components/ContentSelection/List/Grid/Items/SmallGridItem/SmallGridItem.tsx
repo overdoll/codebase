@@ -1,7 +1,7 @@
-import { WrapItem } from '@chakra-ui/react'
+import { HTMLChakraProps, WrapItem } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   children: ReactNode
 }
 

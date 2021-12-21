@@ -8,11 +8,7 @@ const PostBrandFragmentGQL = graphql`
     brand {
       name
       thumbnail {
-        type
-        urls {
-          mimeType
-          url
-        }
+        ...ResourceItemFragment
       }
     }
   }
@@ -29,7 +25,7 @@ export default function PostBrand ({ query }: Props): JSX.Element {
     <Flex align='center'>
       <Flex align='center' justify='center' mr={2} borderRadius='md' overflow='hidden' w={8} h={8}>
         {data?.brand?.thumbnail != null &&
-          <ResourceItem type={data?.brand?.thumbnail?.type} urls={data?.brand?.thumbnail?.urls} />}
+          <ResourceItem query={data.brand.thumbnail} />}
       </Flex>
       <Heading fontSize='md'>
         {data?.brand?.name}

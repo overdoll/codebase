@@ -79,6 +79,7 @@ const HorizontalNavigationDropdownMenu = ({
         </Box>
         <Modal
           isCentered
+          preserveScrollBarGap
           isOpen={isOpen}
           onClose={onClose}
         >

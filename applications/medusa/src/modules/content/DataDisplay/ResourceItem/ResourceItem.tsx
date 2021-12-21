@@ -1,24 +1,34 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps } from '@chakra-ui/react'
+import { graphql } from 'react-relay/hooks'
 import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet'
 import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet'
-import { ResourceUrl } from '@//:types/upload'
+import { useFragment } from 'react-relay'
+import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 
-interface Props {
-  type: string
-  urls: readonly ResourceUrl[]
+interface Props extends HTMLChakraProps<any> {
+  query: ResourceItemFragment$key
 }
 
+const Fragment = graphql`
+  fragment ResourceItemFragment on Resource {
+    type
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
+  }
+`
+
 export default function ResourceItem ({
-  urls,
-  type,
+  query,
   ...rest
 }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   return (
     <Flex>
-      {type === 'IMAGE' &&
-        <ImageSnippet {...rest} urls={urls} />}
-      {type === 'VIDEO' &&
-        <VideoSnippet {...rest} urls={urls} />}
+      {data.type === 'IMAGE' &&
+        <ImageSnippet {...rest} query={data} />}
+      {data.type === 'VIDEO' &&
+        <VideoSnippet {...rest} query={data} />}
     </Flex>
   )
 }

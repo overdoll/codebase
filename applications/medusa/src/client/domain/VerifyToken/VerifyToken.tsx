@@ -73,7 +73,7 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         if (payload.verifyAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
-            title: payload.verifyAuthenticationToken.validation,
+            title: t(`error.${payload.verifyAuthenticationToken.validation}`),
             isClosable: true
           })
         }

@@ -46,10 +46,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         boxShadow='md'
         overflowY='auto'
         flexShrink={0}
-        position={{
-          base: 'fixed',
-          xl: 'fixed'
-        }}
+        position='fixed'
         zIndex='sidebar'
         display={{
           base: 'none',
@@ -73,17 +70,6 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           {props.children}
         </Stack>
       </Box>
-      <Box
-        pl={2}
-        pr={4}
-        h='calc(100vh - 54px)'
-        w='290px'
-        display={{
-          base: 'none',
-          md: 'initial',
-          xl: 'none'
-        }}
-      />
     </>
   )
 }

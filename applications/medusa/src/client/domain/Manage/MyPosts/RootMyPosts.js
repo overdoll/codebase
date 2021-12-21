@@ -32,9 +32,6 @@ export default function RootMyPosts (props: Props): Node {
     <>
       <Helmet title='my posts' />
       <PageWrapper>
-        <PageSectionWrap>
-          <PageSectionTitle>{t('my_posts.title')}</PageSectionTitle>
-        </PageSectionWrap>
         <Suspense fallback={<SkeletonStack />}>
           <ErrorBoundary
             fallback={({ error, reset }) => (

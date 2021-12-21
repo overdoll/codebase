@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 interface Props {
   error?: Error
   reset?: () => void
-  refetch: () => void
+  refetch?: () => void
 }
 
 // eslint-disable-next-line node/handle-callback-err
@@ -16,7 +16,9 @@ export default function ErrorFallback ({
   refetch
 }: Props): JSX.Element {
   const onReset = (): void => {
-    refetch()
+    if (refetch != null) {
+      refetch()
+    }
 
     if (reset != null) {
       reset()

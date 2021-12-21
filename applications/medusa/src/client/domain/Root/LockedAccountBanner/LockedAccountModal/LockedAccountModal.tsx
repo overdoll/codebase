@@ -41,6 +41,7 @@ export default function LockedAccountModal ({
 
   return (
     <Modal
+      preserveScrollBarGap
       isOpen={isOpen}
       onClose={onClose}
       size='5xl'
