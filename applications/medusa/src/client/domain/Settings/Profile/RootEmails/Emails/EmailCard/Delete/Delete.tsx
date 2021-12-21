@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql'
 import { useToast } from '@chakra-ui/react'
 import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql'
 import { SmallMenuItem } from '@//:modules/content/PageLayout'
 import { DeleteBin } from '@//:assets/icons/interface'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   connectionID: string
@@ -30,8 +30,6 @@ export default function Delete ({
   connectionID,
   query
 }: Props): JSX.Element {
-  const [t] = useTranslation('settings')
-
   const data = useFragment(DeleteEmailFragmentGQL, query)
 
   const [deleteEmail, isDeletingEmail] = useMutation<DeleteEmailMutation>(
@@ -51,14 +49,14 @@ export default function Delete ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.options.delete.query.success', { email: data.email }),
+          title: t`${data.email} was removed`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.options.delete.query.error', { email: data.email }),
+          title: t`There was an error removing ${data.email}`,
           isClosable: true
         })
       }
@@ -71,7 +69,7 @@ export default function Delete ({
       isDisabled={isDeletingEmail}
       onClick={onDeleteEmail}
       icon={DeleteBin}
-      text={t('profile.email.options.delete.button')}
+      text={<Trans>Remove</Trans>}
     />
   )
 }

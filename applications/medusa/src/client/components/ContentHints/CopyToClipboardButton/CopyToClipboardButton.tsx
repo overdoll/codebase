@@ -1,8 +1,8 @@
 import Button from '@//:modules/form/Button/Button'
-import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { CopyCheck, CopyText } from '@//:assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   children: string
@@ -12,8 +12,6 @@ export default function CopyToClipboardButton ({
   children,
   ...rest
 }: Props): JSX.Element {
-  const [t] = useTranslation('general')
-
   const [hasCopied, onCopy] = useCopyToClipboardWrapper({ text: children })
 
   return (
@@ -21,7 +19,6 @@ export default function CopyToClipboardButton ({
       colorScheme='gray'
       variant='solid'
       size='sm'
-      aria-label={t('button.copy')}
       rightIcon={(
         <Icon
           w={4}
@@ -32,7 +29,7 @@ export default function CopyToClipboardButton ({
       onClick={onCopy}
       {...rest}
     >
-      {t('button.copy')}
+      <Trans>Copy</Trans>
     </Button>
   )
 }

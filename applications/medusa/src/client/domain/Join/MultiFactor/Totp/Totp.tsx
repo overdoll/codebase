@@ -14,11 +14,11 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
-import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../support'
 import type { TotpFragment$key } from '@//:artifacts/TotpFragment.graphql'
 import { TotpMutation } from '@//:artifacts/TotpMutation.graphql'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: TotpFragment$key
@@ -45,8 +45,6 @@ export default function Totp ({ queryRef }: Props): JSX.Element {
   const data = useFragment(TotpFragment, queryRef)
 
   const [submitTotp, isSubmittingTotp] = useMutation<TotpMutation>(SubmitTotpMutationGQL)
-
-  const [t] = useTranslation('auth')
 
   const breakPoint = useBreakpointValue({
     base: 'md',
@@ -76,7 +74,7 @@ export default function Totp ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t('multi_factor.submit.form.query.success'),
+          title: t`You have been logged in using two-factor authentication.`,
           isClosable: true
         })
       },
@@ -86,10 +84,9 @@ export default function Totp ({ queryRef }: Props): JSX.Element {
         prepareViewer(store, payload)
       },
       onError (data) {
-        console.log(data)
         notify({
           status: 'error',
-          title: t('multi_factor.submit.form.query.error'),
+          title: t`There was an error submitting the authentication code`,
           isClosable: true
         })
       }
@@ -113,14 +110,18 @@ export default function Totp ({ queryRef }: Props): JSX.Element {
           fontSize='xl'
           color='gray.00'
         >
-          {t('multi_factor.header')}
+          <Trans>
+            Enter the 6-digit code from your Authenticator app
+          </Trans>
         </Heading>
         <Text
           align='center'
           fontSize='sm'
           color='gray.200'
         >
-          {t('multi_factor.subheader')}
+          <Trans>
+            You can find this in the same app you used to set up two-factor authentication
+          </Trans>
         </Text>
       </Box>
       <Flex
@@ -168,7 +169,7 @@ export default function Totp ({ queryRef }: Props): JSX.Element {
                 mr={2}
                 color='gray.00'
               >
-                {t('multi_factor.submit.form.submitting')}
+                <Trans>Submitting</Trans>
               </Text>
               <Spinner
                 color='gray.00'

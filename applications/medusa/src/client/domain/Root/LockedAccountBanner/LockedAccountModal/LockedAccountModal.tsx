@@ -1,5 +1,4 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
 import {
   Alert,
   AlertDescription,
@@ -14,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import CommunityGuidelines from '../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -35,7 +35,6 @@ export default function LockedAccountModal ({
 }: Props): JSX.Element | null {
   const data = useFragment(LockedAccountModalGQL, queryRef)
 
-  const [t] = useTranslation('locked')
   // TODO add avatar in "jail"
   // TODO button for unlocking account is disabled and has countdown timer
   // TODO to unlock account, you have to check "I promise to be better" checkbox
@@ -59,10 +58,19 @@ export default function LockedAccountModal ({
               fontSize='4xl'
               color='gray.00'
             >
-              {t('title', { time: data.expires })}
+              <Trans>Banned for {data.expires}</Trans>
             </Heading>
-            <Text mb={2}>{t('description')}</Text>
-            <Text>{t('reason')}</Text>
+            <Text mb={2}>
+              <Trans>
+                Looks like you messed up. Something you did here violated our community guidelines. If you keep this up,
+                the bans will become longer.
+              </Trans>
+            </Text>
+            <Text>
+              <Trans>
+                Here's the reason...
+              </Trans>
+            </Text>
             <Alert
               mt={4}
               mb={4}
@@ -73,13 +81,17 @@ export default function LockedAccountModal ({
               </AlertDescription>
             </Alert>
             <Box>
-              <Text>{t('review')}</Text>
+              <Text>
+                <Trans>
+                  Please review the community guidelines to make sure this doesn't happen again.
+                </Trans>
+              </Text>
               <CommunityGuidelines />
             </Box>
-            <Text>{t('timer', {
-              time: data.expires,
-              date: data.expires
-            })}
+            <Text>
+              <Trans>
+                Your account has been locked for {data.expires}. You can unlock it after {data.expires}.
+              </Trans>
             </Text>
           </Stack>
         </ModalBody>

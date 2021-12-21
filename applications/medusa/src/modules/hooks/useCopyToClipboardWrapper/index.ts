@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { useClipboard, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 interface Props {
   text: string
 }
 
 export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, () => void] {
-  const [t] = useTranslation('general')
-
   const [copied] = useState(text)
 
   const {
@@ -21,7 +19,7 @@ export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, (
   const onClickButton = (): void => {
     onCopy()
     notify({
-      title: t('menu.copied'),
+      title: t`Copied to clipboard!`,
       duration: 1000,
       status: 'success',
       isClosable: true,

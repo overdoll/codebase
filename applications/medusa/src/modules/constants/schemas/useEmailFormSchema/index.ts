@@ -1,9 +1,7 @@
-import { useTranslation } from 'react-i18next'
 import Joi from 'joi'
+import { t } from '@lingui/macro'
 
 export default function useEmailFormSchema (): Joi.Schema {
-  const [t] = useTranslation('settings')
-
   return Joi
     .string()
     .email({
@@ -12,7 +10,7 @@ export default function useEmailFormSchema (): Joi.Schema {
     })
     .required()
     .messages({
-      'string.empty': t('profile.email.add.form.validation.email.empty'),
-      'string.email': t('profile.email.add.form.validation.email.pattern')
+      'string.empty': t`Please enter an email address`,
+      'string.email': t`Please enter a valid email address`
     })
 }

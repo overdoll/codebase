@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import Icon from '../Icon/Icon'
 import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   error?: Error
@@ -15,8 +15,6 @@ export default function ErrorFallback ({
   reset,
   refetch
 }: Props): JSX.Element {
-  const [t] = useTranslation('error')
-
   const onReset = (): void => {
     refetch()
 
@@ -31,7 +29,9 @@ export default function ErrorFallback ({
         <Flex align='center'>
           <AlertIcon />
           <AlertDescription>
-            {t('fallback.header')}
+            <Trans>
+              Error
+            </Trans>
           </AlertDescription>
         </Flex>
         <Button
@@ -48,7 +48,9 @@ export default function ErrorFallback ({
           colorScheme='orange'
           variant='solid'
         >
-          {t('fallback.button')}
+          <Trans>
+            Retry
+          </Trans>
         </Button>
       </Flex>
     </Alert>

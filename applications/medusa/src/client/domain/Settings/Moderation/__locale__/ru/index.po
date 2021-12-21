@@ -1,0 +1,34 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-12-20 18:52-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:88
+msgid "Change your status for receiving posts in your Moderation Queue"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/RootQueueSettings.tsx:26
+msgid "Queue"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:71
+msgid "There was an error changing your Queue status"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:83
+msgid "Toggle Queue Status"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:64
+msgid "You are no longer in the Moderator Posts Queue"
+msgstr ""

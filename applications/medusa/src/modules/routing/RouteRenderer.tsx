@@ -89,7 +89,7 @@ export default function RouterRenderer (): JSX.Element {
         id={nextItem.id}
         component={nextItem.component}
         prepared={nextItem.prepared}
-        dependencies={firstItem.dependencies}
+        dependencies={nextItem.dependencies}
         routeData={nextItem.routeData}
       >
         {routeComponent}

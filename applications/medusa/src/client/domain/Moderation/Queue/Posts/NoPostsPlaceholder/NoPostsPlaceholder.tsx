@@ -1,10 +1,10 @@
 import { Button, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
-import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Link } from '@//:modules/routing'
 import { CheckCircle, PauseCircle } from '@//:assets/icons/interface'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   moderator: NoPostsPlaceholderFragment$key
@@ -19,8 +19,6 @@ const NoPostsPlaceholderFragmentGQL = graphql`
 `
 
 export default function PostHeader (props: Props): JSX.Element {
-  const [t] = useTranslation('moderation')
-
   const data = useFragment(NoPostsPlaceholderFragmentGQL, props.moderator)
 
   if (!data.moderatorSettings.isInModeratorQueue) {
@@ -34,17 +32,24 @@ export default function PostHeader (props: Props): JSX.Element {
           fill='orange.300'
         />
         <Heading color='gray.00' fontSize='4xl'>
-          {t('queue.paused.header')}
+          <Trans>
+            Moderation Paused
+          </Trans>
         </Heading>
         <Text color='gray.200'>
-          {t('queue.paused.subheader')}
+          <Trans>
+            Since you've paused your moderator status, you won't get anymore new cases.
+          </Trans>
         </Text>
         <Link to='/settings/moderation'>
           <Button
             colorScheme='gray'
             variant='ghost'
             size='md'
-          >{t('queue.paused.unpause')}
+          >
+            <Trans>
+              Moderation Settings
+            </Trans>
           </Button>
         </Link>
       </Stack>
@@ -61,10 +66,14 @@ export default function PostHeader (props: Props): JSX.Element {
         fill='green.300'
       />
       <Heading color='gray.00' fontSize='4xl'>
-        {t('queue.empty.header')}
+        <Trans>
+          All Clear
+        </Trans>
       </Heading>
       <Text color='gray.200'>
-        {t('queue.empty.subheader')}
+        <Trans>
+          There are no posts in your queue at the moment. Try checking again tomorrow?
+        </Trans>
       </Text>
     </Stack>
   )

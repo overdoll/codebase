@@ -8,8 +8,8 @@ import type { EmailsQuery } from '@//:artifacts/EmailsQuery.graphql'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import { usePaginationFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
-import { useTranslation } from 'react-i18next'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<EmailsQuery>
@@ -58,8 +58,6 @@ export default function Emails (props: Props): JSX.Element {
     EmailsFragmentGQL,
     queryData?.viewer
   )
-
-  const [t] = useTranslation('settings')
 
   const emailsConnectionID = data?.emails?.__id
 
@@ -115,7 +113,10 @@ export default function Emails (props: Props): JSX.Element {
             isLoading={isLoadingNext}
             color='gray.200'
             variant='link'
-          >{t('profile.email.load')}
+          >
+            <Trans>
+              Load More
+            </Trans>
           </Button>
         </Flex>}
       <AddEmailForm connectionID={emailsConnectionID} />

@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql'
 import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql'
 import { useToast } from '@chakra-ui/react'
 import { SmallMenuItem } from '@//:modules/content/PageLayout'
 import { SettingWrench } from '@//:assets/icons/navigation'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   query: MakePrimaryFragment$key
@@ -35,8 +35,6 @@ const MakeEmailPrimaryMutationGQL = graphql`
 `
 
 export default function MakePrimary ({ query }: Props): JSX.Element {
-  const [t] = useTranslation('settings')
-
   const data = useFragment(MakePrimaryFragmentGQL, query)
 
   const [makePrimary, isMakingPrimary] = useMutation<MakePrimaryOptionMutation>(
@@ -45,7 +43,7 @@ export default function MakePrimary ({ query }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const onMakePrimary = () => {
+  const onMakePrimary = (): void => {
     makePrimary({
       variables: {
         input: {
@@ -55,25 +53,24 @@ export default function MakePrimary ({ query }: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.options.set_primary.query.success', { email: data.email }),
+          title: t`${data.email} was set as your Primary email`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.options.set_primary.query.error', { email: data.email }),
+          title: t`There was an error setting ${data.email} to Primary`,
           isClosable: true
         })
       }
-    }
-    )
+    })
   }
 
   return (
     <SmallMenuItem
       icon={SettingWrench}
-      text={t('profile.email.options.set_primary.button')}
+      text={<Trans>Make Primary</Trans>}
       isDisabled={isMakingPrimary}
       onClick={onMakePrimary}
     />

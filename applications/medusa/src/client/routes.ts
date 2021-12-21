@@ -74,6 +74,12 @@ function getDateFnsLocale (locale: string): string {
   return locale
 }
 
+const loadMessages = ({
+  data,
+  environment,
+  i18n
+}): void => i18n.load(getLanguageFromEnvironment(environment), data.messages)
+
 const routes: Route[] = [
   {
     component: loadable(async () =>
@@ -93,6 +99,14 @@ const routes: Route[] = [
           environment,
           i18n
         }) => i18n.load(getLanguageFromEnvironment(environment), { dateFns: data })
+      },
+      {
+        resource: loadable(async (environment) =>
+          await import(
+            `./domain/Root/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+          )
+        ),
+        then: loadMessages
       }
     ],
     middleware: [
@@ -120,6 +134,16 @@ const routes: Route[] = [
       {
         path: '/join',
         exact: true,
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Join/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         component: loadable(async () =>
           await import(
             './domain/Join/JoinRoot'
@@ -175,6 +199,16 @@ const routes: Route[] = [
             './domain/VerifyToken/VerifyToken'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/VerifyToken/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
           ({
@@ -218,6 +252,16 @@ const routes: Route[] = [
             './domain/ConfirmEmail/ConfirmEmail'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({
@@ -251,6 +295,16 @@ const routes: Route[] = [
             './domain/Moderation/Moderation'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Moderation/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({
@@ -274,6 +328,16 @@ const routes: Route[] = [
                 './domain/Moderation/Queue/Queue'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const PostsQuery = require('@//:artifacts/PostsQuery.graphql')
               return {
@@ -294,6 +358,16 @@ const routes: Route[] = [
                 './domain/Moderation/History/History'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const AuditLogsQuery = require('@//:artifacts/AuditLogsQuery.graphql')
               return {
@@ -321,11 +395,7 @@ const routes: Route[] = [
                 `./domain/Manage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
-            then: ({
-              data,
-              environment,
-              i18n
-            }) => i18n.load(getLanguageFromEnvironment(environment), data.messages)
+            then: loadMessages
           }
         ],
         component: loadable(async () =>
@@ -386,6 +456,16 @@ const routes: Route[] = [
             './domain/Settings/Settings'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({
@@ -409,6 +489,16 @@ const routes: Route[] = [
                 './domain/Settings/Profile/Profile'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Profile/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
               const EmailsQuery = require('@//:artifacts/EmailsQuery.graphql')
@@ -438,6 +528,16 @@ const routes: Route[] = [
                 './domain/Settings/Security/Security'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
@@ -468,6 +568,16 @@ const routes: Route[] = [
                 './domain/Settings/Moderation/Moderation'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Moderation/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             middleware: [
               ({ environment }) => {
                 const ability = getAbilityFromUser(environment)
@@ -497,6 +607,16 @@ const routes: Route[] = [
             './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: () => {
           const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
 
@@ -532,6 +652,16 @@ const routes: Route[] = [
             './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: () => {
           const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
 
@@ -608,9 +738,19 @@ const routes: Route[] = [
       {
         path: '*',
         exact: false,
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/NotFound/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         component: loadable(async () =>
           await import(
-            './domain/Error/NotFound/NotFound'
+            './domain/NotFound/NotFound'
           )
         )
       }

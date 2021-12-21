@@ -1,12 +1,12 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { useEffect, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   refresh: () => void
@@ -39,8 +39,6 @@ export default function Lobby ({
     return ''
   }, [cookies])
 
-  const [t] = useTranslation('auth')
-
   // poll for result
   useEffect(() => {
     const refreshLoop = (): void => {
@@ -68,7 +66,9 @@ export default function Lobby ({
         size='md'
         color='gray.00'
       >
-        {t('lobby.header')}
+        <Trans>
+          Click on the link you received in your email to continue
+        </Trans>
       </Heading>
       <Flex
         justify='center'

@@ -3,10 +3,10 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { SessionsSettingsQuery } from '@//:artifacts/SessionsSettingsQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { Flex, Stack } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button/Button'
 import SessionCard from './SessionCard/SessionCard'
 import { SessionsPaginationQuery } from '@//:artifacts/SessionsPaginationQuery.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<SessionsSettingsQuery>
@@ -55,8 +55,6 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const [t] = useTranslation('settings')
-
   const sessions = data?.sessions.edges
 
   const sessionsConnectionID = data?.sessions?.__id
@@ -80,7 +78,9 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
             color='gray.200'
             variant='link'
           >
-            {t('security.sessions.load')}
+            <Trans>
+              Load More
+            </Trans>
           </Button>
         </Flex>
       )}

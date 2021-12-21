@@ -1,12 +1,11 @@
 import { Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
-
-import { useTranslation } from 'react-i18next'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery($first: Int) {
@@ -42,8 +41,6 @@ export default function Usernames (props: Props): JSX.Element | null {
 
   const data = useFragment<UsernamesSettingsFragment$key>(UsernameFragmentGQL, queryData?.viewer)
 
-  const [t] = useTranslation('settings')
-
   const {
     isOpen: isFormOpen,
     onToggle: onToggleForm
@@ -74,7 +71,7 @@ export default function Usernames (props: Props): JSX.Element | null {
                   variant='link'
                   onClick={onToggleAliases}
                 >
-                  {t('profile.username.previous.title', { count: data.usernames.edges.length })}
+                  <Trans>{data.usernames.edges.length} alias</Trans>
                 </Button>
               </>}
           </Flex>
@@ -82,7 +79,11 @@ export default function Usernames (props: Props): JSX.Element | null {
         <Collapse in={isAliasesOpen} animateOpacity>
           <SmallBackgroundBox>
             <Flex>
-              <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
+              <Text fontSize='sm' color='gray.100'>
+                <Trans>
+                  Your old usernames are replaced
+                </Trans>
+              </Text>
             </Flex>
             {data.usernames.edges.map((item, index) =>
               <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
@@ -95,7 +96,9 @@ export default function Usernames (props: Props): JSX.Element | null {
           onClick={onToggleForm}
           size='sm'
         >
-          {t('profile.username.current.change')}
+          <Trans>
+            Change Username
+          </Trans>
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Flex>

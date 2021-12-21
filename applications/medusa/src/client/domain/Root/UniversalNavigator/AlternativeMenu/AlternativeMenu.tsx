@@ -1,7 +1,6 @@
 import { CogDouble, ContentPens, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import { useTranslation } from 'react-i18next'
 import { RenderOnDesktop } from '@//:modules/content/PageLayout'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -13,6 +12,8 @@ import { AlternativeMenuFragment, AlternativeMenuFragment$key } from '@//:artifa
 import LanguageManager from './LanguageManager/LanguageManager'
 import { MenuDivider, Skeleton } from '@chakra-ui/react'
 import { Suspense } from 'react'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -26,9 +27,9 @@ const AlternativeMenuGQL = graphql`
 `
 
 export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
-  const [t] = useTranslation('navigation')
-
   const data = useFragment(AlternativeMenuGQL, queryRef)
+
+  const { i18n } = useLingui()
 
   return (
     <>
@@ -38,7 +39,11 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             to='/join'
             w='42px'
             icon={LoginKeys}
-            label={t('nav.join')}
+            label={
+              <Trans>
+                Join
+              </Trans>
+            }
           />
         </Can>
         <Can I='manage' a='Account'>
@@ -46,7 +51,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
-        label={t('nav.menu')}
+        label={i18n._(t`Alternative Menu`)}
         icon={PageControllerSettings}
       >
         <Can not I='manage' a='Account'>
@@ -54,7 +59,11 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             to='/join'
             icon={LoginKeys}
             color='green.500'
-            label={t('menu.join')}
+            label={
+              <Trans>
+                Join
+              </Trans>
+            }
           />
         </Can>
         <Can I='manage' a='Account'>
@@ -62,13 +71,21 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           <HorizontalNavigationDropdownMenu.Button
             to='/manage/my_posts'
             icon={ContentPens}
-            label={t('menu.manage')}
+            label={
+              <Trans>
+                Manage
+              </Trans>
+            }
           />
           <HorizontalNavigationDropdownMenu.Button
             to='/settings/profile'
             icon={CogDouble}
             color='green.500'
-            label={t('menu.settings')}
+            label={
+              <Trans>
+                Settings
+              </Trans>
+            }
           />
           <DropdownMenuButtonLogout />
         </Can>

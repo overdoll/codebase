@@ -1,6 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -10,6 +9,8 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -41,11 +42,11 @@ export default function Register ({ queryRef }: Props): JSX.Element {
   const data = useFragment(RegisterFragment, queryRef)
 
   const notify = useToast()
-  const [t] = useTranslation('auth')
 
   const [, , removeCookie] = useCookies<string>(['token'])
 
   const history = useHistory()
+  const { i18n } = useLingui()
 
   const onSubmit = ({ username }): void => {
     commit({
@@ -79,14 +80,14 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
         notify({
           status: 'success',
-          title: t('register.success'),
+          title: t`Welcome to overdoll!`,
           isClosable: true
         })
       },
-      onError (data) {
+      onError () {
         notify({
           status: 'error',
-          title: t('register.error'),
+          title: t`There was an issue with registration.`,
           isClosable: true
         })
       }

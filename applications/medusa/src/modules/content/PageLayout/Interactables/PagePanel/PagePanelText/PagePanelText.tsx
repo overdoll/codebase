@@ -1,8 +1,9 @@
 import { Box, Heading, Text } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
 interface Props {
-  title: string
-  description: string
+  title: ReactNode
+  description: ReactNode
 }
 
 export default function PagePanelText ({

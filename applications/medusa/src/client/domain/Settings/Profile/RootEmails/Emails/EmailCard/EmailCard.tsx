@@ -1,11 +1,11 @@
 import { Badge, Box, Flex, Spacer, Stack, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import type { EmailCardFragment$key } from '@//:artifacts/EmailCardFragment.graphql'
 import MakePrimary from './MakePrimary/MakePrimary'
 import Delete from './Delete/Delete'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { SmallBackgroundBox, SmallMenuButton } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   emails: EmailCardFragment$key
@@ -27,8 +27,6 @@ export default function EmailCard ({
 }: Props): JSX.Element {
   const data = useFragment(EmailCardFragmentGQL, emails)
 
-  const [t] = useTranslation('settings')
-
   return (
     <SmallBackgroundBox>
       <Flex justify='space-between' w='100%'>
@@ -40,11 +38,23 @@ export default function EmailCard ({
           </Flex>
           <Box>
             {data.status === 'PRIMARY' &&
-              <Text color='gray.200' fontSize='sm'>{t('profile.email.primary.hint1')}</Text>}
+              <Text color='gray.200' fontSize='sm'>
+                <Trans>
+                  Used to log into your account
+                </Trans>
+              </Text>}
             {data.status === 'CONFIRMED' &&
-              <Text color='gray.200' fontSize='sm'>{t('profile.email.confirmed.hint1')}</Text>}
+              <Text color='gray.200' fontSize='sm'>
+                <Trans>
+                  Can be set as a Primary email
+                </Trans>
+              </Text>}
             {data.status === 'UNCONFIRMED' &&
-              <Text color='gray.200' fontSize='sm'>{t('profile.email.unconfirmed.hint1')}</Text>}
+              <Text color='gray.200' fontSize='sm'>
+                <Trans>
+                  Needs to be confirmed through email link
+                </Trans>
+              </Text>}
           </Box>
         </Stack>
         <Flex direction='column' align='flex-end'>

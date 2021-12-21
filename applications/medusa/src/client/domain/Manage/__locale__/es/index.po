@@ -13,7 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. yes this is a comment
-#: src/client/domain/Manage/Manage.tsx:29
-msgid "known"
-msgstr "espanol senor"
+#: src/client/domain/Manage/Manage.tsx:30
+msgid "Manage Brands"
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:23
+msgid "Manage Posts"
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:17
+msgid "Post Management"
+msgstr ""

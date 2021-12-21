@@ -3,7 +3,7 @@ import { useLocation } from '@//:modules/routing'
 import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { FileMultiple, TimeHourGlass } from '@//:assets/icons/navigation'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   children: ReactNode
@@ -12,19 +12,30 @@ interface Props {
 export default function Moderation ({ children }: Props): JSX.Element {
   const location = useLocation()
 
-  const [t] = useTranslation('navigation')
-
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content title={t('sidebar.mod.title')}>
+      <VerticalNavigation.Content title={
+        <Trans>
+          Moderation
+        </Trans>
+      }
+      >
         <VerticalNavigation.Button
           to='/moderation/queue'
-          title={t('sidebar.mod.queue')}
+          title={
+            <Trans>
+              Queue
+            </Trans>
+          }
           icon={FileMultiple}
         />
         <VerticalNavigation.Button
           to='/moderation/history'
-          title={t('sidebar.mod.history')}
+          title={
+            <Trans>
+              History
+            </Trans>
+          }
           icon={TimeHourGlass}
         />
       </VerticalNavigation.Content>

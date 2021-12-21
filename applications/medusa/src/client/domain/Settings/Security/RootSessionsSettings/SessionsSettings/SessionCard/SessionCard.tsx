@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -7,6 +6,9 @@ import UAParser from 'ua-parser-js'
 import { format } from 'date-fns'
 import { PagePanelWrap } from '@//:modules/content/PageLayout'
 import { DesktopComputer, MobilePhone } from '@//:assets/icons/interface'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   connectionID: string
@@ -27,14 +29,15 @@ export default function SessionCard ({
   query
 }: Props): JSX.Element {
   const data = useFragment(SessionGQL, query)
-  const [t] = useTranslation('settings')
   const {
     isOpen: isRevealed,
     onToggle
   } = useDisclosure()
 
+  const { i18n } = useLingui()
+
   const userAgent = UAParser(data.device)
-  const formattedDate = format(new Date(data?.created as string), 'LLLL Lo, y')
+  const formattedDate = format(new Date(data?.created as string), 'LLLL Lo, y', { locale: dateFnsLocaleFromI18n(i18n) })
 
   return (
     <PagePanelWrap path='/'>
@@ -53,17 +56,18 @@ export default function SessionCard ({
               ml={2}
               color='gray.100'
               fontSize='md'
-            >{t('security.sessions.on', {
-              browser: userAgent.browser.name,
-              device: userAgent.os.name
-            })}
+            >
+              <Trans>
+                {userAgent.browser.name} on {userAgent.os.name}
+              </Trans>
             </Heading>
           </Flex>
           <Flex justify='space-between'>
             <Text
               color='gray.200'
               fontSize='sm'
-            >{data.current ? t('security.sessions.current') : t('security.sessions.accessed', { date: formattedDate })}
+            >
+              {data.current ? <Trans>Your Current Session</Trans> : <Trans>Last login on {formattedDate}</Trans>}
             </Text>
           </Flex>
         </Box>

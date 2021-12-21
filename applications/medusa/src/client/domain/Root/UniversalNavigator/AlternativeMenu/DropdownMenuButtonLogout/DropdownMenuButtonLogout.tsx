@@ -1,10 +1,10 @@
 import { useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
 import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+import { Trans } from '@lingui/macro'
 
 const LogoutButtonGQL = graphql`
   mutation DropdownMenuButtonLogoutMutation {
@@ -17,8 +17,6 @@ const LogoutButtonGQL = graphql`
 export default function DropdownMenuButtonLogout (): JSX.Element {
   const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
 
-  const [t] = useTranslation('navigation')
-
   const history = useHistory()
 
   const onLogout = (): void => {
@@ -27,7 +25,7 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('logout.success'),
+          title: <Trans>You have been logged out</Trans>,
           isClosable: true
         })
       },
@@ -46,7 +44,7 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t('logout.error'),
+          title: <Trans>There was an error logging out</Trans>,
           isClosable: true
         })
       }
@@ -61,7 +59,11 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
       isDisabled={isLoggingOut}
       color='orange.300'
       icon={SafetyExitDoorLeft}
-      label={t('menu.logout')}
+      label={
+        <Trans>
+          Log Out
+        </Trans>
+      }
     />
   )
 }

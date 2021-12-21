@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
-  title: string
+  title: ReactNode
 }
 
 export default function VerticalNavigationContent (props: Props): JSX.Element {

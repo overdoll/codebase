@@ -1,10 +1,10 @@
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import LockedAccountModal from './LockedAccountModal/LockedAccountModal'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: LockedAccountBannerFragment$key | null
@@ -19,8 +19,6 @@ const LockedAccountBannerGQL = graphql`
 `
 
 export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element | null {
-  const [t] = useTranslation('locked')
-
   const data = useFragment(LockedAccountBannerGQL, queryRef)
 
   const {
@@ -51,7 +49,9 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
         <Flex>
           <AlertIcon />
           <AlertDescription>
-            {t('banner.description')}
+            <Trans>
+              Your account is currently locked
+            </Trans>
           </AlertDescription>
         </Flex>
         <Button
@@ -60,7 +60,9 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
           variant='solid'
           onClick={onToggle}
         >
-          {t('banner.button')}
+          <Trans>
+            View Details
+          </Trans>
         </Button>
         <LockedAccountModal
           queryRef={data.lock}

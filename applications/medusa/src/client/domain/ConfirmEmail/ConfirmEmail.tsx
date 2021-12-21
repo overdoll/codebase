@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
 import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
 import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -26,7 +27,7 @@ export default function ConfirmEmail (): JSX.Element {
     ConfirmEmailMutationGQL
   )
 
-  const [t] = useTranslation('confirmation')
+  const { i18n } = useLingui()
 
   const history = useHistory()
 
@@ -44,16 +45,16 @@ export default function ConfirmEmail (): JSX.Element {
 
         if (data != null) {
           if (data.accountEmail == null) {
-            flash('confirmation.error', t('error'))
+            flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
             history.push('/settings/profile')
           } else {
-            flash('confirmation.success', t('success', { email: data.accountEmail.email }))
+            flash('confirmation.success', t`${data.accountEmail.email} was confirmed successfully`)
             history.push('/settings/profile')
           }
         }
       },
       onError () {
-        flash('confirmation.error', t('error'))
+        flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
         history.push('/settings/profile')
       }
     })
@@ -82,13 +83,17 @@ export default function ConfirmEmail (): JSX.Element {
         size='md'
         color='gray.00'
       >
-        {t('header')}
+        <Trans>
+          Confirming Email
+        </Trans>
       </Heading>
       <Text
         size='sm'
         color='gray.100'
       >
-        {t('subheader')}
+        <Trans>
+          Please wait while we confirm your email...
+        </Trans>
       </Text>
     </Flex>
   )

@@ -1,11 +1,9 @@
 import Button from '@//:modules/form/Button/Button'
-import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
 import { ButtonProps } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 export default function CommunityGuidelines ({ ...rest }: ButtonProps): JSX.Element {
-  const [t] = useTranslation('general')
-
   return (
     <Link to='#'>
       <Button
@@ -14,7 +12,9 @@ export default function CommunityGuidelines ({ ...rest }: ButtonProps): JSX.Elem
         variant='link'
         {...rest}
       >
-        {t('button.guidelines')}
+        <Trans>
+          Community Guidelines
+        </Trans>
       </Button>
     </Link>
   )

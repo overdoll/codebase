@@ -1,9 +1,7 @@
-import { useTranslation } from 'react-i18next'
 import Joi from 'joi'
+import { t } from '@lingui/macro'
 
 export default function useUsernameFormSchema (): Joi.Schema {
-  const [t] = useTranslation('auth')
-
   return Joi
     .string()
     .alphanum()
@@ -11,9 +9,9 @@ export default function useUsernameFormSchema (): Joi.Schema {
     .max(15)
     .required()
     .messages({
-      'string.empty': t('register.form.validation.username.empty'),
-      'string.min': t('register.form.validation.username.min'),
-      'string.max': t('register.form.validation.username.max'),
-      'string.alphanum': t('register.form.validation.username.alphanum')
+      'string.empty': t`Please enter a username`,
+      'string.min': t`Username must be at least 3 characters long`,
+      'string.max': t`Username length cannot exceed 15 characters`,
+      'string.alphanum': t`Usernames can only contain numbers and letters`
     })
 }

@@ -6,7 +6,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import RecoveryCode from './RecoveryCode/RecoveryCode'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: MultiFactorFragment$key
@@ -27,8 +27,6 @@ const MultiFactorFragmentGQL = graphql`
 export default function MultiFactor ({ queryRef }: Props): JSX.Element {
   const data = useFragment(MultiFactorFragmentGQL, queryRef)
 
-  const [t] = useTranslation('auth')
-
   const {
     isOpen,
     onToggle
@@ -46,7 +44,9 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
               size='md'
               variant='link'
             >
-              {t('multi_factor.recovery.button')}
+              <Trans>
+                I lost access to my device
+              </Trans>
             </Button>
           </Flex>
           <Collapse
@@ -61,7 +61,10 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
                   lineHeight={5}
                   fontSize='sm'
                 >
-                  {t('multi_factor.recovery.alert.description')}
+                  <Trans>
+                    If you lost access to your two-factor device, you can use one of the recovery codes you downloaded
+                    when you set up two-factor authentication.
+                  </Trans>
                 </AlertDescription>
               </Alert>
               <RecoveryCode queryRef={data} />

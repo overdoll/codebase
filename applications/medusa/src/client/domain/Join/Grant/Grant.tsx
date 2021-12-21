@@ -1,13 +1,13 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -38,9 +38,8 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const [t] = useTranslation('auth')
-
   const [, , removeCookie] = useCookies(['token'])
+  const { i18n } = useLingui()
 
   const history = useHistory()
 
@@ -68,7 +67,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t('grant.success'),
+          title: t`You have been logged in`,
           isClosable: true
         })
       },
@@ -80,10 +79,9 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         history.push('/profile')
       },
       onError (data) {
-        console.log(data)
         notify({
           status: 'error',
-          title: t('grant.error'),
+          title: t`There was an error logging you in`,
           isClosable: true
         })
       }
