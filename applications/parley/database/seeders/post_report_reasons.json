@@ -2,14 +2,14 @@
   {
     "id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
     "reason": {
-      "en-US": "Some report reason"
+      "en": "Some report reason"
     },
     "bucket": 0
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "reason": {
-      "en-US": "Some report reason #2"
+      "en": "Some report reason #2"
     },
     "bucket": 0
   }
