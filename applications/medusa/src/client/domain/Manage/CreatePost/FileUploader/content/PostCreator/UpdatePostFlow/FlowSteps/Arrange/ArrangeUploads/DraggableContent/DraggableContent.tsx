@@ -9,6 +9,8 @@ interface Props {
   index: number
   dragDisabled: boolean
   query: DraggableContentFragment$key
+  removeDisabled: boolean
+  h: number
 }
 
 const Fragment = graphql`
@@ -27,7 +29,9 @@ export default function DraggableContent ({
   onRemove,
   index,
   dragDisabled,
-  query
+  query,
+  removeDisabled,
+  h
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -35,7 +39,7 @@ export default function DraggableContent ({
     <Draggable isDragDisabled={dragDisabled} draggableId={data.id} key={data.id} index={index}>
       {(provided, snapshot) => (
         <Flex
-          h={100}
+          h={h}
           bg='gray.800'
           borderRadius='md'
           overflow='hidden'
@@ -54,7 +58,8 @@ export default function DraggableContent ({
           </Flex>
           <Flex w='38%' />
           <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>
-            <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(data.id)} />
+            {!removeDisabled &&
+              <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(data.id)} />}
           </Flex>
         </Flex>
       )}

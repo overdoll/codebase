@@ -1,5 +1,4 @@
 import { UppyFile } from '@uppy/core'
-import type { ArrangeUploadsFragment } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 
 export interface Urls {
   [item: string]: {
@@ -112,7 +111,6 @@ export interface QueryArgs {
 export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'
 
 export type Event =
-  | 'thumbnails'
   | 'urls'
   | 'files'
   | 'step'
@@ -126,11 +124,10 @@ export type Event =
   | 'isInReview'
 
 export interface State {
-  thumbnails: Thumbnails
   files: UppyFile[]
   urls: Urls
   step: Step
-  content: Content[] | null | ArrangeUploadsFragment['content']
+  content: string[] | null
   progress: Progress
   brand: string | null
   audience: string | null

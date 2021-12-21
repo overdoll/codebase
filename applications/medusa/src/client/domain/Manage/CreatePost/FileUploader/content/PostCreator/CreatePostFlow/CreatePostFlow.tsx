@@ -11,6 +11,7 @@ import FilePicker from '../../../components/FilePicker/FilePicker'
 import { FileUpload } from '../../../../../../../../assets/icons/interface'
 import Icon from '@//:modules/content/Icon/Icon'
 import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -87,7 +88,9 @@ export default function CreatePostFlow ({
           />
           <Box>
             <Heading color='gray.00' fontSize='4xl'>
-              {t('create_post.flow.create.uploader.title')}
+              <Trans>
+                Upload Files
+              </Trans>
             </Heading>
             <Text color='gray.200'>
               {t('create_post.flow.create.uploader.description')}

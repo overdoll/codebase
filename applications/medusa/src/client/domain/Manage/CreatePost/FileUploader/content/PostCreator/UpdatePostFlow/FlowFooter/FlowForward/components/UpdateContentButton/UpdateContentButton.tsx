@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateContentButtonFragment$key } from '@//:artifacts/UpdateContentButtonFragment.graphql'
 import type { UpdateContentButtonMutation } from '@//:artifacts/UpdateContentButtonMutation.graphql'
-
 import Button from '@//:modules/form/Button/Button'
 import { compareTwoArrayOrders } from '@//:modules/support'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -22,7 +22,9 @@ const Fragment = graphql`
   fragment UpdateContentButtonFragment on Post {
     id
     content {
-      id
+      urls {
+        url
+      }
     }
   }
 `
@@ -59,25 +61,25 @@ export default function UpdateContentButton ({
 
   const notify = useToast()
 
-  const contentData = state.content ?? data.content
-
   const buttonDisabled = (): boolean => {
     if ((state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)) {
       return true
-    } else if (contentData.length < 1) {
+    } else if (state.content == null) {
+      return true
+    } else if (state.content.length < 1) {
       return true
     }
     return false
   }
 
-  const checkUpdate = (): void => {
-    const currentContent = data.content.map((item) => item.id)
-    const stateContent = (state.content ?? data.content).map((item) => item.id)
+  const hasUpdate = (): boolean => {
+    const currentContent = data.content.map((item) => item.urls[0].url)
+    // We only check the order because newly added files are committed automatically
+    if (state.content == null) return false
+    return !compareTwoArrayOrders(currentContent, state.content)
+  }
 
-    if (state.content != null && !compareTwoArrayOrders(currentContent, stateContent)) {
-      onUpdateContent()
-      return
-    }
+  const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
       value: STEPS.AUDIENCE
@@ -85,14 +87,11 @@ export default function UpdateContentButton ({
   }
 
   const onUpdateContent = (): void => {
-    const currentURLs = state.content.map((item) =>
-      item.urls[0].url) as string[]
-
     updateContent({
       variables: {
         input: {
           id: data.id,
-          content: currentURLs
+          content: state.content as string[]
         }
       },
       onCompleted () {
@@ -109,11 +108,27 @@ export default function UpdateContentButton ({
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.arrange.arranger.query.error'),
+          title: t`There was an error updating the post content`,
           isClosable: true
         })
       }
     })
+  }
+
+  if (hasUpdate()) {
+    return (
+      <Button
+        colorScheme='green'
+        size='lg'
+        isDisabled={buttonDisabled()}
+        isLoading={isUpdatingContent}
+        onClick={onUpdateContent}
+      >
+        <Trans>
+          Save
+        </Trans>
+      </Button>
+    )
   }
 
   return (
@@ -121,9 +136,11 @@ export default function UpdateContentButton ({
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled()}
-      isLoading={isUpdatingContent}
-      onClick={checkUpdate}
-    >{t('create_post.flow.steps.footer.forward')}
+      onClick={goNext}
+    >
+      <Trans>
+        Next
+      </Trans>
     </Button>
   )
 }

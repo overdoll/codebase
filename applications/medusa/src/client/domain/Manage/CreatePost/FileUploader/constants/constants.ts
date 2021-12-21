@@ -60,8 +60,7 @@ const INITIAL_STATE: State = {
   categories: {},
   cleanup: () => {
   },
-  isInReview: false,
-  thumbnails: {}
+  isInReview: false
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

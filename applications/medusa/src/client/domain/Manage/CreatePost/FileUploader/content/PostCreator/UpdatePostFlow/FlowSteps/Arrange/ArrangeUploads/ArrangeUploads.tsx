@@ -1,13 +1,14 @@
-import type { Content as ContentType, Dispatch, State } from '@//:types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { Flex, Stack, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import { graphql, useFragment } from 'react-relay/hooks'
-import type { ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
+import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import { EVENTS } from '../../../../../../constants/constants'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import DraggableContent from './Content/DraggableContent'
+import DraggableContent from './DraggableContent/DraggableContent'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { useEffect, useState } from 'react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -19,9 +20,9 @@ interface Props {
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
     content {
+      id
       urls {
         url
-        mimeType
       }
       ...DraggableContentFragment
     }
@@ -29,24 +30,16 @@ const ArrangeUploadsFragmentGQL = graphql`
 `
 
 const reorder = (
-  list: ContentType[],
+  list: ArrangeUploadsFragment['content'],
   startIndex: number,
   endIndex: number
-): ContentType[] => {
+): ArrangeUploadsFragment['content'] => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
   result.splice(endIndex, 0, removed)
 
   return result
 }
-
-// TODO redo dragging system
-// on rearrange, add URLS to content in the rearranged order
-// content is now string[]
-// need some sort of state here to keep the arrange order.
-// or the state is mounted automatically and then a filter lookup is done
-// to find the correct fragment
-// and then the current URLS are compared to the old URLs
 
 export default function ArrangeUploads ({
   state,
@@ -56,30 +49,16 @@ export default function ArrangeUploads ({
 }: Props): JSX.Element {
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
-  const displayData = state.content ?? data.content
+  const [displayData, setDisplayData] = useState(data.content)
 
   const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
   const onRemoveFile = (id: string): void => {
     uppy.removeFile(id)
-    if (state.content != null) {
-      dispatch({
-        type: EVENTS.CONTENT,
-        value: id,
-        remove: true
-      })
-    }
-    dispatch({
-      type: EVENTS.CONTENT,
-      value: displayData
-    })
-    dispatch({
-      type: EVENTS.CONTENT,
-      value: id,
-      remove: true
-    })
+
+    const filteredData = displayData.filter((item) => item.id !== id)
+
+    setDisplayData(filteredData)
   }
 
   const onDragEnd = (result): void => {
@@ -94,17 +73,41 @@ export default function ArrangeUploads ({
       result.destination.index
     )
 
+    setDisplayData(content)
+  }
+
+  const getHeight = (): number => {
+    if (displayData.length <= 1) {
+      return 150
+    } else if (displayData.length < 6) {
+      return 100
+    } else {
+      return 75
+    }
+  }
+
+  useEffect(() => {
+    const urls = displayData.map((item) => item.urls[0].url)
+
     dispatch({
       type: EVENTS.CONTENT,
-      value: content
+      value: urls
     })
-  }
+  }, [displayData])
+
+  useEffect(() => {
+    setDisplayData(data.content)
+  }, [data.content])
 
   if (displayData.length < 1) {
     return (
       <SmallBackgroundBox display='flex' h={100}>
         <Flex align='center' justify='center'>
-          <Text>{t('create_post.flow.steps.arrange.arranger.empty')}</Text>
+          <Text>
+            <Trans>
+              You'll need to upload at least one file to continue
+            </Trans>
+          </Text>
         </Flex>
       </SmallBackgroundBox>
     )
@@ -121,11 +124,13 @@ export default function ArrangeUploads ({
           >
             {displayData.map((item, index) => (
               <DraggableContent
-                dragDisabled={dragDisabled}
+                dragDisabled={dragDisabled || displayData.length < 2}
+                removeDisabled={displayData.length < 2}
                 key={index}
                 index={index}
                 query={item}
                 onRemove={onRemoveFile}
+                h={getHeight()}
               />
             ))}
             {provided.placeholder}

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash cdca50ff8134e7a5e217dda1f82c8556 */
+/* @relayHash 45397b6135232d7cd82eddce00f94a2c */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -49,9 +49,9 @@ fragment ArrangeFragment on Post {
 
 fragment ArrangeUploadsFragment on Post {
   content {
+    id
     urls {
       url
-      mimeType
     }
     ...DraggableContentFragment
   }
@@ -228,7 +228,9 @@ fragment UpdateCharacterButtonFragment on Post {
 fragment UpdateContentButtonFragment on Post {
   id
   content {
-    id
+    urls {
+      url
+    }
   }
 }
 
@@ -544,7 +546,7 @@ return {
     ]
   },
   "params": {
-    "id": "cdca50ff8134e7a5e217dda1f82c8556",
+    "id": "45397b6135232d7cd82eddce00f94a2c",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

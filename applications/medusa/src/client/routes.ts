@@ -697,6 +697,16 @@ const routes: Route[] = [
             './domain/Manage/CreatePost/CreatePost'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Manage/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         middleware: [
           ({
             environment,

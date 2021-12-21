@@ -9,7 +9,7 @@ export type DraggableContentFragment = {
     readonly id: string;
     readonly type: ResourceType;
     readonly urls: ReadonlyArray<{
-        readonly url: unknown;
+        readonly url: string;
         readonly mimeType: string;
     }>;
     readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;

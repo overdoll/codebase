@@ -12,22 +12,20 @@ const U: UppyType = Uppy({
     maxFileSize: 25000000
   },
   autoProceed: true,
-  allowMultipleUploads: true
+  allowMultipleUploads: true,
+  onBeforeFileAdded: (currentFile, files) => {
+    return {
+      ...currentFile,
+      id: `${currentFile.id}__${Date.now()}`,
+      name: `${currentFile.name}__${Date.now()}`
+    }
+  }
 }
 )
 
 if (CanUseDOM) {
   // Allow resuming uploads if user refreshes or navigates away (browser-only)
   U.use(GoldenRetriever, { serviceWorker: false })
-
-  // Generate thumbnails for the user to see
-  U.use(require('./plugins/AllThumbnailGenerator'), {
-    id: 'ThumbnailGenerator',
-    thumbnailWidth: 200,
-    thumbnailHeight: 200,
-    thumbnailType: 'image/jpeg',
-    waitForThumbnailsBeforeUpload: false
-  })
 }
 
 // Resume-able uploads on the API

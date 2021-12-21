@@ -33,10 +33,8 @@ export default function VideoSnippet ({
       muted
       loop
       preload='auto'
-      style={{
-        objectFit: 'cover',
-        height: '100%'
-      }}
+      h='100%'
+      objectFit='cover'
       {...rest}
     >
       {data.urls.map((item, index) => (

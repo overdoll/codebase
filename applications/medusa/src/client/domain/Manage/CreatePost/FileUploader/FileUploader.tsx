@@ -27,7 +27,10 @@ export default function FileUploader (): JSX.Element {
       if (file.source !== 'already-uploaded') {
         const url = response.uploadURL as string
         const fileId = url.substring(url.lastIndexOf('/') + 1)
-        dispatch({ type: EVENTS.URLS, value: { [file.id]: fileId } })
+        dispatch({
+          type: EVENTS.URLS,
+          value: { [file.id]: fileId }
+        })
       }
     })
   }, [uppy])
@@ -36,7 +39,15 @@ export default function FileUploader (): JSX.Element {
   useEffect(() => {
     uppy.on('upload-progress', (file, progress) => {
       if (file.source !== 'already-uploaded') {
-        dispatch({ type: EVENTS.PROGRESS, value: { [file.id]: { 0: progress.bytesUploaded, 1: progress.bytesTotal } } })
+        dispatch({
+          type: EVENTS.PROGRESS,
+          value: {
+            [file.id]: {
+              0: progress.bytesUploaded,
+              1: progress.bytesTotal
+            }
+          }
+        })
       }
     })
   }, [uppy])
@@ -46,7 +57,13 @@ export default function FileUploader (): JSX.Element {
     uppy.on('file-added', file => {
       // remove uploaded file and emit error if upload limit is hit
       if (file.source !== 'already-uploaded') {
-        dispatch({ type: EVENTS.FILES, value: { id: file.id, type: file.type } })
+        dispatch({
+          type: EVENTS.FILES,
+          value: {
+            id: file.id,
+            type: file.type
+          }
+        })
       }
     })
   }, [uppy])
