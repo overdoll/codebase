@@ -71,7 +71,7 @@ export default function Usernames (props: Props): JSX.Element | null {
                   variant='link'
                   onClick={onToggleAliases}
                 >
-                  <Trans>{data.usernames.edges.length} alias</Trans>
+                  <Trans>{data.usernames.edges.length} aliases</Trans>
                 </Button>
               </>}
           </Flex>

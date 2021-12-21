@@ -6,7 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type VideoSnippetFragment = {
     readonly urls: ReadonlyArray<{
-        readonly url: unknown;
+        readonly url: string;
         readonly mimeType: string;
     }>;
     readonly " $refType": "VideoSnippetFragment";

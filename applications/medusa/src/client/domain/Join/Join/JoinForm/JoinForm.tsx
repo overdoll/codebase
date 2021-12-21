@@ -3,10 +3,10 @@ import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
-import { useEmailFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import Email from '@//:modules/validation/Email'
 
 interface JoinValues {
   email: string
@@ -22,7 +22,7 @@ export default function JoinForm ({
   loading
 }: Props): JSX.Element {
   const schema = Joi.object({
-    email: useEmailFormSchema()
+    email: Email()
   })
 
   const {

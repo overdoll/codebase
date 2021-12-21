@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c7ca6e0ad30a1014d6f972b91d0a8e92 */
+/* @relayHash 3368af37f01fc03d2093ee6f3a0d5aec */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,7 +10,9 @@ export type RootQueryResponse = {
     readonly viewer: {
         readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
     } | null;
-    readonly " $fragmentRefs": FragmentRefs<"LocaleCreatorFragment">;
+    readonly language: {
+        readonly locale: string;
+    };
 };
 export type RootQuery = {
     readonly response: RootQueryResponse;
@@ -27,7 +29,9 @@ query RootQuery {
     ...LockedAccountBannerFragment
     id
   }
-  ...LocaleCreatorFragment
+  language {
+    locale
+  }
 }
 
 fragment AccountAuthorizerFragment on Account {
@@ -46,12 +50,6 @@ fragment AlternativeMenuFragment on Account {
 fragment DropdownMenuButtonProfileFragment on Account {
   username
   avatar
-}
-
-fragment LocaleCreatorFragment on Query {
-  language {
-    locale
-  }
 }
 
 fragment LockedAccountBannerFragment on Account {
@@ -74,7 +72,26 @@ fragment UniversalNavigatorFragment on Account {
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Language",
+  "kind": "LinkedField",
+  "name": "language",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "locale",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -107,11 +124,7 @@ const node: ConcreteRequest = {
         ],
         "storageKey": null
       },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "LocaleCreatorFragment"
-      }
+      (v0/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
@@ -200,33 +213,17 @@ const node: ConcreteRequest = {
         ],
         "storageKey": null
       },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Language",
-        "kind": "LinkedField",
-        "name": "language",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "locale",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
+      (v0/*: any*/)
     ]
   },
   "params": {
-    "id": "c7ca6e0ad30a1014d6f972b91d0a8e92",
+    "id": "3368af37f01fc03d2093ee6f3a0d5aec",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
-(node as any).hash = 'a195c4d06b26e499ec1f7d17bebbf39f';
+})();
+(node as any).hash = '4a182eb0eb5dbeddf86cde10eadc74b2';
 export default node;

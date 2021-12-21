@@ -45,7 +45,7 @@ msgstr ""
 msgid "Enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:70
+#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:68
 msgid "Enter a username"
 msgstr ""
 
@@ -77,8 +77,11 @@ msgstr ""
 msgid "Please wait while we log you in..."
 msgstr ""
 
+#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:80
+msgid "Register"
+msgstr ""
+
 #: src/client/domain/Join/MultiFactor/RecoveryCode/RecoveryCode.tsx:152
-#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:82
 msgid "Submit"
 msgstr ""
 
@@ -110,7 +113,7 @@ msgstr ""
 msgid "There was an issue with registration."
 msgstr ""
 
-#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:61
+#: src/client/domain/Join/Register/RegisterForm/RegisterForm.tsx:59
 msgid "Username"
 msgstr ""
 

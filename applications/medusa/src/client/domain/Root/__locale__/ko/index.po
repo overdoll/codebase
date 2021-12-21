@@ -17,7 +17,7 @@ msgstr ""
 msgid "Alternative Menu"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:61
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:62
 msgid "Banned for {0}"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
-#: src/modules/content/ErrorFallback/ErrorFallback.tsx:32
+#: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
 msgid "Error"
 msgstr ""
 
@@ -47,7 +47,7 @@ msgstr ""
 msgid "Go to my profile"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:70
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:71
 msgid "Here's the reason..."
 msgstr ""
 
@@ -60,11 +60,11 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:63
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:59
 msgid "Log Out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:64
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:65
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -76,23 +76,31 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/modules/constants/schemas/useUsernameFormSchema/index.ts:12
+#: src/modules/validation/Username.ts:14
 msgid "Please enter a username"
 msgstr ""
 
+#: src/modules/validation/Email.ts:16
+msgid "Please enter a valid email"
+msgstr ""
+
 #: src/modules/constants/schemas/useEmailFormSchema/index.ts:14
-msgid "Please enter a valid email address"
+#~ msgid "Please enter a valid email address"
+#~ msgstr ""
+
+#: src/modules/validation/Email.ts:15
+msgid "Please enter an email"
 msgstr ""
 
 #: src/modules/constants/schemas/useEmailFormSchema/index.ts:13
-msgid "Please enter an email address"
-msgstr ""
+#~ msgid "Please enter an email address"
+#~ msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:85
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:86
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
-#: src/modules/content/ErrorFallback/ErrorFallback.tsx:51
+#: src/modules/content/ErrorFallback/ErrorFallback.tsx:53
 msgid "Retry"
 msgstr ""
 
@@ -100,19 +108,19 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:47
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:43
 msgid "There was an error logging out"
 msgstr ""
 
-#: src/modules/constants/schemas/useUsernameFormSchema/index.ts:14
+#: src/modules/validation/Username.ts:16
 msgid "Username length cannot exceed 15 characters"
 msgstr ""
 
-#: src/modules/constants/schemas/useUsernameFormSchema/index.ts:13
+#: src/modules/validation/Username.ts:15
 msgid "Username must be at least 3 characters long"
 msgstr ""
 
-#: src/modules/constants/schemas/useUsernameFormSchema/index.ts:15
+#: src/modules/validation/Username.ts:17
 msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
@@ -120,11 +128,11 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:28
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:25
 msgid "You have been logged out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:92
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:93
 msgid "Your account has been locked for {0}. You can unlock it after {1}."
 msgstr ""
 

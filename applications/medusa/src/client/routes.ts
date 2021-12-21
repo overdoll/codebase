@@ -98,7 +98,7 @@ const routes: Route[] = [
           data,
           environment,
           i18n
-        }) => i18n.load(getLanguageFromEnvironment(environment), { dateFns: data })
+        }) => i18n._load(getLanguageFromEnvironment(environment), { dateFns: data })
       },
       {
         resource: loadable(async (environment) =>
@@ -692,9 +692,9 @@ const routes: Route[] = [
       },
       {
         path: '/configure/create-post',
-        component: JSResource('CreatePostRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+            './domain/Manage/CreatePost/CreatePost'
           )
         ),
         middleware: [

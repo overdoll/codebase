@@ -3,10 +3,9 @@ import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import Username from '@//:modules/validation/Username'
 
 interface RegisterValues {
   username: string
@@ -22,7 +21,7 @@ export default function RegisterForm ({
   loading
 }: Props): JSX.Element {
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: Username()
   })
 
   const {
@@ -40,7 +39,6 @@ export default function RegisterForm ({
   })
 
   const success = isDirty && (errors.username == null) && isSubmitted
-  const { i18n } = useLingui()
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -80,7 +78,7 @@ export default function RegisterForm ({
           w='100%'
         >
           <Trans>
-            Submit
+            Register
           </Trans>
         </Button>
       </Stack>

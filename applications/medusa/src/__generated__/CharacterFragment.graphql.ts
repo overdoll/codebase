@@ -17,7 +17,7 @@ export type CharacterFragment = {
             readonly type: ResourceType;
             readonly urls: ReadonlyArray<{
                 readonly mimeType: string;
-                readonly url: unknown;
+                readonly url: string;
             }>;
         } | null;
     }>;

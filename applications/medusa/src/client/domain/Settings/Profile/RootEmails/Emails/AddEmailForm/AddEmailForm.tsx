@@ -7,10 +7,10 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import IconButton from '@//:modules/form/IconButton/IconButton'
-import { useEmailFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import Email from '@//:modules/validation/Email'
 
 interface EmailValues {
   email: string
@@ -34,7 +34,7 @@ const AddEmailMutationGQL = graphql`
 
 export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
   const schema = Joi.object({
-    email: useEmailFormSchema()
+    email: Email()
   })
 
   const {

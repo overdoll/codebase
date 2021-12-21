@@ -5,10 +5,10 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import Username from '@//:modules/validation/Username'
 
 interface UsernameValues {
   username: string
@@ -40,7 +40,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
   )
 
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: Username()
   })
 
   const {
