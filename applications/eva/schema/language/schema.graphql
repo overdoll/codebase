@@ -2,7 +2,15 @@
 scalar BCP47
 
 type Language {
+  """
+  BCP47 locale
+  """
   locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
 }
 
 extend type Account {

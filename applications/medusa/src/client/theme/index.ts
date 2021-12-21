@@ -10,7 +10,6 @@ import shadows from './shadows'
 import borders from './borders'
 import transition from './transition'
 import components from './components'
-import 'overlayscrollbars/css/OverlayScrollbars.css'
 import glob from './global'
 
 const theme = extendTheme({

@@ -6,10 +6,11 @@ import { ArrowButtonRight } from '@//:assets/icons/navigation'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
 import IconButton from '@//:modules/form/IconButton/IconButton'
-import { useEmailFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import Email from '@//:modules/validation/Email'
 
 interface EmailValues {
   email: string
@@ -32,10 +33,8 @@ const AddEmailMutationGQL = graphql`
 `
 
 export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
-  const [t] = useTranslation('settings')
-
   const schema = Joi.object({
-    email: useEmailFormSchema()
+    email: Email()
   })
 
   const {
@@ -58,27 +57,29 @@ export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
     AddEmailMutationGQL
   )
 
+  const { i18n } = useLingui()
+
   const notify = useToast()
 
-  const onAddEmail = (formData): void => {
+  const onAddEmail = (data): void => {
     addEmail({
       variables: {
         input: {
-          email: formData.email
+          email: data.email
         },
         connections: [connectionID]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.add.query.success', { email: formData.email }),
+          title: t`A confirmation email was sent to ${data.email}. Check your inbox/spam!`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.add.query.error'),
+          title: t`There was an error adding the email`,
           isClosable: true
         })
       }
@@ -89,17 +90,21 @@ export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
   return (
     <form noValidate onSubmit={handleSubmit(onAddEmail)}>
       <FormControl isInvalid={errors.email != null} id='email'>
-        <FormLabel>{t('profile.email.add.title')}</FormLabel>
+        <FormLabel>
+          <Trans>
+            Add an email
+          </Trans>
+        </FormLabel>
         <HStack align='flex-start'>
           <StyledInput
             register={register('email')}
             success={success}
             error={errors.email != null}
-            placeholder={t('profile.email.add.placeholder')}
+            placeholder={i18n._(t`Enter an email address`)}
             errorMessage={errors?.email?.message}
           />
           <IconButton
-            aria-label={t('profile.email.add.button')}
+            aria-label={i18n._(t`Add`)}
             type='submit'
             disabled={errors.email != null}
             isLoading={isAddingEmail}

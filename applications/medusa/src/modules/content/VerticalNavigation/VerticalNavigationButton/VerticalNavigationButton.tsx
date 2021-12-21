@@ -1,11 +1,11 @@
 import ClickableBox from '../../PageLayout/Interactables/ClickableBox/ClickableBox'
 import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../Icon/Icon'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
 
 interface Props {
-  title: string
+  title: ReactNode
   to: string
   exact?: boolean
   icon: FunctionComponent<any>

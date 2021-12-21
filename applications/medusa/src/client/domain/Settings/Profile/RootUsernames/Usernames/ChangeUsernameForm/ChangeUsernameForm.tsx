@@ -1,13 +1,14 @@
 import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
 import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import Username from '@//:modules/validation/Username'
 
 interface UsernameValues {
   username: string
@@ -39,10 +40,8 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
   )
 
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: Username()
   })
-
-  const [t] = useTranslation('settings')
 
   const {
     register,
@@ -60,6 +59,8 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
   })
 
   const notify = useToast()
+
+  const { i18n } = useLingui()
 
   const onChangeUsername = (formData): void => {
     changeUsername({
@@ -79,14 +80,14 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
         }
         notify({
           status: 'success',
-          title: t('profile.username.modal.query.success'),
+          title: t`Username changed successfully`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.username.modal.query.error'),
+          title: t`There was an error changing your username`,
           isClosable: true
         })
       }
@@ -102,13 +103,17 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
         isInvalid={errors.username != null}
         id='username'
       >
-        <FormLabel>{t('profile.username.modal.header')}</FormLabel>
+        <FormLabel>
+          <Trans>
+            Enter a new username
+          </Trans>
+        </FormLabel>
         <HStack align='flex-start'>
           <StyledInput
             register={register('username')}
             success={success}
             error={errors.username != null}
-            placeholder={t('profile.username.modal.header')}
+            placeholder={i18n._(t`Enter a new username`)}
             errorMessage={errors?.username?.message}
           />
           <Button
@@ -119,7 +124,9 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
             disabled={errors.username != null}
             isLoading={isChangingUsername}
           >
-            {t('profile.username.modal.submit')}
+            <Trans>
+              Submit
+            </Trans>
           </Button>
         </HStack>
       </FormControl>

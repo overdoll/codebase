@@ -1,9 +1,10 @@
-import { matchRoutes } from 'react-router-config'
+import matchRoutes from './matchRoutes'
 import { fetchQuery, loadQuery, PreloadedQuery } from 'react-relay/hooks'
-import { Resource } from '../operations/JSResource'
+import { ClientResource, PromisedResource, ServerResource } from '../operations/JSResource'
 import Cookies from 'universal-cookie'
 import type { History, Location } from 'history'
 import { IEnvironment } from 'relay-runtime'
+import { i18n } from '@lingui/core'
 
 export interface LocationShape {
   pathname?: string
@@ -25,12 +26,19 @@ export interface Match {
 interface MiddlewareT {
   history: History
   environment: IEnvironment
+  i18n: typeof i18n
 }
 
 export type Middleware = (props: MiddlewareT) => boolean
 
+interface ResourceDependency {
+  resource: ClientResource | ServerResource | PromisedResource
+  then: (data: any) => void
+}
+
 export interface Route {
-  component: Resource
+  component: ClientResource | ServerResource | PromisedResource
+  dependencies?: ResourceDependency[]
   prepare?: (Params) => {}
   middleware?: Middleware[]
   exact?: boolean
@@ -49,7 +57,8 @@ export type Preload = (pathname: string) => void
 export type Subscribe = (sb: (sb) => void) => () => void
 
 export interface PreparedEntry {
-  component: Resource
+  component: ClientResource
+  dependencies?: ResourceDependency[]
   prepared: Params
   routeData: Match
   id: string
@@ -99,7 +108,8 @@ async function createServerRouter (
   routes: Route[],
   history: History,
   environment: IEnvironment,
-  req
+  req,
+  trackedModules: string[]
 ): Promise<RouterInstance> {
   // Before going further and creating
   // our router, we pre-emptively resolve the RootQuery routes, so that the user object
@@ -131,7 +141,8 @@ async function createServerRouter (
 
   const data = {
     environment,
-    flash: req.flash
+    flash: req.flash,
+    i18n: req.i18n
   }
 
   // Find the initial match and prepare it
@@ -147,7 +158,7 @@ async function createServerRouter (
     cookies: new Cookies(req.headers.cookie)
   }
 
-  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
+  const initialEntries = await prepareMatchesServer(initialMatches, prepareOptions, environment, req.i18n, trackedModules)
 
   // The actual object that will be passed on the RoutingContext.
   const context = {
@@ -159,18 +170,8 @@ async function createServerRouter (
       }
     },
     preloadCode (pathname) {
-      const matches: RouteMatch[] = matchRoutes(routes, pathname)
-      matches.forEach(({ route }) => {
-        void route.component.load()
-      })
     },
     preload (pathname) {
-      const prepareOptions = {
-        query: new URLSearchParams(pathname),
-        cookies: new Cookies(req.headers.cookie)
-      }
-
-      prepareMatches(matchRoutes(routes, pathname), prepareOptions, environment)
     },
     subscribe (sb: (sb) => void) {
       return () => {
@@ -195,20 +196,21 @@ async function createServerRouter (
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
+
 function createClientRouter (
   routes: Route[],
   history: History,
   environment: IEnvironment
 ): RouterInstance {
   // Find the initial match and prepare it
-  const initialMatches = matchRoutes(routes, history.location.pathname)
+  const initialMatches = matchRoutes(routes as any, history.location.pathname)
 
   const prepareOptions = {
     query: new URLSearchParams(history.location.search),
     cookies: new Cookies()
   }
 
-  const initialEntries = prepareMatches(initialMatches, prepareOptions, environment)
+  const initialEntries = prepareMatchesClient(initialMatches, prepareOptions, environment)
 
   let currentEntry: RouterInit = {
     location: history.location,
@@ -226,14 +228,14 @@ function createClientRouter (
     if (location.pathname === currentEntry.location.pathname) {
       return
     }
-    const matches = matchRoutes(routes, history.location.pathname)
+    const matches = matchRoutes(routes as any, history.location.pathname)
 
     const prepareOptions = {
       query: new URLSearchParams(history.location.search),
       cookies: new Cookies()
     }
 
-    const entries = prepareMatches(matches, prepareOptions, environment)
+    const entries = prepareMatchesClient(matches, prepareOptions, environment)
     const nextEntry = {
       location,
       entries
@@ -250,21 +252,38 @@ function createClientRouter (
     },
     preloadCode (pathname) {
       // preload just the code for a route, without storing the result
-      const matches: RouteMatch[] = matchRoutes(routes, pathname)
+      const matches: RouteMatch[] = matchRoutes(routes as any, pathname) as unknown as RouteMatch[]
+
       matches.forEach(({ route }) => {
-        void route.component.load()
+        if (route.component.get() == null) {
+          void route.component.load(environment)
+        }
+
+        if (route.dependencies != null) {
+          route.dependencies.forEach(dep => {
+            if (dep.resource.get() != null) {
+              return
+            }
+
+            void dep.resource.load(environment).then(data => dep.then({
+              data,
+              environment,
+              i18n: i18n
+            }))
+          })
+        }
       })
     },
     preload (pathname) {
       // preload the code and data for a route, without storing the result
-      const matches = matchRoutes(routes, pathname)
+      const matches = matchRoutes(routes as any, pathname)
 
       const prepareOptions = {
         query: new URLSearchParams(pathname),
         cookies: new Cookies()
       }
 
-      prepareMatches(matches, prepareOptions, environment)
+      prepareMatchesClient(matches, prepareOptions, environment)
     },
     subscribe (cb) {
       const id = nextId++
@@ -287,7 +306,7 @@ function createClientRouter (
  * Match the current location to the corresponding route entry.
  */
 function matchRouteWithFilter (routes, history, location, data): RouteMatch[] {
-  const unparsedRoutes: RouteMatch[] = matchRoutes(routes, location.pathname)
+  const unparsedRoutes: RouteMatch[] = matchRoutes(routes, location.pathname) as unknown as RouteMatch[]
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
@@ -300,17 +319,10 @@ function matchRouteWithFilter (routes, history, location, data): RouteMatch[] {
   )
 }
 
-/**
- * Load the data for the matched route, given the params extracted from the route
- *
- * Inject RelayEnvironment
- */
 function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEntry[] {
   return matches.map((match, index) => {
-    const {
-      route,
-      match: matchData
-    } = match
+    const matchData = match.match
+    const route: Route = match.route
 
     const prepared = convertPreparedToQueries(
       relayEnvironment,
@@ -321,18 +333,80 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       }
     )
 
-    const Component = route.component.get()
-    if (Component == null) {
-      route.component.load() // eagerly load
-    }
-
     return {
       component: route.component,
+      dependencies: route.dependencies,
       prepared,
       routeData: matchData,
       id: route.component.getModuleId()
     }
   })
+}
+
+/**
+ * Load the data for the matched route, given the params extracted from the route
+ *
+ * Inject RelayEnvironment
+ */
+async function prepareMatchesServer (matches, prepareOptions, relayEnvironment, i18n, trackedModules): Promise<PreparedEntry[]> {
+  for (const match of matches) {
+    const route: Route = match.route
+
+    trackedModules.push(route.component.getModuleId(relayEnvironment))
+
+    if (route.dependencies != null) {
+      for (const dep of route.dependencies) {
+        const result = dep.resource.get(relayEnvironment)
+        // const res = dep.resource.loadSync(relayEnvironment)
+        dep.then({
+          data: result,
+          environment: relayEnvironment,
+          i18n
+        })
+        trackedModules.push(dep.resource.getModuleId(relayEnvironment))
+      }
+    }
+  }
+
+  return prepareMatches(matches, prepareOptions, relayEnvironment)
+}
+
+/**
+ * Load the data for the matched route, given the params extracted from the route
+ *
+ * Inject RelayEnvironment
+ */
+function prepareMatchesClient (matches, prepareOptions, relayEnvironment): PreparedEntry[] {
+  for (const match of matches) {
+    const route: Route = match.route
+    // load synchronously on the server
+    const Component = route.component.get()
+    if (Component == null) {
+      void route.component.load(relayEnvironment) // eagerly load
+    }
+
+    if (route.dependencies != null) {
+      route.dependencies.forEach(dep => {
+        const result = dep.resource.get()
+
+        if (result == null) {
+          void dep.resource.load(relayEnvironment).then(data => dep.then({
+            data,
+            environment: relayEnvironment,
+            i18n: i18n
+          }))
+        } else {
+          dep.then({
+            data: result,
+            environment: relayEnvironment,
+            i18n: i18n
+          })
+        }
+      })
+    }
+  }
+
+  return prepareMatches(matches, prepareOptions, relayEnvironment)
 }
 
 /**

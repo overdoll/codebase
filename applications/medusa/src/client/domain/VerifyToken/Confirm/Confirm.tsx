@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { Box, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import Button from '@//:modules/form/Button/Button'
 import { ConfirmRevokeMutation } from '@//:artifacts/ConfirmRevokeMutation.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   verify: () => void
@@ -31,8 +31,6 @@ export default function Confirm ({
     RevokeTokenMutationGQL
   )
 
-  const [t] = useTranslation('token')
-
   const [queryToken] = useQueryParam<string>('token')
   const [querySecret] = useQueryParam<string>('secret')
 
@@ -43,9 +41,6 @@ export default function Confirm ({
           token: queryToken,
           secret: querySecret
         }
-      },
-      onError (data) {
-        console.log(data)
       }
     })
   }
@@ -56,7 +51,9 @@ export default function Confirm ({
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction='column'>
           <Heading mb={8} align='center' size='md' color='gray.100'>
-            {t('confirm.header')}
+            <Trans>
+              Please confirm that you are attempting to login from the following device & location
+            </Trans>
           </Heading>
           <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
             <Center>
@@ -81,7 +78,9 @@ export default function Confirm ({
                 loading={isRevokingToken}
                 onClick={revoke}
               >
-                {t('confirm.revoke')}
+                <Trans>
+                  No, this is not me
+                </Trans>
               </Button>
               <Button
                 size='md'
@@ -90,7 +89,9 @@ export default function Confirm ({
                 loading={isVerifying}
                 onClick={verify}
               >
-                {t('confirm.verify')}
+                <Trans>
+                  Yes, this is me
+                </Trans>
               </Button>
             </Stack>
           </Center>

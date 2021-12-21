@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import JSResource from '../../operations/JSResource'
+import { Resource } from '../../operations/JSResource'
 import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
 import { createMockEnvironment } from 'relay-test-utils'
@@ -9,7 +9,7 @@ import RoutingProvider from '../RoutingProvider'
 it('renders a root component with children', async () => {
   const routes = [
     {
-      component: JSResource(
+      component: Resource(
         'Root',
         async () =>
           await new Promise(resolve =>
@@ -20,7 +20,7 @@ it('renders a root component with children', async () => {
         {
           path: '/test',
           exact: true,
-          component: JSResource(
+          component: Resource(
             'JoinRoot',
             async () => await new Promise(resolve => resolve(() => <div>test2</div>))
           )

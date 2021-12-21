@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useTranslation } from 'react-i18next'
 import type { PostsQuery as PostsQueryType } from '@//:artifacts/PostsQuery.graphql'
 import PostsQuery from '@//:artifacts/PostsQuery.graphql'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
@@ -10,6 +9,7 @@ import Posts from './Posts/Posts'
 import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   prepared: {
@@ -23,18 +23,21 @@ export default function Queue (props: Props): JSX.Element | null {
     props.prepared.postsQuery
   )
 
-  const [t] = useTranslation('moderation')
-
   return (
     <>
       <Helmet title='queue' />
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle>
-            {t('queue.title')}
+            <Trans>
+              Moderation Queue
+            </Trans>
           </PageSectionTitle>
           <PageSectionDescription>
-            {t('queue.post.actions.notice.description')}
+            <Trans>
+              Before posts are visible to the public, they must be reviewed to ensure that they comply with the
+              community guidelines.
+            </Trans>
           </PageSectionDescription>
           <CommunityGuidelines />
         </PageSectionWrap>

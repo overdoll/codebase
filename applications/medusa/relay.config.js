@@ -12,5 +12,9 @@ module.exports = {
   artifactDirectory: resolve(
     __dirname,
     'src/__generated__'
-  )
+  ),
+  customScalars: {
+    URI: 'string',
+    BCP47: 'string'
+  }
 }

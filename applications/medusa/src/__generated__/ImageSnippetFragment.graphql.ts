@@ -6,7 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ImageSnippetFragment = {
     readonly urls: ReadonlyArray<{
-        readonly url: unknown;
+        readonly url: string;
         readonly mimeType: string;
     }>;
     readonly " $refType": "ImageSnippetFragment";

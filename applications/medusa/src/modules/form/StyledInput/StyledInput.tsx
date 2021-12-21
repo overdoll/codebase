@@ -1,12 +1,13 @@
 import { Box, FormErrorMessage, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { Icon } from '../../content'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
+import { ReactNode } from 'react'
 
 interface Props {
   register: any
   success: boolean
   error: boolean
-  placeholder: string
+  placeholder: ReactNode
   errorMessage?: string
   size?: string
   variant?: string

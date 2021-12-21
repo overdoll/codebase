@@ -3,15 +3,17 @@ const LoadableWebpackPlugin = require('@loadable/webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const path = require('path')
+const webpack = require('webpack')
+
+const supportedLocales = require('./locales.config')
+const unlikelyToChangeChunk = ['react', 'react-dom', 'react-relay', 'relay-runtime', '@lingui', 'make-plural', 'history', '@casl', 'axios']
 
 module.exports = {
-  experimental: {
-    newExternals: true,
-    reactRefresh: true
-  },
   options: {
     cssPrefix: 'css',
-    jsPrefix: 'js'
+    jsPrefix: 'js',
+    enableReactRefresh: true
+
   },
   modifyPaths ({
     webpackObject, // the imported webpack node module
@@ -30,16 +32,17 @@ module.exports = {
     options
   }) {
     const config = options.webpackOptions
+    config.stats = 'verbose'
 
     if (!env.dev && env.target === 'web') {
-      // config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      // config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      //
-      // config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      // config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      //
-      // config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      // config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
+      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
+
+      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
+
+      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
     }
 
     return config
@@ -73,7 +76,15 @@ module.exports = {
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
-      '@//:assets': path.resolve(__dirname, 'src/assets')
+      '@//:assets': path.resolve(__dirname, 'src/assets'),
+      '@//:types': path.resolve(__dirname, 'src/types')
+    }
+
+    if (!opts.env.dev) {
+      config.cache = {
+        type: 'filesystem',
+        store: 'pack'
+      }
     }
 
     if (opts.env.target === 'node') {
@@ -94,15 +105,40 @@ module.exports = {
         config.devServer.index = ''
         config.devServer.public = process.env.URL
         config.devServer.hot = true
-      }
-
-      config.optimization = {
-        moduleIds: 'size',
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all'
+        config.optimization = {
+          moduleIds: 'size',
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all'
+          }
+        }
+      } else {
+        config.optimization = {
+          // TODO: when switching to webpack 5, change to deterministic
+          // cannot switch because hot reload becomes 10x slower?
+          moduleIds: 'hashed',
+          chunkIds: 'size',
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+              bootstrap: {
+                test: new RegExp(`[\\/]node_modules[\\/](${unlikelyToChangeChunk.join('|')})[\\/]`),
+                name: 'bootstrap',
+                chunks: 'all'
+              }
+            }
+          }
         }
       }
+
+      // cacheGroups: {
+      //   dateFns: {
+      //     test: /[\\/]node_modules[\\/](date-fns)[\\/]/,
+      //       name: 'dateFns',
+      //       chunks: 'all'
+      //   }
+      // }
 
       // saving stats file to build folder
       // without this, stats files will go into
@@ -112,6 +148,17 @@ module.exports = {
           outputAsset: false,
           writeToDisk: { filename }
         })
+      )
+
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /\.js\.flow|\.po|\.ts\.flow/,
+          contextRegExp: /date\-fns[\/\\]/
+        })
+      )
+
+      config.plugins.push(
+        new webpack.ContextReplacementPlugin(/date\-fns[\/\\]/, new RegExp(`[/\\\\\](${supportedLocales.join('|')}|en-US)[/\\\\\]`))
       )
 
       if (process.env.ANALYZE_BUNDLE === 'true') {

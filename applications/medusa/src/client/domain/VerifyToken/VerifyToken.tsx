@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
@@ -14,6 +13,7 @@ import Confirm from './Confirm/Confirm'
 import Link from '@//:modules/routing/Link'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   prepared: {
@@ -58,8 +58,6 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const [t] = useTranslation('token')
-
   const [queryToken] = useQueryParam<string>('token')
   const [querySecret] = useQueryParam<string>('secret')
 
@@ -80,8 +78,7 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
           })
         }
       },
-      onError (data) {
-        console.log(data)
+      onError () {
       }
     })
   }
@@ -115,7 +112,11 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
           status='warning'
         >
           <AlertIcon />
-          <AlertDescription>{t('expired')}</AlertDescription>
+          <AlertDescription>
+            <Trans>
+              The login link you are using is either invalid or expired
+            </Trans>
+          </AlertDescription>
         </Alert>
         <Flex justify='center'>
           <Link to='/join'>
@@ -124,7 +125,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
               colorScheme='gray'
               variant='solid'
             >
-              {t('back')}
+              <Trans>
+                Back to the Join page
+              </Trans>
             </Button>
           </Link>
         </Flex>
@@ -182,7 +185,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
           size='md'
           color='gray.100'
         >
-          {t('header')}
+          <Trans>
+            You have been successfully logged in to the requested device
+          </Trans>
         </Heading>
         <Box
           pt={3}
@@ -205,7 +210,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         >
           <AlertIcon />
           <AlertDescription>
-            {t('close')}
+            <Trans>
+              You may safely close this window
+            </Trans>
           </AlertDescription>
         </Alert>
         {data.sameDevice
@@ -217,7 +224,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
                 onClick={refresh}
                 variant='link'
               >
-                {t('closed_original_device')}
+                <Trans>
+                  I closed the original tab
+                </Trans>
               </Button>
             </Flex>)
           : (
@@ -227,7 +236,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
                 fontSize='md'
                 color='pink.300'
               >
-                {t('closed_original_device_hint')}
+                <Trans>
+                  If you closed the original tab, just open it back up in the same url!
+                </Trans>
               </Text>
             </Center>
             )}

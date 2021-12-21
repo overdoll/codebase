@@ -1,4 +1,4 @@
-import JSResource from '@//:modules/operations/JSResource'
+import { loadable } from '@//:modules/operations/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
@@ -19,6 +19,17 @@ function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data
   }
 
   return null
+}
+
+function getLanguageFromEnvironment (environment): string {
+  if (environment == null) {
+    return ''
+  }
+
+  return environment
+    .getStore()
+    .getSource()
+    .get('client:root:language')?.locale
 }
 
 const getAbilityFromUser = (environment): AppAbility => {
@@ -50,13 +61,63 @@ const getAbilityFromUser = (environment): AppAbility => {
  *
  */
 
+const mapping = {
+  en: 'en-US'
+}
+
+// dateFNS has weird mapping - so we check to make sure its proper here
+function getDateFnsLocale (locale: string): string {
+  if (mapping[locale] != null) {
+    return mapping[locale]
+  }
+
+  return locale
+}
+
+const loadMessages = ({
+  data,
+  environment,
+  i18n
+}): void => i18n._load(getLanguageFromEnvironment(environment), data.messages)
+
 const routes: Route[] = [
   {
-    component: JSResource('Root', async () =>
+    component: loadable(async () =>
       await import(
-        /* webpackChunkName: "Root" */ './domain/Root/Root'
+        './domain/Root/Root'
       )
     ),
+    dependencies: [
+      {
+        resource: loadable(async (environment) => (
+          await import(
+            /* webpackExclude: /_lib/ */`date-fns/locale/${getDateFnsLocale(getLanguageFromEnvironment(environment))}/index.js`
+          )
+        )),
+        then: ({
+          data,
+          environment,
+          i18n
+        }) => i18n._load(getLanguageFromEnvironment(environment), { dateFns: data })
+      },
+      {
+        resource: loadable(async (environment) =>
+          await import(
+            `./domain/Root/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+          )
+        ),
+        then: loadMessages
+      }
+    ],
+    middleware: [
+      ({
+        environment,
+        i18n
+      }) => {
+        i18n._locale = getLanguageFromEnvironment(environment)
+        return true
+      }
+    ],
     prepare: () => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
       return {
@@ -73,9 +134,19 @@ const routes: Route[] = [
       {
         path: '/join',
         exact: true,
-        component: JSResource('JoinRoot', async () =>
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Join/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "JoinRoot" */ './domain/Join/JoinRoot'
+            './domain/Join/JoinRoot'
           )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
@@ -123,11 +194,21 @@ const routes: Route[] = [
       {
         path: '/verify-token',
         exact: true,
-        component: JSResource('VerifyToken', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "VerifyToken" */ './domain/VerifyToken/VerifyToken'
+            './domain/VerifyToken/VerifyToken'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/VerifyToken/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
           ({
@@ -166,11 +247,21 @@ const routes: Route[] = [
       {
         path: '/confirm-email',
         exact: true,
-        component: JSResource('ConfirmEmailRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "ConfirmEmailRoot" */ './domain/ConfirmEmail/ConfirmEmail'
+            './domain/ConfirmEmail/ConfirmEmail'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({
@@ -191,19 +282,29 @@ const routes: Route[] = [
       {
         path: '/',
         exact: true,
-        component: JSResource('HomeRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "HomeRoot" */ './domain/Home/Home'
+            './domain/Home/Home'
           )
         )
       },
       {
         path: '/moderation',
-        component: JSResource('ModRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
+            './domain/Moderation/Moderation'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Moderation/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({
@@ -222,11 +323,21 @@ const routes: Route[] = [
         routes: [
           {
             path: '/moderation/queue',
-            component: JSResource('ModQueueRoot', async () =>
+            component: loadable(async () =>
               await import(
-                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/Queue/Queue'
+                './domain/Moderation/Queue/Queue'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const PostsQuery = require('@//:artifacts/PostsQuery.graphql')
               return {
@@ -242,11 +353,21 @@ const routes: Route[] = [
           },
           {
             path: '/moderation/history',
-            component: JSResource('ModHistoryRoot', async () =>
+            component: loadable(async () =>
               await import(
-                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/History/History'
+                './domain/Moderation/History/History'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const AuditLogsQuery = require('@//:artifacts/AuditLogsQuery.graphql')
               return {
@@ -265,66 +386,86 @@ const routes: Route[] = [
           }
         ]
       },
-      // {
-      //   path: '/manage',
-      //   component: JSResource('ManageRoot', async () =>
-      //     await import(
-      //       /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
-      //     )
-      //   ),
-      //   middleware: [
-      //     ({
-      //       environment,
-      //       history
-      //     }) => {
-      //       const ability = getAbilityFromUser(environment)
-      //
-      //       if (ability.can('manage', 'posting')) {
-      //         return true
-      //       }
-      //       history.push('/join')
-      //       return false
-      //     }
-      //   ],
-      //   routes: [
-      //     {
-      //       path: '/manage/my_posts',
-      //       component: JSResource('ManageMyPostsRoot', async () =>
-      //         await import(
-      //           /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
-      //         )
-      //       ),
-      //       prepare: params => {
-      //         const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
-      //
-      //         return {
-      //           myPostsQuery: {
-      //             query: MyPostsQuery,
-      //             variables: {},
-      //             options: {
-      //               fetchPolicy: 'store-or-network'
-      //             }
-      //           }
-      //         }
-      //       }
-      //     },
-      //     {
-      //       path: '/manage/brands',
-      //       component: JSResource('ManageBrandsRoot', async () =>
-      //         await import(
-      //           /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
-      //         )
-      //       )
-      //     }
-      //   ]
-      // },
+      {
+        path: '/manage',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Manage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        component: loadable(async () =>
+          await import(
+            './domain/Manage/Manage'
+          )
+        )
+        // middleware: [
+        //   ({
+        //     environment,
+        //     history
+        //   }) => {
+        //     const ability = getAbilityFromUser(environment)
+        //
+        //     if (ability.can('manage', 'posting')) {
+        //       return true
+        //     }
+        //     history.push('/join')
+        //     return false
+        //   }
+        // ],
+        // routes: [
+        //   {
+        //     path: '/manage/my_posts',
+        //     component: JSResource('ManageMyPostsRoot', async () =>
+        //       await import(
+        //         /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
+        //       )
+        //     ),
+        //     prepare: params => {
+        //       const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+        //
+        //       return {
+        //         myPostsQuery: {
+        //           query: MyPostsQuery,
+        //           variables: {},
+        //           options: {
+        //             fetchPolicy: 'store-or-network'
+        //           }
+        //         }
+        //       }
+        //     }
+        //   },
+        //   {
+        //     path: '/manage/brands',
+        //     component: JSResource('ManageBrandsRoot', async () =>
+        //       await import(
+        //         /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
+        //       )
+        //     )
+        //   }
+        // ]
+      },
       {
         path: '/settings',
-        component: JSResource('SettingsRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
+            './domain/Settings/Settings'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({
@@ -343,11 +484,21 @@ const routes: Route[] = [
         routes: [
           {
             path: '/settings/profile',
-            component: JSResource('SettingsProfileRoot', async () =>
+            component: loadable(async () =>
               await import(
-                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/Profile/Profile'
+                './domain/Settings/Profile/Profile'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Profile/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
               const EmailsQuery = require('@//:artifacts/EmailsQuery.graphql')
@@ -372,11 +523,21 @@ const routes: Route[] = [
           },
           {
             path: '/settings/security',
-            component: JSResource('SettingsSecurityRoot', async () =>
+            component: loadable(async () =>
               await import(
-                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
+                './domain/Settings/Security/Security'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             prepare: () => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
@@ -402,11 +563,21 @@ const routes: Route[] = [
           },
           {
             path: '/settings/moderation',
-            component: JSResource('SettingsModerationRoot', async () =>
+            component: loadable(async () =>
               await import(
-                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/Moderation/Moderation'
+                './domain/Settings/Moderation/Moderation'
               )
             ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Moderation/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             middleware: [
               ({ environment }) => {
                 const ability = getAbilityFromUser(environment)
@@ -431,11 +602,21 @@ const routes: Route[] = [
       },
       {
         path: '/configure/multi_factor/totp',
-        component: JSResource('TotpSetup', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
+            './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: () => {
           const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
 
@@ -466,11 +647,21 @@ const routes: Route[] = [
       },
       {
         path: '/configure/multi_factor/recovery_codes',
-        component: JSResource('TotpSetup', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "TotpSetup" */ './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
+            './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: () => {
           const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
 
@@ -501,9 +692,9 @@ const routes: Route[] = [
       },
       {
         path: '/configure/create-post',
-        component: JSResource('CreatePostRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "CreatePostRoot" */ './domain/Manage/CreatePost/CreatePost'
+            './domain/Manage/CreatePost/CreatePost'
           )
         ),
         middleware: [
@@ -524,9 +715,9 @@ const routes: Route[] = [
       {
         path: '/profile',
         exact: true,
-        component: JSResource('ProfileRoot', async () =>
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "ProfileRoot" */ './domain/Profile/Profile'
+            './domain/Profile/Profile'
           )
         ),
         middleware: [
@@ -547,9 +738,19 @@ const routes: Route[] = [
       {
         path: '*',
         exact: false,
-        component: JSResource('Empty', async () =>
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/NotFound/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        component: loadable(async () =>
           await import(
-            /* webpackChunkName: "Empty" */ './domain/Error/NotFound/NotFound'
+            './domain/NotFound/NotFound'
           )
         )
       }

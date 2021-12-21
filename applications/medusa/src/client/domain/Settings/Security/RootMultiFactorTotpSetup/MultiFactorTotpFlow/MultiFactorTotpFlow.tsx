@@ -15,7 +15,6 @@ import {
   Spinner,
   Text
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import ExternalLink from '../../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import SuspenseImage from '@//:modules/operations/SuspenseImage'
@@ -25,6 +24,7 @@ import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import { Trans } from '@lingui/macro'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
@@ -42,8 +42,6 @@ export default function MultiFactorTotpFlow (): JSX.Element {
   const [generateTotp, isGeneratingTotp] = useMutation<MultiFactorTotpFlowMutation>(
     MultiFactorTotpFlowMutationGQL
   )
-
-  const [t] = useTranslation('configure')
 
   useEffect(() => {
     !isSuccessful && generateTotpSetup()
@@ -63,7 +61,6 @@ export default function MultiFactorTotpFlow (): JSX.Element {
       },
       onError (data) {
         setHasError(true)
-        console.log(data)
       }
     })
   }
@@ -79,10 +76,15 @@ export default function MultiFactorTotpFlow (): JSX.Element {
             <Flex align='center' direction='column'>
               <AlertIcon mr={0} mb={2} />
               <AlertDescription align='center' mb={1} lineHeight={5} fontSize='sm'>
-                {t('totp.flow.success.title')}
+                <Trans>
+                  You have successfully set up two-factor authentication!
+                </Trans>
               </AlertDescription>
               <AlertDescription align='center' lineHeight={5} fontSize='sm'>
-                {t('totp.flow.success.description')}
+                <Trans>
+                  The next time you login, you'll be asked to enter another 6-digit code using the same device you used
+                  to set this up.
+                </Trans>
               </AlertDescription>
             </Flex>
           </Alert>
@@ -103,7 +105,11 @@ export default function MultiFactorTotpFlow (): JSX.Element {
     return (
       <Flex mt={6} align='center' direction='column' justify='center'>
         <Spinner mb={3} thickness='4' size='lg' color='primary.500' />
-        <Heading size='md' color='gray.00'>{t('totp.flow.generating')}</Heading>
+        <Heading size='md' color='gray.00'>
+          <Trans>
+            Generating two-factor flow...
+          </Trans>
+        </Heading>
       </Flex>
     )
   }
@@ -132,20 +138,28 @@ export default function MultiFactorTotpFlow (): JSX.Element {
           </Flex>
           <Box m={2}>
             <Heading fontSize='lg' color='gray.00'>
-              {t('totp.flow.app_step.title')}
+              <Trans>
+                Download an Authenticator App
+              </Trans>
             </Heading>
             <Text color='gray.100' fontSize='sm'>
-              {t('totp.flow.app_step.description')}
+              <Trans>
+                Install an authenticator app for your mobile device.
+              </Trans>
             </Text>
             <List spacing={1} mt={2}>
               <ListItem>
                 <ExternalLink path='https://support.google.com/accounts/answer/1066447'>
-                  {t('totp.flow.app_step.options.google_authenticator')}
+                  <Trans>
+                    Google Authenticator
+                  </Trans>
                 </ExternalLink>
               </ListItem>
               <ListItem>
                 <ExternalLink path='https://authy.com/features/setup/'>
-                  {t('totp.flow.app_step.options.authy')}
+                  <Trans>
+                    Authy
+                  </Trans>
                 </ExternalLink>
               </ListItem>
             </List>
@@ -182,13 +196,19 @@ export default function MultiFactorTotpFlow (): JSX.Element {
           </Flex>
           <Box m={2}>
             <Heading fontSize='lg' color='gray.00'>
-              {t('totp.flow.scan_step.title')}
+              <Trans>
+                Scan the QR Code
+              </Trans>
             </Heading>
             <Text color='gray.100' fontSize='sm'>
-              {t('totp.flow.scan_step.description')}
+              <Trans>
+                Open the authenticator app and scan the image. You must scan the code through the app or it won't work.
+              </Trans>
             </Text>
             <Text mt={2} color='gray.100' fontSize='sm'>
-              {t('totp.flow.scan_step.alternative')}
+              <Trans>
+                Alternatively, you can enter the following secret code into the app
+              </Trans>
             </Text>
             <CopyCodeToClipboard mt={2}>
               {totp?.generateAccountMultiFactorTotp?.multiFactorTotp?.secret ?? ''}
@@ -215,10 +235,14 @@ export default function MultiFactorTotpFlow (): JSX.Element {
           </Flex>
           <Box m={2}>
             <Heading fontSize='lg' color='gray.00'>
-              {t('totp.flow.code_step.title')}
+              <Trans>
+                Enter the code
+              </Trans>
             </Heading>
             <Text mb={2} color='gray.100' fontSize='sm'>
-              {t('totp.flow.code_step.description')}
+              <Trans>
+                Enter the 6-digit verification code that the authenticator app generated.
+              </Trans>
             </Text>
             <TotpSubmissionForm
               id={totp?.generateAccountMultiFactorTotp?.multiFactorTotp?.id as string}

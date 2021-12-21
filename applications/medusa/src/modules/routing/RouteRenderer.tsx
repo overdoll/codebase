@@ -1,8 +1,9 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRoutingContext } from './RoutingContext'
-import { RouterInit, PreparedEntry } from './router'
+import { PreparedEntry, RouterInit } from './router'
 import ErrorBoundary from '../operations/ErrorBoundary'
 import { chakra, Progress, Slide } from '@chakra-ui/react'
+import { useRelayEnvironment } from 'react-relay'
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -76,6 +77,7 @@ export default function RouterRenderer (): JSX.Element {
     <RouteComponent
       id={firstItem.id}
       component={firstItem.component}
+      dependencies={firstItem.dependencies}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
     />
@@ -84,9 +86,10 @@ export default function RouterRenderer (): JSX.Element {
     const nextItem = reversedItems[ii]
     routeComponent = (
       <RouteComponent
-        id={firstItem.id}
+        id={nextItem.id}
         component={nextItem.component}
         prepared={nextItem.prepared}
+        dependencies={nextItem.dependencies}
         routeData={nextItem.routeData}
       >
         {routeComponent}
@@ -140,11 +143,19 @@ function RouteComponent ({
   children,
   routeData,
   component,
+  dependencies,
   prepared
 }: PreparedEntry): JSX.Element {
-  const Component = component.read()
+  const environment = useRelayEnvironment()
+
+  // make sure localization files are loaded
+  if (dependencies != null) {
+    dependencies.forEach(res => res.resource.read(environment))
+  }
+
+  const Component = component.read(environment)
+
   return (
-    // @ts-expect-error
     <Component
       routeData={routeData}
       prepared={prepared}

@@ -41,7 +41,9 @@ async function fetchRelay (params, variables): Promise<any> {
   // property of the response. If any exceptions occurred when processing the request,
   // throw an error to indicate to the developer what went wrong.
   if (Array.isArray(json.errors)) {
-    throw new Error(JSON.stringify(json.errors))
+    const error = new Error(JSON.stringify(json.errors))
+    console.log(error)
+    throw error
   }
 
   // Otherwise, return the full payload.

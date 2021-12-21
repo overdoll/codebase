@@ -4,7 +4,7 @@ import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import Button from '@//:modules/form/Button/Button'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<MultiFactorTotpHeaderQuery>
@@ -27,8 +27,6 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
     props.query
   )
 
-  const [t] = useTranslation('configure')
-
   if (queryData?.viewer?.multiFactorSettings == null) return null
 
   if (!queryData.viewer.multiFactorSettings.recoveryCodesGenerated) {
@@ -37,7 +35,9 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
         <Alert mb={3} status='warning'>
           <AlertIcon />
           <AlertDescription>
-            {t('totp.empty.alert')}
+            <Trans>
+              You must generate a set of recovery codes before you can set up two-factor authentication
+            </Trans>
           </AlertDescription>
         </Alert>
         <Link to='/configure/multi_factor/recovery_codes'>
@@ -45,7 +45,9 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
             colorScheme='gray'
             size='md'
           >
-            {t('totp.empty.button')}
+            <Trans>
+              Go to recovery codes
+            </Trans>
           </Button>
         </Link>
       </Flex>
@@ -59,7 +61,10 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
           <Alert status='warning'>
             <AlertIcon />
             <AlertDescription lineHeight={5} fontSize='sm'>
-              {t('totp.configured.description')}
+              <Trans>
+                You're about to reconfigure your two-factor authentication device. This will invalidate your current
+                two-factor device configuration.
+              </Trans>
             </AlertDescription>
           </Alert>
         </Flex>}

@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next'
 import { Avatar, Flex, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: DropdownMenuButtonProfileFragment$key | null
@@ -17,8 +17,6 @@ const DropdownMenuButtonProfileGQL = graphql`
 `
 
 export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Element {
-  const [t] = useTranslation('navigation')
-
   const data = useFragment(DropdownMenuButtonProfileGQL, queryRef)
 
   return (
@@ -49,7 +47,9 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
             color='gray.300'
             fontSize='md'
           >
-            {t('menu.profile')}
+            <Trans>
+              Go to my profile
+            </Trans>
           </Text>
         </Flex>
       </Flex>

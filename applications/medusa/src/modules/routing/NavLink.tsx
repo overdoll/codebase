@@ -1,5 +1,5 @@
 import { useRoutingContext } from './RoutingContext'
-import { matchPath } from 'react-router'
+import matchPath from './matchPath'
 import Link from './Link'
 import { createLocation } from 'history'
 import { useLocation } from './useLocation'

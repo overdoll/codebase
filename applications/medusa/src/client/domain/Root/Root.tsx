@@ -22,6 +22,9 @@ const RootQueryGQL = graphql`
       ...UniversalNavigatorFragment
       ...LockedAccountBannerFragment
     }
+    language {
+      locale
+    }
   }
 `
 

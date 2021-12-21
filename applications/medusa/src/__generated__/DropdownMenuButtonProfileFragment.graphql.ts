@@ -6,7 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type DropdownMenuButtonProfileFragment = {
     readonly username: string;
-    readonly avatar: unknown;
+    readonly avatar: string;
     readonly " $refType": "DropdownMenuButtonProfileFragment";
 };
 export type DropdownMenuButtonProfileFragment$data = DropdownMenuButtonProfileFragment;

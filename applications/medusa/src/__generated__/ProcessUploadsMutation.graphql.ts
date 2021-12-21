@@ -21,7 +21,7 @@ export type ProcessUploadsMutationResponse = {
                 readonly id: string;
                 readonly type: ResourceType;
                 readonly urls: ReadonlyArray<{
-                    readonly url: unknown;
+                    readonly url: string;
                     readonly mimeType: string;
                 }>;
             }>;

@@ -1,12 +1,12 @@
 import { Stack, Text, useToast } from '@chakra-ui/react'
 import type { AuditInspectFragment$key } from '@//:artifacts/AuditInspectFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-relay/hooks'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
 import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
 import Button from '@//:modules/form/Button/Button'
 import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   auditLog: AuditInspectFragment$key
@@ -37,8 +37,6 @@ const RevertAuditLogGQL = graphql`
 `
 
 export default function AuditInspect ({ auditLog }: Props): JSX.Element {
-  const [t] = useTranslation('moderation')
-
   const data = useFragment(AuditInspectFragmentGQL, auditLog)
 
   const [revertPost, isRevertingPost] = useMutation<AuditInspectMutation>(
@@ -57,14 +55,14 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('history.inspect.revert.query.success'),
+          title: t`This audit log was reverted. The post should appear back in your queue shortly.`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('history.inspect.revert.query.failure'),
+          title: t`There was an error reverting the audit log`,
           isClosable: true
         })
       }
@@ -80,9 +78,15 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
           ? (
             <SmallBackgroundBox bg='purple.50' alignContent='center' justifyContent='center'>
               <Text color='purple.500' fontSize='2xl' fontFamily='mono'>
-                {t('history.inspect.revert.action')}
+                <Trans>
+                  REVERTED
+                </Trans>
               </Text>
-              <Text>{t('history.inspect.revert.description', { action: data.action })}</Text>
+              <Text>
+                <Trans>
+                  Originally {data.action}
+                </Trans>
+              </Text>
             </SmallBackgroundBox>
             )
           : (
@@ -107,7 +111,9 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
             isLoading={isRevertingPost}
             onClick={revertLog}
           >
-            {t('history.inspect.revert.button.action')}
+            <Trans>
+              Revert Decision
+            </Trans>
           </Button>}
       </Stack>
     </LargeBackgroundBox>

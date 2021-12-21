@@ -8,7 +8,7 @@ export type ArrangeFragment = {
     readonly content: ReadonlyArray<{
         readonly id: string;
         readonly urls: ReadonlyArray<{
-            readonly url: unknown;
+            readonly url: string;
             readonly mimeType: string;
         }>;
     }>;

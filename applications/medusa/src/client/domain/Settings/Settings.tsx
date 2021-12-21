@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 import { useLocation } from '@//:modules/routing'
-import { Redirect } from 'react-router'
+import Redirect from '@//:modules/routing/Redirect'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
-import { useTranslation } from 'react-i18next'
 import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'
 import Can from '@//:modules/authorization/Can'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   children: ReactNode
@@ -13,25 +13,40 @@ interface Props {
 export default function Settings ({ children }: Props): JSX.Element {
   const location = useLocation()
 
-  const [t] = useTranslation('navigation')
-
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content title={t('sidebar.settings.title')}>
+      <VerticalNavigation.Content title={
+        <Trans>
+          Account Settings
+        </Trans>
+      }
+      >
         <VerticalNavigation.Button
           to='/settings/profile'
-          title={t('sidebar.settings.profile')}
+          title={
+            <Trans>
+              Profile
+            </Trans>
+          }
           icon={UserHuman}
         />
         <VerticalNavigation.Button
           to='/settings/security'
-          title={t('sidebar.settings.security')}
+          title={
+            <Trans>
+              Security
+            </Trans>
+          }
           icon={SecurityShield}
         />
         <Can I='moderate' a='Post'>
           <VerticalNavigation.Button
             to='/settings/moderation'
-            title={t('sidebar.settings.moderation')}
+            title={
+              <Trans>
+                Moderation
+              </Trans>
+            }
             icon={SettingWrench}
           />
         </Can>

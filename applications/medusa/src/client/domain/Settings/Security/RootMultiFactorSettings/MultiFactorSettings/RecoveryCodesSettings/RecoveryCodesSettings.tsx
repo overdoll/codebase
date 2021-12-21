@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { RecoveryCodesSettingsFragment$key } from '@//:artifacts/RecoveryCodesSettingsFragment.graphql'
 import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
 import { Barcode } from '@//:assets/icons/interface'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   data: RecoveryCodesSettingsFragment$key
@@ -17,16 +17,18 @@ const RecoveryCodesFragmentGQL = graphql`
 export default function RecoveryCodesSettings (props: Props): JSX.Element {
   const data = useFragment(RecoveryCodesFragmentGQL, props.data)
 
-  const [t] = useTranslation('settings')
-
   return (
     <PagePanelWrap path='/configure/multi_factor/recovery_codes'>
       <PagePanelIcon icon={Barcode} colorScheme='orange' />
       <PagePanelText
-        title={t('security.multi_factor.recovery_codes.title')}
-        description={data.recoveryCodesGenerated
-          ? t('security.multi_factor.recovery_codes.description.configured')
-          : t('security.multi_factor.recovery_codes.description.not_configured')}
+        title={
+          <Trans>Recovery Codes</Trans>
+        }
+        description={(
+          data.recoveryCodesGenerated
+            ? <Trans>View or regenerate recovery codes</Trans>
+            : <Trans>Generate recovery codes</Trans>
+        )}
       />
     </PagePanelWrap>
   )

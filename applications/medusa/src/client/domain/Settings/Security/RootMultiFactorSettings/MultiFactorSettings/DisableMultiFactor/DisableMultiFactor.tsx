@@ -11,12 +11,12 @@ import {
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql'
 import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
 import { useRef } from 'react'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   data: DisableMultiFactorFragment$key
@@ -43,8 +43,6 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
     DisableMultiFactorMutationGQL
   )
 
-  const [t] = useTranslation('settings')
-
   const cancelRef = useRef(null)
 
   const {
@@ -61,7 +59,7 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('security.multi_factor.disable.modal.query.success'),
+          title: t`Two-factor authentication has been disabled for your account`,
           isClosable: true
         })
         onClose()
@@ -79,7 +77,7 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t('security.multi_factor.disable.modal.query.error'),
+          title: t`There was an error disabling two-factor authentication`,
           isClosable: true
         })
       }
@@ -101,13 +99,19 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
           justify='space-between'
         >
           <Text fontFamily='body' fontWeight='semibold' color='gray.200' fontSize='sm'>
-            {t('security.multi_factor.disable.title')}
+            <Trans>
+              Disable Two-Factor Authentication
+            </Trans>
           </Text>
         </Flex>
         <Tooltip
           isDisabled={data.canDisableMultiFactor}
           shouldWrapChildren
-          label={t('security.multi_factor.disable.tooltip')}
+          label={
+            <Trans>
+              Your account role prevents you from disabling two-factor authentication
+            </Trans>
+          }
         >
           <Button
             onClick={onOpen}
@@ -119,7 +123,9 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
             borderBottomLeftRadius={0}
             h='37px'
           >
-            {t('security.multi_factor.disable.button')}
+            <Trans>
+              Disable
+            </Trans>
           </Button>
         </Tooltip>
       </Flex>
@@ -131,16 +137,21 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg'>
-              {t('security.multi_factor.disable.modal.header')}
+              <Trans>
+                Disable Two-Factor Authentication
+              </Trans>
             </AlertDialogHeader>
-
             <AlertDialogBody>
-              {t('security.multi_factor.disable.modal.description')}
+              <Trans>
+                Disabling two-factor authentication will remove the extra layer of security on your account. Are you
+                sure?
+              </Trans>
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button size='md' onClick={onClose} ref={cancelRef}>
-                {t('security.multi_factor.disable.modal.cancel')}
+                <Trans>
+                  Cancel
+                </Trans>
               </Button>
               <Button
                 isLoading={isDisablingMultiFactor}
@@ -150,7 +161,9 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
                 onClick={onDisable}
                 ml={3}
               >
-                {t('security.multi_factor.disable.modal.confirm')}
+                <Trans>
+                  Disable Two-Factor
+                </Trans>
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -76,30 +76,22 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 
 func (a *Application) UpdateDeviceLanguageEvent(ctx context.Context, res *http.Response, language string) error {
 
-	_, err := res.Request.Cookie(languageCookieName)
+	encoded, err := a.Cookie.Encode(languageCookieName, language)
 
 	if err != nil {
-		// no device cookie - we will add one
-		if err == http.ErrNoCookie {
-
-			encoded, err := a.Cookie.Encode(languageCookieName, language)
-
-			if err != nil {
-				return err
-			}
-
-			ck := http.Cookie{
-				Name:     languageCookieName,
-				Value:    encoded,
-				Path:     "/",
-				HttpOnly: true,
-				Secure:   true,
-				SameSite: http.SameSiteLaxMode,
-			}
-
-			res.Header.Add("Set-Cookie", ck.String())
-		}
+		return err
 	}
+
+	ck := http.Cookie{
+		Name:     languageCookieName,
+		Value:    encoded,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	res.Header.Add("Set-Cookie", ck.String())
 
 	return nil
 }

@@ -43,6 +43,7 @@ beforeEach(() => {
 
 afterEach(() => {
   window.removeEventListener('error', onError)
+  // eslint-disable-next-line jest/no-standalone-expect
   expect(actualErrors).toBe(expectedErrors)
   expectedErrors = 0
 })

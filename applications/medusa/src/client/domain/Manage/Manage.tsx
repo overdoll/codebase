@@ -1,8 +1,8 @@
-import { Redirect } from 'react-router'
 import { useLocation } from '@//:modules/routing'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { ContentBookEdit, SettingHammer } from '@//:assets/icons/navigation'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
+import Redirect from '@//:modules/routing/Redirect'
 
 interface Props {
   children: Node
@@ -11,19 +11,24 @@ interface Props {
 export default function Manage ({ children }: Props): JSX.Element {
   const location = useLocation()
 
-  const [t] = useTranslation('navigation')
-
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content title={t('sidebar.manage.title')}>
+      <VerticalNavigation.Content title={(
+        <Trans>Post Management</Trans>
+      )}
+      >
         <VerticalNavigation.Button
           to='/manage/my_posts'
-          title={t('sidebar.manage.my_posts')}
+          title={
+            <Trans>Manage Posts</Trans>
+          }
           icon={ContentBookEdit}
         />
         <VerticalNavigation.Button
           to='/manage/brands'
-          title={t('sidebar.manage.brand')}
+          title={
+            <Trans>Manage Brands</Trans>
+          }
           icon={SettingHammer}
         />
       </VerticalNavigation.Content>

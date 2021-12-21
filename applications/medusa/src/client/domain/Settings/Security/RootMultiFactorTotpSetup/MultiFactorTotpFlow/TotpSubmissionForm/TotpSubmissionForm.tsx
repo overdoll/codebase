@@ -2,11 +2,12 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpSubmissionFormMutation } from '@//:artifacts/TotpSubmissionFormMutation.graphql'
 import { FormControl, HStack, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
-import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { useLingui } from '@lingui/react'
+import { t, Trans } from '@lingui/macro'
 
 interface CodeValues {
   code: string
@@ -31,7 +32,7 @@ export default function TotpSubmissionForm (props: Props): JSX.Element {
     TotpSubmissionFormMutationGQL
   )
 
-  const [t] = useTranslation('configure')
+  const { i18n } = useLingui()
 
   const schema = Joi.object({
     code: Joi
@@ -40,9 +41,9 @@ export default function TotpSubmissionForm (props: Props): JSX.Element {
       .length(6)
       .required()
       .messages({
-        'string.empty': t('totp.flow.code_step.form.validation.empty'),
-        'string.length': t('totp.flow.code_step.form.validation.length'),
-        'string.pattern.base': t('totp.flow.code_step.form.validation.pattern')
+        'string.empty': i18n._(t`Please enter a 6-digit authentication code`),
+        'string.length': i18n._(t`The code must be 6 digits long`),
+        'string.pattern.base': i18n._(t`The code can only contain numbers`)
       })
   })
 
@@ -75,13 +76,13 @@ export default function TotpSubmissionForm (props: Props): JSX.Element {
         if (data?.enrollAccountMultiFactorTotp?.validation != null) {
           setError('code', {
             type: 'mutation',
-            message: t(`totp.flow.code_step.form.query.error.${data.enrollAccountMultiFactorTotp.validation}`)
+            message: data.enrollAccountMultiFactorTotp.validation
           })
           return
         }
         notify({
           status: 'success',
-          title: t('totp.flow.code_step.form.query.success'),
+          title: t`Two-factor authentication was successfully set up`,
           isClosable: true
         })
         props.setIsSuccessful()
@@ -98,7 +99,7 @@ export default function TotpSubmissionForm (props: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t('totp.flow.code_step.form.query.error.message'),
+          title: t`There was an error setting up two-factor authentication`,
           isClosable: true
         })
       }
@@ -131,7 +132,9 @@ export default function TotpSubmissionForm (props: Props): JSX.Element {
             disabled={errors.code != null}
             isLoading={isSubmittingTotp}
           >
-            {t('totp.flow.code_step.form.submit')}
+            <Trans>
+              Activate
+            </Trans>
           </Button>
         </HStack>
       </FormControl>

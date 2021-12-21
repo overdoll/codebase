@@ -3,7 +3,6 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { Fragment, useEffect, useState } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { format } from 'date-fns'
-import { useTranslation } from 'react-i18next'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
@@ -15,6 +14,9 @@ import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
 import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<PostsQuery>
@@ -69,7 +71,7 @@ export default function Posts (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const [t] = useTranslation('moderation')
+  const { i18n } = useLingui()
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -142,7 +144,7 @@ export default function Posts (props: Props): JSX.Element {
     )
   }
 
-  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:mm aaa')
+  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:mm aaa', { locale: dateFnsLocaleFromI18n(i18n) })
 
   // Show the posts queue for the user
   return (
@@ -164,7 +166,7 @@ export default function Posts (props: Props): JSX.Element {
             color='gray.300'
             fontSize='md'
           >
-            {t('queue.post.title', { date: formattedDate })}
+            <Trans>Posted on {formattedDate}</Trans>
           </Text>
         </SmallBackgroundBox>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&

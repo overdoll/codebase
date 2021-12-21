@@ -6,7 +6,7 @@ import NavLink from '../../../routing/NavLink'
 
 interface Props extends HTMLChakraProps<any> {
   icon?: FunctionComponent<any>
-  label: string
+  label: ReactNode
   exact?: boolean
   to: string
   onClick?: () => void
@@ -43,7 +43,6 @@ export default function HorizontalNavigationButton ({
                 base: 2,
                 md: 10
               }}
-              aria-label={label}
               bg={isActiveBasePath ? 'gray.500' : 'transparent'}
               h={h ?? {
                 base: '48px',

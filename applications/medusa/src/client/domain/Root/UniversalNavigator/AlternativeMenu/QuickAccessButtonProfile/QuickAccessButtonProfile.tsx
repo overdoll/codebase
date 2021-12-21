@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment } from 'react-relay'
 import { Avatar, Flex } from '@chakra-ui/react'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import { QuickAccessButtonProfileFragment$key } from '@//:artifacts/QuickAccessButtonProfileFragment.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRef: QuickAccessButtonProfileFragment$key
@@ -15,14 +15,16 @@ const QuickAccessButtonProfileGQL = graphql`
 `
 
 export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Element {
-  const [t] = useTranslation('navigation')
-
   const data = useFragment(QuickAccessButtonProfileGQL, queryRef)
 
   return (
     <HorizontalNavigation.Button
       to='/profile'
-      label={t('nav.profile')}
+      label={
+        <Trans>
+          Go to my profile
+        </Trans>
+      }
     >
       <Flex
         h='100%'
@@ -31,7 +33,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
       >
         <Avatar
           borderRadius='25%'
-          src={data.avatar as string}
+          src={data.avatar}
           m={0}
           h='42px'
           w='42px'

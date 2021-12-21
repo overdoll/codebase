@@ -1,10 +1,10 @@
 import { MenuItem, Text } from '@chakra-ui/react'
 import { Icon } from '../../../../index'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 
 interface Props {
   icon: FunctionComponent<any>
-  text: string
+  text: ReactNode
   onClick?: () => void
   isDisabled?: boolean
   color?: string
@@ -34,7 +34,8 @@ export default function SmallMenuItem ({
       <Text
         pointerEvents='none'
         color={color ?? 'gray.100'}
-      >{text}
+      >
+        {text}
       </Text>
     </MenuItem>
   )

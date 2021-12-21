@@ -3,11 +3,11 @@ import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejec
 import { graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
 import { CloseButton, Fade, Flex, HStack, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
 import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   infractions: RejectionReasonsFragment$key
@@ -61,8 +61,6 @@ export default function ModeratePost (props: Props): JSX.Element {
 
   const data = useFragment(PostIDGQL, props.postID)
 
-  const [t] = useTranslation('moderation')
-
   const {
     isOpen,
     onOpen,
@@ -82,14 +80,14 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.approve.query.success', { brand: data?.brand?.name }),
+          title: t`Post created by ${data?.brand?.name} was approved successfully`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.approve.query.error', { brand: data?.brand?.name }),
+          title: t`There was an error approving a post created by ${data?.brand?.name}`,
           isClosable: true
         })
       }
@@ -108,7 +106,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.reject.query.success', { brand: data?.brand?.name }),
+          title: t`Post created by ${data?.brand?.name} was successfully rejected`,
           isClosable: true
         })
         onClose()
@@ -116,7 +114,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.reject.query.error', { brand: data?.brand?.name }),
+          title: t`There was an error rejecting the post created by ${data?.brand?.name}`,
           isClosable: true
         })
       }
@@ -127,10 +125,14 @@ export default function ModeratePost (props: Props): JSX.Element {
     <>
       <HStack spacing={4}>
         <Button size='md' isDisabled={isApprovingPost} onClick={onOpen} colorScheme='orange' variant='solid'>
-          {t('queue.post.actions.reject.button')}
+          <Trans>
+            Reject
+          </Trans>
         </Button>
         <Button size='md' isLoading={isApprovingPost} onClick={onApprovePost} colorScheme='green' variant='solid'>
-          {t('queue.post.actions.approve.button')}
+          <Trans>
+            Approve
+          </Trans>
         </Button>
       </HStack>
       <Flex
@@ -153,7 +155,11 @@ export default function ModeratePost (props: Props): JSX.Element {
             backdropFilter='blur(5px)'
           >
             <Flex align='center' w='100%' justify='space-between'>
-              <Text fontSize='md' color='gray.100'>{t('queue.post.actions.reject.modal.title')}</Text>
+              <Text fontSize='md' color='gray.100'>
+                <Trans>
+                  Select a reason for rejecting this post
+                </Trans>
+              </Text>
               <CloseButton isDisabled={isRejectingPost} onClick={onClose} right={0} />
             </Flex>
             <RejectionReasons

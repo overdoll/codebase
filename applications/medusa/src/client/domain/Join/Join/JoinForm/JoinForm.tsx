@@ -1,11 +1,12 @@
 import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
-import { useEmailFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import Email from '@//:modules/validation/Email'
 
 interface JoinValues {
   email: string
@@ -20,10 +21,8 @@ export default function JoinForm ({
   onSubmit,
   loading
 }: Props): JSX.Element {
-  const [t] = useTranslation('auth')
-
   const schema = Joi.object({
-    email: useEmailFormSchema()
+    email: Email()
   })
 
   const {
@@ -39,6 +38,8 @@ export default function JoinForm ({
       schema
     )
   })
+
+  const { i18n } = useLingui()
 
   const success = isDirty && (errors.email == null) && isSubmitted
 
@@ -59,13 +60,17 @@ export default function JoinForm ({
                   : 'gray.200'
               : 'green.600'}
           >
-            {t('authenticate.form.email.title')}
+            <Trans>
+              Email
+            </Trans>
           </FormLabel>
           <StyledInput
             register={register('email')}
             success={success}
             error={errors.email != null}
-            placeholder={t('authenticate.form.email.placeholder')}
+            placeholder={
+              i18n._(t`Enter an email`)
+            }
             errorMessage={errors.email?.message}
             size='xl'
           />
@@ -78,7 +83,9 @@ export default function JoinForm ({
           colorScheme='primary'
           w='100%'
         >
-          {t('authenticate.form.continue')}
+          <Trans>
+            Continue
+          </Trans>
         </Button>
       </Stack>
     </form>

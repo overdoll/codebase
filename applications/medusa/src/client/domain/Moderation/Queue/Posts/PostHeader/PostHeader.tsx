@@ -1,8 +1,8 @@
 import { CircularProgress, CircularProgressLabel, Flex, Tooltip } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
-import { useTranslation } from 'react-i18next'
 import PostBrand from '../../../../../components/Posts/PostBrand/PostBrand'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PostHeaderFragment$key
@@ -16,8 +16,6 @@ const ContributorFragmentGQL = graphql`
 `
 
 export default function PostHeader ({ query }: Props): JSX.Element {
-  const [t] = useTranslation('moderation')
-
   const data = useFragment(ContributorFragmentGQL, query)
 
   // Get difference in hours so that the moderator can see the reassignment deadline
@@ -49,7 +47,12 @@ export default function PostHeader ({ query }: Props): JSX.Element {
   return (
     <Flex align='center' w='100%' justify='space-between'>
       <PostBrand query={data} />
-      <Tooltip label={t('queue.post.reassignment')}>
+      <Tooltip label={
+        <Trans>
+          Time you have left to take action on the post before it is reassigned to another moderator
+        </Trans>
+      }
+      >
         <Flex align='center'>
           <CircularProgress
             size={10}
