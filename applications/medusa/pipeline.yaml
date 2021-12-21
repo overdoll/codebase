@@ -3,7 +3,7 @@ steps:
     commands:
       # compile localization files
       - bazel build //applications/medusa:packages
-      - npm run locale:compile
+      - npm run lingui compile
     targets:
       - //applications/medusa:bundle
 
