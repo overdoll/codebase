@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 10764c8374840d36bb1bb3ada28ebd03 */
+/* @relayHash 34aa054bc096d4ba41c8cccbf52c9d7d */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -29,6 +29,19 @@ query SearchCategoriesPaginationFragment(
   ...SearchCategoriesFragment_2PG6LC
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
 fragment SearchCategoriesFragment_2PG6LC on Query {
   categories(first: $first, after: $after, title: $title) {
     edges {
@@ -37,6 +50,7 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
         title
         slug
         thumbnail {
+          ...ResourceItemFragment
           type
           urls {
             mimeType
@@ -51,6 +65,13 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
       endCursor
       hasNextPage
     }
+  }
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 */
@@ -184,14 +205,14 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "mimeType",
+                            "name": "url",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "url",
+                            "name": "mimeType",
                             "storageKey": null
                           }
                         ],
@@ -262,7 +283,7 @@ return {
     ]
   },
   "params": {
-    "id": "10764c8374840d36bb1bb3ada28ebd03",
+    "id": "34aa054bc096d4ba41c8cccbf52c9d7d",
     "metadata": {},
     "name": "SearchCategoriesPaginationFragment",
     "operationKind": "query",
@@ -270,5 +291,5 @@ return {
   }
 };
 })();
-(node as any).hash = '1a544fb577b799ed8f5b240efe789cf1';
+(node as any).hash = 'c61dfb7b802db19dbbe3ed7a39623a8c';
 export default node;

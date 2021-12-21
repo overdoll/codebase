@@ -1,17 +1,22 @@
-import { ChangeEvent, useRef } from 'react'
+import { ChangeEvent, ReactNode, useRef } from 'react'
 import { Flex, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 
 interface Props {
   uppy: Uppy
   onSelect?: () => void
-  children: Node
+  children: ReactNode
 }
 
 /**
  * File picker - select files and add them to the list
  */
-export default function FilePicker ({ uppy, onSelect, children, ...rest }: Props): JSX.Element {
+export default function FilePicker ({
+  uppy,
+  onSelect,
+  children,
+  ...rest
+}: Props): JSX.Element {
   const notify = useToast()
 
   const onChange = (e: ChangeEvent<HTMLInputElement>): void => {

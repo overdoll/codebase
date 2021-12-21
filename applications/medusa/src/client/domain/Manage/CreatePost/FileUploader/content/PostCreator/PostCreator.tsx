@@ -30,9 +30,8 @@ const Query = graphql`
     post (reference: $reference) {
       __typename
       state
+      ...UpdatePostFlowFragment
     }
-
-    ...UpdatePostFlowFragment
   }
 `
 

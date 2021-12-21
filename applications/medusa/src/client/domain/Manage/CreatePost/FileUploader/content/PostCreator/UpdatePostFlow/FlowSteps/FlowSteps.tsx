@@ -20,7 +20,7 @@ interface Props {
 }
 
 const FlowStepsFragmentGQL = graphql`
-  fragment FlowStepsFragment on Query {
+  fragment FlowStepsFragment on Post {
     ...ArrangeFragment
     ...AudienceFragment
     ...BrandFragment
@@ -30,7 +30,12 @@ const FlowStepsFragmentGQL = graphql`
   }
 `
 
-export default function FlowSteps ({ uppy, dispatch, state, query }: Props): JSX.Element {
+export default function FlowSteps ({
+  uppy,
+  dispatch,
+  state,
+  query
+}: Props): JSX.Element {
   const data = useFragment(FlowStepsFragmentGQL, query)
 
   switch (state.step) {

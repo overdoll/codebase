@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import { Box, Heading, Text } from '@chakra-ui/react'
@@ -16,10 +12,14 @@ interface Props {
   dispatch: Dispatch
 }
 
-export default function Submit ({ uppy, state, dispatch }: Props): Node {
+export default function Submit ({
+  uppy,
+  state,
+  dispatch
+}: Props): JSX.Element {
   const [t] = useTranslation('manage')
 
-  const onRetry = () => {
+  const onRetry = (): void => {
     dispatch({
       type: EVENTS.CLEANUP,
       value: INITIAL_STATE

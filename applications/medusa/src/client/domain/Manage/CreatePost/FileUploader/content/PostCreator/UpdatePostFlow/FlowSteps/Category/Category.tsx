@@ -1,13 +1,9 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useEffect, useState } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { useFragment } from 'react-relay'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
@@ -15,60 +11,77 @@ import { EVENTS } from '../../../../../constants/constants'
 import SearchInput from '../../../SearchInput/SearchInput'
 import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: CategoryFragment$key,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: CategoryFragment$key
 }
 
 const CategoryFragmentGQL = graphql`
-  fragment CategoryFragment on Query {
-    post (reference: $reference) {
-      categories {
-        id
-        title
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
+  fragment CategoryFragment on Post {
+    categories {
+      id
+      title
+      slug
+      thumbnail {
+        type
+        urls {
+          mimeType
+          url
         }
       }
     }
   }
 `
 
-export default function Category ({ uppy, state, dispatch, query }: Props): Node {
+export default function Category ({
+  uppy,
+  state,
+  dispatch,
+  query
+}: Props): JSX.Element {
   const data = useFragment(CategoryFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
-  const currentCategories = data.post.categories.map((item) => item.id)
+  const currentCategories = data.categories.map((item) => item.id) as string[]
 
   const [selected, setSelected] = useState(currentCategories)
 
-  const setCurrentSelection = (category) => {
+  const setCurrentSelection = (category): void => {
     if (selected.includes(category.id)) {
       setSelected(selected.filter((item) => item !== category.id))
-      dispatch({ type: EVENTS.CATEGORIES, value: category, remove: true })
+      dispatch({
+        type: EVENTS.CATEGORIES,
+        value: category,
+        remove: true
+      })
       return
     }
     setSelected((array) => [...array, category.id])
-    dispatch({ type: EVENTS.CATEGORIES, value: category })
+    dispatch({
+      type: EVENTS.CATEGORIES,
+      value: category
+    })
   }
 
-  const removeSelection = (id) => {
+  const removeSelection = (id): void => {
     setSelected(selected.filter((item) => item !== id))
-    dispatch({ type: EVENTS.CATEGORIES, value: { id: id }, remove: true })
+    dispatch({
+      type: EVENTS.CATEGORIES,
+      value: { id: id },
+      remove: true
+    })
   }
 
   // Initially add current categories to state on load
   useEffect(() => {
-    data.post.categories.forEach((item) => {
-      dispatch({ type: EVENTS.CATEGORIES, value: item })
+    data.categories.forEach((item) => {
+      dispatch({
+        type: EVENTS.CATEGORIES,
+        value: item
+      })
     })
   }, [])
 
@@ -91,7 +104,9 @@ export default function Category ({ uppy, state, dispatch, query }: Props): Node
                   <Tag borderRadius='full' size='lg'>
                     <TagLabel>{item.title}</TagLabel>
                     <TagCloseButton
-                      color='gray.00' opacity={1} bg='orange.400'
+                      color='gray.00'
+                      opacity={1}
+                      bg='orange.400'
                       onClick={() => removeSelection(item.id)}
                     />
                   </Tag>

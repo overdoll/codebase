@@ -5,10 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FlowHeaderFragment = {
-    readonly post: {
-        readonly id: string;
-        readonly " $fragmentRefs": FragmentRefs<"useCheckRequirementsFragment">;
-    } | null;
+    readonly " $fragmentRefs": FragmentRefs<"useCheckRequirementsFragment">;
     readonly " $refType": "FlowHeaderFragment";
 };
 export type FlowHeaderFragment$data = FlowHeaderFragment;
@@ -20,48 +17,19 @@ export type FlowHeaderFragment$key = {
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "reference"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "FlowHeaderFragment",
   "selections": [
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "reference",
-          "variableName": "reference"
-        }
-      ],
-      "concreteType": "Post",
-      "kind": "LinkedField",
-      "name": "post",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "useCheckRequirementsFragment"
-        }
-      ],
-      "storageKey": null
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useCheckRequirementsFragment"
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'c9a89850dc421832044804f86863c336';
+(node as any).hash = 'cf8763855c099df759353ffd089fbcd7';
 export default node;

@@ -14,6 +14,7 @@ export type PostBrandFragment = {
                 readonly mimeType: string;
                 readonly url: unknown;
             }>;
+            readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
         } | null;
     } | null;
     readonly " $refType": "PostBrandFragment";
@@ -86,6 +87,11 @@ const node: ReaderFragment = {
                 }
               ],
               "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ResourceItemFragment"
             }
           ],
           "storageKey": null
@@ -97,5 +103,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '3224316cbdb403b85c8ee5bfe988e051';
+(node as any).hash = '4b6ceb7e69354bf06477deeb847b641c';
 export default node;

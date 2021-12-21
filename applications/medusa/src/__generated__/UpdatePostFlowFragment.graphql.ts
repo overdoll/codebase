@@ -38,8 +38,8 @@ const node: ReaderFragment = {
       "name": "FlowHeaderFragment"
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '33185ace4cce97d9b9f4054e0561b145';
+(node as any).hash = '9a9942426050ce53867f5f2b7013ea2b';
 export default node;

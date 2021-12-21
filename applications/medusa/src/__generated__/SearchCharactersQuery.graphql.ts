@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 83fa2598a3804e4acfe50b5e92c4c85b */
+/* @relayHash c24f236d4d723278c57ed5e5b0663d1f */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,19 @@ query SearchCharactersQuery(
   ...SearchCharactersFragment_2aiVTE
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
 fragment SearchCharactersFragment_2aiVTE on Query {
   characters(first: 3, name: $name) {
     edges {
@@ -37,11 +50,7 @@ fragment SearchCharactersFragment_2aiVTE on Query {
         }
         slug
         thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
+          ...ResourceItemFragment
         }
         __typename
       }
@@ -51,6 +60,13 @@ fragment SearchCharactersFragment_2aiVTE on Query {
       endCursor
       hasNextPage
     }
+  }
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 */
@@ -192,14 +208,14 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "mimeType",
+                            "name": "url",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "url",
+                            "name": "mimeType",
                             "storageKey": null
                           }
                         ],
@@ -270,7 +286,7 @@ return {
     ]
   },
   "params": {
-    "id": "83fa2598a3804e4acfe50b5e92c4c85b",
+    "id": "c24f236d4d723278c57ed5e5b0663d1f",
     "metadata": {},
     "name": "SearchCharactersQuery",
     "operationKind": "query",

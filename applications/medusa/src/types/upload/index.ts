@@ -28,8 +28,8 @@ export interface Thumbnails {
 
 export interface Progress {
   [progress: string]: {
-    '1': String
-    '2': String
+    '1': number
+    '2': number
   }
 }
 
@@ -98,6 +98,14 @@ export interface Categories {
 
 export interface Submit {
   review?: boolean
+}
+
+export interface QueryArgs {
+  options: { fetchKey: number }
+  variables: {
+    title?: string | null
+    name?: string | null
+  }
 }
 
 export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'

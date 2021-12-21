@@ -6,20 +6,18 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type CategoryFragment = {
-    readonly post: {
-        readonly categories: ReadonlyArray<{
-            readonly id: string;
-            readonly title: string;
-            readonly slug: string;
-            readonly thumbnail: {
-                readonly type: ResourceType;
-                readonly urls: ReadonlyArray<{
-                    readonly mimeType: string;
-                    readonly url: unknown;
-                }>;
-            } | null;
-        }>;
-    } | null;
+    readonly categories: ReadonlyArray<{
+        readonly id: string;
+        readonly title: string;
+        readonly slug: string;
+        readonly thumbnail: {
+            readonly type: ResourceType;
+            readonly urls: ReadonlyArray<{
+                readonly mimeType: string;
+                readonly url: unknown;
+            }>;
+        } | null;
+    }>;
     readonly " $refType": "CategoryFragment";
 };
 export type CategoryFragment$data = CategoryFragment;
@@ -31,97 +29,75 @@ export type CategoryFragment$key = {
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "reference"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "CategoryFragment",
   "selections": [
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "reference",
-          "variableName": "reference"
-        }
-      ],
-      "concreteType": "Post",
+      "args": null,
+      "concreteType": "Category",
       "kind": "LinkedField",
-      "name": "post",
-      "plural": false,
+      "name": "categories",
+      "plural": true,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "Category",
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "title",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
           "kind": "LinkedField",
-          "name": "categories",
-          "plural": true,
+          "name": "thumbnail",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "id",
+              "name": "type",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "title",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "slug",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Resource",
+              "concreteType": "ResourceUrl",
               "kind": "LinkedField",
-              "name": "thumbnail",
-              "plural": false,
+              "name": "urls",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "type",
+                  "name": "mimeType",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "ResourceUrl",
-                  "kind": "LinkedField",
-                  "name": "urls",
-                  "plural": true,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "mimeType",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "url",
-                      "storageKey": null
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "url",
                   "storageKey": null
                 }
               ],
@@ -134,8 +110,8 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'ad44029fa93644d546b7719996d4a935';
+(node as any).hash = 'c6320b23d3ae53ed890d41ef56a3d811';
 export default node;

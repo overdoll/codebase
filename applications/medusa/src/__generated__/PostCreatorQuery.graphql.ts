@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9c4fe56c2b3bc039a3cd1f62f32db5f3 */
+/* @relayHash 0c55428b75db241dd4ae29abcec1f57c */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -13,8 +13,8 @@ export type PostCreatorQueryResponse = {
     readonly post: {
         readonly __typename: string;
         readonly state: PostState;
+        readonly " $fragmentRefs": FragmentRefs<"UpdatePostFlowFragment">;
     } | null;
-    readonly " $fragmentRefs": FragmentRefs<"UpdatePostFlowFragment">;
 };
 export type PostCreatorQuery = {
     readonly response: PostCreatorQueryResponse;
@@ -30,24 +30,21 @@ query PostCreatorQuery(
   post(reference: $reference) {
     __typename
     state
+    ...UpdatePostFlowFragment
     id
   }
-  ...UpdatePostFlowFragment
 }
 
-fragment ArrangeFragment on Query {
-  post(reference: $reference) {
-    content {
-      id
-      urls {
-        url
-        mimeType
-      }
-    }
-    ...ArrangeUploadsFragment
-    ...ProcessUploadsFragment
+fragment ArrangeFragment on Post {
+  content {
     id
+    urls {
+      url
+      mimeType
+    }
   }
+  ...ArrangeUploadsFragment
+  ...ProcessUploadsFragment
 }
 
 fragment ArrangeUploadsFragment on Post {
@@ -61,137 +58,71 @@ fragment ArrangeUploadsFragment on Post {
   }
 }
 
-fragment AudienceFragment on Query {
-  post(reference: $reference) {
-    audience {
-      id
-      title
-    }
-    id
-  }
-  audiences {
-    edges {
-      node {
-        id
-        title
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
-        }
-      }
-    }
-  }
-}
-
-fragment BrandFragment on Query {
-  post(reference: $reference) {
-    brand {
-      id
-      name
-    }
-    id
-  }
-  brands {
-    edges {
-      node {
-        id
-        name
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
-        }
-      }
-    }
-  }
-}
-
-fragment CategoryFragment on Query {
-  post(reference: $reference) {
-    categories {
-      id
-      title
-      slug
-      thumbnail {
-        type
-        urls {
-          mimeType
-          url
-        }
-      }
-    }
-    id
-  }
-}
-
-fragment CharacterFragment on Query {
-  post(reference: $reference) {
-    characters {
-      id
-      name
-      series {
-        title
-        id
-      }
-      slug
-      thumbnail {
-        type
-        urls {
-          mimeType
-          url
-        }
-      }
-    }
-    id
-  }
-}
-
-fragment FlowFooterFragment on Query {
-  post(reference: $reference) {
-    ...FlowForwardButtonFragment
-    id
-  }
-}
-
-fragment FlowForwardButtonFragment on Post {
-  id
-  content {
-    id
-  }
+fragment AudienceFragment on Post {
   audience {
     id
+    title
   }
+}
+
+fragment BrandFragment on Post {
   brand {
     id
   }
+}
+
+fragment CategoryFragment on Post {
   categories {
     id
+    title
+    slug
+    thumbnail {
+      type
+      urls {
+        mimeType
+        url
+      }
+    }
   }
+}
+
+fragment CharacterFragment on Post {
   characters {
     id
+    name
+    series {
+      title
+      id
+    }
+    slug
+    thumbnail {
+      type
+      urls {
+        mimeType
+        url
+      }
+    }
   }
-  ...useUpdateContentFragment
-  ...useUpdateAudienceFragment
-  ...useUpdateBrandFragment
-  ...useUpdateCategoryFragment
-  ...useUpdateCharacterFragment
-  ...useSubmitPostFragment
 }
 
-fragment FlowHeaderFragment on Query {
-  post(reference: $reference) {
-    id
-    ...useCheckRequirementsFragment
-  }
+fragment FlowFooterFragment on Post {
+  ...FlowForwardButtonFragment
 }
 
-fragment FlowStepsFragment on Query {
+fragment FlowForwardButtonFragment on Post {
+  ...SubmitPostButtonFragment
+  ...UpdateAudienceButton
+  ...UpdateBrandButtonFragment
+  ...UpdateCategoryButtonFragment
+  ...UpdateCharacterButtonFragment
+  ...UpdateContentButtonFragment
+}
+
+fragment FlowHeaderFragment on Post {
+  ...useCheckRequirementsFragment
+}
+
+fragment FlowStepsFragment on Post {
   ...ArrangeFragment
   ...AudienceFragment
   ...BrandFragment
@@ -200,10 +131,18 @@ fragment FlowStepsFragment on Query {
   ...ReviewFragment
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
 fragment PostBrandFragment on Post {
   brand {
     name
     thumbnail {
+      ...ResourceItemFragment
       type
       urls {
         mimeType
@@ -217,10 +156,8 @@ fragment PostBrandFragment on Post {
 fragment PostGalleryContentFragment on Post {
   content {
     type
-    urls {
-      url
-      mimeType
-    }
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
   }
 }
 
@@ -234,24 +171,74 @@ fragment ProcessUploadsFragment on Post {
   }
 }
 
-fragment ReviewFragment on Query {
-  post(reference: $reference) {
-    id
-    content {
-      urls {
-        url
-        mimeType
-      }
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
+fragment ReviewFragment on Post {
+  id
+  content {
+    urls {
+      url
+      mimeType
     }
-    ...PostGalleryContentFragment
-    ...PostBrandFragment
+  }
+  ...PostGalleryContentFragment
+  ...PostBrandFragment
+}
+
+fragment SubmitPostButtonFragment on Post {
+  id
+}
+
+fragment UpdateAudienceButton on Post {
+  id
+  audience {
+    id
   }
 }
 
-fragment UpdatePostFlowFragment on Query {
+fragment UpdateBrandButtonFragment on Post {
+  id
+  brand {
+    id
+  }
+}
+
+fragment UpdateCategoryButtonFragment on Post {
+  id
+  categories {
+    id
+  }
+}
+
+fragment UpdateCharacterButtonFragment on Post {
+  id
+  characters {
+    id
+  }
+}
+
+fragment UpdateContentButtonFragment on Post {
+  id
+  content {
+    id
+  }
+}
+
+fragment UpdatePostFlowFragment on Post {
   ...FlowStepsFragment
   ...FlowFooterFragment
   ...FlowHeaderFragment
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
 }
 
 fragment useCheckRequirementsFragment on Post {
@@ -274,30 +261,6 @@ fragment useCheckRequirementsFragment on Post {
     __typename
     id
   }
-}
-
-fragment useSubmitPostFragment on Post {
-  id
-}
-
-fragment useUpdateAudienceFragment on Post {
-  id
-}
-
-fragment useUpdateBrandFragment on Post {
-  id
-}
-
-fragment useUpdateCategoryFragment on Post {
-  id
-}
-
-fragment useUpdateCharacterFragment on Post {
-  id
-}
-
-fragment useUpdateContentFragment on Post {
-  id
 }
 */
 
@@ -354,25 +317,45 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "type",
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v5/*: any*/),
+    (v6/*: any*/)
+  ],
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "type",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -380,7 +363,7 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v7/*: any*/),
+    (v8/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -395,13 +378,6 @@ v10 = {
       "storageKey": null
     }
   ],
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
   "storageKey": null
 };
 return {
@@ -420,14 +396,14 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/)
+          (v3/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "UpdatePostFlowFragment"
+          }
         ],
         "storageKey": null
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "UpdatePostFlowFragment"
       }
     ],
     "type": "Query",
@@ -449,7 +425,6 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
-          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -459,24 +434,13 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "urls",
-                "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  (v6/*: any*/)
-                ],
-                "storageKey": null
-              },
               (v7/*: any*/),
+              (v8/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
           },
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -493,7 +457,7 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v8/*: any*/),
+              (v9/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -507,8 +471,20 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v9/*: any*/),
               (v10/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": [
+                  (v8/*: any*/),
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              },
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -522,9 +498,9 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v8/*: any*/),
+              (v9/*: any*/),
               (v11/*: any*/),
-              (v10/*: any*/),
+              (v12/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -538,7 +514,7 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -547,87 +523,14 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
+                  (v9/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
               },
               (v11/*: any*/),
-              (v10/*: any*/),
+              (v12/*: any*/),
               (v2/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "AudienceConnection",
-        "kind": "LinkedField",
-        "name": "audiences",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AudienceEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Audience",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v8/*: any*/),
-                  (v10/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "BrandConnection",
-        "kind": "LinkedField",
-        "name": "brands",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BrandEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Brand",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v9/*: any*/),
-                  (v11/*: any*/),
-                  (v10/*: any*/)
-                ],
-                "storageKey": null
-              }
             ],
             "storageKey": null
           }
@@ -637,7 +540,7 @@ return {
     ]
   },
   "params": {
-    "id": "9c4fe56c2b3bc039a3cd1f62f32db5f3",
+    "id": "0c55428b75db241dd4ae29abcec1f57c",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",
@@ -645,5 +548,5 @@ return {
   }
 };
 })();
-(node as any).hash = '9149acd65bf41d9d5c413dd65bbf3700';
+(node as any).hash = '14f11d6a2a1ecd50e8f3d2c6a29fddb6';
 export default node;

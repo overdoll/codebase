@@ -10,7 +10,8 @@ interface Props {
 
 export default function ExternalLink ({
   path,
-  children
+  children,
+  ...rest
 }: Props): JSX.Element {
   return (
     <Link
@@ -21,17 +22,16 @@ export default function ExternalLink ({
         size='sm'
         colorScheme='primary'
         variant='link'
+        {...rest}
       >
-        <>
-          {children}
-          <Icon
-            mb={1}
-            ml={1}
-            icon={ShareExternalLink}
-            h={2}
-            fill='primary.400'
-          />
-        </>
+        {children}
+        <Icon
+          mb={1}
+          ml={1}
+          icon={ShareExternalLink}
+          h={2}
+          fill='primary.400'
+        />
       </Button>
     </Link>
   )

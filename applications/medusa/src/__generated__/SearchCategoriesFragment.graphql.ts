@@ -18,6 +18,7 @@ export type SearchCategoriesFragment = {
                         readonly mimeType: string;
                         readonly url: unknown;
                     }>;
+                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
                 } | null;
             };
         }>;
@@ -169,6 +170,11 @@ return {
                         }
                       ],
                       "storageKey": null
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "ResourceItemFragment"
                     }
                   ],
                   "storageKey": null
@@ -226,5 +232,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '1a544fb577b799ed8f5b240efe789cf1';
+(node as any).hash = 'c61dfb7b802db19dbbe3ed7a39623a8c';
 export default node;

@@ -6,23 +6,21 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type CharacterFragment = {
-    readonly post: {
-        readonly characters: ReadonlyArray<{
-            readonly id: string;
-            readonly name: string;
-            readonly series: {
-                readonly title: string;
-            };
-            readonly slug: string;
-            readonly thumbnail: {
-                readonly type: ResourceType;
-                readonly urls: ReadonlyArray<{
-                    readonly mimeType: string;
-                    readonly url: unknown;
-                }>;
-            } | null;
-        }>;
-    } | null;
+    readonly characters: ReadonlyArray<{
+        readonly id: string;
+        readonly name: string;
+        readonly series: {
+            readonly title: string;
+        };
+        readonly slug: string;
+        readonly thumbnail: {
+            readonly type: ResourceType;
+            readonly urls: ReadonlyArray<{
+                readonly mimeType: string;
+                readonly url: unknown;
+            }>;
+        } | null;
+    }>;
     readonly " $refType": "CharacterFragment";
 };
 export type CharacterFragment$data = CharacterFragment;
@@ -34,115 +32,93 @@ export type CharacterFragment$key = {
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "reference"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "CharacterFragment",
   "selections": [
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "reference",
-          "variableName": "reference"
-        }
-      ],
-      "concreteType": "Post",
+      "args": null,
+      "concreteType": "Character",
       "kind": "LinkedField",
-      "name": "post",
-      "plural": false,
+      "name": "characters",
+      "plural": true,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "Character",
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Series",
           "kind": "LinkedField",
-          "name": "characters",
-          "plural": true,
+          "name": "series",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "id",
+              "name": "title",
               "storageKey": null
-            },
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "thumbnail",
+          "plural": false,
+          "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "name",
+              "name": "type",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
-              "concreteType": "Series",
+              "concreteType": "ResourceUrl",
               "kind": "LinkedField",
-              "name": "series",
-              "plural": false,
+              "name": "urls",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "title",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "slug",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Resource",
-              "kind": "LinkedField",
-              "name": "thumbnail",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "type",
+                  "name": "mimeType",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "ResourceUrl",
-                  "kind": "LinkedField",
-                  "name": "urls",
-                  "plural": true,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "mimeType",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "url",
-                      "storageKey": null
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "url",
                   "storageKey": null
                 }
               ],
@@ -155,8 +131,8 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '3bc15d0d5ea05aa4844ed6d17971894e';
+(node as any).hash = '5280b650440e05ed806a545cda52b49d';
 export default node;

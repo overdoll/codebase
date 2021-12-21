@@ -4,7 +4,6 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type SearchCharactersFragment = {
     readonly characters: {
         readonly edges: ReadonlyArray<{
@@ -16,11 +15,7 @@ export type SearchCharactersFragment = {
                 };
                 readonly slug: string;
                 readonly thumbnail: {
-                    readonly type: ResourceType;
-                    readonly urls: ReadonlyArray<{
-                        readonly mimeType: string;
-                        readonly url: unknown;
-                    }>;
+                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
                 } | null;
             };
         }>;
@@ -160,36 +155,9 @@ return {
                   "plural": false,
                   "selections": [
                     {
-                      "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
-                      "name": "type",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "ResourceUrl",
-                      "kind": "LinkedField",
-                      "name": "urls",
-                      "plural": true,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "mimeType",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "url",
-                          "storageKey": null
-                        }
-                      ],
-                      "storageKey": null
+                      "kind": "FragmentSpread",
+                      "name": "ResourceItemFragment"
                     }
                   ],
                   "storageKey": null
@@ -247,5 +215,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '3624a4dcc9b2aabd139ade2b2ad7cc52';
+(node as any).hash = 'eae53434575ed72b1d71e6b699da0a0c';
 export default node;

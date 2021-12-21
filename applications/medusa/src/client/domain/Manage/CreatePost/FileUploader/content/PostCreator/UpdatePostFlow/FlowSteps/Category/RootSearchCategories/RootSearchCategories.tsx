@@ -1,19 +1,20 @@
-/**
- * @flow
- */
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import SearchCategories from './SearchCategories/SearchCategories'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
-type Props = {
-  search?: string,
-  selected: Array<string>,
-  onSelect: () => void,
+interface Props {
+  search?: string
+  selected: string[]
+  onSelect: (category: any) => void
 }
 
-export default function RootSearchCategories ({ search, onSelect, selected }: Props): Node {
+export default function RootSearchCategories ({
+  search,
+  onSelect,
+  selected
+}: Props): JSX.Element {
   const [queryArgs, setQueryArgs] = useState({
     options: { fetchKey: 0 },
     variables: {
@@ -31,7 +32,7 @@ export default function RootSearchCategories ({ search, onSelect, selected }: Pr
         fetchKey: (prev?.options?.fetchKey ?? 0) + 1
       },
       variables: {
-        title: search || null
+        title: search ?? null
       }
     }))
   }, [])
@@ -43,8 +44,11 @@ export default function RootSearchCategories ({ search, onSelect, selected }: Pr
   return (
     <Suspense fallback={<CenteredSpinner />}>
       <ErrorBoundary
-        fallback={({ error, reset }) => (
-          <ErrorFallback error={error} reset={reset} refetch={refetch} />
+        fallback={({
+          error,
+          reset
+        }) => (
+          <ErrorFallback error={error} reset={reset} refetch={refetch as () => void} />
         )}
       >
         <SearchCategories selected={selected} onSelect={onSelect} queryArgs={queryArgs} />

@@ -5,16 +5,14 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ReviewFragment = {
-    readonly post: {
-        readonly id: string;
-        readonly content: ReadonlyArray<{
-            readonly urls: ReadonlyArray<{
-                readonly url: unknown;
-                readonly mimeType: string;
-            }>;
+    readonly id: string;
+    readonly content: ReadonlyArray<{
+        readonly urls: ReadonlyArray<{
+            readonly url: unknown;
+            readonly mimeType: string;
         }>;
-        readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostBrandFragment">;
-    } | null;
+    }>;
+    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostBrandFragment">;
     readonly " $refType": "ReviewFragment";
 };
 export type ReviewFragment$data = ReviewFragment;
@@ -26,89 +24,67 @@ export type ReviewFragment$key = {
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "reference"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ReviewFragment",
   "selections": [
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "reference",
-          "variableName": "reference"
-        }
-      ],
-      "concreteType": "Post",
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
       "kind": "LinkedField",
-      "name": "post",
-      "plural": false,
+      "name": "content",
+      "plural": true,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
+          "concreteType": "ResourceUrl",
           "kind": "LinkedField",
-          "name": "content",
+          "name": "urls",
           "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "urls",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "url",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "mimeType",
-                  "storageKey": null
-                }
-              ],
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mimeType",
               "storageKey": null
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostGalleryContentFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostBrandFragment"
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostGalleryContentFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostBrandFragment"
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'dd4eec181fabcd7ff2c0c0aa4d596d31';
+(node as any).hash = '9015c8e48847d128def4673ad7289fcb';
 export default node;

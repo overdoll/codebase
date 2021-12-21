@@ -1,10 +1,6 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useEffect, useState } from 'react'
 import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '../../../../../../../../../../types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import type { CharacterFragment$key } from '@//:artifacts/CharacterFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
@@ -15,63 +11,80 @@ import SearchInput from '../../../SearchInput/SearchInput'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
-  query: CharacterFragment$key,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
+  query: CharacterFragment$key
 }
 
 const CharacterFragmentGQL = graphql`
-  fragment CharacterFragment on Query {
-    post (reference: $reference) {
-      characters {
-        id
-        name
-        series {
-          title
-        }
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
+  fragment CharacterFragment on Post {
+    characters {
+      id
+      name
+      series {
+        title
+      }
+      slug
+      thumbnail {
+        type
+        urls {
+          mimeType
+          url
         }
       }
     }
   }
 `
 
-export default function Category ({ uppy, state, dispatch, query }: Props): Node {
+export default function Category ({
+  uppy,
+  state,
+  dispatch,
+  query
+}: Props): JSX.Element {
   const data = useFragment(CharacterFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
-  const currentCharacters = data.post.characters.map((item) => item.id)
+  const currentCharacters = data.characters.map((item) => item.id)
 
-  const [selected, setSelected] = useState(currentCharacters)
+  const [selected, setSelected] = useState(currentCharacters as string[])
 
-  const setCurrentSelection = (character) => {
+  const setCurrentSelection = (character): void => {
     if (selected.includes(character.id)) {
       setSelected(selected.filter((item) => item !== character.id))
-      dispatch({ type: EVENTS.CHARACTERS, value: character, remove: true })
+      dispatch({
+        type: EVENTS.CHARACTERS,
+        value: character,
+        remove: true
+      })
       return
     }
     setSelected((array) => [...array, character.id])
-    dispatch({ type: EVENTS.CHARACTERS, value: character })
+    dispatch({
+      type: EVENTS.CHARACTERS,
+      value: character
+    })
   }
 
-  const removeSelection = (id) => {
+  const removeSelection = (id): void => {
     setSelected(selected.filter((item) => item !== id))
-    dispatch({ type: EVENTS.CHARACTERS, value: { id: id }, remove: true })
+    dispatch({
+      type: EVENTS.CHARACTERS,
+      value: { id: id },
+      remove: true
+    })
   }
 
   // Initially add current characters to state on load
   useEffect(() => {
-    data.post.characters.forEach((item) => {
-      dispatch({ type: EVENTS.CHARACTERS, value: item })
+    data.characters.forEach((item) => {
+      dispatch({
+        type: EVENTS.CHARACTERS,
+        value: item
+      })
     })
   }, [])
 
@@ -94,7 +107,9 @@ export default function Category ({ uppy, state, dispatch, query }: Props): Node
                   <Tag borderRadius='full' size='lg'>
                     <TagLabel>{item.name}</TagLabel>
                     <TagCloseButton
-                      color='gray.00' opacity={1} bg='orange.400'
+                      color='gray.00'
+                      opacity={1}
+                      bg='orange.400'
                       onClick={() => removeSelection(item.id)}
                     />
                   </Tag>

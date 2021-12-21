@@ -1,20 +1,21 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import type { Content as ContentType } from '../../../../../../../../../../../../types/upload'
 import { CloseButton, Flex, Heading } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 
-type Props = {
-  content: Array<ContentType>,
-  onRemove: () => void,
-  index: number,
-  dragDisabled: boolean,
-};
+interface Props {
+  content: ContentType
+  onRemove: (string) => void
+  index: number
+  dragDisabled: boolean
+}
 
-export default function Content ({ content, onRemove, index, dragDisabled }: Props): Node {
+export default function Content ({
+  content,
+  onRemove,
+  index,
+  dragDisabled
+}: Props): JSX.Element {
   return (
     <Draggable isDragDisabled={dragDisabled} draggableId={content.id} key={content.id} index={index}>
       {(provided, snapshot) => (
@@ -23,7 +24,7 @@ export default function Content ({ content, onRemove, index, dragDisabled }: Pro
           bg='gray.800'
           borderRadius='md'
           overflow='hidden'
-          boxShadow={snapshot.isDragging ? 'drag' : 'none'}
+          boxShadow={snapshot.isDragging as boolean ? 'drag' : 'none'}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}

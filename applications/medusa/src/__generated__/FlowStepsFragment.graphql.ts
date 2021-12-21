@@ -53,8 +53,8 @@ const node: ReaderFragment = {
       "name": "ReviewFragment"
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'a8ce0916045c594584851dc923b59245';
+(node as any).hash = '52b60975eedff7f2834ee83c6dc5537b';
 export default node;

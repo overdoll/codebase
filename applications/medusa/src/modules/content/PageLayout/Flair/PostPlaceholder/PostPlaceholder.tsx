@@ -1,11 +1,15 @@
 import { Flex, Stack } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: string
+  children: ReactNode
 }
 
-export default function PostPlaceholder ({ children, ...rest }: Props): JSX.Element {
+export default function PostPlaceholder ({
+  children,
+  ...rest
+}: Props): JSX.Element {
   return (
     <LargeBackgroundBox>
       <Flex

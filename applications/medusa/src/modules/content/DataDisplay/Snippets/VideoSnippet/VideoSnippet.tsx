@@ -1,19 +1,29 @@
 import { Box, HTMLChakraProps } from '@chakra-ui/react'
-import { ResourceUrl } from '@//:types/upload'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props {
   innerRef?: () => void
-  urls: readonly ResourceUrl[]
+  query: VideoSnippetFragment$key
 }
 
-// TODO use a fragment here
+const Fragment = graphql`
+  fragment VideoSnippetFragment on Resource {
+    urls {
+      url
+      mimeType
+    }
+  }
+`
 
 export default function VideoSnippet ({
-  urls,
+  query,
   innerRef,
-  objectFit,
   ...rest
 }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   return (
     <Box
       as='video'
@@ -24,17 +34,15 @@ export default function VideoSnippet ({
       loop
       preload='auto'
       style={{
-        // @ts-expect-error
-        objectFit: objectFit ?? 'cover',
+        objectFit: 'cover',
         height: '100%'
       }}
       {...rest}
     >
-      {urls.map((item, index) => (
+      {data.urls.map((item, index) => (
         <source
           key={index}
-          // @ts-expect-error
-          src={item.url}
+          src={item.url as string}
           type={item.mimeType}
         />)
       )}

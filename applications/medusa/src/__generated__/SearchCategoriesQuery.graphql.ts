@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1f976447c77a3075b95d898a2e94b6cb */
+/* @relayHash b7804a513e665c6929125ca7a3e5a5cb */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,19 @@ query SearchCategoriesQuery(
   ...SearchCategoriesFragment_3FzUSU
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
 fragment SearchCategoriesFragment_3FzUSU on Query {
   categories(first: 5, title: $title) {
     edges {
@@ -33,6 +46,7 @@ fragment SearchCategoriesFragment_3FzUSU on Query {
         title
         slug
         thumbnail {
+          ...ResourceItemFragment
           type
           urls {
             mimeType
@@ -47,6 +61,13 @@ fragment SearchCategoriesFragment_3FzUSU on Query {
       endCursor
       hasNextPage
     }
+  }
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 */
@@ -168,14 +189,14 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "mimeType",
+                            "name": "url",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "url",
+                            "name": "mimeType",
                             "storageKey": null
                           }
                         ],
@@ -246,7 +267,7 @@ return {
     ]
   },
   "params": {
-    "id": "1f976447c77a3075b95d898a2e94b6cb",
+    "id": "b7804a513e665c6929125ca7a3e5a5cb",
     "metadata": {},
     "name": "SearchCategoriesQuery",
     "operationKind": "query",

@@ -1,11 +1,6 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { usePaginationFragment } from 'react-relay'
 import { useTranslation } from 'react-i18next'
-import type { SearchCategoriesFragment } from '@//:artifacts/SearchCategoriesFragment.graphql'
-
+import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Flex, Text } from '@chakra-ui/react'
 import {
@@ -16,13 +11,13 @@ import {
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { removeNode } from '@//:modules/support'
-import type SearchCategoriesQuery from '@//:artifacts/SearchCategoriesQuery.graphql'
+import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   selected: string[]
-  onSelect: () => void
-  queryArgs: () => void
+  onSelect: (category: any) => void
+  queryArgs: QueryArgsType
 }
 
 const SearchCategoriesQueryGQL = graphql`
@@ -52,6 +47,7 @@ const SearchCategoriesFragmentGQL = graphql`
           title
           slug
           thumbnail {
+            ...ResourceItemFragment
             type
             urls {
               mimeType
@@ -64,14 +60,23 @@ const SearchCategoriesFragmentGQL = graphql`
   }
 `
 
-export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
+export default function SearchCategories ({
+  onSelect,
+  selected,
+  queryArgs
+}: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SearchCategoriesQuery>(
     SearchCategoriesQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCategoriesFragment>(
+  const {
+    data,
+    loadNext,
+    isLoadingNext,
+    hasNext
+  } = usePaginationFragment<SearchCategoriesQuery, any>(
     SearchCategoriesFragmentGQL,
     queryData
   )
@@ -80,7 +85,7 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
 
   const categories = removeNode(data.categories.edges)
 
-  const onChangeSelection = (id) => {
+  const onChangeSelection = (id): void => {
     const category = categories.filter((item) => item.id === id)[0]
     onSelect(category)
   }
@@ -108,8 +113,7 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
             >
               <SelectorTextOverlay label={item.title}>
                 <ResourceItem
-                  type={item.thumbnail.type}
-                  urls={item.thumbnail.urls}
+                  query={item.thumbnail}
                 />
               </SelectorTextOverlay>
             </Selector>

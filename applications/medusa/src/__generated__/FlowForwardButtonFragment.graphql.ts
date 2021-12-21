@@ -5,23 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FlowForwardButtonFragment = {
-    readonly id: string;
-    readonly content: ReadonlyArray<{
-        readonly id: string;
-    }>;
-    readonly audience: {
-        readonly id: string;
-    } | null;
-    readonly brand: {
-        readonly id: string;
-    } | null;
-    readonly categories: ReadonlyArray<{
-        readonly id: string;
-    }>;
-    readonly characters: ReadonlyArray<{
-        readonly id: string;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"useUpdateContentFragment" | "useUpdateAudienceFragment" | "useUpdateBrandFragment" | "useUpdateCategoryFragment" | "useUpdateCharacterFragment" | "useSubmitPostFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateBrandButtonFragment" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "UpdateContentButtonFragment">;
     readonly " $refType": "FlowForwardButtonFragment";
 };
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -32,108 +16,45 @@ export type FlowForwardButtonFragment$key = {
 
 
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = [
-  (v0/*: any*/)
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "FlowForwardButtonFragment",
   "selections": [
-    (v0/*: any*/),
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": (v1/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Audience",
-      "kind": "LinkedField",
-      "name": "audience",
-      "plural": false,
-      "selections": (v1/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Brand",
-      "kind": "LinkedField",
-      "name": "brand",
-      "plural": false,
-      "selections": (v1/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Category",
-      "kind": "LinkedField",
-      "name": "categories",
-      "plural": true,
-      "selections": (v1/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Character",
-      "kind": "LinkedField",
-      "name": "characters",
-      "plural": true,
-      "selections": (v1/*: any*/),
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "SubmitPostButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useUpdateContentFragment"
+      "name": "UpdateAudienceButton"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useUpdateAudienceFragment"
+      "name": "UpdateBrandButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useUpdateBrandFragment"
+      "name": "UpdateCategoryButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useUpdateCategoryFragment"
+      "name": "UpdateCharacterButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useUpdateCharacterFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "useSubmitPostFragment"
+      "name": "UpdateContentButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-})();
-(node as any).hash = 'dbf64aad155cc6f52b4ca96c03c2ddac';
+(node as any).hash = '6fe4a9ab10d22a0c992f9824c4a8302f';
 export default node;

@@ -1,10 +1,6 @@
-/**
- * @flow
- */
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import type SearchCharactersQuery from '@//:artifacts/SearchCharactersQuery.graphql'
+import type { SearchCharactersQuery } from '@//:artifacts/SearchCharactersQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
-import type { SearchCharactersFragment$key } from '@//:artifacts/SearchCharactersFragment.graphql'
 import { useTranslation } from 'react-i18next'
 import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
@@ -16,11 +12,12 @@ import {
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClickableBox } from '@//:modules/content/PageLayout'
+import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 
 interface Props {
   selected: string[]
-  onSelect: () => void
-  queryArgs: () => void
+  onSelect: (character) => void
+  queryArgs: QueryArgsType
 }
 
 const SearchCharactersQueryGQL = graphql`
@@ -53,11 +50,7 @@ const SearchCharactersFragmentGQL = graphql`
           }
           slug
           thumbnail {
-            type
-            urls {
-              mimeType
-              url
-            }
+            ...ResourceItemFragment
           }
         }
       }
@@ -65,14 +58,23 @@ const SearchCharactersFragmentGQL = graphql`
   }
 `
 
-export default function SearchCategories ({ onSelect, selected, queryArgs }: Props): Node {
+export default function SearchCategories ({
+  onSelect,
+  selected,
+  queryArgs
+}: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SearchCharactersQuery>(
     SearchCharactersQueryGQL,
     queryArgs.variables,
     queryArgs.options
   )
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<SearchCharactersFragment$key>(
+  const {
+    data,
+    loadNext,
+    isLoadingNext,
+    hasNext
+  } = usePaginationFragment<SearchCharactersQuery, any>(
     SearchCharactersFragmentGQL,
     queryData
   )
@@ -81,7 +83,7 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
 
   const characters = removeNode(data.characters.edges)
 
-  const onChangeSelection = (id) => {
+  const onChangeSelection = (id): void => {
     const character = characters.filter((item) => item.id === id)[0]
     onSelect(character)
   }
@@ -109,8 +111,7 @@ export default function SearchCategories ({ onSelect, selected, queryArgs }: Pro
             >
               <SelectorTextOverlay label={item.name} description={item.series.title}>
                 <ResourceItem
-                  type={item.thumbnail.type}
-                  urls={item.thumbnail.urls}
+                  query={item.thumbnail}
                 />
               </SelectorTextOverlay>
             </Selector>

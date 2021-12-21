@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 670d3df5220b445b7ca73baeb8518618 */
+/* @relayHash 9aacafc9f212d148d1878eb09b2aa758 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -29,6 +29,19 @@ query SearchCharactersPaginationFragment(
   ...SearchCharactersFragment_3cTRis
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
 fragment SearchCharactersFragment_3cTRis on Query {
   characters(first: $first, after: $after, name: $name) {
     edges {
@@ -41,11 +54,7 @@ fragment SearchCharactersFragment_3cTRis on Query {
         }
         slug
         thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
+          ...ResourceItemFragment
         }
         __typename
       }
@@ -55,6 +64,13 @@ fragment SearchCharactersFragment_3cTRis on Query {
       endCursor
       hasNextPage
     }
+  }
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 */
@@ -208,14 +224,14 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "mimeType",
+                            "name": "url",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "url",
+                            "name": "mimeType",
                             "storageKey": null
                           }
                         ],
@@ -286,7 +302,7 @@ return {
     ]
   },
   "params": {
-    "id": "670d3df5220b445b7ca73baeb8518618",
+    "id": "9aacafc9f212d148d1878eb09b2aa758",
     "metadata": {},
     "name": "SearchCharactersPaginationFragment",
     "operationKind": "query",
@@ -294,5 +310,5 @@ return {
   }
 };
 })();
-(node as any).hash = '3624a4dcc9b2aabd139ade2b2ad7cc52';
+(node as any).hash = 'eae53434575ed72b1d71e6b699da0a0c';
 export default node;

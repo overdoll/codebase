@@ -17,17 +17,20 @@ interface Props {
   query: UpdatePostFlowFragment$key
 }
 
-// TODO change fragments to spread on post
-
 const UpdatePostFlowFragmentGQL = graphql`
-  fragment UpdatePostFlowFragment on Query {
+  fragment UpdatePostFlowFragment on Post {
     ...FlowStepsFragment
     ...FlowFooterFragment
     ...FlowHeaderFragment
   }
 `
 
-export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): JSX.Element {
+export default function UpdatePostFlow ({
+  uppy,
+  state,
+  dispatch,
+  query
+}: Props): JSX.Element {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
 
   return (

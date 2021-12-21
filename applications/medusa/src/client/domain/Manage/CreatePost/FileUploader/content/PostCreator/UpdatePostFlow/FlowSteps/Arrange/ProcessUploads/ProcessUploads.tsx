@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql'
-import type ProcessUploadsMutation from '@//:artifacts/ProcessUploadsMutation.graphql'
+import type { ProcessUploadsMutation } from '@//:artifacts/ProcessUploadsMutation.graphql'
 import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
@@ -56,7 +56,12 @@ const ProcessUploadsMutationGQL = graphql`
   }
 `
 
-export default function ProcessUploads ({ state, dispatch, uppy, query }: Props): Node {
+export default function ProcessUploads ({
+  state,
+  dispatch,
+  uppy,
+  query
+}: Props): Node {
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
   const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
@@ -65,18 +70,16 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
 
   const [hasProcessingError, setProcessingError] = useState(false)
 
-  const postContent = data?.content
-
   // Function for updating content with uploads + current content
-  const onUpdateContent = () => {
+  const onUpdateContent = (): void => {
     if (Object.keys(state.urls).length > 0) {
       setProcessingError(false)
       const uploadedIDs = Object.keys(state.urls)
       const uploadedURLs = Object.values(state.urls)
-      const currentURLs = postContent?.map((item) =>
-        item.urls[0].url) || []
+      const currentURLs = data?.content.map((item) =>
+        item.urls[0].url)
 
-      const combinedUpload = [...currentURLs, ...uploadedURLs]
+      const combinedUpload = [...currentURLs, ...uploadedURLs] as string[]
 
       updateContent({
         variables: {
@@ -85,7 +88,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
             content: combinedUpload
           }
         },
-        onCompleted (data) {
+        onCompleted () {
           uploadedIDs.forEach((item) => {
             dispatch({
               type: EVENTS.FILES,
@@ -103,7 +106,9 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
               remove: true
             })
             dispatch({
-              type: EVENTS.CONTENT, clear: true
+              type: EVENTS.CONTENT,
+              clear: true,
+              value: true
             })
           })
         },
@@ -123,7 +128,7 @@ export default function ProcessUploads ({ state, dispatch, uppy, query }: Props)
   }, [state.urls, state.files])
 
   // If processing error, show a message
-  const ErrorMessage = () => {
+  const ErrorMessage = (): JSX.Element => {
     return (
       <Alert status='warning'>
         <Flex w='100%' align='center' justify='space-between'>

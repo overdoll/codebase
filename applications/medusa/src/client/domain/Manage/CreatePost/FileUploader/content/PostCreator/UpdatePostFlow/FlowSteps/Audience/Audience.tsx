@@ -6,17 +6,11 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import {
-  RowItem,
-  RowWrap,
-  Selector,
-  SelectorTextOverlay,
-  useSingleSelector
-} from '../../../../../../../../../components/ContentSelection'
+import { useSingleSelector } from '../../../../../../../../../components/ContentSelection'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
+import RootAudiences from './RootAudiences/RootAudiences'
 
 interface Props {
   uppy: Uppy
@@ -26,39 +20,25 @@ interface Props {
 }
 
 const AudienceFragmentGQL = graphql`
-  fragment AudienceFragment on Query {
-    post (reference: $reference) {
-      audience {
-        id
-        title
-      }
-    }
-    audiences {
-      edges {
-        node {
-          id
-          title
-          thumbnail {
-            type
-            urls {
-              mimeType
-              url
-            }
-          }
-        }
-      }
+  fragment AudienceFragment on Post {
+    audience {
+      id
+      title
     }
   }
 `
 
-export default function Audience ({ uppy, state, dispatch, query }: Props): JSX.Element {
+export default function Audience ({
+  uppy,
+  state,
+  dispatch,
+  query
+}: Props): JSX.Element {
   const data = useFragment(AudienceFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
-  const audiences = data.audiences.edges
-
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.post?.audience?.id as string })
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.audience?.id as string })
 
   useEffect(() => {
     dispatch({
@@ -77,22 +57,7 @@ export default function Audience ({ uppy, state, dispatch, query }: Props): JSX.
           {t('create_post.flow.steps.audience.selector.description')}
         </PageSectionDescription>
       </PageSectionWrap>
-      <RowWrap>
-        {audiences.map((item, index) => (
-          <RowItem key={index}>
-            <Selector
-              onSelect={setCurrentSelection}
-              selected={(currentSelection != null) ? [currentSelection] : []}
-              id={item.node.id}
-            >
-              <SelectorTextOverlay label={item.node.title}>
-                <ResourceItem type={item?.node?.thumbnail?.type} urls={item?.node?.thumbnail?.urls} />
-              </SelectorTextOverlay>
-            </Selector>
-          </RowItem>
-        )
-        )}
-      </RowWrap>
+      <RootAudiences selected={currentSelection} onSelect={setCurrentSelection} />
       <Flex justify='center'>
         <RequiredPrompt>{t('create_post.flow.steps.audience.selector.required_prompt')}</RequiredPrompt>
       </Flex>

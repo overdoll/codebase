@@ -16,7 +16,7 @@ const useUpload = (state: State, dispatch: Dispatch): [Uppy] => {
 
   useEffect(() => {
     return () => {
-      if (state.step === STEPS.FINISH && uppy.current != null) {
+      if (state.step === STEPS.SUBMIT && uppy.current != null) {
         uppy.current?.reset()
       }
     }

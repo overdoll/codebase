@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useEffect } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -12,47 +8,50 @@ import ProcessUploads from './ProcessUploads/ProcessUploads'
 import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 
-type Props = {
-  uppy: Uppy,
-  state: State,
-  dispatch: Dispatch,
+interface Props {
+  uppy: Uppy
+  state: State
+  dispatch: Dispatch
   query: ArrangeFragment$key
-};
+}
 
 const ArrangeFragmentGQL = graphql`
-  fragment ArrangeFragment on Query {
-    post (reference: $reference) {
-      content {
-        id
-        urls {
-          url
-          mimeType
-        }
+  fragment ArrangeFragment on Post {
+    content {
+      id
+      urls {
+        url
+        mimeType
       }
-      ...ArrangeUploadsFragment
-      ...ProcessUploadsFragment
     }
+    ...ArrangeUploadsFragment
+    ...ProcessUploadsFragment
   }
 `
 
-export default function Arrange ({ uppy, dispatch, state, query }: Props): Node {
+export default function Arrange ({
+  uppy,
+  dispatch,
+  state,
+  query
+}: Props): JSX.Element {
   const data = useFragment(ArrangeFragmentGQL, query)
 
   const [t] = useTranslation('manage')
 
-  const contentData = state.content || data.post.content
+  const contentData = state.content ?? data?.content
 
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
 
   useEffect(() => {
-    if (state.files.length < 1 && state.urls.length < 1) {
+    if (state.files.length < 1 && Object.keys(state.urls).length < 1) {
       uppy.cancelAll()
-      data.post.content.forEach(file => {
+      data.content.forEach(async file => {
         const resource = file.urls[0]
-        const tempUrl = `https://overdoll.test/api/upload/${resource.url}`
-        fetch(tempUrl)
-          .then((response) => response.blob()) // returns a Blob
+        const tempUrl = `https://overdoll.test/api/upload/${resource.url as string}`
+        await fetch(tempUrl)
+          .then(async (response) => await response.blob()) // returns a Blob
           .then((blob) => {
             const uppyFileId = uppy.addFile({
               id: file.id,
@@ -71,7 +70,7 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
           })
       })
     }
-  }, [data.post.content])
+  }, [data.content])
 
   return (
     <>
@@ -83,8 +82,8 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
           {t('create_post.flow.steps.arrange.uploader.description')}
         </PageSectionDescription>
       </PageSectionWrap>
-      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
-      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data.post} />
+      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
+      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
     </>
   )
 }

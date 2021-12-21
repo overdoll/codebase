@@ -23,7 +23,7 @@ import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.gr
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import useCheckRequirements from './useCheckRequirements'
-import progressScore from './progressScore'
+import progressScore from './progressScore/index'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
 import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
@@ -36,36 +36,46 @@ interface Props {
 }
 
 const FlowHeaderFragmentGQL = graphql`
-  fragment FlowHeaderFragment on Query {
-    post (reference: $reference) {
-      id
-      ...useCheckRequirementsFragment
-    }
+  fragment FlowHeaderFragment on Post {
+    ...useCheckRequirementsFragment
   }
 `
 
-export default function FlowHeader ({ state, uppy, dispatch, query }: Props): JSX.Element {
+export default function FlowHeader ({
+  state,
+  uppy,
+  dispatch,
+  query
+}: Props): JSX.Element {
   const data = useFragment(FlowHeaderFragmentGQL, query)
 
-  const cancelButtonRef = useRef()
+  const cancelButtonRef = useRef(null)
 
   const [t] = useTranslation('manage')
 
-  const { isOpen, onOpen, onClose } = useHistoryDisclosure()
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useHistoryDisclosure()
 
   const [, setPostReference] = useQueryParam<string>('id')
 
-  const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data.post })
+  const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data })
 
   const score = progressScore([content, audience, brand, categories, characters])
 
-  const onCleanup = () => {
+  const onCleanup = (): void => {
     uppy.reset()
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    dispatch({
+      type: EVENTS.CLEANUP,
+      value: INITIAL_STATE
+    })
+    // @ts-expect-error
     setPostReference(undefined)
   }
 
-  const findText = () => {
+  const findText = (): string[] => {
     switch (state.step) {
       case STEPS.ARRANGE:
         return [t('create_post.flow.steps.arrange.header'), t('create_post.flow.steps.arrange.subheader')]
@@ -118,7 +128,6 @@ export default function FlowHeader ({ state, uppy, dispatch, query }: Props): JS
           <AlertDialogBody>
             {t('create_post.flow.steps.header.modal.body.start')}
             <ExternalLink
-              mx={2}
               path='/manage/my-posts'
             >{t('create_post.flow.steps.header.modal.body.middle')}
             </ExternalLink>
