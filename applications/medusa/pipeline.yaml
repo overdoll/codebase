@@ -3,7 +3,7 @@ steps:
     commands:
       # compile localization files
       - bazel build //applications/medusa:packages
-      - ../../node_modules/.bin/lingui compile
+      - npm run locale:compile
     targets:
       - //applications/medusa:bundle
 
@@ -22,7 +22,7 @@ steps:
   e2e_test:
     commands:
       # compile localization files
-      - lingui compile
+      - npm run locale:compile
     coverage:
       - name: medusa.e2e
         paths:

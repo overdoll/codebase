@@ -166,17 +166,10 @@ def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
 def execute_build_commands_custom(configs):
     commands = configs.get("build", {}).get("commands", [])
 
-    cwd = os.getcwd()
-
-    # need to be in the correct directory
-    os.chdir('./applications/medusa')
-
     terminal_print.print_expanded_group(":lua: Executing custom commands")
 
     for i in commands:
         exec.execute_command(i.split())
-
-    os.chdir(cwd)
 
 
 def execute_custom_e2e_commands_custom(configs):
@@ -184,15 +177,8 @@ def execute_custom_e2e_commands_custom(configs):
 
     terminal_print.print_expanded_group(":lua: Executing custom commands")
 
-    cwd = os.getcwd()
-
-    # need to be in the correct directory
-    os.chdir('./applications/medusa')
-
     for i in commands:
         exec.execute_command(i.split())
-
-    os.chdir(cwd)
 
 
 def execute_build_commands(configs):
