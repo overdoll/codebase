@@ -21,6 +21,7 @@ _SRC = glob(
 ) + [
     "razzle.config.js",
     "package.json",
+    "locales.config.js",
 ]
 
 _RUNTIME_DEPS = [
@@ -113,6 +114,12 @@ _RUNTIME_DEPS = [
     "@npm//react-cookie",
     "@npm//universal-cookie",
     "@npm//@babel/preset-typescript",
+    "@npm//babel-plugin-macros",
+    "@npm//@lingui/babel-preset-react",
+    "@npm//@lingui/macro",
+    "@npm//path-to-regexp",
+    "@npm//history",
+    "@npm//@lingui/react"
 ]
 
 TEST_DEPS = [
