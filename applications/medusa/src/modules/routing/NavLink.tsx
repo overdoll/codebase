@@ -51,14 +51,13 @@ const NavLink = ({
 
   const { pathname: path } = toLocation
 
-  const escapedPath =
-    (path !== '') && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
+  const escapedPath = path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
 
   const isActiveBasePath = getBasePath(location.pathname) === getBasePath(path)
 
   const match = escapedPath != null
     ? matchPath(currentLocation.pathname, {
-      path: escapedPath as string,
+      path: escapedPath,
       exact,
       sensitive,
       strict
