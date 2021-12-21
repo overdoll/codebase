@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 
 interface Props {
@@ -9,21 +9,22 @@ interface Props {
 
 export default function PageContents ({ children }: Props): JSX.Element {
   return (
-    <Flex direction={{
-      base: 'column',
-      md: 'row'
-    }}
+    <Box
+      left={0}
+      right={0}
+      top={54}
+      bottom={0}
+      position='absolute'
+      overflowY='auto'
+      overflowX='hidden'
     >
-      <Box
-        className='page-contents'
-        w='100%'
-      >
+      <Box>
         <ErrorBoundary fallback='error'>
           <Suspense fallback={<CenteredSpinner />}>
             {children}
           </Suspense>
         </ErrorBoundary>
       </Box>
-    </Flex>
+    </Box>
   )
 }

@@ -4,7 +4,11 @@ import Joi from 'joi'
 export default function useUsernameFormSchema (): Joi.Schema {
   const [t] = useTranslation('auth')
 
-  return Joi
+  const getValidationError = (error) => {
+    return t(`register.form.validation.username.${error}`)
+  }
+
+  const schema = Joi
     .string()
     .alphanum()
     .min(3)
@@ -16,4 +20,6 @@ export default function useUsernameFormSchema (): Joi.Schema {
       'string.max': t('register.form.validation.username.max'),
       'string.alphanum': t('register.form.validation.username.alphanum')
     })
+
+  return [schema, getValidationError]
 }

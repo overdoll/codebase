@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4b19abe3fa61d51d25e010c08659878f */
+/* @relayHash 78b2d20c16aa986058690e040507bc1a */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -77,6 +77,13 @@ fragment AuditLogsFragment on Account {
   id
 }
 
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
 fragment PostAudienceFragment on Post {
   audience {
     title
@@ -105,10 +112,8 @@ fragment PostCharactersFragment on Post {
 fragment PostGalleryContentFragment on Post {
   content {
     type
-    urls {
-      url
-      mimeType
-    }
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
   }
 }
 
@@ -117,6 +122,13 @@ fragment PostPreviewFragment on Post {
   ...PostCharactersFragment
   ...PostCategoriesFragment
   ...PostGalleryContentFragment
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
 }
 */
 
@@ -458,7 +470,7 @@ return {
     ]
   },
   "params": {
-    "id": "4b19abe3fa61d51d25e010c08659878f",
+    "id": "78b2d20c16aa986058690e040507bc1a",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

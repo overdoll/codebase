@@ -23,10 +23,8 @@ const PostGalleryContentFragmentGQL = graphql`
   fragment PostGalleryContentFragment on Post {
     content {
       type
-      urls {
-        url
-        mimeType
-      }
+      ...ImageSnippetFragment
+      ...VideoSnippetFragment
     }
   }
 `
@@ -83,14 +81,14 @@ export default function PostGalleryContent ({
           <SwiperSlide key={index}>
             <Flex bg='gray.800' justify='center' align='center' h={500}>
               {item.type === 'IMAGE' &&
-                <ImageSnippet h='100%' urls={item.urls} />}
+                <ImageSnippet h='100%' query={item} />}
               {item.type === 'VIDEO' &&
                 <VideoSnippet
                   autoPlay={index === currentSlide}
                   onVolumeChange={(e) =>
                     onVolumeChange(e)}
                   controls
-                  urls={item.urls}
+                  query={item}
                 />}
             </Flex>
           </SwiperSlide>)}

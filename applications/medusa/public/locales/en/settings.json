@@ -5,24 +5,41 @@
     "username": {
       "title": "Username",
       "current": {
-        "title": "Current Username",
+        "badge": "Current",
         "change": "Change Username"
       },
       "previous": {
         "title": "{{count}} alias",
         "title_plural": "{{count}} aliases",
+        "alias": "Alias",
         "tooltip": {
-          "title": "Your old usernames are replaced",
-          "hint": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
+          "title": "You can use or swap to any one of the aliases below. You may only have a maximum of 5 aliases."
+        },
+        "swap": {
+          "button": "Swap To",
+          "query": {
+            "success": "Successfully changed current username to {{username}}",
+            "error": "There was an error swapping to {{username}}"
+          }
+        },
+        "delete": {
+          "button": "Remove Alias",
+          "query": {
+            "success": "You can no longer use the alias {{username}}",
+            "error": "There was an error removing the alias {{username}}"
+          }
         }
       },
       "modal": {
         "header": "Enter a new username",
         "input_title": "Username",
-        "submit": "Submit",
+        "submit": "Change",
+        "warning": "You have added the maximum number of usernames. You have to remove at least one alias before you can change your username to a new one.",
         "query": {
           "success": "Username changed successfully",
-          "error": "There was an error changing your username"
+          "error": {
+            "unknown": "There was an error changing your username"
+          }
         },
         "form": {
           "validation": {
@@ -75,11 +92,13 @@
         "title": "Add an email",
         "button": "Add",
         "placeholder": "Enter an email address",
+        "alert": "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another.",
         "form": {
           "validation": {
             "email": {
               "empty": "Please enter an email address",
-              "pattern": "Please enter a valid email address"
+              "pattern": "Please enter a valid email address",
+              "INVALID_EMAIL": "This email is invalid. Try a different one?"
             }
           }
         },
@@ -88,7 +107,8 @@
           "error": "There was an error adding the email"
         }
       },
-      "load": "Load More"
+      "load": "Load More",
+      "open": "Add Email"
     }
   },
   "moderation": {
@@ -147,12 +167,17 @@
     "sessions": {
       "title": "Sessions",
       "description": "Here is a list of devices that have logged into your account. You can click on one to view the details.",
-      "accessed": "Last login on {{date}}",
+      "accessed": "Last seen on {{date}}",
       "show": "Show IP",
       "current": "Your Current Session",
       "load": "Load More",
-      "revoke": "Revoke",
+      "revoke": "Revoke Session",
       "on": "{{browser}} on {{device}}",
+      "panel": {
+        "ip": "IP Address",
+        "location": "Last Location",
+        "login": "Signed In"
+      },
       "query": {
         "success": "Session revoked successfully",
         "error": "There was an error revoking the session"

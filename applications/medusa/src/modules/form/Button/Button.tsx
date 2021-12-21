@@ -1,10 +1,11 @@
-import { forwardRef, ReactNode, useEffect, useState } from 'react'
+import { ForwardedRef, forwardRef, ReactNode, useEffect, useState } from 'react'
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   loading?: boolean
   children?: ReactNode
   disabled?: boolean
+  forwardRef?: ForwardedRef<any>
 }
 
 const Button = forwardRef<any, Props>(({
@@ -15,7 +16,7 @@ const Button = forwardRef<any, Props>(({
   isDisabled,
   isLoading,
   ...rest
-}: Props, ref) => {
+}: Props, forwardRef) => {
   const [disableOverride, setDisableOverride] = useState(true)
 
   // We need this hook here to enable the buttons after SSR hydration occurs
@@ -30,7 +31,7 @@ const Button = forwardRef<any, Props>(({
 
   return (
     <ChakraButton
-      ref={ref}
+      ref={forwardRef}
       type={type}
       isDisabled={fullDisable}
       isLoading={fullLoading}

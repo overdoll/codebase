@@ -21,6 +21,8 @@ import heading from './heading'
 import avatar from './avatar'
 import tabs from './tabs'
 import popover from './popover'
+import modal from './modal'
+import accordion from './accordion'
 
 export default {
   Menu: menu,
@@ -45,5 +47,7 @@ export default {
   Heading: heading,
   Avatar: avatar,
   Tabs: tabs,
-  Popover: popover
+  Popover: popover,
+  Modal: modal,
+  Accordion: accordion
 }

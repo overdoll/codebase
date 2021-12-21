@@ -1,19 +1,32 @@
-import { Box, ImageProps, Skeleton } from '@chakra-ui/react'
-import { ResourceUrl } from '@//:types/upload'
+import { Box, HTMLChakraProps, Skeleton } from '@chakra-ui/react'
 import SuspenseImage from '../../../../operations/SuspenseImage'
+import { graphql } from 'react-relay/hooks'
+import { useFragment } from 'react-relay'
+import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 
-interface Props extends ImageProps {
-  urls: readonly ResourceUrl[]
+interface Props extends HTMLChakraProps<any> {
+  query: ImageSnippetFragment$key
 }
 
+const Fragment = graphql`
+  fragment ImageSnippetFragment on Resource {
+    urls {
+      url
+      mimeType
+    }
+  }
+`
+
 export default function ImageSnippet ({
-  urls,
+  query,
   ...rest
 }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   return (
     <Box>
       <picture>
-        {urls.map((item, index) =>
+        {data.urls.map((item, index) =>
           (
             <source
               key={index}
@@ -28,9 +41,9 @@ export default function ImageSnippet ({
           h='inherit'
           objectFit='cover'
           userSelect='none'
-          src={urls[urls.length - 1].url as string}
-          {...rest}
+          src={data.urls[data.urls.length - 1].url as string}
           fallback={<Skeleton w='100%' h='100%' />}
+          {...rest}
         />
       </picture>
     </Box>

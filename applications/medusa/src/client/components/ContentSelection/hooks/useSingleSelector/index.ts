@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 interface Props {
-  initialSelection: string
+  initialSelection: string | null
 }
 
 export default function useSingleSelector (props: Props): [string | null, (id: string) => void] {
