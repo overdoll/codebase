@@ -19,7 +19,7 @@ msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:23
 msgid "Manage Posts"
-msgstr "asd"
+msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:17
 msgid "Post Management"

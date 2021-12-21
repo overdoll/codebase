@@ -196,6 +196,7 @@ async function createServerRouter (
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
+
 function createClientRouter (
   routes: Route[],
   history: History,
@@ -252,11 +253,18 @@ function createClientRouter (
     preloadCode (pathname) {
       // preload just the code for a route, without storing the result
       const matches: RouteMatch[] = matchRoutes(routes as any, pathname) as unknown as RouteMatch[]
+
       matches.forEach(({ route }) => {
-        void route.component.load(environment)
+        if (route.component.get() == null) {
+          void route.component.load(environment)
+        }
 
         if (route.dependencies != null) {
           route.dependencies.forEach(dep => {
+            if (dep.resource.get() != null) {
+              return
+            }
+
             void dep.resource.load(environment).then(data => dep.then({
               data,
               environment,

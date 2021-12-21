@@ -78,7 +78,7 @@ const loadMessages = ({
   data,
   environment,
   i18n
-}): void => i18n.load(getLanguageFromEnvironment(environment), data.messages)
+}): void => i18n._load(getLanguageFromEnvironment(environment), data.messages)
 
 const routes: Route[] = [
   {
