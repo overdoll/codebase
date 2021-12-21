@@ -25,7 +25,7 @@ export default function MainMenu (): JSX.Element {
       <Can I='create' a='Post'>
         <HorizontalNavigation.Button
           exact
-          to='/configure/create_post'
+          to='/configure/create-post'
           icon={ContentBrushPen}
           label={t('nav.create_post')}
         />

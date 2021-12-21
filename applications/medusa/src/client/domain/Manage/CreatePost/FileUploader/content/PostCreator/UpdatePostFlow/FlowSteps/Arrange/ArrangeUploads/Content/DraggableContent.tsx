@@ -1,23 +1,38 @@
-import type { Content as ContentType } from '../../../../../../../../../../../../types/upload'
 import { CloseButton, Flex, Heading } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { DraggableContentFragment$key } from '@//:artifacts/DraggableContentFragment.graphql'
 
 interface Props {
-  content: ContentType
   onRemove: (string) => void
   index: number
   dragDisabled: boolean
+  query: DraggableContentFragment$key
 }
 
-export default function Content ({
-  content,
+const Fragment = graphql`
+  fragment DraggableContentFragment on Resource {
+    id
+    type
+    urls {
+      url
+      mimeType
+    }
+    ...ResourceItemFragment
+  }
+`
+
+export default function DraggableContent ({
   onRemove,
   index,
-  dragDisabled
+  dragDisabled,
+  query
 }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   return (
-    <Draggable isDragDisabled={dragDisabled} draggableId={content.id} key={content.id} index={index}>
+    <Draggable isDragDisabled={dragDisabled} draggableId={data.id} key={data.id} index={index}>
       {(provided, snapshot) => (
         <Flex
           h={100}
@@ -35,11 +50,11 @@ export default function Content ({
             </Heading>
           </Flex>
           <Flex align='center' justify='center' w='38%'>
-            <ResourceItem type={content.type} urls={content.urls} />
+            <ResourceItem query={data} />
           </Flex>
           <Flex w='38%' />
           <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>
-            <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(content.id)} />
+            <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(data.id)} />
           </Flex>
         </Flex>
       )}

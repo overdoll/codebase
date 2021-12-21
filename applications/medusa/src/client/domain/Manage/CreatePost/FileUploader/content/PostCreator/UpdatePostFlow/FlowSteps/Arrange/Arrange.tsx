@@ -49,7 +49,7 @@ export default function Arrange ({
       uppy.cancelAll()
       data.content.forEach(async file => {
         const resource = file.urls[0]
-        const tempUrl = `https://overdoll.test/api/upload/${resource.url as string}`
+        const tempUrl = resource.url as string
         await fetch(tempUrl)
           .then(async (response) => await response.blob()) // returns a Blob
           .then((blob) => {

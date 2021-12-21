@@ -25,9 +25,9 @@ type Account implements Node {
 
   """
   The language of the account.
-  
+
   Note: this is the language that will be used to determine which emails should be sent where.
-  
+
   You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
   consistent experience. Use "UpdateLanguage" when the languages are mismatched.
   """
@@ -35,7 +35,7 @@ type Account implements Node {
 
   """
   Sessions linked to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   sessions(
@@ -79,7 +79,7 @@ type Account implements Node {
 
   """
   Emails for account (multiple emails per account)
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   emails(
@@ -100,14 +100,14 @@ type Account implements Node {
 
   """
   Multi factor account settings
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   multiFactorSettings: AccountMultiFactorSettings!
 
   """
   MFA Recovery codes belonging to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
@@ -190,7 +190,7 @@ type Account implements Node {
 
   """
   Post Audit Logs linked to this account
-  
+
   Viewable by either the currently logged-in account or staff+
   """
   moderatorPostAuditLogs(
@@ -214,7 +214,7 @@ type Account implements Node {
 
   """
   Infraction history for this account
-  
+
   Viewable by the currently authenticated account or staff+
   """
   infractions(
@@ -235,7 +235,7 @@ type Account implements Node {
 
   """
   Moderator settings and status for this account
-  
+
   Viewable by the currently authenticated account or staff+
   """
   moderatorSettings: ModeratorSettings!
@@ -266,7 +266,7 @@ type AccountEmail implements Node {
 
   """
   The account that this email belongs to
-  
+
   May be null because unconfirmed emails are not yet actually attached to the account
   """
   account: Account
@@ -1106,7 +1106,7 @@ type Mutation {
 
   """
   Update the language of the account.
-  
+
   Note: that this is only a value, and in order to see anything in the browser,
   you should use the "UpdateLanguage" mutation.
   """
@@ -1128,14 +1128,14 @@ type Mutation {
 
   """
   Update the account username
-  
+
   Will retain the old username
   """
   updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
 
   """
   Update the account email status to primary
-  
+
   Cannot update if the email is not confirmed
   """
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
@@ -1152,7 +1152,7 @@ type Mutation {
 
   """
   Enroll into TOTP.
-  
+
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
@@ -1160,9 +1160,9 @@ type Mutation {
 
   """
   Disable account multi factor
-  
+
   Will delete all multi factor settings (if TOTP is set up, etc...)
-  
+
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload
@@ -1184,7 +1184,7 @@ type Mutation {
 
   """
   Grant authentication token
-  
+
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
   """
@@ -1192,7 +1192,7 @@ type Mutation {
 
   """
   Revoke authentication token
-  
+
   Creating accounts and completing authentication flows will not be possible once it's revoked
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
@@ -1202,7 +1202,7 @@ type Mutation {
 
   """
   Grant account access with authentication token
-  
+
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
   verified first
   """
@@ -1210,14 +1210,14 @@ type Mutation {
 
   """
   Grant account access using an authentication token and a multi factor option
-  
+
   Set "code" when authenticating with a TOTP code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
   """
   Grant account access using an authentication token and a multi factor option
-  
+
   Set "recoveryCode" when authenticating with a recovery code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
@@ -1264,7 +1264,7 @@ type Mutation {
 
   """
   Revert an audit log, in case it was done incorrectly
-  
+
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
   revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
@@ -1317,7 +1317,7 @@ type Post implements Node {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """Content belonging to this post"""
+  """DraggableContent belonging to this post"""
   content: [Resource!]!
 
   """The date and time of when this post was created"""
@@ -1590,16 +1590,16 @@ type Query {
 
   """
   The current language that is set
-  
+
   Note: this is only temporary, per-browser language
-  
+
   For a permanent language on an account level, see "Language" as part of viewer
   """
   language: Language!
 
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
-  
+
   Note: you can only view the authentication token if you're the originating
   device or you have entered a valid secret (not from same device)
   """
@@ -1754,7 +1754,7 @@ type Query {
 
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
-    
+
     Only one slug is allowed for now since you don't want inaccurate results
     """
     seriesSlug: String
@@ -1821,7 +1821,7 @@ type Query {
 
   """
   Get rejection reasons that can be used for pending posts
-  
+
   Only viewable by moderators+
   """
   postRejectionReasons(
@@ -1842,7 +1842,7 @@ type Query {
 
   """
   Get rejection reasons that can be used for pending posts
-  
+
   Viewable by everyone who is authenticated
   """
   postReportReasons(

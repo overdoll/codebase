@@ -1,4 +1,5 @@
 import { UppyFile } from '@uppy/core'
+import type { ArrangeUploadsFragment } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 
 export interface Urls {
   [item: string]: {
@@ -129,7 +130,7 @@ export interface State {
   files: UppyFile[]
   urls: Urls
   step: Step
-  content: Content[]
+  content: Content[] | null | ArrangeUploadsFragment['content']
   progress: Progress
   brand: string | null
   audience: string | null

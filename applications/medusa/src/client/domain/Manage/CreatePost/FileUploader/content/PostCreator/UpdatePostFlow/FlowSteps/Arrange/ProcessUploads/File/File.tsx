@@ -21,7 +21,8 @@ export default function File ({
   disabled
 }: Props): JSX.Element {
   const progress = state.progress[file.id]
-  const progressValue: number = ((progress[0] / progress[1]) * 100)
+  const progressValue = progress != null &&
+    ((progress[0] / progress[1]) * 100)
   const url = state.urls[file.id]
 
   const onRemoveFile = (id: string): void => {
@@ -64,7 +65,7 @@ export default function File ({
       <Progress
         colorScheme='primary'
         w='100%'
-        value={progressValue ?? 0}
+        value={progressValue !== false ? progressValue : undefined}
         size='md'
         isIndeterminate={progress != null}
       />

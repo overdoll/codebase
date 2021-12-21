@@ -6,7 +6,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import { EVENTS } from '../../../../../../constants/constants'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import Content from './Content/Content'
+import DraggableContent from './Content/DraggableContent'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
@@ -19,12 +19,11 @@ interface Props {
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
     content {
-      id
-      type
       urls {
         url
         mimeType
       }
+      ...DraggableContentFragment
     }
   }
 `
@@ -40,6 +39,14 @@ const reorder = (
 
   return result
 }
+
+// TODO redo dragging system
+// on rearrange, add URLS to content in the rearranged order
+// content is now string[]
+// need some sort of state here to keep the arrange order.
+// or the state is mounted automatically and then a filter lookup is done
+// to find the correct fragment
+// and then the current URLS are compared to the old URLs
 
 export default function ArrangeUploads ({
   state,
@@ -113,11 +120,11 @@ export default function ArrangeUploads ({
             ref={provided.innerRef}
           >
             {displayData.map((item, index) => (
-              <Content
+              <DraggableContent
                 dragDisabled={dragDisabled}
                 key={index}
-                content={item}
                 index={index}
+                query={item}
                 onRemove={onRemoveFile}
               />
             ))}
