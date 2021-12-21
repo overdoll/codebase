@@ -1,13 +1,15 @@
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
-import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
+import type {
+  MultiFactorSettingsQuery as MultiFactorSettingsQueryType
+} from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<MultiFactorSettingsQueryType>
@@ -19,13 +21,19 @@ export default function RootMultiFactorSettings (props: Props): JSX.Element | nu
     props.query
   )
 
-  const [t] = useTranslation('settings')
-
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>{t('security.multi_factor.title')}</PageSectionTitle>
-        <PageSectionDescription>{t('security.multi_factor.description')}</PageSectionDescription>
+        <PageSectionTitle>
+          <Trans>
+            Two-factor Authentication
+          </Trans>
+        </PageSectionTitle>
+        <PageSectionDescription>
+          <Trans>
+            Setting up two-factor authentication adds an extra layer of security in case your account is compromised.
+          </Trans>
+        </PageSectionDescription>
       </PageSectionWrap>
       <QueryErrorBoundary loadQuery={() => loadQuery({})}>
         <Suspense fallback={<SkeletonStack />}>

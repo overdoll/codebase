@@ -1,12 +1,12 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { Flex, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
 import Button from '@//:modules/form/Button/Button'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { AuditLogsQuery } from '@//:artifacts/AuditLogsQuery.graphql'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import { AuditLogsPaginationQuery } from '@//:artifacts/AuditLogsPaginationQuery.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<AuditLogsQuery>
@@ -54,8 +54,6 @@ export default function AuditLogs (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const [t] = useTranslation('moderation')
-
   const auditLogs = data?.moderatorPostAuditLogs.edges
 
   return (
@@ -76,11 +74,16 @@ export default function AuditLogs (props: Props): JSX.Element {
               isLoading={isLoadingNext}
               color='gray.200'
               variant='ghost'
-            >{t('history.table.load')}
+            >
+              <Trans>
+                Load More
+              </Trans>
             </Button>)
           : (
             <Text fontSize='sm' color='gray.200'>
-              {t('history.table.empty')}
+              <Trans>
+                Only the last 7 days of logs are available
+              </Trans>
             </Text>)}
       </Flex>
     </>

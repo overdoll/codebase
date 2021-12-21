@@ -1,5 +1,4 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -9,6 +8,8 @@ import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -44,11 +45,11 @@ export default function Join ({
 
   const data = useFragment(JoinFragment, queryRef)
 
-  const [t] = useTranslation('auth')
-
   const notify = useToast()
 
   const [cookies, setCookie] = useCookies<string>(['token'])
+
+  const { i18n } = useLingui()
 
   const onSubmit = ({ email }): void => {
     commit({
@@ -92,10 +93,9 @@ export default function Join ({
         })
       },
       onError (data) {
-        console.log(data)
         notify({
           status: 'error',
-          title: t('authenticate.error.join'),
+          title: t`There was an error with joining`,
           isClosable: true
         })
       }
@@ -122,7 +122,11 @@ export default function Join ({
             status='error'
           >
             <AlertIcon />
-            <AlertDescription>{t('expired')}</AlertDescription>
+            <AlertDescription>
+              <Trans>
+                The login code has previously expired or is no longer valid. Try again?
+              </Trans>
+            </AlertDescription>
             <CloseButton
               position='absolute'
               right={2}

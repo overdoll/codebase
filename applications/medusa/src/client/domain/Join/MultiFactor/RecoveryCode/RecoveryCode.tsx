@@ -4,12 +4,13 @@ import Button from '@//:modules/form/Button/Button'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../support'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql'
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
+import { useLingui } from '@lingui/react'
+import { t, Trans } from '@lingui/macro'
 
 interface CodeValues {
   code: string
@@ -43,7 +44,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
     RecoveryCodeMutationGQL
   )
 
-  const [t] = useTranslation('auth')
+  const { i18n } = useLingui()
 
   const schema = Joi.object({
     code: Joi
@@ -52,9 +53,9 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       .length(8)
       .required()
       .messages({
-        'string.empty': t('multi_factor.recovery.form.validation.code.empty'),
-        'string.length': t('multi_factor.recovery.form.validation.code.length'),
-        'string.alphanum': t('multi_factor.recovery.form.validation.code.alphanum')
+        'string.empty': i18n._(t`Please enter a recovery code`),
+        'string.length': i18n._(t`A recovery code must be 8 characters long`),
+        'string.alphanum': i18n._(t`A recovery code can only contain numbers and letters`)
       })
   })
 
@@ -96,7 +97,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         notify({
           status: 'success',
           isClosable: true,
-          title: t('multi_factor.recovery.form.query.success')
+          title: t`A recovery code was successfully used up to log you in`
         })
         history.push('/profile')
       },
@@ -106,10 +107,9 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         prepareViewer(store, payload)
       },
       onError (data) {
-        console.log(data)
         notify({
           status: 'error',
-          title: t('multi_factor.recovery.form.query.error'),
+          title: t`There was an error submitting a recovery code`,
           isClosable: true
         })
       }
@@ -127,13 +127,17 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         <FormControl
           isInvalid={errors.code != null}
         >
-          <FormLabel>{t('multi_factor.recovery.form.header')}</FormLabel>
+          <FormLabel>
+            <Trans>
+              Enter a recovery code
+            </Trans>
+          </FormLabel>
           <Flex justify='center'>
             <StyledInput
               register={register('code')}
               success={success}
               error={errors.code != null}
-              placeholder={t('multi_factor.recovery.form.placeholder')}
+              placeholder={i18n._(t`An 8-character recovery code`)}
               errorMessage={errors.code?.message}
             />
             <Button
@@ -145,7 +149,9 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
               isLoading={isSubmittingCode}
               ml={2}
             >
-              {t('multi_factor.recovery.form.submit')}
+              <Trans>
+                Submit
+              </Trans>
             </Button>
           </Flex>
         </FormControl>

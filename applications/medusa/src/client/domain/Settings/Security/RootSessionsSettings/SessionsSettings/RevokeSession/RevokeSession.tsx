@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { DeleteBin } from '@//:assets/icons/interface'
 import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   connectionID: string
@@ -29,8 +29,6 @@ export default function RevokeSession ({
   connectionID,
   session
 }: Props): JSX.Element {
-  const [t] = useTranslation('settings')
-
   const data = useFragment(SessionGQL, session)
 
   const [RevokeSession, isRevokingSession] = useMutation<RevokeSessionMutation>(
@@ -50,14 +48,14 @@ export default function RevokeSession ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t('security.sessions.query.success'),
+          title: t`Session revoked successfully`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('security.sessions.query.error'),
+          title: t`There was an error revoking the session`,
           isClosable: true
         })
       }
@@ -71,7 +69,11 @@ export default function RevokeSession ({
       onClick={onRevokeSession}
     >
       <Icon pointerEvents='none' icon={DeleteBin} fill='orange.300' w={4} h={4} mr={2} />
-      <Text pointerEvents='none' color='orange.300'>{t('security.sessions.revoke')}</Text>
+      <Text pointerEvents='none' color='orange.300'>
+        <Trans>
+          Revoke
+        </Trans>
+      </Text>
     </MenuItem>
   )
 }

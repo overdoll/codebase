@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import {
   Alert,
@@ -18,6 +17,8 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import type { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface NoteValues {
   note: string
@@ -54,9 +55,9 @@ const schema = Joi.object({
 })
 
 export default function RejectionReasons (props: Props): JSX.Element {
-  const [t] = useTranslation('moderation')
-
   const data = useFragment(InfractionsGQL, props.infractions)
+
+  const { i18n } = useLingui()
 
   const [infraction, setInfraction] = useState<boolean>(false)
 
@@ -79,39 +80,49 @@ export default function RejectionReasons (props: Props): JSX.Element {
       <Stack spacing={3}>
         <FormControl isInvalid={errors.rejectionId != null}>
           <FormLabel>
-            {t('queue.post.actions.reject.modal.form.dropdown.label')}
+            <Trans>
+              Reason
+            </Trans>
           </FormLabel>
           <Select
             {...register('rejectionId')}
             onChange={(e) => findInfraction(e.target.value)}
-            placeholder={t('queue.post.actions.reject.modal.form.dropdown.placeholder')}
+            placeholder={i18n._(t`Select the rejection reason`)}
           >
             {data.postRejectionReasons.edges.map((item, index) =>
               <option key={index} value={item.node.id}>{item.node.reason}</option>
             )}
           </Select>
           <FormErrorMessage>
-            {(errors.rejectionId != null) && errors.rejectionId.type === 'string.empty' && t('queue.post.actions.reject.modal.form.validation.rejectionId.empty')}
+            {(errors.rejectionId != null) && errors.rejectionId.type === 'string.empty' &&
+              <Trans>Please select a rejection option</Trans>}
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={errors.note != null}>
           <FormLabel>
-            {t('queue.post.actions.reject.modal.form.textarea.label')}
+            <Trans>
+              Note
+            </Trans>
           </FormLabel>
           <Textarea
             resize='none'
             {...register('note')}
-            placeholder={t('queue.post.actions.reject.modal.form.textarea.placeholder')}
+            placeholder={i18n._(t`Add a note describing the reason in detail...`)}
           />
           <FormErrorMessage>
-            {(errors.note != null) && (errors.note.type === 'string.empty' || errors.note.type === 'string.min') && t('queue.post.actions.reject.modal.form.validation.note.empty')}
-            {(errors.note != null) && errors.note.type === 'string.max' && t('queue.post.actions.reject.modal.form.validation.note.max')}
+            {(errors.note != null) && (errors.note.type === 'string.empty' || errors.note.type === 'string.min') &&
+              <Trans>The note cannot be empty</Trans>}
+            {(errors.note != null) && errors.note.type === 'string.max' &&
+              <Trans>The note cannot exceed 255 characters</Trans>}
           </FormErrorMessage>
         </FormControl>
         {infraction != null &&
           <Alert borderRadius={5} mt={1} mb={1} status='warning'>
             <AlertIcon mt={1} mb={3} />
-            <AlertDescription>{t('queue.post.actions.reject.modal.infraction')}
+            <AlertDescription>
+              <Trans>
+                This rejection reason is an infraction. The poster's account will be temporarily suspended.
+              </Trans>
             </AlertDescription>
           </Alert>}
         <Flex justify='flex-end'>
@@ -121,7 +132,10 @@ export default function RejectionReasons (props: Props): JSX.Element {
             size='md'
             colorScheme='orange'
             type='submit'
-          >{t('queue.post.actions.reject.modal.form.submit')}
+          >
+            <Trans>
+              Reject Post
+            </Trans>
           </Button>
         </Flex>
       </Stack>

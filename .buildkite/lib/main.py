@@ -7,11 +7,13 @@ import glob
 import os
 import random
 import shutil
-import sys
-import tempfile
 import stat
+import tempfile
 import threading
 import urllib.request
+
+import sys
+import yaml
 
 import utils.bazel as bazel
 import utils.exception as exception
@@ -23,7 +25,6 @@ import utils.parse_config as parse_config
 import utils.pipeline as pipeline
 import utils.terminal_print as terminal_print
 import utils.test_logs as test_logs
-import yaml
 
 random.seed()
 
@@ -160,6 +161,15 @@ def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
 
     if json_bep_file and os.path.exists(json_bep_file):
         exec.execute_command(["buildkite-agent", "artifact", "upload", json_bep_file], cwd=tmpdir)
+
+
+def execute_build_commands_custom(configs):
+    commands = configs.get("build", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":lua: Executing custom commands")
+
+    for i in commands:
+        exec.execute_command([i])
 
 
 def execute_build_commands(configs):
@@ -344,6 +354,8 @@ def main(argv=None):
         configs = parse_config.load_configs().get("steps", {})
 
         if args.subparsers_name == "build":
+            # execute any custom build commands before we run bazel targets
+            execute_build_commands_custom(configs)
             execute_build_commands(configs)
         elif args.subparsers_name == "integration_test":
             execute_integration_tests_commands(configs)

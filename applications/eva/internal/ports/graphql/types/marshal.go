@@ -17,7 +17,7 @@ import (
 )
 
 func MarshalLanguageToGraphQL(result *translations.Language) *Language {
-	return &Language{Locale: result.Locale()}
+	return &Language{Locale: result.Locale(), Name: result.Name()}
 }
 
 func MarshalAccountToGraphQL(result *account.Account) *Account {

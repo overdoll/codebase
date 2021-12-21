@@ -1,0 +1,126 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-12-20 20:48-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:110
+msgid "Add a note describing the reason in detail..."
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:69
+msgid "All Clear"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:133
+msgid "Approve"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:40
+msgid "Audience"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Queue.tsx:37
+msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:56
+msgid "Categories"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:48
+msgid "Characters"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:35
+msgid "Moderation Paused"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Queue.tsx:32
+msgid "Moderation Queue"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:50
+msgid "Moderation Settings"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:103
+msgid "Note"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:98
+msgid "Please select a rejection option"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:83
+msgid "Post created by {0} was approved successfully"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:109
+msgid "Post created by {0} was successfully rejected"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/Posts.tsx:169
+msgid "Posted on {formattedDate}"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:83
+msgid "Reason"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:128
+msgid "Reject"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:136
+msgid "Reject Post"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:159
+msgid "Select a reason for rejecting this post"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:90
+msgid "Select the rejection reason"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:40
+msgid "Since you've paused your moderator status, you won't get anymore new cases."
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:114
+msgid "The note cannot be empty"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:116
+msgid "The note cannot exceed 255 characters"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:74
+msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:90
+msgid "There was an error approving a post created by {0}"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:117
+msgid "There was an error rejecting the post created by {0}"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:123
+msgid "This rejection reason is an infraction. The poster's account will be temporarily suspended."
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/PostHeader/PostHeader.tsx:51
+msgid "Time you have left to take action on the post before it is reassigned to another moderator"
+msgstr ""

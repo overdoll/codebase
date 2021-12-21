@@ -1,11 +1,11 @@
 import Joi from 'joi'
-import { useTranslation } from 'react-i18next'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
-import { useUsernameFormSchema } from '@//:modules/constants/schemas'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import { t, Trans } from '@lingui/macro'
+import Username from '@//:modules/validation/Username'
 
 interface RegisterValues {
   username: string
@@ -20,10 +20,8 @@ export default function RegisterForm ({
   onSubmit,
   loading
 }: Props): JSX.Element {
-  const [t] = useTranslation('auth')
-
   const schema = Joi.object({
-    username: useUsernameFormSchema()
+    username: Username()
   })
 
   const {
@@ -58,14 +56,16 @@ export default function RegisterForm ({
                   : 'gray.200'
               : 'green.600'}
           >
-            {t('register.form.username.title')}
+            <Trans>
+              Username
+            </Trans>
           </FormLabel>
           <StyledInput
             size='xl'
             register={register('username')}
             success={success}
             error={errors.username != null}
-            placeholder={t('register.form.username.placeholder')}
+            placeholder={t`Enter a username`}
             errorMessage={errors.username?.message}
           />
         </FormControl>
@@ -77,7 +77,9 @@ export default function RegisterForm ({
           colorScheme='green'
           w='100%'
         >
-          {t('register.form.submit')}
+          <Trans>
+            Register
+          </Trans>
         </Button>
       </Stack>
     </form>

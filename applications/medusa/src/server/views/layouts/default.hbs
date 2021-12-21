@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,shrink-to-fit=no" />
   <meta name="csrf-token" content="{{csrfToken}}">
   <meta name="nonce" content="{{nonce}}">
-  <meta name="browser-language" content="{{i18nextLang}}">
+  <meta name="browser-language" content="{{language}}">
   {{{meta}}}
   {{{preload}}}
   {{> fonts}}
@@ -16,7 +16,6 @@
   <style nonce="{{nonce}}" data-emotion="od {{emotionIds}}">{{{emotionCss}}}</style>
   <script nonce="{{nonce}}" type="application/json" id="runtime-store">{{{runtimeStore}}}</script>
   <script nonce="{{nonce}}" type="application/json" id="relay-store">{{{relayStore}}}</script>
-  <script nonce="{{nonce}}" type="application/json" id="i18next-store">{{{i18nextStore}}}</script>
   <script nonce="{{nonce}}" type="application/json" id="flash-store">{{{flashStore}}}</script>
 </head>
 <body>{{{body}}}</body>

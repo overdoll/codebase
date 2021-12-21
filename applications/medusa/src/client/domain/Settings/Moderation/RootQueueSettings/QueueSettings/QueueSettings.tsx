@@ -1,9 +1,10 @@
 import { Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsMutation } from '@//:artifacts/QueueSettingsMutation.graphql'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import Switch from '@//:modules/form/Switch/Switch'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: PreloadedQuery<QueueSettingsQueryType>
@@ -45,10 +46,10 @@ export default function QueueSettings (props: Props): JSX.Element {
     QueueSettingsMutationGQL
   )
 
-  const [t] = useTranslation('settings')
-
   const status = queryData?.viewer?.moderatorSettings.isInModeratorQueue === true
   const notify = useToast()
+
+  const { i18n } = useLingui()
 
   const onChangeSettings = (): void => {
     changeSettings({
@@ -60,27 +61,34 @@ export default function QueueSettings (props: Props): JSX.Element {
       onCompleted (data) {
         notify({
           status: 'success',
-          title: t('moderation.queue.toggle.query.success_off'),
+          title: t`You are no longer in the Moderator Posts Queue`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('moderation.queue.toggle.query.error'),
+          title: t`There was an error changing your Queue status`,
           isClosable: true
         })
       }
-    }
-    )
+    })
   }
 
   return (
     <>
       <Flex align='center' direction='row'>
         <Flex direction='column'>
-          <Heading color='gray.100' fontSize='lg'>{t('moderation.queue.toggle.header')}</Heading>
-          <Text color='gray.200' fontSize='sm'>{t('moderation.queue.toggle.subheader')}</Text>
+          <Heading color='gray.100' fontSize='lg'>
+            <Trans>
+              Toggle Queue Status
+            </Trans>
+          </Heading>
+          <Text color='gray.200' fontSize='sm'>
+            <Trans>
+              Change your status for receiving posts in your Moderation Queue
+            </Trans>
+          </Text>
         </Flex>
         <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} ml={4} defaultChecked={status} />
       </Flex>

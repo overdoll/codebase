@@ -7,7 +7,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ArrangeUploadsFragment = {
     readonly content: ReadonlyArray<{
         readonly urls: ReadonlyArray<{
-            readonly url: unknown;
+            readonly url: string;
             readonly mimeType: string;
         }>;
         readonly " $fragmentRefs": FragmentRefs<"DraggableContentFragment">;

@@ -105,6 +105,7 @@ const HorizontalNavigationDropdownMenu = ({
       </RenderOnMobile>
       <RenderOnDesktop>
         <Menu
+          isLazy
           flip
           preventOverflow
           isOpen={isOpenMenu}

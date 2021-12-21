@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Grid, GridItem, Stack, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
@@ -10,6 +9,7 @@ import AuditLogsQuery from '@//:artifacts/AuditLogsQuery.graphql'
 import AuditLogs from './AuditLogs/AuditLogs'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   prepared: {
@@ -23,35 +23,44 @@ export default function History (props: Props): JSX.Element | null {
     props.prepared.auditLogsQuery
   )
 
-  const [t] = useTranslation('moderation')
-
   return (
     <>
       <Helmet title='history' />
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle>
-            {t('history.title')}
+            <Trans>
+              Moderation History
+            </Trans>
           </PageSectionTitle>
           <PageSectionDescription>
-            {t('history.description')}
+            <Trans>
+              Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making
+              them.
+            </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
         <Stack>
           <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
             <GridItem color='gray.200' colSpan={3}>
               <Text>
-                {t('history.table.headers.date')}
+                <Trans>
+                  Date Posted
+                </Trans>
               </Text>
             </GridItem>
             <GridItem color='gray.200' colSpan={3}>
               <Text>
-                {t('history.table.headers.brand')}
+                <Trans>
+                  Brand
+                </Trans>
               </Text>
             </GridItem>
             <GridItem colSpan={1}>
               <Text color='gray.200'>
-                {t('history.table.headers.status')}
+                <Trans>
+                  Status
+                </Trans>
               </Text>
             </GridItem>
             <GridItem colSpan={1} />
@@ -67,7 +76,6 @@ export default function History (props: Props): JSX.Element | null {
               <AuditLogs query={queryRef as PreloadedQuery<AuditLogsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>
-
         </Stack>
       </PageWrapper>
     </>

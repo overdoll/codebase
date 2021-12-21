@@ -11,6 +11,7 @@
       "ES6"
     ],
     "allowJs": false,
+    "checkJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "strictNullChecks": true,
@@ -50,6 +51,7 @@
     "./applications/medusa/coverage",
     "./applications/medusa/cache",
     "./applications/medusa/cypress",
-    "node_modules"
+    "node_modules",
+    "**/__locale/**/*.ts"
   ]
 }

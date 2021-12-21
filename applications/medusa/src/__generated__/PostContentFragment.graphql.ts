@@ -9,7 +9,7 @@ export type PostContentFragment = {
     readonly content: ReadonlyArray<{
         readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
-            readonly url: unknown;
+            readonly url: string;
             readonly mimeType: string;
         }>;
     }>;

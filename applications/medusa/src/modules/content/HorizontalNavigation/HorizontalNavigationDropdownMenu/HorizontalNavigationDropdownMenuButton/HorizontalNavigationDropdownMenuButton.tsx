@@ -5,7 +5,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../Icon/Icon'
 
 interface Props {
-  label?: string
+  label?: ReactNode
   icon?: FunctionComponent<any>
   to?: string
   onClick?: () => void

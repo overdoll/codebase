@@ -3,11 +3,11 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { UsernamesQuery as UsernamesQueryType } from '@//:artifacts/UsernamesQuery.graphql'
 import UsernamesQuery from '@//:artifacts/UsernamesQuery.graphql'
 import Usernames from './Usernames/Usernames'
-import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<UsernamesQueryType>
@@ -19,12 +19,14 @@ export default function RootUsernames (props: Props): JSX.Element | null {
     props.query
   )
 
-  const [t] = useTranslation('settings')
-
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>{t('profile.username.title')}</PageSectionTitle>
+        <PageSectionTitle>
+          <Trans>
+            Username
+          </Trans>
+        </PageSectionTitle>
       </PageSectionWrap>
       <QueryErrorBoundary loadQuery={() => loadQuery({})}>
         <Suspense fallback={<SkeletonStack />}>

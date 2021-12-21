@@ -1,7 +1,7 @@
 import Link from '../Link'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import JSResource from '../../operations/JSResource'
+import { Resource } from '../../operations/JSResource'
 import { createMockEnvironment } from 'relay-test-utils'
 import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
@@ -19,7 +19,7 @@ const Component = (): string => {
 
 const Empty = {
   path: '*',
-  component: JSResource(
+  component: Resource(
     'LinkComponent',
     async () => await new Promise(resolve => resolve(LinkComponent))
   )
@@ -31,7 +31,7 @@ it('clicking on the link directs to the route', async () => {
     {
       path: '/test',
       exact: true,
-      component: JSResource(
+      component: Resource(
         'Component',
         async () => await new Promise(resolve => resolve(Component))
       )
@@ -72,7 +72,7 @@ it('hovering over the link will preload the component', async () => {
     {
       path: '/test',
       exact: true,
-      component: JSResource(
+      component: Resource(
         'Component2',
         async () =>
           await new Promise(resolve => {
@@ -119,7 +119,7 @@ it('mouse down on the link will load code and data', async () => {
     {
       path: '/test',
       exact: true,
-      component: JSResource(
+      component: Resource(
         'Component3',
         async () =>
           await new Promise(resolve => {

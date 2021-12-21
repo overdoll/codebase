@@ -10,11 +10,12 @@ import { createServerRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../../client/Bootstrap'
 import createMockHistory from './Domain/createMockHistory'
 import axios from 'axios'
-import routes from '../../../client/routes'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import express from 'express'
 import parseCookies from './Domain/parseCookies'
 import { HelmetData } from 'react-helmet-async'
+import { setupI18n } from '@lingui/core'
+import * as plurals from 'make-plural'
 
 interface Context {
   url?: undefined | string
@@ -121,6 +122,16 @@ async function request (req, res): Promise<void> {
 
   const context: Context = {}
 
+  // Get any extra assets we need to load, so that we don't have to import them in-code and wait for suspense boundaries to resolve
+  const loadedModules: string[] = []
+
+  const i18n = setupI18n()
+  i18n._loadLocaleData(i18n.locale, { plurals: plurals[i18n.locale] })
+  req.i18n = i18n
+
+  // routes for the server
+  const routes = require('../../../client/routes').default
+
   // Create a router
   const router = await createServerRouter(
     routes,
@@ -129,7 +140,8 @@ async function request (req, res): Promise<void> {
       location: req.url
     }),
     environment,
-    req
+    req,
+    loadedModules
   )
 
   const helmetContext: Helmet = {}
@@ -139,14 +151,15 @@ async function request (req, res): Promise<void> {
     key: EMOTION_CACHE_KEY,
     nonce
   })
+
   const { extractCritical } = createEmotionServer(cache)
 
   const App = (
     <Bootstrap
       environment={environment}
-      i18next={req.i18n}
+      i18n={i18n}
       emotionCache={cache}
-      routerContext={router.context}
+      router={router.context}
       runtimeContext={runtime}
       helmetContext={helmetContext}
       flash={req.flash}
@@ -169,38 +182,10 @@ async function request (req, res): Promise<void> {
     return
   }
 
-  // Get our i18next store, and we will send this to the front-end
-  const initialI18nStore = {}
-
-  req.i18n.languages.forEach(l => {
-    // By passing the i18n instance to the provider above, each namespace that is requested
-    // will be passed to reportNamespaces. With reportNamespaces, we filter out
-    // our cached data and make sure that we give the user all the namespaces that were requested
-    const languageData = req.i18n.services.resourceStore.data[l]
-
-    // reportNamespaces may be undefined (namespaces weren't used in a route) so we check for that here
-    if (req.i18n.reportNamespaces === undefined) {
-      initialI18nStore[l] = {}
-      return
-    }
-
-    req.i18n.reportNamespaces.getUsedNamespaces().forEach(key => {
-      // If the store doesn't contain key, we need to add it
-      if (!(Object.prototype.hasOwnProperty.call(initialI18nStore, l) as boolean)) {
-        initialI18nStore[l] = {}
-      }
-
-      initialI18nStore[l][key] = languageData[key]
-    })
-  })
-
-  // Get any extra assets we need to load, so that we dont have to import them in-code
-  const assets = router.context.get().entries.map(entry => entry.id)
-
   // Set up our chunk extractor, so that we can preload our resources
   const extractor = new ChunkExtractor({
     statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-    entrypoints: ['client', ...assets]
+    entrypoints: ['client', ...loadedModules]
   })
 
   const {
@@ -230,9 +215,8 @@ async function request (req, res): Promise<void> {
         .getSource()
     ),
     runtimeStore: serialize(runtime),
-    i18nextStore: serialize(initialI18nStore),
     flashStore: serialize(req.flash.flush()),
-    i18nextLang: req.i18n.language
+    language: i18n._locale
   })
 }
 
