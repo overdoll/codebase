@@ -169,7 +169,7 @@ def execute_build_commands_custom(configs):
     terminal_print.print_expanded_group(":lua: Executing custom commands")
 
     for i in commands:
-        exec.execute_command([i])
+        exec.execute_command(i.split())
 
 
 def execute_build_commands(configs):
