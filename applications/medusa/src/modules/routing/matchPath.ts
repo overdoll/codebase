@@ -1,4 +1,4 @@
-import { pathToRegexp } from 'path-to-regexp'
+import pathToRegexp from 'path-to-regexp'
 import type { Match } from './router'
 
 // taken from https://github.com/remix-run/react-router/blob/v5.3.0/packages/react-router/modules/matchPath.js
@@ -62,7 +62,6 @@ export default function matchPath (pathname: string, options: Options = {}): Mat
 
   return paths.reduce((matched, path) => {
     if (!path && path !== '') return null
-    if (path === '*') return null
     if (matched != null) return matched
 
     const {

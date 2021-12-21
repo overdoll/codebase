@@ -7,6 +7,7 @@ import { createClientRouter } from '../router'
 import { createMemoryHistory } from 'history'
 import RouterRenderer from '../RouteRenderer'
 import RoutingProvider from '../RoutingProvider'
+import { RelayEnvironmentProvider } from 'react-relay/hooks'
 
 // components to help with testing
 const LinkComponent = (): JSX.Element => {
@@ -27,6 +28,8 @@ const Empty = {
 
 // tests link actions
 it('clicking on the link directs to the route', async () => {
+  const environment = createMockEnvironment()
+
   const routes = [
     {
       path: '/test',
@@ -45,13 +48,15 @@ it('clicking on the link directs to the route', async () => {
       initialEntries: ['/'],
       initialIndex: 0
     }),
-    createMockEnvironment()
+    environment
   )
 
   render(
-    <RoutingProvider router={router.context}>
-      <RouterRenderer />
-    </RoutingProvider>
+    <RelayEnvironmentProvider environment={environment}>
+      <RoutingProvider router={router.context}>
+        <RouterRenderer />
+      </RoutingProvider>
+    </RelayEnvironmentProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
@@ -67,6 +72,7 @@ it('clicking on the link directs to the route', async () => {
 
 it('hovering over the link will preload the component', async () => {
   const func = jest.fn()
+  const environment = createMockEnvironment()
 
   const routes = [
     {
@@ -90,13 +96,15 @@ it('hovering over the link will preload the component', async () => {
       initialEntries: ['/'],
       initialIndex: 0
     }),
-    createMockEnvironment()
+    environment
   )
 
   render(
-    <RoutingProvider router={router.context}>
-      <RouterRenderer />
-    </RoutingProvider>
+    <RelayEnvironmentProvider environment={environment}>
+      <RoutingProvider router={router.context}>
+        <RouterRenderer />
+      </RoutingProvider>
+    </RelayEnvironmentProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
@@ -152,9 +160,11 @@ it('mouse down on the link will load code and data', async () => {
   )
 
   render(
-    <RoutingProvider router={router.context}>
-      <RouterRenderer />
-    </RoutingProvider>
+    <RelayEnvironmentProvider environment={Environment}>
+      <RoutingProvider router={router.context}>
+        <RouterRenderer />
+      </RoutingProvider>
+    </RelayEnvironmentProvider>
   )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
