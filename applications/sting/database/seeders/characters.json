@@ -3,7 +3,7 @@
     "id": "1q7MJfxuQNRslgmHqOdj35SWgrP",
     "slug": "susannah_aguilar",
     "name": {
-      "en-US": "Susannah Aguilar"
+      "en": "Susannah Aguilar"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdMMBixvJnJCigJMao5RTVFS\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql"
@@ -12,7 +12,7 @@
     "id": "1q7MJkk5fQGBWWYDqM22iITSjeW",
     "slug": "margaret_lee",
     "name": {
-      "en-US": "Margaret Lee"
+      "en": "Margaret Lee"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql"
@@ -21,7 +21,7 @@
     "id": "1q7MJnQXAtxer0fboBMHtlC0JMe",
     "slug": "aarush_hills",
     "name": {
-      "en-US": "Aarush Hills"
+      "en": "Aarush Hills"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKibRoqTAUgmOiNpGLIrztM9R"
@@ -30,7 +30,7 @@
     "id": "1q7MJvJSqaUlTnqHOPav3hNZqFg",
     "slug": "marianne_hogan",
     "name": {
-      "en-US": "Marianne Hogan"
+      "en": "Marianne Hogan"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m"
@@ -39,7 +39,7 @@
     "id": "1q7MJzOppSUvaS2dIKsAjDj1G2G",
     "slug": "orion_strong",
     "name": {
-      "en-US": "Orion Strong"
+      "en": "Orion Strong"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKj395CsMusRZlJviwIG4qRCh"
@@ -48,7 +48,7 @@
     "id": "1q7MJwBKmIki8ogV0RzbFyH4CNz",
     "slug": "ronnie_durham",
     "name": {
-      "en-US": "Ronnie Durham"
+      "en": "Ronnie Durham"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m"
@@ -57,7 +57,7 @@
     "id": "1q7MKCL8EUAtVyB9Xe0wPbHMFVI",
     "slug": "franky_spears",
     "name": {
-      "en-US": "Franky Spears"
+      "en": "Franky Spears"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP"
@@ -66,7 +66,7 @@
     "id": "1q7MfC2Y6gdEuJYeIdnL4VduYGO",
     "slug": "umer_dixon",
     "name": {
-      "en-US": "Umer Dixon"
+      "en": "Umer Dixon"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7"
@@ -75,7 +75,7 @@
     "id": "1q7MfGasemHylVBXDbOijLoIvhT",
     "slug": "haider_woodley",
     "name": {
-      "en-US": "Haider Woodley"
+      "en": "Haider Woodley"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7"
@@ -84,7 +84,7 @@
     "id": "1q7MfIULfXfCXXzRO2ddDfLUAJw",
     "slug": "lylah_barrett",
     "name": {
-      "en-US": "Lylah Barrett"
+      "en": "Lylah Barrett"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7"

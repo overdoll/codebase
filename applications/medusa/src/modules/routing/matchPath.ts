@@ -1,5 +1,5 @@
 import pathToRegexp from 'path-to-regexp'
-import { Match } from './router'
+import type { Match } from './router'
 
 // taken from https://github.com/remix-run/react-router/blob/v5.3.0/packages/react-router/modules/matchPath.js
 
@@ -26,7 +26,7 @@ interface Options {
 
 const compilePath = (path: string, options: Options): Compiled => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const cacheKey = `${options?.end}${options?.strict}${options?.sensitive}`
+  const cacheKey = `${options.end}${options.strict}${options.sensitive}`
   const pathCache = cache[cacheKey] ?? (cache[cacheKey] = {})
 
   if (pathCache[path] != null) return pathCache[path]
@@ -46,7 +46,7 @@ const compilePath = (path: string, options: Options): Compiled => {
   return result
 }
 
-function matchPath (pathname: string, options: Options = {}): Match | null {
+export default function matchPath (pathname: string, options: Options = {}): Match | null {
   if (typeof options === 'string' || Array.isArray(options)) {
     options = { path: options }
   }
@@ -92,5 +92,3 @@ function matchPath (pathname: string, options: Options = {}): Match | null {
     }
   }, null)
 }
-
-export default matchPath

@@ -3,6 +3,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load(":jest.bzl", "jest_test")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@npm//@lingui/cli:index.bzl", "lingui")
 load("@npm//razzle:index.bzl", "razzle")
 
 package(default_visibility = ["//visibility:public"])
@@ -21,6 +22,7 @@ _SRC = glob(
 ) + [
     "razzle.config.js",
     "package.json",
+    "locales.config.js",
 ]
 
 _RUNTIME_DEPS = [
@@ -59,6 +61,7 @@ _RUNTIME_DEPS = [
     "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
     "@npm//razzle",
+    "@npm//@lingui/cli",
     "@npm//react-ssr-prepass",
     "@npm//axios",
     "@npm//serialize-javascript",
@@ -113,6 +116,12 @@ _RUNTIME_DEPS = [
     "@npm//react-cookie",
     "@npm//universal-cookie",
     "@npm//@babel/preset-typescript",
+    "@npm//babel-plugin-macros",
+    "@npm//@lingui/babel-preset-react",
+    "@npm//@lingui/macro",
+    "@npm//path-to-regexp",
+    "@npm//history",
+    "@npm//@lingui/react",
 ]
 
 TEST_DEPS = [
@@ -138,6 +147,11 @@ TEST_DEPS = [
 ]
 
 _SERVER_DEPS = []
+
+filegroup(
+    name = "packages",
+    data = _RUNTIME_DEPS
+)
 
 copy_to_bin(
     name = "copy_static_files",

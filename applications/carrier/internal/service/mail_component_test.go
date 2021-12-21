@@ -106,7 +106,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 	email := generateEmail("carrier.new_login_token")
 	token := ksuid.New().String()
 
-	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en-US", Token: token})
+	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token})
 
 	require.NoError(t, err, "no error for sending login token email")
 

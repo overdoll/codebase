@@ -10,7 +10,7 @@ const ESIndex = `
 		"supported": {	
 			"type": "boolean"
 		},
-		"en-US": {
+		"en": {
 			"type": "text",
 			"analyzer": "english"
 		},

@@ -38,7 +38,8 @@ export default function useHistoryDisclosure (): HistoryDisclosure {
     const currentHistory = history.location
     const state = currentHistory.state as HistoryDisclosureState
     if (state?.hasModal === true) {
-      history.goBack()
+      // TODO: if there was a route change, this makes the modal un-usable?
+      //  history.goBack()
     }
     onCloseAction()
   }

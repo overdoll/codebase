@@ -10,7 +10,6 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Portal,
   SimpleGrid,
   Stack,
   useDisclosure
@@ -19,6 +18,7 @@ import { useHistoryDisclosure } from '../../../hooks'
 import SiteLinkLogo from '../../../../client/domain/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
 import Icon from '../../Icon/Icon'
+import { HorizontalNavigationDropdownMenuContext } from './context'
 
 interface Props {
   children: ReactNode
@@ -50,82 +50,24 @@ const HorizontalNavigationDropdownMenu = ({
   return (
     <>
       <RenderOnMobile>
-        <Box h='100%'>
-          <ClickableBox
-            p={0}
-            onClick={onToggle}
-            borderRadius={{
-              base: 2,
-              md: 10
-            }}
-            aria-label={label}
-            bg={isOpen ? 'gray.500' : 'transparent'}
-            h={{
-              base: '48px',
-              md: '42px'
-            }}
-          >
-            <Icon
-              icon={icon}
-              w={{
-                base: '58px',
-                md: '42px'
-              }}
-              h='38px'
-              p={2}
-              fill={isOpen ? 'gray.100' : 'gray.300'}
-            />
-          </ClickableBox>
-        </Box>
-        <Modal
-          isCentered
-          preserveScrollBarGap
-          isOpen={isOpen}
-          onClose={onClose}
-        >
-          <ModalOverlay />
-          <ModalContent
-            backdropFilter='blur(5px)'
-            bg='gray.800'
-            boxShadow='none'
-          >
-            <ModalBody my={4}>
-              <Stack
-                onClick={onClose}
-                spacing={4}
-              >
-                <SiteLinkLogo />
-                <SimpleGrid spacing={3}>
-                  {children}
-                </SimpleGrid>
-              </Stack>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </RenderOnMobile>
-      <RenderOnDesktop>
-        <Menu
-          isLazy
-          flip
-          preventOverflow
-          isOpen={isOpenMenu}
-          onClose={onCloseMenu}
+        <HorizontalNavigationDropdownMenuContext.Provider value={{
+          onClose: onClose
+        }}
         >
           <Box h='100%'>
             <ClickableBox
               p={0}
-              onClick={onToggleMenu}
+              onClick={onToggle}
               borderRadius={{
                 base: 2,
                 md: 10
               }}
               aria-label={label}
-              bg={isOpenMenu ? 'gray.500' : 'transparent'}
+              bg={isOpen ? 'gray.500' : 'transparent'}
               h={{
                 base: '48px',
                 md: '42px'
               }}
-              as={MenuButton}
             >
               <Icon
                 icon={icon}
@@ -135,11 +77,76 @@ const HorizontalNavigationDropdownMenu = ({
                 }}
                 h='38px'
                 p={2}
-                fill={isOpenMenu ? 'gray.100' : 'gray.300'}
+                fill={isOpen ? 'gray.100' : 'gray.300'}
               />
             </ClickableBox>
           </Box>
-          <Portal>
+          <Modal
+            isCentered
+            preserveScrollBarGap
+            isOpen={isOpen}
+            onClose={onClose}
+          >
+            <ModalOverlay />
+            <ModalContent
+              backdropFilter='blur(5px)'
+              bg='gray.800'
+              boxShadow='none'
+            >
+              <ModalBody my={4}>
+                <Stack
+                  spacing={4}
+                >
+                  <SiteLinkLogo />
+                  <SimpleGrid spacing={3}>
+                    {children}
+                  </SimpleGrid>
+                </Stack>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </HorizontalNavigationDropdownMenuContext.Provider>
+      </RenderOnMobile>
+      <RenderOnDesktop>
+        <HorizontalNavigationDropdownMenuContext.Provider value={{
+          onClose: onCloseMenu
+        }}
+        >
+          <Menu
+            isLazy
+            flip
+            preventOverflow
+            isOpen={isOpenMenu}
+            onClose={onCloseMenu}
+          >
+            <Box h='100%'>
+              <ClickableBox
+                p={0}
+                onClick={onToggleMenu}
+                borderRadius={{
+                  base: 2,
+                  md: 10
+                }}
+                aria-label={label}
+                bg={isOpenMenu ? 'gray.500' : 'transparent'}
+                h={{
+                  base: '48px',
+                  md: '42px'
+                }}
+                as={MenuButton}
+              >
+                <Icon
+                  icon={icon}
+                  w={{
+                    base: '58px',
+                    md: '42px'
+                  }}
+                  h='38px'
+                  p={2}
+                  fill={isOpenMenu ? 'gray.100' : 'gray.300'}
+                />
+              </ClickableBox>
+            </Box>
             <MenuList
               minW='300px'
               m={0}
@@ -148,14 +155,13 @@ const HorizontalNavigationDropdownMenu = ({
             >
               <SimpleGrid
                 p={4}
-                onClick={onCloseMenu}
                 spacing={3}
               >
                 {children}
               </SimpleGrid>
             </MenuList>
-          </Portal>
-        </Menu>
+          </Menu>
+        </HorizontalNavigationDropdownMenuContext.Provider>
       </RenderOnDesktop>
     </>
   )
