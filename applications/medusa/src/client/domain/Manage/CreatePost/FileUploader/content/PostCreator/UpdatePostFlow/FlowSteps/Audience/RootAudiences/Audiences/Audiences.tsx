@@ -7,6 +7,7 @@ import {
   SelectorTextOverlay
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 
 interface Props {
   selected: string | null
@@ -48,7 +49,7 @@ export default function Audiences ({
             id={item.node.id}
           >
             <SelectorTextOverlay label={item.node.title}>
-              <ResourceItem query={item.node.thumbnail} />
+              <ResourceItem query={item.node.thumbnail as ResourceItemFragment$key} />
             </SelectorTextOverlay>
           </Selector>
         </RowItem>

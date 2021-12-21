@@ -1,8 +1,8 @@
 import { ChangeEvent, ReactNode, useRef } from 'react'
-import { Flex, useToast } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   uppy: Uppy
   onSelect?: () => void
   children: ReactNode

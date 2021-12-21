@@ -1,10 +1,10 @@
-import { Box, Skeleton } from '@chakra-ui/react'
+import { Box, HTMLChakraProps, Skeleton } from '@chakra-ui/react'
 import SuspenseImage from '../../../../operations/SuspenseImage'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   query: ImageSnippetFragment$key
 }
 

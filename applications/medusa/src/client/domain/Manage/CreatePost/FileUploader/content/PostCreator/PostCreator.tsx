@@ -18,6 +18,7 @@ import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import Icon from '@//:modules/content/Icon/Icon'
 import { PauseCircle } from '../../../../../../../assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
+import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 
 interface Props {
   uppy: Uppy
@@ -35,7 +36,11 @@ const Query = graphql`
   }
 `
 
-export default function PostCreator ({ uppy, state, dispatch }: Props): JSX.Element {
+export default function PostCreator ({
+  uppy,
+  state,
+  dispatch
+}: Props): JSX.Element {
   const [postReference] = useQueryParam<string | null>('id')
 
   const data = useLazyLoadQuery<PostCreatorQuery>(
@@ -114,7 +119,10 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): JSX.Elem
   return (
     <Suspense fallback={<SkeletonStack />}>
       <ErrorBoundary
-        fallback={({ error, reset }) => (
+        fallback={({
+          error,
+          reset
+        }) => (
           <ErrorFallback error={error} reset={reset} />
         )}
       >
@@ -122,7 +130,7 @@ export default function PostCreator ({ uppy, state, dispatch }: Props): JSX.Elem
           uppy={uppy}
           state={state}
           dispatch={dispatch}
-          query={data}
+          query={data?.post as UpdatePostFlowFragment$key}
         />
       </ErrorBoundary>
     </Suspense>

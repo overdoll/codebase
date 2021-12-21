@@ -9,11 +9,6 @@ const PostBrandFragmentGQL = graphql`
       name
       thumbnail {
         ...ResourceItemFragment
-        type
-        urls {
-          mimeType
-          url
-        }
       }
     }
   }

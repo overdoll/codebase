@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e2cf13f1719a2f259cb604c54669cc68 */
+/* @relayHash 98732fd54feb841ca29e8d439a9ab5d7 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -68,11 +68,6 @@ fragment PostBrandFragment on Post {
     name
     thumbnail {
       ...ResourceItemFragment
-      type
-      urls {
-        mimeType
-        url
-      }
     }
     id
   }
@@ -506,7 +501,7 @@ return {
     ]
   },
   "params": {
-    "id": "e2cf13f1719a2f259cb604c54669cc68",
+    "id": "98732fd54feb841ca29e8d439a9ab5d7",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

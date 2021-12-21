@@ -4,16 +4,10 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type PostBrandFragment = {
     readonly brand: {
         readonly name: string;
         readonly thumbnail: {
-            readonly type: ResourceType;
-            readonly urls: ReadonlyArray<{
-                readonly mimeType: string;
-                readonly url: unknown;
-            }>;
             readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
         } | null;
     } | null;
@@ -57,38 +51,6 @@ const node: ReaderFragment = {
           "plural": false,
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "urls",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "mimeType",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "url",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
               "args": null,
               "kind": "FragmentSpread",
               "name": "ResourceItemFragment"
@@ -103,5 +65,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '4b6ceb7e69354bf06477deeb847b641c';
+(node as any).hash = '03d31980c1a1e833c6c97f5d91cb3ede';
 export default node;

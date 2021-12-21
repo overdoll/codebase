@@ -3,6 +3,7 @@ import type { BrandsQuery } from '@//:artifacts/BrandsQuery.graphql'
 import { RowItem, RowWrap, Selector } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 
 interface Props {
   selected: string | null
@@ -50,7 +51,7 @@ export default function Brands ({
               align='center'
             >
               <Flex align='center' justify='center' mr={2} borderRadius='md' overflow='hidden' w={12} h={12}>
-                <ResourceItem query={item.node.thumbnail} />
+                <ResourceItem query={item?.node?.thumbnail as ResourceItemFragment$key} />
               </Flex>
               <Box>
                 <Heading fontSize='xl' color='gray.00'>

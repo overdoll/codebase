@@ -1,11 +1,11 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet'
 import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet'
 import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   query: ResourceItemFragment$key
 }
 

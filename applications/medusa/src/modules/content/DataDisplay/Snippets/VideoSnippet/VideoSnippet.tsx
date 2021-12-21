@@ -3,7 +3,7 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   innerRef?: () => void
   query: VideoSnippetFragment$key
 }

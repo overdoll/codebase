@@ -1,7 +1,3 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useEffect, useState } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -61,7 +57,7 @@ export default function ProcessUploads ({
   dispatch,
   uppy,
   query
-}: Props): Node {
+}: Props): JSX.Element {
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
   const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
