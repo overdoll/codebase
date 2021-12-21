@@ -2,7 +2,7 @@ steps:
   build:
     commands:
       # compile localization files
-      - yarn run locale:compile
+      - npm run locale:compile
     targets:
       - //applications/medusa:bundle
 
