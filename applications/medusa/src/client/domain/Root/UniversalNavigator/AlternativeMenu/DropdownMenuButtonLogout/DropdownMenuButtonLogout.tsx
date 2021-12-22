@@ -23,7 +23,7 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
     logout({
       variables: {},
       onCompleted () {
-        history.push('/')
+        history.replace('/')
 
         notify({
           status: 'success',

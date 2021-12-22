@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash eb117c39da9edb1bb8d2dad5762dc263 */
+/* @relayHash df279f7a6e166e543ea7d0aa92c66081 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -40,8 +40,6 @@ query AuditLogsPaginationQuery(
 }
 
 fragment AuditCardFragment on PostAuditLog {
-  reverted
-  reversibleUntil
   post {
     postedAt
     brand {
@@ -55,10 +53,7 @@ fragment AuditCardFragment on PostAuditLog {
 }
 
 fragment AuditInspectFragment on PostAuditLog {
-  id
   notes
-  reverted
-  reversibleUntil
   action
   post {
     ...PostPreviewFragment
@@ -67,7 +62,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment_2HEEH6 on Account {
-  moderatorPostAuditLogs(first: $first, after: $after, dateRange: {from: $from, to: $to}) {
+  postAuditLogs(first: $first, after: $after, dateRange: {from: $from, to: $to}) {
     edges {
       node {
         ...AuditCardFragment
@@ -299,7 +294,7 @@ return {
                 "args": (v10/*: any*/),
                 "concreteType": "PostAuditLogConnection",
                 "kind": "LinkedField",
-                "name": "moderatorPostAuditLogs",
+                "name": "postAuditLogs",
                 "plural": false,
                 "selections": [
                   {
@@ -318,20 +313,6 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "reverted",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "reversibleUntil",
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
@@ -457,7 +438,6 @@ return {
                             "name": "action",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -465,6 +445,7 @@ return {
                             "name": "notes",
                             "storageKey": null
                           },
+                          (v9/*: any*/),
                           (v8/*: any*/)
                         ],
                         "storageKey": null
@@ -514,9 +495,9 @@ return {
                   "dateRange"
                 ],
                 "handle": "connection",
-                "key": "AuditLogs_moderatorPostAuditLogs",
+                "key": "AuditLogsAccount_postAuditLogs",
                 "kind": "LinkedHandle",
-                "name": "moderatorPostAuditLogs"
+                "name": "postAuditLogs"
               }
             ],
             "type": "Account",
@@ -528,7 +509,7 @@ return {
     ]
   },
   "params": {
-    "id": "eb117c39da9edb1bb8d2dad5762dc263",
+    "id": "df279f7a6e166e543ea7d0aa92c66081",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -536,5 +517,5 @@ return {
   }
 };
 })();
-(node as any).hash = '6db86852053df48207963870e14a4cd2';
+(node as any).hash = '349f729a9bb99751140cc7dc2ce2c5d3';
 export default node;

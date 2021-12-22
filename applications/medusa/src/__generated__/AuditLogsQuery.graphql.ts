@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 78b2d20c16aa986058690e040507bc1a */
+/* @relayHash 09c557248c7728a3db1d4df9cb555b37 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -33,8 +33,6 @@ query AuditLogsQuery(
 }
 
 fragment AuditCardFragment on PostAuditLog {
-  reverted
-  reversibleUntil
   post {
     postedAt
     brand {
@@ -48,10 +46,7 @@ fragment AuditCardFragment on PostAuditLog {
 }
 
 fragment AuditInspectFragment on PostAuditLog {
-  id
   notes
-  reverted
-  reversibleUntil
   action
   post {
     ...PostPreviewFragment
@@ -60,7 +55,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment on Account {
-  moderatorPostAuditLogs(first: 5, dateRange: {from: $from, to: $to}) {
+  postAuditLogs(first: 5, dateRange: {from: $from, to: $to}) {
     edges {
       node {
         ...AuditCardFragment
@@ -238,7 +233,7 @@ return {
             "args": (v1/*: any*/),
             "concreteType": "PostAuditLogConnection",
             "kind": "LinkedField",
-            "name": "moderatorPostAuditLogs",
+            "name": "postAuditLogs",
             "plural": false,
             "selections": [
               {
@@ -257,20 +252,6 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "reverted",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "reversibleUntil",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -396,7 +377,6 @@ return {
                         "name": "action",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -404,6 +384,7 @@ return {
                         "name": "notes",
                         "storageKey": null
                       },
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -459,9 +440,9 @@ return {
               "dateRange"
             ],
             "handle": "connection",
-            "key": "AuditLogs_moderatorPostAuditLogs",
+            "key": "AuditLogsAccount_postAuditLogs",
             "kind": "LinkedHandle",
-            "name": "moderatorPostAuditLogs"
+            "name": "postAuditLogs"
           },
           (v3/*: any*/)
         ],
@@ -470,7 +451,7 @@ return {
     ]
   },
   "params": {
-    "id": "78b2d20c16aa986058690e040507bc1a",
+    "id": "09c557248c7728a3db1d4df9cb555b37",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

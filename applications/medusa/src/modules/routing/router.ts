@@ -228,6 +228,7 @@ function createClientRouter (
     if (location.pathname === currentEntry.location.pathname) {
       return
     }
+
     const matches = matchRoutes(routes as any, history.location.pathname)
 
     const prepareOptions = {

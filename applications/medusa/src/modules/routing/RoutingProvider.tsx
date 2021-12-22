@@ -1,6 +1,7 @@
 import RoutingContext from './RoutingContext'
 import { ReactNode } from 'react'
 import { Router } from './router'
+import { LocationProvider } from './Location'
 
 interface Props {
   children: ReactNode
@@ -13,7 +14,9 @@ export default function RoutingProvider ({
 }: Props): JSX.Element {
   return (
     <RoutingContext.Provider value={router}>
-      {children}
+      <LocationProvider>
+        {children}
+      </LocationProvider>
     </RoutingContext.Provider>
   )
 }

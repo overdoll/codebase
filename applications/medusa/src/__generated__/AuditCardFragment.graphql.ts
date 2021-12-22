@@ -6,8 +6,6 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
 export type AuditCardFragment = {
-    readonly reverted: boolean;
-    readonly reversibleUntil: unknown;
     readonly post: {
         readonly postedAt: unknown | null;
         readonly brand: {
@@ -32,20 +30,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "AuditCardFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reverted",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reversibleUntil",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -98,5 +82,5 @@ const node: ReaderFragment = {
   "type": "PostAuditLog",
   "abstractKey": null
 };
-(node as any).hash = 'c2603b7112e7aa8ee3c027b24db29fe9';
+(node as any).hash = '9e72e51c9b7f9787926b7eae7a0d23b1';
 export default node;
