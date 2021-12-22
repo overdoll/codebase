@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import { Alert, AlertDescription, AlertIcon, Flex, Stack } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql'
@@ -13,6 +12,7 @@ import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/Icon/Icon'
 import FilePicker from '../../../../../../components/FilePicker/FilePicker'
 import { FileUpload } from '../../../../../../../../../../../assets/icons/interface'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -61,8 +61,6 @@ export default function ProcessUploads ({
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
   const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
-
-  const [t] = useTranslation('manage')
 
   const [hasProcessingError, setProcessingError] = useState(false)
 
@@ -131,11 +129,15 @@ export default function ProcessUploads ({
           <Flex>
             <AlertIcon />
             <AlertDescription>
-              {t('create_post.flow.steps.arrange.uploader.processing.error.message')}
+              <Trans>
+                There was an error processing your files
+              </Trans>
             </AlertDescription>
           </Flex>
           <Button size='sm' onClick={onUpdateContent} colorScheme='orange' variant='solid'>
-            {t('create_post.flow.steps.arrange.uploader.processing.error.button')}
+            <Trans>
+              Retry
+            </Trans>
           </Button>
         </Flex>
       </Alert>
@@ -151,7 +153,9 @@ export default function ProcessUploads ({
             variant='solid'
             size='md'
             rightIcon={<Icon h={3} w={3} icon={FileUpload} fill='gray.100' />}
-          >{t('create_post.flow.steps.arrange.uploader.picker')}
+          ><Trans>
+            Upload Files
+          </Trans>
           </Button>
         </Flex>
       </FilePicker>

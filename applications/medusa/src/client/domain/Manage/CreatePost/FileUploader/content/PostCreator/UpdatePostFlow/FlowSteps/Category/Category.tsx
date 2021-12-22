@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
@@ -10,6 +9,7 @@ import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import { EVENTS } from '../../../../../constants/constants'
 import SearchInput from '../../../SearchInput/SearchInput'
 import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -42,8 +42,6 @@ export default function Category ({
   query
 }: Props): JSX.Element {
   const data = useFragment(CategoryFragmentGQL, query)
-
-  const [t] = useTranslation('manage')
 
   const currentCategories = data.categories.map((item) => item.id) as string[]
 
@@ -89,13 +87,17 @@ export default function Category ({
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.category.selector.title')}
+          <Trans>
+            Add some categories
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.category.selector.description')}
+          <Trans>
+            Select the categories that would be most applicable to the content you have uploaded.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput placeholder={t('create_post.flow.steps.category.selector.search.placeholder')}>
+      <SearchInput placeholder={t`Search for a category`}>
         {({ searchInput }) =>
           <>
             <Wrap>

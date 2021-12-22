@@ -3,11 +3,11 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateBrandButtonFragment$key } from '@//:artifacts/UpdateBrandButtonFragment.graphql'
 import type { UpdateBrandButtonMutation } from '@//:artifacts/UpdateBrandButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -48,16 +48,13 @@ export default function UpdateBrandButton ({
   const data = useFragment(Fragment, query)
 
   const [updateBrand, isUpdatingBrand] = useMutation<UpdateBrandButtonMutation>(Mutation)
-
-  const [t] = useTranslation('manage')
-
   const notify = useToast()
 
-  const checkUpdate = (): void => {
-    if (state.brand !== data?.brand?.id) {
-      onUpdateBrand()
-      return
-    }
+  const hasUpdate = state.brand !== data?.brand?.id && state.brand != null
+
+  const isDisabled = state.brand == null
+
+  const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
       value: STEPS.CATEGORY
@@ -75,29 +72,44 @@ export default function UpdateBrandButton ({
         }
       },
       onCompleted () {
-        dispatch({
-          type: EVENTS.STEP,
-          value: STEPS.CATEGORY
-        })
+        goNext()
       },
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.brand.selector.query.error'),
+          title: t`There was an error saving the brand`,
           isClosable: true
         })
       }
     })
   }
 
+  if (hasUpdate) {
+    return (
+      <Button
+        colorScheme='green'
+        size='lg'
+        isDisabled={isDisabled}
+        isLoading={isUpdatingBrand}
+        onClick={onUpdateBrand}
+      >
+        <Trans>
+          Save
+        </Trans>
+      </Button>
+    )
+  }
+
   return (
     <Button
       colorScheme='gray'
       size='lg'
-      isDisabled={state.brand == null}
-      isLoading={isUpdatingBrand}
-      onClick={checkUpdate}
-    >{t('create_post.flow.steps.footer.forward')}
+      isDisabled={isDisabled}
+      onClick={goNext}
+    >
+      <Trans>
+        Next
+      </Trans>
     </Button>
   )
 }

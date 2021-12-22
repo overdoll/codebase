@@ -3,11 +3,11 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateAudienceButton$key } from '@//:artifacts/UpdateAudienceButton.graphql'
 import type { UpdateAudienceButtonMutation } from '@//:artifacts/UpdateAudienceButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -49,20 +49,18 @@ export default function UpdateAudienceButton ({
 
   const [updateAudience, isUpdatingAudience] = useMutation<UpdateAudienceButtonMutation>(Mutation)
 
-  const [t] = useTranslation('manage')
-
   const notify = useToast()
 
-  const checkUpdate = (): void => {
-    if (state.audience !== data?.audience?.id) {
-      onUpdateAudience()
-      return
-    }
+  const hasUpdate = state.audience !== data?.audience?.id && state.audience != null
+
+  const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
       value: STEPS.BRAND
     })
   }
+
+  const isDisabled = state.audience == null
 
   const onUpdateAudience = (): void => {
     if (state?.audience == null) return
@@ -75,29 +73,43 @@ export default function UpdateAudienceButton ({
         }
       },
       onCompleted () {
-        dispatch({
-          type: EVENTS.STEP,
-          value: STEPS.BRAND
-        })
+        goNext()
       },
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.audience.selector.query.error'),
+          title: t`There was an error saving the audience`,
           isClosable: true
         })
       }
     })
+  }
+  if (hasUpdate) {
+    return (
+      <Button
+        colorScheme='green'
+        size='lg'
+        isDisabled={isDisabled}
+        isLoading={isUpdatingAudience}
+        onClick={onUpdateAudience}
+      >
+        <Trans>
+          Save
+        </Trans>
+      </Button>
+    )
   }
 
   return (
     <Button
       colorScheme='gray'
       size='lg'
-      isDisabled={state.audience == null}
-      isLoading={isUpdatingAudience}
-      onClick={checkUpdate}
-    >{t('create_post.flow.steps.footer.forward')}
+      isDisabled={isDisabled}
+      onClick={goNext}
+    >
+      <Trans>
+        Next
+      </Trans>
     </Button>
   )
 }

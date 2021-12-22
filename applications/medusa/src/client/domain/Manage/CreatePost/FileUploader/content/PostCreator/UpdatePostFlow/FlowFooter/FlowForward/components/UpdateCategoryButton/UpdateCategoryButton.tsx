@@ -3,12 +3,12 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateCategoryButtonFragment$key } from '@//:artifacts/UpdateCategoryButtonFragment.graphql'
 import type { UpdateCategoryButtonMutation } from '@//:artifacts/UpdateCategoryButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { compareTwoArrays } from '@//:modules/support'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -57,20 +57,18 @@ export default function UpdateBrandButton ({
 
   const [updateCategory, isUpdatingCategory] = useMutation<UpdateCategoryButtonMutation>(Mutation)
 
-  const [t] = useTranslation('manage')
-
   const notify = useToast()
 
   const buttonDisabled = (Object.keys(state.categories)).length < 3
 
-  const checkUpdate = (): void => {
+  const hasUpdate = (): boolean => {
     const currentCategories = data?.categories?.map((item) => item.id)
     const stateCategories = Object.keys(state.categories)
 
-    if (compareTwoArrays(currentCategories, stateCategories) === false) {
-      onUpdateCategory()
-      return
-    }
+    return compareTwoArrays(currentCategories, stateCategories) === false
+  }
+
+  const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
       value: STEPS.CHARACTER
@@ -90,19 +88,32 @@ export default function UpdateBrandButton ({
         }
       },
       onCompleted () {
-        dispatch({
-          type: EVENTS.STEP,
-          value: STEPS.CHARACTER
-        })
+        goNext()
       },
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.category.query.error'),
+          title: t`There was an error saving the categories`,
           isClosable: true
         })
       }
     })
+  }
+
+  if (hasUpdate() && Object.keys(state.categories).length > 2) {
+    return (
+      <Button
+        colorScheme='green'
+        size='lg'
+        isDisabled={buttonDisabled}
+        isLoading={isUpdatingCategory}
+        onClick={onUpdateCategory}
+      >
+        <Trans>
+          Save
+        </Trans>
+      </Button>
+    )
   }
 
   return (
@@ -110,9 +121,11 @@ export default function UpdateBrandButton ({
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled}
-      isLoading={isUpdatingCategory}
-      onClick={checkUpdate}
-    >{t('create_post.flow.steps.footer.forward')}
+      onClick={goNext}
+    >
+      <Trans>
+        Next
+      </Trans>
     </Button>
   )
 }

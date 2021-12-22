@@ -3,13 +3,12 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateContentButtonFragment$key } from '@//:artifacts/UpdateContentButtonFragment.graphql'
 import type { UpdateContentButtonMutation } from '@//:artifacts/UpdateContentButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { compareTwoArrayOrders } from '@//:modules/support'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -56,8 +55,6 @@ export default function UpdateContentButton ({
   const data = useFragment(Fragment, query)
 
   const [updateContent, isUpdatingContent] = useMutation<UpdateContentButtonMutation>(Mutation)
-
-  const [t] = useTranslation('manage')
 
   const notify = useToast()
 

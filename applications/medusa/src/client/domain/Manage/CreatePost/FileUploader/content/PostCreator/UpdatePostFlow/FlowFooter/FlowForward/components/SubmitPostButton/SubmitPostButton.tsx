@@ -3,12 +3,12 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useTranslation } from 'react-i18next'
+import { useQueryParam } from 'use-query-params'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../../../../constants/constants'
 import type { SubmitPostButtonFragment$key } from '@//:artifacts/SubmitPostButtonFragment.graphql'
 import type { SubmitPostButtonMutation } from '@//:artifacts/SubmitPostButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
+import { Trans, t } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -45,9 +45,7 @@ export default function SubmitPostButton ({
 
   const [submitPost, isSubmittingPost] = useMutation<SubmitPostButtonMutation>(Mutation)
 
-  const [, setPostReference] = useQueryParam('id', StringParam)
-
-  const [t] = useTranslation('manage')
+  const [, setPostReference] = useQueryParam<string | null | undefined>('id')
 
   const notify = useToast()
 
@@ -79,7 +77,7 @@ export default function SubmitPostButton ({
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.review.selector.query.error'),
+          title: t`There was an error submitting your post`,
           isClosable: true
         })
       }
@@ -92,7 +90,9 @@ export default function SubmitPostButton ({
       size='lg'
       isLoading={isSubmittingPost}
       onClick={onSubmitPost}
-    >{t('create_post.flow.steps.footer.submit')}
+    ><Trans>
+      Submit
+    </Trans>
     </Button>
   )
 }

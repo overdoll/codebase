@@ -1,10 +1,10 @@
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import { Box, Heading, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import { EVENTS, INITIAL_STATE } from '../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -17,8 +17,6 @@ export default function Submit ({
   state,
   dispatch
 }: Props): JSX.Element {
-  const [t] = useTranslation('manage')
-
   const onRetry = (): void => {
     dispatch({
       type: EVENTS.CLEANUP,
@@ -31,10 +29,15 @@ export default function Submit ({
       <PostPlaceholder>
         <Box>
           <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
-            {t('create_post.flow.steps.submit.in_review.title')}
+            <Trans>
+              Submitted For Review
+            </Trans>
           </Heading>
           <Text mb={8} textAlign='center' color='gray.100' fontSize='md'>
-            {t('create_post.flow.steps.submit.in_review.description')}
+            <Trans>
+              The post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be
+              visible to the public.
+            </Trans>
           </Text>
         </Box>
         <Button
@@ -42,7 +45,7 @@ export default function Submit ({
           colorScheme='primary'
           size='lg'
           onClick={onRetry}
-        >{t('create_post.flow.steps.footer.retry')}
+        ><Trans>Post again</Trans>
         </Button>
       </PostPlaceholder>
     )
@@ -52,10 +55,14 @@ export default function Submit ({
     <PostPlaceholder>
       <Box>
         <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
-          {t('create_post.flow.steps.submit.not_in_review.title')}
+          <Trans>
+            Post Submitted
+          </Trans>
         </Heading>
         <Text mb={8} textAlign='center' color='gray.100' fontSize='md'>
-          {t('create_post.flow.steps.submit.not_in_review.description')}
+          <Trans>
+            Your post is now visible to the public
+          </Trans>
         </Text>
       </Box>
       <Button
@@ -63,7 +70,7 @@ export default function Submit ({
         colorScheme='primary'
         size='lg'
         onClick={onRetry}
-      >{t('create_post.flow.steps.footer.retry')}
+      ><Trans>Post again</Trans>
       </Button>
     </PostPlaceholder>
   )

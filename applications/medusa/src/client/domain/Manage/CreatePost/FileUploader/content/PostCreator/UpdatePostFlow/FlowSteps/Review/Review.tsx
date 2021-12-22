@@ -1,6 +1,5 @@
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql'
@@ -8,6 +7,7 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import PostGalleryContent from '../../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
 import PostBrand from '../../../../../../../../../components/Posts/PostBrand/PostBrand'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -38,16 +38,18 @@ export default function Review ({
 }: Props): JSX.Element {
   const data = useFragment(ReviewFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
   return (
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.review.body.title')}
+          <Trans>
+            Review your selections
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.review.body.description')}
+          <Trans>
+            Make sure you like what you see before you submit the post.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <Stack spacing={2}>

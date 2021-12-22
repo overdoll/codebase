@@ -8,24 +8,23 @@ import {
   PopoverHeader,
   PopoverTrigger
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: string
+  children: ReactNode
 }
 
 export default function RequiredPrompt ({ children }: Props): JSX.Element {
-  const [t] = useTranslation('manage')
-
   return (
     <Box>
       <Popover>
         <PopoverTrigger>
-          <Heading role='button' fontSize='md' color='gray.200'>{t('create_post.flow.steps.footer.required')}</Heading>
+          <Heading role='button' fontSize='md' color='gray.200'><Trans>Why is this required</Trans></Heading>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverCloseButton />
-          <PopoverHeader fontWeight='semibold'>{t('create_post.flow.steps.footer.required')}</PopoverHeader>
+          <PopoverHeader fontWeight='semibold'><Trans>Why is this required</Trans></PopoverHeader>
           <PopoverBody textAlign='left' fontSize='sm'>{children}</PopoverBody>
         </PopoverContent>
       </Popover>

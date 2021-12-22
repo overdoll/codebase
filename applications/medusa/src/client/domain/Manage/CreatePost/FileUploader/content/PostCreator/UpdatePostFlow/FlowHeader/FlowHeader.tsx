@@ -16,7 +16,6 @@ import {
   Text
 } from '@chakra-ui/react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
-import { useTranslation } from 'react-i18next'
 import { useQueryParam } from 'use-query-params'
 import type { Uppy } from '@uppy/core'
 import type { FlowHeaderFragment$key } from '@//:artifacts/FlowHeaderFragment.graphql'
@@ -27,6 +26,7 @@ import progressScore from './progressScore/index'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
 import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -51,15 +51,13 @@ export default function FlowHeader ({
 
   const cancelButtonRef = useRef(null)
 
-  const [t] = useTranslation('manage')
-
   const {
     isOpen,
     onOpen,
     onClose
   } = useHistoryDisclosure()
 
-  const [, setPostReference] = useQueryParam<string>('id')
+  const [, setPostReference] = useQueryParam<string | null | undefined>('id')
 
   const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data })
 
@@ -71,26 +69,23 @@ export default function FlowHeader ({
       type: EVENTS.CLEANUP,
       value: INITIAL_STATE
     })
-    // @ts-expect-error
     setPostReference(undefined)
   }
 
   const findText = (): string[] => {
     switch (state.step) {
       case STEPS.ARRANGE:
-        return [t('create_post.flow.steps.arrange.header'), t('create_post.flow.steps.arrange.subheader')]
+        return [t`Step 1`, t`Arrange your uploads`]
       case STEPS.AUDIENCE:
-        return [t('create_post.flow.steps.audience.header'), t('create_post.flow.steps.audience.subheader')]
+        return [t`Step 2`, t`Select an audience`]
       case STEPS.BRAND:
-        return [t('create_post.flow.steps.brand.header'), t('create_post.flow.steps.brand.subheader')]
+        return [t`Step 3`, t`Select a brand`]
       case STEPS.CATEGORY:
-        return [t('create_post.flow.steps.category.header'), t('create_post.flow.steps.category.subheader')]
+        return [t`Step 4`, t`Add categories`]
       case STEPS.CHARACTER:
-        return [t('create_post.flow.steps.character.header'), t('create_post.flow.steps.character.subheader')]
+        return [t`Step 5`, t`Add characters`]
       case STEPS.REVIEW:
-        return [t('create_post.flow.steps.review.header'), t('create_post.flow.steps.review.subheader')]
-      case STEPS.SUBMIT:
-        return [t('create_post.flow.steps.submit.header'), t('create_post.flow.steps.submit.subheader')]
+        return [t`Step 6`, t`Review your post`]
       default:
         return ['', '']
     }
@@ -122,23 +117,34 @@ export default function FlowHeader ({
         <AlertDialogOverlay />
         <AlertDialogContent>
           <AlertDialogHeader>
-            {t('create_post.flow.steps.header.modal.header')}
+            <Trans>
+              Exit Post Creator
+            </Trans>
           </AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
-            {t('create_post.flow.steps.header.modal.body.start')}
+            <Trans>
+              Are you sure you'd like to exit the post creator? You can resume your progress from your
+            </Trans>
             <ExternalLink
+              mx={2}
               path='/manage/my-posts'
-            >{t('create_post.flow.steps.header.modal.body.middle')}
+            ><Trans>My Content</Trans>
             </ExternalLink>
-            {t('create_post.flow.steps.header.modal.body.end')}
+            <Trans>
+              page at any time.
+            </Trans>
           </AlertDialogBody>
           <AlertDialogFooter>
-            <Button variant='solid' size='lg' forwardRef={cancelButtonRef} onClick={onClose}>
-              {t('create_post.flow.steps.header.modal.cancel')}
+            <Button variant='solid' size='lg' onClick={onClose}>
+              <Trans>
+                Go back
+              </Trans>
             </Button>
             <Button onClick={onCleanup} ml={3} size='lg' colorScheme='orange' variant='solid'>
-              {t('create_post.flow.steps.header.modal.confirm')}
+              <Trans>
+                Yes, exit
+              </Trans>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

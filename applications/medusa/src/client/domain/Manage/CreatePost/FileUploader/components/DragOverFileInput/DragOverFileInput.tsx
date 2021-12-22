@@ -4,7 +4,7 @@ import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -12,12 +12,19 @@ interface Props {
   children: ReactNode
 }
 
-export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): JSX.Element {
-  const [t] = useTranslation('general')
-
+export default function DragOverFileInput ({
+  uppy,
+  onSelect,
+  children,
+  ...rest
+}: Props): JSX.Element {
   const notify = useToast()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure()
 
   const [timeOut, changeTimeOut] = useState<ReturnType<typeof setTimeout>>(setTimeout(() => ({})))
 
@@ -97,7 +104,9 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
         display={isOpen ? 'flex' : 'none'}
       >
         <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
-        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>{t('upload.drag_over')}
+        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'><Trans>Drop your files to upload
+          them
+        </Trans>
         </Heading>
       </Flex>
     </Flex>

@@ -3,12 +3,12 @@ import { useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS, STEPS } from '../../../../../../../constants/constants'
 import type { UpdateCharacterButtonFragment$key } from '@//:artifacts/UpdateCharacterButtonFragment.graphql'
 import type { UpdateCharacterButtonMutation } from '@//:artifacts/UpdateCharacterButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { compareTwoArrays } from '@//:modules/support'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -60,20 +60,21 @@ export default function UpdateCharacterButton ({
 
   const [updateCharacter, isUpdatingCharacter] = useMutation<UpdateCharacterButtonMutation>(Mutation)
 
-  const [t] = useTranslation('manage')
-
   const notify = useToast()
 
   const buttonDisabled = (Object.keys(state.characters)).length < 1
 
-  const checkUpdate = (): void => {
+  const hasUpdate = (): boolean => {
     const currentCharacters = data?.characters.map((item) => item.id)
     const stateCharacters = Object.keys(state.characters)
 
-    if (compareTwoArrays(currentCharacters, stateCharacters) === false) {
-      onUpdateCharacter()
-      return
-    }
+    console.log(currentCharacters)
+    console.log(stateCharacters)
+
+    return compareTwoArrays(currentCharacters, stateCharacters) === false
+  }
+
+  const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
       value: STEPS.REVIEW
@@ -91,19 +92,31 @@ export default function UpdateCharacterButton ({
         }
       },
       onCompleted () {
-        dispatch({
-          type: EVENTS.STEP,
-          value: STEPS.REVIEW
-        })
+        goNext()
       },
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.steps.character.query.error'),
+          title: t`There was an error saving the characters`,
           isClosable: true
         })
       }
     })
+  }
+
+  if (hasUpdate() && Object.keys(state.characters).length > 0) {
+    return (
+      <Button
+        colorScheme='green'
+        size='lg'
+        isDisabled={buttonDisabled}
+        isLoading={isUpdatingCharacter}
+        onClick={onUpdateCharacter}
+      ><Trans>
+        Save
+      </Trans>
+      </Button>
+    )
   }
 
   return (
@@ -111,9 +124,10 @@ export default function UpdateCharacterButton ({
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled}
-      isLoading={isUpdatingCharacter}
-      onClick={checkUpdate}
-    >{t('create_post.flow.steps.footer.forward')}
+      onClick={goNext}
+    ><Trans>
+      Next
+    </Trans>
     </Button>
   )
 }

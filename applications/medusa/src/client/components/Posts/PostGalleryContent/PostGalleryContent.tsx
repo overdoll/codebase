@@ -80,16 +80,19 @@ export default function PostGalleryContent ({
         {data.content.map((item, index) =>
           <SwiperSlide key={index}>
             <Flex bg='gray.800' justify='center' align='center' h={500}>
-              {item.type === 'IMAGE' &&
-                <ImageSnippet h='100%' query={item} />}
-              {item.type === 'VIDEO' &&
-                <VideoSnippet
-                  autoPlay={index === currentSlide}
-                  onVolumeChange={(e) =>
-                    onVolumeChange(e)}
-                  controls
-                  query={item}
-                />}
+              <Flex h='100%'>
+                {item.type === 'IMAGE' &&
+                  <ImageSnippet h='100%' query={item} />}
+                {item.type === 'VIDEO' &&
+                  <VideoSnippet
+                    h='100%'
+                    autoPlay={index === currentSlide}
+                    onVolumeChange={(e) =>
+                      onVolumeChange(e)}
+                    controls
+                    query={item}
+                  />}
+              </Flex>
             </Flex>
           </SwiperSlide>)}
       </Swiper>

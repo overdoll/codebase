@@ -1,7 +1,6 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { SearchCharactersQuery } from '@//:artifacts/SearchCharactersQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
 import {
@@ -13,6 +12,7 @@ import {
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   selected: string[]
@@ -79,8 +79,6 @@ export default function SearchCategories ({
     queryData
   )
 
-  const [t] = useTranslation('manage')
-
   const characters = removeNode(data.characters.edges)
 
   const onChangeSelection = (id): void => {
@@ -93,7 +91,9 @@ export default function SearchCategories ({
     return (
       <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
         <Text color='gray.200' textAlign='center' fontSize='lg'>
-          {t('create_post.flow.steps.character.selector.search.empty', { word: queryArgs.variables.name })}
+          <Trans>
+            No characters were found with the name {queryArgs.variables.name}
+          </Trans>
         </Text>
       </Flex>
     )
@@ -130,7 +130,9 @@ export default function SearchCategories ({
               justify='center'
             >
               <Text textAlign='center' color='gray.00'>
-                {t('create_post.flow.steps.character.selector.search.load')}
+                <Trans>
+                  Load More Characters
+                </Trans>
               </Text>
             </ClickableBox>
           </LargeGridItem>}

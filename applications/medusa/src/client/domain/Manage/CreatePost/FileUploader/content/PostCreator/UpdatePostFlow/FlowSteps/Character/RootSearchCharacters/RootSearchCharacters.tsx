@@ -28,7 +28,7 @@ export default function RootSearchCategories ({
         fetchKey: (prev?.options?.fetchKey ?? 0) + 1
       },
       variables: {
-        name: search
+        name: search != null && search !== '' ? search : null
       }
     }))
   }, [])

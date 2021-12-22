@@ -4,12 +4,12 @@ import type { Dispatch, State } from '@//:types/upload'
 import type { CharacterFragment$key } from '@//:artifacts/CharacterFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { useTranslation } from 'react-i18next'
 import { EVENTS } from '../../../../../constants/constants'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import SearchInput from '../../../SearchInput/SearchInput'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -46,11 +46,9 @@ export default function Category ({
 }: Props): JSX.Element {
   const data = useFragment(CharacterFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
+  const currentCharacters = data.characters.map((item) => item.id) as string[]
 
-  const currentCharacters = data.characters.map((item) => item.id)
-
-  const [selected, setSelected] = useState(currentCharacters as string[])
+  const [selected, setSelected] = useState(currentCharacters)
 
   const setCurrentSelection = (character): void => {
     if (selected.includes(character.id)) {
@@ -92,13 +90,17 @@ export default function Category ({
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.character.selector.title')}
+          <Trans>
+            Who is in your post?
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.character.selector.description')}
+          <Trans>
+            Select the character(s) that are the primary focus in your content.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput placeholder={t('create_post.flow.steps.character.selector.search.placeholder')}>
+      <SearchInput placeholder={t`Search for a character by name`}>
         {({ searchInput }) =>
           <>
             <Wrap>

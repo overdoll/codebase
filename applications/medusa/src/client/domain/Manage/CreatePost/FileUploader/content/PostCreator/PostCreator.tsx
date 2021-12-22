@@ -7,7 +7,6 @@ import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import { useQueryParam } from 'use-query-params'
 import type { PostCreatorQuery } from '@//:artifacts/PostCreatorQuery.graphql'
 import { STEPS } from '../../constants/constants'
-import { useTranslation } from 'react-i18next'
 import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import Button from '@//:modules/form/Button/Button'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
@@ -19,6 +18,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import { PauseCircle } from '../../../../../../../assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -41,14 +41,12 @@ export default function PostCreator ({
   state,
   dispatch
 }: Props): JSX.Element {
-  const [postReference] = useQueryParam<string | null>('id')
+  const [postReference] = useQueryParam<string | null | undefined>('id')
 
   const data = useLazyLoadQuery<PostCreatorQuery>(
     Query,
     { reference: postReference ?? '' }
   )
-
-  const [t] = useTranslation('manage')
 
   const history = useHistory()
 
@@ -61,17 +59,19 @@ export default function PostCreator ({
         <CreatePostFlow uppy={uppy} state={state} dispatch={dispatch} />
         <Box>
           <Heading color='gray.00' fontSize='xl'>
-            {t('create_post.flow.create.uploader.rules.heading')}
+            <Trans>
+              As a reminder of the guidelines...
+            </Trans>
           </Heading>
           <Box ml={4}>
-            <Text>{t('create_post.flow.create.uploader.rules.rule_one')}</Text>
-            <Text>{t('create_post.flow.create.uploader.rules.rule_two')}</Text>
-            <Text>{t('create_post.flow.create.uploader.rules.rule_three')}</Text>
+            <Text><Trans>Nothing extremely offensive or shocking</Trans></Text>
+            <Text><Trans>All characters must be of legal age</Trans></Text>
+            <Text><Trans>You own the rights to the content you upload</Trans></Text>
           </Box>
         </Box>
         <Box>
           <Text fontSize='md' color='gray.100'>
-            {t('create_post.flow.create.uploader.rules.hint')}
+            <Trans>Upstanding netizens shall read all the rules before posting</Trans>
           </Text>
           <CommunityGuidelines size='md' />
         </Box>
@@ -99,7 +99,9 @@ export default function PostCreator ({
             />
             <Box>
               <Heading color='gray.00' fontSize='4xl'>
-                {t('create_post.flow.create.not_draft.title')}
+                <Trans>
+                  This post was already submitted
+                </Trans>
               </Heading>
             </Box>
             <Button
@@ -107,7 +109,9 @@ export default function PostCreator ({
               variant='solid'
               size='lg'
               onClick={() => history.goBack()}
-            >{t('create_post.flow.create.not_draft.button')}
+            ><Trans>
+              Go back
+            </Trans>
             </Button>
           </Stack>
         </Flex>

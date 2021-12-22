@@ -2,19 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import { graphql } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import type { PostStateRejectedFragment$key } from '@//:artifacts/PostStateRejectedFragment.graphql'
-import {
-  ClickableBox,
-  ListSpacer,
-  PageSectionDescription,
-  PageSectionWrap,
-  PostPlaceholder
-} from '@//:modules/content/PageLayout'
-import { Text, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Box } from '@chakra-ui/react'
+import { ClickableBox, PageSectionDescription, PageSectionWrap, PostPlaceholder } from '@//:modules/content/PageLayout'
+import { Box, Heading, Text } from '@chakra-ui/react'
 import { RowItem, RowWrap } from '../../../../../components/ContentSelection'
-import { useTranslation } from 'react-i18next'
 import PostStateRejectedPreview from './PostStateRejectedPreview/PostStateRejectedPreview'
 
 type Props = {
@@ -40,13 +33,16 @@ const Fragment = graphql`
 `
 
 export default function PostStateRejected ({ query }: Props): Node {
-  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<PostStateRejectedFragment$key,
+  const {
+    data,
+    loadNext,
+    hasNext,
+    isLoadingNext,
+  } = usePaginationFragment<PostStateRejectedFragment$key,
     _>(
-      Fragment,
-      query
-    )
-
-  const [t] = useTranslation('manage')
+    Fragment,
+    query,
+  )
 
   if (data.rejectedPosts.edges.length < 1) {
     return (
@@ -74,7 +70,7 @@ export default function PostStateRejected ({ query }: Props): Node {
         {data.rejectedPosts.edges.map((item, index) =>
           <RowItem key={index} h={100}>
             <PostStateRejectedPreview query={item.node} />
-          </RowItem>
+          </RowItem>,
         )}
         {hasNext &&
           <RowItem>

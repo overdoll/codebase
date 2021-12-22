@@ -31,7 +31,7 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 
   return (
-    <HorizontalNavigation transparent={isHidden}>
+    <HorizontalNavigation>
       <HorizontalNavigation.Left>
         <SiteLinkLogo invisible={isHidden} />
       </HorizontalNavigation.Left>

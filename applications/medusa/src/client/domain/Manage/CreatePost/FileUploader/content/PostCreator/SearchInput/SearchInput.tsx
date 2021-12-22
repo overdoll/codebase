@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CloseButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 interface Props {
   children: ({ searchInput: string }) => {}
@@ -21,15 +21,13 @@ export default function SearchInput ({
     setSearch(e.target.value)
   }
 
-  const [t] = useTranslation('manage')
-
   return (
     <>
       <InputGroup>
         <Input
           size='lg'
           value={searchInput}
-          placeholder={placeholder ?? t('input.search')}
+          placeholder={placeholder ?? t`Enter a search term`}
           onChange={onChangeInput}
           variant='filled'
         />

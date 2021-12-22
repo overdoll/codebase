@@ -3,7 +3,6 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:m
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import type { BrandFragment$key } from '@//:artifacts/BrandFragment.graphql'
-import { useTranslation } from 'react-i18next'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { useSingleSelector } from '../../../../../../../../../components/ContentSelection'
@@ -11,6 +10,7 @@ import { Flex } from '@chakra-ui/react'
 import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
 import { EVENTS } from '../../../../../constants/constants'
 import RootBrands from './RootBrands/RootBrands'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -35,11 +35,9 @@ export default function Brand ({
 }: Props): JSX.Element {
   const data = useFragment(BrandFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
-  const determineDefaultBrand = (): string => {
+  const determineDefaultBrand = (): string | null => {
     if (data?.brand?.id == null) {
-      return ''
+      return null
     }
     return data.brand.id
   }
@@ -57,15 +55,22 @@ export default function Brand ({
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.brand.selector.title')}
+          <Trans>
+            What is the brand?
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.brand.selector.description')}
+          <Trans>
+            A brand is the artist or group of artists that created the content that belongs to the post.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <RootBrands selected={currentSelection} onSelect={setCurrentSelection} />
       <Flex justify='center'>
-        <RequiredPrompt>{t('create_post.flow.steps.brand.required_prompt')}</RequiredPrompt>
+        <RequiredPrompt><Trans>Brands are an easy way to manage your content and allow you to have a unique link that
+          can be shared anywhere.
+        </Trans>
+        </RequiredPrompt>
       </Flex>
     </>
   )

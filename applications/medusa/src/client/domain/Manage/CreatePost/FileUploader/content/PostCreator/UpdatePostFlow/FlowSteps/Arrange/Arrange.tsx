@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useTranslation } from 'react-i18next'
 import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql'
 import ProcessUploads from './ProcessUploads/ProcessUploads'
 import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -36,8 +36,6 @@ export default function Arrange ({
   query
 }: Props): JSX.Element {
   const data = useFragment(ArrangeFragmentGQL, query)
-
-  const [t] = useTranslation('manage')
 
   const contentData = state.content ?? data?.content
 
@@ -76,10 +74,14 @@ export default function Arrange ({
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.arrange.uploader.title', { count: contentData.length })}
+          <Trans>
+            Posting {contentData.length} Media
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.arrange.uploader.description')}
+          <Trans>
+            Add, arrange, or remove the files you're uploading.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />

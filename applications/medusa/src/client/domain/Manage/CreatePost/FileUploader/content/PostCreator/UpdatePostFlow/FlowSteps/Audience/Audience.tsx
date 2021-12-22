@@ -5,12 +5,12 @@ import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphq
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Flex } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { useSingleSelector } from '../../../../../../../../../components/ContentSelection'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../../components/RequiredPrompt/RequiredPrompt'
 import RootAudiences from './RootAudiences/RootAudiences'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -36,8 +36,6 @@ export default function Audience ({
 }: Props): JSX.Element {
   const data = useFragment(AudienceFragmentGQL, query)
 
-  const [t] = useTranslation('manage')
-
   const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.audience?.id as string })
 
   useEffect(() => {
@@ -51,15 +49,25 @@ export default function Audience ({
     <>
       <PageSectionWrap>
         <PageSectionTitle>
-          {t('create_post.flow.steps.audience.selector.title')}
+          <Trans>
+            Who is the target audience?
+          </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
-          {t('create_post.flow.steps.audience.selector.description')}
+          <Trans>
+            The audience is the group of people that you intended this post for. This will determine whether or not a
+            user can see your post based on their set preferences.
+          </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <RootAudiences selected={currentSelection} onSelect={setCurrentSelection} />
       <Flex justify='center'>
-        <RequiredPrompt>{t('create_post.flow.steps.audience.selector.required_prompt')}</RequiredPrompt>
+        <RequiredPrompt>
+          <Trans>
+            Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We
+            only show a person content they are interested in seeing.
+          </Trans>
+        </RequiredPrompt>
       </Flex>
     </>
   )

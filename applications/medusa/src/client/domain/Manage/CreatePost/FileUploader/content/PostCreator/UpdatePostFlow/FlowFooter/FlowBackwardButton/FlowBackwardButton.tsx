@@ -1,7 +1,7 @@
 import { EVENTS, STEPS } from '../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
 import type { Dispatch, State } from '@//:types/upload'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   state: State
@@ -12,8 +12,6 @@ export default function FlowBackwardButton ({
   dispatch,
   state
 }: Props): JSX.Element {
-  const [t] = useTranslation('manage')
-
   const goBack = (): void => {
     switch (state.step) {
       case STEPS.AUDIENCE:
@@ -62,7 +60,9 @@ export default function FlowBackwardButton ({
           colorScheme='gray'
           size='lg'
           onClick={goBack}
-        >{t('create_post.flow.steps.footer.back')}
+        ><Trans>
+          Back
+        </Trans>
         </Button>
       )
   }

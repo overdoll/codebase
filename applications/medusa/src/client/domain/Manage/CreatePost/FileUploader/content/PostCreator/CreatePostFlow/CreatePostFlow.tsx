@@ -3,15 +3,14 @@ import type { Dispatch, State } from '@//:types/upload'
 import { Box, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useTranslation } from 'react-i18next'
+import { useQueryParam } from 'use-query-params'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import DragOverFileInput from '../../../components/DragOverFileInput/DragOverFileInput'
 import FilePicker from '../../../components/FilePicker/FilePicker'
 import { FileUpload } from '../../../../../../../../assets/icons/interface'
 import Icon from '@//:modules/content/Icon/Icon'
 import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   uppy: Uppy
@@ -34,11 +33,9 @@ export default function CreatePostFlow ({
   state,
   dispatch
 }: Props): JSX.Element {
-  const [, setPostReference] = useQueryParam('id', StringParam)
+  const [, setPostReference] = useQueryParam<string | null | undefined>('id')
 
   const [createPost, isCreatingPost] = useMutation(Mutation)
-
-  const [t] = useTranslation('manage')
 
   const notify = useToast()
 
@@ -46,13 +43,13 @@ export default function CreatePostFlow ({
     createPost({
       variables: {},
       onCompleted (data: CreatePostFlowMutationResponse) {
-        setPostReference(data?.createPost?.post?.reference)
+        setPostReference(data?.createPost?.post?.reference as string)
       },
 
       onError () {
         notify({
           status: 'error',
-          title: t('create_post.flow.create.query.error'),
+          title: t`There was an error creating a draft post`,
           isClosable: true
         })
       }
@@ -71,7 +68,7 @@ export default function CreatePostFlow ({
     return (
       <PostPlaceholder>
         <Spinner mb={6} thickness='4px' size='lg' color='primary.500' />
-        <Text color='gray.100'>{t('create_post.flow.create.creating')}</Text>
+        <Text color='gray.100'><Trans>Creating your post...</Trans></Text>
       </PostPlaceholder>
     )
   }
@@ -93,7 +90,9 @@ export default function CreatePostFlow ({
               </Trans>
             </Heading>
             <Text color='gray.200'>
-              {t('create_post.flow.create.uploader.description')}
+              <Trans>
+                Upload one or more files by dragging and dropping them
+              </Trans>
             </Text>
           </Box>
         </PostPlaceholder>
