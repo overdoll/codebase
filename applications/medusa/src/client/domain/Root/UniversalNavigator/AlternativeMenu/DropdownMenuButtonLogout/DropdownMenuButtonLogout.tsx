@@ -23,6 +23,8 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
     logout({
       variables: {},
       onCompleted () {
+        history.push('/')
+
         notify({
           status: 'success',
           title: t`You have been logged out`,
@@ -39,8 +41,6 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
         if (viewer != null) {
           viewer.invalidateRecord()
         }
-
-        history.push('/')
       },
       onError () {
         notify({

@@ -1,4 +1,4 @@
-package translations
+package localization
 
 import (
 	"go.uber.org/zap"

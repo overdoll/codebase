@@ -122,21 +122,3 @@ func (m MutationResolver) ApprovePost(ctx context.Context, input types.ApprovePo
 
 	return &types.ApprovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
 }
-
-func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, command.RevertModeratePost{
-		Principal:  principal.FromContext(ctx),
-		AuditLogId: input.PostAuditLogID.GetID(),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
-}

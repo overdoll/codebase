@@ -10,7 +10,6 @@ go_library(
         "remove_moderator_from_post_queue.go",
         "remove_post.go",
         "report_post.go",
-        "revert_moderate_post_audit_log.go",
         "services.go",
     ],
     importpath = "overdoll/applications/parley/internal/app/command",

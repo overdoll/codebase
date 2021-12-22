@@ -29,7 +29,7 @@ type Session struct {
 
 var (
 	ErrSessionsNotFound = errors.New("sessions not found")
-	defaultDuration     = int64(28800000)
+	defaultDuration     = int64(1209600)
 )
 
 func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, lastSeen int64, current bool, location *location.Location) *Session {

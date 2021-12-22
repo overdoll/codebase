@@ -11,10 +11,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
-	"overdoll/libraries/translations"
 )
 
 type seriesDocument struct {
@@ -36,7 +36,7 @@ const seriesIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"title":  ` + translations.ESIndex + `
+	"title":  ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
 	}
@@ -67,7 +67,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
 				Type("best_fields"),
 		)
 	}

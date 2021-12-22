@@ -1,4 +1,4 @@
-package translations
+package localization
 
 // elasticsearch index with language mappings
 const ESIndex = `
@@ -47,10 +47,6 @@ const ESIndex = `
 			"analyzer": "czech"
 		},
 		"ja": {
-			"type": "text",
-			"analyzer": "default"
-		},
-		"zh-Hans": {
 			"type": "text",
 			"analyzer": "default"
 		},

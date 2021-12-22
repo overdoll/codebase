@@ -3,9 +3,9 @@ package report
 import (
 	"errors"
 
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/translations"
 )
 
 var (
@@ -15,7 +15,7 @@ var (
 type PostReportReason struct {
 	*paging.Node
 
-	reason *translations.Translation
+	reason *localization.Translation
 	id     string
 }
 
@@ -23,7 +23,7 @@ func (m *PostReportReason) ID() string {
 	return m.id
 }
 
-func (m *PostReportReason) Reason() *translations.Translation {
+func (m *PostReportReason) Reason() *localization.Translation {
 	return m.reason
 }
 
@@ -42,6 +42,6 @@ func CanViewPostReportReasons(requester *principal.Principal) error {
 func UnmarshalPostReportReasonFromDatabase(id string, reason map[string]string) *PostReportReason {
 	return &PostReportReason{
 		id:     id,
-		reason: translations.UnmarshalTranslationFromDatabase(reason),
+		reason: localization.UnmarshalTranslationFromDatabase(reason),
 	}
 }

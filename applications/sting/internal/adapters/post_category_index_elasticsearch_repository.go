@@ -11,10 +11,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
-	"overdoll/libraries/translations"
 )
 
 type categoryDocument struct {
@@ -36,7 +36,7 @@ const categoryIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"title":  ` + translations.ESIndex + `
+	"title":  ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
 	}
@@ -76,7 +76,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
+		Title:     localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
@@ -120,7 +120,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
 				Type("best_fields"),
 		)
 	}

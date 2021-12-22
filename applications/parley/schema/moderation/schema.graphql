@@ -28,12 +28,6 @@ input ApprovePostInput {
   postId: ID!
 }
 
-"""Revert the pending post audit log input"""
-input RevertPostAuditLogInput {
-  """The audit log to revert"""
-  postAuditLogId: ID!
-}
-
 """Add moderator to posts queue."""
 input AddModeratorToPostQueueInput {
   """The moderator account to take the action on"""
@@ -76,12 +70,6 @@ type RemovePostPayload {
   postAuditLog: PostAuditLog
 }
 
-"""Revert the pending post audit log payload"""
-type RevertPostAuditLogPayload {
-  """The new state of the audit log"""
-  postAuditLog: PostAuditLog
-}
-
 extend type Mutation {
   """
   Reject a specific post
@@ -97,13 +85,6 @@ extend type Mutation {
   Approve a specific post
   """
   approvePost(input: ApprovePostInput!): ApprovePostPayload
-
-  """
-  Revert an audit log, in case it was done incorrectly
-
-  Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
-  """
-  revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
   """
   Add moderator to posts queue

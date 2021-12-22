@@ -60,12 +60,3 @@ func (s StingGrpc) DiscardPost(ctx context.Context, id string) error {
 
 	return nil
 }
-
-func (s StingGrpc) UndoPost(ctx context.Context, id string) error {
-
-	if _, err := s.client.UndoPost(ctx, &sting.PostRequest{Id: id}); err != nil {
-		return err
-	}
-
-	return nil
-}

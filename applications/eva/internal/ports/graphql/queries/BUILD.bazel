@@ -14,9 +14,9 @@ go_library(
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/passport",
-        "//libraries/translations",
         "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

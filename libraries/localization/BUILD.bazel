@@ -17,3 +17,21 @@ go_library(
         "@org_uber_go_zap//:zap",
     ],
 )
+
+go_library(
+    name = "localization",
+    srcs = [
+        "elasticsearch_index.go",
+        "language.go",
+        "supported_locales.go",
+        "translated_support.go",
+        "translation.go",
+    ],
+    importpath = "overdoll/libraries/localization",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@org_golang_x_text//language",
+        "@org_golang_x_text//language/display",
+        "@org_uber_go_zap//:zap",
+    ],
+)

@@ -12,10 +12,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
-	"overdoll/libraries/translations"
 )
 
 type characterDocument struct {
@@ -38,7 +38,7 @@ const characterIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"name": ` + translations.ESIndex + `
+	"name": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
 	},
@@ -98,14 +98,14 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: charThumb,
-		Name:      translations.MarshalTranslationToDatabase(char.Name()),
+		Name:      localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Series: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: seriesThumb,
 			Slug:      media.Slug(),
-			Title:     translations.MarshalTranslationToDatabase(media.Title()),
+			Title:     localization.MarshalTranslationToDatabase(media.Title()),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
 	}, nil
@@ -149,7 +149,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	if filter.Name() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Name(), translations.GetESSearchFields("name")...).
+				NewMultiMatchQuery(*filter.Name(), localization.GetESSearchFields("name")...).
 				Type("best_fields"),
 		)
 	}

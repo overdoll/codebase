@@ -3,7 +3,7 @@ package account
 import (
 	"errors"
 	"os"
-	"overdoll/libraries/translations"
+	"overdoll/libraries/localization"
 	"strings"
 	"time"
 
@@ -23,7 +23,7 @@ type Account struct {
 	roles    []Role
 	verified bool
 	avatar   string
-	language *translations.Language
+	language *localization.Language
 
 	locked       bool
 	lockedUntil  int
@@ -64,13 +64,13 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		avatar:             avatar,
 		lockedUntil:        lockedUntil,
 		locked:             locked,
-		language:           translations.NewLanguageWithFallback(locale),
+		language:           localization.NewLanguageWithFallback(locale),
 		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
 	}
 }
 
-func NewAccount(lang *translations.Language, id, username, email string) (*Account, error) {
+func NewAccount(lang *localization.Language, id, username, email string) (*Account, error) {
 
 	if err := validateUsername(username); err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (a *Account) IsUsername(usr string) bool {
 	return strings.ToLower(a.username) == strings.ToLower(usr)
 }
 
-func (a *Account) Language() *translations.Language {
+func (a *Account) Language() *localization.Language {
 	return a.language
 }
 
@@ -258,7 +258,7 @@ func (a *Account) RolesAsString() []string {
 
 func (a *Account) UpdateLanguage(locale string) error {
 
-	l, err := translations.NewLanguage(locale)
+	l, err := localization.NewLanguage(locale)
 
 	if err != nil {
 		return err
@@ -270,10 +270,6 @@ func (a *Account) UpdateLanguage(locale string) error {
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {
-
-	if len(emails) >= maxEmailsLimit {
-		return ErrMaxEmailsLimitReached
-	}
 
 	for _, current := range emails {
 		if current.IsEqual(email) {

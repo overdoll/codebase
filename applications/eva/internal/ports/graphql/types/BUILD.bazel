@@ -16,8 +16,8 @@ go_library(
         "//applications/eva/internal/domain/token",
         "//libraries/graphql",
         "//libraries/graphql/relay",
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/passport",
-        "//libraries/translations",
     ],
 )

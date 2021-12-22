@@ -2,8 +2,6 @@ package infraction
 
 import (
 	"errors"
-	"time"
-
 	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -24,8 +22,7 @@ type PostAuditLog struct {
 	moderatorId   string
 	contributorId string
 
-	notes    *string
-	reverted bool
+	notes *string
 
 	status PostAuditLogStatus
 
@@ -46,7 +43,6 @@ func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId
 		status:          PostAuditLogStatusRemoved,
 		rejectionReason: rejectionReason,
 		notes:           notes,
-		reverted:        false,
 	}, nil
 }
 
@@ -66,7 +62,6 @@ func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId,
 		status:            PostAuditLogStatusApproved,
 		rejectionReason:   nil,
 		notes:             nil,
-		reverted:          false,
 		accountInfraction: nil,
 	}, nil
 }
@@ -100,12 +95,11 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 		status:            PostAuditLogStatusDenied,
 		rejectionReason:   rejectionReason,
 		notes:             notes,
-		reverted:          false,
 		accountInfraction: accountInfraction,
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, userInfraction *AccountInfractionHistory) *PostAuditLog {
 
 	st, _ := PostAuditLogStatusFromString(status)
 
@@ -117,7 +111,6 @@ func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, s
 		status:            st,
 		rejectionReason:   rejectionReason,
 		notes:             notes,
-		reverted:          reverted,
 		accountInfraction: userInfraction,
 	}
 }
@@ -156,44 +149,6 @@ func (m *PostAuditLog) IsRemoved() bool {
 
 func (m *PostAuditLog) IsDenied() bool {
 	return m.status == PostAuditLogStatusDenied
-}
-
-func (m *PostAuditLog) Reverted() bool {
-	return m.reverted
-}
-
-func (m *PostAuditLog) reversible() bool {
-	parse, err := ksuid.Parse(m.id)
-
-	if err != nil {
-		return false
-	}
-
-	return !parse.Time().After(time.Now().Add(time.Minute * 10))
-}
-
-func (m *PostAuditLog) ReversibleUntil() time.Time {
-	parse, err := ksuid.Parse(m.id)
-
-	if err != nil {
-		return time.Now()
-	}
-
-	return parse.Time().Add(time.Minute * 10)
-}
-
-// revert log
-func (m *PostAuditLog) Revert() error {
-	// cant revert after 15 minutes
-	if !m.reversible() {
-		return errors.New("revert log period has passed")
-	}
-
-	// remove infraction (else we have bad ids)
-	m.accountInfraction = nil
-	m.reverted = true
-
-	return nil
 }
 
 func (m *PostAuditLog) CanView(requester *principal.Principal) error {

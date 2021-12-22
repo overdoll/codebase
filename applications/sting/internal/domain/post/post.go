@@ -226,15 +226,6 @@ func (p *Post) MakeRemoved() error {
 	return nil
 }
 
-func (p *Post) MakeUndo() error {
-
-	if p.state == Discarded || p.state == Published {
-		return ErrNotComplete
-	}
-
-	return nil
-}
-
 func (p *Post) MakePublishing() {
 	p.state = Publishing
 }
