@@ -5,6 +5,7 @@ import { createMemoryHistory } from 'history'
 import { createMockEnvironment } from 'relay-test-utils'
 import RouterRenderer from '../RouteRenderer'
 import RoutingProvider from '../RoutingProvider'
+import { RelayEnvironmentProvider } from 'react-relay/hooks'
 
 it('renders a root component with children', async () => {
   const routes = [
@@ -29,19 +30,23 @@ it('renders a root component with children', async () => {
     }
   ]
 
+  const environment = createMockEnvironment()
+
   const router = createClientRouter(
     routes,
     createMemoryHistory({
       initialEntries: ['/test'],
       initialIndex: 0
     }),
-    createMockEnvironment()
+    environment
   )
 
   render(
-    <RoutingProvider router={router.context}>
-      <RouterRenderer />
-    </RoutingProvider>
+    <RelayEnvironmentProvider environment={environment}>
+      <RoutingProvider router={router.context}>
+        <RouterRenderer />
+      </RoutingProvider>
+    </RelayEnvironmentProvider>
   )
 
   await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument())

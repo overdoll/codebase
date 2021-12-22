@@ -1,8 +1,8 @@
 import NavLink from '../../../../routing/NavLink'
-import { FunctionComponent, ReactNode } from 'react'
-import { ClickableBox } from '../../../PageLayout'
-import { Flex, Heading } from '@chakra-ui/react'
-import Icon from '../../../Icon/Icon'
+import { FunctionComponent, ReactNode, useContext } from 'react'
+import { HorizontalNavigationDropdownMenuContext } from '../context'
+import HorizontalNavigationDropdownMenuButtonBody
+  from './HorizontalNavigationDropdownMenuButtonBody/HorizontalNavigationDropdownMenuButtonBody'
 
 interface Props {
   label?: ReactNode
@@ -21,45 +21,46 @@ export default function HorizontalNavigationDropdownMenuButton ({
   isDisabled,
   color,
   children,
-  to = ''
+  to
 }: Props): JSX.Element {
+  const ctx = useContext(HorizontalNavigationDropdownMenuContext)
+
+  const onClickMenu = (): void => {
+    if (onClick != null) {
+      onClick()
+    }
+
+    ctx.onClose()
+  }
+
+  if (to == null) {
+    return (
+      <HorizontalNavigationDropdownMenuButtonBody
+        icon={icon}
+        color={color}
+        label={label}
+        onClick={onClickMenu}
+        isDisabled={isDisabled}
+        isActive={false}
+      >
+        {children}
+      </HorizontalNavigationDropdownMenuButtonBody>
+    )
+  }
+
   return (
     <NavLink to={to}>
       {({ isActive }) => (
-        <ClickableBox
-          onClick={onClick}
+        <HorizontalNavigationDropdownMenuButtonBody
+          icon={icon}
+          color={color}
+          label={label}
+          onClick={onClickMenu}
           isDisabled={isDisabled}
-          bg={isActive ? 'gray.700' : 'gray.800'}
+          isActive={isActive}
         >
-          <Flex align='center'>
-            {(icon != null) && (
-              <Flex
-                borderRadius='md'
-                align='center'
-                p={1}
-                mr={3}
-                bg={isActive ? 'gray.00' : 'gray.500'}
-              >
-                <Icon
-                  icon={icon}
-                  w='26px'
-                  h='26px'
-                  p={1}
-                  fill={(color ?? (isActive ? 'primary.400' : 'gray.100'))}
-                />
-              </Flex>
-            )}
-            {label != null && (
-              <Heading
-                color={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
-                fontSize='lg'
-              >
-                {label}
-              </Heading>
-            )}
-            {(icon == null) && children}
-          </Flex>
-        </ClickableBox>
+          {children}
+        </HorizontalNavigationDropdownMenuButtonBody>
       )}
     </NavLink>
   )

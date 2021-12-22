@@ -34,7 +34,7 @@ export default function withProviders ({
       return (
         <Bootstrap
           emotionCache={cache}
-          routerContext={router.context}
+          router={router.context}
           environment={environment}
           i18n={i18n}
         >

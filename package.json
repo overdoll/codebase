@@ -41,6 +41,7 @@
     "joi": "^17.4.0",
     "js-file-download": "^0.4.12",
     "numbro": "^2.3.2",
+    "path-to-regexp": "1.7.0",
     "query-string": "6.0.0",
     "react": "0.0.0-experimental-0203b6567",
     "react-beautiful-dnd": "^13.0.0",

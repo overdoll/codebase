@@ -4,6 +4,7 @@ import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { t, Trans } from '@lingui/macro'
+import { useHistory } from '@//:modules/routing'
 
 const LogoutButtonGQL = graphql`
   mutation DropdownMenuButtonLogoutMutation {
@@ -15,6 +16,8 @@ const LogoutButtonGQL = graphql`
 
 export default function DropdownMenuButtonLogout (): JSX.Element {
   const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
+
+  const history = useHistory()
 
   const onLogout = (): void => {
     logout({
@@ -36,6 +39,8 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
         if (viewer != null) {
           viewer.invalidateRecord()
         }
+
+        history.push('/')
       },
       onError () {
         notify({

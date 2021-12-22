@@ -3,7 +3,7 @@
     "id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
     "slug": "default_brand",
     "name": {
-      "en-US": "Default Brand"
+      "en": "Default Brand"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
@@ -11,7 +11,7 @@
     "id": "1q7MIqqnkzew33q4elXuN1Ri27d",
     "slug": "non_default_brand",
     "name": {
-      "en-US": "Non-Default Brand"
+      "en": "Non-Default Brand"
     },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   }
