@@ -1,9 +1,14 @@
-import { Box, BoxProps } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
+import { ReactNode } from 'react'
+
+interface Props extends HTMLChakraProps<any> {
+  children: ReactNode
+}
 
 export default function SmallBackgroundBox ({
   children,
   ...rest
-}: BoxProps): JSX.Element {
+}: Props): JSX.Element {
   return (
     <Box
       bg='gray.800'

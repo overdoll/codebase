@@ -1,10 +1,12 @@
 import { Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay/hooks'
-import type { QueueSettingsMutation } from '@//:artifacts/QueueSettingsMutation.graphql'
+import { graphql, PreloadedQuery, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import Switch from '@//:modules/form/Switch/Switch'
-import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/macro'
+import { useTranslation } from 'react-i18next'
+import type { QueueSettingsAddMutation } from '@//:artifacts/QueueSettingsAddMutation.graphql'
+import type { QueueSettingsRemoveMutation } from '@//:artifacts/QueueSettingsRemoveMutation.graphql'
+import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
 
 interface Props {
   query: PreloadedQuery<QueueSettingsQueryType>
@@ -13,18 +15,25 @@ interface Props {
 const PreparedQueueGQL = graphql`
   query QueueSettingsQuery {
     viewer {
-      id
-      moderatorSettings {
-        isInModeratorQueue
-      }
+      ...QueueSettingsFragment
     }
   }
 `
 
-const QueueSettingsMutationGQL = graphql`
-  mutation QueueSettingsMutation($input: RemoveModeratorFromPostQueueInput!) {
-    removeModeratorFromPostQueue(input: $input) {
+const QueueSettingsFragmentGQL = graphql`
+  fragment QueueSettingsFragment on Account {
+    id
+    moderatorSettings {
+      isInModeratorQueue
+    }
+  }
+`
+
+const AddToQueue = graphql`
+  mutation QueueSettingsAddMutation($input: AddModeratorToPostQueueInput!) {
+    addModeratorToPostQueue(input: $input) {
       account {
+        id
         moderatorSettings {
           isInModeratorQueue
         }
@@ -33,8 +42,18 @@ const QueueSettingsMutationGQL = graphql`
   }
 `
 
-// TODO a new mutation for addmoderatortopostqueue
-// TODO and now you also have to pass in account id
+const RemoveFromQueue = graphql`
+  mutation QueueSettingsRemoveMutation($input: RemoveModeratorFromPostQueueInput!) {
+    removeModeratorFromPostQueue(input: $input) {
+      account {
+        id
+        moderatorSettings {
+          isInModeratorQueue
+        }
+      }
+    }
+  }
+`
 
 export default function QueueSettings (props: Props): JSX.Element {
   const queryData = usePreloadedQuery<QueueSettingsQueryType>(
@@ -42,33 +61,68 @@ export default function QueueSettings (props: Props): JSX.Element {
     props.query
   )
 
-  const [changeSettings, isChangingSettings] = useMutation<QueueSettingsMutation>(
-    QueueSettingsMutationGQL
+  const data = useFragment<QueueSettingsFragment$key>(
+    QueueSettingsFragmentGQL,
+    queryData?.viewer as unknown as QueueSettingsFragment$key
   )
 
-  const status = queryData?.viewer?.moderatorSettings.isInModeratorQueue === true
+  const [addToQueue, isAddingToQueue] = useMutation<QueueSettingsAddMutation>(
+    AddToQueue
+  )
+
+  const [removeFromQueue, isRemovingFromQueue] = useMutation<QueueSettingsRemoveMutation>(
+    RemoveFromQueue
+  )
+
+  const [t] = useTranslation('settings')
+
+  const status = data?.moderatorSettings?.isInModeratorQueue
+
   const notify = useToast()
 
-  const { i18n } = useLingui()
-
   const onChangeSettings = (): void => {
-    changeSettings({
+    if (status) {
+      removeFromQueue({
+        variables: {
+          input: {
+            accountId: data.id
+          }
+        },
+        onCompleted () {
+          notify({
+            status: 'success',
+            title: t`You are no longer in the Moderator Posts Queue`,
+            isClosable: true
+          })
+        },
+        onError () {
+          notify({
+            status: 'error',
+            title: t`There was an error changing your Queue status to Off`,
+            isClosable: true
+          })
+        }
+      })
+      return
+    }
+
+    addToQueue({
       variables: {
         input: {
-          accountId: queryData.viewer?.id as string
+          accountId: data.id
         }
       },
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
-          title: t`You are no longer in the Moderator Posts Queue`,
+          title: t`You are now active in the Moderator Posts Queue`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error changing your Queue status`,
+          title: t`There was an error changing your Queue status to On`,
           isClosable: true
         })
       }
@@ -79,18 +133,21 @@ export default function QueueSettings (props: Props): JSX.Element {
     <>
       <Flex align='center' direction='row'>
         <Flex direction='column'>
-          <Heading color='gray.100' fontSize='lg'>
-            <Trans>
-              Toggle Queue Status
-            </Trans>
+          <Heading color='gray.100' fontSize='lg'><Trans>
+            Toggle Queue Status
+          </Trans>
           </Heading>
-          <Text color='gray.200' fontSize='sm'>
-            <Trans>
-              Change your status for receiving posts in your Moderation Queue
-            </Trans>
+          <Text color='gray.200' fontSize='sm'><Trans>
+            Change your status for receiving posts in your Moderation Queue
+          </Trans>
           </Text>
         </Flex>
-        <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} ml={4} defaultChecked={status} />
+        <Switch
+          onChange={onChangeSettings}
+          isDisabled={isAddingToQueue || isRemovingFromQueue}
+          ml={4}
+          defaultChecked={status}
+        />
       </Flex>
     </>
   )

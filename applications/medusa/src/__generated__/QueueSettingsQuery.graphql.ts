@@ -1,16 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash dcb46663ed45d0d4edb35941026f4a66 */
+/* @relayHash b362964b720ce01b03d1ca29b8bb9e55 */
 
 import { ConcreteRequest } from "relay-runtime";
+import { FragmentRefs } from "relay-runtime";
 export type QueueSettingsQueryVariables = {};
 export type QueueSettingsQueryResponse = {
     readonly viewer: {
-        readonly id: string;
-        readonly moderatorSettings: {
-            readonly isInModeratorQueue: boolean;
-        };
+        readonly " $fragmentRefs": FragmentRefs<"QueueSettingsFragment">;
     } | null;
 };
 export type QueueSettingsQuery = {
@@ -23,60 +21,43 @@ export type QueueSettingsQuery = {
 /*
 query QueueSettingsQuery {
   viewer {
+    ...QueueSettingsFragment
     id
-    moderatorSettings {
-      isInModeratorQueue
-    }
+  }
+}
+
+fragment QueueSettingsFragment on Account {
+  id
+  moderatorSettings {
+    isInModeratorQueue
   }
 }
 */
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "Account",
-    "kind": "LinkedField",
-    "name": "viewer",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "ModeratorSettings",
-        "kind": "LinkedField",
-        "name": "moderatorSettings",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isInModeratorQueue",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
+const node: ConcreteRequest = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "QueueSettingsQuery",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "QueueSettingsFragment"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -85,16 +66,52 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "QueueSettingsQuery",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ModeratorSettings",
+            "kind": "LinkedField",
+            "name": "moderatorSettings",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isInModeratorQueue",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "dcb46663ed45d0d4edb35941026f4a66",
+    "id": "b362964b720ce01b03d1ca29b8bb9e55",
     "metadata": {},
     "name": "QueueSettingsQuery",
     "operationKind": "query",
     "text": null
   }
 };
-})();
-(node as any).hash = '39706208c79f01166cccd0abdabd866e';
+(node as any).hash = '87666487e59d3d0b0ad33448974d6d75';
 export default node;
