@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
@@ -15,7 +15,8 @@ interface UsernameValues {
 }
 
 interface Props {
-  usernamesConnectionID: string
+  usernamesConnectionID: string | undefined
+  isDisabled: boolean
 }
 
 const UsernameMutationGQL = graphql`
@@ -34,7 +35,10 @@ const UsernameMutationGQL = graphql`
   }
 `
 
-export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): JSX.Element {
+export default function ChangeUsernameForm ({
+  usernamesConnectionID,
+  isDisabled
+}: Props): JSX.Element {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
@@ -63,6 +67,8 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
   const { i18n } = useLingui()
 
   const onChangeUsername = (formData): void => {
+    if (usernamesConnectionID == null) return
+
     changeUsername({
       variables: {
         input: {
@@ -103,6 +109,16 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
         isInvalid={errors.username != null}
         id='username'
       >
+        {isDisabled &&
+          <Alert mb={1} status='warning'>
+            <AlertIcon />
+            <AlertDescription fontSize='sm'>
+              <Trans>
+                You have added the maximum number of usernames. You have to remove at least one alias before you can
+                change your username to a new one.
+              </Trans>
+            </AlertDescription>
+          </Alert>}
         <FormLabel>
           <Trans>
             Enter a new username
@@ -121,7 +137,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): J
             variant='solid'
             type='submit'
             colorScheme='gray'
-            disabled={errors.username != null}
+            disabled={errors.username != null || isDisabled}
             isLoading={isChangingUsername}
           >
             <Trans>

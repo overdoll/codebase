@@ -1,10 +1,9 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
-import { MenuItem, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-import { DeleteBin } from '@//:assets/icons/interface'
+import { useToast } from '@chakra-ui/react'
 import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
 import { t, Trans } from '@lingui/macro'
+import Button from '@//:modules/form/Button/Button'
 
 interface Props {
   connectionID: string
@@ -34,7 +33,6 @@ export default function RevokeSession ({
   const [RevokeSession, isRevokingSession] = useMutation<RevokeSessionMutation>(
     DeleteEmailMutationGQL
   )
-
   const notify = useToast()
 
   const onRevokeSession = (): void => {
@@ -48,7 +46,7 @@ export default function RevokeSession ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Session revoked successfully`,
+          title: t`Session successfully revoked`,
           isClosable: true
         })
       },
@@ -59,21 +57,20 @@ export default function RevokeSession ({
           isClosable: true
         })
       }
-    })
+    }
+    )
   }
 
   return (
-    <MenuItem
-      justify='center'
+    <Button
+      colorScheme='orange'
+      size='md'
       isDisabled={isRevokingSession}
       onClick={onRevokeSession}
     >
-      <Icon pointerEvents='none' icon={DeleteBin} fill='orange.300' w={4} h={4} mr={2} />
-      <Text pointerEvents='none' color='orange.300'>
-        <Trans>
-          Revoke
-        </Trans>
-      </Text>
-    </MenuItem>
+      <Trans>
+        Revoke Session
+      </Trans>
+    </Button>
   )
 }

@@ -11,6 +11,7 @@ export type UsernamesSettingsFragment = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly username: string;
+                readonly " $fragmentRefs": FragmentRefs<"UsernameAliasCard">;
             };
         }>;
     };
@@ -86,6 +87,11 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "UsernameAliasCard"
                 }
               ],
               "storageKey": null
@@ -145,5 +151,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'bace2e572b5d38453f17fbfbd02ce968';
+(node as any).hash = 'cc77d6ea0d55a6d0b7fdb34008e8ae6f';
 export default node;

@@ -1,24 +1,19 @@
-/**
- * @flow
- */
-import type { Node } from 'react'
 import { useState } from 'react'
-import { Badge, Box, Flex, Spacer, Stack, Text, useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { Badge, Flex, Text, useToast } from '@chakra-ui/react'
 import type { UsernameAliasCard$key } from '@//:artifacts/UsernameAliasCard.graphql'
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import { SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout'
 import { DeleteBin, SwapCircle } from '../../../../../../../assets/icons/interface'
-import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import type { UsernameAliasCardDeleteMutation } from '@//:artifacts/UsernameAliasCardDeleteMutation.graphql'
 import type { UsernameAliasCardSwapMutation } from '@//:artifacts/UsernameAliasCardSwapMutation.graphql'
+import { t, Trans } from '@lingui/macro'
 
-type Props = {
-  query: UsernameAliasCard$key,
-  usernamesConnectionID: UsernamesSettingsFragment$key,
-  disabled: () => void,
-};
+interface Props {
+  query: UsernameAliasCard$key
+  usernamesConnectionID: string | undefined
+  disabled: boolean
+}
 
 const Fragment = graphql`
   fragment UsernameAliasCard on AccountUsername {
@@ -48,7 +43,11 @@ const DeleteUsernameMutation = graphql`
   }
 `
 
-export default function UsernameAliasCard ({ query, usernamesConnectionID, disabled }: Props): Node {
+export default function UsernameAliasCard ({
+  query,
+  usernamesConnectionID,
+  disabled
+}: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const [currentUsername] = useState(data.username)
@@ -61,29 +60,26 @@ export default function UsernameAliasCard ({ query, usernamesConnectionID, disab
     DeleteUsernameMutation
   )
 
-  const [t] = useTranslation('settings')
-
   const notify = useToast()
 
-  const onSwapUsername = () => {
+  const onSwapUsername = (): void => {
     swapUsername({
       variables: {
         input: {
           username: data.username
-        },
-        connections: [usernamesConnectionID]
+        }
       },
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.username.previous.swap.query.success', { username: currentUsername }),
+          title: t`Your current username is now ${currentUsername}`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.username.previous.swap.query.error', { username: currentUsername }),
+          title: t`There was an error swapping to the username ${currentUsername}`,
           isClosable: true
         })
       }
@@ -91,7 +87,9 @@ export default function UsernameAliasCard ({ query, usernamesConnectionID, disab
     )
   }
 
-  const onDeleteUsername = () => {
+  const onDeleteUsername = (): void => {
+    if (usernamesConnectionID == null) return
+
     deleteUsername({
       variables: {
         input: {
@@ -99,17 +97,17 @@ export default function UsernameAliasCard ({ query, usernamesConnectionID, disab
         },
         connections: [usernamesConnectionID]
       },
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.username.previous.delete.query.success', { username: currentUsername }),
+          title: t`You can no longer use the username ${currentUsername}`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.username.previous.delete.query.error', { username: currentUsername }),
+          title: t`There was an error deleting the username ${currentUsername}`,
           isClosable: true
         })
       }
@@ -126,20 +124,22 @@ export default function UsernameAliasCard ({ query, usernamesConnectionID, disab
               fontSize='xs'
               colorScheme='green'
             >
-            {t('profile.username.current.badge')}
+            <Trans>
+              Current
+            </Trans>
           </Badge>
           : <Flex align='center'>
             <SmallMenuButton>
               <SmallMenuItem
                 icon={SwapCircle}
-                text={t('profile.username.previous.swap.button')}
+                text={t`Swap To`}
                 onClick={onSwapUsername}
                 isDisabled={isSwappingUsername}
               />
               <SmallMenuItem
                 color='orange.300'
                 icon={DeleteBin}
-                text={t('profile.username.previous.delete.button')}
+                text={t`Delete`}
                 onClick={onDeleteUsername}
                 isDisabled={isDeletingUsername}
               />

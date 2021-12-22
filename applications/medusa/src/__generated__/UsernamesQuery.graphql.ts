@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6fdd71db6b8be5a80b955e67dd5659b9 */
+/* @relayHash 8236bfe9d667180e0daecf28e6693652 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,6 +10,7 @@ export type UsernamesQueryVariables = {
 };
 export type UsernamesQueryResponse = {
     readonly viewer: {
+        readonly usernamesLimit: number;
         readonly " $fragmentRefs": FragmentRefs<"UsernamesSettingsFragment">;
     } | null;
 };
@@ -26,8 +27,14 @@ query UsernamesQuery(
 ) {
   viewer {
     ...UsernamesSettingsFragment
+    usernamesLimit
     id
   }
+}
+
+fragment UsernameAliasCard on AccountUsername {
+  id
+  username
 }
 
 fragment UsernamesSettingsFragment on Account {
@@ -36,6 +43,7 @@ fragment UsernamesSettingsFragment on Account {
     edges {
       node {
         username
+        ...UsernameAliasCard
         id
         __typename
       }
@@ -61,17 +69,24 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "usernamesLimit",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "username",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "kind": "Variable",
     "name": "first",
     "variableName": "first"
   }
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -93,6 +108,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -119,10 +135,10 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "concreteType": "AccountUsernameConnection",
             "kind": "LinkedField",
             "name": "usernames",
@@ -144,8 +160,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -208,21 +224,22 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "UsernamesSettingsFragment_usernames",
             "kind": "LinkedHandle",
             "name": "usernames"
           },
-          (v3/*: any*/)
+          (v1/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "6fdd71db6b8be5a80b955e67dd5659b9",
+    "id": "8236bfe9d667180e0daecf28e6693652",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",
@@ -230,5 +247,5 @@ return {
   }
 };
 })();
-(node as any).hash = '55b4b82bf6b6fc004e5ca92273a7d969';
+(node as any).hash = '16ae99eac1572a04a2d01555a46f28c5';
 export default node;
