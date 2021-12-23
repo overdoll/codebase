@@ -8,7 +8,7 @@ import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButt
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
 import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuButtonLogout'
 import Can from '@//:modules/authorization/Can'
-import { AlternativeMenuFragment, AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
+import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 import LanguageManager from './LanguageManager/LanguageManager'
 import { MenuDivider, Skeleton } from '@chakra-ui/react'
 import { Suspense } from 'react'
@@ -23,6 +23,7 @@ const AlternativeMenuGQL = graphql`
   fragment AlternativeMenuFragment on Account {
     ...DropdownMenuButtonProfileFragment
     ...QuickAccessButtonProfileFragment
+    ...LanguageManagerFragment
   }
 `
 
@@ -47,7 +48,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         </Can>
         <Can I='manage' a='Account'>
-          <QuickAccessButtonProfile queryRef={data as AlternativeMenuFragment} />
+          <QuickAccessButtonProfile queryRef={data} />
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
@@ -67,7 +68,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         </Can>
         <Can I='manage' a='Account'>
-          <DropdownMenuButtonProfile queryRef={data as AlternativeMenuFragment} />
+          <DropdownMenuButtonProfile queryRef={data} />
           <HorizontalNavigationDropdownMenu.Button
             to='/manage/my_posts'
             icon={ContentPens}
@@ -97,7 +98,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         }
         >
-          <LanguageManager />
+          <LanguageManager queryRef={data} />
         </Suspense>
       </HorizontalNavigationDropdownMenu>
     </>

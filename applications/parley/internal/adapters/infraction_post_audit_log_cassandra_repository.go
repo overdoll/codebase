@@ -43,7 +43,6 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"action",
 		"post_rejection_reason_id",
 		"notes",
-		"reverted",
 	},
 	PartKey: []string{"post_id"},
 	SortKey: []string{"id"},
@@ -59,7 +58,6 @@ type postAuditLogByPost struct {
 	Action                string  `db:"action"`
 	PostRejectionReasonId string  `db:"post_rejection_reason_id"`
 	Notes                 *string `db:"notes"`
-	Reverted              bool    `db:"reverted"`
 }
 
 var postAuditLogByModeratorTable = table.New(table.Metadata{
@@ -74,7 +72,6 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"action",
 		"post_rejection_reason_id",
 		"notes",
-		"reverted",
 	},
 	PartKey: []string{"moderator_account_id", "bucket"},
 	SortKey: []string{"id"},
@@ -90,7 +87,6 @@ type postAuditLogByModerator struct {
 	Action                string  `db:"action"`
 	PostRejectionReasonId *string `db:"post_rejection_reason_id"`
 	Notes                 *string `db:"notes"`
-	Reverted              bool    `db:"reverted"`
 }
 
 func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAuditLogByModerator, error) {
@@ -124,7 +120,6 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 		Action:                auditLog.Status().String(),
 		PostRejectionReasonId: reason,
 		Notes:                 auditLog.Notes(),
-		Reverted:              auditLog.Reverted(),
 	}, nil
 }
 
@@ -158,7 +153,6 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.Action,
 		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
-		marshalledAuditLog.Reverted,
 	)
 
 	stmt, _ = postAuditLogByModeratorTable.Insert()
@@ -173,7 +167,6 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.Action,
 		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
-		marshalledAuditLog.Reverted,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -266,7 +259,6 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 		pendingPostAuditLogByModerator.Action,
 		rejectionReason,
 		pendingPostAuditLogByModerator.Notes,
-		pendingPostAuditLogByModerator.Reverted,
 		userInfractionHistory,
 	)
 
@@ -360,7 +352,6 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.Action,
 			postRejectionReason,
 			pendingPostAuditLog.Notes,
-			pendingPostAuditLog.Reverted,
 			userInfractionHistory,
 		)
 
@@ -398,20 +389,18 @@ func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, r
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id", "reverted")
+	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id")
 
 	batch.Query(stmt,
 		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.Reverted,
 		marshalledAuditLog.PostId,
 		marshalledAuditLog.Id,
 	)
 
-	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id", "reverted")
+	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id")
 
 	batch.Query(stmt,
 		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.Reverted,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
 		marshalledAuditLog.Id,

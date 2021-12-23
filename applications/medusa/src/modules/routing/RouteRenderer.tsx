@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, useTransition } from 'react'
 import { useRoutingContext } from './RoutingContext'
 import { PreparedEntry, RouterInit } from './router'
 import ErrorBoundary from '../operations/ErrorBoundary'
@@ -14,6 +14,8 @@ import { useRelayEnvironment } from 'react-relay'
 export default function RouterRenderer (): JSX.Element {
   // Access the router
   const router = useRoutingContext()
+  const [isPending, startTransition] = useTransition()
+
   // Improve the route transition UX by delaying transitions: show the previous route entry
   // for a brief period while the next route is being prepared. See
   // https://reactjs.org/docs/concurrent-mode-patterns.html#transitions
@@ -39,7 +41,9 @@ export default function RouterRenderer (): JSX.Element {
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.
       // TODO: transitions are buggy - getting rid of them for now
-      setRouteEntry(nextEntry)
+      startTransition(() => {
+        setRouteEntry(nextEntry)
+      })
     })
     return () => dispose()
 
@@ -101,14 +105,14 @@ export default function RouterRenderer (): JSX.Element {
   // Routes can suspend, so wrap in <Suspense>
   return (
     <ErrorBoundary>
-      <Suspense fallback={
+      <Suspense fallback={null}>
         <chakra.div
           zIndex='banner'
           position='fixed'
           w='100%'
           top='0'
         >
-          <Slide direction='top'>
+          <Slide in={isPending} direction='top'>
             <Progress
               h='3px'
               borderRadius='none'
@@ -120,8 +124,6 @@ export default function RouterRenderer (): JSX.Element {
             />
           </Slide>
         </chakra.div>
-      }
-      >
         {routeComponent}
       </Suspense>
     </ErrorBoundary>

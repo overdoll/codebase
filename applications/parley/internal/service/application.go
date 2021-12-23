@@ -55,7 +55,6 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			RejectPost:                   command.NewRejectPostHandler(infractionRepo, eva, sting),
 			ApprovePost:                  command.NewApprovePostHandler(infractionRepo, eva, sting),
 			RemovePost:                   command.NewRemovePostHandler(infractionRepo, eva, sting),
-			RevertModeratePost:           command.NewRevertModeratePostHandler(infractionRepo, eva, sting),
 			ReportPost:                   command.NewReportPostHandler(reportRepo, eva, sting),
 			AddModeratorToPostQueue:      command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
 			RemoveModeratorFromPostQueue: command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),

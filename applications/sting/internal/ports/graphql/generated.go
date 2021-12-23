@@ -8055,6 +8055,41 @@ func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql
 	return ec.marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) ___Directive_isRepeatable(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Directive",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsRepeatable, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) ___EnumValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9007,7 +9042,10 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 func (ec *executionContext) unmarshalInputAudiencesOrder(ctx context.Context, obj interface{}) (types.AudiencesOrder, error) {
 	var it types.AudiencesOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9027,7 +9065,10 @@ func (ec *executionContext) unmarshalInputAudiencesOrder(ctx context.Context, ob
 
 func (ec *executionContext) unmarshalInputBrandsOrder(ctx context.Context, obj interface{}) (types.BrandsOrder, error) {
 	var it types.BrandsOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9047,7 +9088,10 @@ func (ec *executionContext) unmarshalInputBrandsOrder(ctx context.Context, obj i
 
 func (ec *executionContext) unmarshalInputCategoriesOrder(ctx context.Context, obj interface{}) (types.CategoriesOrder, error) {
 	var it types.CategoriesOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9067,7 +9111,10 @@ func (ec *executionContext) unmarshalInputCategoriesOrder(ctx context.Context, o
 
 func (ec *executionContext) unmarshalInputCharactersOrder(ctx context.Context, obj interface{}) (types.CharactersOrder, error) {
 	var it types.CharactersOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9087,7 +9134,10 @@ func (ec *executionContext) unmarshalInputCharactersOrder(ctx context.Context, o
 
 func (ec *executionContext) unmarshalInputPostsOrder(ctx context.Context, obj interface{}) (types.PostsOrder, error) {
 	var it types.PostsOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9107,7 +9157,10 @@ func (ec *executionContext) unmarshalInputPostsOrder(ctx context.Context, obj in
 
 func (ec *executionContext) unmarshalInputSeriesOrder(ctx context.Context, obj interface{}) (types.SeriesOrder, error) {
 	var it types.SeriesOrder
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9127,7 +9180,10 @@ func (ec *executionContext) unmarshalInputSeriesOrder(ctx context.Context, obj i
 
 func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, obj interface{}) (types.SubmitPostInput, error) {
 	var it types.SubmitPostInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9147,7 +9203,10 @@ func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, o
 
 func (ec *executionContext) unmarshalInputUpdatePostAudienceInput(ctx context.Context, obj interface{}) (types.UpdatePostAudienceInput, error) {
 	var it types.UpdatePostAudienceInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9175,7 +9234,10 @@ func (ec *executionContext) unmarshalInputUpdatePostAudienceInput(ctx context.Co
 
 func (ec *executionContext) unmarshalInputUpdatePostBrandInput(ctx context.Context, obj interface{}) (types.UpdatePostBrandInput, error) {
 	var it types.UpdatePostBrandInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9203,7 +9265,10 @@ func (ec *executionContext) unmarshalInputUpdatePostBrandInput(ctx context.Conte
 
 func (ec *executionContext) unmarshalInputUpdatePostCategoriesInput(ctx context.Context, obj interface{}) (types.UpdatePostCategoriesInput, error) {
 	var it types.UpdatePostCategoriesInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9231,7 +9296,10 @@ func (ec *executionContext) unmarshalInputUpdatePostCategoriesInput(ctx context.
 
 func (ec *executionContext) unmarshalInputUpdatePostCharactersInput(ctx context.Context, obj interface{}) (types.UpdatePostCharactersInput, error) {
 	var it types.UpdatePostCharactersInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -9259,7 +9327,10 @@ func (ec *executionContext) unmarshalInputUpdatePostCharactersInput(ctx context.
 
 func (ec *executionContext) unmarshalInputUpdatePostContentInput(ctx context.Context, obj interface{}) (types.UpdatePostContentInput, error) {
 	var it types.UpdatePostContentInput
-	var asMap = obj.(map[string]interface{})
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
 
 	for k, v := range asMap {
 		switch k {
@@ -10926,6 +10997,11 @@ func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isRepeatable":
+			out.Values[i] = ec.___Directive_isRepeatable(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11219,6 +11295,13 @@ func (ec *executionContext) marshalNAudienceEdge2ᚕᚖoverdollᚋapplications�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11324,6 +11407,13 @@ func (ec *executionContext) marshalNBrandEdge2ᚕᚖoverdollᚋapplicationsᚋst
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11405,6 +11495,13 @@ func (ec *executionContext) marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋsti
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11466,6 +11563,13 @@ func (ec *executionContext) marshalNCategoryEdge2ᚕᚖoverdollᚋapplications�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11517,6 +11621,13 @@ func (ec *executionContext) marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋst
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11578,6 +11689,13 @@ func (ec *executionContext) marshalNCharacterEdge2ᚕᚖoverdollᚋapplications�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11641,6 +11759,12 @@ func (ec *executionContext) marshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelay
 	ret := make(graphql.Array, len(v))
 	for i := range v {
 		ret[i] = ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
 	}
 
 	return ret
@@ -11718,6 +11842,13 @@ func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋsti
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11790,6 +11921,13 @@ func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋsti
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11847,6 +11985,13 @@ func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋ
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11922,6 +12067,13 @@ func (ec *executionContext) marshalNSeriesEdge2ᚕᚖoverdollᚋapplicationsᚋs
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -11990,6 +12142,12 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	ret := make(graphql.Array, len(v))
 	for i := range v {
 		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
 	}
 
 	return ret
@@ -12098,6 +12256,12 @@ func (ec *executionContext) marshalN_Any2ᚕmapᚄ(ctx context.Context, sel ast.
 		ret[i] = ec.marshalN_Any2map(ctx, sel, v[i])
 	}
 
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12135,6 +12299,7 @@ func (ec *executionContext) marshalN_Entity2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 
 	}
 	wg.Wait()
+
 	return ret
 }
 
@@ -12195,6 +12360,13 @@ func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12268,6 +12440,13 @@ func (ec *executionContext) marshalN__DirectiveLocation2ᚕstringᚄ(ctx context
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12317,6 +12496,13 @@ func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12358,6 +12544,13 @@ func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12546,6 +12739,12 @@ func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel
 		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
 	}
 
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12665,6 +12864,13 @@ func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgq
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12705,6 +12911,13 @@ func (ec *executionContext) marshalO__Field2ᚕgithubᚗcomᚋ99designsᚋgqlgen
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12745,6 +12958,13 @@ func (ec *executionContext) marshalO__InputValue2ᚕgithubᚗcomᚋ99designsᚋg
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 
@@ -12792,6 +13012,13 @@ func (ec *executionContext) marshalO__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgen�
 
 	}
 	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
 }
 

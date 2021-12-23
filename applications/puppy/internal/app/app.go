@@ -6,8 +6,8 @@ import (
 	"github.com/gorilla/securecookie"
 	"net/http"
 	"overdoll/applications/puppy/internal/domain/session"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/translations"
 	"strings"
 )
 
@@ -68,7 +68,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 	// no language set - read accept-language header
 	if language == "" {
 		accept := req.Header.Get("Accept-Language")
-		language = translations.NewLanguageWithFallback(accept).Locale()
+		language = localization.NewLanguageWithFallback(accept).Locale()
 	}
 
 	return deviceId, ip, userAgent, language, nil

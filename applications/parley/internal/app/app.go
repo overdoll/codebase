@@ -19,8 +19,6 @@ type Commands struct {
 
 	ReportPost command.ReportPostHandler
 
-	RevertModeratePost command.RevertModeratePostHandler
-
 	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
 }

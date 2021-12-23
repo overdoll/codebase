@@ -11,10 +11,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
-	"overdoll/libraries/translations"
 )
 
 type audienceDocument struct {
@@ -40,7 +40,7 @@ const audienceIndexProperties = `
 	"standard": {
 		"type": "integer"
 	},
-	"title": ` + translations.ESIndex + `
+	"title": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
 	}
@@ -86,7 +86,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
+		Title:     localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:  stnd,
 	}, nil
@@ -106,7 +106,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
 				Type("best_fields"),
 		)
 	}

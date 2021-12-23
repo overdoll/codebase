@@ -5,7 +5,7 @@ import { QuickAccessButtonProfileFragment$key } from '@//:artifacts/QuickAccessB
 import { Trans } from '@lingui/macro'
 
 interface Props {
-  queryRef: QuickAccessButtonProfileFragment$key
+  queryRef: QuickAccessButtonProfileFragment$key | null
 }
 
 const QuickAccessButtonProfileGQL = graphql`
@@ -33,7 +33,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
       >
         <Avatar
           borderRadius='25%'
-          src={data.avatar}
+          src={data?.avatar}
           m={0}
           h='42px'
           w='42px'

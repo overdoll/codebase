@@ -2,7 +2,7 @@ import { useRoutingContext } from './RoutingContext'
 import matchPath from './matchPath'
 import Link from './Link'
 import { createLocation } from 'history'
-import { useLocation } from './useLocation'
+import { useLocation } from './Location'
 import { ReactNode } from 'react'
 import getBasePath from './getBasePath'
 

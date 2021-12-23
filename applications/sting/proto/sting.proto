@@ -19,5 +19,4 @@ service Sting {
   rpc RemovePost(PostRequest) returns (UpdatePostResponse);
   rpc RejectPost(PostRequest) returns (UpdatePostResponse);
   rpc DiscardPost(PostRequest) returns (UpdatePostResponse);
-  rpc UndoPost(PostRequest) returns (UpdatePostResponse);
 }

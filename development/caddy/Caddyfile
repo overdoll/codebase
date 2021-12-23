@@ -1,0 +1,9 @@
+:8000 {
+    root * /var/www/html
+    encode gzip
+    file_server {
+       status {http.request.uri.query.status}
+    }
+}
+
+

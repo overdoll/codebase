@@ -9,14 +9,14 @@ import (
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/translations"
 	"sort"
 	"time"
 )
 
-func MarshalLanguageToGraphQL(result *translations.Language) *Language {
+func MarshalLanguageToGraphQL(result *localization.Language) *Language {
 	return &Language{Locale: result.Locale(), Name: result.Name()}
 }
 

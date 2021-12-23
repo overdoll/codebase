@@ -16,5 +16,4 @@ type StingService interface {
 	RejectPost(context.Context, string) error
 	DiscardPost(context.Context, string) error
 	RemovePost(context.Context, string) error
-	UndoPost(context.Context, string) error
 }

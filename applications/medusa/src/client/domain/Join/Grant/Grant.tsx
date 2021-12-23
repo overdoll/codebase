@@ -7,7 +7,6 @@ import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -39,7 +38,6 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
   const notify = useToast()
 
   const [, , removeCookie] = useCookies(['token'])
-  const { i18n } = useLingui()
 
   const history = useHistory()
 
@@ -74,7 +72,8 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         prepareViewer(store, payload)
-        store.delete(data.id)
+        // don't delete token
+        //  store.delete(data.id)
         removeCookie('token')
         history.push('/profile')
       },

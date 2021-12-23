@@ -10,7 +10,6 @@ go_library(
         "remove_post.go",
         "services.go",
         "submit_post.go",
-        "undo_post.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],

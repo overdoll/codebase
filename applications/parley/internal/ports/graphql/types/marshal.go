@@ -40,8 +40,6 @@ func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAu
 		Action:              action,
 		PostRejectionReason: reason,
 		Notes:               result.Notes(),
-		Reverted:            result.Reverted(),
-		ReversibleUntil:     result.ReversibleUntil(),
 		Post:                &Post{ID: relay.NewID(Post{}, result.PostID())},
 	}
 }

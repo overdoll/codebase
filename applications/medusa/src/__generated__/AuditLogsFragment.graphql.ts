@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type AuditLogsFragment = {
-    readonly moderatorPostAuditLogs: {
+    readonly postAuditLogs: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly " $fragmentRefs": FragmentRefs<"AuditCardFragment">;
@@ -25,7 +25,7 @@ export type AuditLogsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "moderatorPostAuditLogs"
+  "postAuditLogs"
 ];
 return {
   "argumentDefinitions": [
@@ -77,7 +77,7 @@ return {
   "name": "AuditLogsFragment",
   "selections": [
     {
-      "alias": "moderatorPostAuditLogs",
+      "alias": "postAuditLogs",
       "args": [
         {
           "fields": [
@@ -98,7 +98,7 @@ return {
       ],
       "concreteType": "PostAuditLogConnection",
       "kind": "LinkedField",
-      "name": "__AuditLogs_moderatorPostAuditLogs_connection",
+      "name": "__AuditLogsAccount_postAuditLogs_connection",
       "plural": false,
       "selections": [
         {
@@ -182,5 +182,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '6db86852053df48207963870e14a4cd2';
+(node as any).hash = '349f729a9bb99751140cc7dc2ce2c5d3';
 export default node;

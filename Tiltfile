@@ -111,3 +111,13 @@ applications = {
 
 # Build applications with our helper function
 build_applications(applications, [])
+
+# Caddy, to serve error middleware
+docker_build(
+    'caddy-web',
+    context='.',
+    dockerfile='./development/caddy/caddy.dockerfile',
+    only=['./development/caddy/'],
+)
+
+k8s_yaml('development/caddy/deploy.yaml')

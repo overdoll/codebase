@@ -171,7 +171,7 @@ it('mouse down on the link will load code and data', async () => {
 
   const link = screen.getByRole('link')
 
-  userEvent.click(link)
+  await waitFor(() => userEvent.click(link))
 
   await waitFor(() => expect(func).toHaveBeenCalled())
 

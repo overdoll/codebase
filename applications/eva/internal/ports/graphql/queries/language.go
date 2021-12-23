@@ -5,14 +5,14 @@ import (
 	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/translations"
+	"overdoll/libraries/localization"
 )
 
 func (r *QueryResolver) Languages(ctx context.Context) ([]*types.Language, error) {
 
 	var langs []*types.Language
 
-	for _, l := range translations.SupportedLanguages {
+	for _, l := range localization.SupportedLanguages {
 		langs = append(langs, types.MarshalLanguageToGraphQL(l))
 	}
 

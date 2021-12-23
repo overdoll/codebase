@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"overdoll/applications/sting/internal/domain/resource"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/translations"
 )
 
 var (
@@ -17,7 +17,7 @@ type Category struct {
 
 	id        string
 	slug      string
-	title     *translations.Translation
+	title     *localization.Translation
 	thumbnail *resource.Resource
 }
 
@@ -29,7 +29,7 @@ func (c *Category) Slug() string {
 	return c.slug
 }
 
-func (c *Category) Title() *translations.Translation {
+func (c *Category) Title() *localization.Translation {
 	return c.title
 }
 
@@ -41,7 +41,7 @@ func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thu
 	return &Category{
 		id:        id,
 		slug:      slug,
-		title:     translations.UnmarshalTranslationFromDatabase(title),
+		title:     localization.UnmarshalTranslationFromDatabase(title),
 		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 	}
 }

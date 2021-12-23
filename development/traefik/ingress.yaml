@@ -9,6 +9,20 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
+  name: status-pages
+spec:
+  errors:
+    status:
+      - "500"
+      - "502-504"
+    query: /{status}.html?status={status}
+    service:
+      name: caddy-web
+      port: 8000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
   name: compression
 spec:
   compress: { }
@@ -35,6 +49,8 @@ spec:
       services:
         - name: sting
           port: 8000
+      middlewares:
+        - name: status-pages
     - match: Host(`overdoll.test`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -42,11 +58,14 @@ spec:
           port: 8000
       middlewares:
         - name: compression
+        - name: status-pages
     - match: Host(`overdoll.test`) && PathPrefix(`/api/graphql`)
       kind: Rule
       services:
         - name: puppy
           port: 8000
+      middlewares:
+        - name: status-pages
     - match: Host(`static.dollycdn.test`) && PathPrefix(`/`)
       kind: Rule
       services:

@@ -19,7 +19,6 @@ type Commands struct {
 	CreatePost  command.CreatePostHandler
 	DiscardPost command.DiscardPostHandler
 	PublishPost command.PublishPostHandler
-	UndoPost    command.UndoPostHandler
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
 	RemovePost  command.RemovePostHandler

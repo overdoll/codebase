@@ -13,9 +13,9 @@ go_library(
     importpath = "overdoll/applications/parley/internal/domain/infraction",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
-        "//libraries/translations",
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

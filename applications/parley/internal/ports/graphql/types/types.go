@@ -14,7 +14,7 @@ type Account struct {
 	// Post Audit Logs linked to this account
 	//
 	// Viewable by either the currently logged-in account or staff+
-	ModeratorPostAuditLogs *PostAuditLogConnection `json:"moderatorPostAuditLogs"`
+	PostAuditLogs *PostAuditLogConnection `json:"postAuditLogs"`
 	// Infraction history for this account
 	//
 	// Viewable by the currently authenticated account or staff+
@@ -111,10 +111,6 @@ type PostAuditLog struct {
 	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
 	// Additional notes by the moderator
 	Notes *string `json:"notes"`
-	// If this audit log was reverted
-	Reverted bool `json:"reverted"`
-	// The time until which this audit log will be revertable
-	ReversibleUntil time.Time `json:"reversibleUntil"`
 	// The post linked to this audit log
 	Post *Post `json:"post"`
 }
@@ -277,18 +273,6 @@ type ReportPostInput struct {
 type ReportPostPayload struct {
 	// The post report that was generated
 	PostReport *PostReport `json:"postReport"`
-}
-
-// Revert the pending post audit log input
-type RevertPostAuditLogInput struct {
-	// The audit log to revert
-	PostAuditLogID relay.ID `json:"postAuditLogId"`
-}
-
-// Revert the pending post audit log payload
-type RevertPostAuditLogPayload struct {
-	// The new state of the audit log
-	PostAuditLog *PostAuditLog `json:"postAuditLog"`
 }
 
 type PostAuditLogAction string

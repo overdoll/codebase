@@ -17,7 +17,6 @@ go_library(
         "services.go",
         "submit_post.go",
         "tus_composer.go",
-        "undo_post.go",
         "update_post_audience.go",
         "update_post_brand.go",
         "update_post_categories.go",

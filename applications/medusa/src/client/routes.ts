@@ -742,7 +742,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/NotFound/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/CatchAll/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -750,7 +750,7 @@ const routes: Route[] = [
         ],
         component: loadable(async () =>
           await import(
-            './domain/NotFound/NotFound'
+            './domain/CatchAll/CatchAll'
           )
         )
       }

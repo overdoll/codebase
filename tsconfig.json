@@ -24,6 +24,7 @@
     "jsx": "react-jsx",
     "types": [
       "react-dom/next",
+      "react/next",
       "webpack-env",
       "jest"
     ],
