@@ -50,7 +50,7 @@ export default function Brands ({
               my={1}
               align='center'
             >
-              <Flex align='center' justify='center' mr={2} borderRadius='md' overflow='hidden' w={12} h={12}>
+              <Flex align='center' justify='center' mr={3} ml={1} borderRadius='md' overflow='hidden' w={12} h={12}>
                 <ResourceItem query={item?.node?.thumbnail as ResourceItemFragment$key} />
               </Flex>
               <Box>

@@ -116,7 +116,7 @@ export default function RejectionReasons (props: Props): JSX.Element {
               <Trans>The note cannot exceed 255 characters</Trans>}
           </FormErrorMessage>
         </FormControl>
-        {infraction != null &&
+        {infraction &&
           <Alert borderRadius={5} mt={1} mb={1} status='warning'>
             <AlertIcon mt={1} mb={3} />
             <AlertDescription>

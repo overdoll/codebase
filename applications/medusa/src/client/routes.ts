@@ -601,7 +601,7 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/configure/multi_factor/totp',
+        path: '/configure/multi-factor/totp',
         component: loadable(async () =>
           await import(
             './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
@@ -646,7 +646,7 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/configure/multi_factor/recovery_codes',
+        path: '/configure/multi-factor/recovery-codes',
         component: loadable(async () =>
           await import(
             './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
