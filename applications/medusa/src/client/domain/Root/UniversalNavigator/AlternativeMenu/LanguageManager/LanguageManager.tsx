@@ -59,7 +59,7 @@ export default function LanguageManager (): JSX.Element {
 
   return (
     <Select
-      variant='filled'
+      variant='outline'
       size='lg'
       isDisabled={isInFlight}
       defaultValue={query.language.locale}

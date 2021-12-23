@@ -69,27 +69,26 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         <Can I='manage' a='Account'>
           <DropdownMenuButtonProfile queryRef={data as AlternativeMenuFragment} />
           <HorizontalNavigationDropdownMenu.Button
-            to='/manage/my_posts'
+            to='/manage/posts'
             icon={ContentPens}
             label={
               <Trans>
-                Manage
+                Manage Content
               </Trans>
             }
           />
           <HorizontalNavigationDropdownMenu.Button
             to='/settings/profile'
             icon={CogDouble}
-            color='green.500'
             label={
               <Trans>
-                Settings
+                Account Settings
               </Trans>
             }
           />
           <DropdownMenuButtonLogout />
         </Can>
-        <MenuDivider />
+        <MenuDivider mb={1} borderColor='gray.500' borderWidth={2} />
         <Suspense fallback={
           <Skeleton
             borderRadius={5}

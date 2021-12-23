@@ -5,7 +5,7 @@ import { useMutation } from 'react-relay/hooks'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
 import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
 import Button from '@//:modules/form/Button/Button'
-import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 
 interface Props {
@@ -72,50 +72,53 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
   const canRevert = new Date(data?.reversibleUntil as string) > new Date() && !data.reverted
 
   return (
-    <LargeBackgroundBox>
-      <Stack spacing={3}>
-        {data.reverted
-          ? (
-            <SmallBackgroundBox bg='purple.50' alignContent='center' justifyContent='center'>
-              <Text color='purple.500' fontSize='2xl' fontFamily='mono'>
-                <Trans>
-                  REVERTED
-                </Trans>
-              </Text>
-              <Text>
-                <Trans>
-                  Originally {data.action}
-                </Trans>
-              </Text>
-            </SmallBackgroundBox>
-            )
-          : (
-            <SmallBackgroundBox
-              bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'}
-              alignContent='center'
-              justifyContent='center'
-            >
-              <Text color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'} fontSize='2xl' fontFamily='mono'>
-                {data.action}
-              </Text>
-              {data?.notes != null && <Text>{data.notes}</Text>}
-            </SmallBackgroundBox>
-            )}
-        <PostPreview query={data.post} />
-        {canRevert &&
-          <Button
-            size='md'
-            variant='solid'
-            colorScheme='purple'
-            disabled={data.reverted || !canRevert}
-            isLoading={isRevertingPost}
-            onClick={revertLog}
+    <Stack spacing={3}>
+      {data.reverted
+        ? (
+          <SmallBackgroundBox align='center' justify='center' bg='purple.50'>
+            <Text textAlign='center' color='purple.500' fontSize='2xl' fontFamily='mono'>
+              <Trans>
+                REVERTED
+              </Trans>
+            </Text>
+            <Text textAlign='center'>
+              <Trans>
+                Originally {data.action}
+              </Trans>
+            </Text>
+          </SmallBackgroundBox>
+          )
+        : (
+          <SmallBackgroundBox
+            bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'}
+            alignContent='center'
+            justifyContent='center'
           >
-            <Trans>
-              Revert Decision
-            </Trans>
-          </Button>}
-      </Stack>
-    </LargeBackgroundBox>
+            <Text
+              textAlign='center'
+              color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'}
+              fontSize='2xl'
+              fontFamily='mono'
+            >
+              {data.action}
+            </Text>
+            {data?.notes != null && <Text>{data.notes}</Text>}
+          </SmallBackgroundBox>
+          )}
+      <PostPreview query={data.post} />
+      {canRevert &&
+        <Button
+          size='md'
+          variant='solid'
+          colorScheme='purple'
+          disabled={data.reverted || !canRevert}
+          isLoading={isRevertingPost}
+          onClick={revertLog}
+        >
+          <Trans>
+            Revert Decision
+          </Trans>
+        </Button>}
+    </Stack>
   )
 }

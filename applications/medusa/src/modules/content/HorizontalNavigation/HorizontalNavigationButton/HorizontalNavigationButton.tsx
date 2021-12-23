@@ -1,4 +1,4 @@
-import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
+import { Box, Flex, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
 import { Icon } from '../../index'
 import { ClickableBox } from '../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
@@ -37,7 +37,6 @@ export default function HorizontalNavigationButton ({
         >
           <Box h='100%'>
             <ClickableBox
-              p={0}
               onClick={onClick}
               borderRadius={{
                 base: 2,
@@ -48,17 +47,20 @@ export default function HorizontalNavigationButton ({
                 base: '48px',
                 md: '42px'
               }}
+              w='58px'
               as={as}
+              p={0}
             >
               {(icon != null)
                 ? (
-                  <Icon
-                    icon={icon}
-                    w={w ?? '58px'}
-                    h='38px'
-                    p={2}
-                    fill={isActiveBasePath ? 'gray.100' : 'gray.300'}
-                  />
+                  <Flex justify='center' align='center' w='100%'>
+                    <Icon
+                      icon={icon}
+                      p={2}
+                      fill={isActiveBasePath ? 'gray.100' : 'gray.300'}
+                      h='38px'
+                    />
+                  </Flex>
                   )
                 : children}
             </ClickableBox>

@@ -402,52 +402,52 @@ const routes: Route[] = [
           await import(
             './domain/Manage/Manage'
           )
-        )
-        // middleware: [
-        //   ({
-        //     environment,
-        //     history
-        //   }) => {
-        //     const ability = getAbilityFromUser(environment)
-        //
-        //     if (ability.can('manage', 'posting')) {
-        //       return true
-        //     }
-        //     history.push('/join')
-        //     return false
-        //   }
-        // ],
-        // routes: [
-        //   {
-        //     path: '/manage/my_posts',
-        //     component: JSResource('ManageMyPostsRoot', async () =>
-        //       await import(
-        //         /* webpackChunkName: "ManageMyPostsRoot" */ './domain/Manage/MyPosts/RootMyPosts'
-        //       )
-        //     ),
-        //     prepare: params => {
-        //       const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
-        //
-        //       return {
-        //         myPostsQuery: {
-        //           query: MyPostsQuery,
-        //           variables: {},
-        //           options: {
-        //             fetchPolicy: 'store-or-network'
-        //           }
-        //         }
-        //       }
-        //     }
-        //   },
-        //   {
-        //     path: '/manage/brands',
-        //     component: JSResource('ManageBrandsRoot', async () =>
-        //       await import(
-        //         /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
-        //       )
-        //     )
-        //   }
-        // ]
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('create', 'Post')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/manage/posts',
+            component: loadable(async () =>
+              await import(
+                './domain/Manage/MyPosts/RootMyPosts'
+              )
+            ),
+            prepare: params => {
+              const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+
+              return {
+                myPostsQuery: {
+                  query: MyPostsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/manage/brands',
+            component: loadable(async () =>
+              await import(
+                './domain/Manage/Brands/Brands'
+              )
+            )
+          }
+        ]
       },
       {
         path: '/settings',
@@ -694,14 +694,14 @@ const routes: Route[] = [
         path: '/configure/create-post',
         component: loadable(async () =>
           await import(
-            './domain/Manage/CreatePost/CreatePost'
+            './domain/CreatePost/CreatePost'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Manage/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
