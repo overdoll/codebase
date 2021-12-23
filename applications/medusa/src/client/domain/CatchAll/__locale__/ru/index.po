@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: de\n"
+"Language: ru\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -13,14 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/NotFound/NotFound.tsx:44
+#: src/client/domain/CatchAll/CatchAll.tsx:45
 msgid "Back"
 msgstr ""
 
-#: src/client/domain/NotFound/NotFound.tsx:53
+#: src/client/domain/CatchAll/CatchAll.tsx:54
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/NotFound/NotFound.tsx:29
+#: src/client/domain/CatchAll/CatchAll.tsx:30
 msgid "It doesn't look like there's anything here"
 msgstr ""

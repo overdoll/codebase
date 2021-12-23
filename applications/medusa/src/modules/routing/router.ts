@@ -79,6 +79,14 @@ export interface Router {
   subscribe: Subscribe
   get: Get
   history: History
+  staticContext?: StaticContext
+}
+
+export interface StaticContext {
+  // custom url for SSR
+  url?: string
+  // custom status code, i.e. 404's
+  status?: number
 }
 
 export interface RouterInstance {
@@ -109,7 +117,8 @@ async function createServerRouter (
   history: History,
   environment: IEnvironment,
   req,
-  trackedModules: string[]
+  trackedModules: string[],
+  staticContext: StaticContext
 ): Promise<RouterInstance> {
   // Before going further and creating
   // our router, we pre-emptively resolve the RootQuery routes, so that the user object
@@ -163,6 +172,7 @@ async function createServerRouter (
   // The actual object that will be passed on the RoutingContext.
   const context = {
     history,
+    staticContext,
     get () {
       return {
         location: history.location,

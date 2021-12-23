@@ -6,10 +6,11 @@ import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import Link from '@//:modules/routing/Link'
 import { Trans } from '@lingui/macro'
+import NotFound from '@//:modules/routing/NotFound'
 
-export default function NotFound (): JSX.Element {
+export default function CatchAll (): JSX.Element {
   return (
-    <>
+    <NotFound>
       <Helmet title='error' />
       <PageWrapper>
         <Icon
@@ -58,6 +59,6 @@ export default function NotFound (): JSX.Element {
           </Stack>
         </Center>
       </PageWrapper>
-    </>
+    </NotFound>
   )
 }
