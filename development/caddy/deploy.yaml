@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caddy-web
+  labels:
+    app: caddy-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caddy-web
+  template:
+    metadata:
+      labels:
+        app: caddy-web
+    spec:
+      containers:
+        - name: caddy-web
+          image: caddy-web
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy-web
+spec:
+  selector:
+    app: caddy-web
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

@@ -330,8 +330,6 @@ func TestAccountRegistration_complete(t *testing.T) {
 
 	authenticate := grantAuthenticationToken(t, client, fake.Email)
 
-	// get cookies
-
 	require.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken, "token is true")
 
 	// check our auth query and make sure that it returns the correct cookie values

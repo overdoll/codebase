@@ -13,12 +13,16 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:54
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:55
 msgid "Alternative Menu"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:62
 msgid "Banned for {0}"
+msgstr ""
+
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:76
+msgid "Changing to your preferred language..."
 msgstr ""
 
 #: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:15
@@ -55,12 +59,12 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:43
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:63
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:44
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:64
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:59
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:64
 msgid "Log Out"
 msgstr ""
 
@@ -68,7 +72,7 @@ msgstr ""
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:75
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:76
 msgid "Manage"
 msgstr ""
 
@@ -104,11 +108,11 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:85
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:86
 msgid "Settings"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:43
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:48
 msgid "There was an error logging out"
 msgstr ""
 
@@ -128,7 +132,7 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:25
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:30
 msgid "You have been logged out"
 msgstr ""
 

@@ -106,26 +106,24 @@ export default function RouterRenderer (): JSX.Element {
   return (
     <ErrorBoundary>
       <Suspense fallback={null}>
-        {isPending as boolean && (
-          <chakra.div
-            zIndex='banner'
-            position='fixed'
-            w='100%'
-            top='0'
-          >
-            <Slide in direction='top'>
-              <Progress
-                h='3px'
-                borderRadius='none'
-                hasStripe
-                isAnimated
-                colorScheme='primary'
-                size='xs'
-                value={100}
-              />
-            </Slide>
-          </chakra.div>
-        )}
+        <chakra.div
+          zIndex='banner'
+          position='fixed'
+          w='100%'
+          top='0'
+        >
+          <Slide in={isPending} direction='top'>
+            <Progress
+              h='3px'
+              borderRadius='none'
+              hasStripe
+              isAnimated
+              colorScheme='primary'
+              size='xs'
+              value={100}
+            />
+          </Slide>
+        </chakra.div>
         {routeComponent}
       </Suspense>
     </ErrorBoundary>
