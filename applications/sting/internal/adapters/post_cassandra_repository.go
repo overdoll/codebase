@@ -72,8 +72,8 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	var brandId *string
 
-	if pending.Brand() != nil {
-		id := pending.Brand().ID()
+	if pending.Club() != nil {
+		id := pending.Club().ID()
 		brandId = &id
 	}
 
@@ -114,10 +114,10 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		return nil, err
 	}
 
-	var brand *post.Brand
+	var brand *post.Club
 
 	if postPending.BrandId != nil {
-		brand, err = r.GetBrandById(ctx, nil, *postPending.BrandId)
+		brand, err = r.GetClubById(ctx, nil, *postPending.BrandId)
 
 		if err != nil {
 			return nil, err
@@ -300,7 +300,7 @@ func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, reques
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
 }
 
-func (r PostsCassandraRepository) UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraRepository) UpdatePostClub(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"brand_id"})
 }
 

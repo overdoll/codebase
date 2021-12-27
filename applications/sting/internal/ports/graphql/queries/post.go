@@ -31,7 +31,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		ModeratorId:    nil,
 		ContributorId:  nil,
 		AudienceSlugs:  audienceSlugs,
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		CategorySlugs:  categorySlugs,
 		CharacterSlugs: characterSlugs,
 		SeriesSlugs:    seriesSlugs,

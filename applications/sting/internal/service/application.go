@@ -56,10 +56,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			IndexAllBrands:     command.NewIndexAllBrandsHandler(postRepo, indexRepo),
+			IndexAllClubs:      command.NewIndexAllClubsHandler(postRepo, indexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, indexRepo),
 
-			UpdatePostBrand:      command.NewUpdatePostBrandHandler(postRepo, indexRepo),
+			UpdatePostClub:       command.NewUpdatePostClubHandler(postRepo, indexRepo),
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, indexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, indexRepo),
 			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, indexRepo, resourceRepo),
@@ -80,9 +80,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 
-			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
-			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),
-			BrandById:    query.NewBrandByIdHandler(postRepo),
+			SearchClubs: query.NewSearchClubsHandler(indexRepo),
+			ClubBySlug:  query.NewClubBySlugHandler(postRepo),
+			ClubById:    query.NewClubByIdHandler(postRepo),
 
 			SearchAudience: query.NewSearchAudienceHandler(indexRepo),
 			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),

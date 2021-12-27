@@ -75,10 +75,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
-	var brand *Brand
+	var club *Club
 
-	if result.Brand() != nil {
-		brand = MarshalBrandToGraphQL(ctx, result.Brand())
+	if result.Club() != nil {
+		club = MarshalClubToGraphQL(ctx, result.Club())
 	}
 
 	var audience *Audience
@@ -98,7 +98,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		Reference:      result.ID(),
 		Moderator:      moderator,
 		Contributor:    &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Brand:          brand,
+		Club:           club,
 		Audience:       audience,
 		State:          state,
 		Content:        content,
@@ -110,7 +110,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 	}
 }
 
-func MarshalBrandToGraphQL(ctx context.Context, result *post.Brand) *Brand {
+func MarshalClubToGraphQL(ctx context.Context, result *post.Club) *Club {
 
 	var res *Resource
 
@@ -118,8 +118,8 @@ func MarshalBrandToGraphQL(ctx context.Context, result *post.Brand) *Brand {
 		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
-	return &Brand{
-		ID:        relay.NewID(Brand{}, result.ID()),
+	return &Club{
+		ID:        relay.NewID(Club{}, result.ID()),
 		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
@@ -135,7 +135,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 	}
 
 	return &Audience{
-		ID:        relay.NewID(Brand{}, result.ID()),
+		ID:        relay.NewID(Audience{}, result.ID()),
 		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
@@ -393,17 +393,17 @@ func MarshalSeriesToGraphQLConnection(ctx context.Context, results []*post.Serie
 	return conn
 }
 
-func MarshalBrandsToGraphQLConnection(ctx context.Context, results []*post.Brand, cursor *paging.Cursor) *BrandConnection {
-	var brands []*BrandEdge
+func MarshalClubsToGraphQLConnection(ctx context.Context, results []*post.Club, cursor *paging.Cursor) *ClubConnection {
+	var clubs []*ClubEdge
 
-	conn := &BrandConnection{
+	conn := &ClubConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
 			StartCursor:     nil,
 			EndCursor:       nil,
 		},
-		Edges: brands,
+		Edges: clubs,
 	}
 
 	limit := cursor.GetLimit()
@@ -418,28 +418,28 @@ func MarshalBrandsToGraphQLConnection(ctx context.Context, results []*post.Brand
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *post.Brand
+	var nodeAt func(int) *post.Club
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *post.Brand {
+		nodeAt = func(i int) *post.Club {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *post.Brand {
+		nodeAt = func(i int) *post.Club {
 			return results[i]
 		}
 	}
 
 	for i := range results {
 		node := nodeAt(i)
-		brands = append(brands, &BrandEdge{
-			Node:   MarshalBrandToGraphQL(ctx, node),
+		clubs = append(clubs, &ClubEdge{
+			Node:   MarshalClubToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
 
-	conn.Edges = brands
+	conn.Edges = clubs
 
 	if len(results) > 0 {
 		res := results[0].Cursor()

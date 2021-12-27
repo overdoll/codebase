@@ -26,14 +26,14 @@ type Commands struct {
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
-	UpdatePostBrand      command.UpdatePostBrandHandler
+	UpdatePostClub       command.UpdatePostClubHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
 
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllSeries     command.IndexAllSeriesHandler
 	IndexAllAudience   command.IndexAllAudienceHandler
-	IndexAllBrands     command.IndexAllBrandsHandler
+	IndexAllClubs      command.IndexAllClubsHandler
 	IndexAllPosts      command.IndexAllPostsHandler
 }
 
@@ -60,7 +60,7 @@ type Queries struct {
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
 
-	SearchBrands query.SearchBrandsHandler
-	BrandBySlug  query.BrandBySlugHandler
-	BrandById    query.BrandByIdHandler
+	SearchClubs query.SearchClubsHandler
+	ClubBySlug  query.ClubBySlugHandler
+	ClubById    query.ClubByIdHandler
 }

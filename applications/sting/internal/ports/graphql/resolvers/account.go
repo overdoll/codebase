@@ -42,7 +42,7 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		ModeratorId:    &moderatorId,
 		State:          stateModified,
 		OrderBy:        orderBy.Field.String(),
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CharacterSlugs: characterSlugs,
 		CategorySlugs:  categorySlugs,
@@ -81,7 +81,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
 		ContributorId:  &contributorId,
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		SeriesSlugs:    seriesSlugs,
 		CategorySlugs:  categorySlugs,

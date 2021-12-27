@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrAudienceNotFound = errors.New("brand not found")
+	ErrAudienceNotFound = errors.New("club not found")
 )
 
 type Audience struct {

@@ -48,22 +48,6 @@ CREATE TABLE IF NOT EXISTS series_slugs
     primary key ( slug )
 );
 
-CREATE TABLE IF NOT EXISTS brands
-(
-    id        text,
-    slug      text,
-    name      map<text, text>,
-    thumbnail text,
-    primary key ( id )
-);
-
-CREATE TABLE IF NOT EXISTS brands_slugs
-(
-    slug     text,
-    brand_id text,
-    primary key ( slug )
-);
-
 CREATE TABLE IF NOT EXISTS audience
 (
     id        text,
@@ -87,7 +71,7 @@ CREATE TABLE IF NOT EXISTS posts
     state                     text,
     moderator_account_id      text,
     contributor_account_id    text,
-    brand_id                  text,
+    club_id                   text,
     audience_id               text,
     category_ids              list<text>,
     character_ids             list<text>,
@@ -96,4 +80,72 @@ CREATE TABLE IF NOT EXISTS posts
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS clubs
+(
+    id               text,
+    slug             text,
+    name             map<text, text>,
+    thumbnail        text,
+    member_count     int,
+    owner_account_id text,
+    primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS club_member_count_calculation
+(
+    club_id                       text,
+    member_count                  int,
+    last_member_count_calculation timestamp,
+    primary key ( club_id )
+);
+
+CREATE TABLE IF NOT EXISTS clubs_slugs
+(
+    slug    text,
+    club_id text,
+    primary key ( slug )
+);
+
+CREATE TABLE IF NOT EXISTS slugs_by_club
+(
+    club_id text,
+    slug    text,
+    primary key ( club_id, slug )
+);
+
+CREATE TABLE IF NOT EXISTS club_account_members_by_account
+(
+    club_id      text,
+    account_id   text,
+    joined_at    timestamp,
+    is_supporter boolean,
+    primary key ( (club_id, account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS account_clubs
+(
+    club_id      text,
+    account_id   text,
+    joined_at    timestamp,
+    is_supporter boolean,
+    primary key ( account_id, joined_at, club_id )
+) WITH CLUSTERING ORDER BY (joined_at ASC, club_id ASC);
+
+CREATE TABLE IF NOT EXISTS club_account_members
+(
+    club_id      text,
+    bucket       timeuuid,
+    account_id   text,
+    joined_at    timestamp,
+    is_supporter boolean,
+    primary key ( (club_id, bucket), account_id, joined_at )
+);
+
+CREATE TABLE IF NOT EXISTS club_account_members_partitions
+(
+    club_id text,
+    bucket  timeuuid,
+    primary key ( club_id, bucket )
 );

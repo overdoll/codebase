@@ -30,7 +30,7 @@ type Post struct {
 	moderatorId   *string
 	contributorId string
 
-	brand    *Brand
+	club     *Club
 	audience *Audience
 
 	characters []*Character
@@ -53,7 +53,7 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, content []string, club *Club, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 
 	var resources []*resource.Resource
 
@@ -67,7 +67,7 @@ func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributo
 		id:             id,
 		moderatorId:    moderatorId,
 		state:          ps,
-		brand:          brand,
+		club:           club,
 		audience:       audience,
 		contributorId:  contributorId,
 		content:        resources,
@@ -95,8 +95,8 @@ func (p *Post) Audience() *Audience {
 	return p.audience
 }
 
-func (p *Post) Brand() *Brand {
-	return p.brand
+func (p *Post) Club() *Club {
+	return p.club
 }
 
 func (p *Post) State() State {
@@ -308,13 +308,13 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	return nil
 }
 
-func (p *Post) UpdateBrandRequest(requester *principal.Principal, brand *Brand) error {
+func (p *Post) UpdateClubRequest(requester *principal.Principal, club *Club) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
-	p.brand = brand
+	p.club = club
 	return nil
 }
 

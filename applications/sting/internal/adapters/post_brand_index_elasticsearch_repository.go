@@ -53,7 +53,7 @@ const brandsIndex = `
 
 const brandsIndexName = "brands"
 
-func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
+func marshalBrandToDocument(cat *post.Club) (*brandDocument, error) {
 
 	parse, err := ksuid.Parse(cat.ID())
 
@@ -81,7 +81,7 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Brand, error) {
+func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Club, error) {
 
 	builder := r.client.Search().
 		Index(brandsIndexName)
@@ -114,7 +114,7 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 		return nil, fmt.Errorf("failed search brands: %v", err)
 	}
 
-	var brands []*post.Brand
+	var brands []*post.Club
 
 	for _, hit := range response.Hits.Hits {
 
@@ -126,7 +126,7 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newBrand := post.UnmarshalBrandFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail)
+		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail)
 		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
 		brands = append(brands, newBrand)
@@ -135,7 +135,7 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 	return brands, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{

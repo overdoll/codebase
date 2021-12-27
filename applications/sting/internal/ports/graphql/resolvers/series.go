@@ -33,7 +33,7 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
 		SeriesSlugs:    []string{obj.Slug},
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,
 		CharacterSlugs: characterSlugs,

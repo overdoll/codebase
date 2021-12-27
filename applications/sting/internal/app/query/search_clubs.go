@@ -8,7 +8,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type SearchBrands struct {
+type SearchClubs struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
 	Name      *string
@@ -16,15 +16,15 @@ type SearchBrands struct {
 	Slugs     []string
 }
 
-type SearchBrandsHandler struct {
+type SearchClubsHandler struct {
 	pr post.IndexRepository
 }
 
-func NewSearchBrandsHandler(pr post.IndexRepository) SearchBrandsHandler {
-	return SearchBrandsHandler{pr: pr}
+func NewSearchClubsHandler(pr post.IndexRepository) SearchClubsHandler {
+	return SearchClubsHandler{pr: pr}
 }
 
-func (h SearchBrandsHandler) Handle(ctx context.Context, query SearchBrands) ([]*post.Brand, error) {
+func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*post.Club, error) {
 
 	filters, err := post.NewObjectFilters(
 		query.Name,
@@ -36,7 +36,7 @@ func (h SearchBrandsHandler) Handle(ctx context.Context, query SearchBrands) ([]
 		return nil, err
 	}
 
-	results, err := h.pr.SearchBrands(ctx, query.Principal, query.Cursor, filters)
+	results, err := h.pr.SearchClubs(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

@@ -59,39 +59,6 @@ type AudiencesOrder struct {
 	Field AudiencesOrderField `json:"field"`
 }
 
-type Brand struct {
-	// An ID pointing to this brand.
-	ID relay.ID `json:"id"`
-	// A url-friendly ID. Should be used when searching
-	Slug string `json:"slug"`
-	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
-	// A name for this brand.
-	Name string `json:"name"`
-	// Posts belonging to this brand
-	Posts *PostConnection `json:"posts"`
-}
-
-func (Brand) IsNode()   {}
-func (Brand) IsObject() {}
-func (Brand) IsEntity() {}
-
-type BrandConnection struct {
-	Edges    []*BrandEdge    `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
-}
-
-type BrandEdge struct {
-	Cursor string `json:"cursor"`
-	Node   *Brand `json:"node"`
-}
-
-// Ordering options for brands
-type BrandsOrder struct {
-	// The field to order brands by.
-	Field BrandsOrderField `json:"field"`
-}
-
 // Ordering options for categories
 type CategoriesOrder struct {
 	// The field to order categories by.
@@ -160,6 +127,39 @@ type CharactersOrder struct {
 	Field CharactersOrderField `json:"field"`
 }
 
+type Club struct {
+	// An ID pointing to this club.
+	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail *Resource `json:"thumbnail"`
+	// A name for this club.
+	Name string `json:"name"`
+	// Posts belonging to this club
+	Posts *PostConnection `json:"posts"`
+}
+
+func (Club) IsNode()   {}
+func (Club) IsObject() {}
+func (Club) IsEntity() {}
+
+type ClubConnection struct {
+	Edges    []*ClubEdge     `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type ClubEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Club  `json:"node"`
+}
+
+// Ordering options for clubs
+type ClubsOrder struct {
+	// The field to order clubs by.
+	Field ClubsOrderField `json:"field"`
+}
+
 // Payload for a created pending post
 type CreatePostPayload struct {
 	// The pending post after the creation
@@ -186,12 +186,12 @@ type Post struct {
 	ReassignmentAt *time.Time `json:"reassignmentAt"`
 	// Represents the audience that this post belongs to
 	Audience *Audience `json:"audience"`
-	// Represents the brand that this post belongs to
-	Brand *Brand `json:"brand"`
 	// Categories that belong to this post
 	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
 	Characters []*Character `json:"characters"`
+	// Represents the club that this post belongs to
+	Club *Club `json:"club"`
 }
 
 func (Post) IsNode()   {}
@@ -290,20 +290,6 @@ type UpdatePostAudiencePayload struct {
 	Post *Post `json:"post"`
 }
 
-// Update post brand.
-type UpdatePostBrandInput struct {
-	// The post to update
-	ID relay.ID `json:"id"`
-	// The brand that this post belongs to
-	BrandID relay.ID `json:"brandId"`
-}
-
-// Payload for updating a post
-type UpdatePostBrandPayload struct {
-	// The post after the update
-	Post *Post `json:"post"`
-}
-
 // Update post audience.
 type UpdatePostCategoriesInput struct {
 	// The post to update
@@ -328,6 +314,20 @@ type UpdatePostCharactersInput struct {
 
 // Payload for updating a post
 type UpdatePostCharactersPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post club.
+type UpdatePostClubInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// The club that this post belongs to
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for updating a post
+type UpdatePostClubPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }
@@ -384,47 +384,6 @@ func (e *AudiencesOrderField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AudiencesOrderField) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Properties by which brand connections can be ordered.
-type BrandsOrderField string
-
-const (
-	// Brand by created time
-	BrandsOrderFieldCreatedAt BrandsOrderField = "CREATED_AT"
-)
-
-var AllBrandsOrderField = []BrandsOrderField{
-	BrandsOrderFieldCreatedAt,
-}
-
-func (e BrandsOrderField) IsValid() bool {
-	switch e {
-	case BrandsOrderFieldCreatedAt:
-		return true
-	}
-	return false
-}
-
-func (e BrandsOrderField) String() string {
-	return string(e)
-}
-
-func (e *BrandsOrderField) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = BrandsOrderField(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid BrandsOrderField", str)
-	}
-	return nil
-}
-
-func (e BrandsOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -507,6 +466,47 @@ func (e *CharactersOrderField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CharactersOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which club connections can be ordered.
+type ClubsOrderField string
+
+const (
+	// Club by created time
+	ClubsOrderFieldCreatedAt ClubsOrderField = "CREATED_AT"
+)
+
+var AllClubsOrderField = []ClubsOrderField{
+	ClubsOrderFieldCreatedAt,
+}
+
+func (e ClubsOrderField) IsValid() bool {
+	switch e {
+	case ClubsOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e ClubsOrderField) String() string {
+	return string(e)
+}
+
+func (e *ClubsOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubsOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubsOrderField", str)
+	}
+	return nil
+}
+
+func (e ClubsOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

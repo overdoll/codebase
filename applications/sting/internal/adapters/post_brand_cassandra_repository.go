@@ -44,7 +44,7 @@ type brandSlugs struct {
 	Slug    string `db:"slug"`
 }
 
-func (r PostsCassandraRepository) GetBrandBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Brand, error) {
+func (r PostsCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Club, error) {
 
 	queryBrandSlug := r.session.
 		Query(brandSlugTable.Get()).
@@ -56,16 +56,16 @@ func (r PostsCassandraRepository) GetBrandBySlug(ctx context.Context, requester 
 	if err := queryBrandSlug.Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrBrandNotFound
+			return nil, post.ErrClubNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get brand by slug: %v", err)
 	}
 
-	return r.GetBrandById(ctx, requester, b.BrandId)
+	return r.GetClubById(ctx, requester, b.BrandId)
 }
 
-func (r PostsCassandraRepository) GetBrandById(ctx context.Context, requester *principal.Principal, brandId string) (*post.Brand, error) {
+func (r PostsCassandraRepository) GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*post.Club, error) {
 
 	queryBrand := r.session.
 		Query(brandTable.Get()).
@@ -77,13 +77,13 @@ func (r PostsCassandraRepository) GetBrandById(ctx context.Context, requester *p
 	if err := queryBrand.Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrBrandNotFound
+			return nil, post.ErrClubNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get brand by id: %v", err)
 	}
 
-	return post.UnmarshalBrandFromDatabase(
+	return post.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
 		b.Name,

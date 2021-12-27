@@ -37,13 +37,6 @@ CREATE TABLE IF NOT EXISTS account_usernames
     primary key ( username )
 );
 
-CREATE TABLE IF NOT EXISTS usernames_by_account
-(
-    account_id text,
-    username   text,
-    primary key ( account_id, username )
-) WITH CLUSTERING ORDER BY (username DESC);
-
 CREATE TABLE IF NOT EXISTS account_multi_factor_totp
 (
     account_id text,

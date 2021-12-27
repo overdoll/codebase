@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	ErrBrandNotFound = errors.New("brand not found")
+	ErrClubNotFound = errors.New("club not found")
 )
 
-type Brand struct {
+type Club struct {
 	*paging.Node
 
 	id        string
@@ -21,24 +21,24 @@ type Brand struct {
 	thumbnail *resource.Resource
 }
 
-func (m *Brand) ID() string {
+func (m *Club) ID() string {
 	return m.id
 }
 
-func (m *Brand) Slug() string {
+func (m *Club) Slug() string {
 	return m.slug
 }
 
-func (m *Brand) Name() *localization.Translation {
+func (m *Club) Name() *localization.Translation {
 	return m.name
 }
 
-func (m *Brand) Thumbnail() *resource.Resource {
+func (m *Club) Thumbnail() *resource.Resource {
 	return m.thumbnail
 }
 
-func UnmarshalBrandFromDatabase(id, slug string, name map[string]string, thumbnail string) *Brand {
-	return &Brand{
+func UnmarshalClubFromDatabase(id, slug string, name map[string]string, thumbnail string) *Club {
+	return &Club{
 		id:        id,
 		slug:      slug,
 		name:      localization.UnmarshalTranslationFromDatabase(name),

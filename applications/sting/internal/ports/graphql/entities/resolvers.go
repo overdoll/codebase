@@ -33,23 +33,23 @@ func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*typ
 	return types.MarshalAudienceToGraphQL(ctx, media), nil
 }
 
-func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.Brand, error) {
+func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
 
-	media, err := r.App.Queries.BrandById.Handle(ctx, query.BrandById{
+	media, err := r.App.Queries.ClubById.Handle(ctx, query.ClubById{
 		Principal: principal.FromContext(ctx),
 		Id:        id.GetID(),
 	})
 
 	if err != nil {
 
-		if err == post.ErrBrandNotFound {
+		if err == post.ErrClubNotFound {
 			return nil, nil
 		}
 
 		return nil, err
 	}
 
-	return types.MarshalBrandToGraphQL(ctx, media), nil
+	return types.MarshalClubToGraphQL(ctx, media), nil
 }
 
 func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error) {

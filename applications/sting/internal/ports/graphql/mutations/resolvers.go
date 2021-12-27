@@ -79,19 +79,18 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 	}, err
 }
 
-func (r *MutationResolver) UpdatePostBrand(ctx context.Context, input types.UpdatePostBrandInput) (*types.UpdatePostBrandPayload, error) {
-
+func (r *MutationResolver) UpdatePostClub(ctx context.Context, input types.UpdatePostClubInput) (*types.UpdatePostClubPayload, error) {
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	pst, err := r.App.Commands.UpdatePostBrand.
+	pst, err := r.App.Commands.UpdatePostClub.
 		Handle(
 			ctx,
-			command.UpdatePostBrand{
+			command.UpdatePostClub{
 				Principal: principal.FromContext(ctx),
 				PostId:    input.ID.GetID(),
-				BrandId:   input.BrandID.GetID(),
+				ClubId:    input.ClubID.GetID(),
 			},
 		)
 
@@ -99,7 +98,7 @@ func (r *MutationResolver) UpdatePostBrand(ctx context.Context, input types.Upda
 		return nil, err
 	}
 
-	return &types.UpdatePostBrandPayload{
+	return &types.UpdatePostClubPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }

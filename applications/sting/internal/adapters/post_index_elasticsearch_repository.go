@@ -123,8 +123,8 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 
 	var brandDoc *brandDocument
 
-	if pst.Brand() != nil {
-		brandDoc, err = marshalBrandToDocument(pst.Brand())
+	if pst.Club() != nil {
+		brandDoc, err = marshalBrandToDocument(pst.Club())
 
 		if err != nil {
 			return nil, err
@@ -337,10 +337,10 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			postedAtTime = &newTime
 		}
 
-		var brand *post.Brand
+		var brand *post.Club
 
 		if pst.Brand != nil {
-			brand = post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail)
+			brand = post.UnmarshalClubFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail)
 		}
 
 		var audience *post.Audience
@@ -430,7 +430,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			var brandDoc *brandDocument
 
 			if p.BrandId != nil {
-				brnd, err := rep.GetBrandById(ctx, nil, *p.BrandId)
+				brnd, err := rep.GetClubById(ctx, nil, *p.BrandId)
 
 				if err != nil {
 					return err

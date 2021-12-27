@@ -35,7 +35,7 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 		CharacterSlugs: []string{obj.Slug},
 		Principal:      principal.FromContext(ctx),
 		State:          stateModified,
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,
 		OrderBy:        orderBy.Field.String(),

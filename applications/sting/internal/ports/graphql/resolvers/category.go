@@ -32,7 +32,7 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
-		BrandSlugs:     brandSlugs,
+		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CharacterSlugs: characterSlugs,
 		SeriesSlugs:    seriesSlugs,

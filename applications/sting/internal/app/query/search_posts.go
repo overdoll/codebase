@@ -15,7 +15,7 @@ type SearchPosts struct {
 	ContributorId *string
 
 	AudienceSlugs  []string
-	BrandSlugs     []string
+	ClubSlugs      []string
 	CategorySlugs  []string
 	CharacterSlugs []string
 	SeriesSlugs    []string
@@ -40,7 +40,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,
-		query.BrandSlugs,
+		query.ClubSlugs,
 		query.AudienceSlugs,
 		query.CategorySlugs,
 		query.CharacterSlugs,
