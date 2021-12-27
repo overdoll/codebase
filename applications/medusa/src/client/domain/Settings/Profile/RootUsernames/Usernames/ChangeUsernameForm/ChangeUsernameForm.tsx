@@ -31,29 +31,19 @@ interface UsernameValues {
   username: string
 }
 
-interface Props {
-  usernamesConnectionID: string | undefined
-}
-
 const UsernameMutationGQL = graphql`
-  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
+  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!) {
     updateAccountUsernameAndRetainPrevious(input: $input) {
       validation
       accountUsername  {
         id
         username
-        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
-          id
-          username
-        }
       }
     }
   }
 `
 
-export default function ChangeUsernameForm ({
-  usernamesConnectionID
-}: Props): JSX.Element {
+export default function ChangeUsernameForm (): JSX.Element {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
@@ -97,7 +87,7 @@ export default function ChangeUsernameForm ({
   }
 
   const onChangeUsername = (): void => {
-    if (selectedUsername == null || usernamesConnectionID == null) return
+    if (selectedUsername == null) return
 
     onCloseConfirmation()
 
@@ -105,8 +95,7 @@ export default function ChangeUsernameForm ({
       variables: {
         input: {
           username: selectedUsername
-        },
-        connections: [usernamesConnectionID]
+        }
       },
       onCompleted (data) {
         if (data?.updateAccountUsernameAndRetainPrevious?.validation != null) {

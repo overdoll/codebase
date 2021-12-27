@@ -8,7 +8,7 @@ import { ListSpacer, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 
 const UsernameQueryGQL = graphql`
-  query UsernamesQuery($first: Int) {
+  query UsernamesQuery {
     viewer {
       ...UsernamesSettingsFragment
     }
@@ -38,8 +38,6 @@ export default function Usernames (props: Props): JSX.Element | null {
     onToggle: onToggleForm
   } = useDisclosure()
 
-  const usernamesConnectionID = data?.usernames?.__id
-
   return (
     <>
       <ListSpacer>
@@ -63,9 +61,7 @@ export default function Usernames (props: Props): JSX.Element | null {
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Flex>
-            <ChangeUsernameForm
-              usernamesConnectionID={usernamesConnectionID}
-            />
+            <ChangeUsernameForm />
           </Flex>
         </Collapse>
       </ListSpacer>

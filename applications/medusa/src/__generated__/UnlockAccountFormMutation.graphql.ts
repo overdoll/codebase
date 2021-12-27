@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2d5dc090d760ead7dda27050c889181d */
+/* @relayHash 6be0469a447b5ccc4e9fe393299b575f */
 
 import { ConcreteRequest } from "relay-runtime";
 export type AccountLockReason = "POST_INFRACTION" | "%future added value";
@@ -14,6 +14,8 @@ export type UnlockAccountFormMutationResponse = {
                 readonly expires: unknown;
                 readonly reason: AccountLockReason;
             } | null;
+            readonly isModerator: boolean;
+            readonly isStaff: boolean;
         } | null;
     } | null;
 };
@@ -33,6 +35,8 @@ mutation UnlockAccountFormMutation {
         expires
         reason
       }
+      isModerator
+      isStaff
     }
   }
 }
@@ -87,6 +91,20 @@ var v0 = [
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isModerator",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -113,7 +131,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "2d5dc090d760ead7dda27050c889181d",
+    "id": "6be0469a447b5ccc4e9fe393299b575f",
     "metadata": {},
     "name": "UnlockAccountFormMutation",
     "operationKind": "mutation",
@@ -121,5 +139,5 @@ return {
   }
 };
 })();
-(node as any).hash = '59101473432e48ad1039578aecf58083';
+(node as any).hash = '2b1e34faa7765c18d83d65740c329a09';
 export default node;

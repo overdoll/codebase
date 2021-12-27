@@ -15,9 +15,10 @@ import {
 import CommunityGuidelines from '../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
 import { t, Trans } from '@lingui/macro'
-import { formatDistanceStrict, isPast } from 'date-fns'
+import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from 'date-fns'
 import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
-import Button from '@//:modules/form/Button/Button'
+import { useEffect, useState } from 'react'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -39,8 +40,7 @@ export default function LockedAccountModal ({
 }: Props): JSX.Element | null {
   const data = useFragment(LockedAccountModalGQL, queryRef)
 
-  // TODO add avatar in "jail"
-  // TODO button for unlocking account is disabled and has countdown timer
+  // TODO add avatar in "jail" in both here and the menu?
 
   const reasons = {
     POST_INFRACTION: t`The contents of a post you uploaded are not allowed on our platform.`
@@ -48,9 +48,28 @@ export default function LockedAccountModal ({
 
   const expires = new Date(data.expires as Date)
 
-  const remainingTime = formatDistanceStrict(expires, new Date())
+  const calculateRemainingTime = (): Duration => {
+    return intervalToDuration({
+      start: expires,
+      end: new Date()
+    })
+  }
+
+  const [timer, setTimer] = useState(calculateRemainingTime())
 
   const canBeUnlocked = isPast(expires)
+
+  const remainingTime = formatDistanceStrict(expires, new Date())
+
+  const duration = formatDuration(timer)
+
+  useEffect(() => {
+    const timerObject = setTimeout(() => {
+      setTimer(calculateRemainingTime())
+    }, 1000)
+
+    return () => clearTimeout(timerObject)
+  })
 
   return (
     <Modal
@@ -106,16 +125,18 @@ export default function LockedAccountModal ({
                   You may unlock your account after agreeing to the community guidelines.
                 </Trans>
                 : <Trans>
-                  Your account has been locked and you'll have the ability to unlock it after {remainingTime}.
+                  Your account has been locked and you'll have the ability to unlock it after
                 </Trans>}
             </Text>
             {canBeUnlocked
               ? <UnlockAccountForm />
-              : <Button size='lg' colorScheme='gray' isDisabled>
-                <Trans>
-                  timer
-                </Trans>
-              </Button>}
+              : <SmallBackgroundBox bg='green.50'>
+                <Text textAlign='center' color='green.500'>
+                  <Trans>
+                    {duration}
+                  </Trans>
+                </Text>
+              </SmallBackgroundBox>}
           </Stack>
         </ModalBody>
       </ModalContent>

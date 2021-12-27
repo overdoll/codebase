@@ -13,7 +13,10 @@ const baseStyleOverlay: SystemStyleObject = {
 }
 
 const baseStyleDialogContainer: SystemStyleFunction = (props) => {
-  const { isCentered, scrollBehavior } = props
+  const {
+    isCentered,
+    scrollBehavior
+  } = props
 
   return {
     display: 'flex',
@@ -21,6 +24,7 @@ const baseStyleDialogContainer: SystemStyleFunction = (props) => {
     justifyContent: 'center',
     alignItems: isCentered as boolean ? 'center' : 'flex-start',
     overflow: scrollBehavior === 'inside' ? 'hidden' : 'auto'
+
   }
 }
 
@@ -33,7 +37,8 @@ const baseStyleDialog: SystemStyleFunction = (props) => {
     color: 'inherit',
     my: '3.75rem',
     zIndex: 'modal',
-    maxH: scrollBehavior === 'inside' ? 'calc(100% - 7.5rem)' : undefined
+    maxH: scrollBehavior === 'inside' ? 'calc(100% - 7.5rem)' : undefined,
+    boxShadow: 'none'
   }
 }
 
@@ -82,7 +87,11 @@ const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
 function getSize (value: string): PartsStyleObject<typeof parts> {
   if (value === 'full') {
     return {
-      dialog: { maxW: '100vw', minH: '100vh', my: 0 }
+      dialog: {
+        maxW: '100vw',
+        minH: '100vh',
+        my: 0
+      }
     }
   }
   return {

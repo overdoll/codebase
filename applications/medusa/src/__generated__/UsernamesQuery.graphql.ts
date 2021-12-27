@@ -1,16 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8236bfe9d667180e0daecf28e6693652 */
+/* @relayHash d3c358aa75ea117805bc34ad8cd10703 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type UsernamesQueryVariables = {
-    first?: number | null | undefined;
-};
+export type UsernamesQueryVariables = {};
 export type UsernamesQueryResponse = {
     readonly viewer: {
-        readonly usernamesLimit: number;
         readonly " $fragmentRefs": FragmentRefs<"UsernamesSettingsFragment">;
     } | null;
 };
@@ -22,80 +19,21 @@ export type UsernamesQuery = {
 
 
 /*
-query UsernamesQuery(
-  $first: Int
-) {
+query UsernamesQuery {
   viewer {
     ...UsernamesSettingsFragment
-    usernamesLimit
     id
   }
 }
 
-fragment UsernameAliasCard on AccountUsername {
-  id
-  username
-}
-
 fragment UsernamesSettingsFragment on Account {
   username
-  usernames(first: $first) {
-    edges {
-      node {
-        username
-        ...UsernameAliasCard
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
 }
 */
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "first"
-  }
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "usernamesLimit",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v3 = [
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  }
-],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ConcreteRequest = {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "UsernamesQuery",
@@ -108,7 +46,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -123,7 +60,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
     "name": "UsernamesQuery",
     "selections": [
@@ -135,117 +72,32 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
             "alias": null,
-            "args": (v3/*: any*/),
-            "concreteType": "AccountUsernameConnection",
-            "kind": "LinkedField",
-            "name": "usernames",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "AccountUsernameEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "AccountUsername",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v4/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__typename",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cursor",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PageInfo",
-                "kind": "LinkedField",
-                "name": "pageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "endCursor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasNextPage",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "kind": "ClientExtension",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__id",
-                    "storageKey": null
-                  }
-                ]
-              }
-            ],
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v3/*: any*/),
-            "filters": null,
-            "handle": "connection",
-            "key": "UsernamesSettingsFragment_usernames",
-            "kind": "LinkedHandle",
-            "name": "usernames"
-          },
-          (v1/*: any*/),
-          (v4/*: any*/)
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "8236bfe9d667180e0daecf28e6693652",
+    "id": "d3c358aa75ea117805bc34ad8cd10703",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",
     "text": null
   }
 };
-})();
-(node as any).hash = '16ae99eac1572a04a2d01555a46f28c5';
+(node as any).hash = '7c4f06712d73eab470e2b3ef98aacfd7';
 export default node;
