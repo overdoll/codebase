@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2fb43209e83912c1c318e2f8655b673c */
+/* @relayHash 58034fa7073cc309429438b94b4c630d */
 
 import { ConcreteRequest } from "relay-runtime";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
@@ -9,10 +9,10 @@ export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput = {
     token: string;
     code: string;
 };
-export type TotpMutationVariables = {
+export type TotpSubmissionMutationVariables = {
     input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput;
 };
-export type TotpMutationResponse = {
+export type TotpSubmissionMutationResponse = {
     readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: {
         readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
         readonly account: {
@@ -20,15 +20,15 @@ export type TotpMutationResponse = {
         } | null;
     } | null;
 };
-export type TotpMutation = {
-    readonly response: TotpMutationResponse;
-    readonly variables: TotpMutationVariables;
+export type TotpSubmissionMutation = {
+    readonly response: TotpSubmissionMutationResponse;
+    readonly variables: TotpSubmissionMutationVariables;
 };
 
 
 
 /*
-mutation TotpMutation(
+mutation TotpSubmissionMutation(
   $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!
 ) {
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
@@ -97,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "TotpMutation",
+    "name": "TotpSubmissionMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -106,17 +106,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "TotpMutation",
+    "name": "TotpSubmissionMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2fb43209e83912c1c318e2f8655b673c",
+    "id": "58034fa7073cc309429438b94b4c630d",
     "metadata": {},
-    "name": "TotpMutation",
+    "name": "TotpSubmissionMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = '34f6170c5dd092e79b811253ea8e963c';
+(node as any).hash = '2669e660cadc249a8cef4a11d5ee9a1b';
 export default node;

@@ -24,6 +24,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           direction='column'
           bg='gray.800'
           borderRadius='base'
+          zIndex='sidebar'
         >
           <SmallBackgroundBox>
             <PageSectionWrap>

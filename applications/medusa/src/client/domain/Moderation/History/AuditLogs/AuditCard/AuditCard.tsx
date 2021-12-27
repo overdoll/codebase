@@ -23,8 +23,6 @@ interface Props {
 
 const AuditCardFragmentGQL = graphql`
   fragment AuditCardFragment on PostAuditLog {
-    reverted
-    reversibleUntil
     post {
       postedAt
       brand {
@@ -38,20 +36,6 @@ const AuditCardFragmentGQL = graphql`
 
 export default function AuditCard ({ auditLog }: Props): JSX.Element {
   const data = useFragment(AuditCardFragmentGQL, auditLog)
-
-  const getMinuteDifference = (date): number => {
-    const ms = 1000 * 60
-    const now = new Date()
-    const later = new Date(date)
-
-    const difference = Math.round((later.getTime() - now.getTime()) / ms)
-
-    return difference < 0 ? 0 : difference
-  }
-
-  const expiryTime = getMinuteDifference(data.reversibleUntil)
-
-  const expiryPercent = (expiryTime / 10) * 100
 
   const formattedDate = format(new Date(data?.post?.postedAt as string), 'eeee h:mm aaa')
 
@@ -76,20 +60,12 @@ export default function AuditCard ({ auditLog }: Props): JSX.Element {
                   <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
                     <Box>
                       <Icon
-                        icon={data.reverted ? SwapCircle : data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
+                        icon={data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
                         w={4}
                         h={4}
-                        fill={data.reverted ? 'purple.400' : data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
+                        fill={data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
                       />
                     </Box>
-                    {(expiryPercent > 0 && !data.reverted) &&
-                      <CircularProgress
-                        trackColor='transparent'
-                        color='purple.400'
-                        position='absolute'
-                        value={expiryPercent}
-                        size={7}
-                      />}
                   </Flex>
                 </GridItem>
                 <GridItem align='center' colSpan={1}>

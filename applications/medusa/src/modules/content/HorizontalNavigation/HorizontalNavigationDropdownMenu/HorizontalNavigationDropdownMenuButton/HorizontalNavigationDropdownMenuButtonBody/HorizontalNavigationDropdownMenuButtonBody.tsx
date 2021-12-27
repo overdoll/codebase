@@ -35,7 +35,7 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
             align='center'
             p={1}
             mr={3}
-            bg={isActive ? 'primary.400' : 'gray.500'}
+            bg={isActive ? (color ? 'gray.00' : 'primary.400') : 'gray.500'}
           >
             <Icon
               icon={icon}

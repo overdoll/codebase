@@ -53,7 +53,7 @@ msgstr ""
 msgid "Enter an email"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/Totp/Totp.tsx:113
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:113
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/Totp/Totp.tsx:172
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:172
 msgid "Submitting"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgstr ""
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/Totp/Totp.tsx:89
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:89
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Welcome to overdoll!"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/Totp/Totp.tsx:122
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:122
 msgid "You can find this in the same app you used to set up two-factor authentication"
 msgstr ""
 
@@ -129,6 +129,6 @@ msgstr ""
 msgid "You have been logged in"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/Totp/Totp.tsx:77
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:77
 msgid "You have been logged in using two-factor authentication."
 msgstr ""

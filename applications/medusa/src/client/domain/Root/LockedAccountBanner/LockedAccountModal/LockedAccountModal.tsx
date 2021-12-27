@@ -6,6 +6,7 @@ import {
   Heading,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Stack,
@@ -13,7 +14,10 @@ import {
 } from '@chakra-ui/react'
 import CommunityGuidelines from '../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
+import { formatDistanceStrict, isPast } from 'date-fns'
+import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
+import Button from '@//:modules/form/Button/Button'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -39,27 +43,35 @@ export default function LockedAccountModal ({
   // TODO button for unlocking account is disabled and has countdown timer
   // TODO to unlock account, you have to check "I promise to be better" checkbox
 
+  const reasons = {
+    POST_INFRACTION: t`The contents of a post you uploaded are not allowed on our platform.`
+  }
+
+  const expires = new Date(data.expires as Date)
+
+  const remainingTime = formatDistanceStrict(expires, new Date())
+
+  const canBeUnlocked = isPast(expires)
+
   return (
     <Modal
       preserveScrollBarGap
       isOpen={isOpen}
       onClose={onClose}
-      size='5xl'
       isCentered
     >
       <ModalOverlay />
-      <ModalContent
-        position='relative'
-        borderRadius={0}
-        bg='gray.800'
-      >
+      <ModalContent>
+        <ModalCloseButton />
         <ModalBody>
           <Stack m={5} spacing={4}>
             <Heading
               fontSize='4xl'
               color='gray.00'
             >
-              <Trans>Banned for {data.expires}</Trans>
+              {canBeUnlocked
+                ? <Trans>Banned</Trans>
+                : <Trans>Banned for {remainingTime}</Trans>}
             </Heading>
             <Text mb={2}>
               <Trans>
@@ -75,10 +87,10 @@ export default function LockedAccountModal ({
             <Alert
               mt={4}
               mb={4}
-              status='info'
+              status='warning'
             >
               <AlertDescription>
-                {data.reason}
+                {reasons[data.reason] ?? t`No reason was found`}
               </AlertDescription>
             </Alert>
             <Box>
@@ -90,10 +102,21 @@ export default function LockedAccountModal ({
               <CommunityGuidelines />
             </Box>
             <Text>
-              <Trans>
-                Your account has been locked for {data.expires}. You can unlock it after {data.expires}.
-              </Trans>
+              {canBeUnlocked
+                ? <Trans>
+                  You may unlock your account after agreeing to the community guidelines.
+                </Trans>
+                : <Trans>
+                  Your account has been locked and you'll have the ability to unlock it after {remainingTime}.
+                </Trans>}
             </Text>
+            {canBeUnlocked
+              ? <UnlockAccountForm />
+              : <Button>
+                <Trans>
+                  timer
+                </Trans>
+              </Button>}
           </Stack>
         </ModalBody>
       </ModalContent>

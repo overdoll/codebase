@@ -2,8 +2,7 @@ import { Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import Switch from '@//:modules/form/Switch/Switch'
-import { Trans } from '@lingui/macro'
-import { useTranslation } from 'react-i18next'
+import { t, Trans } from '@lingui/macro'
 import type { QueueSettingsAddMutation } from '@//:artifacts/QueueSettingsAddMutation.graphql'
 import type { QueueSettingsRemoveMutation } from '@//:artifacts/QueueSettingsRemoveMutation.graphql'
 import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
@@ -73,8 +72,6 @@ export default function QueueSettings (props: Props): JSX.Element {
   const [removeFromQueue, isRemovingFromQueue] = useMutation<QueueSettingsRemoveMutation>(
     RemoveFromQueue
   )
-
-  const [t] = useTranslation('settings')
 
   const status = data?.moderatorSettings?.isInModeratorQueue
 

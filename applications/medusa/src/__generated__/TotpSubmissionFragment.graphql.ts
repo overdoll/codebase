@@ -4,14 +4,14 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type TotpFragment = {
+export type TotpSubmissionFragment = {
     readonly token: string;
-    readonly " $refType": "TotpFragment";
+    readonly " $refType": "TotpSubmissionFragment";
 };
-export type TotpFragment$data = TotpFragment;
-export type TotpFragment$key = {
-    readonly " $data"?: TotpFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"TotpFragment">;
+export type TotpSubmissionFragment$data = TotpSubmissionFragment;
+export type TotpSubmissionFragment$key = {
+    readonly " $data"?: TotpSubmissionFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"TotpSubmissionFragment">;
 };
 
 
@@ -20,7 +20,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "TotpFragment",
+  "name": "TotpSubmissionFragment",
   "selections": [
     {
       "alias": null,
@@ -33,5 +33,5 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = '3b76dc95392d94e6750767ad6845aa59';
+(node as any).hash = '4e067ae3310dbddaba61bc644fbf6fc8';
 export default node;

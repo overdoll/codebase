@@ -1,5 +1,20 @@
 import Joi from 'joi'
-import { Alert, AlertDescription, AlertIcon, FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  FormControl,
+  FormLabel,
+  HStack,
+  Stack,
+  Text,
+  useToast
+} from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
@@ -9,6 +24,8 @@ import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
+import { useHistoryDisclosure } from '@//:modules/hooks'
+import { useRef, useState } from 'react'
 
 interface UsernameValues {
   username: string
@@ -16,7 +33,6 @@ interface UsernameValues {
 
 interface Props {
   usernamesConnectionID: string | undefined
-  isDisabled: boolean
 }
 
 const UsernameMutationGQL = graphql`
@@ -36,8 +52,7 @@ const UsernameMutationGQL = graphql`
 `
 
 export default function ChangeUsernameForm ({
-  usernamesConnectionID,
-  isDisabled
+  usernamesConnectionID
 }: Props): JSX.Element {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
@@ -66,13 +81,30 @@ export default function ChangeUsernameForm ({
 
   const { i18n } = useLingui()
 
-  const onChangeUsername = (formData): void => {
-    if (usernamesConnectionID == null) return
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null)
+
+  const {
+    isOpen: isConfirmationOpen,
+    onOpen: onOpenConfirmation,
+    onClose: onCloseConfirmation
+  } = useHistoryDisclosure()
+
+  const cancelButtonRef = useRef(null)
+
+  const onDataConfirmed = (formData): void => {
+    setSelectedUsername(formData.username)
+    onOpenConfirmation()
+  }
+
+  const onChangeUsername = (): void => {
+    if (selectedUsername == null || usernamesConnectionID == null) return
+
+    onCloseConfirmation()
 
     changeUsername({
       variables: {
         input: {
-          username: formData.username
+          username: selectedUsername
         },
         connections: [usernamesConnectionID]
       },
@@ -104,48 +136,99 @@ export default function ChangeUsernameForm ({
   const success = isDirty && (errors.username == null) && isSubmitted
 
   return (
-    <form noValidate onSubmit={handleSubmit(onChangeUsername)}>
-      <FormControl
-        isInvalid={errors.username != null}
-        id='username'
-      >
-        {isDisabled &&
-          <Alert mb={1} status='warning'>
-            <AlertIcon />
-            <AlertDescription fontSize='sm'>
-              <Trans>
-                You have added the maximum number of usernames. You have to remove at least one alias before you can
-                change your username to a new one.
-              </Trans>
-            </AlertDescription>
-          </Alert>}
-        <FormLabel>
-          <Trans>
-            Enter a new username
-          </Trans>
-        </FormLabel>
-        <HStack align='flex-start'>
-          <StyledInput
-            register={register('username')}
-            success={success}
-            error={errors.username != null}
-            placeholder={i18n._(t`Enter a new username`)}
-            errorMessage={errors?.username?.message}
-          />
-          <Button
-            size='sm'
-            variant='solid'
-            type='submit'
-            colorScheme='gray'
-            disabled={errors.username != null || isDisabled}
-            isLoading={isChangingUsername}
-          >
+    <>
+      <form noValidate onSubmit={handleSubmit(onDataConfirmed)}>
+        <FormControl
+          isInvalid={errors.username != null}
+          id='username'
+        >
+          <FormLabel>
             <Trans>
-              Submit
+              Enter a new username
             </Trans>
-          </Button>
-        </HStack>
-      </FormControl>
-    </form>
+          </FormLabel>
+          <HStack align='flex-start'>
+            <StyledInput
+              register={register('username')}
+              success={success}
+              error={errors.username != null}
+              placeholder={i18n._(t`Enter a new username`)}
+              errorMessage={errors?.username?.message}
+            />
+            <Button
+              size='sm'
+              variant='solid'
+              colorScheme='gray'
+              type='submit'
+              disabled={errors.username != null}
+              isLoading={isChangingUsername}
+            >
+              <Trans>
+                Submit
+              </Trans>
+            </Button>
+          </HStack>
+        </FormControl>
+      </form>
+      <AlertDialog
+        preserveScrollBarGap
+        isCentered
+        leastDestructiveRef={cancelButtonRef}
+        isOpen={isConfirmationOpen}
+        onClose={onCloseConfirmation}
+      >
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <Trans>
+              Confirm Username Change
+            </Trans>
+          </AlertDialogHeader>
+          <AlertDialogCloseButton />
+          <AlertDialogBody>
+            <Stack spacing={2}>
+              <Text>
+                <Trans>
+                  Changing your to a different one username will break any links that include your current username.
+                </Trans>
+              </Text>
+              <Text>
+                <Trans>
+                  In addition, you won't be able to change your username for 30 days after confirming.
+                </Trans>
+              </Text>
+              <Box>
+                <Text>
+                  <Trans>
+                    Are you sure you'd like to change your username to
+                  </Trans>
+                </Text>
+                <Text color='green.300'>
+                  {selectedUsername}
+                </Text>
+              </Box>
+            </Stack>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button variant='solid' size='lg' onClick={onCloseConfirmation}>
+              <Trans>
+                Go back
+              </Trans>
+            </Button>
+            <Button
+              onClick={onChangeUsername}
+              ml={3}
+              size='lg'
+              colorScheme='green'
+              variant='solid'
+            >
+              <Trans>
+                Yes, change
+              </Trans>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

@@ -10,7 +10,7 @@ export type MultiFactorFragment = {
             readonly totp: boolean;
         } | null;
     } | null;
-    readonly " $fragmentRefs": FragmentRefs<"TotpFragment" | "RecoveryCodeFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment">;
     readonly " $refType": "MultiFactorFragment";
 };
 export type MultiFactorFragment$data = MultiFactorFragment;
@@ -59,7 +59,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "TotpFragment"
+      "name": "TotpSubmissionFragment"
     },
     {
       "args": null,
@@ -70,5 +70,5 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = '48ab9cc39de8cb455f9a2cbdc1a5e39b';
+(node as any).hash = '9044bb2fe2f16fafb720f468de2c0c71';
 export default node;

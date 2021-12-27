@@ -139,6 +139,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
               error={errors.code != null}
               placeholder={i18n._(t`An 8-character recovery code`)}
               errorMessage={errors.code?.message}
+              size='md'
             />
             <Button
               size='md'

@@ -35,7 +35,7 @@ export default function Submit ({
           </Heading>
           <Text mb={8} textAlign='center' color='gray.100' fontSize='md'>
             <Trans>
-              The post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be
+              Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be
               visible to the public.
             </Trans>
           </Text>

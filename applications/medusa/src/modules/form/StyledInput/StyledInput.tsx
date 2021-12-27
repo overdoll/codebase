@@ -43,7 +43,7 @@ export default function StyledInput ({
   const determineTextSizing = (): string | undefined => {
     if (size == null) return undefined
 
-    if (['xs', 'sm', 'md'].includes(size)) {
+    if (['xs', 'sm', 'md', 'lg'].includes(size)) {
       return 'sm'
     }
     return size

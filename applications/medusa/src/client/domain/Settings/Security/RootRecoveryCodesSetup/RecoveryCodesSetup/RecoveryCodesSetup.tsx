@@ -31,7 +31,7 @@ interface Props {
 const RecoveryCodesSetupQueryGQL = graphql`
   query RecoveryCodesSetupQuery {
     viewer {
-      __id
+      id
       recoveryCodes {
         __id
         code
@@ -95,7 +95,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
           isClosable: true
         })
       },
-      onError (data) {
+      onError () {
         notify({
           status: 'error',
           title: t`There was an error generating recovery codes`,
@@ -103,7 +103,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
         })
       },
       updater: (store) => {
-        const viewerId = data?.viewer?.__id
+        const viewerId = data?.viewer?.id
 
         if (viewerId == null) return
 

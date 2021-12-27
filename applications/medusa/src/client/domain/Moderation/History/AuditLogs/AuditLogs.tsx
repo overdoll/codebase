@@ -54,8 +54,6 @@ export default function AuditLogs (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  console.log(queryData)
-
   const auditLogs = data?.moderatorPostAuditLogs?.edges
 
   return (

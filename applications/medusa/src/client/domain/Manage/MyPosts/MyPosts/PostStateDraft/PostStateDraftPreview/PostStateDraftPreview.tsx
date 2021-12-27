@@ -1,5 +1,4 @@
 import { Flex, Heading, Progress, SimpleGrid } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { ClickableBox, SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout'
 import { graphql } from 'react-relay/hooks'
 import type { PostStateDraftPreviewFragment$key } from '@//:artifacts/PostStateDraftPreviewFragment.graphql'
@@ -13,6 +12,7 @@ import { DeleteBin } from '../../../../../../../assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/Icon/Icon'
 import { ContentBrushPen } from '../../../../../../../assets/icons/navigation'
+import { t } from '@lingui/macro'
 
 interface Props {
   query: PostStateDraftPreviewFragment$key
@@ -32,8 +32,6 @@ export default function PostStateDraftPreview ({ query }: Props): JSX.Element {
   const data = useFragment(PostStatePreviewFragmentGQL, query)
 
   const history = useHistory()
-
-  const [t] = useTranslation('manage')
 
   const limitedContent = data.content.slice(0, 3)
 

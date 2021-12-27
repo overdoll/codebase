@@ -1,13 +1,13 @@
 import { graphql, useMutation } from 'react-relay/hooks'
-import type { TotpSubmissionFormMutation } from '@//:artifacts/TotpSubmissionFormMutation.graphql'
+import type { TotpActivationFormMutation } from '@//:artifacts/TotpActivationFormMutation.graphql'
 import { FormControl, HStack, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
+import Totp from '@//:modules/validation/Totp'
 
 interface CodeValues {
   code: string
@@ -18,8 +18,8 @@ interface Props {
   id: string
 }
 
-const TotpSubmissionFormMutationGQL = graphql`
-  mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
+const Mutation = graphql`
+  mutation TotpActivationFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
     enrollAccountMultiFactorTotp(input: $input) {
       validation
       accountMultiFactorTotpEnabled
@@ -27,24 +27,13 @@ const TotpSubmissionFormMutationGQL = graphql`
   }
 `
 
-export default function TotpSubmissionForm (props: Props): JSX.Element {
-  const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionFormMutation>(
-    TotpSubmissionFormMutationGQL
+export default function TotpActivationForm (props: Props): JSX.Element {
+  const [submitTotp, isSubmittingTotp] = useMutation<TotpActivationFormMutation>(
+    Mutation
   )
 
-  const { i18n } = useLingui()
-
   const schema = Joi.object({
-    code: Joi
-      .string()
-      .regex(/^[0-9]+$/)
-      .length(6)
-      .required()
-      .messages({
-        'string.empty': i18n._(t`Please enter a 6-digit authentication code`),
-        'string.length': i18n._(t`The code must be 6 digits long`),
-        'string.pattern.base': i18n._(t`The code can only contain numbers`)
-      })
+    code: Totp()
   })
 
   const {

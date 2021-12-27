@@ -68,9 +68,6 @@ export default function UpdateCharacterButton ({
     const currentCharacters = data?.characters.map((item) => item.id)
     const stateCharacters = Object.keys(state.characters)
 
-    console.log(currentCharacters)
-    console.log(stateCharacters)
-
     return compareTwoArrays(currentCharacters, stateCharacters) === false
   }
 

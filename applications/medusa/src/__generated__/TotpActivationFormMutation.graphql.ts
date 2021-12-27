@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8da6df175ba332299eb439bef0f9ed9f */
+/* @relayHash 2aa94deb9b52ae0f585815d12adfac43 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type EnrollAccountMultiFactorTotpValidation = "INVALID_CODE" | "%future added value";
@@ -9,24 +9,24 @@ export type EnrollAccountMultiFactorTotpInput = {
     id: string;
     code: string;
 };
-export type TotpSubmissionFormMutationVariables = {
+export type TotpActivationFormMutationVariables = {
     input: EnrollAccountMultiFactorTotpInput;
 };
-export type TotpSubmissionFormMutationResponse = {
+export type TotpActivationFormMutationResponse = {
     readonly enrollAccountMultiFactorTotp: {
         readonly validation: EnrollAccountMultiFactorTotpValidation | null;
         readonly accountMultiFactorTotpEnabled: boolean | null;
     } | null;
 };
-export type TotpSubmissionFormMutation = {
-    readonly response: TotpSubmissionFormMutationResponse;
-    readonly variables: TotpSubmissionFormMutationVariables;
+export type TotpActivationFormMutation = {
+    readonly response: TotpActivationFormMutationResponse;
+    readonly variables: TotpActivationFormMutationVariables;
 };
 
 
 
 /*
-mutation TotpSubmissionFormMutation(
+mutation TotpActivationFormMutation(
   $input: EnrollAccountMultiFactorTotpInput!
 ) {
   enrollAccountMultiFactorTotp(input: $input) {
@@ -82,7 +82,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "TotpSubmissionFormMutation",
+    "name": "TotpActivationFormMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -91,17 +91,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "TotpSubmissionFormMutation",
+    "name": "TotpActivationFormMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "8da6df175ba332299eb439bef0f9ed9f",
+    "id": "2aa94deb9b52ae0f585815d12adfac43",
     "metadata": {},
-    "name": "TotpSubmissionFormMutation",
+    "name": "TotpActivationFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = 'e42d28d3a20fd21c1f7098ef27f12738';
+(node as any).hash = '3998ef08a40e0cabc4f4966d8e9c8623';
 export default node;
