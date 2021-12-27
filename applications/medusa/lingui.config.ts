@@ -26,8 +26,8 @@ export default {
       include: ['src/client/domain/Join/']
     },
     {
-      path: 'src/client/domain/NotFound/__locale__/{locale}/index',
-      include: ['src/client/domain/NotFound/']
+      path: 'src/client/domain/CatchAll/__locale__/{locale}/index',
+      include: ['src/client/domain/CatchAll/']
     },
     {
       path: 'src/client/domain/VerifyToken/__locale__/{locale}/index',

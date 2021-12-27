@@ -3,9 +3,9 @@ package infraction
 import (
 	"errors"
 
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/translations"
 )
 
 var (
@@ -20,7 +20,7 @@ type PostRejectionReason struct {
 	*paging.Node
 
 	id         string
-	reason     *translations.Translation
+	reason     *localization.Translation
 	infraction bool
 }
 
@@ -28,7 +28,7 @@ func (m *PostRejectionReason) ID() string {
 	return m.id
 }
 
-func (m *PostRejectionReason) Reason() *translations.Translation {
+func (m *PostRejectionReason) Reason() *localization.Translation {
 	return m.reason
 }
 
@@ -51,7 +51,7 @@ func CanViewRejectionReasons(requester *principal.Principal) error {
 func UnmarshalPostRejectionReasonFromDatabase(id string, reason map[string]string, infraction bool) *PostRejectionReason {
 	return &PostRejectionReason{
 		id:         id,
-		reason:     translations.UnmarshalTranslationFromDatabase(reason),
+		reason:     localization.UnmarshalTranslationFromDatabase(reason),
 		infraction: infraction,
 	}
 }

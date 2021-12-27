@@ -51,10 +51,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ID                     func(childComplexity int) int
-		Infractions            func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ModeratorPostAuditLogs func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) int
-		ModeratorSettings      func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Infractions       func(childComplexity int, after *string, before *string, first *int, last *int) int
+		ModeratorSettings func(childComplexity int) int
+		PostAuditLogs     func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) int
 	}
 
 	AccountInfractionHistory struct {
@@ -102,7 +102,6 @@ type ComplexityRoot struct {
 		RemoveModeratorFromPostQueue func(childComplexity int, input types.RemoveModeratorFromPostQueueInput) int
 		RemovePost                   func(childComplexity int, input types.RemovePostInput) int
 		ReportPost                   func(childComplexity int, input types.ReportPostInput) int
-		RevertPostAuditLog           func(childComplexity int, input types.RevertPostAuditLogInput) int
 	}
 
 	PageInfo struct {
@@ -127,8 +126,6 @@ type ComplexityRoot struct {
 		Notes               func(childComplexity int) int
 		Post                func(childComplexity int) int
 		PostRejectionReason func(childComplexity int) int
-		ReversibleUntil     func(childComplexity int) int
-		Reverted            func(childComplexity int) int
 	}
 
 	PostAuditLogConnection struct {
@@ -211,17 +208,13 @@ type ComplexityRoot struct {
 		PostReport func(childComplexity int) int
 	}
 
-	RevertPostAuditLogPayload struct {
-		PostAuditLog func(childComplexity int) int
-	}
-
 	Service struct {
 		SDL func(childComplexity int) int
 	}
 }
 
 type AccountResolver interface {
-	ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error)
+	PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error)
 	Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error)
 	ModeratorSettings(ctx context.Context, obj *types.Account) (*types.ModeratorSettings, error)
 }
@@ -238,7 +231,6 @@ type MutationResolver interface {
 	RejectPost(ctx context.Context, input types.RejectPostInput) (*types.RejectPostPayload, error)
 	RemovePost(ctx context.Context, input types.RemovePostInput) (*types.RemovePostPayload, error)
 	ApprovePost(ctx context.Context, input types.ApprovePostInput) (*types.ApprovePostPayload, error)
-	RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error)
 	AddModeratorToPostQueue(ctx context.Context, input types.AddModeratorToPostQueueInput) (*types.AddModeratorToPostQueuePayload, error)
 	RemoveModeratorFromPostQueue(ctx context.Context, input types.RemoveModeratorFromPostQueueInput) (*types.RemoveModeratorFromPostQueuePayload, error)
 	ReportPost(ctx context.Context, input types.ReportPostInput) (*types.ReportPostPayload, error)
@@ -287,24 +279,24 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Infractions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
-	case "Account.moderatorPostAuditLogs":
-		if e.complexity.Account.ModeratorPostAuditLogs == nil {
-			break
-		}
-
-		args, err := ec.field_Account_moderatorPostAuditLogs_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.ModeratorPostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange)), true
-
 	case "Account.moderatorSettings":
 		if e.complexity.Account.ModeratorSettings == nil {
 			break
 		}
 
 		return e.complexity.Account.ModeratorSettings(childComplexity), true
+
+	case "Account.postAuditLogs":
+		if e.complexity.Account.PostAuditLogs == nil {
+			break
+		}
+
+		args, err := ec.field_Account_postAuditLogs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Account.PostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange)), true
 
 	case "AccountInfractionHistory.id":
 		if e.complexity.AccountInfractionHistory.ID == nil {
@@ -532,18 +524,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.ReportPost(childComplexity, args["input"].(types.ReportPostInput)), true
 
-	case "Mutation.revertPostAuditLog":
-		if e.complexity.Mutation.RevertPostAuditLog == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_revertPostAuditLog_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.RevertPostAuditLog(childComplexity, args["input"].(types.RevertPostAuditLogInput)), true
-
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
 			break
@@ -658,20 +638,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PostAuditLog.PostRejectionReason(childComplexity), true
-
-	case "PostAuditLog.reversibleUntil":
-		if e.complexity.PostAuditLog.ReversibleUntil == nil {
-			break
-		}
-
-		return e.complexity.PostAuditLog.ReversibleUntil(childComplexity), true
-
-	case "PostAuditLog.reverted":
-		if e.complexity.PostAuditLog.Reverted == nil {
-			break
-		}
-
-		return e.complexity.PostAuditLog.Reverted(childComplexity), true
 
 	case "PostAuditLogConnection.edges":
 		if e.complexity.PostAuditLogConnection.Edges == nil {
@@ -912,13 +878,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ReportPostPayload.PostReport(childComplexity), true
 
-	case "RevertPostAuditLogPayload.postAuditLog":
-		if e.complexity.RevertPostAuditLogPayload.PostAuditLog == nil {
-			break
-		}
-
-		return e.complexity.RevertPostAuditLogPayload.PostAuditLog(childComplexity), true
-
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
 			break
@@ -1020,12 +979,6 @@ type PostAuditLog implements Node @key(fields: "id") {
   """Additional notes by the moderator"""
   notes: String
 
-  """If this audit log was reverted"""
-  reverted: Boolean!
-
-  """The time until which this audit log will be revertable"""
-  reversibleUntil: Time!
-
   """The post linked to this audit log"""
   post: Post!
 }
@@ -1073,7 +1026,7 @@ extend type Account {
 
   Viewable by either the currently logged-in account or staff+
   """
-  moderatorPostAuditLogs(
+  postAuditLogs(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1213,12 +1166,6 @@ input ApprovePostInput {
   postId: ID!
 }
 
-"""Revert the pending post audit log input"""
-input RevertPostAuditLogInput {
-  """The audit log to revert"""
-  postAuditLogId: ID!
-}
-
 """Add moderator to posts queue."""
 input AddModeratorToPostQueueInput {
   """The moderator account to take the action on"""
@@ -1261,12 +1208,6 @@ type RemovePostPayload {
   postAuditLog: PostAuditLog
 }
 
-"""Revert the pending post audit log payload"""
-type RevertPostAuditLogPayload {
-  """The new state of the audit log"""
-  postAuditLog: PostAuditLog
-}
-
 extend type Mutation {
   """
   Reject a specific post
@@ -1282,13 +1223,6 @@ extend type Mutation {
   Approve a specific post
   """
   approvePost(input: ApprovePostInput!): ApprovePostPayload
-
-  """
-  Revert an audit log, in case it was done incorrectly
-
-  Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
-  """
-  revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
   """
   Add moderator to posts queue
@@ -1551,7 +1485,7 @@ func (ec *executionContext) field_Account_infractions_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Account_moderatorPostAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Account_postAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -1789,21 +1723,6 @@ func (ec *executionContext) field_Mutation_reportPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNReportPostInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐReportPostInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_revertPostAuditLog_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.RevertPostAuditLogInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRevertPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevertPostAuditLogInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2057,7 +1976,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Account_moderatorPostAuditLogs(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_postAuditLogs(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2074,7 +1993,7 @@ func (ec *executionContext) _Account_moderatorPostAuditLogs(ctx context.Context,
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_moderatorPostAuditLogs_args(ctx, rawArgs)
+	args, err := ec.field_Account_postAuditLogs_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2082,7 +2001,7 @@ func (ec *executionContext) _Account_moderatorPostAuditLogs(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange))
+		return ec.resolvers.Account().PostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2963,45 +2882,6 @@ func (ec *executionContext) _Mutation_approvePost(ctx context.Context, field gra
 	return ec.marshalOApprovePostPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐApprovePostPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_revertPostAuditLog(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_revertPostAuditLog_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RevertPostAuditLog(rctx, args["input"].(types.RevertPostAuditLogInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.RevertPostAuditLogPayload)
-	fc.Result = res
-	return ec.marshalORevertPostAuditLogPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevertPostAuditLogPayload(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_addModeratorToPostQueue(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3606,76 +3486,6 @@ func (ec *executionContext) _PostAuditLog_notes(ctx context.Context, field graph
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _PostAuditLog_reverted(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "PostAuditLog",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Reverted, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _PostAuditLog_reversibleUntil(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "PostAuditLog",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ReversibleUntil, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLog_post(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
@@ -4911,38 +4721,6 @@ func (ec *executionContext) _ReportPostPayload_postReport(ctx context.Context, f
 	res := resTmp.(*types.PostReport)
 	fc.Result = res
 	return ec.marshalOPostReport2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReport(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _RevertPostAuditLogPayload_postAuditLog(ctx context.Context, field graphql.CollectedField, obj *types.RevertPostAuditLogPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "RevertPostAuditLogPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PostAuditLog, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.PostAuditLog)
-	fc.Result = res
-	return ec.marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -6339,29 +6117,6 @@ func (ec *executionContext) unmarshalInputReportPostInput(ctx context.Context, o
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputRevertPostAuditLogInput(ctx context.Context, obj interface{}) (types.RevertPostAuditLogInput, error) {
-	var it types.RevertPostAuditLogInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "postAuditLogId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postAuditLogId"))
-			it.PostAuditLogID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -6483,7 +6238,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
-		case "moderatorPostAuditLogs":
+		case "postAuditLogs":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -6491,7 +6246,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_moderatorPostAuditLogs(ctx, field, obj)
+				res = ec._Account_postAuditLogs(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6859,8 +6614,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_removePost(ctx, field)
 		case "approvePost":
 			out.Values[i] = ec._Mutation_approvePost(ctx, field)
-		case "revertPostAuditLog":
-			out.Values[i] = ec._Mutation_revertPostAuditLog(ctx, field)
 		case "addModeratorToPostQueue":
 			out.Values[i] = ec._Mutation_addModeratorToPostQueue(ctx, field)
 		case "removeModeratorFromPostQueue":
@@ -7015,16 +6768,6 @@ func (ec *executionContext) _PostAuditLog(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._PostAuditLog_postRejectionReason(ctx, field, obj)
 		case "notes":
 			out.Values[i] = ec._PostAuditLog_notes(ctx, field, obj)
-		case "reverted":
-			out.Values[i] = ec._PostAuditLog_reverted(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "reversibleUntil":
-			out.Values[i] = ec._PostAuditLog_reversibleUntil(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "post":
 			out.Values[i] = ec._PostAuditLog_post(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -7574,30 +7317,6 @@ func (ec *executionContext) _ReportPostPayload(ctx context.Context, sel ast.Sele
 			out.Values[i] = graphql.MarshalString("ReportPostPayload")
 		case "postReport":
 			out.Values[i] = ec._ReportPostPayload_postReport(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var revertPostAuditLogPayloadImplementors = []string{"RevertPostAuditLogPayload"}
-
-func (ec *executionContext) _RevertPostAuditLogPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevertPostAuditLogPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, revertPostAuditLogPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("RevertPostAuditLogPayload")
-		case "postAuditLog":
-			out.Values[i] = ec._RevertPostAuditLogPayload_postAuditLog(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -8420,11 +8139,6 @@ func (ec *executionContext) unmarshalNReportPostInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNRevertPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevertPostAuditLogInput(ctx context.Context, v interface{}) (types.RevertPostAuditLogInput, error) {
-	res, err := ec.unmarshalInputRevertPostAuditLogInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -8933,13 +8647,6 @@ func (ec *executionContext) marshalOReportPostPayload2ᚖoverdollᚋapplications
 		return graphql.Null
 	}
 	return ec._ReportPostPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalORevertPostAuditLogPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevertPostAuditLogPayload(ctx context.Context, sel ast.SelectionSet, v *types.RevertPostAuditLogPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._RevertPostAuditLogPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

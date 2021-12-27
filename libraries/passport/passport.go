@@ -3,8 +3,8 @@ package passport
 import (
 	"context"
 	"errors"
+	"overdoll/libraries/localization"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
-	"overdoll/libraries/translations"
 
 	"sync"
 	"time"
@@ -47,8 +47,8 @@ func (p *Passport) DeviceID() string {
 	return p.passport.DeviceInfo.Id
 }
 
-func (p *Passport) Language() *translations.Language {
-	return translations.NewLanguageWithFallback(p.passport.DeviceInfo.Language)
+func (p *Passport) Language() *localization.Language {
+	return localization.NewLanguageWithFallback(p.passport.DeviceInfo.Language)
 }
 
 func (p *Passport) IP() string {
@@ -76,7 +76,7 @@ func (p *Passport) AuthenticateAccount(id string) error {
 
 func (p *Passport) UpdateDeviceLanguage(lang string) error {
 
-	lng, err := translations.NewLanguage(lang)
+	lng, err := localization.NewLanguage(lang)
 
 	if err != nil {
 		return err

@@ -65,7 +65,7 @@ msgstr ""
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:111
+#: src/client/domain/Join/Grant/Grant.tsx:110
 msgid "Logging in"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:119
+#: src/client/domain/Join/Grant/Grant.tsx:118
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:84
+#: src/client/domain/Join/Grant/Grant.tsx:83
 msgid "There was an error logging you in"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgstr ""
 msgid "You can find this in the same app you used to set up two-factor authentication"
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:70
+#: src/client/domain/Join/Grant/Grant.tsx:68
 msgid "You have been logged in"
 msgstr ""
 

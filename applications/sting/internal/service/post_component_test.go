@@ -485,7 +485,7 @@ func TestCreatePost_Discard(t *testing.T) {
 }
 
 // Test_CreatePost_Reject - reject post
-func TestCreatePost_Reject_undo_reject(t *testing.T) {
+func TestCreatePost_Reject(t *testing.T) {
 	t.Parallel()
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
@@ -509,26 +509,6 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 
 			// make sure post is in rejected state
 			require.Equal(t, types.PostStateRejected, post.Post.State)
-
-			// UNDO
-			_, e = stingClient.UndoPost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
-
-			newEnv := getWorkflowEnvironment(t)
-			newEnv.ExecuteWorkflow(workflows.UndoPost, postId)
-
-			require.True(t, newEnv.IsWorkflowCompleted())
-			require.NoError(t, newEnv.GetWorkflowError())
-
-			// CHECK STATUS
-			post = getPost(t, newPostId)
-
-			// check to make sure post is still in "review" state (since we did the undo)
-			require.Equal(t, types.PostStateReview, post.Post.State)
-
-			// need to reject again, or else we will be in an infinite loop
-			_, e = stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
 		}
 	})
 

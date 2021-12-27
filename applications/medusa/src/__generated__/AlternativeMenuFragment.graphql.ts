@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type AlternativeMenuFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment" | "LanguageManagerFragment">;
     readonly " $refType": "AlternativeMenuFragment";
 };
 export type AlternativeMenuFragment$data = AlternativeMenuFragment;
@@ -31,10 +31,15 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "QuickAccessButtonProfileFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "LanguageManagerFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'f916892e8339373ee22ff56b2ce8f7de';
+(node as any).hash = '01d079aadc1017275737d344b56c1b8a';
 export default node;

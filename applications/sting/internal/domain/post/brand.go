@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"overdoll/applications/sting/internal/domain/resource"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/translations"
 )
 
 var (
@@ -17,7 +17,7 @@ type Brand struct {
 
 	id        string
 	slug      string
-	name      *translations.Translation
+	name      *localization.Translation
 	thumbnail *resource.Resource
 }
 
@@ -29,7 +29,7 @@ func (m *Brand) Slug() string {
 	return m.slug
 }
 
-func (m *Brand) Name() *translations.Translation {
+func (m *Brand) Name() *localization.Translation {
 	return m.name
 }
 
@@ -41,7 +41,7 @@ func UnmarshalBrandFromDatabase(id, slug string, name map[string]string, thumbna
 	return &Brand{
 		id:        id,
 		slug:      slug,
-		name:      translations.UnmarshalTranslationFromDatabase(name),
+		name:      localization.UnmarshalTranslationFromDatabase(name),
 		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 	}
 }

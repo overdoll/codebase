@@ -27,8 +27,8 @@ const AuditLogsGQL = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "AuditLogsPaginationQuery" ) {
-    moderatorPostAuditLogs (first: $first, after: $after, dateRange: {from: $from, to: $to})
-    @connection(key: "AuditLogs_moderatorPostAuditLogs") {
+    postAuditLogs (first: $first, after: $after, dateRange: {from: $from, to: $to})
+    @connection(key: "AuditLogsAccount_postAuditLogs") {
       edges {
         node {
           ...AuditCardFragment

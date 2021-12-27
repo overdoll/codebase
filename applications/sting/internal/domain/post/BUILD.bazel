@@ -19,9 +19,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/internal/domain/resource",
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
-        "//libraries/translations",
         "//libraries/uuid",
     ],
 )

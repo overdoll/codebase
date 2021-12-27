@@ -150,7 +150,7 @@ _SERVER_DEPS = []
 
 filegroup(
     name = "packages",
-    data = _RUNTIME_DEPS
+    data = _RUNTIME_DEPS,
 )
 
 copy_to_bin(

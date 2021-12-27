@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
     action                   text,
     post_rejection_reason_id text,
     notes                    text,
-    reverted                 boolean,
     primary key ( post_id, id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
@@ -40,7 +39,6 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
     action                   text,
     post_rejection_reason_id text,
     notes                    text,
-    reverted                 boolean,
     primary key ( (moderator_account_id, bucket), id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 

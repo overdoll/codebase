@@ -6,7 +6,7 @@ import prepass from 'react-ssr-prepass'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
-import { createServerRouter } from '@//:modules/routing/router'
+import { createServerRouter, StaticContext } from '@//:modules/routing/router'
 import Bootstrap from '../../../client/Bootstrap'
 import createMockHistory from './Domain/createMockHistory'
 import axios from 'axios'
@@ -16,10 +16,7 @@ import parseCookies from './Domain/parseCookies'
 import { HelmetData } from 'react-helmet-async'
 import { setupI18n } from '@lingui/core'
 import * as plurals from 'make-plural'
-
-interface Context {
-  url?: undefined | string
-}
+import routes from '../../../client/routes'
 
 interface Helmet {
   helmet?: HelmetData
@@ -120,7 +117,7 @@ async function request (req, res): Promise<void> {
     isServer: true
   })
 
-  const context: Context = {}
+  const context: StaticContext = {}
 
   // Get any extra assets we need to load, so that we don't have to import them in-code and wait for suspense boundaries to resolve
   const loadedModules: string[] = []
@@ -128,9 +125,6 @@ async function request (req, res): Promise<void> {
   const i18n = setupI18n()
   i18n._loadLocaleData(i18n.locale, { plurals: plurals[i18n.locale] })
   req.i18n = i18n
-
-  // routes for the server
-  const routes = require('../../../client/routes').default
 
   // Create a router
   const router = await createServerRouter(
@@ -141,7 +135,8 @@ async function request (req, res): Promise<void> {
     }),
     environment,
     req,
-    loadedModules
+    loadedModules,
+    context
   )
 
   const helmetContext: Helmet = {}
@@ -175,6 +170,10 @@ async function request (req, res): Promise<void> {
     'cache-control',
     'private, no-cache, no-store, must-revalidate'
   )
+
+  if (context.status != null) {
+    res.status(context.status)
+  }
 
   // check for another redirect, this time by the body of the whole app
   if (context.url != null) {

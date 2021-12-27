@@ -11,10 +11,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
-	"overdoll/libraries/translations"
 )
 
 type brandDocument struct {
@@ -36,7 +36,7 @@ const brandsIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"name": ` + translations.ESIndex + `
+	"name": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
 	}
@@ -76,7 +76,7 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Name:      translations.MarshalTranslationToDatabase(cat.Name()),
+		Name:      localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
@@ -95,7 +95,7 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("name")...).
+				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("name")...).
 				Type("best_fields"),
 		)
 	}

@@ -110,7 +110,6 @@ const HorizontalNavigationDropdownMenu = ({
         }}
         >
           <Menu
-            isLazy
             flip
             preventOverflow
             isOpen={isOpenMenu}

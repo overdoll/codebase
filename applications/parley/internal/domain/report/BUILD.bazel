@@ -11,9 +11,9 @@ go_library(
     importpath = "overdoll/applications/parley/internal/domain/report",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
-        "//libraries/translations",
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

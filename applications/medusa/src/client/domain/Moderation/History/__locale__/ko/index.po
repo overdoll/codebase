@@ -14,14 +14,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/client/domain/Moderation/History/History.tsx:37
-msgid "Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making them."
+msgid "Any moderation actions you take will appear here."
 msgstr ""
 
-#: src/client/domain/Moderation/History/History.tsx:54
+#: src/client/domain/Moderation/History/History.tsx:37
+#~ msgid "Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making them."
+#~ msgstr ""
+
+#: src/client/domain/Moderation/History/History.tsx:53
 msgid "Brand"
 msgstr ""
 
-#: src/client/domain/Moderation/History/History.tsx:47
+#: src/client/domain/Moderation/History/History.tsx:46
 msgid "Date Posted"
 msgstr ""
 
@@ -38,25 +42,25 @@ msgid "Only the last 7 days of logs are available"
 msgstr ""
 
 #: src/client/domain/Moderation/History/AuditLogs/AuditCard/AuditInspect/AuditInspect.tsx:86
-msgid "Originally {0}"
-msgstr ""
+#~ msgid "Originally {0}"
+#~ msgstr ""
 
 #: src/client/domain/Moderation/History/AuditLogs/AuditCard/AuditInspect/AuditInspect.tsx:81
-msgid "REVERTED"
-msgstr ""
+#~ msgid "REVERTED"
+#~ msgstr ""
 
 #: src/client/domain/Moderation/History/AuditLogs/AuditCard/AuditInspect/AuditInspect.tsx:114
-msgid "Revert Decision"
-msgstr ""
+#~ msgid "Revert Decision"
+#~ msgstr ""
 
-#: src/client/domain/Moderation/History/History.tsx:61
+#: src/client/domain/Moderation/History/History.tsx:60
 msgid "Status"
 msgstr ""
 
 #: src/client/domain/Moderation/History/AuditLogs/AuditCard/AuditInspect/AuditInspect.tsx:65
-msgid "There was an error reverting the audit log"
-msgstr ""
+#~ msgid "There was an error reverting the audit log"
+#~ msgstr ""
 
 #: src/client/domain/Moderation/History/AuditLogs/AuditCard/AuditInspect/AuditInspect.tsx:58
-msgid "This audit log was reverted. The post should appear back in your queue shortly."
-msgstr ""
+#~ msgid "This audit log was reverted. The post should appear back in your queue shortly."
+#~ msgstr ""

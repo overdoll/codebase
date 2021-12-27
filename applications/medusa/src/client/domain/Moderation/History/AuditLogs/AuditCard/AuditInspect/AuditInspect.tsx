@@ -10,7 +10,6 @@ interface Props {
 
 const AuditInspectFragmentGQL = graphql`
   fragment AuditInspectFragment on PostAuditLog {
-    id
     notes
     action
     post {

@@ -14,30 +14,11 @@ import (
 type PostAuditLogModified struct {
 	PostRejectionReason *types.PostRejectionReason
 	Notes               string
-	Reverted            bool
 	ID                  string
 	Post                struct {
 		ID string
 	}
 	Action types.PostAuditLogAction
-}
-
-type RevertPostAuditLog struct {
-	RevertPostAuditLog *struct {
-		PostAuditLog *PostAuditLogModified
-	} `graphql:"revertPostAuditLog(input: $input)"`
-}
-
-func revertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
-	var search RevertPostAuditLog
-
-	err := client.Mutate(context.Background(), &search, map[string]interface{}{
-		"input": types.RevertPostAuditLogInput{PostAuditLogID: relay.ID(id)},
-	})
-
-	require.NoError(t, err)
-
-	return search
 }
 
 type PostRejectionReasons struct {
@@ -62,12 +43,12 @@ func TestPostRejectionReasons(t *testing.T) {
 type AccountPostAuditLogs struct {
 	Entities []struct {
 		Account struct {
-			ID                     string
-			ModeratorPostAuditLogs *struct {
+			ID            string
+			PostAuditLogs *struct {
 				Edges []struct {
 					Node PostAuditLogModified
 				}
-			} `graphql:"moderatorPostAuditLogs(dateRange: $dateRange)"`
+			} `graphql:"postAuditLogs(dateRange: $dateRange)"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -190,7 +171,7 @@ func TestModeratePost_approve(t *testing.T) {
 
 	var moderatorAuditLog *PostAuditLogModified
 
-	for _, l := range logs.Entities[0].Account.ModeratorPostAuditLogs.Edges {
+	for _, l := range logs.Entities[0].Account.PostAuditLogs.Edges {
 		if l.Node.Post.ID == postId {
 			moderatorAuditLog = &l.Node
 			break
@@ -199,10 +180,6 @@ func TestModeratePost_approve(t *testing.T) {
 
 	require.NotNil(t, moderatorAuditLog, "should have found moderator post audit logs")
 	require.Equal(t, types.PostAuditLogActionApproved, moderatorAuditLog.Action)
-	require.False(t, moderatorAuditLog.Reverted, "moderator log should not be reverted")
-
-	undo := revertModeratePost(t, client, approvePost.ApprovePost.PostAuditLog.ID)
-	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted, "moderator log should be reverted")
 
 	posts := auditLogsForPost(t, client, postId)
 
@@ -211,7 +188,6 @@ func TestModeratePost_approve(t *testing.T) {
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionApproved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
-	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }
 
 type RemovePost struct {
@@ -261,10 +237,6 @@ func TestModeratePost_reject(t *testing.T) {
 	require.Equal(t, "some additional notes", res.RejectPost.PostAuditLog.Notes)
 	require.Equal(t, "Reason with no infraction", res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
-	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
-
-	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
-
 	posts := auditLogsForPost(t, client, postId)
 
 	// should be exactly 1 - a reverted audit log
@@ -272,7 +244,6 @@ func TestModeratePost_reject(t *testing.T) {
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
-	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }
 
 type AccountInfractionHistory struct {
@@ -328,11 +299,6 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	client = getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
-
-	// infraction should have been undone
-	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
-
 	// check audit log record exists
 	posts := auditLogsForPost(t, client, postId)
 
@@ -342,5 +308,4 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
 	require.Equal(t, "some additional notes and stuff", posts.Entities[0].Post.AuditLogs.Edges[0].Node.Notes)
-	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }

@@ -28,12 +28,6 @@ type PostAuditLog implements Node @key(fields: "id") {
   """Additional notes by the moderator"""
   notes: String
 
-  """If this audit log was reverted"""
-  reverted: Boolean!
-
-  """The time until which this audit log will be revertable"""
-  reversibleUntil: Time!
-
   """The post linked to this audit log"""
   post: Post!
 }
@@ -81,7 +75,7 @@ extend type Account {
 
   Viewable by either the currently logged-in account or staff+
   """
-  moderatorPostAuditLogs(
+  postAuditLogs(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 

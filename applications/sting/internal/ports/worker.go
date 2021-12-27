@@ -22,7 +22,6 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w.RegisterWorkflow(workflows.SubmitPost)
 	w.RegisterWorkflow(workflows.DiscardPost)
-	w.RegisterWorkflow(workflows.UndoPost)
 	w.RegisterWorkflow(workflows.PublishPost)
 
 	// register activities with our struct

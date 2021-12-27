@@ -193,7 +193,7 @@ type Account implements Node {
 
   Viewable by either the currently logged-in account or staff+
   """
-  moderatorPostAuditLogs(
+  postAuditLogs(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1266,13 +1266,6 @@ type Mutation {
   """Approve a specific post"""
   approvePost(input: ApprovePostInput!): ApprovePostPayload
 
-  """
-  Revert an audit log, in case it was done incorrectly
-
-  Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
-  """
-  revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
-
   """Add moderator to posts queue"""
   addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
 
@@ -1409,12 +1402,6 @@ type PostAuditLog implements Node {
 
   """Additional notes by the moderator"""
   notes: String
-
-  """If this audit log was reverted"""
-  reverted: Boolean!
-
-  """The time until which this audit log will be revertable"""
-  reversibleUntil: Time!
 
   """The post linked to this audit log"""
   post: Post!
@@ -1952,18 +1939,6 @@ enum ResourceType {
 type ResourceUrl {
   url: URI!
   mimeType: String!
-}
-
-"""Revert the pending post audit log input"""
-input RevertPostAuditLogInput {
-  """The audit log to revert"""
-  postAuditLogId: ID!
-}
-
-"""Revert the pending post audit log payload"""
-type RevertPostAuditLogPayload {
-  """The new state of the audit log"""
-  postAuditLog: PostAuditLog
 }
 
 """Payload for revoking the current viewer"""

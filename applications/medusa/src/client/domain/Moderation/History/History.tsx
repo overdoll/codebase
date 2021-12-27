@@ -35,8 +35,7 @@ export default function History (props: Props): JSX.Element | null {
           </PageSectionTitle>
           <PageSectionDescription>
             <Trans>
-              Any moderation actions you take will appear here. You can undo any actions within 10 minutes of making
-              them.
+              Any moderation actions you take will appear here.
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>

@@ -2,8 +2,13 @@ package service_test
 
 import (
 	"context"
+	"github.com/bxcodec/faker/v3"
 	"log"
 	"os"
+	"overdoll/applications/eva/internal/adapters"
+	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/localization"
+	"overdoll/libraries/uuid"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -153,6 +158,38 @@ func getAccountByUsername(t *testing.T, client *graphql.Client, username string)
 	require.NoError(t, err)
 
 	return accountByUsername.Account
+}
+
+type TestAccount struct {
+	Email    string `faker:"email"`
+	Username string `faker:"username"`
+}
+
+func newTestAccount(t *testing.T) *account.Account {
+	fake := TestAccount{}
+
+	err := faker.FakeData(&fake)
+
+	require.NoError(t, err)
+
+	usr, err := account.NewAccount(localization.NewLanguageWithFallback("en"), uuid.New().String(), fake.Username, fake.Email)
+
+	require.NoError(t, err)
+
+	return usr
+}
+
+// helper which creates fake account in the repository so tests can be more predictable
+func createFakeNormalAccount(t *testing.T) *account.Account {
+	usr := newTestAccount(t)
+
+	session := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
+
+	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
+	err := adapter.CreateAccount(context.Background(), usr)
+	require.NoError(t, err)
+	return usr
 }
 
 func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {

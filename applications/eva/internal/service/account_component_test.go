@@ -85,11 +85,14 @@ type UnlockAccount struct {
 func TestAccount_lock_unlock(t *testing.T) {
 	t.Parallel()
 
+	acc := createFakeNormalAccount(t)
+	accountId := acc.ID()
+
 	client, _ := getGrpcClient(t)
 
 	// lock account with grpc endpoint
 	res, err := client.LockAccount(context.Background(), &eva.LockAccountRequest{
-		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
+		Id:       accountId,
 		Duration: time.Now().Add(time.Duration(-15) * time.Minute).Unix(),
 		Reason:   eva.LockAccountReason_POST_INFRACTION,
 	})
@@ -98,7 +101,7 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	require.Equal(t, true, res.Locked, "account should be locked")
 
-	gClient, _ := getHttpClientWithAuthenticatedAccount(t, "1q7MIqqnkzew33q4elXuN1Ri27d")
+	gClient, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	var query ViewerAccountLock
 	err = gClient.Query(context.Background(), &query, nil)

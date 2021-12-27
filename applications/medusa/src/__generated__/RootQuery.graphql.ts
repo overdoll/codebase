@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3368af37f01fc03d2093ee6f3a0d5aec */
+/* @relayHash fe40ae3a0471a5a206760c0c1ea28c92 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -45,11 +45,18 @@ fragment AccountAuthorizerFragment on Account {
 fragment AlternativeMenuFragment on Account {
   ...DropdownMenuButtonProfileFragment
   ...QuickAccessButtonProfileFragment
+  ...LanguageManagerFragment
 }
 
 fragment DropdownMenuButtonProfileFragment on Account {
   username
   avatar
+}
+
+fragment LanguageManagerFragment on Account {
+  language {
+    locale
+  }
 }
 
 fragment LockedAccountBannerFragment on Account {
@@ -203,6 +210,7 @@ return {
             "name": "avatar",
             "storageKey": null
           },
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -217,7 +225,7 @@ return {
     ]
   },
   "params": {
-    "id": "3368af37f01fc03d2093ee6f3a0d5aec",
+    "id": "fe40ae3a0471a5a206760c0c1ea28c92",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

@@ -16,7 +16,7 @@ import { ReactNode } from 'react'
 import RoutingProvider from '@//:modules/routing/RoutingProvider'
 import { I18nProvider } from '@lingui/react'
 import type { i18n } from '@lingui/core'
-import { Route, Router as ReactRouter } from 'react-router-dom'
+import Route from '@//:modules/routing/Route'
 
 interface Props {
   environment: IEnvironment
@@ -55,15 +55,13 @@ const Bootstrap = ({
             <FlashProvider override={flash}>
               <CookiesProvider cookies={cookies}>
                 <RelayEnvironmentProvider environment={environment}>
-                  <ReactRouter history={router.history as any}>
+                  <RoutingProvider router={router}>
                     <QueryParamProvider
                       ReactRouterRoute={Route}
                     >
-                      <RoutingProvider router={router}>
-                        {children ?? <RouterRenderer />}
-                      </RoutingProvider>
+                      {children ?? <RouterRenderer />}
                     </QueryParamProvider>
-                  </ReactRouter>
+                  </RoutingProvider>
                 </RelayEnvironmentProvider>
               </CookiesProvider>
             </FlashProvider>

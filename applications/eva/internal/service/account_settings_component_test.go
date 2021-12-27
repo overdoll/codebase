@@ -85,7 +85,9 @@ type UpdateAccountEmailStatusToPrimary struct {
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
 
-	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+	newAcc := createFakeNormalAccount(t)
+	testAccountId := newAcc.ID()
+	oldEmail := newAcc.Email()
 
 	// use passport with user
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
@@ -127,12 +129,17 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
+	var oldEmailId relay.ID
 	foundConfirmedEmail := false
 
 	// go through account settings and make sure that this email is now confirmed
 	for _, email := range settings.Viewer.Emails.Edges {
 		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusConfirmed {
 			foundConfirmedEmail = true
+		}
+
+		if email.Node.Email == oldEmail {
+			oldEmailId = email.Node.ID
 		}
 	}
 
@@ -166,7 +173,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// set old email as primary
 	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
-		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: "QWNjb3VudEVtYWlsOjFwY0tpYlJvcVRBVWdtT2lOcEdMSXJ6dE05UjppMmZoei50ZXN0LWFjY291bnRAaW5ib3gudGVzdG1haWwuYXBw"},
+		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: oldEmailId},
 	})
 
 	require.NoError(t, err, "no error for updating status to primary")
@@ -227,7 +234,9 @@ type DeleteAccountUsername struct {
 func TestAccountUsername_modify(t *testing.T) {
 	t.Parallel()
 
-	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+	newAcc := createFakeNormalAccount(t)
+	testAccountId := newAcc.ID()
+	oldUsername := newAcc.Username()
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
@@ -265,8 +274,6 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// make sure that the username is modified as well for the "authentication" query
 	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
-
-	oldUsername := "testaccountforstuff"
 
 	var modifyAccountUsernameToPrevious UpdateAccountUsernameAndRetainPrevious
 
@@ -307,10 +314,6 @@ func TestAccountUsername_modify(t *testing.T) {
 	}
 
 	require.Nil(t, foundUsernameOld, "should not have the username in the list anymore")
-}
-
-type TestSession struct {
-	Ip string `faker:"ipv4"`
 }
 
 type RevokeAccountSession struct {
@@ -381,6 +384,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 }
 
 func TestAccountSessions_view_and_revoke_remote(t *testing.T) {
+	t.Parallel()
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
