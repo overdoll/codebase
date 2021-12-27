@@ -41,7 +41,6 @@ export default function LockedAccountModal ({
 
   // TODO add avatar in "jail"
   // TODO button for unlocking account is disabled and has countdown timer
-  // TODO to unlock account, you have to check "I promise to be better" checkbox
 
   const reasons = {
     POST_INFRACTION: t`The contents of a post you uploaded are not allowed on our platform.`
@@ -70,7 +69,7 @@ export default function LockedAccountModal ({
               color='gray.00'
             >
               {canBeUnlocked
-                ? <Trans>Banned</Trans>
+                ? <Trans>Account Locked</Trans>
                 : <Trans>Banned for {remainingTime}</Trans>}
             </Heading>
             <Text mb={2}>
@@ -112,7 +111,7 @@ export default function LockedAccountModal ({
             </Text>
             {canBeUnlocked
               ? <UnlockAccountForm />
-              : <Button>
+              : <Button size='lg' colorScheme='gray' isDisabled>
                 <Trans>
                   timer
                 </Trans>
