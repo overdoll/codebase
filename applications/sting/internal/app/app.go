@@ -35,6 +35,8 @@ type Commands struct {
 	IndexAllAudience   command.IndexAllAudienceHandler
 	IndexAllClubs      command.IndexAllClubsHandler
 	IndexAllPosts      command.IndexAllPostsHandler
+
+	CreateClub command.CreateClubHandler
 }
 
 type Queries struct {

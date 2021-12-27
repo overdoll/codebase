@@ -23,7 +23,7 @@ type postDocument struct {
 	ContributorId  string               `json:"contributor_id"`
 	Content        []string             `json:"content"`
 	Audience       *audienceDocument    `json:"audience"`
-	Brand          *brandDocument       `json:"brand"`
+	Club           *clubDocument        `json:"club"`
 	Categories     []*categoryDocument  `json:"categories"`
 	Characters     []*characterDocument `json:"characters"`
 	CreatedAt      string               `json:"created_at"`
@@ -54,7 +54,7 @@ const postIndex = `
 				},
 				"brand": {
 					"type": "nested",
-					"properties": ` + brandsIndexProperties + ` 
+					"properties": ` + clubsIndexProperties + ` 
 				},
 				"categories": {
 					"type": "nested",
@@ -121,10 +121,10 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		categoryDocuments = append(categoryDocuments, cat)
 	}
 
-	var brandDoc *brandDocument
+	var brandDoc *clubDocument
 
 	if pst.Club() != nil {
-		brandDoc, err = marshalBrandToDocument(pst.Club())
+		brandDoc, err = marshalClubToDocument(pst.Club())
 
 		if err != nil {
 			return nil, err
@@ -180,7 +180,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		Id:             pst.ID(),
 		State:          pst.State().String(),
 		Audience:       audDoc,
-		Brand:          brandDoc,
+		Club:           brandDoc,
 		ModeratorId:    moderatorId,
 		ContributorId:  pst.ContributorId(),
 		Content:        content,
@@ -339,8 +339,8 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 		var brand *post.Club
 
-		if pst.Brand != nil {
-			brand = post.UnmarshalClubFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail)
+		if pst.Club != nil {
+			brand = post.UnmarshalClubFromDatabase(pst.Club.Id, pst.Club.Slug, pst.Club.Name, pst.Club.Thumbnail, pst.Club.MembersCount, pst.Club.OwnerAccountId)
 		}
 
 		var audience *post.Audience
@@ -427,7 +427,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				categoryDocuments = append(categoryDocuments, catDoc)
 			}
 
-			var brandDoc *brandDocument
+			var brandDoc *clubDocument
 
 			if p.BrandId != nil {
 				brnd, err := rep.GetClubById(ctx, nil, *p.BrandId)
@@ -436,7 +436,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 					return err
 				}
 
-				brandDoc, err = marshalBrandToDocument(brnd)
+				brandDoc, err = marshalClubToDocument(brnd)
 
 				if err != nil {
 					return err
@@ -471,7 +471,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				ModeratorId:    moderatorId,
 				ContributorId:  p.ContributorId,
 				Content:        p.Content,
-				Brand:          brandDoc,
+				Club:           brandDoc,
 				Audience:       audDoc,
 				Categories:     categoryDocuments,
 				Characters:     characterDocuments,

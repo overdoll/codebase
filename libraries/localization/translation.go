@@ -60,3 +60,18 @@ func UnmarshalTranslationFromDatabase(translations map[string]string) *Translati
 
 	return &Translation{translations: trans}
 }
+
+func NewEnglishTranslation(name string) (*Translation, error) {
+
+	var trans []*TranslatedSupport
+
+	res, err := unmarshalTranslatedSupportFromDatabase("en", name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	trans = append(trans, res)
+
+	return &Translation{translations: trans}, nil
+}

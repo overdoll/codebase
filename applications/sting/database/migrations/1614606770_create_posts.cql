@@ -87,18 +87,10 @@ CREATE TABLE IF NOT EXISTS clubs
     id               text,
     slug             text,
     name             map<text, text>,
+    members_count    int,
     thumbnail        text,
-    member_count     int,
     owner_account_id text,
     primary key ( id )
-);
-
-CREATE TABLE IF NOT EXISTS club_member_count_calculation
-(
-    club_id                       text,
-    member_count                  int,
-    last_member_count_calculation timestamp,
-    primary key ( club_id )
 );
 
 CREATE TABLE IF NOT EXISTS clubs_slugs
@@ -115,37 +107,42 @@ CREATE TABLE IF NOT EXISTS slugs_by_club
     primary key ( club_id, slug )
 );
 
-CREATE TABLE IF NOT EXISTS club_account_members_by_account
+CREATE TABLE IF NOT EXISTS club_members_by_account
 (
     club_id      text,
     account_id   text,
-    joined_at    timestamp,
+    bucket       timeuuid,
+    joined_at    timeuuid,
     is_supporter boolean,
     primary key ( (club_id, account_id) )
 );
 
 CREATE TABLE IF NOT EXISTS account_clubs
 (
-    club_id      text,
-    account_id   text,
-    joined_at    timestamp,
-    is_supporter boolean,
-    primary key ( account_id, joined_at, club_id )
+    club_id           text,
+    member_account_id text,
+    bucket            timeuuid,
+    joined_at         timeuuid,
+    is_supporter      boolean,
+    primary key ( member_account_id, joined_at, club_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC, club_id ASC);
 
-CREATE TABLE IF NOT EXISTS club_account_members
+CREATE TABLE IF NOT EXISTS club_members
 (
-    club_id      text,
-    bucket       timeuuid,
-    account_id   text,
-    joined_at    timestamp,
-    is_supporter boolean,
-    primary key ( (club_id, bucket), account_id, joined_at )
-);
+    club_id           text,
+    bucket            timeuuid,
+    member_account_id text,
+    joined_at         timeuuid,
+    is_supporter      boolean,
+    primary key ( (club_id, bucket), joined_at, member_account_id )
+) WITH CLUSTERING ORDER BY (joined_at ASC);
 
-CREATE TABLE IF NOT EXISTS club_account_members_partitions
+CREATE TABLE IF NOT EXISTS club_members_partitions
 (
-    club_id text,
-    bucket  timeuuid,
+    club_id              text,
+    bucket               timeuuid,
+    last_joined_at_count timeuuid,
+    members_count        int,
+    max_members_count    int,
     primary key ( club_id, bucket )
 );

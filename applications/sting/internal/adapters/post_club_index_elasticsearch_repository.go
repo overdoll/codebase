@@ -17,15 +17,17 @@ import (
 	"overdoll/libraries/scan"
 )
 
-type brandDocument struct {
-	Id        string            `json:"id"`
-	Slug      string            `json:"slug"`
-	Thumbnail string            `json:"thumbnail"`
-	Name      map[string]string `json:"name"`
-	CreatedAt string            `json:"created_at"`
+type clubDocument struct {
+	Id             string            `json:"id"`
+	Slug           string            `json:"slug"`
+	Thumbnail      string            `json:"thumbnail"`
+	Name           map[string]string `json:"name"`
+	CreatedAt      string            `json:"created_at"`
+	MembersCount   int               `json:"members_count"`
+	OwnerAccountId string            `json:"owner_account_id"`
 }
 
-const brandsIndexProperties = `
+const clubsIndexProperties = `
 {
 	"id": {
 		"type": "keyword"
@@ -36,24 +38,30 @@ const brandsIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"name": ` + localization.ESIndex + `
+	"name": ` + localization.ESIndex + `,
+    "members_count": {
+		"type": "int"
+	},
+    "owner_account_id": {
+		"type": "keyword"
+	},
 	"created_at": {
 		"type": "date"
 	}
 }
 `
 
-const brandsIndex = `
+const clubsIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties":` + brandsIndexProperties + `
+		"properties":` + clubsIndexProperties + `
 	}
 }`
 
-const brandsIndexName = "brands"
+const clubsIndexName = "clubs"
 
-func marshalBrandToDocument(cat *post.Club) (*brandDocument, error) {
+func marshalClubToDocument(cat *post.Club) (*clubDocument, error) {
 
 	parse, err := ksuid.Parse(cat.ID())
 
@@ -72,19 +80,43 @@ func marshalBrandToDocument(cat *post.Club) (*brandDocument, error) {
 		}
 	}
 
-	return &brandDocument{
-		Id:        cat.ID(),
-		Slug:      cat.Slug(),
-		Thumbnail: thumbnail,
-		Name:      localization.MarshalTranslationToDatabase(cat.Name()),
-		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+	return &clubDocument{
+		Id:             cat.ID(),
+		Slug:           cat.Slug(),
+		Thumbnail:      thumbnail,
+		Name:           localization.MarshalTranslationToDatabase(cat.Name()),
+		CreatedAt:      strconv.FormatInt(parse.Time().Unix(), 10),
+		MembersCount:   cat.MembersCount(),
+		OwnerAccountId: cat.OwnerAccountId(),
 	}, nil
+}
+
+func (r PostsIndexElasticSearchRepository) IndexClub(ctx context.Context, club *post.Club) error {
+
+	clb, err := marshalClubToDocument(club)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Index().
+		Index(clubsIndexName).
+		Id(clb.Id).
+		BodyJson(*clb).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to index club: %v", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Club, error) {
 
 	builder := r.client.Search().
-		Index(brandsIndexName)
+		Index(clubsIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -118,7 +150,7 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 
 	for _, hit := range response.Hits.Hits {
 
-		var bd brandDocument
+		var bd clubDocument
 
 		err := json.Unmarshal(hit.Source, &bd)
 
@@ -126,7 +158,7 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail)
+		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
 		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
 		brands = append(brands, newBrand)
@@ -145,9 +177,9 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 		},
 	)
 
-	err := scanner.RunIterator(ctx, brandTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, clubTable, func(iter *gocqlx.Iterx) error {
 
-		var m brand
+		var m club
 
 		for iter.StructScan(&m) {
 
@@ -157,7 +189,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 				return err
 			}
 
-			doc := brandDocument{
+			doc := clubDocument{
 				Id:        m.Id,
 				Slug:      m.Slug,
 				Thumbnail: m.Thumbnail,
@@ -167,7 +199,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 
 			_, err = r.client.
 				Index().
-				Index(brandsIndexName).
+				Index(clubsIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -187,22 +219,22 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteBrandsIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteClubsIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(brandsIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(clubsIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(brandsIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(clubsIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(brandsIndexName).BodyString(brandsIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(clubsIndexName).BodyString(clubsIndex).Do(ctx); err != nil {
 		return err
 	}
 

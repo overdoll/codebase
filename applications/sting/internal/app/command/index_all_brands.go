@@ -17,7 +17,7 @@ func NewIndexAllClubsHandler(pr post.Repository, pi post.IndexRepository) IndexA
 
 func (h IndexAllClubsHandler) Handle(ctx context.Context) error {
 
-	if err := h.pi.DeleteBrandsIndex(ctx); err != nil {
+	if err := h.pi.DeleteClubsIndex(ctx); err != nil {
 		return err
 	}
 

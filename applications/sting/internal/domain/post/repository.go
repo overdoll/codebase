@@ -28,6 +28,7 @@ type Repository interface {
 
 	GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*Club, error)
 	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)
+	CreateClub(ctx context.Context, requester *principal.Principal, club *Club) error
 
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
@@ -54,7 +55,8 @@ type IndexRepository interface {
 	IndexCharacters(ctx context.Context, characters []*Character) error
 
 	IndexAllClubs(ctx context.Context) error
-	DeleteBrandsIndex(ctx context.Context) error
+	IndexClub(ctx context.Context, club *Club) error
+	DeleteClubsIndex(ctx context.Context) error
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Club, error)
 
 	IndexAllAudience(ctx context.Context) error
