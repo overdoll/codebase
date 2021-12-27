@@ -23,6 +23,7 @@ import tabs from './tabs'
 import popover from './popover'
 import modal from './modal'
 import accordion from './accordion'
+import checkbox from './checkbox'
 
 export default {
   Menu: menu,
@@ -49,5 +50,6 @@ export default {
   Tabs: tabs,
   Popover: popover,
   Modal: modal,
-  Accordion: accordion
+  Accordion: accordion,
+  Checkbox: checkbox
 }

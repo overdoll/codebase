@@ -33,7 +33,7 @@ export default function ImageSnippet ({
               srcSet={item.url as string}
               type={item.mimeType}
             />
-          )
+          ),
         )}
         <SuspenseImage
           alt='thumbnail'

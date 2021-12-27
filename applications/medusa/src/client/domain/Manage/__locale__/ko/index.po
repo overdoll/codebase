@@ -24,3 +24,7 @@ msgstr ""
 #: src/client/domain/Manage/Manage.tsx:17
 msgid "Post Management"
 msgstr ""
+
+#: src/client/domain/Manage/CreatePost/FileUploader/content/PostCreator/CreatePostFlow/CreatePostFlow.tsx:91
+msgid "Upload Files"
+msgstr ""

@@ -3,6 +3,7 @@ import HorizontalNavigationDropdownMenuButton
   from './HorizontalNavigationDropdownMenuButton/HorizontalNavigationDropdownMenuButton'
 import {
   Box,
+  Flex,
   Menu,
   MenuButton,
   MenuList,
@@ -64,21 +65,18 @@ const HorizontalNavigationDropdownMenu = ({
               }}
               aria-label={label}
               bg={isOpen ? 'gray.500' : 'transparent'}
-              h={{
-                base: '48px',
-                md: '42px'
-              }}
+              h='48px'
+              w='48px'
             >
-              <Icon
-                icon={icon}
-                w={{
-                  base: '58px',
-                  md: '42px'
-                }}
-                h='38px'
-                p={2}
-                fill={isOpen ? 'gray.100' : 'gray.300'}
-              />
+              <Flex w='100%' align='center' justify='center'>
+                <Icon
+                  icon={icon}
+                  w='42px'
+                  h='38px'
+                  p={2}
+                  fill={isOpen ? 'gray.100' : 'gray.300'}
+                />
+              </Flex>
             </ClickableBox>
           </Box>
           <Modal
@@ -89,7 +87,6 @@ const HorizontalNavigationDropdownMenu = ({
           >
             <ModalOverlay />
             <ModalContent
-              backdropFilter='blur(5px)'
               bg='gray.800'
               boxShadow='none'
             >
@@ -117,6 +114,7 @@ const HorizontalNavigationDropdownMenu = ({
             preventOverflow
             isOpen={isOpenMenu}
             onClose={onCloseMenu}
+            offset={[-10, 20]}
           >
             <Box h='100%'>
               <ClickableBox
@@ -128,29 +126,29 @@ const HorizontalNavigationDropdownMenu = ({
                 }}
                 aria-label={label}
                 bg={isOpenMenu ? 'gray.500' : 'transparent'}
-                h={{
-                  base: '48px',
-                  md: '42px'
-                }}
+                h='42px'
+                w='42px'
                 as={MenuButton}
               >
-                <Icon
-                  icon={icon}
-                  w={{
-                    base: '58px',
-                    md: '42px'
-                  }}
-                  h='38px'
-                  p={2}
-                  fill={isOpenMenu ? 'gray.100' : 'gray.300'}
-                />
+                <Flex w='100%' align='center' justify='center'>
+                  <Icon
+                    icon={icon}
+                    w={{
+                      base: '58px',
+                      md: '42px'
+                    }}
+                    h='38px'
+                    p={2}
+                    fill={isOpenMenu ? 'gray.100' : 'gray.300'}
+                  />
+                </Flex>
               </ClickableBox>
             </Box>
             <MenuList
               minW='300px'
               m={0}
               p={0}
-              boxShadow='lg'
+              boxShadow='outline'
             >
               <SimpleGrid
                 p={4}

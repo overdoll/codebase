@@ -40,9 +40,9 @@ export default function Root (props: Props): JSX.Element {
         title='overdoll'
       />
       <AccountAuthorizer queryRef={data.viewer}>
-        <LockedAccountBanner queryRef={data.viewer} />
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
+          <LockedAccountBanner queryRef={data.viewer} />
           {props.children}
         </PageContents>
       </AccountAuthorizer>

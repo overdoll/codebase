@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9a5b39f5f881102e2dbe7ea464f82b45 */
+/* @relayHash 2bb290ef65cd5cfd11ab206521b492be */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -35,11 +35,22 @@ query SessionsPaginationQuery(
   }
 }
 
+fragment RevokeSessionFragment on AccountSession {
+  id
+}
+
 fragment SessionCardFragment on AccountSession {
   device
   ip
-  created
+  location {
+    city
+    country
+    subdivision
+  }
+  lastSeen
   current
+  created
+  ...RevokeSessionFragment
 }
 
 fragment SessionsSettingsFragment_2HEEH6 on Account {
@@ -199,8 +210,40 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "concreteType": "Location",
+                            "kind": "LinkedField",
+                            "name": "location",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "city",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "country",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "subdivision",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "kind": "ScalarField",
-                            "name": "created",
+                            "name": "lastSeen",
                             "storageKey": null
                           },
                           {
@@ -208,6 +251,13 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "current",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "created",
                             "storageKey": null
                           },
                           (v4/*: any*/),
@@ -284,7 +334,7 @@ return {
     ]
   },
   "params": {
-    "id": "9a5b39f5f881102e2dbe7ea464f82b45",
+    "id": "2bb290ef65cd5cfd11ab206521b492be",
     "metadata": {},
     "name": "SessionsPaginationQuery",
     "operationKind": "query",

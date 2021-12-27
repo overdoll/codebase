@@ -1,12 +1,21 @@
-import { Box, Collapse, Flex, Grid, GridItem, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  CircularProgress,
+  Flex,
+  Grid,
+  GridItem,
+  Text
+} from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
-import { ClickableBox } from '@//:modules/content/PageLayout'
-import { ArrowButtonDown, ArrowButtonRight } from '@//:assets/icons/navigation'
-import { CheckCircle, DeleteCircle } from '@//:assets/icons/interface'
+import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons/navigation'
+import { CheckCircle, DeleteCircle, SwapCircle } from '@//:assets/icons/interface'
 
 interface Props {
   auditLog: AuditCardFragment$key
@@ -28,58 +37,55 @@ const AuditCardFragmentGQL = graphql`
 export default function AuditCard ({ auditLog }: Props): JSX.Element {
   const data = useFragment(AuditCardFragmentGQL, auditLog)
 
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
-
   const formattedDate = format(new Date(data?.post?.postedAt as string), 'eeee h:mm aaa')
 
   return (
-    <Box>
-      <ClickableBox h={10} onClick={onToggle}>
-        <Flex>
-          <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
-            <GridItem colSpan={3}>
-              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
-                {formattedDate}
-              </Text>
-            </GridItem>
-            <GridItem textOverflow='ellipsis' colSpan={3}>
-              <Text whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
-                {data?.post?.brand?.name}
-              </Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
-                <Box>
-                  <Icon
-                    icon={data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
-                    w={4}
-                    h={4}
-                    fill={data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
-                  />
-                </Box>
-              </Flex>
-            </GridItem>
-            <GridItem align='center' colSpan={1}>
-              <Flex w='100%' h='100%' align='center' justify='flex-end'>
-                <Icon
-                  icon={isOpen ? ArrowButtonDown : ArrowButtonRight}
-                  w={4}
-                  h={4}
-                  fill='gray.300'
-                />
-              </Flex>
-            </GridItem>
-          </Grid>
-        </Flex>
-      </ClickableBox>
-      <Collapse in={isOpen}>
-        <Box mt={2}>
-          <AuditInspect auditLog={data} />
-        </Box>
-      </Collapse>
-    </Box>
+    <AccordionItem>
+      {({ isExpanded }) => (
+        <>
+          <AccordionButton>
+            <Flex w='100%'>
+              <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2}>
+                <GridItem colSpan={3}>
+                  <Text textAlign='left' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
+                    {formattedDate}
+                  </Text>
+                </GridItem>
+                <GridItem textOverflow='ellipsis' colSpan={3}>
+                  <Text textAlign='left' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
+                    {data?.post?.brand?.name}
+                  </Text>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Flex w='100%' h='100%' align='center' justify='center' position='relative'>
+                    <Box>
+                      <Icon
+                        icon={data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
+                        w={4}
+                        h={4}
+                        fill={data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
+                      />
+                    </Box>
+                  </Flex>
+                </GridItem>
+                <GridItem align='center' colSpan={1}>
+                  <Flex w='100%' h='100%' align='center' justify='flex-end'>
+                    <Icon
+                      icon={isExpanded ? ArrowButtonUp : ArrowButtonDown}
+                      fill='gray.300'
+                      w={4}
+                      h={4}
+                    />
+                  </Flex>
+                </GridItem>
+              </Grid>
+            </Flex>
+          </AccordionButton>
+          <AccordionPanel>
+            <AuditInspect auditLog={data} />
+          </AccordionPanel>
+        </>
+      )}
+    </AccordionItem>
   )
 }

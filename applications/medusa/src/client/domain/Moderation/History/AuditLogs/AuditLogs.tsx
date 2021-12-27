@@ -1,5 +1,5 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { Flex, Text } from '@chakra-ui/react'
+import { Accordion, Flex, Text } from '@chakra-ui/react'
 import AuditCard from './AuditCard/AuditCard'
 import Button from '@//:modules/form/Button/Button'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
@@ -54,18 +54,20 @@ export default function AuditLogs (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const auditLogs = data?.postAuditLogs.edges
+  const auditLogs = data?.moderatorPostAuditLogs?.edges
 
   return (
     <>
-      <ListSpacer>
-        {auditLogs.map((item, index) =>
-          <AuditCard
-            key={index}
-            auditLog={auditLogs[index]?.node}
-          />
-        )}
-      </ListSpacer>
+      <Accordion allowToggle>
+        <ListSpacer>
+          {auditLogs.map((item, index) =>
+            <AuditCard
+              key={index}
+              auditLog={auditLogs[index]?.node}
+            />
+          )}
+        </ListSpacer>
+      </Accordion>
       <Flex justify='center'>
         {hasNext
           ? (

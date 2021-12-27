@@ -7,8 +7,15 @@ import { FragmentRefs } from "relay-runtime";
 export type SessionCardFragment = {
     readonly device: string;
     readonly ip: string;
-    readonly created: unknown;
+    readonly location: {
+        readonly city: string;
+        readonly country: string;
+        readonly subdivision: string;
+    };
+    readonly lastSeen: unknown;
     readonly current: boolean;
+    readonly created: unknown;
+    readonly " $fragmentRefs": FragmentRefs<"RevokeSessionFragment">;
     readonly " $refType": "SessionCardFragment";
 };
 export type SessionCardFragment$data = SessionCardFragment;
@@ -42,8 +49,40 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "Location",
+      "kind": "LinkedField",
+      "name": "location",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "subdivision",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
-      "name": "created",
+      "name": "lastSeen",
       "storageKey": null
     },
     {
@@ -52,10 +91,22 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "current",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "created",
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RevokeSessionFragment"
     }
   ],
   "type": "AccountSession",
   "abstractKey": null
 };
-(node as any).hash = 'd5268de138e39bb8fa9e752d3a78fcb0';
+(node as any).hash = '0c5220989bd012b501615188f435b406';
 export default node;

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash fff249507faf3f094e73fde43c282941 */
+/* @relayHash b9a9f9a603e985afc8ffb99a6f646732 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -66,7 +66,7 @@ fragment MultiFactorFragment on AuthenticationToken {
       totp
     }
   }
-  ...TotpFragment
+  ...TotpSubmissionFragment
   ...RecoveryCodeFragment
 }
 
@@ -79,7 +79,7 @@ fragment RegisterFragment on AuthenticationToken {
   token
 }
 
-fragment TotpFragment on AuthenticationToken {
+fragment TotpSubmissionFragment on AuthenticationToken {
   token
 }
 */
@@ -263,7 +263,7 @@ return {
     ]
   },
   "params": {
-    "id": "fff249507faf3f094e73fde43c282941",
+    "id": "b9a9f9a603e985afc8ffb99a6f646732",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",

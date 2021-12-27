@@ -22,6 +22,33 @@ export default function StyledInput ({
   size,
   variant
 }: Props): JSX.Element {
+  const determineMargin = (): number | undefined => {
+    if (size == null) return undefined
+
+    if (['xl', 'lg'].includes(size)) {
+      return 2
+    }
+    return 0
+  }
+
+  const determinePadding = (): number | undefined => {
+    if (size == null) return undefined
+
+    if (['md'].includes(size)) {
+      return 3
+    }
+    return 2
+  }
+
+  const determineTextSizing = (): string | undefined => {
+    if (size == null) return undefined
+
+    if (['xs', 'sm', 'md', 'lg'].includes(size)) {
+      return 'sm'
+    }
+    return size
+  }
+
   return (
     <Box w='100%'>
       <InputGroup>
@@ -33,20 +60,20 @@ export default function StyledInput ({
         />
         {(error || success) && (
           <InputRightElement
-            mr={2}
+            p={determinePadding() ?? 2}
+            mr={determineMargin() ?? 0}
             h='100%'
             pointerEvents='none'
           >
             <Icon
               h='100%'
-              p={3}
               icon={success ? CheckMark : WarningTriangle}
               fill={success ? 'green.500' : 'orange.500'}
             />
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage fontSize={size}>
+      <FormErrorMessage fontSize={determineTextSizing() ?? 'sm'}>
         {errorMessage}
       </FormErrorMessage>
     </Box>

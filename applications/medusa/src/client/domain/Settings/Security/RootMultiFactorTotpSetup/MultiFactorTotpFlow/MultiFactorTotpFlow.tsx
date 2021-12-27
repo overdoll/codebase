@@ -21,7 +21,7 @@ import SuspenseImage from '@//:modules/operations/SuspenseImage'
 import CopyCodeToClipboard from '../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 
-import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
+import TotpActivationForm from './TotpActivationForm/TotpActivationForm'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Trans } from '@lingui/macro'
@@ -244,7 +244,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
                 Enter the 6-digit verification code that the authenticator app generated.
               </Trans>
             </Text>
-            <TotpSubmissionForm
+            <TotpActivationForm
               id={totp?.generateAccountMultiFactorTotp?.multiFactorTotp?.id as string}
               setIsSuccessful={() => setIsSuccessful(true)}
             />

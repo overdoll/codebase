@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorFragment$key } from '@//:artifacts/MultiFactorFragment.graphql'
-import Totp from './Totp/Totp'
+import TotpSubmission from './TotpSubmission/TotpSubmission'
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
@@ -19,7 +19,7 @@ const MultiFactorFragmentGQL = graphql`
         totp
       }
     }
-    ...TotpFragment
+    ...TotpSubmissionFragment
     ...RecoveryCodeFragment
   }
 `
@@ -36,8 +36,8 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
     <>
       <Helmet title='multifactor authentication' />
       <PageWrapper>
-        <Stack spacing={3}>
-          {data.accountStatus?.multiFactor?.totp === true && <Totp queryRef={data} />}
+        <Stack spacing={6}>
+          {data.accountStatus?.multiFactor?.totp === true && <TotpSubmission queryRef={data} />}
           <Flex justify='center'>
             <Button
               onClick={onToggle}

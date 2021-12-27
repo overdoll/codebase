@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Flex, Stack, useToast } from '@chakra-ui/react'
+import { Collapse, Flex, useDisclosure, useToast } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import EmailCard from './EmailCard/EmailCard'
@@ -19,6 +19,7 @@ const EmailsQueryGQL = graphql`
   query EmailsQuery {
     viewer {
       ...EmailsSettingsFragment
+      emailsLimit
     }
   }
 `
@@ -36,7 +37,7 @@ const EmailsFragmentGQL = graphql`
       edges {
         node {
           ...EmailCardFragment
-          id
+          status
         }
       }
     }
@@ -58,6 +59,15 @@ export default function Emails (props: Props): JSX.Element {
     EmailsFragmentGQL,
     queryData?.viewer
   )
+
+  const currentEmails = data.emails.edges.filter((item) => item.node.status !== 'UNCONFIRMED')
+
+  const disableEmailAdd = queryData?.viewer != null && currentEmails.length >= queryData?.viewer?.emailsLimit
+
+  const {
+    isOpen: isFormOpen,
+    onToggle: onToggleForm
+  } = useDisclosure()
 
   const emailsConnectionID = data?.emails?.__id
 
@@ -94,7 +104,7 @@ export default function Emails (props: Props): JSX.Element {
   }, [confirmationError, confirmationSuccess])
 
   return (
-    <Stack spacing={3}>
+    <ListSpacer>
       <ListSpacer>
         {data?.emails.edges.map((item, index) => {
           return (
@@ -113,13 +123,23 @@ export default function Emails (props: Props): JSX.Element {
             isLoading={isLoadingNext}
             color='gray.200'
             variant='link'
-          >
-            <Trans>
-              Load More
-            </Trans>
+          ><Trans>
+            Load More
+          </Trans>
           </Button>
         </Flex>}
-      <AddEmailForm connectionID={emailsConnectionID} />
-    </Stack>
+      <Button
+        variant='solid'
+        colorScheme='gray'
+        onClick={onToggleForm}
+        size='sm'
+      ><Trans>
+        Add Email
+      </Trans>
+      </Button>
+      <Collapse in={isFormOpen} animateOpacity>
+        <AddEmailForm isDisabled={disableEmailAdd} connectionID={emailsConnectionID} />
+      </Collapse>
+    </ListSpacer>
   )
 }

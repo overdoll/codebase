@@ -11,7 +11,7 @@ import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { usePreloadedQuery } from 'react-relay/hooks'
 import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
-import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -80,7 +80,7 @@ export default function Posts (props: Props): JSX.Element {
   const postsConnection = data?.moderatorPostsQueue?.__id
 
   const nextPage = (): void => {
-    if (currentIndex + 1 === data?.moderatorPostsQueue.edges.length) {
+    if (currentIndex + 1 >= data?.moderatorPostsQueue.edges.length) {
       loadNext(
         1,
         {
@@ -115,32 +115,21 @@ export default function Posts (props: Props): JSX.Element {
   // so we can have a loading state
   if ((data.moderatorPostsQueue.edges.length < 1 && hasNext) || (currentPost == null && data.moderatorPostsQueue.edges.length > 0)) {
     return (
-      <LargeBackgroundBox>
+      <PostPlaceholder>
         <Skeleton
-          flexDirection='column'
-          alignItems='center'
-          justifyContent='center'
-          textAlign='center'
-          height='500px'
+          h='100%'
+          w='100%'
         />
-      </LargeBackgroundBox>
+      </PostPlaceholder>
     )
   }
 
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
   if (data.moderatorPostsQueue.edges.length < 1) {
     return (
-      <LargeBackgroundBox>
-        <Flex
-          flexDirection='column'
-          alignItems='center'
-          justifyContent='center'
-          textAlign='center'
-          height='500px'
-        >
-          <NoPostsPlaceholder moderator={data} />
-        </Flex>
-      </LargeBackgroundBox>
+      <PostPlaceholder>
+        <NoPostsPlaceholder moderator={data} />
+      </PostPlaceholder>
     )
   }
 
@@ -161,7 +150,7 @@ export default function Posts (props: Props): JSX.Element {
             borderRadius='base'
             onClick={previousPage}
           />}
-        <SmallBackgroundBox alignContent='center' w='100%'>
+        <SmallBackgroundBox align='center' justify='center' w='100%'>
           <Text
             color='gray.300'
             fontSize='md'

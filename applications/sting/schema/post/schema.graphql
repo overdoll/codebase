@@ -13,7 +13,7 @@ type Post implements Node @key(fields: "id") {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """Content belonging to this post"""
+  """DraggableContent belonging to this post"""
   content: [Resource!]!
 
   """The date and time of when this post was created"""

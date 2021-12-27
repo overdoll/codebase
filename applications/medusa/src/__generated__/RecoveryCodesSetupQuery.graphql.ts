@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7280c1350737606b34c5261d6a7a623a */
+/* @relayHash c176ce6215d6a7bd03094a4f64974aee */
 
 import { ConcreteRequest } from "relay-runtime";
 export type RecoveryCodesSetupQueryVariables = {};
 export type RecoveryCodesSetupQueryResponse = {
     readonly viewer: {
-        readonly __id: string;
+        readonly id: string;
         readonly recoveryCodes: ReadonlyArray<{
             readonly __id: string;
             readonly code: string;
@@ -27,89 +27,93 @@ export type RecoveryCodesSetupQuery = {
 /*
 query RecoveryCodesSetupQuery {
   viewer {
+    id
     recoveryCodes {
       code
     }
     multiFactorSettings {
       __typename
     }
-    id
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "kind": "ClientExtension",
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__id",
-      "storageKey": null
-    }
-  ]
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AccountMultiFactorRecoveryCode",
-  "kind": "LinkedField",
-  "name": "recoveryCodes",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "code",
-      "storageKey": null
-    },
-    (v0/*: any*/)
-  ],
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AccountMultiFactorSettings",
-  "kind": "LinkedField",
-  "name": "multiFactorSettings",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__typename",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Account",
+    "kind": "LinkedField",
+    "name": "viewer",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "id",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AccountMultiFactorRecoveryCode",
+        "kind": "LinkedField",
+        "name": "recoveryCodes",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          },
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
+              }
+            ]
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AccountMultiFactorSettings",
+        "kind": "LinkedField",
+        "name": "multiFactorSettings",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "RecoveryCodesSetupQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
-          (v0/*: any*/)
-        ],
-        "storageKey": null
-      }
-    ],
+    "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -118,32 +122,10 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "RecoveryCodesSetupQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          (v0/*: any*/)
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "7280c1350737606b34c5261d6a7a623a",
+    "id": "c176ce6215d6a7bd03094a4f64974aee",
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
@@ -151,5 +133,5 @@ return {
   }
 };
 })();
-(node as any).hash = '0876f9bce52915db3fe9ded92c64ae97';
+(node as any).hash = 'd9f62c25bdda6fc80faaf753eb5d38a8';
 export default node;

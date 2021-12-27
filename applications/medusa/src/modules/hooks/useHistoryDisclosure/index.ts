@@ -2,15 +2,16 @@ import { useEffect } from 'react'
 import { useDisclosure } from '@chakra-ui/react'
 import { useHistory } from '../../routing'
 
-// useDisclosure hook modified so that when it is opened
-// identical entry into history is added and
-// when the back button is pressed its closed
+/**
+ * useDisclosure hook modified so that when it is opened
+ * identical entry into history is added and
+ * when the back button is pressed its closed
+ */
 
 interface HistoryDisclosure {
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
-
   onToggle: () => void
 
 }
@@ -29,7 +30,7 @@ export default function useHistoryDisclosure (): HistoryDisclosure {
   const history = useHistory()
 
   const onOpen = (): void => {
-    const currentLocation = history.location.pathname
+    const currentLocation = `${history.location.pathname}${history.location.search}`
     history.push(currentLocation, { hasModal: true })
     onOpenAction()
   }
