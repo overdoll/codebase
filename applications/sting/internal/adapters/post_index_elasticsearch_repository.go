@@ -52,7 +52,7 @@ const postIndex = `
 					"type": "nested",
 					"properties": ` + audienceIndexProperties + ` 
 				},
-				"brand": {
+				"club": {
 					"type": "nested",
 					"properties": ` + clubsIndexProperties + ` 
 				},
@@ -251,8 +251,8 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermsQueryFromStrings("characters.slug", filter.CharacterSlugs()...)))
 	}
 
-	if len(filter.BrandSlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermsQueryFromStrings("brand.slug", filter.BrandSlugs()...)))
+	if len(filter.ClubSlugs()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("club", elastic.NewTermsQueryFromStrings("club.slug", filter.ClubSlugs()...)))
 	}
 
 	if len(filter.AudienceSlugs()) > 0 {
@@ -340,7 +340,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var brand *post.Club
 
 		if pst.Club != nil {
-			brand = post.UnmarshalClubFromDatabase(pst.Club.Id, pst.Club.Slug, pst.Club.Name, pst.Club.Thumbnail, pst.Club.MembersCount, pst.Club.OwnerAccountId)
+			brand = post.UnmarshalClubFromDatabase(pst.Club.Id, pst.Club.Slug, pst.Club.SlugAliases, pst.Club.Name, pst.Club.Thumbnail, pst.Club.MembersCount, pst.Club.OwnerAccountId)
 		}
 
 		var audience *post.Audience

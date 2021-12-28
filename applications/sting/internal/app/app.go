@@ -36,7 +36,11 @@ type Commands struct {
 	IndexAllClubs      command.IndexAllClubsHandler
 	IndexAllPosts      command.IndexAllPostsHandler
 
-	CreateClub command.CreateClubHandler
+	CreateClub                    command.CreateClubHandler
+	UpdateClubName                command.UpdateClubNameHandler
+	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
+	AddClubSlugAlias              command.AddClubSlugAliasHandler
+	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
 }
 
 type Queries struct {
@@ -62,7 +66,8 @@ type Queries struct {
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
 
-	SearchClubs query.SearchClubsHandler
-	ClubBySlug  query.ClubBySlugHandler
-	ClubById    query.ClubByIdHandler
+	SearchClubs          query.SearchClubsHandler
+	ClubBySlug           query.ClubBySlugHandler
+	ClubById             query.ClubByIdHandler
+	ClubSlugAliasesLimit query.ClubSlugAliasesLimitHandler
 }

@@ -5,11 +5,22 @@ type Club implements Node & Object @key(fields: "id") {
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 
+  """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
+  slugAliases: [String!]!
+
+  """
+  Maximum amount of slug aliases that can be created for this club.
+  """
+  slugAliasesLimit: Int! @goField(forceResolver: true)
+
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
   """A name for this club."""
   name: String!
+
+  """The account that owns this club."""
+  owner: Account!
 }
 
 type ClubEdge {
@@ -32,6 +43,108 @@ input ClubsOrder {
 enum ClubsOrderField {
   """Club by created time"""
   CREATED_AT
+}
+
+"""Add alias slug."""
+input AddClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Remove alias slug."""
+input RemoveClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Create club."""
+input CreateClubInput {
+  """The chosen slug for the club."""
+  slug: String!
+
+  """The chosen name for the club."""
+  name: String!
+}
+
+"""Update club name."""
+input UpdateClubNameInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen name for the club."""
+  name: String!
+}
+
+"""Update alias slug to default."""
+input PromoteClubSlugAliasToDefaultInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Payload for a new club"""
+type CreateClubPayload {
+  """The club after creation"""
+  club: Club
+}
+
+"""Payload for a new alt slug"""
+type AddClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for a new alt slug"""
+type RemoveClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for a new alt slug"""
+type PromoteClubSlugAliasToDefaultPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the name"""
+type UpdateClubNamePayload {
+  """The club after update"""
+  club: Club
+}
+
+extend type Mutation {
+  """
+  Create a new club
+  """
+  createClub(input: CreateClubInput!): CreateClubPayload
+
+  """
+  Add an alternative slug to the club
+  """
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
+
+  """
+  Remove an alternative slug from the club
+  """
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
+
+  """
+  Make the alias slug the default, swapping out the old slug into the alias list.
+  """
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
+
+  """
+  Update the club's name (english-only for now)
+  """
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 }
 
 extend type Query {

@@ -119,10 +119,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *post.Club) *Club {
 	}
 
 	return &Club{
-		ID:        relay.NewID(Club{}, result.ID()),
-		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
+		ID:          relay.NewID(Club{}, result.ID()),
+		Name:        result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:        result.Slug(),
+		SlugAliases: result.SlugAliases(),
+		Thumbnail:   res,
+		Owner:       &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
 	}
 }
 

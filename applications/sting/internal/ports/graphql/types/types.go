@@ -26,6 +26,20 @@ type Account struct {
 
 func (Account) IsEntity() {}
 
+// Add alias slug.
+type AddClubSlugAliasInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The chosen slug for the club.
+	Slug string `json:"slug"`
+}
+
+// Payload for a new alt slug
+type AddClubSlugAliasPayload struct {
+	// The club after update
+	Club *Club `json:"club"`
+}
+
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
@@ -132,10 +146,16 @@ type Club struct {
 	ID relay.ID `json:"id"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
+	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
+	SlugAliases []string `json:"slugAliases"`
+	// Maximum amount of slug aliases that can be created for this club
+	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this club.
 	Name string `json:"name"`
+	// The account that owns this club.
+	Owner *Account `json:"owner"`
 	// Posts belonging to this club
 	Posts *PostConnection `json:"posts"`
 }
@@ -158,6 +178,20 @@ type ClubEdge struct {
 type ClubsOrder struct {
 	// The field to order clubs by.
 	Field ClubsOrderField `json:"field"`
+}
+
+// Create club.
+type CreateClubInput struct {
+	// The chosen slug for the club.
+	Slug string `json:"slug"`
+	// The chosen name for the club.
+	Name string `json:"name"`
+}
+
+// Payload for a new club
+type CreateClubPayload struct {
+	// The club after creation
+	Club *Club `json:"club"`
 }
 
 // Payload for a created pending post
@@ -211,6 +245,34 @@ type PostEdge struct {
 type PostsOrder struct {
 	// The field to order security advisories by.
 	Field PostsOrderField `json:"field"`
+}
+
+// Update alias slug to default.
+type PromoteClubSlugAliasToDefaultInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The chosen slug for the club.
+	Slug string `json:"slug"`
+}
+
+// Payload for a new alt slug
+type PromoteClubSlugAliasToDefaultPayload struct {
+	// The club after update
+	Club *Club `json:"club"`
+}
+
+// Remove alias slug.
+type RemoveClubSlugAliasInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The chosen slug for the club.
+	Slug string `json:"slug"`
+}
+
+// Payload for a new alt slug
+type RemoveClubSlugAliasPayload struct {
+	// The club after update
+	Club *Club `json:"club"`
 }
 
 // A resource represents an image or a video format that contains an ID to uniquely identify it,
@@ -274,6 +336,20 @@ type SubmitPostPayload struct {
 	Post *Post `json:"post"`
 	// Whether or not the submitted post is going in review
 	InReview *bool `json:"inReview"`
+}
+
+// Update club name.
+type UpdateClubNameInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The chosen name for the club.
+	Name string `json:"name"`
+}
+
+// Payload for updating the name
+type UpdateClubNamePayload struct {
+	// The club after update
+	Club *Club `json:"club"`
 }
 
 // Update post audience.

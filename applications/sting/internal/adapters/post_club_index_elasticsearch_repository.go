@@ -20,6 +20,7 @@ import (
 type clubDocument struct {
 	Id             string            `json:"id"`
 	Slug           string            `json:"slug"`
+	SlugAliases    []string          `json:"slug_aliases"`
 	Thumbnail      string            `json:"thumbnail"`
 	Name           map[string]string `json:"name"`
 	CreatedAt      string            `json:"created_at"`
@@ -33,6 +34,9 @@ const clubsIndexProperties = `
 		"type": "keyword"
 	},
 	"slug": {
+		"type": "keyword"
+	},
+	"slug_aliases": {
 		"type": "keyword"
 	},
 	"thumbnail": {
@@ -83,6 +87,7 @@ func marshalClubToDocument(cat *post.Club) (*clubDocument, error) {
 	return &clubDocument{
 		Id:             cat.ID(),
 		Slug:           cat.Slug(),
+		SlugAliases:    cat.SlugAliases(),
 		Thumbnail:      thumbnail,
 		Name:           localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt:      strconv.FormatInt(parse.Time().Unix(), 10),
@@ -155,10 +160,10 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 		err := json.Unmarshal(hit.Source, &bd)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
+			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
+		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
 		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
 		brands = append(brands, newBrand)
@@ -190,11 +195,12 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 			}
 
 			doc := clubDocument{
-				Id:        m.Id,
-				Slug:      m.Slug,
-				Thumbnail: m.Thumbnail,
-				Name:      m.Name,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:          m.Id,
+				Slug:        m.Slug,
+				SlugAliases: m.SlugAliases,
+				Thumbnail:   m.Thumbnail,
+				Name:        m.Name,
+				CreatedAt:   strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.

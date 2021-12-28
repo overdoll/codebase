@@ -52,7 +52,11 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SubmitPost:  command.NewSubmitPostHandler(postRepo, indexRepo, parley),
 			RemovePost:  command.NewRemovePostHandler(postRepo, indexRepo),
 
-			CreateClub: command.NewCreateClubHandler(postRepo, indexRepo),
+			CreateClub:                    command.NewCreateClubHandler(postRepo, indexRepo),
+			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(postRepo, indexRepo),
+			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(postRepo, indexRepo),
+			UpdateClubName:                command.NewUpdateClubNameHandler(postRepo, indexRepo),
+			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(postRepo, indexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, indexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),
@@ -82,9 +86,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 
-			SearchClubs: query.NewSearchClubsHandler(indexRepo),
-			ClubBySlug:  query.NewClubBySlugHandler(postRepo),
-			ClubById:    query.NewClubByIdHandler(postRepo),
+			SearchClubs:          query.NewSearchClubsHandler(indexRepo),
+			ClubBySlug:           query.NewClubBySlugHandler(postRepo),
+			ClubById:             query.NewClubByIdHandler(postRepo),
+			ClubSlugAliasesLimit: query.NewClubSlugAliasesLimitHandler(postRepo),
 
 			SearchAudience: query.NewSearchAudienceHandler(indexRepo),
 			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),

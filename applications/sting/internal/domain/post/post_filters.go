@@ -16,14 +16,14 @@ type PostFilters struct {
 	moderatorId    *string
 	contributorId  *string
 	state          *string
-	brandSlugs     []string
+	clubSlugs      []string
 	audienceSlugs  []string
 	categorySlugs  []string
 	characterSlugs []string
 	seriesSlugs    []string
 }
 
-func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, brandSlugs, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
+func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, clubSlugs, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
 
 	var newState *string
 
@@ -44,7 +44,7 @@ func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, b
 		moderatorId:    moderatorId,
 		contributorId:  contributorId,
 		audienceSlugs:  audienceSlugs,
-		brandSlugs:     brandSlugs,
+		clubSlugs:      clubSlugs,
 		categorySlugs:  categorySlugs,
 		characterSlugs: characterSlugs,
 		seriesSlugs:    seriesSlugs,
@@ -67,8 +67,8 @@ func (e *PostFilters) OrderBy() string {
 	return e.orderBy
 }
 
-func (e *PostFilters) BrandSlugs() []string {
-	return e.brandSlugs
+func (e *PostFilters) ClubSlugs() []string {
+	return e.clubSlugs
 }
 
 func (e *PostFilters) AudienceSlugs() []string {

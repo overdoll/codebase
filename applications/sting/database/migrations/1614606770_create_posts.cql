@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS clubs
 (
     id               text,
     slug             text,
+    slug_aliases     set<text>,
     name             map<text, text>,
     members_count    int,
     thumbnail        text,
@@ -98,13 +99,6 @@ CREATE TABLE IF NOT EXISTS clubs_slugs
     slug    text,
     club_id text,
     primary key ( slug )
-);
-
-CREATE TABLE IF NOT EXISTS slugs_by_club
-(
-    club_id text,
-    slug    text,
-    primary key ( club_id, slug )
 );
 
 CREATE TABLE IF NOT EXISTS club_members_by_account

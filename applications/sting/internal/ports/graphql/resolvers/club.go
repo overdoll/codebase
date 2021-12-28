@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"overdoll/libraries/passport"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
@@ -13,6 +14,18 @@ import (
 
 type ClubResolver struct {
 	App *app.Application
+}
+
+func (r ClubResolver) SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query.ClubSlugAliasesLimit{
+		AccountId: obj.Owner.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
 }
 
 func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
