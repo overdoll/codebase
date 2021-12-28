@@ -1,21 +1,11 @@
-import {
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  CircularProgress,
-  Flex,
-  Grid,
-  GridItem,
-  Text
-} from '@chakra-ui/react'
+import { AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
 import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons/navigation'
-import { CheckCircle, DeleteCircle, SwapCircle } from '@//:assets/icons/interface'
+import { CheckCircle, DeleteCircle } from '@//:assets/icons/interface'
 
 interface Props {
   auditLog: AuditCardFragment$key

@@ -112,7 +112,7 @@ export default function AddEmailForm ({
             register={register('email')}
             success={success}
             error={errors.email != null}
-            placeholder={i18n._(t`Enter an email address`)}
+            placeholder={t`Enter a new email address`}
             errorMessage={errors?.email?.message}
           />
           <Button
