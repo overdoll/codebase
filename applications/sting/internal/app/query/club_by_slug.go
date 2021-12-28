@@ -2,8 +2,8 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -13,16 +13,16 @@ type BrandBySlug struct {
 }
 
 type ClubBySlugHandler struct {
-	pr post.Repository
+	cr club.Repository
 }
 
-func NewClubBySlugHandler(pr post.Repository) ClubBySlugHandler {
-	return ClubBySlugHandler{pr: pr}
+func NewClubBySlugHandler(cr club.Repository) ClubBySlugHandler {
+	return ClubBySlugHandler{cr: cr}
 }
 
-func (h ClubBySlugHandler) Handle(ctx context.Context, query BrandBySlug) (*post.Club, error) {
+func (h ClubBySlugHandler) Handle(ctx context.Context, query BrandBySlug) (*club.Club, error) {
 
-	result, err := h.pr.GetClubBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.cr.GetClubBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

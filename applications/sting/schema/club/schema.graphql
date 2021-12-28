@@ -181,5 +181,5 @@ extend type Query {
 
 extend type Post {
   """Represents the club that this post belongs to"""
-  club: Club
+  club: Club! @goField(forceResolver: true)
 }

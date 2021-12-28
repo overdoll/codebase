@@ -2,7 +2,6 @@ package post
 
 import (
 	"context"
-
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -16,7 +15,6 @@ type Repository interface {
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
-	UpdatePostClub(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
@@ -25,14 +23,6 @@ type Repository interface {
 	GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
-
-	GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*Club, error)
-	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)
-	CreateClub(ctx context.Context, requester *principal.Principal, club *Club) error
-
-	UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
-	UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
-	UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
 
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
@@ -57,11 +47,6 @@ type IndexRepository interface {
 	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CharacterFilters) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
-
-	IndexAllClubs(ctx context.Context) error
-	IndexClub(ctx context.Context, club *Club) error
-	DeleteClubsIndex(ctx context.Context) error
-	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Club, error)
 
 	IndexAllAudience(ctx context.Context) error
 	DeleteAudienceIndex(ctx context.Context) error

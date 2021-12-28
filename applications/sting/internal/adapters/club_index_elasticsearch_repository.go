@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"overdoll/applications/sting/internal/domain/club"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -65,7 +65,16 @@ const clubsIndex = `
 
 const clubsIndexName = "clubs"
 
-func marshalClubToDocument(cat *post.Club) (*clubDocument, error) {
+type ClubIndexElasticSearchRepository struct {
+	session gocqlx.Session
+	client  *elastic.Client
+}
+
+func NewClubIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) ClubIndexElasticSearchRepository {
+	return ClubIndexElasticSearchRepository{client: client, session: session}
+}
+
+func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
 	parse, err := ksuid.Parse(cat.ID())
 
@@ -96,7 +105,7 @@ func marshalClubToDocument(cat *post.Club) (*clubDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexClub(ctx context.Context, club *post.Club) error {
+func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *club.Club) error {
 
 	clb, err := marshalClubToDocument(club)
 
@@ -118,7 +127,7 @@ func (r PostsIndexElasticSearchRepository) IndexClub(ctx context.Context, club *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Club, error) {
+func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
 		Index(clubsIndexName)
@@ -151,7 +160,7 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 		return nil, fmt.Errorf("failed search brands: %v", err)
 	}
 
-	var brands []*post.Club
+	var brands []*club.Club
 
 	for _, hit := range response.Hits.Hits {
 
@@ -163,7 +172,7 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := post.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
+		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
 		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
 		brands = append(brands, newBrand)
@@ -172,7 +181,7 @@ func (r PostsIndexElasticSearchRepository) SearchClubs(ctx context.Context, requ
 	return brands, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) error {
+func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -184,7 +193,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 
 	err := scanner.RunIterator(ctx, clubTable, func(iter *gocqlx.Iterx) error {
 
-		var m club
+		var m clubs
 
 		for iter.StructScan(&m) {
 
@@ -225,7 +234,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) er
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteClubsIndex(ctx context.Context) error {
+func (r ClubIndexElasticSearchRepository) DeleteClubsIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(clubsIndexName).Do(ctx)
 

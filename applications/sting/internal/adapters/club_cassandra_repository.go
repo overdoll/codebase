@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
 )
@@ -30,7 +31,7 @@ var clubTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type club struct {
+type clubs struct {
 	Id             string            `db:"id"`
 	Slug           string            `db:"slug"`
 	SlugAliases    []string          `db:"slug_aliases"`
@@ -68,7 +69,15 @@ type clubSlugs struct {
 	Slug   string `db:"slug"`
 }
 
-func marshalClubToDatabase(cl *post.Club) (*club, error) {
+type ClubCassandraRepository struct {
+	session gocqlx.Session
+}
+
+func NewClubCassandraRepository(session gocqlx.Session) ClubCassandraRepository {
+	return ClubCassandraRepository{session: session}
+}
+
+func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
 	thumbnail, err := cl.Thumbnail().MarshalResourceToDatabase()
 
@@ -76,7 +85,7 @@ func marshalClubToDatabase(cl *post.Club) (*club, error) {
 		return nil, err
 	}
 
-	return &club{
+	return &clubs{
 		Id:             cl.ID(),
 		Slug:           cl.Slug(),
 		SlugAliases:    cl.SlugAliases(),
@@ -87,7 +96,7 @@ func marshalClubToDatabase(cl *post.Club) (*club, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Club, error) {
+func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
 
 	queryBrandSlug := r.session.
 		Query(clubSlugTable.Get()).
@@ -99,7 +108,7 @@ func (r PostsCassandraRepository) GetClubBySlug(ctx context.Context, requester *
 	if err := queryBrandSlug.Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrClubNotFound
+			return nil, club.ErrClubNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get club by slug: %v", err)
@@ -108,25 +117,25 @@ func (r PostsCassandraRepository) GetClubBySlug(ctx context.Context, requester *
 	return r.GetClubById(ctx, requester, b.ClubId)
 }
 
-func (r PostsCassandraRepository) GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*post.Club, error) {
+func (r ClubCassandraRepository) GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*club.Club, error) {
 
 	queryBrand := r.session.
 		Query(clubTable.Get()).
 		Consistency(gocql.One).
-		BindStruct(club{Id: brandId})
+		BindStruct(clubs{Id: brandId})
 
-	var b club
+	var b clubs
 
 	if err := queryBrand.Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrClubNotFound
+			return nil, club.ErrClubNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get club by id: %v", err)
 	}
 
-	return post.UnmarshalClubFromDatabase(
+	return club.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
 		b.SlugAliases,
@@ -137,7 +146,7 @@ func (r PostsCassandraRepository) GetClubById(ctx context.Context, requester *pr
 	), nil
 }
 
-func (r PostsCassandraRepository) UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *post.Club) error) (*post.Club, error) {
+func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	currentClub, err := r.GetClubById(ctx, requester, clubId)
 
 	if err != nil {
@@ -175,7 +184,7 @@ func (r PostsCassandraRepository) UpdateClubSlug(ctx context.Context, requester 
 	return currentClub, nil
 }
 
-func (r PostsCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *post.Club) error) (*post.Club, error) {
+func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, requester, clubId)
 
@@ -287,11 +296,11 @@ func (r PostsCassandraRepository) UpdateClubSlugAliases(ctx context.Context, req
 	return currentClub, nil
 }
 
-func (r PostsCassandraRepository) UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *post.Club) error) (*post.Club, error) {
+func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"name"})
 }
 
-func (r PostsCassandraRepository) updateClubRequest(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *post.Club) error, columns []string) (*post.Club, error) {
+func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, requester, clubId)
 
@@ -324,7 +333,7 @@ func (r PostsCassandraRepository) updateClubRequest(ctx context.Context, request
 	return currentClub, nil
 }
 
-func (r PostsCassandraRepository) CreateClub(ctx context.Context, requester *principal.Principal, club *post.Club) error {
+func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *principal.Principal, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)
 
@@ -359,7 +368,7 @@ func (r PostsCassandraRepository) CreateClub(ctx context.Context, requester *pri
 	return nil
 }
 
-func (r PostsCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubId, slug string) error {
+func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	if err := r.session.
@@ -375,7 +384,7 @@ func (r PostsCassandraRepository) deleteUniqueClubSlug(ctx context.Context, club
 	return nil
 }
 
-func (r PostsCassandraRepository) createUniqueClubSlug(ctx context.Context, clubId, slug string) error {
+func (r ClubCassandraRepository) createUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	clubSlug := clubTable.
@@ -395,7 +404,7 @@ func (r PostsCassandraRepository) createUniqueClubSlug(ctx context.Context, club
 	}
 
 	if !applied {
-		return post.ErrClubSlugNotUnique
+		return club.ErrClubSlugNotUnique
 	}
 
 	return nil

@@ -2,8 +2,8 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -17,16 +17,16 @@ type SearchClubs struct {
 }
 
 type SearchClubsHandler struct {
-	pr post.IndexRepository
+	cr club.IndexRepository
 }
 
-func NewSearchClubsHandler(pr post.IndexRepository) SearchClubsHandler {
-	return SearchClubsHandler{pr: pr}
+func NewSearchClubsHandler(cr club.IndexRepository) SearchClubsHandler {
+	return SearchClubsHandler{cr: cr}
 }
 
-func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*post.Club, error) {
+func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*club.Club, error) {
 
-	filters, err := post.NewObjectFilters(
+	filters, err := club.NewFilters(
 		query.Name,
 		query.OrderBy,
 		query.Slugs,
@@ -36,7 +36,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*p
 		return nil, err
 	}
 
-	results, err := h.pr.SearchClubs(ctx, query.Principal, query.Cursor, filters)
+	results, err := h.cr.SearchClubs(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

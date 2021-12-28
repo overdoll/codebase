@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -15,17 +15,17 @@ type UpdateClubName struct {
 }
 
 type UpdateClubNameHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	cr club.Repository
+	ci club.IndexRepository
 }
 
-func NewUpdateClubNameHandler(pr post.Repository, pi post.IndexRepository) UpdateClubNameHandler {
-	return UpdateClubNameHandler{pr: pr, pi: pi}
+func NewUpdateClubNameHandler(cr club.Repository, ci club.IndexRepository) UpdateClubNameHandler {
+	return UpdateClubNameHandler{cr: cr, ci: ci}
 }
 
-func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (*post.Club, error) {
+func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (*club.Club, error) {
 
-	club, err := h.pr.UpdateClubName(ctx, cmd.Principal, cmd.ClubId, func(club *post.Club) error {
+	clb, err := h.cr.UpdateClubName(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
 		return club.UpdateName(cmd.Principal, cmd.Name)
 	})
 
@@ -33,9 +33,9 @@ func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (
 		return nil, err
 	}
 
-	if err := h.pi.IndexClub(ctx, club); err != nil {
+	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 
-	return club, nil
+	return clb, nil
 }

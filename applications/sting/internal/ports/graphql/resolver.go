@@ -79,3 +79,9 @@ func (r *Resolver) Club() ClubResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Post() PostResolver {
+	return &resolvers.PostResolver{
+		App: r.app,
+	}
+}

@@ -1,4 +1,4 @@
-package post
+package club
 
 import (
 	"errors"

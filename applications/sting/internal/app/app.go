@@ -26,7 +26,6 @@ type Commands struct {
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
-	UpdatePostClub       command.UpdatePostClubHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
 
 	IndexAllCategories command.IndexAllCategoriesHandler

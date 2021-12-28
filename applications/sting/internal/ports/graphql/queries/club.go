@@ -2,10 +2,10 @@ package queries
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -43,7 +43,7 @@ func (r *QueryResolver) Club(ctx context.Context, slug string) (*types.Club, err
 
 	if err != nil {
 
-		if err == post.ErrClubNotFound {
+		if err == club.ErrClubNotFound {
 			return nil, nil
 		}
 

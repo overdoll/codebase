@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -14,31 +14,31 @@ type CreateClub struct {
 }
 
 type CreateClubHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
+	cr     club.Repository
+	ci     club.IndexRepository
 	parley ParleyService
 	eva    EvaService
 }
 
-func NewCreateClubHandler(pr post.Repository, pi post.IndexRepository) CreateClubHandler {
-	return CreateClubHandler{pr: pr, pi: pi}
+func NewCreateClubHandler(cr club.Repository, ci club.IndexRepository) CreateClubHandler {
+	return CreateClubHandler{cr: cr, ci: ci}
 }
 
-func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*post.Club, error) {
+func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Club, error) {
 
-	club, err := post.NewClub(cmd.Principal, cmd.Slug, cmd.Name)
+	clb, err := club.NewClub(cmd.Principal, cmd.Slug, cmd.Name)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := h.pr.CreateClub(ctx, cmd.Principal, club); err != nil {
+	if err := h.cr.CreateClub(ctx, cmd.Principal, clb); err != nil {
 		return nil, err
 	}
 
-	if err := h.pi.IndexClub(ctx, club); err != nil {
+	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 
-	return club, nil
+	return clb, nil
 }

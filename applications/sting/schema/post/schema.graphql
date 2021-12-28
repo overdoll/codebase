@@ -39,12 +39,9 @@ enum PostState {
   REMOVED
 }
 
-"""Update post club."""
-input UpdatePostClubInput {
-  """The post to update"""
-  id: ID!
-
-  """The club that this post belongs to"""
+"""Create a new post. A club ID is required."""
+input CreatePostInput {
+  """The club ID that this post will belong to"""
   clubId: ID!
 }
 
@@ -172,9 +169,6 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -208,9 +202,6 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -235,12 +226,7 @@ extend type Mutation {
   """
   Create a new post
   """
-  createPost: CreatePostPayload
-
-  """
-  Update a post in draft status - club
-  """
-  updatePostClub(input: UpdatePostClubInput!): UpdatePostClubPayload
+  createPost(input: CreatePostInput!): CreatePostPayload
 
   """
   Update a post in draft status - audience
@@ -289,9 +275,6 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -327,9 +310,6 @@ extend type Category {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -362,9 +342,6 @@ extend type Character {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -393,9 +370,6 @@ extend type Series {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by club slugs."""
-    clubSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -463,9 +437,6 @@ extend type Audience {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by club slugs."""
-    clubSlugs: [String!]
 
     """Search by category slugs."""
     categorySlugs: [String!]

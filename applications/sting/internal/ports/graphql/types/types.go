@@ -148,7 +148,7 @@ type Club struct {
 	Slug string `json:"slug"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
 	SlugAliases []string `json:"slugAliases"`
-	// Maximum amount of slug aliases that can be created for this club
+	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
@@ -192,6 +192,12 @@ type CreateClubInput struct {
 type CreateClubPayload struct {
 	// The club after creation
 	Club *Club `json:"club"`
+}
+
+// Create a new post. A club ID is required.
+type CreatePostInput struct {
+	// The club ID that this post will belong to
+	ClubID relay.ID `json:"clubId"`
 }
 
 // Payload for a created pending post
@@ -392,14 +398,6 @@ type UpdatePostCharactersInput struct {
 type UpdatePostCharactersPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
-}
-
-// Update post club.
-type UpdatePostClubInput struct {
-	// The post to update
-	ID relay.ID `json:"id"`
-	// The club that this post belongs to
-	ClubID relay.ID `json:"clubId"`
 }
 
 // Payload for updating a post

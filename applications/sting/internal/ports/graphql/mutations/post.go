@@ -12,7 +12,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *MutationResolver) CreatePost(ctx context.Context) (*types.CreatePostPayload, error) {
+func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -23,6 +23,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context) (*types.CreatePostPay
 			ctx,
 			command.CreatePost{
 				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
 			},
 		)
 
@@ -70,30 +71,6 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 	return &types.SubmitPostPayload{
 		Post:     types.MarshalPostToGraphQL(ctx, pst),
 		InReview: &inReview,
-	}, err
-}
-
-func (r *MutationResolver) UpdatePostClub(ctx context.Context, input types.UpdatePostClubInput) (*types.UpdatePostClubPayload, error) {
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	pst, err := r.App.Commands.UpdatePostClub.
-		Handle(
-			ctx,
-			command.UpdatePostClub{
-				Principal: principal.FromContext(ctx),
-				PostId:    input.ID.GetID(),
-				ClubId:    input.ClubID.GetID(),
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UpdatePostClubPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 

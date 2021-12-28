@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -42,7 +43,7 @@ func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.C
 
 	if err != nil {
 
-		if err == post.ErrClubNotFound {
+		if err == club.ErrClubNotFound {
 			return nil, nil
 		}
 

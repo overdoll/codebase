@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -15,17 +15,17 @@ type AddClubSlugAlias struct {
 }
 
 type AddClubSlugAliasHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	cr club.Repository
+	ci club.IndexRepository
 }
 
-func NewAddClubSlugAliasHandler(pr post.Repository, pi post.IndexRepository) AddClubSlugAliasHandler {
-	return AddClubSlugAliasHandler{pr: pr, pi: pi}
+func NewAddClubSlugAliasHandler(cr club.Repository, ci club.IndexRepository) AddClubSlugAliasHandler {
+	return AddClubSlugAliasHandler{cr: cr, ci: ci}
 }
 
-func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlias) (*post.Club, error) {
+func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlias) (*club.Club, error) {
 
-	club, err := h.pr.UpdateClubSlugAliases(ctx, cmd.Principal, cmd.ClubId, func(club *post.Club) error {
+	clb, err := h.cr.UpdateClubSlugAliases(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
 		return club.AddSlugAlias(cmd.Principal, cmd.Slug)
 	})
 
@@ -33,9 +33,9 @@ func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlia
 		return nil, err
 	}
 
-	if err := h.pi.IndexClub(ctx, club); err != nil {
+	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 
-	return club, nil
+	return clb, nil
 }

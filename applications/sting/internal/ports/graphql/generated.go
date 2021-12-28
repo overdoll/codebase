@@ -47,6 +47,7 @@ type ResolverRoot interface {
 	Club() ClubResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
+	Post() PostResolver
 	Query() QueryResolver
 	Series() SeriesResolver
 }
@@ -57,8 +58,8 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Account struct {
 		ID                  func(childComplexity int) int
-		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
-		Posts               func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts               func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 	}
 
 	AddClubSlugAliasPayload struct {
@@ -67,7 +68,7 @@ type ComplexityRoot struct {
 
 	Audience struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
 		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
@@ -85,7 +86,7 @@ type ComplexityRoot struct {
 
 	Category struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
 		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
@@ -104,7 +105,7 @@ type ComplexityRoot struct {
 	Character struct {
 		ID        func(childComplexity int) int
 		Name      func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Series    func(childComplexity int) int
 		Slug      func(childComplexity int) int
 		Thumbnail func(childComplexity int) int
@@ -162,7 +163,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddClubSlugAlias              func(childComplexity int, input types.AddClubSlugAliasInput) int
 		CreateClub                    func(childComplexity int, input types.CreateClubInput) int
-		CreatePost                    func(childComplexity int) int
+		CreatePost                    func(childComplexity int, input types.CreatePostInput) int
 		PromoteClubSlugAliasToDefault func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
 		RemoveClubSlugAlias           func(childComplexity int, input types.RemoveClubSlugAliasInput) int
 		SubmitPost                    func(childComplexity int, input types.SubmitPostInput) int
@@ -170,7 +171,6 @@ type ComplexityRoot struct {
 		UpdatePostAudience            func(childComplexity int, input types.UpdatePostAudienceInput) int
 		UpdatePostCategories          func(childComplexity int, input types.UpdatePostCategoriesInput) int
 		UpdatePostCharacters          func(childComplexity int, input types.UpdatePostCharactersInput) int
-		UpdatePostClub                func(childComplexity int, input types.UpdatePostClubInput) int
 		UpdatePostContent             func(childComplexity int, input types.UpdatePostContentInput) int
 	}
 
@@ -221,7 +221,7 @@ type ComplexityRoot struct {
 		Club               func(childComplexity int, slug string) int
 		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
 		Post               func(childComplexity int, reference string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Serial             func(childComplexity int, slug string) int
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.SeriesOrder) int
 		__resolve__service func(childComplexity int) int
@@ -245,7 +245,7 @@ type ComplexityRoot struct {
 
 	Series struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
 		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
@@ -296,17 +296,17 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
-	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
-	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, clubSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CategoryResolver interface {
-	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CharacterResolver interface {
-	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type ClubResolver interface {
 	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
@@ -328,13 +328,15 @@ type MutationResolver interface {
 	RemoveClubSlugAlias(ctx context.Context, input types.RemoveClubSlugAliasInput) (*types.RemoveClubSlugAliasPayload, error)
 	PromoteClubSlugAliasToDefault(ctx context.Context, input types.PromoteClubSlugAliasToDefaultInput) (*types.PromoteClubSlugAliasToDefaultPayload, error)
 	UpdateClubName(ctx context.Context, input types.UpdateClubNameInput) (*types.UpdateClubNamePayload, error)
-	CreatePost(ctx context.Context) (*types.CreatePostPayload, error)
-	UpdatePostClub(ctx context.Context, input types.UpdatePostClubInput) (*types.UpdatePostClubPayload, error)
+	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
 	UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error)
 	UpdatePostContent(ctx context.Context, input types.UpdatePostContentInput) (*types.UpdatePostContentPayload, error)
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
+}
+type PostResolver interface {
+	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
 }
 type QueryResolver interface {
 	Audiences(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.AudiencesOrder) (*types.AudienceConnection, error)
@@ -348,10 +350,10 @@ type QueryResolver interface {
 	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type SeriesResolver interface {
-	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, clubSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 
 type executableSchema struct {
@@ -386,7 +388,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Account.posts":
 		if e.complexity.Account.Posts == nil {
@@ -398,7 +400,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "AddClubSlugAliasPayload.club":
 		if e.complexity.AddClubSlugAliasPayload.Club == nil {
@@ -424,7 +426,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Audience.slug":
 		if e.complexity.Audience.Slug == nil {
@@ -492,7 +494,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Category.slug":
 		if e.complexity.Category.Slug == nil {
@@ -567,7 +569,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Character.series":
 		if e.complexity.Character.Series == nil {
@@ -834,7 +836,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Mutation.CreatePost(childComplexity), true
+		args, err := ec.field_Mutation_createPost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePost(childComplexity, args["input"].(types.CreatePostInput)), true
 
 	case "Mutation.promoteClubSlugAliasToDefault":
 		if e.complexity.Mutation.PromoteClubSlugAliasToDefault == nil {
@@ -919,18 +926,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePostCharacters(childComplexity, args["input"].(types.UpdatePostCharactersInput)), true
-
-	case "Mutation.updatePostClub":
-		if e.complexity.Mutation.UpdatePostClub == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updatePostClub_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdatePostClub(childComplexity, args["input"].(types.UpdatePostClubInput)), true
 
 	case "Mutation.updatePostContent":
 		if e.complexity.Mutation.UpdatePostContent == nil {
@@ -1216,7 +1211,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Query.serial":
 		if e.complexity.Query.Serial == nil {
@@ -1320,7 +1315,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Series.slug":
 		if e.complexity.Series.Slug == nil {
@@ -1805,7 +1800,7 @@ extend type Post {
   slugAliases: [String!]!
 
   """
-  Maximum amount of slug aliases that can be created for this club
+  Maximum amount of slug aliases that can be created for this club.
   """
   slugAliasesLimit: Int! @goField(forceResolver: true)
 
@@ -1977,7 +1972,7 @@ extend type Query {
 
 extend type Post {
   """Represents the club that this post belongs to"""
-  club: Club
+  club: Club! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
 	{Name: "schema/post/schema.graphql", Input: `type Post implements Node @key(fields: "id") {
@@ -2021,12 +2016,9 @@ enum PostState {
   REMOVED
 }
 
-"""Update post club."""
-input UpdatePostClubInput {
-  """The post to update"""
-  id: ID!
-
-  """The club that this post belongs to"""
+"""Create a new post. A club ID is required."""
+input CreatePostInput {
+  """The club ID that this post will belong to"""
   clubId: ID!
 }
 
@@ -2154,9 +2146,6 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2190,9 +2179,6 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2217,12 +2203,7 @@ extend type Mutation {
   """
   Create a new post
   """
-  createPost: CreatePostPayload
-
-  """
-  Update a post in draft status - club
-  """
-  updatePostClub(input: UpdatePostClubInput!): UpdatePostClubPayload
+  createPost(input: CreatePostInput!): CreatePostPayload
 
   """
   Update a post in draft status - audience
@@ -2271,9 +2252,6 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2309,9 +2287,6 @@ extend type Category {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2344,9 +2319,6 @@ extend type Character {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by club slugs."""
-    clubSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2375,9 +2347,6 @@ extend type Series {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by club slugs."""
-    clubSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -2445,9 +2414,6 @@ extend type Audience {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by club slugs."""
-    clubSlugs: [String!]
 
     """Search by category slugs."""
     categorySlugs: [String!]
@@ -2600,224 +2566,14 @@ func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.C
 	}
 	args["last"] = arg3
 	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
-		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["clubSlugs"] = arg4
-	var arg5 []string
 	if tmp, ok := rawArgs["audienceSlugs"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
-		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["audienceSlugs"] = arg5
-	var arg6 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
-		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["categorySlugs"] = arg6
-	var arg7 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
-		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["characterSlugs"] = arg7
-	var arg8 []string
-	if tmp, ok := rawArgs["seriesSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
-		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seriesSlugs"] = arg8
-	var arg9 *types.PostState
-	if tmp, ok := rawArgs["state"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["state"] = arg9
-	var arg10 types.PostsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg10
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
 		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["clubSlugs"] = arg4
-	var arg5 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
-		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["audienceSlugs"] = arg5
-	var arg6 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
-		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["categorySlugs"] = arg6
-	var arg7 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
-		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["characterSlugs"] = arg7
-	var arg8 []string
-	if tmp, ok := rawArgs["seriesSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
-		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seriesSlugs"] = arg8
-	var arg9 *types.PostState
-	if tmp, ok := rawArgs["state"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["state"] = arg9
-	var arg10 types.PostsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg10
-	return args, nil
-}
-
-func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
-		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["clubSlugs"] = arg4
+	args["audienceSlugs"] = arg4
 	var arg5 []string
 	if tmp, ok := rawArgs["categorySlugs"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
@@ -2866,6 +2622,189 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
+func (ec *executionContext) field_Account_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg7
+	var arg8 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg8
+	var arg9 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg9
+	return args, nil
+}
+
+func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg6
+	var arg7 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg7
+	var arg8 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg8, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg8
+	return args, nil
+}
+
 func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2906,59 +2845,50 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 	}
 	args["last"] = arg3
 	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
 		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["clubSlugs"] = arg4
+	args["audienceSlugs"] = arg4
 	var arg5 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
 		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["audienceSlugs"] = arg5
+	args["characterSlugs"] = arg5
 	var arg6 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
 		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["characterSlugs"] = arg6
-	var arg7 []string
-	if tmp, ok := rawArgs["seriesSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
-		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seriesSlugs"] = arg7
-	var arg8 *types.PostState
+	args["seriesSlugs"] = arg6
+	var arg7 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg8
-	var arg9 types.PostsOrder
+	args["state"] = arg7
+	var arg8 types.PostsOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		arg8, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg9
+	args["orderBy"] = arg8
 	return args, nil
 }
 
@@ -3002,50 +2932,41 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 	}
 	args["last"] = arg3
 	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
 		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["clubSlugs"] = arg4
+	args["audienceSlugs"] = arg4
 	var arg5 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
 		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["audienceSlugs"] = arg5
-	var arg6 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
-		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["categorySlugs"] = arg6
-	var arg7 *types.PostState
+	args["categorySlugs"] = arg5
+	var arg6 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg6, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg7
-	var arg8 types.PostsOrder
+	args["state"] = arg6
+	var arg7 types.PostsOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg8, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		arg7, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg8
+	args["orderBy"] = arg7
 	return args, nil
 }
 
@@ -3280,6 +3201,21 @@ func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreatePostInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_promoteClubSlugAliasToDefault_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3377,21 +3313,6 @@ func (ec *executionContext) field_Mutation_updatePostCharacters_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updatePostClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdatePostClubInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdatePostClubInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostClubInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3854,68 +3775,59 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 	}
 	args["last"] = arg3
 	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
 		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["clubSlugs"] = arg4
+	args["audienceSlugs"] = arg4
 	var arg5 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
 		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["audienceSlugs"] = arg5
+	args["categorySlugs"] = arg5
 	var arg6 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
 		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["categorySlugs"] = arg6
+	args["characterSlugs"] = arg6
 	var arg7 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
 		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["characterSlugs"] = arg7
-	var arg8 []string
-	if tmp, ok := rawArgs["seriesSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
-		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seriesSlugs"] = arg8
-	var arg9 *types.PostState
+	args["seriesSlugs"] = arg7
+	var arg8 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg9
-	var arg10 types.PostsOrder
+	args["state"] = arg8
+	var arg9 types.PostsOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg10
+	args["orderBy"] = arg9
 	return args, nil
 }
 
@@ -4043,59 +3955,50 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 	}
 	args["last"] = arg3
 	var arg4 []string
-	if tmp, ok := rawArgs["clubSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSlugs"))
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
 		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["clubSlugs"] = arg4
+	args["audienceSlugs"] = arg4
 	var arg5 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
 		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["audienceSlugs"] = arg5
+	args["categorySlugs"] = arg5
 	var arg6 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
 		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["categorySlugs"] = arg6
-	var arg7 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
-		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["characterSlugs"] = arg7
-	var arg8 *types.PostState
+	args["characterSlugs"] = arg6
+	var arg7 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg8
-	var arg9 types.PostsOrder
+	args["state"] = arg7
+	var arg8 types.PostsOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		arg8, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg9
+	args["orderBy"] = arg8
 	return args, nil
 }
 
@@ -4162,7 +4065,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4204,7 +4107,7 @@ func (ec *executionContext) _Account_posts(ctx context.Context, field graphql.Co
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Account().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4450,7 +4353,7 @@ func (ec *executionContext) _Audience_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4769,7 +4672,7 @@ func (ec *executionContext) _Category_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5123,7 +5026,7 @@ func (ec *executionContext) _Character_posts(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6273,9 +6176,16 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createPost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreatePost(rctx)
+		return ec.resolvers.Mutation().CreatePost(rctx, args["input"].(types.CreatePostInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6287,45 +6197,6 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	res := resTmp.(*types.CreatePostPayload)
 	fc.Result = res
 	return ec.marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_updatePostClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_updatePostClub_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdatePostClub(rctx, args["input"].(types.UpdatePostClubInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdatePostClubPayload)
-	fc.Result = res
-	return ec.marshalOUpdatePostClubPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostClubPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updatePostAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7076,25 +6947,28 @@ func (ec *executionContext) _Post_club(ctx context.Context, field graphql.Collec
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
+		return ec.resolvers.Post().Club(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Club)
 	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostConnection) (ret graphql.Marshaler) {
@@ -7738,7 +7612,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8272,7 +8146,7 @@ func (ec *executionContext) _Series_posts(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["clubSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
+		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9993,6 +9867,29 @@ func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, obj interface{}) (types.CreatePostInput, error) {
+	var it types.CreatePostInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPostsOrder(ctx context.Context, obj interface{}) (types.PostsOrder, error) {
 	var it types.PostsOrder
 	asMap := map[string]interface{}{}
@@ -10239,37 +10136,6 @@ func (ec *executionContext) unmarshalInputUpdatePostCharactersInput(ctx context.
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterIds"))
 			it.CharacterIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdatePostClubInput(ctx context.Context, obj interface{}) (types.UpdatePostClubInput, error) {
-	var it types.UpdatePostClubInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11246,8 +11112,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateClubName(ctx, field)
 		case "createPost":
 			out.Values[i] = ec._Mutation_createPost(ctx, field)
-		case "updatePostClub":
-			out.Values[i] = ec._Mutation_updatePostClub(ctx, field)
 		case "updatePostAudience":
 			out.Values[i] = ec._Mutation_updatePostAudience(ctx, field)
 		case "updatePostContent":
@@ -11319,34 +11183,34 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "id":
 			out.Values[i] = ec._Post_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "reference":
 			out.Values[i] = ec._Post_reference(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "state":
 			out.Values[i] = ec._Post_state(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "moderator":
 			out.Values[i] = ec._Post_moderator(ctx, field, obj)
 		case "contributor":
 			out.Values[i] = ec._Post_contributor(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "content":
 			out.Values[i] = ec._Post_content(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "createdAt":
 			out.Values[i] = ec._Post_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "postedAt":
 			out.Values[i] = ec._Post_postedAt(ctx, field, obj)
@@ -11357,15 +11221,27 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "categories":
 			out.Values[i] = ec._Post_categories(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "characters":
 			out.Values[i] = ec._Post_characters(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "club":
-			out.Values[i] = ec._Post_club(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_club(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12842,6 +12718,11 @@ func (ec *executionContext) unmarshalNCreateClubInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx context.Context, v interface{}) (types.CreatePostInput, error) {
+	res, err := ec.unmarshalInputCreatePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -13343,11 +13224,6 @@ func (ec *executionContext) unmarshalNUpdatePostCategoriesInput2overdollᚋappli
 
 func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx context.Context, v interface{}) (types.UpdatePostCharactersInput, error) {
 	res, err := ec.unmarshalInputUpdatePostCharactersInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdatePostClubInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostClubInput(ctx context.Context, v interface{}) (types.UpdatePostClubInput, error) {
-	res, err := ec.unmarshalInputUpdatePostClubInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -13987,13 +13863,6 @@ func (ec *executionContext) marshalOUpdatePostCharactersPayload2ᚖoverdollᚋap
 		return graphql.Null
 	}
 	return ec._UpdatePostCharactersPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUpdatePostClubPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostClubPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdatePostClubPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdatePostContentPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostContentPayload) graphql.Marshaler {

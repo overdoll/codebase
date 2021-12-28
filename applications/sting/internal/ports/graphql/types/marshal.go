@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/passport"
 
 	"overdoll/applications/sting/internal/domain/post"
@@ -75,12 +76,6 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
-	var club *Club
-
-	if result.Club() != nil {
-		club = MarshalClubToGraphQL(ctx, result.Club())
-	}
-
 	var audience *Audience
 
 	if result.Audience() != nil {
@@ -98,7 +93,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		Reference:      result.ID(),
 		Moderator:      moderator,
 		Contributor:    &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:           club,
+		Club:           &Club{ID: relay.NewID(Club{}, result.ClubId())},
 		Audience:       audience,
 		State:          state,
 		Content:        content,
@@ -110,7 +105,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 	}
 }
 
-func MarshalClubToGraphQL(ctx context.Context, result *post.Club) *Club {
+func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
 	var res *Resource
 
@@ -395,7 +390,7 @@ func MarshalSeriesToGraphQLConnection(ctx context.Context, results []*post.Serie
 	return conn
 }
 
-func MarshalClubsToGraphQLConnection(ctx context.Context, results []*post.Club, cursor *paging.Cursor) *ClubConnection {
+func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {
 	var clubs []*ClubEdge
 
 	conn := &ClubConnection{
@@ -420,15 +415,15 @@ func MarshalClubsToGraphQLConnection(ctx context.Context, results []*post.Club, 
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *post.Club
+	var nodeAt func(int) *club.Club
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *post.Club {
+		nodeAt = func(i int) *club.Club {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *post.Club {
+		nodeAt = func(i int) *club.Club {
 			return results[i]
 		}
 	}

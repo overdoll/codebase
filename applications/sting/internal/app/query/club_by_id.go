@@ -2,8 +2,8 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -13,16 +13,16 @@ type ClubById struct {
 }
 
 type ClubByIdHandler struct {
-	pr post.Repository
+	cr club.Repository
 }
 
-func NewClubByIdHandler(pr post.Repository) ClubByIdHandler {
-	return ClubByIdHandler{pr: pr}
+func NewClubByIdHandler(cr club.Repository) ClubByIdHandler {
+	return ClubByIdHandler{cr: cr}
 }
 
-func (h ClubByIdHandler) Handle(ctx context.Context, query ClubById) (*post.Club, error) {
+func (h ClubByIdHandler) Handle(ctx context.Context, query ClubById) (*club.Club, error) {
 
-	result, err := h.pr.GetClubById(ctx, query.Principal, query.Id)
+	result, err := h.cr.GetClubById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

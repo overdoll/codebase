@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
 )
 
@@ -12,13 +12,13 @@ type ClubSlugAliasesLimit struct {
 }
 
 type ClubSlugAliasesLimitHandler struct {
-	pr post.Repository
+	cr club.Repository
 }
 
-func NewClubSlugAliasesLimitHandler(pr post.Repository) ClubSlugAliasesLimitHandler {
-	return ClubSlugAliasesLimitHandler{pr: pr}
+func NewClubSlugAliasesLimitHandler(cr club.Repository) ClubSlugAliasesLimitHandler {
+	return ClubSlugAliasesLimitHandler{cr: cr}
 }
 
 func (h ClubSlugAliasesLimitHandler) Handle(ctx context.Context, query ClubSlugAliasesLimit) (int, error) {
-	return post.ViewClubSlugLimit(query.Principal, query.AccountId)
+	return club.ViewClubSlugLimit(query.Principal, query.AccountId)
 }

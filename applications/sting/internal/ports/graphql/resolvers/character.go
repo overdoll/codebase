@@ -15,7 +15,7 @@ type CharacterResolver struct {
 	App *app.Application
 }
 
-func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -35,7 +35,6 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 		CharacterSlugs: []string{obj.Slug},
 		Principal:      principal.FromContext(ctx),
 		State:          stateModified,
-		ClubSlugs:      brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,
 		OrderBy:        orderBy.Field.String(),
