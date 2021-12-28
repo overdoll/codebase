@@ -11,22 +11,24 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) UsernamesLimit(ctx context.Context, obj *types.Account) (int, error) {
+func (r AccountResolver) UsernameEditAvailableAt(ctx context.Context, obj *types.Account) (*time.Time, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return r.App.Queries.AccountUsernamesLimit.Handle(ctx, query.AccountUsernamesLimit{
-		Principal: principal.FromContext(ctx),
-		AccountId: obj.ID.GetID(),
-	})
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return nil, err
+	}
+
+	return &obj.UsernameEditAvailableAt, nil
 }
 
 func (r AccountResolver) EmailsLimit(ctx context.Context, obj *types.Account) (int, error) {
@@ -82,36 +84,6 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 	}
 
 	return types.MarshalAccountEmailToGraphQLConnection(results, cursor), nil
-}
-
-func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	results, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, query.AccountUsernamesByAccount{
-		Cursor:    cursor,
-		AccountId: obj.ID.GetID(),
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-
-		if err == account.ErrAccountNotFound {
-			return types.MarshalAccountUsernameToGraphQLConnection(results, cursor), nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalAccountUsernameToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {

@@ -53,9 +53,3 @@ func (r *Resolver) AccountEmail() AccountEmailResolver {
 		App: r.app,
 	}
 }
-
-func (r *Resolver) AccountUsername() AccountUsernameResolver {
-	return &resolvers.AccountUsernameResolver{
-		App: r.app,
-	}
-}

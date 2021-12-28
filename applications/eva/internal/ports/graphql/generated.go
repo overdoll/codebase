@@ -42,7 +42,6 @@ type Config struct {
 type ResolverRoot interface {
 	Account() AccountResolver
 	AccountEmail() AccountEmailResolver
-	AccountUsername() AccountUsernameResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -53,21 +52,20 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Avatar              func(childComplexity int, size *int) int
-		Emails              func(childComplexity int, after *string, before *string, first *int, last *int) int
-		EmailsLimit         func(childComplexity int) int
-		ID                  func(childComplexity int) int
-		IsModerator         func(childComplexity int) int
-		IsStaff             func(childComplexity int) int
-		Language            func(childComplexity int) int
-		Lock                func(childComplexity int) int
-		MultiFactorSettings func(childComplexity int) int
-		RecoveryCodes       func(childComplexity int) int
-		Reference           func(childComplexity int) int
-		Sessions            func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Username            func(childComplexity int) int
-		Usernames           func(childComplexity int, after *string, before *string, first *int, last *int) int
-		UsernamesLimit      func(childComplexity int) int
+		Avatar                  func(childComplexity int, size *int) int
+		Emails                  func(childComplexity int, after *string, before *string, first *int, last *int) int
+		EmailsLimit             func(childComplexity int) int
+		ID                      func(childComplexity int) int
+		IsModerator             func(childComplexity int) int
+		IsStaff                 func(childComplexity int) int
+		Language                func(childComplexity int) int
+		Lock                    func(childComplexity int) int
+		MultiFactorSettings     func(childComplexity int) int
+		RecoveryCodes           func(childComplexity int) int
+		Reference               func(childComplexity int) int
+		Sessions                func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Username                func(childComplexity int) int
+		UsernameEditAvailableAt func(childComplexity int) int
 	}
 
 	AccountConnection struct {
@@ -133,22 +131,6 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	AccountUsername struct {
-		Account  func(childComplexity int) int
-		ID       func(childComplexity int) int
-		Username func(childComplexity int) int
-	}
-
-	AccountUsernameConnection struct {
-		Edges    func(childComplexity int) int
-		PageInfo func(childComplexity int) int
-	}
-
-	AccountUsernameEdge struct {
-		Cursor func(childComplexity int) int
-		Node   func(childComplexity int) int
-	}
-
 	AddAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
 		Validation   func(childComplexity int) int
@@ -193,10 +175,6 @@ type ComplexityRoot struct {
 		AccountEmailID func(childComplexity int) int
 	}
 
-	DeleteAccountUsernamePayload struct {
-		AccountUsernameID func(childComplexity int) int
-	}
-
 	DisableAccountMultiFactorPayload struct {
 		AccountMultiFactorTotpEnabled func(childComplexity int) int
 	}
@@ -207,10 +185,9 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindAccountByID         func(childComplexity int, id relay.ID) int
-		FindAccountEmailByID    func(childComplexity int, id relay.ID) int
-		FindAccountSessionByID  func(childComplexity int, id relay.ID) int
-		FindAccountUsernameByID func(childComplexity int, id relay.ID) int
+		FindAccountByID        func(childComplexity int, id relay.ID) int
+		FindAccountEmailByID   func(childComplexity int, id relay.ID) int
+		FindAccountSessionByID func(childComplexity int, id relay.ID) int
 	}
 
 	GenerateAccountMultiFactorRecoveryCodesPayload struct {
@@ -275,7 +252,6 @@ type ComplexityRoot struct {
 		ConfirmAccountEmail                                                 func(childComplexity int, input types.ConfirmAccountEmailInput) int
 		CreateAccountWithAuthenticationToken                                func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
 		DeleteAccountEmail                                                  func(childComplexity int, input types.DeleteAccountEmailInput) int
-		DeleteAccountUsername                                               func(childComplexity int, input types.DeleteAccountUsernameInput) int
 		DisableAccountMultiFactor                                           func(childComplexity int) int
 		EnrollAccountMultiFactorTotp                                        func(childComplexity int, input types.EnrollAccountMultiFactorTotpInput) int
 		GenerateAccountMultiFactorRecoveryCodes                             func(childComplexity int) int
@@ -292,7 +268,7 @@ type ComplexityRoot struct {
 		UnlockAccount                                                       func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                                   func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountLanguage                                               func(childComplexity int, input types.UpdateAccountLanguageInput) int
-		UpdateAccountUsernameAndRetainPrevious                              func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
+		UpdateAccountUsername                                               func(childComplexity int, input types.UpdateAccountUsername) int
 		UpdateLanguage                                                      func(childComplexity int, input types.UpdateLanguageInput) int
 		VerifyAuthenticationToken                                           func(childComplexity int, input types.VerifyAuthenticationTokenInput) int
 	}
@@ -349,9 +325,9 @@ type ComplexityRoot struct {
 		Language func(childComplexity int) int
 	}
 
-	UpdateAccountUsernameAndRetainPreviousPayload struct {
-		AccountUsername func(childComplexity int) int
-		Validation      func(childComplexity int) int
+	UpdateAccountUsernamePayload struct {
+		Account    func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	UpdateLanguagePayload struct {
@@ -372,8 +348,7 @@ type AccountResolver interface {
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
 
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
-	UsernamesLimit(ctx context.Context, obj *types.Account) (int, error)
-	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
+	UsernameEditAvailableAt(ctx context.Context, obj *types.Account) (*time.Time, error)
 	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error)
@@ -382,14 +357,10 @@ type AccountResolver interface {
 type AccountEmailResolver interface {
 	Account(ctx context.Context, obj *types.AccountEmail) (*types.Account, error)
 }
-type AccountUsernameResolver interface {
-	Account(ctx context.Context, obj *types.AccountUsername) (*types.Account, error)
-}
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
 	FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error)
 	FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error)
-	FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error)
 }
 type MutationResolver interface {
 	GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error)
@@ -406,8 +377,7 @@ type MutationResolver interface {
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
-	DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error)
-	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
+	UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsername) (*types.UpdateAccountUsernamePayload, error)
 	UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error)
 	GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error)
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error)
@@ -549,24 +519,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Username(childComplexity), true
 
-	case "Account.usernames":
-		if e.complexity.Account.Usernames == nil {
+	case "Account.usernameEditAvailableAt":
+		if e.complexity.Account.UsernameEditAvailableAt == nil {
 			break
 		}
 
-		args, err := ec.field_Account_usernames_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Usernames(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
-
-	case "Account.usernamesLimit":
-		if e.complexity.Account.UsernamesLimit == nil {
-			break
-		}
-
-		return e.complexity.Account.UsernamesLimit(childComplexity), true
+		return e.complexity.Account.UsernameEditAvailableAt(childComplexity), true
 
 	case "AccountConnection.edges":
 		if e.complexity.AccountConnection.Edges == nil {
@@ -778,55 +736,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountSessionEdge.Node(childComplexity), true
 
-	case "AccountUsername.account":
-		if e.complexity.AccountUsername.Account == nil {
-			break
-		}
-
-		return e.complexity.AccountUsername.Account(childComplexity), true
-
-	case "AccountUsername.id":
-		if e.complexity.AccountUsername.ID == nil {
-			break
-		}
-
-		return e.complexity.AccountUsername.ID(childComplexity), true
-
-	case "AccountUsername.username":
-		if e.complexity.AccountUsername.Username == nil {
-			break
-		}
-
-		return e.complexity.AccountUsername.Username(childComplexity), true
-
-	case "AccountUsernameConnection.edges":
-		if e.complexity.AccountUsernameConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.AccountUsernameConnection.Edges(childComplexity), true
-
-	case "AccountUsernameConnection.pageInfo":
-		if e.complexity.AccountUsernameConnection.PageInfo == nil {
-			break
-		}
-
-		return e.complexity.AccountUsernameConnection.PageInfo(childComplexity), true
-
-	case "AccountUsernameEdge.cursor":
-		if e.complexity.AccountUsernameEdge.Cursor == nil {
-			break
-		}
-
-		return e.complexity.AccountUsernameEdge.Cursor(childComplexity), true
-
-	case "AccountUsernameEdge.node":
-		if e.complexity.AccountUsernameEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.AccountUsernameEdge.Node(childComplexity), true
-
 	case "AddAccountEmailPayload.accountEmail":
 		if e.complexity.AddAccountEmailPayload.AccountEmail == nil {
 			break
@@ -967,13 +876,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteAccountEmailPayload.AccountEmailID(childComplexity), true
 
-	case "DeleteAccountUsernamePayload.accountUsernameId":
-		if e.complexity.DeleteAccountUsernamePayload.AccountUsernameID == nil {
-			break
-		}
-
-		return e.complexity.DeleteAccountUsernamePayload.AccountUsernameID(childComplexity), true
-
 	case "DisableAccountMultiFactorPayload.accountMultiFactorTotpEnabled":
 		if e.complexity.DisableAccountMultiFactorPayload.AccountMultiFactorTotpEnabled == nil {
 			break
@@ -1030,18 +932,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindAccountSessionByID(childComplexity, args["id"].(relay.ID)), true
-
-	case "Entity.findAccountUsernameByID":
-		if e.complexity.Entity.FindAccountUsernameByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findAccountUsernameByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindAccountUsernameByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "GenerateAccountMultiFactorRecoveryCodesPayload.accountMultiFactorRecoveryCodes":
 		if e.complexity.GenerateAccountMultiFactorRecoveryCodesPayload.AccountMultiFactorRecoveryCodes == nil {
@@ -1290,18 +1180,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteAccountEmail(childComplexity, args["input"].(types.DeleteAccountEmailInput)), true
 
-	case "Mutation.deleteAccountUsername":
-		if e.complexity.Mutation.DeleteAccountUsername == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteAccountUsername_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteAccountUsername(childComplexity, args["input"].(types.DeleteAccountUsernameInput)), true
-
 	case "Mutation.disableAccountMultiFactor":
 		if e.complexity.Mutation.DisableAccountMultiFactor == nil {
 			break
@@ -1469,17 +1347,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateAccountLanguage(childComplexity, args["input"].(types.UpdateAccountLanguageInput)), true
 
-	case "Mutation.updateAccountUsernameAndRetainPrevious":
-		if e.complexity.Mutation.UpdateAccountUsernameAndRetainPrevious == nil {
+	case "Mutation.updateAccountUsername":
+		if e.complexity.Mutation.UpdateAccountUsername == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateAccountUsernameAndRetainPrevious_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_updateAccountUsername_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateAccountUsernameAndRetainPrevious(childComplexity, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput)), true
+		return e.complexity.Mutation.UpdateAccountUsername(childComplexity, args["input"].(types.UpdateAccountUsername)), true
 
 	case "Mutation.updateLanguage":
 		if e.complexity.Mutation.UpdateLanguage == nil {
@@ -1679,19 +1557,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateAccountLanguagePayload.Language(childComplexity), true
 
-	case "UpdateAccountUsernameAndRetainPreviousPayload.accountUsername":
-		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername == nil {
+	case "UpdateAccountUsernamePayload.account":
+		if e.complexity.UpdateAccountUsernamePayload.Account == nil {
 			break
 		}
 
-		return e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername(childComplexity), true
+		return e.complexity.UpdateAccountUsernamePayload.Account(childComplexity), true
 
-	case "UpdateAccountUsernameAndRetainPreviousPayload.validation":
-		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.Validation == nil {
+	case "UpdateAccountUsernamePayload.validation":
+		if e.complexity.UpdateAccountUsernamePayload.Validation == nil {
 			break
 		}
 
-		return e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.Validation(childComplexity), true
+		return e.complexity.UpdateAccountUsernamePayload.Validation(childComplexity), true
 
 	case "UpdateLanguagePayload.language":
 		if e.complexity.UpdateLanguagePayload.Language == nil {
@@ -2104,30 +1982,6 @@ type AccountEmailConnection {
   edges: [AccountEmailEdge!]!
 }
 
-"""Username belonging to a specific account"""
-type AccountUsername implements Node @key(fields: "id") {
-  """ID of the account username"""
-  id: ID!
-
-  """The account username"""
-  username: String!
-
-  """The account that this username belongs to"""
-  account: Account! @goField(forceResolver: true)
-}
-
-"""Edge of the account username"""
-type AccountUsernameEdge {
-  cursor: String!
-  node: AccountUsername!
-}
-
-"""Connection of the account username"""
-type AccountUsernameConnection {
-  pageInfo: PageInfo!
-  edges: [AccountUsernameEdge!]!
-}
-
 """The multi-factor recovery code belonging to the account"""
 type AccountMultiFactorRecoveryCode {
   """The multi factor recovery code"""
@@ -2172,30 +2026,11 @@ type AccountMultiFactorSettings {
 }
 
 extend type Account {
-
+  
   """
-  Maximum amount of usernames that this account can create
+  The next time the username is available to be changed
   """
-  usernamesLimit: Int! @goField(forceResolver: true)
-
-  """
-  Usernames for account (history)
-  """
-  usernames(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountUsernameConnection! @goField(forceResolver: true)
+  usernameEditAvailableAt: Time! @goField(forceResolver: true)
 
   """
   Maximum amount of emails that this account can create
@@ -2254,16 +2089,8 @@ input DeleteAccountEmailInput {
   accountEmailId: ID!
 }
 
-"""Input for removing an email from an account"""
-input DeleteAccountUsernameInput {
-  """
-  The username that should be removed
-  """
-  accountUsernameId: ID!
-}
-
 """Input for updating an account's username"""
-input UpdateAccountUsernameAndRetainPreviousInput {
+input UpdateAccountUsername {
   """
   The username that the account should be updated to
   """
@@ -2320,24 +2147,18 @@ type DeleteAccountEmailPayload {
   accountEmailId: ID!
 }
 
-"""Username to delete from account"""
-type DeleteAccountUsernamePayload {
-  """The ID of the account username that was removed"""
-  accountUsernameId: ID!
-}
-
 """Validation message for updating account username"""
-enum UpdateAccountUsernameAndRetainPreviousValidation {
+enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
 }
 
 """Payload of the updated username"""
-type UpdateAccountUsernameAndRetainPreviousPayload {
+type UpdateAccountUsernamePayload {
   """Validation for taking an account username"""
-  validation: UpdateAccountUsernameAndRetainPreviousValidation
+  validation: UpdateAccountUsernameValidation
 
-  """The account username that was added"""
-  accountUsername: AccountUsername
+  """The account that was modified"""
+  account: Account
 }
 
 """Payload of the updated account email"""
@@ -2407,18 +2228,12 @@ extend type Mutation {
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
-
-  """
-  Delete account username - cannot be the current username
-  """
-  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
-
   """
   Update the account username
 
   Will retain the old username
   """
-  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
+  updateAccountUsername(input: UpdateAccountUsername!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary
@@ -2842,14 +2657,13 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountEmail | AccountSession | AccountUsername
+union _Entity = Account | AccountEmail | AccountSession
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
 	findAccountEmailByID(id: ID!,): AccountEmail!
 	findAccountSessionByID(id: ID!,): AccountSession!
-	findAccountUsernameByID(id: ID!,): AccountUsername!
 
 }
 
@@ -2968,48 +2782,6 @@ func (ec *executionContext) field_Account_sessions_args(ctx context.Context, raw
 	return args, nil
 }
 
-func (ec *executionContext) field_Account_usernames_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	return args, nil
-}
-
 func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3041,21 +2813,6 @@ func (ec *executionContext) field_Entity_findAccountEmailByID_args(ctx context.C
 }
 
 func (ec *executionContext) field_Entity_findAccountSessionByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Entity_findAccountUsernameByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -3152,21 +2909,6 @@ func (ec *executionContext) field_Mutation_deleteAccountEmail_args(ctx context.C
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteAccountUsername_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.DeleteAccountUsernameInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernameInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3340,13 +3082,13 @@ func (ec *executionContext) field_Mutation_updateAccountLanguage_args(ctx contex
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_updateAccountUsernameAndRetainPrevious_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_updateAccountUsername_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.UpdateAccountUsernameAndRetainPreviousInput
+	var arg0 types.UpdateAccountUsername
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateAccountUsernameAndRetainPreviousInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateAccountUsername2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsername(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3869,7 +3611,7 @@ func (ec *executionContext) _Account_sessions(ctx context.Context, field graphql
 	return ec.marshalNAccountSessionConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSessionConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_usernameEditAvailableAt(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3887,7 +3629,7 @@ func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().UsernamesLimit(rctx, obj)
+		return ec.resolvers.Account().UsernameEditAvailableAt(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3899,51 +3641,9 @@ func (ec *executionContext) _Account_usernamesLimit(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_usernames(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_usernames_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Usernames(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountUsernameConnection)
-	fc.Result = res
-	return ec.marshalNAccountUsernameConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameConnection(ctx, field.Selections, res)
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_emailsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -5140,251 +4840,6 @@ func (ec *executionContext) _AccountSessionEdge_node(ctx context.Context, field 
 	return ec.marshalNAccountSession2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSession(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountUsername_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsername) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsername",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsername_username(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsername) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsername",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Username, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsername_account(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsername) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsername",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountUsername().Account(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsernameConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsernameConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsernameConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageInfo, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*relay.PageInfo)
-	fc.Result = res
-	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsernameConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsernameConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsernameConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.AccountUsernameEdge)
-	fc.Result = res
-	return ec.marshalNAccountUsernameEdge2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsernameEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsernameEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsernameEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cursor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountUsernameEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsernameEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountUsernameEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountUsername)
-	fc.Result = res
-	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6055,41 +5510,6 @@ func (ec *executionContext) _DeleteAccountEmailPayload_accountEmailId(ctx contex
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DeleteAccountUsernamePayload_accountUsernameId(ctx context.Context, field graphql.CollectedField, obj *types.DeleteAccountUsernamePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "DeleteAccountUsernamePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccountUsernameID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx context.Context, field graphql.CollectedField, obj *types.DisableAccountMultiFactorPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6310,48 +5730,6 @@ func (ec *executionContext) _Entity_findAccountSessionByID(ctx context.Context, 
 	res := resTmp.(*types.AccountSession)
 	fc.Result = res
 	return ec.marshalNAccountSession2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSession(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Entity_findAccountUsernameByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findAccountUsernameByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindAccountUsernameByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountUsername)
-	fc.Result = res
-	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField, obj *types.GenerateAccountMultiFactorRecoveryCodesPayload) (ret graphql.Marshaler) {
@@ -7734,7 +7112,7 @@ func (ec *executionContext) _Mutation_deleteAccountEmail(ctx context.Context, fi
 	return ec.marshalODeleteAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_deleteAccountUsername(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_updateAccountUsername(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7751,7 +7129,7 @@ func (ec *executionContext) _Mutation_deleteAccountUsername(ctx context.Context,
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_deleteAccountUsername_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_updateAccountUsername_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -7759,7 +7137,7 @@ func (ec *executionContext) _Mutation_deleteAccountUsername(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAccountUsername(rctx, args["input"].(types.DeleteAccountUsernameInput))
+		return ec.resolvers.Mutation().UpdateAccountUsername(rctx, args["input"].(types.UpdateAccountUsername))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7768,48 +7146,9 @@ func (ec *executionContext) _Mutation_deleteAccountUsername(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.DeleteAccountUsernamePayload)
+	res := resTmp.(*types.UpdateAccountUsernamePayload)
 	fc.Result = res
-	return ec.marshalODeleteAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernamePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_updateAccountUsernameAndRetainPrevious(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_updateAccountUsernameAndRetainPrevious_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateAccountUsernameAndRetainPrevious(rctx, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateAccountUsernameAndRetainPreviousPayload)
-	fc.Result = res
-	return ec.marshalOUpdateAccountUsernameAndRetainPreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernamePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateAccountEmailStatusToPrimary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -9014,7 +8353,7 @@ func (ec *executionContext) _UpdateAccountLanguagePayload_Account(ctx context.Co
 	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateAccountUsernamePayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernamePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9022,7 +8361,7 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_valid
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "UpdateAccountUsernameAndRetainPreviousPayload",
+		Object:     "UpdateAccountUsernamePayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -9041,12 +8380,12 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_valid
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.UpdateAccountUsernameAndRetainPreviousValidation)
+	res := resTmp.(*types.UpdateAccountUsernameValidation)
 	fc.Result = res
-	return ec.marshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx, field.Selections, res)
+	return ec.marshalOUpdateAccountUsernameValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameValidation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accountUsername(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateAccountUsernamePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernamePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9054,7 +8393,7 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accou
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "UpdateAccountUsernameAndRetainPreviousPayload",
+		Object:     "UpdateAccountUsernamePayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -9064,7 +8403,7 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accou
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AccountUsername, nil
+		return obj.Account, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9073,9 +8412,9 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accou
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountUsername)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateLanguagePayload_language(ctx context.Context, field graphql.CollectedField, obj *types.UpdateLanguagePayload) (ret graphql.Marshaler) {
@@ -10474,29 +9813,6 @@ func (ec *executionContext) unmarshalInputDeleteAccountEmailInput(ctx context.Co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputDeleteAccountUsernameInput(ctx context.Context, obj interface{}) (types.DeleteAccountUsernameInput, error) {
-	var it types.DeleteAccountUsernameInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "accountUsernameId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountUsernameId"))
-			it.AccountUsernameID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputEnrollAccountMultiFactorTotpInput(ctx context.Context, obj interface{}) (types.EnrollAccountMultiFactorTotpInput, error) {
 	var it types.EnrollAccountMultiFactorTotpInput
 	asMap := map[string]interface{}{}
@@ -10805,8 +10121,8 @@ func (ec *executionContext) unmarshalInputUpdateAccountLanguageInput(ctx context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateAccountUsernameAndRetainPreviousInput(ctx context.Context, obj interface{}) (types.UpdateAccountUsernameAndRetainPreviousInput, error) {
-	var it types.UpdateAccountUsernameAndRetainPreviousInput
+func (ec *executionContext) unmarshalInputUpdateAccountUsername(ctx context.Context, obj interface{}) (types.UpdateAccountUsername, error) {
+	var it types.UpdateAccountUsername
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -10911,13 +10227,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._AccountEmail(ctx, sel, obj)
-	case types.AccountUsername:
-		return ec._AccountUsername(ctx, sel, &obj)
-	case *types.AccountUsername:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._AccountUsername(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -10948,13 +10257,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountSession(ctx, sel, obj)
-	case types.AccountUsername:
-		return ec._AccountUsername(ctx, sel, &obj)
-	case *types.AccountUsername:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._AccountUsername(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -11035,7 +10337,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				}
 				return res
 			})
-		case "usernamesLimit":
+		case "usernameEditAvailableAt":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -11043,21 +10345,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_usernamesLimit(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "usernames":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_usernames(ctx, field, obj)
+				res = ec._Account_usernameEditAvailableAt(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -11528,116 +10816,6 @@ func (ec *executionContext) _AccountSessionEdge(ctx context.Context, sel ast.Sel
 	return out
 }
 
-var accountUsernameImplementors = []string{"AccountUsername", "Node", "_Entity"}
-
-func (ec *executionContext) _AccountUsername(ctx context.Context, sel ast.SelectionSet, obj *types.AccountUsername) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountUsernameImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountUsername")
-		case "id":
-			out.Values[i] = ec._AccountUsername_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "username":
-			out.Values[i] = ec._AccountUsername_username(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "account":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccountUsername_account(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountUsernameConnectionImplementors = []string{"AccountUsernameConnection"}
-
-func (ec *executionContext) _AccountUsernameConnection(ctx context.Context, sel ast.SelectionSet, obj *types.AccountUsernameConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountUsernameConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountUsernameConnection")
-		case "pageInfo":
-			out.Values[i] = ec._AccountUsernameConnection_pageInfo(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "edges":
-			out.Values[i] = ec._AccountUsernameConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountUsernameEdgeImplementors = []string{"AccountUsernameEdge"}
-
-func (ec *executionContext) _AccountUsernameEdge(ctx context.Context, sel ast.SelectionSet, obj *types.AccountUsernameEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountUsernameEdgeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountUsernameEdge")
-		case "cursor":
-			out.Values[i] = ec._AccountUsernameEdge_cursor(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "node":
-			out.Values[i] = ec._AccountUsernameEdge_node(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var addAccountEmailPayloadImplementors = []string{"AddAccountEmailPayload"}
 
 func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.AddAccountEmailPayload) graphql.Marshaler {
@@ -11884,33 +11062,6 @@ func (ec *executionContext) _DeleteAccountEmailPayload(ctx context.Context, sel 
 	return out
 }
 
-var deleteAccountUsernamePayloadImplementors = []string{"DeleteAccountUsernamePayload"}
-
-func (ec *executionContext) _DeleteAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountUsernamePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccountUsernamePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeleteAccountUsernamePayload")
-		case "accountUsernameId":
-			out.Values[i] = ec._DeleteAccountUsernamePayload_accountUsernameId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var disableAccountMultiFactorPayloadImplementors = []string{"DisableAccountMultiFactorPayload"}
 
 func (ec *executionContext) _DisableAccountMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DisableAccountMultiFactorPayload) graphql.Marshaler {
@@ -12013,20 +11164,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findAccountSessionByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "findAccountUsernameByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findAccountUsernameByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -12404,10 +11541,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
 		case "deleteAccountEmail":
 			out.Values[i] = ec._Mutation_deleteAccountEmail(ctx, field)
-		case "deleteAccountUsername":
-			out.Values[i] = ec._Mutation_deleteAccountUsername(ctx, field)
-		case "updateAccountUsernameAndRetainPrevious":
-			out.Values[i] = ec._Mutation_updateAccountUsernameAndRetainPrevious(ctx, field)
+		case "updateAccountUsername":
+			out.Values[i] = ec._Mutation_updateAccountUsername(ctx, field)
 		case "updateAccountEmailStatusToPrimary":
 			out.Values[i] = ec._Mutation_updateAccountEmailStatusToPrimary(ctx, field)
 		case "generateAccountMultiFactorRecoveryCodes":
@@ -12813,21 +11948,21 @@ func (ec *executionContext) _UpdateAccountLanguagePayload(ctx context.Context, s
 	return out
 }
 
-var updateAccountUsernameAndRetainPreviousPayloadImplementors = []string{"UpdateAccountUsernameAndRetainPreviousPayload"}
+var updateAccountUsernamePayloadImplementors = []string{"UpdateAccountUsernamePayload"}
 
-func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountUsernameAndRetainPreviousPayloadImplementors)
+func (ec *executionContext) _UpdateAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountUsernamePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountUsernamePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateAccountUsernameAndRetainPreviousPayload")
+			out.Values[i] = graphql.MarshalString("UpdateAccountUsernamePayload")
 		case "validation":
-			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx, field, obj)
-		case "accountUsername":
-			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_accountUsername(ctx, field, obj)
+			out.Values[i] = ec._UpdateAccountUsernamePayload_validation(ctx, field, obj)
+		case "account":
+			out.Values[i] = ec._UpdateAccountUsernamePayload_account(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13497,88 +12632,6 @@ func (ec *executionContext) marshalNAccountSessionEdge2ᚖoverdollᚋapplication
 	return ec._AccountSessionEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccountUsername2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx context.Context, sel ast.SelectionSet, v types.AccountUsername) graphql.Marshaler {
-	return ec._AccountUsername(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsername) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._AccountUsername(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNAccountUsernameConnection2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameConnection(ctx context.Context, sel ast.SelectionSet, v types.AccountUsernameConnection) graphql.Marshaler {
-	return ec._AccountUsernameConnection(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNAccountUsernameConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameConnection(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsernameConnection) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._AccountUsernameConnection(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNAccountUsernameEdge2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountUsernameEdge) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAccountUsernameEdge2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameEdge(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNAccountUsernameEdge2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsernameEdge(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsernameEdge) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._AccountUsernameEdge(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailInput(ctx context.Context, v interface{}) (types.AddAccountEmailInput, error) {
 	res, err := ec.unmarshalInputAddAccountEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13636,11 +12689,6 @@ func (ec *executionContext) unmarshalNCreateAccountWithAuthenticationTokenInput2
 
 func (ec *executionContext) unmarshalNDeleteAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailInput(ctx context.Context, v interface{}) (types.DeleteAccountEmailInput, error) {
 	res, err := ec.unmarshalInputDeleteAccountEmailInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNDeleteAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernameInput(ctx context.Context, v interface{}) (types.DeleteAccountUsernameInput, error) {
-	res, err := ec.unmarshalInputDeleteAccountUsernameInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -13837,6 +12885,27 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) unmarshalNTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := graphql.MarshalTime(*v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (graphql1.URI, error) {
 	var res graphql1.URI
 	err := res.UnmarshalGQL(v)
@@ -13857,8 +12926,8 @@ func (ec *executionContext) unmarshalNUpdateAccountLanguageInput2overdollᚋappl
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateAccountUsernameAndRetainPreviousInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousInput(ctx context.Context, v interface{}) (types.UpdateAccountUsernameAndRetainPreviousInput, error) {
-	res, err := ec.unmarshalInputUpdateAccountUsernameAndRetainPreviousInput(ctx, v)
+func (ec *executionContext) unmarshalNUpdateAccountUsername2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsername(ctx context.Context, v interface{}) (types.UpdateAccountUsername, error) {
+	res, err := ec.unmarshalInputUpdateAccountUsername(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -14264,13 +13333,6 @@ func (ec *executionContext) marshalOAccountLock2ᚖoverdollᚋapplicationsᚋeva
 	return ec._AccountLock(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsername) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccountUsername(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOAddAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, v *types.AddAccountEmailPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -14397,13 +13459,6 @@ func (ec *executionContext) marshalODeleteAccountEmailPayload2ᚖoverdollᚋappl
 		return graphql.Null
 	}
 	return ec._DeleteAccountEmailPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalODeleteAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountUsernamePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeleteAccountUsernamePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODisableAccountMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableAccountMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, v *types.DisableAccountMultiFactorPayload) graphql.Marshaler {
@@ -14658,23 +13713,23 @@ func (ec *executionContext) marshalOUpdateAccountLanguagePayload2ᚖoverdollᚋa
 	return ec._UpdateAccountLanguagePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernameAndRetainPreviousPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateAccountUsernamePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernamePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._UpdateAccountUsernameAndRetainPreviousPayload(ctx, sel, v)
+	return ec._UpdateAccountUsernamePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx context.Context, v interface{}) (*types.UpdateAccountUsernameAndRetainPreviousValidation, error) {
+func (ec *executionContext) unmarshalOUpdateAccountUsernameValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameValidation(ctx context.Context, v interface{}) (*types.UpdateAccountUsernameValidation, error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(types.UpdateAccountUsernameAndRetainPreviousValidation)
+	var res = new(types.UpdateAccountUsernameValidation)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernameAndRetainPreviousValidation) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateAccountUsernameValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameValidation(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernameValidation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

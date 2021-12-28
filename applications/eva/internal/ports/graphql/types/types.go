@@ -37,10 +37,8 @@ type Account struct {
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
 	Sessions *AccountSessionConnection `json:"sessions"`
-	// Maximum amount of usernames that this account can create
-	UsernamesLimit int `json:"usernamesLimit"`
-	// Usernames for account (history)
-	Usernames *AccountUsernameConnection `json:"usernames"`
+	// The next time the username is available to be changed
+	UsernameEditAvailableAt time.Time `json:"usernameEditAvailableAt"`
 	// Maximum amount of emails that this account can create
 	EmailsLimit int `json:"emailsLimit"`
 	// Emails for account (multiple emails per account)
@@ -156,31 +154,6 @@ type AccountSessionEdge struct {
 	Node   *AccountSession `json:"node"`
 }
 
-// Username belonging to a specific account
-type AccountUsername struct {
-	// ID of the account username
-	ID relay.ID `json:"id"`
-	// The account username
-	Username string `json:"username"`
-	// The account that this username belongs to
-	Account *Account `json:"account"`
-}
-
-func (AccountUsername) IsNode()   {}
-func (AccountUsername) IsEntity() {}
-
-// Connection of the account username
-type AccountUsernameConnection struct {
-	PageInfo *relay.PageInfo        `json:"pageInfo"`
-	Edges    []*AccountUsernameEdge `json:"edges"`
-}
-
-// Edge of the account username
-type AccountUsernameEdge struct {
-	Cursor string           `json:"cursor"`
-	Node   *AccountUsername `json:"node"`
-}
-
 // Add an email to the account
 type AddAccountEmailInput struct {
 	// The email that should be added to this account
@@ -291,18 +264,6 @@ type DeleteAccountEmailInput struct {
 type DeleteAccountEmailPayload struct {
 	// The ID of the account email that was removed
 	AccountEmailID relay.ID `json:"accountEmailId"`
-}
-
-// Input for removing an email from an account
-type DeleteAccountUsernameInput struct {
-	// The username that should be removed
-	AccountUsernameID relay.ID `json:"accountUsernameId"`
-}
-
-// Username to delete from account
-type DeleteAccountUsernamePayload struct {
-	// The ID of the account username that was removed
-	AccountUsernameID relay.ID `json:"accountUsernameId"`
 }
 
 // Payload for disabling account multi factor
@@ -538,17 +499,17 @@ type UpdateAccountLanguagePayload struct {
 }
 
 // Input for updating an account's username
-type UpdateAccountUsernameAndRetainPreviousInput struct {
+type UpdateAccountUsername struct {
 	// The username that the account should be updated to
 	Username string `json:"username"`
 }
 
 // Payload of the updated username
-type UpdateAccountUsernameAndRetainPreviousPayload struct {
+type UpdateAccountUsernamePayload struct {
 	// Validation for taking an account username
-	Validation *UpdateAccountUsernameAndRetainPreviousValidation `json:"validation"`
-	// The account username that was added
-	AccountUsername *AccountUsername `json:"accountUsername"`
+	Validation *UpdateAccountUsernameValidation `json:"validation"`
+	// The account that was modified
+	Account *Account `json:"account"`
 }
 
 // Input for updating the current language
@@ -991,42 +952,42 @@ func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
 }
 
 // Validation message for updating account username
-type UpdateAccountUsernameAndRetainPreviousValidation string
+type UpdateAccountUsernameValidation string
 
 const (
-	UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken UpdateAccountUsernameAndRetainPreviousValidation = "USERNAME_TAKEN"
+	UpdateAccountUsernameValidationUsernameTaken UpdateAccountUsernameValidation = "USERNAME_TAKEN"
 )
 
-var AllUpdateAccountUsernameAndRetainPreviousValidation = []UpdateAccountUsernameAndRetainPreviousValidation{
-	UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken,
+var AllUpdateAccountUsernameValidation = []UpdateAccountUsernameValidation{
+	UpdateAccountUsernameValidationUsernameTaken,
 }
 
-func (e UpdateAccountUsernameAndRetainPreviousValidation) IsValid() bool {
+func (e UpdateAccountUsernameValidation) IsValid() bool {
 	switch e {
-	case UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken:
+	case UpdateAccountUsernameValidationUsernameTaken:
 		return true
 	}
 	return false
 }
 
-func (e UpdateAccountUsernameAndRetainPreviousValidation) String() string {
+func (e UpdateAccountUsernameValidation) String() string {
 	return string(e)
 }
 
-func (e *UpdateAccountUsernameAndRetainPreviousValidation) UnmarshalGQL(v interface{}) error {
+func (e *UpdateAccountUsernameValidation) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = UpdateAccountUsernameAndRetainPreviousValidation(str)
+	*e = UpdateAccountUsernameValidation(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid UpdateAccountUsernameAndRetainPreviousValidation", str)
+		return fmt.Errorf("%s is not a valid UpdateAccountUsernameValidation", str)
 	}
 	return nil
 }
 
-func (e UpdateAccountUsernameAndRetainPreviousValidation) MarshalGQL(w io.Writer) {
+func (e UpdateAccountUsernameValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

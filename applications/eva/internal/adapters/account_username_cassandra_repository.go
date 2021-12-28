@@ -8,7 +8,6 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
 
@@ -27,33 +26,13 @@ type AccountUsername struct {
 	Username  string `db:"username"`
 }
 
-var usernameByAccount = table.New(table.Metadata{
-	Name: "usernames_by_account",
-	Columns: []string{
-		"account_id",
-		"username",
-	},
-	PartKey: []string{"account_id"},
-	SortKey: []string{"username"},
-})
-
-type UsernameByAccount struct {
-	AccountId string `db:"account_id"`
-	Username  string `db:"username"`
-}
-
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	// delete username
-	stmt, _ := usernameByAccount.Delete()
-
-	batch.Query(stmt, accountId, username)
-
 	// delete from other table
-	stmt, _ = accountUsernameTable.Delete()
+	stmt, _ := accountUsernameTable.Delete()
 
 	batch.Query(stmt, strings.ToLower(username))
 
@@ -64,98 +43,60 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 	return nil
 }
 
-func (r AccountRepository) DeleteAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) error {
-
-	emails, err := r.GetAccountUsernames(ctx, requester, nil, accountId)
-
-	if err != nil {
-		return err
-	}
-
-	if err := account.CanDeleteAccountUsername(requester, accountId, emails, username); err != nil {
-		return err
-	}
-
-	return r.deleteAccountUsername(ctx, accountId, username)
-}
-
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)
 // or just change the casings
-func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usernames []*account.Username, usr *account.Account) error) (*account.Account, *account.Username, error) {
+func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
 
 	instance, err := r.GetAccountById(ctx, id)
 
 	if err != nil {
-		return nil, nil, err
-	}
-
-	usernames, err := r.GetAccountUsernames(ctx, requester, nil, id)
-
-	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	if err := instance.CanUpdateUsername(requester); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	//oldUsername := instance.Username()
+	oldUsername := instance.Username()
 
-	err = updateFn(usernames, instance)
+	err = updateFn(instance)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	// if the username switch is a username that already belongs to the current user, then we dont do extra inserts
-	existingUsernameForAccount := instance.UsernameAlreadyBelongs(usernames, instance.Username())
+	// username doesn't belong to the account, make sure it's not taken by someone else first
+	_, err = r.GetAccountByUsername(ctx, instance.Username())
 
-	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
-	if existingUsernameForAccount == nil {
+	if err != nil {
 
-		// username doesn't belong to the account, make sure it's not taken by someone else first
-		_, err := r.GetAccountByUsername(ctx, instance.Username())
-
-		if err != nil {
-			if err != account.ErrAccountNotFound {
-				return nil, nil, err
-			}
-		} else {
-			// username not unique to the site
-			return nil, nil, account.ErrUsernameNotUnique
+		if err != account.ErrAccountNotFound {
+			return nil, err
 		}
 
 		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
-			return nil, nil, err
+			return nil, err
 		}
+
+		batch := r.session.NewBatch(gocql.LoggedBatch)
+
+		// delete old username
+		stmt, _ := accountUsernameTable.Delete()
+		batch.Query(stmt, oldUsername)
+
+		// finally, update account
+		stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
+		batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
+
+		if err := r.session.ExecuteBatch(batch); err != nil {
+			return nil, fmt.Errorf("failed to update account username: %v", err)
+		}
+
+		return instance, nil
+
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// existingusername can't be an exact match or else this fails - cassandra will delete both records
-	// case-sensitive changes are allowed still
-	if existingUsernameForAccount != nil && existingUsernameForAccount.Username() != instance.Username() {
-		// remove old username from being case-sensitive
-		stmt, _ := usernameByAccount.Delete()
-		batch.Query(stmt, existingUsernameForAccount.AccountId(), existingUsernameForAccount.Username())
-	}
-
-	// add to usernames table
-	stmt, _ := usernameByAccount.Insert()
-
-	// add to account's usernames list
-	batch.Query(stmt, instance.ID(), instance.Username())
-
-	stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
-
-	// finally, update account
-	batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, nil, fmt.Errorf("failed to update account username: %v", err)
-	}
-
-	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID(), instance.IsUsername(instance.Username())), nil
+	return nil, account.ErrUsernameNotUnique
 }
 
 // GetAccountByUsername - Get user using the username
@@ -189,91 +130,4 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 	}
 
 	return usr, nil
-}
-
-// GetAccountUsernames - get usernames for account
-func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*account.Username, error) {
-
-	if err := account.CanViewUsernamesForAccount(requester, accountId); err != nil {
-		return nil, err
-	}
-
-	accInstance, err := r.GetAccountById(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var accountUsernames []*UsernameByAccount
-
-	builder := usernameByAccount.SelectBuilder()
-
-	data := &UsernameByAccount{
-		AccountId: accountId,
-	}
-
-	if cursor != nil {
-		cursor.BuildCassandra(builder, "username")
-	}
-
-	queryUsernames := builder.
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(data)
-
-	if err := queryUsernames.Select(&accountUsernames); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get account usernames: %v", err)
-	}
-
-	var usernames []*account.Username
-
-	for _, username := range accountUsernames {
-		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId, accInstance.IsUsername(username.Username))
-		usern.Node = paging.NewNode(username.Username)
-		usernames = append(usernames, usern)
-	}
-
-	return usernames, nil
-}
-
-// GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) (*account.Username, error) {
-
-	accInstance, err := r.GetAccountById(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var accountUsernames *UsernameByAccount
-
-	queryUsernames := r.session.
-		Query(usernameByAccount.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&UsernameByAccount{
-			AccountId: accountId,
-			Username:  username,
-		})
-
-	if err := queryUsernames.Get(&accountUsernames); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get account username: %v", err)
-	}
-
-	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId, accInstance.IsUsername(accountUsernames.Username))
-
-	if err := name.CanView(requester); err != nil {
-		return nil, err
-	}
-
-	return name, nil
 }

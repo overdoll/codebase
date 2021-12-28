@@ -176,29 +176,13 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 	return &types.DeleteAccountEmailPayload{AccountEmailID: input.AccountEmailID}, nil
 }
 
-func (r *MutationResolver) DeleteAccountUsername(ctx context.Context, input types.DeleteAccountUsernameInput) (*types.DeleteAccountUsernamePayload, error) {
+func (r *MutationResolver) UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsername) (*types.UpdateAccountUsernamePayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	if err := r.App.Commands.DeleteAccountUsername.Handle(ctx, command.DeleteAccountUsername{
-		Principal: principal.FromContext(ctx),
-		Username:  input.AccountUsernameID.GetID(),
-	}); err != nil {
-		return nil, err
-	}
-
-	return &types.DeleteAccountUsernamePayload{AccountUsernameID: input.AccountUsernameID}, nil
-}
-
-func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	username, err := r.App.Commands.UpdateAccountUsernameAndRetainPrevious.Handle(ctx, command.UpdateAccountUsernameAndRetainPrevious{
+	acc, err := r.App.Commands.UpdateAccountUsername.Handle(ctx, command.UpdateAccountUsername{
 		Principal: principal.FromContext(ctx),
 		Username:  input.Username,
 	})
@@ -206,14 +190,14 @@ func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Co
 	if err != nil {
 
 		if err == account.ErrUsernameNotUnique {
-			expired := types.UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken
-			return &types.UpdateAccountUsernameAndRetainPreviousPayload{Validation: &expired}, nil
+			expired := types.UpdateAccountUsernameValidationUsernameTaken
+			return &types.UpdateAccountUsernamePayload{Validation: &expired}, nil
 		}
 
 		return nil, err
 	}
 
-	return &types.UpdateAccountUsernameAndRetainPreviousPayload{AccountUsername: types.MarshalAccountUsernameToGraphQL(username)}, nil
+	return &types.UpdateAccountUsernamePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
 }
 
 func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error) {

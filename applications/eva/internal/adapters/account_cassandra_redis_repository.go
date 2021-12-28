@@ -249,10 +249,6 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		return err
 	}
 
-	stmt, _ := usernameByAccount.Insert()
-
-	batch.Query(stmt, instance.ID(), instance.Username())
-
 	// At this point, we know our username is unique & captured, so we
 	// now do our insert, but this time with the email
 	// note: we don't do a unique check for the email first because if they're on this stage, we already
@@ -270,7 +266,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	}
 
 	// create a table that holds all of the user's emails
-	stmt, _ = emailByAccountTable.Insert()
+	stmt, _ := emailByAccountTable.Insert()
 
 	batch.Query(stmt, instance.ID(), instance.Email(), 2)
 

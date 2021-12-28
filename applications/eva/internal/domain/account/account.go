@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"overdoll/libraries/localization"
-	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -29,19 +28,20 @@ type Account struct {
 	lockedUntil  int
 	lockedReason LockReason
 
-	lastUsernameEdit int
+	lastUsernameEdit time.Time
 
 	multiFactorEnabled bool
 }
 
 var (
-	ErrUsernameNotUnique   = errors.New("username is not unique")
-	ErrEmailNotUnique      = errors.New("email is not unique")
-	ErrEmailCodeInvalid    = errors.New("email confirmation expired or invalid")
-	ErrAccountNotFound     = errors.New("account not found")
-	ErrAccountPrivileged   = errors.New("account is privileged")
-	ErrMultiFactorRequired = errors.New("account needs to have multi factor enabled")
-	ErrAccountNoRole       = errors.New("account does not have the assigned role")
+	ErrUsernameNotUnique      = errors.New("username is not unique")
+	ErrEmailNotUnique         = errors.New("email is not unique")
+	ErrEmailCodeInvalid       = errors.New("email confirmation expired or invalid")
+	ErrAccountNotFound        = errors.New("account not found")
+	ErrAccountPrivileged      = errors.New("account is privileged")
+	ErrMultiFactorRequired    = errors.New("account needs to have multi factor enabled")
+	ErrAccountNoRole          = errors.New("account does not have the assigned role")
+	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
 )
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
@@ -94,10 +94,6 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
-}
-
-func (a *Account) IsUsername(usr string) bool {
-	return strings.ToLower(a.username) == strings.ToLower(usr)
 }
 
 func (a *Account) Language() *localization.Language {
@@ -186,8 +182,12 @@ func (a *Account) Unlock() error {
 	return a.Lock(0, "")
 }
 
-func (a *Account) LastUsernameEdit() int {
+func (a *Account) LastUsernameEdit() time.Time {
 	return a.lastUsernameEdit
+}
+
+func (a *Account) UsernameEditAvailableAt() time.Time {
+	return a.lastUsernameEdit.Add(time.Hour * 24 * 30)
 }
 
 func (a *Account) CanDisableMultiFactor() bool {
@@ -218,30 +218,18 @@ func (a *Account) hasRoles(roles []string) bool {
 	return false
 }
 
-func (a *Account) UsernameAlreadyBelongs(usernames []*Username, username string) *Username {
-
-	for _, current := range usernames {
-		if current.IsEqual(username) {
-			return current
-		}
-	}
-
-	return nil
-}
-
-func (a *Account) EditUsername(usernames []*Username, username string) error {
+func (a *Account) EditUsername(username string) error {
 
 	if err := validateUsername(username); err != nil {
 		return err
 	}
 
-	// if limit is reached, and the username doesn't belong to the account already
-	if len(usernames) >= MaxUsernamesLimit && a.UsernameAlreadyBelongs(usernames, username) == nil {
-		return ErrMaxUsernamesLimitReached
+	if !time.Now().After(a.UsernameEditAvailableAt()) {
+		return ErrUsernameChangeCooldown
 	}
 
 	a.username = username
-	a.lastUsernameEdit = int(time.Now().Unix())
+	a.lastUsernameEdit = time.Now()
 
 	return nil
 }

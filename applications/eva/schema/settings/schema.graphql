@@ -35,30 +35,6 @@ type AccountEmailConnection {
   edges: [AccountEmailEdge!]!
 }
 
-"""Username belonging to a specific account"""
-type AccountUsername implements Node @key(fields: "id") {
-  """ID of the account username"""
-  id: ID!
-
-  """The account username"""
-  username: String!
-
-  """The account that this username belongs to"""
-  account: Account! @goField(forceResolver: true)
-}
-
-"""Edge of the account username"""
-type AccountUsernameEdge {
-  cursor: String!
-  node: AccountUsername!
-}
-
-"""Connection of the account username"""
-type AccountUsernameConnection {
-  pageInfo: PageInfo!
-  edges: [AccountUsernameEdge!]!
-}
-
 """The multi-factor recovery code belonging to the account"""
 type AccountMultiFactorRecoveryCode {
   """The multi factor recovery code"""
@@ -105,28 +81,9 @@ type AccountMultiFactorSettings {
 extend type Account {
 
   """
-  Maximum amount of usernames that this account can create
+  The next time the username is available to be changed
   """
-  usernamesLimit: Int! @goField(forceResolver: true)
-
-  """
-  Usernames for account (history)
-  """
-  usernames(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountUsernameConnection! @goField(forceResolver: true)
+  usernameEditAvailableAt: Time! @goField(forceResolver: true)
 
   """
   Maximum amount of emails that this account can create
@@ -185,16 +142,8 @@ input DeleteAccountEmailInput {
   accountEmailId: ID!
 }
 
-"""Input for removing an email from an account"""
-input DeleteAccountUsernameInput {
-  """
-  The username that should be removed
-  """
-  accountUsernameId: ID!
-}
-
 """Input for updating an account's username"""
-input UpdateAccountUsernameAndRetainPreviousInput {
+input UpdateAccountUsername {
   """
   The username that the account should be updated to
   """
@@ -251,24 +200,18 @@ type DeleteAccountEmailPayload {
   accountEmailId: ID!
 }
 
-"""Username to delete from account"""
-type DeleteAccountUsernamePayload {
-  """The ID of the account username that was removed"""
-  accountUsernameId: ID!
-}
-
 """Validation message for updating account username"""
-enum UpdateAccountUsernameAndRetainPreviousValidation {
+enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
 }
 
 """Payload of the updated username"""
-type UpdateAccountUsernameAndRetainPreviousPayload {
+type UpdateAccountUsernamePayload {
   """Validation for taking an account username"""
-  validation: UpdateAccountUsernameAndRetainPreviousValidation
+  validation: UpdateAccountUsernameValidation
 
-  """The account username that was added"""
-  accountUsername: AccountUsername
+  """The account that was modified"""
+  account: Account
 }
 
 """Payload of the updated account email"""
@@ -338,18 +281,12 @@ extend type Mutation {
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
-
-  """
-  Delete account username - cannot be the current username
-  """
-  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
-
   """
   Update the account username
 
   Will retain the old username
   """
-  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
+  updateAccountUsername(input: UpdateAccountUsername!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary
