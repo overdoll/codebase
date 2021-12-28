@@ -11,11 +11,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-const (
-	maxClubMembersPerPartition   = 10000
-	initialClubMembersPartitions = 10
-)
-
 var clubTable = table.New(table.Metadata{
 	Name: "clubs",
 	Columns: []string{
@@ -49,19 +44,6 @@ var clubSlugTable = table.New(table.Metadata{
 	},
 	PartKey: []string{"slug"},
 	SortKey: []string{},
-})
-
-var clubMembersPartitionsTable = table.New(table.Metadata{
-	Name: "club_members_partitions",
-	Columns: []string{
-		"club_id",
-		"bucket",
-		"last_joined_at_count",
-		"members_count",
-		"max_members_count",
-	},
-	PartKey: []string{"club_id"},
-	SortKey: []string{"bucket"},
 })
 
 type clubSlugs struct {

@@ -9,11 +9,12 @@ import (
 )
 
 type SearchClubs struct {
-	Principal *principal.Principal
-	Cursor    *paging.Cursor
-	Name      *string
-	OrderBy   string
-	Slugs     []string
+	Principal      *principal.Principal
+	Cursor         *paging.Cursor
+	OwnerAccountId *string
+	Name           *string
+	OrderBy        string
+	Slugs          []string
 }
 
 type SearchClubsHandler struct {
@@ -30,6 +31,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*c
 		query.Name,
 		query.OrderBy,
 		query.Slugs,
+		query.OwnerAccountId,
 	)
 
 	if err != nil {

@@ -72,6 +72,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
 			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
 			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
+			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
+			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -96,10 +98,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
 
-			SearchClubs:          query.NewSearchClubsHandler(clubIndexRepo),
-			ClubBySlug:           query.NewClubBySlugHandler(clubRepo),
-			ClubById:             query.NewClubByIdHandler(clubRepo),
-			ClubSlugAliasesLimit: query.NewClubSlugAliasesLimitHandler(clubRepo),
+			SearchClubs:                 query.NewSearchClubsHandler(clubIndexRepo),
+			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
+			ClubById:                    query.NewClubByIdHandler(clubRepo),
+			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
+			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
+			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, resourceRepo, parley),
 	}

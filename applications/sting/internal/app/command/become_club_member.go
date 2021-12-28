@@ -4,33 +4,46 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
 
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
 type BecomeClubMember struct {
 	Principal *principal.Principal
-
-	ClubId string
+	ClubId    string
 }
 
 type BecomeClubMemberHandler struct {
-	pr post.Repository
+	cr club.Repository
 }
 
-func NewBecomeClubMemberHandler(pr post.Repository) BecomeClubMemberHandler {
-	return BecomeClubMemberHandler{pr: pr}
+func NewBecomeClubMemberHandler(cr club.Repository) BecomeClubMemberHandler {
+	return BecomeClubMemberHandler{cr: cr}
 }
 
-func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd AddClubSlugAlias) (*club.Club, error) {
+func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMember) (*club.Member, error) {
 
-	club, err := h.pr.UpdateClubSlugAliases(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
-		return club.AddSlugAlias(cmd.Principal, cmd.Slug)
-	})
+	clb, err := h.cr.GetClubById(ctx, cmd.Principal, cmd.ClubId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return club, nil
+	// get all account memberships
+	ships, err := h.cr.GetAccountClubMemberships(ctx, cmd.Principal, nil, cmd.Principal.AccountId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	member, err := club.NewMember(cmd.Principal, clb, ships)
+
+	if err := h.cr.CreateClubMember(ctx, cmd.Principal, member); err != nil {
+		return nil, err
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return member, nil
 }

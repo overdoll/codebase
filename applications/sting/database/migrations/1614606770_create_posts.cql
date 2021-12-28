@@ -103,11 +103,10 @@ CREATE TABLE IF NOT EXISTS clubs_slugs
 
 CREATE TABLE IF NOT EXISTS club_members_by_account
 (
-    club_id      text,
-    account_id   text,
-    bucket       timeuuid,
-    joined_at    timeuuid,
-    is_supporter boolean,
+    club_id    text,
+    account_id text,
+    bucket     timeuuid,
+    joined_at  timeuuid,
     primary key ( (club_id, account_id) )
 );
 
@@ -117,7 +116,6 @@ CREATE TABLE IF NOT EXISTS account_clubs
     member_account_id text,
     bucket            timeuuid,
     joined_at         timeuuid,
-    is_supporter      boolean,
     primary key ( member_account_id, joined_at, club_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC, club_id ASC);
 
@@ -127,7 +125,6 @@ CREATE TABLE IF NOT EXISTS club_members
     bucket            timeuuid,
     member_account_id text,
     joined_at         timeuuid,
-    is_supporter      boolean,
     primary key ( (club_id, bucket), joined_at, member_account_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC);
 

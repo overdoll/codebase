@@ -24,11 +24,14 @@ const (
 type Club struct {
 	*paging.Node
 
-	id             string
-	slug           string
-	slugAliases    []string
-	name           *localization.Translation
-	thumbnail      *resource.Resource
+	id          string
+	slug        string
+	slugAliases []string
+	name        *localization.Translation
+	thumbnail   *resource.Resource
+
+	newClubMembers []string
+
 	membersCount   int
 	ownerAccountId string
 }
@@ -87,6 +90,10 @@ func (m *Club) Thumbnail() *resource.Resource {
 
 func (m *Club) MembersCount() int {
 	return m.membersCount
+}
+
+func (m *Club) NewClubMembers() []string {
+	return m.newClubMembers
 }
 
 func (m *Club) OwnerAccountId() string {

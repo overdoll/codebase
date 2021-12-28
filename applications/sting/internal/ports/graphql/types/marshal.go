@@ -3,13 +3,12 @@ package types
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/libraries/passport"
-
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 )
 
 func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
@@ -102,6 +101,15 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		CreatedAt:      result.CreatedAt(),
 		PostedAt:       result.PostedAt(),
 		ReassignmentAt: result.ReassignmentAt(),
+	}
+}
+
+func MarshalClubMemberToGraphql(ctx context.Context, result *club.Member) *ClubMember {
+	return &ClubMember{
+		ID:       relay.NewID(ClubMember{}, result.ClubId(), result.AccountId()),
+		JoinedAt: result.JoinedAt(),
+		Club:     &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Account:  &Account{ID: relay.NewID(Account{}, result.AccountId())},
 	}
 }
 
@@ -379,6 +387,64 @@ func MarshalSeriesToGraphQLConnection(ctx context.Context, results []*post.Serie
 	}
 
 	conn.Edges = series
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
+
+func MarshalClubMembersToGraphQLConnection(ctx context.Context, results []*club.Member, cursor *paging.Cursor) *ClubMemberConnection {
+	var clubs []*ClubMemberEdge
+
+	conn := &ClubMemberConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: clubs,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *club.Member
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *club.Member {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *club.Member {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		clubs = append(clubs, &ClubMemberEdge{
+			Node:   MarshalClubMemberToGraphql(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = clubs
 
 	if len(results) > 0 {
 		res := results[0].Cursor()

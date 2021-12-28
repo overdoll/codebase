@@ -17,6 +17,14 @@ type Object interface {
 }
 
 type Account struct {
+	// Maximum amount of clubs that you can join as an account.
+	ClubMembershipLimit int `json:"clubMembershipLimit"`
+	// Current count of club memberships. Should be compared against the limit before joining a club.
+	ClubMembershipsCount int `json:"clubMembershipsCount"`
+	// Represents the clubs that the account has write access to.
+	Clubs *ClubConnection `json:"clubs"`
+	// Represents the club memberships that the account has.
+	ClubMemberships *ClubMemberConnection `json:"clubMemberships"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
@@ -71,6 +79,18 @@ type AudienceEdge struct {
 type AudiencesOrder struct {
 	// The field to order audiences by.
 	Field AudiencesOrderField `json:"field"`
+}
+
+// Become a club member.
+type BecomeClubMemberInput struct {
+	// The chosen club ID.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for a new club member
+type BecomeClubMemberPayload struct {
+	// The membership after creation
+	ClubMember *ClubMember `json:"clubMember"`
 }
 
 // Ordering options for categories
@@ -156,6 +176,10 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// Whether or not the viewer is a member of this club.
+	ViewerMember *ClubMember `json:"viewerMember"`
+	// Club members.
+	Members *ClubMemberConnection `json:"members"`
 	// Posts belonging to this club
 	Posts *PostConnection `json:"posts"`
 }
@@ -172,6 +196,36 @@ type ClubConnection struct {
 type ClubEdge struct {
 	Cursor string `json:"cursor"`
 	Node   *Club  `json:"node"`
+}
+
+type ClubMember struct {
+	// An ID pointing to this club member.
+	ID relay.ID `json:"id"`
+	// When the membership was created (when the account originally joined).
+	JoinedAt time.Time `json:"joinedAt"`
+	// The club that this membership belongs to.
+	Club *Club `json:"club"`
+	// The account that belongs to this membership.
+	Account *Account `json:"account"`
+}
+
+func (ClubMember) IsNode()   {}
+func (ClubMember) IsEntity() {}
+
+type ClubMemberConnection struct {
+	Edges    []*ClubMemberEdge `json:"edges"`
+	PageInfo *relay.PageInfo   `json:"pageInfo"`
+}
+
+type ClubMemberEdge struct {
+	Cursor string      `json:"cursor"`
+	Node   *ClubMember `json:"node"`
+}
+
+// Ordering options for club members
+type ClubMembersOrder struct {
+	// The field to order clubs by.
+	Field ClubMembersOrderField `json:"field"`
 }
 
 // Ordering options for clubs
@@ -420,6 +474,18 @@ type UpdatePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+// Withdraw club membership.
+type WithdrawClubMembershipInput struct {
+	// The chosen club ID.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for withdrawing club membership
+type WithdrawClubMembershipPayload struct {
+	// The club membership that was removed
+	ClubMemberID relay.ID `json:"clubMemberId"`
+}
+
 // Properties by which audience connections can be ordered.
 type AudiencesOrderField string
 
@@ -540,6 +606,47 @@ func (e *CharactersOrderField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CharactersOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which club member connections can be ordered.
+type ClubMembersOrderField string
+
+const (
+	// By joined at
+	ClubMembersOrderFieldJoinedAt ClubMembersOrderField = "JOINED_AT"
+)
+
+var AllClubMembersOrderField = []ClubMembersOrderField{
+	ClubMembersOrderFieldJoinedAt,
+}
+
+func (e ClubMembersOrderField) IsValid() bool {
+	switch e {
+	case ClubMembersOrderFieldJoinedAt:
+		return true
+	}
+	return false
+}
+
+func (e ClubMembersOrderField) String() string {
+	return string(e)
+}
+
+func (e *ClubMembersOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubMembersOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubMembersOrderField", str)
+	}
+	return nil
+}
+
+func (e ClubMembersOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

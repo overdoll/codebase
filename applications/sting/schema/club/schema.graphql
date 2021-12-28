@@ -21,6 +21,27 @@ type Club implements Node & Object @key(fields: "id") {
 
   """The account that owns this club."""
   owner: Account!
+
+  """Whether or not the viewer is a member of this club."""
+  viewerMember: ClubMember @goField(forceResolver: true)
+
+  """Club members."""
+  members(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Ordering options for club members."""
+    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+  ): ClubMemberConnection! @goField(forceResolver: true)
 }
 
 type ClubEdge {
@@ -43,6 +64,42 @@ input ClubsOrder {
 enum ClubsOrderField {
   """Club by created time"""
   CREATED_AT
+}
+
+type ClubMemberEdge {
+  cursor: String!
+  node: ClubMember!
+}
+
+type ClubMemberConnection {
+  edges: [ClubMemberEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Ordering options for club members"""
+input ClubMembersOrder {
+  """The field to order clubs by."""
+  field: ClubMembersOrderField!
+}
+
+"""Properties by which club member connections can be ordered."""
+enum ClubMembersOrderField {
+  """By joined at"""
+  JOINED_AT
+}
+
+type ClubMember implements Node @key(fields: "id") {
+  """An ID pointing to this club member."""
+  id: ID!
+
+  """When the membership was created (when the account originally joined)."""
+  joinedAt: Time!
+
+  """The club that this membership belongs to."""
+  club: Club! @goField(forceResolver: true)
+
+  """The account that belongs to this membership."""
+  account: Account! @goField(forceResolver: true)
 }
 
 """Add alias slug."""
@@ -72,6 +129,18 @@ input CreateClubInput {
   name: String!
 }
 
+"""Become a club member."""
+input BecomeClubMemberInput {
+  """The chosen club ID."""
+  clubId: ID!
+}
+
+"""Withdraw club membership."""
+input WithdrawClubMembershipInput {
+  """The chosen club ID."""
+  clubId: ID!
+}
+
 """Update club name."""
 input UpdateClubNameInput {
   """The club to update"""
@@ -94,6 +163,18 @@ input PromoteClubSlugAliasToDefaultInput {
 type CreateClubPayload {
   """The club after creation"""
   club: Club
+}
+
+"""Payload for a new club member"""
+type BecomeClubMemberPayload {
+  """The membership after creation"""
+  clubMember: ClubMember
+}
+
+"""Payload for withdrawing club membership"""
+type WithdrawClubMembershipPayload {
+  """The club membership that was removed"""
+  clubMemberId: ID!
 }
 
 """Payload for a new alt slug"""
@@ -121,6 +202,16 @@ type UpdateClubNamePayload {
 }
 
 extend type Mutation {
+  """
+  Become a member of a club
+  """
+  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
+
+  """
+  Withdraw membership from a club
+  """
+  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
+
   """
   Create a new club
   """
@@ -182,4 +273,58 @@ extend type Query {
 extend type Post {
   """Represents the club that this post belongs to"""
   club: Club! @goField(forceResolver: true)
+}
+
+extend type Account {
+  """
+  Maximum amount of clubs that you can join as an account.
+  """
+  clubMembershipLimit: Int! @goField(forceResolver: true)
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int! @goField(forceResolver: true)
+
+  """Represents the clubs that the account has write access to."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Ordering options for clubs."""
+    orderBy: ClubsOrder! = { field: CREATED_AT }
+  ): ClubConnection! @goField(forceResolver: true)
+
+  """Represents the club memberships that the account has."""
+  clubMemberships(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Ordering options for club members."""
+    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+  ): ClubMemberConnection! @goField(forceResolver: true)
 }

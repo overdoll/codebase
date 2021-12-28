@@ -40,6 +40,8 @@ type Commands struct {
 	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
 	AddClubSlugAlias              command.AddClubSlugAliasHandler
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
+	BecomeClubMember              command.BecomeClubMemberHandler
+	WithdrawClubMembership        command.WithdrawClubMembershipHandler
 }
 
 type Queries struct {
@@ -65,8 +67,12 @@ type Queries struct {
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
 
-	SearchClubs          query.SearchClubsHandler
-	ClubBySlug           query.ClubBySlugHandler
-	ClubById             query.ClubByIdHandler
-	ClubSlugAliasesLimit query.ClubSlugAliasesLimitHandler
+	SearchClubs                 query.SearchClubsHandler
+	ClubBySlug                  query.ClubBySlugHandler
+	ClubById                    query.ClubByIdHandler
+	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
+	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
+	AccountClubMemberships      query.AccountClubMembershipsHandler
+	ClubMemberById              query.ClubMemberByIdHandler
+	ClubMembersByClub           query.ClubMembersByClubHandler
 }
