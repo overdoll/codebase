@@ -117,7 +117,7 @@ export default function TotpActivationForm (props: Props): JSX.Element {
             variant='solid'
             type='submit'
             ml={2}
-            colorScheme='primary'
+            colorScheme='green'
             disabled={errors.code != null}
             isLoading={isSubmittingTotp}
           >

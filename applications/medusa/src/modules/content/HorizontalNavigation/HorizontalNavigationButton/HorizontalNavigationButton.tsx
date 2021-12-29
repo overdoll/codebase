@@ -52,7 +52,7 @@ export default function HorizontalNavigationButton ({
                 md: 10
               }}
               bg={(exact ? isActive : isActiveBasePath) ? 'gray.500' : 'transparent'}
-              h={h ?? '48px'}
+              h={h ?? '46px'}
               w={w ?? '58px'}
               as={as}
               p={0}
