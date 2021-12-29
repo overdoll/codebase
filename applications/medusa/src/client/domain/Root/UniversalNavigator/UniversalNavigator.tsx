@@ -6,6 +6,7 @@ import getBasePath from '@//:modules/routing/getBasePath'
 import { graphql, useFragment } from 'react-relay/hooks'
 import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
 import { UniversalNavigatorFragment$key } from '@//:artifacts/UniversalNavigatorFragment.graphql'
+import { RenderOnDesktop } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRef: UniversalNavigatorFragment$key | null
@@ -33,7 +34,9 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   return (
     <HorizontalNavigation>
       <HorizontalNavigation.Left>
-        <SiteLinkLogo invisible={isHidden} />
+        <RenderOnDesktop>
+          <SiteLinkLogo invisible={isHidden} />
+        </RenderOnDesktop>
       </HorizontalNavigation.Left>
       {!isHidden && (
         <HorizontalNavigation.Center>

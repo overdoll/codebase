@@ -271,18 +271,6 @@ return {
                         "kind": "ScalarField",
                         "name": "cursor",
                         "storageKey": null
-                      },
-                      {
-                        "kind": "ClientExtension",
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "__id",
-                            "storageKey": null
-                          }
-                        ]
                       }
                     ],
                     "storageKey": null
@@ -311,6 +299,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   }
                 ],
                 "storageKey": null
@@ -320,7 +320,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "sessions_sessions",
+                "key": "SessionsSettingsFragment_sessions",
                 "kind": "LinkedHandle",
                 "name": "sessions"
               }
@@ -342,5 +342,5 @@ return {
   }
 };
 })();
-(node as any).hash = '0d84929385b62665e1051b3a556a2741';
+(node as any).hash = 'c996e8b92e2b1c5330aaffb0e2caa5b7';
 export default node;

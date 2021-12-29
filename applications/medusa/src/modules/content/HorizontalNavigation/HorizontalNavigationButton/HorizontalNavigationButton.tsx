@@ -8,6 +8,8 @@ interface Props extends HTMLChakraProps<any> {
   icon?: FunctionComponent<any>
   label: ReactNode
   exact?: boolean
+  w?: string
+  h?: string
   to: string
   onClick?: () => void
   children?: ReactNode
@@ -47,7 +49,7 @@ export default function HorizontalNavigationButton ({
                 base: '48px',
                 md: '42px'
               }}
-              w='58px'
+              w={w ?? '58px'}
               as={as}
               p={0}
             >

@@ -66,6 +66,7 @@ export default function Delete ({
 
   return (
     <SmallMenuItem
+      color='orange.300'
       isDisabled={isDeletingEmail}
       onClick={onDeleteEmail}
       icon={DeleteBin}

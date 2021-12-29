@@ -14,6 +14,7 @@ describe('Settings - Add Email', () => {
       length: 12,
       pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
     })
+  const startTimestamp = Date.now()
 
   const currentEmail = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${currentUsername}@inbox.testmail.app`
 
@@ -28,7 +29,7 @@ describe('Settings - Add Email', () => {
     cy.preserveAccount()
   })
 
-  it('should be able to add an email', () => {
+  it('should be able to add an email and confirm it', () => {
     cy.visit('/settings/profile')
     cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'))
 
@@ -42,9 +43,7 @@ describe('Settings - Add Email', () => {
   })
 
   it('should be able to confirm new email through link', () => {
-    const startTimestamp = Date.now()
-
-    cy.displayLastEmail(startTimestamp, 'Verify Email', currentEmail)
+    cy.displayLastEmail(startTimestamp, 'Verify Email', newEmail)
 
     cy.findByText('verify new email').then(ln => {
       const url = ln.prop('href')
@@ -56,7 +55,16 @@ describe('Settings - Add Email', () => {
     cy.findByText('CONFIRMED').should('exist')
   })
 
-  it('should be able to make new email primary', {
+  it('should be able to make new email primary', () => {
+    cy.findByText(newEmail).parent().parent().parent().get('[aria-label="Open Menu"]').click()
+    cy.findByText(/Make Primary/iu).click()
+    cy.findByText(newEmail).parent().parent().parent().findByText('PRIMARY').should('exist')
+  })
 
+  it('should be able to remove confirmed email', () => {
+    cy.findByText(currentEmail).parent().parent().parent().get('[aria-label="Open Menu"]').click()
+    cy.findByText(/Remove/iu).click()
+    cy.findByText(currentEmail).should('not.exist')
+    cy.findByText(newEmail).should('exist')
   })
 })

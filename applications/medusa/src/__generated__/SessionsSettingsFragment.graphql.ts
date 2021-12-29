@@ -6,8 +6,8 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type SessionsSettingsFragment = {
     readonly sessions: {
+        readonly __id: string;
         readonly edges: ReadonlyArray<{
-            readonly __id: string;
             readonly node: {
                 readonly " $fragmentRefs": FragmentRefs<"SessionCardFragment">;
             };
@@ -74,7 +74,7 @@ return {
       "args": null,
       "concreteType": "AccountSessionConnection",
       "kind": "LinkedField",
-      "name": "__sessions_sessions_connection",
+      "name": "__SessionsSettingsFragment_sessions_connection",
       "plural": false,
       "selections": [
         {
@@ -114,18 +114,6 @@ return {
               "kind": "ScalarField",
               "name": "cursor",
               "storageKey": null
-            },
-            {
-              "kind": "ClientExtension",
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__id",
-                  "storageKey": null
-                }
-              ]
             }
           ],
           "storageKey": null
@@ -154,6 +142,18 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -170,5 +170,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '0d84929385b62665e1051b3a556a2741';
+(node as any).hash = 'c996e8b92e2b1c5330aaffb0e2caa5b7';
 export default node;

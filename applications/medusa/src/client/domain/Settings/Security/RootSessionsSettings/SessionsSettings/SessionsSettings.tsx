@@ -28,9 +28,9 @@ const SessionsGQL = graphql`
   )
   @refetchable(queryName: "SessionsPaginationQuery" ) {
     sessions (first: $first, after: $after)
-    @connection(key: "sessions_sessions") {
+    @connection(key: "SessionsSettingsFragment_sessions") {
+      __id
       edges {
-        __id
         node {
           ...SessionCardFragment
         }

@@ -32,7 +32,6 @@ export default function SmallMenuItem ({
         mr={2}
       />
       <Text
-        pointerEvents='none'
         color={color ?? 'gray.100'}
       >
         {text}
