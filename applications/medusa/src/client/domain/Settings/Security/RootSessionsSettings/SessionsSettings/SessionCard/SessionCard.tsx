@@ -1,14 +1,5 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import {
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Flex,
-  Heading,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react'
+import { AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Heading, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql'
 import UAParser from 'ua-parser-js'
@@ -45,10 +36,6 @@ export default function SessionCard ({
   query
 }: Props): JSX.Element {
   const data = useFragment(SessionGQL, query)
-  const {
-    isOpen: isRevealed,
-    onToggle
-  } = useDisclosure()
 
   const userAgent = UAParser(data.device)
   const formattedDate = format(new Date(data?.lastSeen as Date), 'LLLL Lo, y')

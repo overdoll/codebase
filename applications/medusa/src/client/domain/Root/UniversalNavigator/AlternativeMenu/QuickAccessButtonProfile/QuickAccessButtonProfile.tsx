@@ -19,6 +19,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
 
   return (
     <HorizontalNavigation.Button
+      w='42px'
       to='/profile'
       label={
         <Trans>
@@ -35,8 +36,8 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
           borderRadius='25%'
           src={data?.avatar}
           m={0}
-          h='42px'
-          w='42px'
+          h='38px'
+          w='38px'
         />
       </Flex>
     </HorizontalNavigation.Button>

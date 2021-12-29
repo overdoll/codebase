@@ -60,7 +60,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 	}
 
 	// custom recipient from
-	if err := recipient.SetEmail(cmd.EmailToken); err != nil {
+	if err := recipient.SetEmail(cmd.AccountEmail); err != nil {
 		return err
 	}
 

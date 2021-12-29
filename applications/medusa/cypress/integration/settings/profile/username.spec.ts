@@ -9,7 +9,15 @@ describe('Settings - Change Username', () => {
       pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
     })
 
+  const takenUsername =
+    chance.string({
+      length: 12,
+      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+    })
+
   before(() => {
+    cy.cleanup()
+    cy.joinWithNewAccount(takenUsername)
     cy.cleanup()
     cy.joinWithNewAccount(currentUsername)
   })
@@ -18,7 +26,7 @@ describe('Settings - Change Username', () => {
     cy.preserveAccount()
   })
 
-  it('should be able to change username and cannot change to a taken username', () => {
+  it('should be able to change username', () => {
     cy.visit('/settings/profile')
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
 
@@ -33,15 +41,20 @@ describe('Settings - Change Username', () => {
 
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
 
-    // expand current usernames
-    cy.findByText(/2 aliases/iu).click()
+    cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
+    cy.findByText(newUsername).should('exist')
+  })
 
-    cy.waitUntil(() => cy.findAllByText(newUsername).should('exist'))
+  it('should not be able to change to a taken username', () => {
+    cy.visit('/settings/profile')
+    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
 
-    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').clear().type('0eclipse')
+    cy.findByRole('button', { name: /Change Username/iu }).click()
 
-    // Check if username is taken here
+    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').type(takenUsername)
+
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
+    cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
 
     cy.findByText(/USERNAME_TAKEN/iu).should('exist')
   })

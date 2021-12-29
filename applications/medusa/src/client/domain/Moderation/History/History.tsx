@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Grid, GridItem, Stack, Text } from '@chakra-ui/react'
+import { Divider, Grid, GridItem, Stack, Text } from '@chakra-ui/react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
@@ -64,6 +64,7 @@ export default function History (props: Props): JSX.Element | null {
             </GridItem>
             <GridItem colSpan={1} />
           </Grid>
+          <Divider borderColor='gray.500' borderWidth={1} />
           <QueryErrorBoundary loadQuery={
             () => loadQuery({
               from: new Date(new Date().setDate(new Date().getDate() - 7)),

@@ -23,7 +23,6 @@ Cypress.Commands.add('displayLastEmail', (startTimestamp: number, alias: string,
   // grab "tag" from email
 
   // should only be a testmail email
-
   const parts = email.split('@')
   const main = parts[0].split('.')
   const tag = main[1]

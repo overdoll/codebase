@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 	"os"
 
-	"github.com/sendgrid/sendgrid-go"
+	sendgrid "github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
