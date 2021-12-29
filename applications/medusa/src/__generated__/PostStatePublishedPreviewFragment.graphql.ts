@@ -5,6 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type PostStatePublishedPreviewFragment = {
+    readonly reference: string;
     readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment">;
     readonly " $refType": "PostStatePublishedPreviewFragment";
 };
@@ -23,6 +24,13 @@ const node: ReaderFragment = {
   "name": "PostStatePublishedPreviewFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostGalleryContentFragment"
@@ -31,5 +39,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '0f25bb6391bbe61715d0c39d5b9ce2a2';
+(node as any).hash = '444f35122917f76b9135d468ccd51711';
 export default node;

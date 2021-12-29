@@ -1,7 +1,7 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import PostAudience from './PostAudience/PostAudience'
 import PostCharacters from './PostCharacters/PostCharacters'
-import PostCategories from './PostCategories/PostCategories'
+import PostCategories from '../../../../../components/Posts/components/PostCategories/PostCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
 import PostGalleryContent from '../../../../../components/Posts/PostGalleryContent/PostGalleryContent'

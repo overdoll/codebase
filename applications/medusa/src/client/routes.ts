@@ -746,6 +746,32 @@ const routes: Route[] = [
         ]
       },
       {
+        path: '/post',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/ViewPost/ViewPostRoot'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const ViewPostQuery = require('@//:artifacts/ViewPostQuery.graphql')
+          return {
+            query: {
+              query: ViewPostQuery,
+              variables: {
+                reference: query.get('r') ?? ''
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
         path: '*',
         exact: false,
         dependencies: [

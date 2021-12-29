@@ -4,19 +4,19 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type PostBrandFragment = {
-    readonly brand: {
-        readonly name: string;
+export type PostClickableCategoriesFragment = {
+    readonly categories: ReadonlyArray<{
+        readonly title: string;
         readonly thumbnail: {
             readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
         } | null;
-    } | null;
-    readonly " $refType": "PostBrandFragment";
+    }>;
+    readonly " $refType": "PostClickableCategoriesFragment";
 };
-export type PostBrandFragment$data = PostBrandFragment;
-export type PostBrandFragment$key = {
-    readonly " $data"?: PostBrandFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostBrandFragment">;
+export type PostClickableCategoriesFragment$data = PostClickableCategoriesFragment;
+export type PostClickableCategoriesFragment$key = {
+    readonly " $data"?: PostClickableCategoriesFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"PostClickableCategoriesFragment">;
 };
 
 
@@ -25,21 +25,21 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostBrandFragment",
+  "name": "PostClickableCategoriesFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "Brand",
+      "concreteType": "Category",
       "kind": "LinkedField",
-      "name": "brand",
-      "plural": false,
+      "name": "categories",
+      "plural": true,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "name",
+          "name": "title",
           "storageKey": null
         },
         {
@@ -65,5 +65,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '3d4d0a11cc97092fe5f03a32ca29b0c3';
+(node as any).hash = '67396ee9cbf35dc7f20976ec2f3282ff';
 export default node;

@@ -88,7 +88,6 @@ const HorizontalNavigationDropdownMenu = ({
             <ModalOverlay />
             <ModalContent
               bg='gray.800'
-              boxShadow='none'
             >
               <ModalBody my={4}>
                 <Stack

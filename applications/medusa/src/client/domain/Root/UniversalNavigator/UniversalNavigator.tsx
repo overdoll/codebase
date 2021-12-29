@@ -32,20 +32,22 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 
   return (
-    <HorizontalNavigation>
-      <HorizontalNavigation.Left>
-        <RenderOnDesktop>
-          <SiteLinkLogo invisible={isHidden} />
-        </RenderOnDesktop>
-      </HorizontalNavigation.Left>
-      {!isHidden && (
-        <HorizontalNavigation.Center>
-          <MainMenu />
-        </HorizontalNavigation.Center>
-      )}
-      <HorizontalNavigation.Right>
-        <AlternativeMenu queryRef={data} />
-      </HorizontalNavigation.Right>
-    </HorizontalNavigation>
+    <>
+      <HorizontalNavigation>
+        <HorizontalNavigation.Left>
+          <RenderOnDesktop>
+            <SiteLinkLogo invisible={isHidden} />
+          </RenderOnDesktop>
+        </HorizontalNavigation.Left>
+        {!isHidden && (
+          <HorizontalNavigation.Center>
+            <MainMenu />
+          </HorizontalNavigation.Center>
+        )}
+        <HorizontalNavigation.Right>
+          <AlternativeMenu queryRef={data} />
+        </HorizontalNavigation.Right>
+      </HorizontalNavigation>
+    </>
   )
 }

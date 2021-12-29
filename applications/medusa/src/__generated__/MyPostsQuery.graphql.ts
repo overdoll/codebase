@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9f5b4ec35af0b5ee0a2210e3e41745c7 */
+/* @relayHash 4b024b797d0e89568f84d50df1813474 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -89,6 +89,7 @@ fragment PostStatePublishedFragment on Account {
 }
 
 fragment PostStatePublishedPreviewFragment on Post {
+  reference
   ...PostGalleryContentFragment
 }
 
@@ -561,6 +562,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v2/*: any*/),
                       (v13/*: any*/),
                       (v6/*: any*/),
                       (v5/*: any*/)
@@ -638,7 +640,7 @@ return {
     ]
   },
   "params": {
-    "id": "9f5b4ec35af0b5ee0a2210e3e41745c7",
+    "id": "4b024b797d0e89568f84d50df1813474",
     "metadata": {},
     "name": "MyPostsQuery",
     "operationKind": "query",

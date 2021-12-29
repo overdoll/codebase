@@ -2,6 +2,8 @@ import { graphql } from 'react-relay/hooks'
 import type { PostStatePublishedPreviewFragment$key } from '@//:artifacts/PostStatePublishedPreviewFragment.graphql'
 import { useFragment } from 'react-relay'
 import PostGalleryContent from '../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import { Box } from '@chakra-ui/react'
+import { useHistory } from '@//:modules/routing'
 
 interface Props {
   query: PostStatePublishedPreviewFragment$key
@@ -9,10 +11,10 @@ interface Props {
 
 // TODO this is a placeholder - we probably want to give
 // TODO more information and control over the post here
-// TODO like clicking on it will take them to the public post
 
 const Fragment = graphql`
   fragment PostStatePublishedPreviewFragment on Post {
+    reference
     ...PostGalleryContentFragment
   }
 `
@@ -20,7 +22,15 @@ const Fragment = graphql`
 export default function PostStatePublishedPreview ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const history = useHistory()
+
+  const gotoPublicPage = (): void => {
+    history.push(`/post?r=${data.reference}`)
+  }
+
   return (
-    <PostGalleryContent query={data} />
+    <Box onClick={gotoPublicPage}>
+      <PostGalleryContent query={data} />
+    </Box>
   )
 }

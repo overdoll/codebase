@@ -8,6 +8,7 @@ import { useFragment } from 'react-relay'
 import PostGalleryContent from '../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
 import PostBrand from '../../../../../../../../components/Posts/PostBrand/PostBrand'
 import { Trans } from '@lingui/macro'
+import PostIndexer from '../../../../../../../../components/Posts/PostIndexer/PostIndexer'
 
 interface Props {
   uppy: Uppy
@@ -54,7 +55,13 @@ export default function Review ({
       </PageSectionWrap>
       <Stack spacing={2}>
         <PostBrand query={data} />
-        <PostGalleryContent query={data} />
+        <PostGalleryContent query={data}>
+          {({
+            slidesCount,
+            currentSlide
+          }) =>
+            <PostIndexer length={slidesCount} currentIndex={currentSlide} />}
+        </PostGalleryContent>
       </Stack>
     </>
   )
