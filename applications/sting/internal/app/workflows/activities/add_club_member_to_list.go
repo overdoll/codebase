@@ -4,6 +4,6 @@ import (
 	"context"
 )
 
-func (h *Activities) AddClubMemberToList(ctx context.Context, clubId, postId string) error {
-	return nil
+func (h *Activities) AddClubMemberToList(ctx context.Context, clubId, accountId string) error {
+	return h.cr.AddClubMemberToList(ctx, clubId, accountId)
 }

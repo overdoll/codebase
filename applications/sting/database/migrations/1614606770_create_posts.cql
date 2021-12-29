@@ -101,13 +101,14 @@ CREATE TABLE IF NOT EXISTS clubs_slugs
     primary key ( slug )
 );
 
-CREATE TABLE IF NOT EXISTS club_members_by_account
+CREATE TABLE IF NOT EXISTS club_members
 (
-    club_id    text,
-    account_id text,
-    bucket     timeuuid,
-    joined_at  timeuuid,
-    primary key ( (club_id, account_id) )
+    club_id           text,
+    member_account_id text,
+    bucket            timeuuid,
+    joined_at         timeuuid,
+    deleted           boolean,
+    primary key ( (club_id, member_account_id) )
 );
 
 CREATE TABLE IF NOT EXISTS account_clubs
@@ -119,7 +120,7 @@ CREATE TABLE IF NOT EXISTS account_clubs
     primary key ( member_account_id, joined_at, club_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC, club_id ASC);
 
-CREATE TABLE IF NOT EXISTS club_members
+CREATE TABLE IF NOT EXISTS club_members_by_club
 (
     club_id           text,
     bucket            timeuuid,

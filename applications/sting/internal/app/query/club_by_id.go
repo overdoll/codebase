@@ -22,7 +22,7 @@ func NewClubByIdHandler(cr club.Repository) ClubByIdHandler {
 
 func (h ClubByIdHandler) Handle(ctx context.Context, query ClubById) (*club.Club, error) {
 
-	result, err := h.cr.GetClubById(ctx, query.Principal, query.Id)
+	result, err := h.cr.GetClubById(ctx, query.Id)
 
 	if err != nil {
 		return nil, err

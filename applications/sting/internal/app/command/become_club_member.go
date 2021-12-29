@@ -22,7 +22,7 @@ func NewBecomeClubMemberHandler(cr club.Repository) BecomeClubMemberHandler {
 
 func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMember) (*club.Member, error) {
 
-	clb, err := h.cr.GetClubById(ctx, cmd.Principal, cmd.ClubId)
+	clb, err := h.cr.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return nil, err

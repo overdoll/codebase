@@ -22,7 +22,7 @@ func NewWithdrawClubMembershipHandler(cr club.Repository) WithdrawClubMembership
 
 func (h WithdrawClubMembershipHandler) Handle(ctx context.Context, cmd WithdrawClubMembership) error {
 
-	if err := h.cr.DeleteClubMember(ctx, cmd.Principal, cmd.ClubId); err != nil {
+	if err := h.cr.DeleteClubMember(ctx, cmd.Principal, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
 		return err
 	}
 

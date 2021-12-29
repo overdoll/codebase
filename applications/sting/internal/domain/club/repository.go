@@ -8,8 +8,8 @@ import (
 )
 
 type Repository interface {
-	GetClubById(ctx context.Context, requester *principal.Principal, clubId string) (*Club, error)
-	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)
+	GetClubById(ctx context.Context, clubId string) (*Club, error)
+	GetClubBySlug(ctx context.Context, slug string) (*Club, error)
 	CreateClub(ctx context.Context, requester *principal.Principal, club *Club) error
 
 	UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
@@ -18,7 +18,11 @@ type Repository interface {
 
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, requester *principal.Principal, member *Member) error
-	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId string) error
+	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error
+	RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error
+	AddClubMemberToList(ctx context.Context, clubId, accountId string) error
+
+	UpdateClubMembersTotalCount(ctx context.Context, clubId string) error
 
 	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)
 	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)

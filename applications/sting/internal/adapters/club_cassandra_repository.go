@@ -78,7 +78,7 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	}, nil
 }
 
-func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
+func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, slug string) (*club.Club, error) {
 
 	queryBrandSlug := r.session.
 		Query(clubSlugTable.Get()).
@@ -96,10 +96,10 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *p
 		return nil, fmt.Errorf("failed to get club by slug: %v", err)
 	}
 
-	return r.GetClubById(ctx, requester, b.ClubId)
+	return r.GetClubById(ctx, b.ClubId)
 }
 
-func (r ClubCassandraRepository) GetClubById(ctx context.Context, requester *principal.Principal, brandId string) (*club.Club, error) {
+func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string) (*club.Club, error) {
 
 	queryBrand := r.session.
 		Query(clubTable.Get()).
@@ -129,7 +129,7 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, requester *pri
 }
 
 func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	currentClub, err := r.GetClubById(ctx, requester, clubId)
+	currentClub, err := r.GetClubById(ctx, clubId)
 
 	if err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *
 
 func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
-	currentClub, err := r.GetClubById(ctx, requester, clubId)
+	currentClub, err := r.GetClubById(ctx, clubId)
 
 	if err != nil {
 		return nil, err
@@ -282,9 +282,23 @@ func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, requester *
 	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"name"})
 }
 
+func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
+
+	clubUpdate := r.session.
+		Query(clubTable.Update("members_count")).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubs{Id: clubId, MembersCount: count})
+
+	if err := clubUpdate.ExecRelease(); err != nil {
+		return fmt.Errorf("failed to update club member count: %v", err)
+	}
+
+	return nil
+}
+
 func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
 
-	currentClub, err := r.GetClubById(ctx, requester, clubId)
+	currentClub, err := r.GetClubById(ctx, clubId)
 
 	if err != nil {
 		return nil, err
