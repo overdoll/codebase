@@ -59,7 +59,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, postIndexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
-			IndexAllClubs:      command.NewIndexAllClubsHandler(postRepo, postIndexRepo),
+			IndexAllClubs:      command.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
@@ -102,7 +102,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
 			ClubById:                    query.NewClubByIdHandler(clubRepo),
 			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
 			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
+			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
 			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
 			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},

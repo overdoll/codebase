@@ -9,6 +9,7 @@ import (
 type Repository interface {
 	CreateAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string, recoveryCodes []*RecoveryCode) error
 	GetAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string) ([]*RecoveryCode, error)
+	HasAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string) (bool, error)
 	VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *RecoveryCode) error
 
 	GetAccountMultiFactorTOTP(ctx context.Context, accountId string) (*TOTP, error)

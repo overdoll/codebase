@@ -45,17 +45,18 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchAccounts                  query.SearchAccountsHandler
-	AccountById                     query.AccountByIdHandler
-	AccountsById                    query.AccountsByIdHandler
-	AccountByEmail                  query.AccountByEmailHandler
-	AccountByUsername               query.AccountByUsernameHandler
-	AccountEmailByEmail             query.AccountEmailByEmailHandler
-	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
-	AccountEmailsLimit              query.AccountEmailsLimitHandler
-	AccountSessionById              query.AccountSessionByIdHandler
-	AccountSessionsByAccount        query.AccountSessionsByAccountHandler
-	AccountRecoveryCodesByAccount   query.AccountRecoveryCodesByAccountHandler
-	IsAccountMultiFactorTOTPEnabled query.IsAccountMultiFactorTOTPEnabledHandler
-	ViewAuthenticationToken         query.ViewAuthenticationTokenHandler
+	SearchAccounts                              query.SearchAccountsHandler
+	AccountById                                 query.AccountByIdHandler
+	AccountsById                                query.AccountsByIdHandler
+	AccountByEmail                              query.AccountByEmailHandler
+	AccountByUsername                           query.AccountByUsernameHandler
+	AccountEmailByEmail                         query.AccountEmailByEmailHandler
+	AccountEmailsByAccount                      query.AccountEmailsByAccountHandler
+	AccountEmailsLimit                          query.AccountEmailsLimitHandler
+	AccountSessionById                          query.AccountSessionByIdHandler
+	AccountSessionsByAccount                    query.AccountSessionsByAccountHandler
+	AccountRecoveryCodesByAccount               query.AccountRecoveryCodesByAccountHandler
+	IsAccountMultiFactorTOTPEnabled             query.IsAccountMultiFactorTOTPEnabledHandler
+	AreAccountMultiFactorRecoveryCodesGenerated query.AreAccountMultiFactorRecoveryCodesGeneratedHandler
+	ViewAuthenticationToken                     query.ViewAuthenticationTokenHandler
 }

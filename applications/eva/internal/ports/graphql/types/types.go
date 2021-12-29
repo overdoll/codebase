@@ -45,10 +45,14 @@ type Account struct {
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
 	Emails *AccountEmailConnection `json:"emails"`
-	// Multi factor account settings
-	//
-	// Only queryable if the currently logged-in account belongs to the requested account
-	MultiFactorSettings *AccountMultiFactorSettings `json:"multiFactorSettings"`
+	// Have recovery codes been generated? Required in order to configure TOTP
+	RecoveryCodesGenerated bool `json:"recoveryCodesGenerated"`
+	// Is multi factor enabled - can be toggled off if they want to
+	MultiFactorEnabled bool `json:"multiFactorEnabled"`
+	// Privileged users cannot disable MFA (moderators, staff)
+	CanDisableMultiFactor bool `json:"canDisableMultiFactor"`
+	// Has TOTP been configured? Recovery codes must be generated before configuring
+	MultiFactorTotpConfigured bool `json:"multiFactorTotpConfigured"`
 	// MFA Recovery codes belonging to this account
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -108,17 +112,6 @@ type AccountLock struct {
 type AccountMultiFactorRecoveryCode struct {
 	// The multi factor recovery code
 	Code string `json:"code"`
-}
-
-type AccountMultiFactorSettings struct {
-	// Have recovery codes been generated? Required in order to configure TOTP
-	RecoveryCodesGenerated bool `json:"recoveryCodesGenerated"`
-	// Is multi factor enabled - can be toggled off if they want to
-	MultiFactorEnabled bool `json:"multiFactorEnabled"`
-	// Privileged users cannot disable MFA (moderators, staff)
-	CanDisableMultiFactor bool `json:"canDisableMultiFactor"`
-	// Has TOTP been configured? Recovery codes must be generated before configuring
-	MultiFactorTotpConfigured bool `json:"multiFactorTotpConfigured"`
 }
 
 // Session belonging to a specific account

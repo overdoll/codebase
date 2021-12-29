@@ -1,5 +1,6 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
 import { Switch as ChakraSwitch, SwitchProps } from '@chakra-ui/react'
+import useSSRDisable from '../../hooks/useSSRDisable'
 
 const AnimatedSwitch = ChakraSwitch
 
@@ -15,13 +16,7 @@ export default function Switch ({
   disabled = false,
   ...rest
 }: Props): JSX.Element {
-  const [disableOverride, setDisableOverride] = useState(true)
-
-  // We need this hook here to enable the buttons after SSR hydration occurs
-  // we dont want buttons to be usable until javascript is mounted or else we get issues
-  useEffect(() => {
-    setDisableOverride(false)
-  }, [])
+  const disableOverride = useSSRDisable()
 
   // for type=submit (forms), we show a loading state
   const fullDisable = (disableOverride) || (disabled || loading)

@@ -85,3 +85,11 @@ func ViewAccountClubMemberLimit(requester *principal.Principal, accountId string
 
 	return maxAccountClubsLimit, nil
 }
+
+func CanViewAccountClubMemberships(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}

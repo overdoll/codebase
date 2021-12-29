@@ -33,10 +33,8 @@ func (r AccountResolver) ClubMembershipsCount(ctx context.Context, obj *types.Ac
 		return 0, err
 	}
 
-	results, err := r.App.Queries.AccountClubMemberships.Handle(ctx, query.AccountClubMemberships{
+	results, err := r.App.Queries.AccountClubMembershipsCount.Handle(ctx, query.AccountClubMembershipsCount{
 		Principal: principal.FromContext(ctx),
-		// for the count, cursor is nil to return all results
-		Cursor:    nil,
 		AccountId: obj.ID.GetID(),
 	})
 
@@ -44,7 +42,7 @@ func (r AccountResolver) ClubMembershipsCount(ctx context.Context, obj *types.Ac
 		return 0, err
 	}
 
-	return len(results), nil
+	return results, nil
 }
 
 func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error) {

@@ -45,6 +45,7 @@ require (
 	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.6.0
 	github.com/vektah/gqlparser/v2 v2.2.0
+	go.temporal.io/api v1.4.1-0.20210318194442-3f93fcec559f
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/zap v1.18.1

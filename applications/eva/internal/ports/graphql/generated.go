@@ -52,20 +52,23 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Avatar                  func(childComplexity int, size *int) int
-		Emails                  func(childComplexity int, after *string, before *string, first *int, last *int) int
-		EmailsLimit             func(childComplexity int) int
-		ID                      func(childComplexity int) int
-		IsModerator             func(childComplexity int) int
-		IsStaff                 func(childComplexity int) int
-		Language                func(childComplexity int) int
-		Lock                    func(childComplexity int) int
-		MultiFactorSettings     func(childComplexity int) int
-		RecoveryCodes           func(childComplexity int) int
-		Reference               func(childComplexity int) int
-		Sessions                func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Username                func(childComplexity int) int
-		UsernameEditAvailableAt func(childComplexity int) int
+		Avatar                    func(childComplexity int, size *int) int
+		CanDisableMultiFactor     func(childComplexity int) int
+		Emails                    func(childComplexity int, after *string, before *string, first *int, last *int) int
+		EmailsLimit               func(childComplexity int) int
+		ID                        func(childComplexity int) int
+		IsModerator               func(childComplexity int) int
+		IsStaff                   func(childComplexity int) int
+		Language                  func(childComplexity int) int
+		Lock                      func(childComplexity int) int
+		MultiFactorEnabled        func(childComplexity int) int
+		MultiFactorTotpConfigured func(childComplexity int) int
+		RecoveryCodes             func(childComplexity int) int
+		RecoveryCodesGenerated    func(childComplexity int) int
+		Reference                 func(childComplexity int) int
+		Sessions                  func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Username                  func(childComplexity int) int
+		UsernameEditAvailableAt   func(childComplexity int) int
 	}
 
 	AccountConnection struct {
@@ -102,13 +105,6 @@ type ComplexityRoot struct {
 
 	AccountMultiFactorRecoveryCode struct {
 		Code func(childComplexity int) int
-	}
-
-	AccountMultiFactorSettings struct {
-		CanDisableMultiFactor     func(childComplexity int) int
-		MultiFactorEnabled        func(childComplexity int) int
-		MultiFactorTotpConfigured func(childComplexity int) int
-		RecoveryCodesGenerated    func(childComplexity int) int
 	}
 
 	AccountSession struct {
@@ -351,7 +347,10 @@ type AccountResolver interface {
 	UsernameEditAvailableAt(ctx context.Context, obj *types.Account) (*time.Time, error)
 	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
-	MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error)
+	RecoveryCodesGenerated(ctx context.Context, obj *types.Account) (bool, error)
+	MultiFactorEnabled(ctx context.Context, obj *types.Account) (bool, error)
+	CanDisableMultiFactor(ctx context.Context, obj *types.Account) (bool, error)
+	MultiFactorTotpConfigured(ctx context.Context, obj *types.Account) (bool, error)
 	RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error)
 }
 type AccountEmailResolver interface {
@@ -425,6 +424,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Avatar(childComplexity, args["size"].(*int)), true
 
+	case "Account.canDisableMultiFactor":
+		if e.complexity.Account.CanDisableMultiFactor == nil {
+			break
+		}
+
+		return e.complexity.Account.CanDisableMultiFactor(childComplexity), true
+
 	case "Account.emails":
 		if e.complexity.Account.Emails == nil {
 			break
@@ -479,12 +485,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Lock(childComplexity), true
 
-	case "Account.multiFactorSettings":
-		if e.complexity.Account.MultiFactorSettings == nil {
+	case "Account.multiFactorEnabled":
+		if e.complexity.Account.MultiFactorEnabled == nil {
 			break
 		}
 
-		return e.complexity.Account.MultiFactorSettings(childComplexity), true
+		return e.complexity.Account.MultiFactorEnabled(childComplexity), true
+
+	case "Account.multiFactorTotpConfigured":
+		if e.complexity.Account.MultiFactorTotpConfigured == nil {
+			break
+		}
+
+		return e.complexity.Account.MultiFactorTotpConfigured(childComplexity), true
 
 	case "Account.recoveryCodes":
 		if e.complexity.Account.RecoveryCodes == nil {
@@ -492,6 +505,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.RecoveryCodes(childComplexity), true
+
+	case "Account.recoveryCodesGenerated":
+		if e.complexity.Account.RecoveryCodesGenerated == nil {
+			break
+		}
+
+		return e.complexity.Account.RecoveryCodesGenerated(childComplexity), true
 
 	case "Account.reference":
 		if e.complexity.Account.Reference == nil {
@@ -630,34 +650,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountMultiFactorRecoveryCode.Code(childComplexity), true
-
-	case "AccountMultiFactorSettings.canDisableMultiFactor":
-		if e.complexity.AccountMultiFactorSettings.CanDisableMultiFactor == nil {
-			break
-		}
-
-		return e.complexity.AccountMultiFactorSettings.CanDisableMultiFactor(childComplexity), true
-
-	case "AccountMultiFactorSettings.multiFactorEnabled":
-		if e.complexity.AccountMultiFactorSettings.MultiFactorEnabled == nil {
-			break
-		}
-
-		return e.complexity.AccountMultiFactorSettings.MultiFactorEnabled(childComplexity), true
-
-	case "AccountMultiFactorSettings.multiFactorTotpConfigured":
-		if e.complexity.AccountMultiFactorSettings.MultiFactorTotpConfigured == nil {
-			break
-		}
-
-		return e.complexity.AccountMultiFactorSettings.MultiFactorTotpConfigured(childComplexity), true
-
-	case "AccountMultiFactorSettings.recoveryCodesGenerated":
-		if e.complexity.AccountMultiFactorSettings.RecoveryCodesGenerated == nil {
-			break
-		}
-
-		return e.complexity.AccountMultiFactorSettings.RecoveryCodesGenerated(childComplexity), true
 
 	case "AccountSession.created":
 		if e.complexity.AccountSession.Created == nil {
@@ -2003,30 +1995,8 @@ type MultiFactorTotp  {
   imageSrc: String!
 }
 
-type AccountMultiFactorSettings {
-  """
-  Have recovery codes been generated? Required in order to configure TOTP
-  """
-  recoveryCodesGenerated: Boolean!
-
-  """
-  Is multi factor enabled - can be toggled off if they want to
-  """
-  multiFactorEnabled: Boolean!
-
-  """
-  Privileged users cannot disable MFA (moderators, staff)
-  """
-  canDisableMultiFactor: Boolean!
-
-  """
-  Has TOTP been configured? Recovery codes must be generated before configuring
-  """
-  multiFactorTotpConfigured: Boolean!
-}
-
 extend type Account {
-  
+
   """
   The next time the username is available to be changed
   """
@@ -2059,11 +2029,24 @@ extend type Account {
   ): AccountEmailConnection! @goField(forceResolver: true)
 
   """
-  Multi factor account settings
-
-  Only queryable if the currently logged-in account belongs to the requested account
+  Have recovery codes been generated? Required in order to configure TOTP
   """
-  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true)
+  recoveryCodesGenerated: Boolean! @goField(forceResolver: true)
+
+  """
+  Is multi factor enabled - can be toggled off if they want to
+  """
+  multiFactorEnabled: Boolean! @goField(forceResolver: true)
+
+  """
+  Privileged users cannot disable MFA (moderators, staff)
+  """
+  canDisableMultiFactor: Boolean! @goField(forceResolver: true)
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean! @goField(forceResolver: true)
 
   """
   MFA Recovery codes belonging to this account
@@ -3723,7 +3706,7 @@ func (ec *executionContext) _Account_emails(ctx context.Context, field graphql.C
 	return ec.marshalNAccountEmailConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmailConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_multiFactorSettings(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_recoveryCodesGenerated(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3741,7 +3724,7 @@ func (ec *executionContext) _Account_multiFactorSettings(ctx context.Context, fi
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().MultiFactorSettings(rctx, obj)
+		return ec.resolvers.Account().RecoveryCodesGenerated(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3753,9 +3736,114 @@ func (ec *executionContext) _Account_multiFactorSettings(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountMultiFactorSettings)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNAccountMultiFactorSettings2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorSettings(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_multiFactorEnabled(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().MultiFactorEnabled(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_canDisableMultiFactor(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().CanDisableMultiFactor(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_multiFactorTotpConfigured(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().MultiFactorTotpConfigured(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_recoveryCodes(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -4313,146 +4401,6 @@ func (ec *executionContext) _AccountMultiFactorRecoveryCode_code(ctx context.Con
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountMultiFactorSettings_recoveryCodesGenerated(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSettings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorSettings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RecoveryCodesGenerated, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountMultiFactorSettings_multiFactorEnabled(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSettings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorSettings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MultiFactorEnabled, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountMultiFactorSettings_canDisableMultiFactor(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSettings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorSettings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CanDisableMultiFactor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountMultiFactorSettings_multiFactorTotpConfigured(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSettings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorSettings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MultiFactorTotpConfigured, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSession_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountSession) (ret graphql.Marshaler) {
@@ -10379,7 +10327,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				}
 				return res
 			})
-		case "multiFactorSettings":
+		case "recoveryCodesGenerated":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10387,7 +10335,49 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_multiFactorSettings(ctx, field, obj)
+				res = ec._Account_recoveryCodesGenerated(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "multiFactorEnabled":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_multiFactorEnabled(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "canDisableMultiFactor":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_canDisableMultiFactor(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "multiFactorTotpConfigured":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_multiFactorTotpConfigured(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10639,48 +10629,6 @@ func (ec *executionContext) _AccountMultiFactorRecoveryCode(ctx context.Context,
 			out.Values[i] = graphql.MarshalString("AccountMultiFactorRecoveryCode")
 		case "code":
 			out.Values[i] = ec._AccountMultiFactorRecoveryCode_code(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountMultiFactorSettingsImplementors = []string{"AccountMultiFactorSettings"}
-
-func (ec *executionContext) _AccountMultiFactorSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountMultiFactorSettings) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountMultiFactorSettingsImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountMultiFactorSettings")
-		case "recoveryCodesGenerated":
-			out.Values[i] = ec._AccountMultiFactorSettings_recoveryCodesGenerated(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "multiFactorEnabled":
-			out.Values[i] = ec._AccountMultiFactorSettings_multiFactorEnabled(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "canDisableMultiFactor":
-			out.Values[i] = ec._AccountMultiFactorSettings_canDisableMultiFactor(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "multiFactorTotpConfigured":
-			out.Values[i] = ec._AccountMultiFactorSettings_multiFactorTotpConfigured(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12534,20 +12482,6 @@ func (ec *executionContext) marshalNAccountMultiFactorRecoveryCode2ᚖoverdoll�
 		return graphql.Null
 	}
 	return ec._AccountMultiFactorRecoveryCode(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNAccountMultiFactorSettings2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorSettings(ctx context.Context, sel ast.SelectionSet, v types.AccountMultiFactorSettings) graphql.Marshaler {
-	return ec._AccountMultiFactorSettings(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNAccountMultiFactorSettings2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorSettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountMultiFactorSettings) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._AccountMultiFactorSettings(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNAccountSession2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSession(ctx context.Context, sel ast.SelectionSet, v types.AccountSession) graphql.Marshaler {

@@ -56,28 +56,6 @@ type MultiFactorTotp  {
   imageSrc: String!
 }
 
-type AccountMultiFactorSettings {
-  """
-  Have recovery codes been generated? Required in order to configure TOTP
-  """
-  recoveryCodesGenerated: Boolean!
-
-  """
-  Is multi factor enabled - can be toggled off if they want to
-  """
-  multiFactorEnabled: Boolean!
-
-  """
-  Privileged users cannot disable MFA (moderators, staff)
-  """
-  canDisableMultiFactor: Boolean!
-
-  """
-  Has TOTP been configured? Recovery codes must be generated before configuring
-  """
-  multiFactorTotpConfigured: Boolean!
-}
-
 extend type Account {
 
   """
@@ -112,11 +90,24 @@ extend type Account {
   ): AccountEmailConnection! @goField(forceResolver: true)
 
   """
-  Multi factor account settings
-
-  Only queryable if the currently logged-in account belongs to the requested account
+  Have recovery codes been generated? Required in order to configure TOTP
   """
-  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true)
+  recoveryCodesGenerated: Boolean! @goField(forceResolver: true)
+
+  """
+  Is multi factor enabled - can be toggled off if they want to
+  """
+  multiFactorEnabled: Boolean! @goField(forceResolver: true)
+
+  """
+  Privileged users cannot disable MFA (moderators, staff)
+  """
+  canDisableMultiFactor: Boolean! @goField(forceResolver: true)
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean! @goField(forceResolver: true)
 
   """
   MFA Recovery codes belonging to this account

@@ -18,6 +18,68 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) RecoveryCodesGenerated(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	res, err := r.App.Queries.AreAccountMultiFactorRecoveryCodesGenerated.Handle(ctx, query.AreAccountMultiFactorRecoveryCodesGenerated{
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return res, nil
+}
+
+func (r AccountResolver) MultiFactorEnabled(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return false, err
+	}
+
+	return obj.MultiFactorEnabled, nil
+}
+
+func (r AccountResolver) CanDisableMultiFactor(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return false, err
+	}
+
+	return obj.CanDisableMultiFactor, nil
+}
+
+func (r AccountResolver) MultiFactorTotpConfigured(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, query.IsAccountMultiFactorTOTPEnabled{
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return totpEnabled, nil
+}
+
 func (r AccountResolver) UsernameEditAvailableAt(ctx context.Context, obj *types.Account) (*time.Time, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -115,55 +177,6 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 	}
 
 	return types.MarshalAccountSessionToGraphQLConnection(results, cursor), nil
-}
-
-func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	accountId := obj.ID.GetID()
-
-	if err := principal.FromContext(ctx).BelongsToAccount(accountId); err != nil {
-		return nil, err
-	}
-
-	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
-
-	if err != nil {
-
-		if err == account.ErrAccountNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{
-		AccountId: accountId,
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, query.IsAccountMultiFactorTOTPEnabled{
-		AccountId: accountId,
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.AccountMultiFactorSettings{
-		RecoveryCodesGenerated:    len(codes) > 0,
-		MultiFactorEnabled:        acc.MultiFactorEnabled(),
-		CanDisableMultiFactor:     acc.CanDisableMultiFactor(),
-		MultiFactorTotpConfigured: totpEnabled,
-	}, nil
 }
 
 func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error) {

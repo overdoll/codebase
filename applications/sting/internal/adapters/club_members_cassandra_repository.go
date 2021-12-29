@@ -56,6 +56,13 @@ var accountClubsTable = table.New(table.Metadata{
 	SortKey: []string{"joined_at", "club_id"},
 })
 
+type accountClubs struct {
+	ClubId          string    `db:"club_id"`
+	Bucket          string    `db:"bucket"`
+	MemberAccountId string    `db:"member_account_id"`
+	JoinedAt        time.Time `db:"joined_at"`
+}
+
 var clubMembersByClubTable = table.New(table.Metadata{
 	Name: "club_members_by_club",
 	Columns: []string{
@@ -96,7 +103,20 @@ type clubMembersPartition struct {
 	MaxMembersCount   int       `db:"max_members_count"`
 }
 
-func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId, bucket string) error {
+func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) error {
+
+	stmt, _ := clubMembersPartitionsTable.Insert()
+
+	// initially, make 10 partitions with a maximum member count of x members per partition
+	// will expand when partitions begin to fill up
+	for i := 0; i <= initialClubMembersPartitions; i++ {
+		batch.Query(stmt, clubId, gocql.TimeUUID(), time.Now(), 0, maxClubMembersPerPartition)
+	}
+
+	return nil
+}
+
+func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId, bucket string, noTimestamp bool) error {
 
 	// first, grab the partition to get the last timestamp count
 	queryPartitions := r.session.
@@ -109,14 +129,19 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		return fmt.Errorf("failed to get club by id: %v", err)
 	}
 
-	// then, using the last timestamp, count the number of new rows since then
-	getCurrentCount := clubMembersByClubTable.
+	builder := clubMembersByClubTable.
 		SelectBuilder().
 		Where(
-			qb.Gt("joined_at"),
 			qb.Eq("club_id"),
 			qb.Eq("bucket"),
-		).
+		)
+
+	if !noTimestamp {
+		builder.Where(qb.Gt("joined_at"))
+	}
+
+	// then, using the last timestamp, count the number of new rows since then
+	getCurrentCount := builder.
 		CountAll().
 		Max("joined_at").
 		Query(r.session).
@@ -137,13 +162,19 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		return fmt.Errorf("failed to get club by id: %v", err)
 	}
 
-	applied, err := clubMembersPartitionsTable.
+	partBuilder := clubMembersPartitionsTable.
 		UpdateBuilder().
 		Set("last_joined_at_count", "count").
 		Where(
 			qb.Eq("club_id"),
 			qb.Eq("bucket"),
-		).
+		)
+
+	if !noTimestamp {
+		partBuilder.If(qb.EqLit("last_joined_at_count", `'`+partition.LastJoinedAtCount.String()+`'`))
+	}
+
+	applied, err := partBuilder.
 		Query(r.session).
 		BindStruct(clubMembersPartition{
 			ClubId:            partition.ClubId,
@@ -249,6 +280,20 @@ func (r ClubCassandraRepository) getClubMemberById(ctx context.Context, clubId, 
 	return &clubMem, nil
 }
 
+func (r ClubCassandraRepository) deleteClubMemberById(ctx context.Context, clubId, accountId string) error {
+
+	queryMember := r.session.
+		Query(clubMembersTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId})
+
+	if err := queryMember.ExecRelease(); err != nil {
+		return fmt.Errorf("failed to get club member by id: %v", err)
+	}
+
+	return nil
+}
+
 func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
@@ -308,7 +353,7 @@ func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId
 	}
 
 	// finally, also update the count
-	return r.updateClubMembersPartitionCount(ctx, clb.ClubId, clb.Bucket)
+	return r.updateClubMembersPartitionCount(ctx, clb.ClubId, clb.Bucket, false)
 }
 
 func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context, clubId string) error {
@@ -340,16 +385,106 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 }
 
 func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club.Member, error) {
-	//TODO implement me
-	panic("implement me")
+
+	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
+		return nil, err
+	}
+
+	builder := accountClubsTable.SelectBuilder()
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "joined_at")
+	}
+
+	queryClubMemberships := builder.Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountClubs{
+			MemberAccountId: accountId,
+		})
+
+	var accountClubs []*accountClubs
+
+	if err := queryClubMemberships.Select(&accountClubs); err != nil {
+		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	var members []*club.Member
+
+	for _, clb := range accountClubs {
+		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt)
+		members = append(members, em)
+		em.Node = paging.NewNode(clb.JoinedAt.String())
+	}
+
+	return members, nil
 }
 
-func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
-	//TODO implement me
-	panic("implement me")
+func (r ClubCassandraRepository) GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
+
+	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
+		return 0, err
+	}
+
+	type accountClubMembersCount struct {
+		Count int `db:"count(*)"`
+	}
+
+	var clubMembersCount accountClubMembersCount
+
+	queryAccountsCount := accountClubsTable.
+		SelectBuilder().
+		CountAll().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountClubs{
+			MemberAccountId: accountId,
+		})
+
+	if err := queryAccountsCount.Select(&clubMembersCount); err != nil {
+		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	return clubMembersCount.Count, nil
 }
 
 func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error {
+
+	clb, err := r.getClubMemberById(ctx, clubId, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if !clb.Deleted {
+		return errors.New("ran delete when delete was not requested")
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// delete from account's club list
+	stmt, _ := accountClubsTable.Delete()
+	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId)
+
+	// delete from club members list
+	stmt, _ = clubMembersByClubTable.Delete()
+
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId)
+
+	// execute batch
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete member from lists: %v", err)
+	}
+
+	// update the count - don't use the previous timestamp and instead do a fresh count (we need to consider removed records)
+	if err := r.updateClubMembersPartitionCount(ctx, clb.ClubId, clb.Bucket, true); err != nil {
+		return err
+	}
+
+	// delete the final record
+	return r.deleteClubMemberById(ctx, clubId, accountId)
+}
+
+func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
 	//TODO implement me
 	panic("implement me")
 }

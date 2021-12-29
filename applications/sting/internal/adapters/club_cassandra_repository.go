@@ -343,15 +343,11 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *prin
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := clubMembersPartitionsTable.Insert()
-
-	// initially, make 10 partitions with a maximum member count of 10000 per partition
-	// will expand when partitions begin to fill up
-	for i := 0; i <= initialClubMembersPartitions; i++ {
-		batch.Query(stmt, cla.Id, gocql.TimeUUID(), nil, 0, maxClubMembersPerPartition)
+	if err := r.addInitialClubPartitionInsertsToBatch(ctx, batch, cla.Id); err != nil {
+		return err
 	}
 
-	stmt, _ = clubTable.Insert()
+	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
 	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.Thumbnail, cla.MembersCount, cla.OwnerAccountId)
