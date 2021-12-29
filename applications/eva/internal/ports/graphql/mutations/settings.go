@@ -176,7 +176,7 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 	return &types.DeleteAccountEmailPayload{AccountEmailID: input.AccountEmailID}, nil
 }
 
-func (r *MutationResolver) UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsername) (*types.UpdateAccountUsernamePayload, error) {
+func (r *MutationResolver) UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsernameInput) (*types.UpdateAccountUsernamePayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err

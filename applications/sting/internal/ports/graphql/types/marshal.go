@@ -121,13 +121,20 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
+	var slugAliases []*ClubSlugAlias
+
+	for _, s := range result.SlugAliases() {
+		slugAliases = append(slugAliases, &ClubSlugAlias{Slug: s})
+	}
+
 	return &Club{
-		ID:          relay.NewID(Club{}, result.ID()),
-		Name:        result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:        result.Slug(),
-		SlugAliases: result.SlugAliases(),
-		Thumbnail:   res,
-		Owner:       &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		ID:           relay.NewID(Club{}, result.ID()),
+		Name:         result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:         result.Slug(),
+		SlugAliases:  slugAliases,
+		MembersCount: result.MembersCount(),
+		Thumbnail:    res,
+		Owner:        &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
 	}
 }
 

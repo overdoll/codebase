@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash df279f7a6e166e543ea7d0aa92c66081 */
+/* @relayHash b1a3f2d26729afb4c6d5a5eb3021e102 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -42,7 +42,7 @@ query AuditLogsPaginationQuery(
 fragment AuditCardFragment on PostAuditLog {
   post {
     postedAt
-    brand {
+    club {
       name
       id
     }
@@ -331,9 +331,9 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Brand",
+                                "concreteType": "Club",
                                 "kind": "LinkedField",
-                                "name": "brand",
+                                "name": "club",
                                 "plural": false,
                                 "selections": [
                                   (v11/*: any*/),
@@ -509,7 +509,7 @@ return {
     ]
   },
   "params": {
-    "id": "df279f7a6e166e543ea7d0aa92c66081",
+    "id": "b1a3f2d26729afb4c6d5a5eb3021e102",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

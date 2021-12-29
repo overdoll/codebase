@@ -36,9 +36,6 @@ const RecoveryCodesSetupQueryGQL = graphql`
         __id
         code
       }
-      multiFactorSettings {
-        __typename
-      }
     }
   }
 `
@@ -112,12 +109,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
         if (node != null) {
           const payload = store.getRootField('generateAccountMultiFactorRecoveryCodes').getLinkedRecords('accountMultiFactorRecoveryCodes')
           node.setLinkedRecords(payload, 'recoveryCodes')
-
-          const multiFactorSettings = node.getLinkedRecord('multiFactorSettings')
-
-          if (multiFactorSettings != null) {
-            multiFactorSettings.setValue(true, 'recoveryCodesGenerated')
-          }
+          node.setValue(true, 'recoveryCodesGenerated')
         }
       }
     })

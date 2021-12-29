@@ -167,7 +167,7 @@ type Club struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
-	SlugAliases []string `json:"slugAliases"`
+	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// A URL pointing to the object's thumbnail.
@@ -176,6 +176,8 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// The total amount of members in this club.
+	MembersCount int `json:"membersCount"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// Club members.
@@ -228,6 +230,12 @@ type ClubMembersOrder struct {
 	Field ClubMembersOrderField `json:"field"`
 }
 
+// The club slug alias
+type ClubSlugAlias struct {
+	// The slug alias
+	Slug string `json:"slug"`
+}
+
 // Ordering options for clubs
 type ClubsOrder struct {
 	// The field to order clubs by.
@@ -270,7 +278,7 @@ type Post struct {
 	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
-	// Content belonging to this post
+	// DraggableContent belonging to this post
 	Content []*Resource `json:"content"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`

@@ -42,9 +42,9 @@ const clubsIndexProperties = `
 	"thumbnail": {
 		"type": "keyword"
 	},
-	"name": ` + localization.ESIndex + `,
+	"name": ` + localization.ESIndex + `
     "members_count": {
-		"type": "int"
+		"type": "integer"
 	},
     "owner_account_id": {
 		"type": "keyword"

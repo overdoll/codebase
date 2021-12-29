@@ -78,10 +78,8 @@ export default function TotpActivationForm (props: Props): JSX.Element {
       },
       updater: (store, payload) => {
         const viewer = store.getRoot().getLinkedRecord('viewer')
-        const settings = viewer?.getLinkedRecord('multiFactorSettings')
-
-        if (settings != null) {
-          settings
+        if (viewer != null) {
+          viewer
             .setValue(payload?.enrollAccountMultiFactorTotp?.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
         }
       },

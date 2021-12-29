@@ -4,9 +4,9 @@ go_library(
     name = "queries",
     srcs = [
         "audience.go",
-        "brand.go",
         "category.go",
         "character.go",
+        "club.go",
         "post.go",
         "resolvers.go",
         "series.go",
@@ -16,6 +16,7 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/paging",

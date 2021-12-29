@@ -13,7 +13,7 @@ import Confirm from './Confirm/Confirm'
 import Link from '@//:modules/routing/Link'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 interface Props {
   prepared: {
@@ -73,7 +73,7 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         if (payload.verifyAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
-            title: t(`error.${payload.verifyAuthenticationToken.validation}`),
+            title: t`error.${payload.verifyAuthenticationToken.validation}`,
             isClosable: true
           })
         }

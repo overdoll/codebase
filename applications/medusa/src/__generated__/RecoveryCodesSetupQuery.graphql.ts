@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c176ce6215d6a7bd03094a4f64974aee */
+/* @relayHash ea44164ff2f779fdbe860953ddf6fe6c */
 
 import { ConcreteRequest } from "relay-runtime";
 export type RecoveryCodesSetupQueryVariables = {};
@@ -12,9 +12,6 @@ export type RecoveryCodesSetupQueryResponse = {
             readonly __id: string;
             readonly code: string;
         }>;
-        readonly multiFactorSettings: {
-            readonly __typename: string;
-        };
     } | null;
 };
 export type RecoveryCodesSetupQuery = {
@@ -30,9 +27,6 @@ query RecoveryCodesSetupQuery {
     id
     recoveryCodes {
       code
-    }
-    multiFactorSettings {
-      __typename
     }
   }
 }
@@ -84,24 +78,6 @@ var v0 = [
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "AccountMultiFactorSettings",
-        "kind": "LinkedField",
-        "name": "multiFactorSettings",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "__typename",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ],
     "storageKey": null
@@ -125,7 +101,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "c176ce6215d6a7bd03094a4f64974aee",
+    "id": "ea44164ff2f779fdbe860953ddf6fe6c",
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
@@ -133,5 +109,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'd9f62c25bdda6fc80faaf753eb5d38a8';
+(node as any).hash = 'f3d97216bd7585c44241cf52bb7f079b';
 export default node;

@@ -264,7 +264,7 @@ type ComplexityRoot struct {
 		UnlockAccount                                                       func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                                   func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountLanguage                                               func(childComplexity int, input types.UpdateAccountLanguageInput) int
-		UpdateAccountUsername                                               func(childComplexity int, input types.UpdateAccountUsername) int
+		UpdateAccountUsername                                               func(childComplexity int, input types.UpdateAccountUsernameInput) int
 		UpdateLanguage                                                      func(childComplexity int, input types.UpdateLanguageInput) int
 		VerifyAuthenticationToken                                           func(childComplexity int, input types.VerifyAuthenticationTokenInput) int
 	}
@@ -376,7 +376,7 @@ type MutationResolver interface {
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
-	UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsername) (*types.UpdateAccountUsernamePayload, error)
+	UpdateAccountUsername(ctx context.Context, input types.UpdateAccountUsernameInput) (*types.UpdateAccountUsernamePayload, error)
 	UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error)
 	GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error)
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error)
@@ -1349,7 +1349,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateAccountUsername(childComplexity, args["input"].(types.UpdateAccountUsername)), true
+		return e.complexity.Mutation.UpdateAccountUsername(childComplexity, args["input"].(types.UpdateAccountUsernameInput)), true
 
 	case "Mutation.updateLanguage":
 		if e.complexity.Mutation.UpdateLanguage == nil {
@@ -2073,7 +2073,7 @@ input DeleteAccountEmailInput {
 }
 
 """Input for updating an account's username"""
-input UpdateAccountUsername {
+input UpdateAccountUsernameInput {
   """
   The username that the account should be updated to
   """
@@ -2216,7 +2216,7 @@ extend type Mutation {
 
   Will retain the old username
   """
-  updateAccountUsername(input: UpdateAccountUsername!): UpdateAccountUsernamePayload
+  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary
@@ -3068,10 +3068,10 @@ func (ec *executionContext) field_Mutation_updateAccountLanguage_args(ctx contex
 func (ec *executionContext) field_Mutation_updateAccountUsername_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.UpdateAccountUsername
+	var arg0 types.UpdateAccountUsernameInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateAccountUsername2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsername(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7085,7 +7085,7 @@ func (ec *executionContext) _Mutation_updateAccountUsername(ctx context.Context,
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateAccountUsername(rctx, args["input"].(types.UpdateAccountUsername))
+		return ec.resolvers.Mutation().UpdateAccountUsername(rctx, args["input"].(types.UpdateAccountUsernameInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10069,8 +10069,8 @@ func (ec *executionContext) unmarshalInputUpdateAccountLanguageInput(ctx context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateAccountUsername(ctx context.Context, obj interface{}) (types.UpdateAccountUsername, error) {
-	var it types.UpdateAccountUsername
+func (ec *executionContext) unmarshalInputUpdateAccountUsernameInput(ctx context.Context, obj interface{}) (types.UpdateAccountUsernameInput, error) {
+	var it types.UpdateAccountUsernameInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -12860,8 +12860,8 @@ func (ec *executionContext) unmarshalNUpdateAccountLanguageInput2overdollᚋappl
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateAccountUsername2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsername(ctx context.Context, v interface{}) (types.UpdateAccountUsername, error) {
-	res, err := ec.unmarshalInputUpdateAccountUsername(ctx, v)
+func (ec *executionContext) unmarshalNUpdateAccountUsernameInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameInput(ctx context.Context, v interface{}) (types.UpdateAccountUsernameInput, error) {
+	res, err := ec.unmarshalInputUpdateAccountUsernameInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

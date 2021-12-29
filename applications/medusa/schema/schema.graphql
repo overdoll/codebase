@@ -54,25 +54,8 @@ type Account implements Node {
     last: Int
   ): AccountSessionConnection!
 
-  """Maximum amount of usernames that this account can create"""
-  usernamesLimit: Int!
-
-  """Usernames for account (history)"""
-  usernames(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountUsernameConnection!
+  """The next time the username is available to be changed"""
+  usernameEditAvailableAt: Time!
 
   """Maximum amount of emails that this account can create"""
   emailsLimit: Int!
@@ -99,11 +82,20 @@ type Account implements Node {
   ): AccountEmailConnection!
 
   """
-  Multi factor account settings
-  
-  Only queryable if the currently logged-in account belongs to the requested account
+  Have recovery codes been generated? Required in order to configure TOTP
   """
-  multiFactorSettings: AccountMultiFactorSettings!
+  recoveryCodesGenerated: Boolean!
+
+  """Is multi factor enabled - can be toggled off if they want to"""
+  multiFactorEnabled: Boolean!
+
+  """Privileged users cannot disable MFA (moderators, staff)"""
+  canDisableMultiFactor: Boolean!
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean!
 
   """
   MFA Recovery codes belonging to this account
@@ -111,6 +103,60 @@ type Account implements Node {
   Only queryable if the currently logged-in account belongs to the requested account
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """Maximum amount of clubs that you can join as an account."""
+  clubMembershipLimit: Int!
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int!
+
+  """Represents the clubs that the account has write access to."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Ordering options for clubs."""
+    orderBy: ClubsOrder! = {field: CREATED_AT}
+  ): ClubConnection!
+
+  """Represents the club memberships that the account has."""
+  clubMemberships(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Ordering options for club members."""
+    orderBy: ClubMembersOrder! = {field: JOINED_AT}
+  ): ClubMemberConnection!
 
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
@@ -127,9 +173,6 @@ type Account implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by brand slugs."""
-    brandSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -165,9 +208,6 @@ type Account implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by brand slugs."""
-    brandSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -326,24 +366,6 @@ type AccountMultiFactorRecoveryCode {
   code: String!
 }
 
-type AccountMultiFactorSettings {
-  """
-  Have recovery codes been generated? Required in order to configure TOTP
-  """
-  recoveryCodesGenerated: Boolean!
-
-  """Is multi factor enabled - can be toggled off if they want to"""
-  multiFactorEnabled: Boolean!
-
-  """Privileged users cannot disable MFA (moderators, staff)"""
-  canDisableMultiFactor: Boolean!
-
-  """
-  Has TOTP been configured? Recovery codes must be generated before configuring
-  """
-  multiFactorTotpConfigured: Boolean!
-}
-
 """Session belonging to a specific account"""
 type AccountSession implements Node {
   """ID of the session"""
@@ -383,30 +405,6 @@ type AccountSessionEdge {
   node: AccountSession!
 }
 
-"""Username belonging to a specific account"""
-type AccountUsername implements Node {
-  """ID of the account username"""
-  id: ID!
-
-  """The account username"""
-  username: String!
-
-  """The account that this username belongs to"""
-  account: Account!
-}
-
-"""Connection of the account username"""
-type AccountUsernameConnection {
-  pageInfo: PageInfo!
-  edges: [AccountUsernameEdge!]!
-}
-
-"""Edge of the account username"""
-type AccountUsernameEdge {
-  cursor: String!
-  node: AccountUsername!
-}
-
 """Add an email to the account"""
 input AddAccountEmailInput {
   """The email that should be added to this account"""
@@ -425,6 +423,21 @@ type AddAccountEmailPayload {
 """Validation message for adding account email"""
 enum AddAccountEmailValidation {
   INVALID_EMAIL
+}
+
+"""Add alias slug."""
+input AddClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Payload for a new alt slug"""
+type AddClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
 }
 
 """Add moderator to posts queue."""
@@ -503,9 +516,6 @@ type Audience implements Node & Object {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by brand slugs."""
-    brandSlugs: [String!]
 
     """Search by category slugs."""
     categorySlugs: [String!]
@@ -596,75 +606,16 @@ type AuthenticationTokenAccountStatus {
 
 scalar BCP47
 
-type Brand implements Node & Object {
-  """An ID pointing to this brand."""
-  id: ID!
-
-  """A url-friendly ID. Should be used when searching"""
-  slug: String!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
-
-  """A name for this brand."""
-  name: String!
-
-  """Posts belonging to this brand"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
-  ): PostConnection!
+"""Become a club member."""
+input BecomeClubMemberInput {
+  """The chosen club ID."""
+  clubId: ID!
 }
 
-type BrandConnection {
-  edges: [BrandEdge!]!
-  pageInfo: PageInfo!
-}
-
-type BrandEdge {
-  cursor: String!
-  node: Brand!
-}
-
-"""Ordering options for brands"""
-input BrandsOrder {
-  """The field to order brands by."""
-  field: BrandsOrderField!
-}
-
-"""Properties by which brand connections can be ordered."""
-enum BrandsOrderField {
-  """Brand by created time"""
-  CREATED_AT
+"""Payload for a new club member"""
+type BecomeClubMemberPayload {
+  """The membership after creation"""
+  clubMember: ClubMember
 }
 
 """Ordering options for categories"""
@@ -707,9 +658,6 @@ type Category implements Node & Object {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by brand slugs."""
-    brandSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -770,9 +718,6 @@ type Character implements Node & Object {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by brand slugs."""
-    brandSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -806,6 +751,157 @@ input CharactersOrder {
 """Properties by which character connections can be ordered."""
 enum CharactersOrderField {
   """Character by created time"""
+  CREATED_AT
+}
+
+type Club implements Node & Object {
+  """An ID pointing to this club."""
+  id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """
+  An alias list of slugs. These are valid, as in, you can find the club using
+  the slug. However, it should always be replaced by the default slug.
+  """
+  slugAliases: [ClubSlugAlias!]!
+
+  """Maximum amount of slug aliases that can be created for this club."""
+  slugAliasesLimit: Int!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """A name for this club."""
+  name: String!
+
+  """The account that owns this club."""
+  owner: Account!
+
+  """The total amount of members in this club."""
+  membersCount: Int!
+
+  """Whether or not the viewer is a member of this club."""
+  viewerMember: ClubMember
+
+  """Club members."""
+  members(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Ordering options for club members."""
+    orderBy: ClubMembersOrder! = {field: JOINED_AT}
+  ): ClubMemberConnection!
+
+  """Posts belonging to this club"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = {field: CREATED_AT}
+  ): PostConnection!
+}
+
+type ClubConnection {
+  edges: [ClubEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ClubEdge {
+  cursor: String!
+  node: Club!
+}
+
+type ClubMember implements Node {
+  """An ID pointing to this club member."""
+  id: ID!
+
+  """When the membership was created (when the account originally joined)."""
+  joinedAt: Time!
+
+  """The club that this membership belongs to."""
+  club: Club!
+
+  """The account that belongs to this membership."""
+  account: Account!
+}
+
+type ClubMemberConnection {
+  edges: [ClubMemberEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ClubMemberEdge {
+  cursor: String!
+  node: ClubMember!
+}
+
+"""Ordering options for club members"""
+input ClubMembersOrder {
+  """The field to order clubs by."""
+  field: ClubMembersOrderField!
+}
+
+"""Properties by which club member connections can be ordered."""
+enum ClubMembersOrderField {
+  """By joined at"""
+  JOINED_AT
+}
+
+"""The club slug alias"""
+type ClubSlugAlias {
+  """The slug alias"""
+  slug: String!
+}
+
+"""Ordering options for clubs"""
+input ClubsOrder {
+  """The field to order clubs by."""
+  field: ClubsOrderField!
+}
+
+"""Properties by which club connections can be ordered."""
+enum ClubsOrderField {
+  """Club by created time"""
   CREATED_AT
 }
 
@@ -858,6 +954,27 @@ enum CreateAccountWithAuthenticationTokenValidation {
   TOKEN_INVALID
 }
 
+"""Create club."""
+input CreateClubInput {
+  """The chosen slug for the club."""
+  slug: String!
+
+  """The chosen name for the club."""
+  name: String!
+}
+
+"""Payload for a new club"""
+type CreateClubPayload {
+  """The club after creation"""
+  club: Club
+}
+
+"""Create a new post. A club ID is required."""
+input CreatePostInput {
+  """The club ID that this post will belong to"""
+  clubId: ID!
+}
+
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
@@ -874,18 +991,6 @@ input DeleteAccountEmailInput {
 type DeleteAccountEmailPayload {
   """The ID of the account email that was removed"""
   accountEmailId: ID!
-}
-
-"""Input for removing an email from an account"""
-input DeleteAccountUsernameInput {
-  """The username that should be removed"""
-  accountUsernameId: ID!
-}
-
-"""Username to delete from account"""
-type DeleteAccountUsernamePayload {
-  """The ID of the account username that was removed"""
-  accountUsernameId: ID!
 }
 
 """Payload for disabling account multi factor"""
@@ -1127,15 +1232,12 @@ type Mutation {
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
-  """Delete account username - cannot be the current username"""
-  deleteAccountUsername(input: DeleteAccountUsernameInput!): DeleteAccountUsernamePayload
-
   """
   Update the account username
   
   Will retain the old username
   """
-  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
+  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary
@@ -1234,11 +1336,31 @@ type Mutation {
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload
 
-  """Create a new post"""
-  createPost: CreatePostPayload
+  """Become a member of a club"""
+  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
 
-  """Update a post in draft status - brand"""
-  updatePostBrand(input: UpdatePostBrandInput!): UpdatePostBrandPayload
+  """Withdraw membership from a club"""
+  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
+
+  """Create a new club"""
+  createClub(input: CreateClubInput!): CreateClubPayload
+
+  """Add an alternative slug to the club"""
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
+
+  """Remove an alternative slug from the club"""
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
+
+  """
+  Make the alias slug the default, swapping out the old slug into the alias list.
+  """
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
+
+  """Update the club's name (english-only for now)"""
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """Create a new post"""
+  createPost(input: CreatePostInput!): CreatePostPayload
 
   """Update a post in draft status - audience"""
   updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
@@ -1314,7 +1436,7 @@ type Post implements Node {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """Content belonging to this post"""
+  """DraggableContent belonging to this post"""
   content: [Resource!]!
 
   """The date and time of when this post was created"""
@@ -1329,14 +1451,14 @@ type Post implements Node {
   """Represents the audience that this post belongs to"""
   audience: Audience
 
-  """Represents the brand that this post belongs to"""
-  brand: Brand
-
   """Categories that belong to this post"""
   categories: [Category!]!
 
   """Characters that belong to this post"""
   characters: [Character!]!
+
+  """Represents the club that this post belongs to"""
+  club: Club!
 
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -1546,6 +1668,21 @@ enum PostState {
   REMOVED
 }
 
+"""Update alias slug to default."""
+input PromoteClubSlugAliasToDefaultInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Payload for a new alt slug"""
+type PromoteClubSlugAliasToDefaultPayload {
+  """The club after update"""
+  club: Club
+}
+
 type Query {
   """Get the currently-authenticated account"""
   viewer: Account
@@ -1627,38 +1764,6 @@ type Query {
     """Search by slug of the audience."""
     slug: String!
   ): Audience
-
-  """Search multiple brands."""
-  brands(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by brand slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the brand."""
-    name: String
-
-    """Ordering options for brands."""
-    orderBy: BrandsOrder! = {field: CREATED_AT}
-  ): BrandConnection!
-
-  """Get a single brand."""
-  brand(
-    """Search by slug of the brand."""
-    slug: String!
-  ): Brand
 
   """Search all categories."""
   categories(
@@ -1766,6 +1871,38 @@ type Query {
     seriesSlug: String!
   ): Character
 
+  """Search multiple clubs."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Ordering options for clubs."""
+    orderBy: ClubsOrder! = {field: CREATED_AT}
+  ): ClubConnection!
+
+  """Get a single club."""
+  club(
+    """Search by slug of the club."""
+    slug: String!
+  ): Club
+
   """Look up a single post"""
   post(
     """Look up a post by a reference #"""
@@ -1787,9 +1924,6 @@ type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by brand slugs."""
-    brandSlugs: [String!]
 
     """Search by audience slugs."""
     audienceSlugs: [String!]
@@ -1870,6 +2004,21 @@ input RejectPostInput {
 type RejectPostPayload {
   """The audit log generated by the pending post"""
   postAuditLog: PostAuditLog
+}
+
+"""Remove alias slug."""
+input RemoveClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Payload for a new alt slug"""
+type RemoveClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
 }
 
 """Remove moderator from posts queue."""
@@ -2029,9 +2178,6 @@ type Series implements Node & Object {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by brand slugs."""
-    brandSlugs: [String!]
-
     """Search by audience slugs."""
     audienceSlugs: [String!]
 
@@ -2130,23 +2276,38 @@ type UpdateAccountLanguagePayload {
 }
 
 """Input for updating an account's username"""
-input UpdateAccountUsernameAndRetainPreviousInput {
+input UpdateAccountUsernameInput {
   """The username that the account should be updated to"""
   username: String!
 }
 
 """Payload of the updated username"""
-type UpdateAccountUsernameAndRetainPreviousPayload {
+type UpdateAccountUsernamePayload {
   """Validation for taking an account username"""
-  validation: UpdateAccountUsernameAndRetainPreviousValidation
+  validation: UpdateAccountUsernameValidation
 
-  """The account username that was added"""
-  accountUsername: AccountUsername
+  """The account that was modified"""
+  account: Account
 }
 
 """Validation message for updating account username"""
-enum UpdateAccountUsernameAndRetainPreviousValidation {
+enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
+}
+
+"""Update club name."""
+input UpdateClubNameInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen name for the club."""
+  name: String!
+}
+
+"""Payload for updating the name"""
+type UpdateClubNamePayload {
+  """The club after update"""
+  club: Club
 }
 
 """Input for updating the current language"""
@@ -2172,21 +2333,6 @@ input UpdatePostAudienceInput {
 
 """Payload for updating a post"""
 type UpdatePostAudiencePayload {
-  """The post after the update"""
-  post: Post
-}
-
-"""Update post brand."""
-input UpdatePostBrandInput {
-  """The post to update"""
-  id: ID!
-
-  """The brand that this post belongs to"""
-  brandId: ID!
-}
-
-"""Payload for updating a post"""
-type UpdatePostBrandPayload {
   """The post after the update"""
   post: Post
 }
@@ -2217,6 +2363,12 @@ input UpdatePostCharactersInput {
 
 """Payload for updating a post"""
 type UpdatePostCharactersPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostClubPayload {
   """The post after the update"""
   post: Post
 }
@@ -2260,4 +2412,16 @@ type VerifyAuthenticationTokenPayload {
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
   TOKEN_INVALID
+}
+
+"""Withdraw club membership."""
+input WithdrawClubMembershipInput {
+  """The chosen club ID."""
+  clubId: ID!
+}
+
+"""Payload for withdrawing club membership"""
+type WithdrawClubMembershipPayload {
+  """The club membership that was removed"""
+  clubMemberId: ID!
 }

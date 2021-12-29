@@ -6,9 +6,9 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type UpdateBrandButtonFragment = {
     readonly id: string;
-    readonly brand: {
+    readonly club: {
         readonly id: string;
-    } | null;
+    };
     readonly " $refType": "UpdateBrandButtonFragment";
 };
 export type UpdateBrandButtonFragment$data = UpdateBrandButtonFragment;
@@ -37,9 +37,9 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Brand",
+      "concreteType": "Club",
       "kind": "LinkedField",
-      "name": "brand",
+      "name": "club",
       "plural": false,
       "selections": [
         (v0/*: any*/)
@@ -51,5 +51,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '502ee53f53c35faf7bde8a5831e0c332';
+(node as any).hash = '18b174e970b33010c457a749f07b5f70';
 export default node;

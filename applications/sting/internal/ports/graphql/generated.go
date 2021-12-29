@@ -45,7 +45,6 @@ type ResolverRoot interface {
 	Category() CategoryResolver
 	Character() CharacterResolver
 	Club() ClubResolver
-	ClubMember() ClubMemberResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
 	Post() PostResolver
@@ -133,6 +132,7 @@ type ComplexityRoot struct {
 	Club struct {
 		ID               func(childComplexity int) int
 		Members          func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
+		MembersCount     func(childComplexity int) int
 		Name             func(childComplexity int) int
 		Owner            func(childComplexity int) int
 		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
@@ -168,6 +168,10 @@ type ComplexityRoot struct {
 	ClubMemberEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	ClubSlugAlias struct {
+		Slug func(childComplexity int) int
 	}
 
 	CreateClubPayload struct {
@@ -353,10 +357,6 @@ type ClubResolver interface {
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
 	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
 	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
-}
-type ClubMemberResolver interface {
-	Club(ctx context.Context, obj *types.ClubMember) (*types.Club, error)
-	Account(ctx context.Context, obj *types.ClubMember) (*types.Account, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -732,6 +732,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.Members(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder)), true
 
+	case "Club.membersCount":
+		if e.complexity.Club.MembersCount == nil {
+			break
+		}
+
+		return e.complexity.Club.MembersCount(childComplexity), true
+
 	case "Club.name":
 		if e.complexity.Club.Name == nil {
 			break
@@ -876,6 +883,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClubMemberEdge.Node(childComplexity), true
+
+	case "ClubSlugAlias.slug":
+		if e.complexity.ClubSlugAlias.Slug == nil {
+			break
+		}
+
+		return e.complexity.ClubSlugAlias.Slug(childComplexity), true
 
 	case "CreateClubPayload.club":
 		if e.complexity.CreateClubPayload.Club == nil {
@@ -2008,7 +2022,7 @@ extend type Post {
   slug: String!
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
-  slugAliases: [String!]!
+  slugAliases: [ClubSlugAlias!]!
 
   """
   Maximum amount of slug aliases that can be created for this club.
@@ -2023,6 +2037,9 @@ extend type Post {
 
   """The account that owns this club."""
   owner: Account!
+
+  """The total amount of members in this club."""
+  membersCount: Int!
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
@@ -2044,6 +2061,12 @@ extend type Post {
     """Ordering options for club members."""
     orderBy: ClubMembersOrder! = { field: JOINED_AT }
   ): ClubMemberConnection! @goField(forceResolver: true)
+}
+
+"""The club slug alias"""
+type ClubSlugAlias {
+  """The slug alias"""
+  slug: String!
 }
 
 type ClubEdge {
@@ -2098,10 +2121,10 @@ type ClubMember implements Node @key(fields: "id") {
   joinedAt: Time!
 
   """The club that this membership belongs to."""
-  club: Club! @goField(forceResolver: true)
+  club: Club!
 
   """The account that belongs to this membership."""
-  account: Account! @goField(forceResolver: true)
+  account: Account!
 }
 
 """Add alias slug."""
@@ -2346,7 +2369,7 @@ extend type Account {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """Content belonging to this post"""
+  """DraggableContent belonging to this post"""
   content: [Resource!]!
 
   """The date and time of when this post was created"""
@@ -6042,9 +6065,9 @@ func (ec *executionContext) _Club_slugAliases(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]*types.ClubSlugAlias)
 	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNClubSlugAlias2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAliasᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_slugAliasesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -6182,6 +6205,41 @@ func (ec *executionContext) _Club_owner(ctx context.Context, field graphql.Colle
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_membersCount(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MembersCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_viewerMember(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -6521,14 +6579,14 @@ func (ec *executionContext) _ClubMember_club(ctx context.Context, field graphql.
 		Object:     "ClubMember",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.ClubMember().Club(rctx, obj)
+		return obj.Club, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6556,14 +6614,14 @@ func (ec *executionContext) _ClubMember_account(ctx context.Context, field graph
 		Object:     "ClubMember",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.ClubMember().Account(rctx, obj)
+		return obj.Account, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6718,6 +6776,41 @@ func (ec *executionContext) _ClubMemberEdge_node(ctx context.Context, field grap
 	res := resTmp.(*types.ClubMember)
 	fc.Result = res
 	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubSlugAlias_slug(ctx context.Context, field graphql.CollectedField, obj *types.ClubSlugAlias) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubSlugAlias",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Slug, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateClubPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.CreateClubPayload) (ret graphql.Marshaler) {
@@ -12255,6 +12348,11 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "membersCount":
+			out.Values[i] = ec._Club_membersCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "viewerMember":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -12383,41 +12481,23 @@ func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSe
 		case "id":
 			out.Values[i] = ec._ClubMember_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "joinedAt":
 			out.Values[i] = ec._ClubMember_joinedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "club":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._ClubMember_club(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._ClubMember_club(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "account":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._ClubMember_account(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._ClubMember_account(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12479,6 +12559,33 @@ func (ec *executionContext) _ClubMemberEdge(ctx context.Context, sel ast.Selecti
 			}
 		case "node":
 			out.Values[i] = ec._ClubMemberEdge_node(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubSlugAliasImplementors = []string{"ClubSlugAlias"}
+
+func (ec *executionContext) _ClubSlugAlias(ctx context.Context, sel ast.SelectionSet, obj *types.ClubSlugAlias) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubSlugAliasImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubSlugAlias")
+		case "slug":
+			out.Values[i] = ec._ClubSlugAlias_slug(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -14423,6 +14530,60 @@ func (ec *executionContext) unmarshalNClubMembersOrderField2overdollᚋapplicati
 
 func (ec *executionContext) marshalNClubMembersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx context.Context, sel ast.SelectionSet, v types.ClubMembersOrderField) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNClubSlugAlias2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAliasᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubSlugAlias) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubSlugAlias2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAlias(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubSlugAlias2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAlias(ctx context.Context, sel ast.SelectionSet, v *types.ClubSlugAlias) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubSlugAlias(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNClubsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx context.Context, v interface{}) (types.ClubsOrder, error) {

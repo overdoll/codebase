@@ -11,7 +11,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"sort"
-	"time"
 )
 
 const (
@@ -37,11 +36,11 @@ var clubMembersTable = table.New(table.Metadata{
 })
 
 type clubMember struct {
-	ClubId          string    `db:"club_id"`
-	Bucket          string    `db:"bucket"`
-	MemberAccountId string    `db:"member_account_id"`
-	JoinedAt        time.Time `db:"joined_at"`
-	Deleted         bool      `db:"deleted"`
+	ClubId          string     `db:"club_id"`
+	Bucket          string     `db:"bucket"`
+	MemberAccountId string     `db:"member_account_id"`
+	JoinedAt        gocql.UUID `db:"joined_at"`
+	Deleted         bool       `db:"deleted"`
 }
 
 var accountClubsTable = table.New(table.Metadata{
@@ -57,10 +56,10 @@ var accountClubsTable = table.New(table.Metadata{
 })
 
 type accountClubs struct {
-	ClubId          string    `db:"club_id"`
-	Bucket          string    `db:"bucket"`
-	MemberAccountId string    `db:"member_account_id"`
-	JoinedAt        time.Time `db:"joined_at"`
+	ClubId          string     `db:"club_id"`
+	Bucket          string     `db:"bucket"`
+	MemberAccountId string     `db:"member_account_id"`
+	JoinedAt        gocql.UUID `db:"joined_at"`
 }
 
 var clubMembersByClubTable = table.New(table.Metadata{
@@ -76,10 +75,10 @@ var clubMembersByClubTable = table.New(table.Metadata{
 })
 
 type clubMemberByClub struct {
-	ClubId          string    `db:"club_id"`
-	Bucket          string    `db:"bucket"`
-	MemberAccountId string    `db:"member_account_id"`
-	JoinedAt        time.Time `db:"joined_at"`
+	ClubId          string     `db:"club_id"`
+	Bucket          string     `db:"bucket"`
+	MemberAccountId string     `db:"member_account_id"`
+	JoinedAt        gocql.UUID `db:"joined_at"`
 }
 
 var clubMembersPartitionsTable = table.New(table.Metadata{
@@ -96,11 +95,11 @@ var clubMembersPartitionsTable = table.New(table.Metadata{
 })
 
 type clubMembersPartition struct {
-	ClubId            string    `db:"club_id"`
-	Bucket            string    `db:"bucket"`
-	LastJoinedAtCount time.Time `db:"last_joined_at_count"`
-	MembersCount      int       `db:"members_count"`
-	MaxMembersCount   int       `db:"max_members_count"`
+	ClubId            string     `db:"club_id"`
+	Bucket            string     `db:"bucket"`
+	LastJoinedAtCount gocql.UUID `db:"last_joined_at_count"`
+	MembersCount      int        `db:"members_count"`
+	MaxMembersCount   int        `db:"max_members_count"`
 }
 
 func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) error {
@@ -110,7 +109,7 @@ func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx conte
 	// initially, make 10 partitions with a maximum member count of x members per partition
 	// will expand when partitions begin to fill up
 	for i := 0; i <= initialClubMembersPartitions; i++ {
-		batch.Query(stmt, clubId, gocql.TimeUUID(), time.Now(), 0, maxClubMembersPerPartition)
+		batch.Query(stmt, clubId, gocql.TimeUUID(), gocql.TimeUUID(), 0, maxClubMembersPerPartition)
 	}
 
 	return nil
@@ -152,8 +151,8 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		})
 
 	type clubMemberCountStruct struct {
-		MaxJoinedAt time.Time `db:"max(joined_at)"`
-		Count       int       `db:"count"`
+		MaxJoinedAt gocql.UUID `db:"max(joined_at)"`
+		Count       int        `db:"count"`
 	}
 
 	var clubMemberCounter clubMemberCountStruct
@@ -249,7 +248,7 @@ func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, requester
 			ClubId:          member.ClubId(),
 			Bucket:          partition.Bucket,
 			MemberAccountId: member.AccountId(),
-			JoinedAt:        member.JoinedAt(),
+			JoinedAt:        gocql.UUIDFromTime(member.JoinedAt()),
 			Deleted:         false,
 		}).
 		ExecRelease(); err != nil {
@@ -307,7 +306,7 @@ func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requeste
 		return nil, club.ErrClubMemberNotFound
 	}
 
-	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt), nil
+	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time()), nil
 }
 
 func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
@@ -411,7 +410,7 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 	var members []*club.Member
 
 	for _, clb := range accountClubs {
-		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt)
+		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time())
 		members = append(members, em)
 		em.Node = paging.NewNode(clb.JoinedAt.String())
 	}
@@ -485,6 +484,63 @@ func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, c
 }
 
 func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
-	//TODO implement me
-	panic("implement me")
+	// get first partition
+	getFirstPartition := clubMembersPartitionsTable.
+		SelectBuilder().
+		Where(
+			qb.Eq("club_id"),
+		).
+		Limit(1).
+		Query(r.session).
+		BindStruct(clubMembersPartition{
+			ClubId: clubId,
+		})
+
+	var partitions []clubMembersPartition
+
+	if err := getFirstPartition.Select(&partitions); err != nil {
+		return nil, fmt.Errorf("failed to get first partition: %v", err)
+	}
+
+	if len(partitions) != 1 {
+		return nil, errors.New("no partitions found for grabbing members")
+	}
+
+	// get first partition
+	partition := partitions[0]
+
+	builder := clubMembersByClubTable.
+		SelectBuilder().
+		Where(
+			qb.Eq("club_id"),
+			qb.Eq("bucket"),
+		)
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "joined_at")
+	}
+
+	var clubMembers []clubMemberByClub
+
+	// then, using the last timestamp, count the number of new rows since then
+	getMembers := builder.
+		Query(r.session).
+		BindStruct(clubMemberByClub{
+			ClubId: partition.ClubId,
+			Bucket: partition.Bucket,
+		})
+
+	if err := getMembers.Select(&clubMembers); err != nil {
+		return nil, fmt.Errorf("failed to get club members: %v", err)
+	}
+
+	var members []*club.Member
+
+	for _, member := range clubMembers {
+		em := club.UnmarshalMemberFromDatabase(member.MemberAccountId, member.ClubId, member.JoinedAt.Time())
+		members = append(members, em)
+		em.Node = paging.NewNode(member.JoinedAt.String())
+	}
+
+	return members, nil
 }

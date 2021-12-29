@@ -44,7 +44,7 @@ const ModeratePostRejectGQL = graphql`
 const PostIDGQL = graphql`
   fragment ModeratePostFragment on Post {
     id
-    brand {
+    club {
       name
     }
   }

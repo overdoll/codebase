@@ -492,7 +492,7 @@ type UpdateAccountLanguagePayload struct {
 }
 
 // Input for updating an account's username
-type UpdateAccountUsername struct {
+type UpdateAccountUsernameInput struct {
 	// The username that the account should be updated to
 	Username string `json:"username"`
 }

@@ -19,21 +19,18 @@ interface Props {
 const Fragment = graphql`
   fragment UpdateBrandButtonFragment on Post {
     id
-    brand {
+    club {
       id
     }
   }
 `
 
 const Mutation = graphql`
-  mutation UpdateBrandButtonMutation ($input: UpdatePostBrandInput!) {
-    updatePostBrand(input: $input) {
+  mutation UpdateBrandButtonMutation ($input: UpdatePostContentInput!) {
+    updatePostContent(input: $input) {
       post {
         id
-        brand {
-          id
-          name
-        }
+        
       }
     }
   }

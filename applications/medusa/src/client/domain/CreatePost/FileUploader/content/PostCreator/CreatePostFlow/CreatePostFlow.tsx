@@ -19,8 +19,8 @@ interface Props {
 }
 
 const Mutation = graphql`
-  mutation CreatePostFlowMutation {
-    createPost {
+  mutation CreatePostFlowMutation($input: CreatePostInput!) {
+    createPost(input: $input) {
       post {
         reference
       }

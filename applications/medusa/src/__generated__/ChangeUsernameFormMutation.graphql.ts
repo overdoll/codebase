@@ -1,20 +1,20 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 17a681f12d930b2483084c29da4c5bcc */
+/* @relayHash 89ac26f06f90d11edac8563669fc1603 */
 
 import { ConcreteRequest } from "relay-runtime";
-export type UpdateAccountUsernameAndRetainPreviousValidation = "USERNAME_TAKEN" | "%future added value";
-export type UpdateAccountUsernameAndRetainPreviousInput = {
+export type UpdateAccountUsernameValidation = "USERNAME_TAKEN" | "%future added value";
+export type UpdateAccountUsernameInput = {
     username: string;
 };
 export type ChangeUsernameFormMutationVariables = {
-    input: UpdateAccountUsernameAndRetainPreviousInput;
+    input: UpdateAccountUsernameInput;
 };
 export type ChangeUsernameFormMutationResponse = {
-    readonly updateAccountUsernameAndRetainPrevious: {
-        readonly validation: UpdateAccountUsernameAndRetainPreviousValidation | null;
-        readonly accountUsername: {
+    readonly updateAccountUsername: {
+        readonly validation: UpdateAccountUsernameValidation | null;
+        readonly account: {
             readonly id: string;
             readonly username: string;
         } | null;
@@ -29,11 +29,11 @@ export type ChangeUsernameFormMutation = {
 
 /*
 mutation ChangeUsernameFormMutation(
-  $input: UpdateAccountUsernameAndRetainPreviousInput!
+  $input: UpdateAccountUsernameInput!
 ) {
-  updateAccountUsernameAndRetainPrevious(input: $input) {
+  updateAccountUsername(input: $input) {
     validation
-    accountUsername {
+    account {
       id
       username
     }
@@ -59,9 +59,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
+    "concreteType": "UpdateAccountUsernamePayload",
     "kind": "LinkedField",
-    "name": "updateAccountUsernameAndRetainPrevious",
+    "name": "updateAccountUsername",
     "plural": false,
     "selections": [
       {
@@ -74,9 +74,9 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "AccountUsername",
+        "concreteType": "Account",
         "kind": "LinkedField",
-        "name": "accountUsername",
+        "name": "account",
         "plural": false,
         "selections": [
           {
@@ -118,7 +118,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "17a681f12d930b2483084c29da4c5bcc",
+    "id": "89ac26f06f90d11edac8563669fc1603",
     "metadata": {},
     "name": "ChangeUsernameFormMutation",
     "operationKind": "mutation",
@@ -126,5 +126,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'ab15ae19988bc34660ba742f1c646005';
+(node as any).hash = '39f8a280199ca1dd27b9ede397eab53b';
 export default node;

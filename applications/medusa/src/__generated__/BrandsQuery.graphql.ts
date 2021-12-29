@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8bfb4140e0ad76c9b8e4d1ec9a0cad26 */
+/* @relayHash 45e13b9dd83e698ea5456b37e3b9536d */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type BrandsQueryVariables = {};
 export type BrandsQueryResponse = {
-    readonly brands: {
+    readonly clubs: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
@@ -29,7 +29,7 @@ export type BrandsQuery = {
 
 /*
 query BrandsQuery {
-  brands {
+  clubs {
     edges {
       node {
         id
@@ -96,15 +96,15 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "BrandConnection",
+        "concreteType": "ClubConnection",
         "kind": "LinkedField",
-        "name": "brands",
+        "name": "clubs",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BrandEdge",
+            "concreteType": "ClubEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -112,7 +112,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Brand",
+                "concreteType": "Club",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
@@ -158,15 +158,15 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "BrandConnection",
+        "concreteType": "ClubConnection",
         "kind": "LinkedField",
-        "name": "brands",
+        "name": "clubs",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BrandEdge",
+            "concreteType": "ClubEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -174,7 +174,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Brand",
+                "concreteType": "Club",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
@@ -237,7 +237,7 @@ return {
     ]
   },
   "params": {
-    "id": "8bfb4140e0ad76c9b8e4d1ec9a0cad26",
+    "id": "45e13b9dd83e698ea5456b37e3b9536d",
     "metadata": {},
     "name": "BrandsQuery",
     "operationKind": "query",
@@ -245,5 +245,5 @@ return {
   }
 };
 })();
-(node as any).hash = '2d08030e17c706923607adf9612ab8f5';
+(node as any).hash = '6b935a28e48243cea710a041ecc2b7a5';
 export default node;

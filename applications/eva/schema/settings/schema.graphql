@@ -134,7 +134,7 @@ input DeleteAccountEmailInput {
 }
 
 """Input for updating an account's username"""
-input UpdateAccountUsername {
+input UpdateAccountUsernameInput {
   """
   The username that the account should be updated to
   """
@@ -277,7 +277,7 @@ extend type Mutation {
 
   Will retain the old username
   """
-  updateAccountUsername(input: UpdateAccountUsername!): UpdateAccountUsernamePayload
+  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary

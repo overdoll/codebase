@@ -57,12 +57,19 @@ func NewClub(acc *principal.Principal, slug, name string) (*Club, error) {
 }
 
 func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string) *Club {
+
+	var res *resource.Resource
+
+	if thumbnail != "" {
+		res = resource.UnmarshalResourceFromDatabase(thumbnail)
+	}
+
 	return &Club{
 		id:             id,
 		slug:           slug,
 		slugAliases:    alternativeSlugs,
 		name:           localization.UnmarshalTranslationFromDatabase(name),
-		thumbnail:      resource.UnmarshalResourceFromDatabase(thumbnail),
+		thumbnail:      res,
 		ownerAccountId: ownerAccountId,
 		membersCount:   membersCount,
 	}

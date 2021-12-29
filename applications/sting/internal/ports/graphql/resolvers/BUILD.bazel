@@ -5,9 +5,10 @@ go_library(
     srcs = [
         "account.go",
         "audience.go",
-        "brand.go",
         "category.go",
         "character.go",
+        "club.go",
+        "post.go",
         "series.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/resolvers",
@@ -15,6 +16,7 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/paging",
         "//libraries/passport",

@@ -6,7 +6,7 @@ type Club implements Node & Object @key(fields: "id") {
   slug: String!
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
-  slugAliases: [String!]!
+  slugAliases: [ClubSlugAlias!]!
 
   """
   Maximum amount of slug aliases that can be created for this club.
@@ -21,6 +21,9 @@ type Club implements Node & Object @key(fields: "id") {
 
   """The account that owns this club."""
   owner: Account!
+
+  """The total amount of members in this club."""
+  membersCount: Int!
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
@@ -42,6 +45,12 @@ type Club implements Node & Object @key(fields: "id") {
     """Ordering options for club members."""
     orderBy: ClubMembersOrder! = { field: JOINED_AT }
   ): ClubMemberConnection! @goField(forceResolver: true)
+}
+
+"""The club slug alias"""
+type ClubSlugAlias {
+  """The slug alias"""
+  slug: String!
 }
 
 type ClubEdge {
@@ -96,10 +105,10 @@ type ClubMember implements Node @key(fields: "id") {
   joinedAt: Time!
 
   """The club that this membership belongs to."""
-  club: Club! @goField(forceResolver: true)
+  club: Club!
 
   """The account that belongs to this membership."""
-  account: Account! @goField(forceResolver: true)
+  account: Account!
 }
 
 """Add alias slug."""

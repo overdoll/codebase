@@ -61,10 +61,15 @@ func NewClubCassandraRepository(session gocqlx.Session) ClubCassandraRepository 
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
-	thumbnail, err := cl.Thumbnail().MarshalResourceToDatabase()
+	var thumbnail string
+	var err error
 
-	if err != nil {
-		return nil, err
+	if cl.Thumbnail() != nil {
+		thumbnail, err = cl.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &clubs{
@@ -149,17 +154,22 @@ func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *
 	// remove the slug from the alias list
 	// put the old slug into the alias list
 	// put the new slug
-	clubUpdate := clubTable.
-		UpdateBuilder().
-		RemoveLit("slug_aliases", aliasDefault).
-		AddLit("slug_aliases", oldAliasDefault).
-		Set("slug").
-		Query(r.session).
-		BindMap(map[string]interface{}{
-			"slug": []string{aliasDefault},
-		})
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	if err := clubUpdate.ExecRelease(); err != nil {
+	stmt, _ := clubTable.UpdateBuilder().Remove("slug_aliases").ToCql()
+
+	batch.Query(stmt, []string{aliasDefault}, clubId)
+
+	stmt, _ = clubTable.UpdateBuilder().Add("slug_aliases").ToCql()
+
+	batch.Query(stmt, []string{oldAliasDefault}, clubId)
+
+	stmt, _ = clubTable.UpdateBuilder().Set("slug").ToCql()
+
+	batch.Query(stmt, aliasDefault, clubId)
+
+	// execute batch.
+	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, fmt.Errorf("failed to update club slug: %v", err)
 	}
 
@@ -223,7 +233,7 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requ
 		}
 	}
 
-	if aliasSlugToRemove == "" || newAliasSlugToAdd == "" {
+	if aliasSlugToRemove == "" && newAliasSlugToAdd == "" {
 		return nil, fmt.Errorf("no removals or additions found")
 	}
 
@@ -238,6 +248,7 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requ
 			Add("slug_aliases").
 			Query(r.session).
 			BindMap(map[string]interface{}{
+				"id":           pst.Id,
 				"slug_aliases": []string{newAliasSlugToAdd},
 			})
 
@@ -263,6 +274,7 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requ
 		Remove("slug_aliases").
 		Query(r.session).
 		BindMap(map[string]interface{}{
+			"id":           pst.Id,
 			"slug_aliases": []string{aliasSlugToRemove},
 		})
 
@@ -352,9 +364,15 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *prin
 	// create actual club table entry
 	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.Thumbnail, cla.MembersCount, cla.OwnerAccountId)
 
-	// execute batch. if fails, release unique slug
+	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug)
+
+		// if fails, release unique slug
+		if err := r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
+			return err
+		}
+
+		return err
 	}
 
 	return nil
@@ -364,7 +382,7 @@ func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubI
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	if err := r.session.
-		Query(clubTable.Delete()).
+		Query(clubSlugTable.Delete()).
 		BindStruct(clubSlugs{
 			Slug:   slug,
 			ClubId: clubId,
@@ -379,7 +397,7 @@ func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubI
 func (r ClubCassandraRepository) createUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
-	clubSlug := clubTable.
+	applied, err := clubSlugTable.
 		InsertBuilder().
 		Unique().
 		Query(r.session).
@@ -387,9 +405,8 @@ func (r ClubCassandraRepository) createUniqueClubSlug(ctx context.Context, clubI
 		BindStruct(clubSlugs{
 			Slug:   slug,
 			ClubId: clubId,
-		})
-
-	applied, err := clubSlug.ExecCAS()
+		}).
+		ExecCAS()
 
 	if err != nil {
 		return fmt.Errorf("failed to create unique slug: %v", err)
