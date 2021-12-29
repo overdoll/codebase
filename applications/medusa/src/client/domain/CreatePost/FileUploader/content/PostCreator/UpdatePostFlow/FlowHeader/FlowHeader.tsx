@@ -105,7 +105,7 @@ export default function FlowHeader ({
           </Flex>
           <CloseButton size='lg' onClick={onOpen} />
         </Flex>
-        <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'primary'} value={score} />
+        <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'teal'} value={score} />
       </Box>
       <AlertDialog
         preserveScrollBarGap

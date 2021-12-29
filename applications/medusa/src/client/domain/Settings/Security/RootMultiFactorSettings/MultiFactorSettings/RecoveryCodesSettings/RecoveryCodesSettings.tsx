@@ -19,7 +19,7 @@ export default function RecoveryCodesSettings (props: Props): JSX.Element {
 
   return (
     <PagePanelWrap path='/configure/multi-factor/recovery-codes'>
-      <PagePanelIcon icon={Barcode} colorScheme='orange' />
+      <PagePanelIcon icon={Barcode} colorScheme='teal' />
       <PagePanelText
         title={
           <Trans>Recovery Codes</Trans>

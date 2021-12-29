@@ -141,6 +141,7 @@ export default function QueueSettings (props: Props): JSX.Element {
         </Flex>
         <Switch
           onChange={onChangeSettings}
+          colorScheme='purple'
           isDisabled={isAddingToQueue || isRemovingFromQueue}
           ml={4}
           defaultChecked={status}

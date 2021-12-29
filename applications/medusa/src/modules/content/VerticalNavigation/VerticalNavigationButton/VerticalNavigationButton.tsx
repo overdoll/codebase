@@ -9,14 +9,18 @@ interface Props {
   to: string
   exact?: boolean
   icon: FunctionComponent<any>
+  colorScheme?: string
 }
 
 export default function VerticalNavigationButton ({
   title,
   icon,
   exact = false,
-  to
+  to,
+  colorScheme = 'gray'
 }: Props): JSX.Element {
+  const colorPalette = colorScheme === 'gray' ? `${colorScheme}.100` : `${colorScheme}.400`
+
   return (
     <NavLink
       exact={exact}
@@ -26,7 +30,7 @@ export default function VerticalNavigationButton ({
         <ClickableBox
           h={10}
           display='inline'
-          color={isActive ? 'primary.400' : 'gray.300'}
+          color={isActive ? colorPalette : 'gray.300'}
           bg={isActive ? 'gray.600' : 'transparent'}
         >
           <Flex
@@ -39,7 +43,7 @@ export default function VerticalNavigationButton ({
                 align='center'
                 p={1}
                 mr={3}
-                bg={isActive ? 'primary.400' : 'gray.600'}
+                bg={isActive ? colorPalette : 'gray.600'}
               >
                 <Icon
                   icon={icon}

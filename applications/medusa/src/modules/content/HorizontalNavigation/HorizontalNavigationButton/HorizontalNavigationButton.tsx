@@ -12,6 +12,7 @@ interface Props extends HTMLChakraProps<any> {
   h?: string
   to: string
   onClick?: () => void
+  colorScheme?: string
   children?: ReactNode
 }
 
@@ -24,14 +25,20 @@ export default function HorizontalNavigationButton ({
   h,
   as,
   to,
-  exact = false
+  exact = false,
+  colorScheme = 'gray'
 }: Props): JSX.Element {
+  const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
+
   return (
     <NavLink
       exact={exact}
       to={to}
     >
-      {({ isActiveBasePath }) => (
+      {({
+        isActiveBasePath,
+        isActive
+      }) => (
         <Tooltip
           hasArrow
           label={label}
@@ -44,11 +51,8 @@ export default function HorizontalNavigationButton ({
                 base: 2,
                 md: 10
               }}
-              bg={isActiveBasePath ? 'gray.500' : 'transparent'}
-              h={h ?? {
-                base: '48px',
-                md: '42px'
-              }}
+              bg={(exact ? isActive : isActiveBasePath) ? 'gray.500' : 'transparent'}
+              h={h ?? '48px'}
               w={w ?? '58px'}
               as={as}
               p={0}
@@ -59,7 +63,7 @@ export default function HorizontalNavigationButton ({
                     <Icon
                       icon={icon}
                       p={2}
-                      fill={isActiveBasePath ? 'gray.100' : 'gray.300'}
+                      fill={(exact ? isActive : isActiveBasePath) ? fillColor : 'gray.300'}
                       h='38px'
                     />
                   </Flex>

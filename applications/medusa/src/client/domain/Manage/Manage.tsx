@@ -19,6 +19,7 @@ export default function Manage ({ children }: Props): JSX.Element {
       >
         <VerticalNavigation.Button
           to='/manage/posts'
+          colorScheme='teal'
           title={
             <Trans>My Posts</Trans>
           }
@@ -26,6 +27,7 @@ export default function Manage ({ children }: Props): JSX.Element {
         />
         <VerticalNavigation.Button
           to='/manage/brands'
+          colorScheme='teal'
           title={
             <Trans>Manage Brands</Trans>
           }

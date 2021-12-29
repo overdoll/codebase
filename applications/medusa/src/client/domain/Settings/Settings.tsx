@@ -23,6 +23,7 @@ export default function Settings ({ children }: Props): JSX.Element {
       >
         <VerticalNavigation.Button
           to='/settings/profile'
+          colorScheme='green'
           title={
             <Trans>
               Profile
@@ -32,6 +33,7 @@ export default function Settings ({ children }: Props): JSX.Element {
         />
         <VerticalNavigation.Button
           to='/settings/security'
+          colorScheme='green'
           title={
             <Trans>
               Security
@@ -42,6 +44,7 @@ export default function Settings ({ children }: Props): JSX.Element {
         <Can I='moderate' a='Post'>
           <VerticalNavigation.Button
             to='/settings/moderation'
+            colorScheme='purple'
             title={
               <Trans>
                 Moderation
