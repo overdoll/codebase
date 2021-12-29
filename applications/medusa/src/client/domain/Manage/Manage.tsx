@@ -18,9 +18,9 @@ export default function Manage ({ children }: Props): JSX.Element {
       )}
       >
         <VerticalNavigation.Button
-          to='/manage/my_posts'
+          to='/manage/posts'
           title={
-            <Trans>Manage Posts</Trans>
+            <Trans>My Posts</Trans>
           }
           icon={ContentBookEdit}
         />

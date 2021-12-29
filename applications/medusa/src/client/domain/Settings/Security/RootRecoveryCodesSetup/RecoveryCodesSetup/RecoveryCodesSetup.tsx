@@ -31,7 +31,7 @@ interface Props {
 const RecoveryCodesSetupQueryGQL = graphql`
   query RecoveryCodesSetupQuery {
     viewer {
-      __id
+      id
       recoveryCodes {
         __id
         code
@@ -95,7 +95,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
           isClosable: true
         })
       },
-      onError (data) {
+      onError () {
         notify({
           status: 'error',
           title: t`There was an error generating recovery codes`,
@@ -103,7 +103,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
         })
       },
       updater: (store) => {
-        const viewerId = data?.viewer?.__id
+        const viewerId = data?.viewer?.id
 
         if (viewerId == null) return
 
@@ -128,7 +128,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
     return (
       <>
         <Flex direction='column' align='center'>
-          <Alert mb={3} status='warning'>
+          <Alert mb={3} status='info'>
             <AlertIcon />
             <AlertDescription>
               <Trans>
@@ -139,8 +139,8 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
           <Button
             isLoading={isGeneratingCodes}
             onClick={onGenerateCodes}
-            colorScheme='gray'
-            size='lg'
+            colorScheme='teal'
+            size='md'
           >
             <Trans>
               Generate Recovery Codes
@@ -153,9 +153,9 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
 
   return (
     <Stack>
-      <SmallBackgroundBox bg='gray.900'>
+      <SmallBackgroundBox>
         <Stack spacing={4}>
-          <Text fontSize='lg' color='gray.00'>
+          <Text fontSize='xl  ' color='gray.00'>
             <Trans>
               Your recovery codes
             </Trans>
@@ -179,8 +179,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
                     ? <Skeleton w='100%' h='100%' />
                     : (
                       <Code
-                        data-cy='recovery-code'
-                        colorScheme='gray'
+                        colorScheme='teal'
                         fontSize='lg'
                       >
                         {item.code}

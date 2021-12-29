@@ -111,7 +111,6 @@ export interface QueryArgs {
 export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'
 
 export type Event =
-  | 'thumbnails'
   | 'urls'
   | 'files'
   | 'step'
@@ -125,11 +124,10 @@ export type Event =
   | 'isInReview'
 
 export interface State {
-  thumbnails: Thumbnails
   files: UppyFile[]
   urls: Urls
   step: Step
-  content: Content[]
+  content: string[] | null
   progress: Progress
   brand: string | null
   audience: string | null

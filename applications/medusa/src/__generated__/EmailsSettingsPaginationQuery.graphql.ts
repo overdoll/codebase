@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 77b121a45a09c73a4032c34a97eebe8f */
+/* @relayHash b035cbf5136da4ce6febf760ba02ab55 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -52,6 +52,7 @@ fragment EmailsSettingsFragment_2HEEH6 on Account {
     edges {
       node {
         ...EmailCardFragment
+        status
         id
         __typename
       }
@@ -280,7 +281,7 @@ return {
     ]
   },
   "params": {
-    "id": "77b121a45a09c73a4032c34a97eebe8f",
+    "id": "b035cbf5136da4ce6febf760ba02ab55",
     "metadata": {},
     "name": "EmailsSettingsPaginationQuery",
     "operationKind": "query",
@@ -288,5 +289,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
+(node as any).hash = '843d323c6ac7e20f102b80df9034e194';
 export default node;

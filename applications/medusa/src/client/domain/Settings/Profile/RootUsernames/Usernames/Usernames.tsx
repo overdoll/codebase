@@ -1,14 +1,14 @@
-import { Collapse, Flex, Spacer, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Collapse, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import Button from '@//:modules/form/Button/Button'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { ListSpacer, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 
 const UsernameQueryGQL = graphql`
-  query UsernamesQuery($first: Int) {
+  query UsernamesQuery {
     viewer {
       ...UsernamesSettingsFragment
     }
@@ -18,14 +18,6 @@ const UsernameQueryGQL = graphql`
 const UsernameFragmentGQL = graphql`
   fragment UsernamesSettingsFragment on Account {
     username
-    usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
-      __id
-      edges {
-        node {
-          username
-        }
-      }
-    }
   }
 `
 
@@ -46,50 +38,17 @@ export default function Usernames (props: Props): JSX.Element | null {
     onToggle: onToggleForm
   } = useDisclosure()
 
-  const {
-    isOpen: isAliasesOpen,
-    onToggle: onToggleAliases
-  } = useDisclosure()
-
-  if (data?.usernames == null) return null
-
-  const usernamesConnectionID = data?.usernames?.__id
-
   return (
     <>
-      <Stack spacing={2}>
-        <SmallBackgroundBox>
-          <Flex justify='center'>
+      <ListSpacer>
+        <SmallBackgroundBox
+          w='100%'
+          h='60px'
+        >
+          <Flex align='center'>
             <Text fontFamily='mono' fontSize='2xl' color='gray.00'>{data?.username}</Text>
-            {data?.usernames.edges.length > 0 &&
-              <>
-                <Spacer />
-                <Button
-                  fontFamily='body'
-                  fontSize='sm'
-                  color='gray.100'
-                  variant='link'
-                  onClick={onToggleAliases}
-                >
-                  <Trans>{data.usernames.edges.length} aliases</Trans>
-                </Button>
-              </>}
           </Flex>
         </SmallBackgroundBox>
-        <Collapse in={isAliasesOpen} animateOpacity>
-          <SmallBackgroundBox>
-            <Flex>
-              <Text fontSize='sm' color='gray.100'>
-                <Trans>
-                  Your old usernames are replaced
-                </Trans>
-              </Text>
-            </Flex>
-            {data.usernames.edges.map((item, index) =>
-              <Text fontSize='sm' key={index} color='gray.200'>{item.node.username}</Text>
-            )}
-          </SmallBackgroundBox>
-        </Collapse>
         <Button
           variant='solid'
           colorScheme='gray'
@@ -102,10 +61,10 @@ export default function Usernames (props: Props): JSX.Element | null {
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Flex>
-            <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+            <ChangeUsernameForm />
           </Flex>
         </Collapse>
-      </Stack>
+      </ListSpacer>
     </>
   )
 }

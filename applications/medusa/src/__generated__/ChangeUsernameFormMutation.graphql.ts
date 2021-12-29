@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9a2b14d6b1fcc87a88391e8c8f9e7460 */
+/* @relayHash 17a681f12d930b2483084c29da4c5bcc */
 
 import { ConcreteRequest } from "relay-runtime";
 export type UpdateAccountUsernameAndRetainPreviousValidation = "USERNAME_TAKEN" | "%future added value";
@@ -10,7 +10,6 @@ export type UpdateAccountUsernameAndRetainPreviousInput = {
 };
 export type ChangeUsernameFormMutationVariables = {
     input: UpdateAccountUsernameAndRetainPreviousInput;
-    connections: Array<string>;
 };
 export type ChangeUsernameFormMutationResponse = {
     readonly updateAccountUsernameAndRetainPrevious: {
@@ -18,10 +17,6 @@ export type ChangeUsernameFormMutationResponse = {
         readonly accountUsername: {
             readonly id: string;
             readonly username: string;
-            readonly account: {
-                readonly id: string;
-                readonly username: string;
-            };
         } | null;
     } | null;
 };
@@ -41,167 +36,89 @@ mutation ChangeUsernameFormMutation(
     accountUsername {
       id
       username
-      account {
-        id
-        username
-      }
     }
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "connections"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "input"
-},
-v2 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
   }
 ],
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "validation",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Account",
-  "kind": "LinkedField",
-  "name": "account",
-  "plural": false,
-  "selections": [
-    (v4/*: any*/),
-    (v5/*: any*/)
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
     ],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ChangeUsernameFormMutation",
+    "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
+    "kind": "LinkedField",
+    "name": "updateAccountUsernameAndRetainPrevious",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
+        "args": null,
+        "kind": "ScalarField",
+        "name": "validation",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AccountUsername",
         "kind": "LinkedField",
-        "name": "updateAccountUsernameAndRetainPrevious",
+        "name": "accountUsername",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountUsername",
-            "kind": "LinkedField",
-            "name": "accountUsername",
-            "plural": false,
-            "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ChangeUsernameFormMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ChangeUsernameFormMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
-        "kind": "LinkedField",
-        "name": "updateAccountUsernameAndRetainPrevious",
-        "plural": false,
-        "selections": [
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountUsername",
-            "kind": "LinkedField",
-            "name": "accountUsername",
-            "plural": false,
-            "selections": [
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "filters": null,
-                "handle": "appendNode",
-                "key": "",
-                "kind": "LinkedHandle",
-                "name": "account",
-                "handleArgs": [
-                  {
-                    "kind": "Variable",
-                    "name": "connections",
-                    "variableName": "connections"
-                  },
-                  {
-                    "kind": "Literal",
-                    "name": "edgeTypeName",
-                    "value": "UsernamesEdge"
-                  }
-                ]
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "9a2b14d6b1fcc87a88391e8c8f9e7460",
+    "id": "17a681f12d930b2483084c29da4c5bcc",
     "metadata": {},
     "name": "ChangeUsernameFormMutation",
     "operationKind": "mutation",
@@ -209,5 +126,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'fc3aaf214c317098946216b82fdeab00';
+(node as any).hash = 'ab15ae19988bc34660ba742f1c646005';
 export default node;

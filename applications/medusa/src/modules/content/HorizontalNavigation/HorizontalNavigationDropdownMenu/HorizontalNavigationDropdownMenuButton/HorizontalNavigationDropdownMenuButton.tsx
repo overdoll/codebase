@@ -50,14 +50,14 @@ export default function HorizontalNavigationDropdownMenuButton ({
 
   return (
     <NavLink to={to}>
-      {({ isActive }) => (
+      {({ isActiveBasePath }) => (
         <HorizontalNavigationDropdownMenuButtonBody
           icon={icon}
           color={color}
           label={label}
           onClick={onClickMenu}
           isDisabled={isDisabled}
-          isActive={isActive}
+          isActive={isActiveBasePath}
         >
           {children}
         </HorizontalNavigationDropdownMenuButtonBody>

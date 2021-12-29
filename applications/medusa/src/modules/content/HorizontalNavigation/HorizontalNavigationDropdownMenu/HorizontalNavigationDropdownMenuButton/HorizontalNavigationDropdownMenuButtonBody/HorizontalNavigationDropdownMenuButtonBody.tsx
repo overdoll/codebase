@@ -35,20 +35,20 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
             align='center'
             p={1}
             mr={3}
-            bg={isActive ? 'gray.00' : 'gray.500'}
+            bg={isActive ? (color != null ? 'gray.00' : 'primary.400') : 'gray.500'}
           >
             <Icon
               icon={icon}
               w='26px'
               h='26px'
               p={1}
-              fill={(color ?? (isActive ? 'primary.400' : 'gray.100'))}
+              fill={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
             />
           </Flex>
         )}
         {label != null && (
           <Heading
-            color={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
+            color={(color ?? (isActive ? 'primary.400' : 'gray.100'))}
             fontSize='lg'
           >
             {label}

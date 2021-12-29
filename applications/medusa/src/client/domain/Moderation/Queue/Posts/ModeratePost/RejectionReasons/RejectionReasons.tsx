@@ -13,7 +13,7 @@ import {
   Textarea
 } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import type { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
@@ -46,12 +46,22 @@ const InfractionsGQL = graphql`
 `
 
 const schema = Joi.object({
-  rejectionId: Joi.string().required(),
+  rejectionId: Joi
+    .string()
+    .required()
+    .messages({
+      'any.required': 'Please select a rejection reason'
+    }),
   note: Joi
     .string()
-    .min(1)
+    .min(5)
     .max(255)
     .required()
+    .messages({
+      'string.empty': 'Please add a note',
+      'string.min': 'The note needs at least 5 characters',
+      'string.max': 'The note cannot exceed 255 characters'
+    })
 })
 
 export default function RejectionReasons (props: Props): JSX.Element {
@@ -66,6 +76,7 @@ export default function RejectionReasons (props: Props): JSX.Element {
   }
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors }
@@ -84,18 +95,33 @@ export default function RejectionReasons (props: Props): JSX.Element {
               Reason
             </Trans>
           </FormLabel>
-          <Select
-            {...register('rejectionId')}
-            onChange={(e) => findInfraction(e.target.value)}
-            placeholder={i18n._(t`Select the rejection reason`)}
-          >
-            {data.postRejectionReasons.edges.map((item, index) =>
-              <option key={index} value={item.node.id}>{item.node.reason}</option>
+          <Controller
+            control={control}
+            name='rejectionId'
+            render={({
+              field: {
+                onChange
+              },
+              fieldState: {
+                invalid
+              }
+            }) => (
+              <Select
+                onChange={(e) => {
+                  findInfraction(e.target.value)
+                  onChange(e.target.value)
+                }}
+                placeholder={i18n._(t`Select the rejection reason`)}
+                isInvalid={invalid}
+              >
+                {data.postRejectionReasons.edges.map((item, index) =>
+                  <option key={index} value={item.node.id}>{item.node.reason}</option>
+                )}
+              </Select>
             )}
-          </Select>
+          />
           <FormErrorMessage>
-            {(errors.rejectionId != null) && errors.rejectionId.type === 'string.empty' &&
-              <Trans>Please select a rejection option</Trans>}
+            {errors?.rejectionId?.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={errors.note != null}>
@@ -110,13 +136,10 @@ export default function RejectionReasons (props: Props): JSX.Element {
             placeholder={i18n._(t`Add a note describing the reason in detail...`)}
           />
           <FormErrorMessage>
-            {(errors.note != null) && (errors.note.type === 'string.empty' || errors.note.type === 'string.min') &&
-              <Trans>The note cannot be empty</Trans>}
-            {(errors.note != null) && errors.note.type === 'string.max' &&
-              <Trans>The note cannot exceed 255 characters</Trans>}
+            {errors?.note?.message}
           </FormErrorMessage>
         </FormControl>
-        {infraction != null &&
+        {infraction &&
           <Alert borderRadius={5} mt={1} mb={1} status='warning'>
             <AlertIcon mt={1} mb={3} />
             <AlertDescription>

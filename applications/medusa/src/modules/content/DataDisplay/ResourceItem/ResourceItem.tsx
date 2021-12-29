@@ -24,7 +24,7 @@ export default function ResourceItem ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Flex>
+    <Flex align='center' justify='center' h='100%'>
       {data.type === 'IMAGE' &&
         <ImageSnippet {...rest} query={data} />}
       {data.type === 'VIDEO' &&

@@ -8,6 +8,7 @@ interface Props {
 export default function VerticalNavigationPage ({ children }: Props): JSX.Element {
   return (
     <Box
+
       ml={{
         base: 0,
         md: 290,

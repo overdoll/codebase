@@ -48,7 +48,8 @@ const baseStyleTablist: SystemStyleFunction = (props) => {
 }
 
 const baseStyleTabpanel: SystemStyleObject = {
-  p: 4
+  py: 4,
+  px: 0
 }
 
 const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({

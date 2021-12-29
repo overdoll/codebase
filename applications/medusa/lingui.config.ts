@@ -64,6 +64,10 @@ export default {
     {
       path: 'src/client/domain/Moderation/Queue/__locale__/{locale}/index',
       include: ['src/client/domain/Moderation/Queue']
+    },
+    {
+      path: 'src/client/domain/Manage/CreatePost/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/CreatePost']
     }
   ],
   format: 'po',

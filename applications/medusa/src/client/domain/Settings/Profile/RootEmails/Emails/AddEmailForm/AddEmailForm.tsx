@@ -1,16 +1,14 @@
 import { graphql, useMutation } from 'react-relay/hooks'
-import { FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import { Alert, AlertDescription, AlertIcon, FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
-import { ArrowButtonRight } from '@//:assets/icons/navigation'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import IconButton from '@//:modules/form/IconButton/IconButton'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'
+import Button from '@//:modules/form/Button/Button'
 
 interface EmailValues {
   email: string
@@ -18,6 +16,7 @@ interface EmailValues {
 
 interface Props {
   connectionID: string
+  isDisabled: boolean
 }
 
 const AddEmailMutationGQL = graphql`
@@ -32,7 +31,10 @@ const AddEmailMutationGQL = graphql`
   }
 `
 
-export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
+export default function AddEmailForm ({
+  connectionID,
+  isDisabled
+}: Props): JSX.Element {
   const schema = Joi.object({
     email: Email()
   })
@@ -90,6 +92,16 @@ export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
   return (
     <form noValidate onSubmit={handleSubmit(onAddEmail)}>
       <FormControl isInvalid={errors.email != null} id='email'>
+        {isDisabled &&
+          <Alert mb={2} status='warning'>
+            <AlertIcon />
+            <AlertDescription fontSize='sm'>
+              <Trans>
+                You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be
+                able to add another.
+              </Trans>
+            </AlertDescription>
+          </Alert>}
         <FormLabel>
           <Trans>
             Add an email
@@ -100,25 +112,21 @@ export default function AddEmailForm ({ connectionID }: Props): JSX.Element {
             register={register('email')}
             success={success}
             error={errors.email != null}
-            placeholder={i18n._(t`Enter an email address`)}
+            placeholder={t`Enter a new email address`}
             errorMessage={errors?.email?.message}
           />
-          <IconButton
-            aria-label={i18n._(t`Add`)}
-            type='submit'
-            disabled={errors.email != null}
-            isLoading={isAddingEmail}
+          <Button
             size='sm'
-            borderRadius='base'
-            icon={
-              <Icon
-                w={3}
-                h={3}
-                icon={ArrowButtonRight}
-                fill='gray.100'
-              />
-            }
-          />
+            variant='solid'
+            type='submit'
+            colorScheme='gray'
+            disabled={(errors.email != null) || isDisabled}
+            isLoading={isAddingEmail}
+          >
+            <Trans>
+              Submit
+            </Trans>
+          </Button>
         </HStack>
       </FormControl>
     </form>

@@ -21,7 +21,7 @@ export default function PagePanelWrap ({
       disabled={disabled}
       to={path}
     >
-      <ClickableBox p={3}>
+      <ClickableBox disabled={disabled} p={3}>
         <Flex justify='space-between'>
           <HStack
             spacing={3}

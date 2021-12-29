@@ -2,17 +2,16 @@
  * @flow
  */
 
-import type { Node } from 'react';
-import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import Icon from '@//:modules/content/Icon/Icon';
-import { useTranslation } from 'react-i18next';
+import type { Node } from 'react'
+import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   disabled: boolean
 }
 
-export default function PostMenu({ disabled }: Props): Node {
-  const [t] = useTranslation('general');
+export default function PostMenu ({ disabled }: Props): Node {
+  // const [t] = useTranslation('general');
 
   return (
     <Menu>
@@ -37,5 +36,5 @@ export default function PostMenu({ disabled }: Props): Node {
         <MenuItem>{t('menu.copy_link')}</MenuItem>
       </MenuList>
     </Menu>
-  );
+  )
 }

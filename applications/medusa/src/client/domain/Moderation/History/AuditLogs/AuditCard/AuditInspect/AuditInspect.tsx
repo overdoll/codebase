@@ -2,7 +2,7 @@ import { Stack, Text } from '@chakra-ui/react'
 import type { AuditInspectFragment$key } from '@//:artifacts/AuditInspectFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
 import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
-import { LargeBackgroundBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   auditLog: AuditInspectFragment$key
@@ -22,20 +22,23 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
   const data = useFragment(AuditInspectFragmentGQL, auditLog)
 
   return (
-    <LargeBackgroundBox>
-      <Stack spacing={3}>
-        <SmallBackgroundBox
-          bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'}
-          alignContent='center'
-          justifyContent='center'
+    <Stack spacing={3}>
+      <SmallBackgroundBox
+        bg={data.action === 'APPROVED' ? 'green.50' : 'orange.50'}
+        alignContent='center'
+        justifyContent='center'
+      >
+        <Text
+          textAlign='center'
+          color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'}
+          fontSize='2xl'
+          fontFamily='mono'
         >
-          <Text color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'} fontSize='2xl' fontFamily='mono'>
-            {data.action}
-          </Text>
-          {data?.notes != null && <Text>{data.notes}</Text>}
-        </SmallBackgroundBox>
-        <PostPreview query={data.post} />
-      </Stack>
-    </LargeBackgroundBox>
+          {data.action}
+        </Text>
+        {data?.notes != null && <Text>{data.notes}</Text>}
+      </SmallBackgroundBox>
+      <PostPreview query={data.post} />
+    </Stack>
   )
 }

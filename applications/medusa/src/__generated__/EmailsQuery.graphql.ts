@@ -1,13 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f9be5875e86fa71d29040ea7a5daa5bd */
+/* @relayHash d0df5f1dd500225e479d66b1e3a8b3e6 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type EmailsQueryVariables = {};
 export type EmailsQueryResponse = {
     readonly viewer: {
+        readonly emailsLimit: number;
         readonly " $fragmentRefs": FragmentRefs<"EmailsSettingsFragment">;
     } | null;
 };
@@ -22,6 +23,7 @@ export type EmailsQuery = {
 query EmailsQuery {
   viewer {
     ...EmailsSettingsFragment
+    emailsLimit
     id
   }
 }
@@ -43,6 +45,7 @@ fragment EmailsSettingsFragment on Account {
     edges {
       node {
         ...EmailCardFragment
+        status
         id
         __typename
       }
@@ -63,14 +66,21 @@ fragment MakePrimaryFragment on AccountEmail {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "emailsLimit",
+  "storageKey": null
+},
+v1 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 3
   }
 ],
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -92,6 +102,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -120,7 +131,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
             "name": "emails",
@@ -142,7 +153,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -219,21 +230,22 @@ return {
           },
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "EmailsSettingsFragment_emails",
             "kind": "LinkedHandle",
             "name": "emails"
           },
-          (v1/*: any*/)
+          (v2/*: any*/),
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "f9be5875e86fa71d29040ea7a5daa5bd",
+    "id": "d0df5f1dd500225e479d66b1e3a8b3e6",
     "metadata": {},
     "name": "EmailsQuery",
     "operationKind": "query",
@@ -241,5 +253,5 @@ return {
   }
 };
 })();
-(node as any).hash = '79d7c5220cb84bef2977b5f3d3fd23a8';
+(node as any).hash = '54c667dc8800618fc0ee75cf884ffa56';
 export default node;

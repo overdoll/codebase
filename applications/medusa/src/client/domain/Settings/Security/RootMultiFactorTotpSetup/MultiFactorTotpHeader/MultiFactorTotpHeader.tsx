@@ -40,7 +40,7 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
             </Trans>
           </AlertDescription>
         </Alert>
-        <Link to='/configure/multi_factor/recovery_codes'>
+        <Link to='/configure/multi-factor/recovery-codes'>
           <Button
             colorScheme='gray'
             size='md'

@@ -4,12 +4,13 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type EmailsSettingsFragment = {
     readonly emails: {
         readonly __id: string;
         readonly edges: ReadonlyArray<{
             readonly node: {
-                readonly id: string;
+                readonly status: AccountEmailStatus;
                 readonly " $fragmentRefs": FragmentRefs<"EmailCardFragment">;
             };
         }>;
@@ -28,14 +29,7 @@ export type EmailsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "emails"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -101,7 +95,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "status",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -167,11 +167,17 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'aaf30d0896133f4e181ed743d2bf61ef';
+(node as any).hash = '843d323c6ac7e20f102b80df9034e194';
 export default node;
