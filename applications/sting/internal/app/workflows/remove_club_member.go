@@ -1,7 +1,6 @@
 package workflows
 
 import (
-	"go.temporal.io/api/common/v1"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
@@ -28,8 +27,7 @@ func RemoveClubMember(ctx workflow.Context, clubId, accountId string) error {
 	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
 	childWorkflowFuture := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount, clubId)
 
-	var childWE common.WorkflowExecution
-	if err := childWorkflowFuture.GetChildWorkflowExecution().Get(ctx, &childWE); err != nil {
+	if err := childWorkflowFuture.GetChildWorkflowExecution().Get(ctx, nil); err != nil {
 		return err
 	}
 

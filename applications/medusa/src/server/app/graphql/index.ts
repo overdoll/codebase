@@ -284,18 +284,12 @@ const renderPlayground = (req, res, next): void => {
       'request.credentials': 'same-origin',
       'schema.polling.enable': false,
       'schema.polling.endpointFilter': '',
-      'schema.polling.interval': 0
-    },
-    tabs: [
-      {
-        query: '',
-        endpoint: req.originalUrl,
-        name: 'Default',
-        headers: {
-          'X-CSRF-TOKEN': req.csrfToken()
-        }
+      'schema.polling.interval': 0,
+      // @ts-expect-error
+      'request.globalHeaders': {
+        'X-CSRF-TOKEN': req.csrfToken()
       }
-    ]
+    }
   }))
   res.end()
 }

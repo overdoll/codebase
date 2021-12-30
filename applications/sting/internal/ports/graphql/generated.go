@@ -57,9 +57,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ClubMembershipLimit  func(childComplexity int) int
 		ClubMemberships      func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
 		ClubMembershipsCount func(childComplexity int) int
+		ClubMembershipsLimit func(childComplexity int) int
 		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
 		ID                   func(childComplexity int) int
 		ModeratorPostsQueue  func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
@@ -335,7 +335,7 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	ClubMembershipLimit(ctx context.Context, obj *types.Account) (int, error)
+	ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubMembershipsCount(ctx context.Context, obj *types.Account) (int, error)
 	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
 	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
@@ -419,13 +419,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Account.clubMembershipLimit":
-		if e.complexity.Account.ClubMembershipLimit == nil {
-			break
-		}
-
-		return e.complexity.Account.ClubMembershipLimit(childComplexity), true
-
 	case "Account.clubMemberships":
 		if e.complexity.Account.ClubMemberships == nil {
 			break
@@ -444,6 +437,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ClubMembershipsCount(childComplexity), true
+
+	case "Account.clubMembershipsLimit":
+		if e.complexity.Account.ClubMembershipsLimit == nil {
+			break
+		}
+
+		return e.complexity.Account.ClubMembershipsLimit(childComplexity), true
 
 	case "Account.clubs":
 		if e.complexity.Account.Clubs == nil {
@@ -2304,7 +2304,7 @@ extend type Account {
   """
   Maximum amount of clubs that you can join as an account.
   """
-  clubMembershipLimit: Int! @goField(forceResolver: true)
+  clubMembershipsLimit: Int! @goField(forceResolver: true)
 
   """
   Current count of club memberships. Should be compared against the limit before joining a club.
@@ -4636,7 +4636,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Account_clubMembershipLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_clubMembershipsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4654,7 +4654,7 @@ func (ec *executionContext) _Account_clubMembershipLimit(ctx context.Context, fi
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ClubMembershipLimit(rctx, obj)
+		return ec.resolvers.Account().ClubMembershipsLimit(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11792,7 +11792,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
-		case "clubMembershipLimit":
+		case "clubMembershipsLimit":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -11800,7 +11800,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_clubMembershipLimit(ctx, field, obj)
+				res = ec._Account_clubMembershipsLimit(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

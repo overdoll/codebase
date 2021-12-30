@@ -18,7 +18,7 @@ type Object interface {
 
 type Account struct {
 	// Maximum amount of clubs that you can join as an account.
-	ClubMembershipLimit int `json:"clubMembershipLimit"`
+	ClubMembershipsLimit int `json:"clubMembershipsLimit"`
 	// Current count of club memberships. Should be compared against the limit before joining a club.
 	ClubMembershipsCount int `json:"clubMembershipsCount"`
 	// Represents the clubs that the account has write access to.

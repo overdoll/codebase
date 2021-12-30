@@ -288,7 +288,7 @@ extend type Account {
   """
   Maximum amount of clubs that you can join as an account.
   """
-  clubMembershipLimit: Int! @goField(forceResolver: true)
+  clubMembershipsLimit: Int! @goField(forceResolver: true)
 
   """
   Current count of club memberships. Should be compared against the limit before joining a club.

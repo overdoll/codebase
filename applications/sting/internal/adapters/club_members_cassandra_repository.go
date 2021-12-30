@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"sort"
+	"time"
 )
 
 const (
@@ -37,14 +38,14 @@ var clubMembersTable = table.New(table.Metadata{
 
 type clubMember struct {
 	ClubId          string     `db:"club_id"`
-	Bucket          string     `db:"bucket"`
+	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
 	Deleted         bool       `db:"deleted"`
 }
 
-var accountClubsTable = table.New(table.Metadata{
-	Name: "account_clubs",
+var clubMembersByAccountTable = table.New(table.Metadata{
+	Name: "club_members_by_account",
 	Columns: []string{
 		"club_id",
 		"bucket",
@@ -55,9 +56,9 @@ var accountClubsTable = table.New(table.Metadata{
 	SortKey: []string{"joined_at", "club_id"},
 })
 
-type accountClubs struct {
+type clubMembersByAccount struct {
 	ClubId          string     `db:"club_id"`
-	Bucket          string     `db:"bucket"`
+	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
 }
@@ -76,7 +77,7 @@ var clubMembersByClubTable = table.New(table.Metadata{
 
 type clubMemberByClub struct {
 	ClubId          string     `db:"club_id"`
-	Bucket          string     `db:"bucket"`
+	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
 }
@@ -96,7 +97,7 @@ var clubMembersPartitionsTable = table.New(table.Metadata{
 
 type clubMembersPartition struct {
 	ClubId            string     `db:"club_id"`
-	Bucket            string     `db:"bucket"`
+	Bucket            gocql.UUID `db:"bucket"`
 	LastJoinedAtCount gocql.UUID `db:"last_joined_at_count"`
 	MembersCount      int        `db:"members_count"`
 	MaxMembersCount   int        `db:"max_members_count"`
@@ -115,7 +116,7 @@ func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx conte
 	return nil
 }
 
-func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId, bucket string, noTimestamp bool) error {
+func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId string, bucket gocql.UUID, fresh bool) error {
 
 	// first, grab the partition to get the last timestamp count
 	queryPartitions := r.session.
@@ -129,14 +130,16 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 	}
 
 	builder := clubMembersByClubTable.
-		SelectBuilder().
-		Where(
-			qb.Eq("club_id"),
-			qb.Eq("bucket"),
-		)
+		SelectBuilder()
 
-	if !noTimestamp {
+	clubMemberItem := clubMemberByClub{
+		ClubId: partition.ClubId,
+		Bucket: partition.Bucket,
+	}
+
+	if !fresh {
 		builder.Where(qb.Gt("joined_at"))
+		clubMemberItem.JoinedAt = partition.LastJoinedAtCount
 	}
 
 	// then, using the last timestamp, count the number of new rows since then
@@ -144,53 +147,68 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		CountAll().
 		Max("joined_at").
 		Query(r.session).
-		BindStruct(clubMemberByClub{
-			ClubId:   partition.ClubId,
-			Bucket:   partition.Bucket,
-			JoinedAt: partition.LastJoinedAtCount,
-		})
+		BindStruct(clubMemberItem)
 
 	type clubMemberCountStruct struct {
-		MaxJoinedAt gocql.UUID `db:"max(joined_at)"`
-		Count       int        `db:"count"`
+		MaxJoinedAt *gocql.UUID `db:"system.max(joined_at)"`
+		Count       int         `db:"count"`
 	}
 
 	var clubMemberCounter clubMemberCountStruct
 
 	if err := getCurrentCount.Get(&clubMemberCounter); err != nil {
-		return fmt.Errorf("failed to get club by id: %v", err)
+		return fmt.Errorf("failed to count: %v", err)
 	}
 
 	partBuilder := clubMembersPartitionsTable.
 		UpdateBuilder().
-		Set("last_joined_at_count", "count").
-		Where(
-			qb.Eq("club_id"),
-			qb.Eq("bucket"),
-		)
+		Set("last_joined_at_count", "members_count")
 
-	if !noTimestamp {
-		partBuilder.If(qb.EqLit("last_joined_at_count", `'`+partition.LastJoinedAtCount.String()+`'`))
+	lastCountTimestamp := clubMemberCounter.MaxJoinedAt
+
+	// timestamp might be 0 because there are no records in the table, so we set the last_joined_at to
+	if lastCountTimestamp == nil {
+		tm := gocql.UUIDFromTime(time.Now())
+		lastCountTimestamp = &tm
 	}
 
-	applied, err := partBuilder.
-		Query(r.session).
-		BindStruct(clubMembersPartition{
-			ClubId:            partition.ClubId,
-			Bucket:            partition.Bucket,
-			LastJoinedAtCount: clubMemberCounter.MaxJoinedAt,
-			// update count with new one
-			MembersCount: clubMemberCounter.Count + partition.MembersCount,
-		}).
-		ExecCAS()
-
-	if err != nil {
-		return fmt.Errorf("failed to update count: %v", err)
+	clubPartItem := clubMembersPartition{
+		ClubId:            partition.ClubId,
+		Bucket:            partition.Bucket,
+		LastJoinedAtCount: *lastCountTimestamp,
 	}
 
-	// if it didn't apply, the count we were gonna update is outdated and we don't have to worry about anything
-	if !applied {
+	if !fresh {
+		clubPartItem.MembersCount = clubMemberCounter.Count + partition.MembersCount
+		// make sure we don't overwrite anything
+		partBuilder.If(qb.EqLit("last_joined_at_count", partition.LastJoinedAtCount.String()))
+
+		applied, err := partBuilder.
+			Query(r.session).
+			BindStruct(clubPartItem).
+			ExecCAS()
+
+		if err != nil {
+			return fmt.Errorf("failed to update count: %v", err)
+		}
+
+		// if it didn't apply, the count we were gonna update is outdated and we don't have to worry about anything
+		if !applied {
+			return nil
+		}
+
 		return nil
+
+	}
+
+	clubPartItem.MembersCount = clubMemberCounter.Count
+
+	// do an overwritten query since we are updating the "total" count here
+	if err := partBuilder.
+		Query(r.session).
+		BindStruct(clubPartItem).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to update count: %v", err)
 	}
 
 	return nil
@@ -339,12 +357,12 @@ func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// insert into account's club list
-	stmt, _ := accountClubsTable.Insert()
-	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId, clb.Bucket)
+	stmt, _ := clubMembersByAccountTable.Insert()
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt)
 
 	// insert into club members list
 	stmt, _ = clubMembersByClubTable.Insert()
-	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId)
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -360,9 +378,6 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 	// Grab the sum of all partitions counters
 	getCurrentCount := clubMembersPartitionsTable.
 		SelectBuilder().
-		Where(
-			qb.Eq("club_id"),
-		).
 		Sum("members_count").
 		Query(r.session).
 		BindStruct(clubMemberByClub{
@@ -370,7 +385,7 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 		})
 
 	type clubMembersPartitionSum struct {
-		SumMembersCount int `db:"sum(members_count)"`
+		SumMembersCount int `db:"system.sum(members_count)"`
 	}
 
 	var clubMembersPartitionSums clubMembersPartitionSum
@@ -389,7 +404,7 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 		return nil, err
 	}
 
-	builder := accountClubsTable.SelectBuilder()
+	builder := clubMembersByAccountTable.SelectBuilder()
 
 	if cursor != nil {
 		cursor.BuildCassandra(builder, "joined_at")
@@ -397,11 +412,11 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 
 	queryClubMemberships := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(accountClubs{
+		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
 		})
 
-	var accountClubs []*accountClubs
+	var accountClubs []*clubMembersByAccount
 
 	if err := queryClubMemberships.Select(&accountClubs); err != nil {
 		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
@@ -425,21 +440,21 @@ func (r ClubCassandraRepository) GetAccountClubMembershipsCount(ctx context.Cont
 	}
 
 	type accountClubMembersCount struct {
-		Count int `db:"count(*)"`
+		Count int `db:"count"`
 	}
 
 	var clubMembersCount accountClubMembersCount
 
-	queryAccountsCount := accountClubsTable.
+	queryAccountsCount := clubMembersByAccountTable.
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(accountClubs{
+		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
 		})
 
-	if err := queryAccountsCount.Select(&clubMembersCount); err != nil {
+	if err := queryAccountsCount.Get(&clubMembersCount); err != nil {
 		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 
@@ -461,12 +476,11 @@ func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, c
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete from account's club list
-	stmt, _ := accountClubsTable.Delete()
+	stmt, _ := clubMembersByAccountTable.Delete()
 	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId)
 
 	// delete from club members list
 	stmt, _ = clubMembersByClubTable.Delete()
-
 	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId)
 
 	// execute batch
@@ -487,9 +501,6 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 	// get first partition
 	getFirstPartition := clubMembersPartitionsTable.
 		SelectBuilder().
-		Where(
-			qb.Eq("club_id"),
-		).
 		Limit(1).
 		Query(r.session).
 		BindStruct(clubMembersPartition{
@@ -510,14 +521,22 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 	partition := partitions[0]
 
 	builder := clubMembersByClubTable.
-		SelectBuilder().
-		Where(
-			qb.Eq("club_id"),
-			qb.Eq("bucket"),
-		)
+		SelectBuilder()
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "joined_at")
+		if cursor.After() != nil {
+			builder.Where(qb.LtLit("joined_at", *cursor.After()))
+		}
+
+		if cursor.Before() != nil {
+			builder.Where(qb.GtLit("joined_at", *cursor.Before()))
+		}
+
+		limit := cursor.GetLimit()
+
+		if limit > 0 {
+			builder.Limit(uint(limit))
+		}
 	}
 
 	var clubMembers []clubMemberByClub

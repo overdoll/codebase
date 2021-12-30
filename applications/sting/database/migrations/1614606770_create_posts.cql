@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS club_members
     primary key ( (club_id, member_account_id) )
 );
 
-CREATE TABLE IF NOT EXISTS account_clubs
+CREATE TABLE IF NOT EXISTS club_members_by_account
 (
     club_id           text,
     member_account_id text,

@@ -108,6 +108,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
 			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, postIndexRepo, resourceRepo, parley),
+		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, clubIndexRepo, postIndexRepo, resourceRepo, parley),
 	}
 }

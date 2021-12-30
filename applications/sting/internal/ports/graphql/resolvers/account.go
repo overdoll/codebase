@@ -15,7 +15,7 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) ClubMembershipLimit(ctx context.Context, obj *types.Account) (int, error) {
+func (r AccountResolver) ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return 0, err
