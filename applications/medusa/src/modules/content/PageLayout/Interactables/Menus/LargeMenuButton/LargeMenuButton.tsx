@@ -21,7 +21,7 @@ export default function LargeMenuButton ({ children }: Props): JSX.Element {
           <Icon
             icon={NavigationMenuHorizontal}
             w={8}
-            fill='gray.500'
+            currentColor='gray.500'
             h={8}
           />
         }
