@@ -118,8 +118,7 @@ export default function ChangeUsernameForm (): JSX.Element {
           isClosable: true
         })
       }
-    }
-    )
+    })
   }
 
   const success = isDirty && (errors.username == null) && isSubmitted

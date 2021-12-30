@@ -82,7 +82,7 @@ func NewAccount(lang *localization.Language, id, username, email string) (*Accou
 		username:         username,
 		language:         lang,
 		email:            email,
-		lastUsernameEdit: time.Now(),
+		lastUsernameEdit: time.Now().Add(time.Duration(-(24 * 30 * 2)) * time.Hour),
 	}, nil
 }
 
