@@ -51,7 +51,7 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 
 	parts := strings.Split(email, "@")
 	main := strings.Split(parts[0], ".")
-	tag := main[1]
+	tag := strings.Join(main[1:], ".")
 
 	client := &http.Client{Transport: &addHeaderTransport{}}
 
@@ -62,7 +62,7 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	err := gClient.Query(context.Background(), &queryInbox, map[string]interface{}{
 		"namespace":      graphql.String(os.Getenv("TESTMAIL_NAMESPACE")),
 		"tag":            graphql.String(tag),
-		"timestamp_from": graphql.Float(timestampFrom.Unix()),
+		"timestamp_from": graphql.Float(float64(timestampFrom.UnixMilli())),
 	})
 
 	require.NoError(t, err, "no error for waiting for email to arrive")
@@ -84,7 +84,7 @@ func TestConfirmAccountEmail(t *testing.T) {
 
 	client := getGrpcClient()
 
-	email := generateEmail("carrier.confirm_account_email")
+	email := generateEmail("carrier-confirm_account_email")
 	token := ksuid.New().String()
 
 	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Token: token})
@@ -95,7 +95,10 @@ func TestConfirmAccountEmail(t *testing.T) {
 
 	link := doc.Find("a").First()
 
-	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token, link.Text())
+	val, exists := link.Attr("href")
+	require.True(t, exists)
+
+	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token, val)
 }
 
 func TestNewLoginTokenEmail(t *testing.T) {
@@ -103,7 +106,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	client := getGrpcClient()
 
-	email := generateEmail("carrier.new_login_token")
+	email := generateEmail("carrier-new_login_token")
 	token := ksuid.New().String()
 	secret := ksuid.New().String()
 
@@ -115,5 +118,8 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	link := doc.Find("a").First()
 
-	require.Contains(t, os.Getenv("APP_URL")+"/verify-token?token="+token+"&secret="+secret, link.Text())
+	val, exists := link.Attr("href")
+	require.True(t, exists)
+
+	require.Contains(t, os.Getenv("APP_URL")+"/verify-token?token="+token+"&secret="+secret, val)
 }
