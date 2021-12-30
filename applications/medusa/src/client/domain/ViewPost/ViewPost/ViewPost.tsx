@@ -10,7 +10,12 @@ import { LoginKeys } from '@//:assets/icons/navigation'
 import { t, Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
 import PostClickableCategories
-  from '../../../components/Posts/components/PostClickableCategories/PostClickableCategories'
+  from '../../../components/Posts/components/PostData/PostClickableCategories/PostClickableCategories'
+import PostClickableCharacters
+  from '../../../components/Posts/components/PostData/PostClickableCharacters/PostClickableCharacters'
+import { CheckCircle } from '@//:assets/icons/interface'
+import { Icon } from '@//:modules/content'
+import IconButton from '@//:modules/form/IconButton/IconButton'
 
 interface Props {
   query: PreloadedQuery<ViewPostQuery>
@@ -22,6 +27,7 @@ const Query = graphql`
       ...PostBrandFragment
       ...PostGalleryContentFragment
       ...PostClickableCategoriesFragment
+      ...PostClickableCharactersFragment
     }
   }
 `
@@ -71,13 +77,25 @@ export default function ViewPost (props: Props): JSX.Element {
             <Grid w='100%' templateColumns='repeat(8, 1fr)' gap={2} mt={1}>
               <GridItem colSpan={1}>
                 <Flex h='100%' align='center' justify='flex-start'>
-                  <Trans>
-                    like
-                  </Trans>
+                  <IconButton
+                    bg='transparent'
+                    size='lg'
+                    aria-label={t`Like`}
+                    icon={
+                      <Icon
+                        icon={CheckCircle}
+                        w={8}
+                        fill='gray.500'
+                        h={8}
+                      />
+                    }
+                  />
                 </Flex>
               </GridItem>
               <GridItem colSpan={6}>
-                <PostIndexer length={slidesCount} currentIndex={currentSlide} />
+                <Flex justify='center' h='100%' align='center'>
+                  <PostIndexer length={slidesCount} currentIndex={currentSlide} />
+                </Flex>
               </GridItem>
               <GridItem colSpan={1}>
                 <Flex h='100%' align='center' justify='flex-end'>
@@ -88,6 +106,7 @@ export default function ViewPost (props: Props): JSX.Element {
               </GridItem>
             </Grid>}
         </PostGalleryContent>
+        <PostClickableCharacters query={post} />
         <PostClickableCategories query={post} />
       </Stack>
     </>

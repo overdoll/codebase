@@ -4,19 +4,19 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type PostCharactersFragment = {
+export type PostStaticCharactersFragment = {
     readonly characters: ReadonlyArray<{
         readonly name: string;
         readonly series: {
             readonly title: string;
         };
     }>;
-    readonly " $refType": "PostCharactersFragment";
+    readonly " $refType": "PostStaticCharactersFragment";
 };
-export type PostCharactersFragment$data = PostCharactersFragment;
-export type PostCharactersFragment$key = {
-    readonly " $data"?: PostCharactersFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostCharactersFragment">;
+export type PostStaticCharactersFragment$data = PostStaticCharactersFragment;
+export type PostStaticCharactersFragment$key = {
+    readonly " $data"?: PostStaticCharactersFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"PostStaticCharactersFragment">;
 };
 
 
@@ -25,7 +25,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostCharactersFragment",
+  "name": "PostStaticCharactersFragment",
   "selections": [
     {
       "alias": null,
@@ -67,5 +67,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'd0e57e5f22fd7d3231cd163d507ba546';
+(node as any).hash = 'b34c37c164429df344982ff458d06b4e';
 export default node;

@@ -26,7 +26,7 @@ export default function PostBrand ({ query }: Props): JSX.Element {
   return (
     <Flex align='center'>
       <ResourceIcon mr={2} query={data?.brand?.thumbnail} />
-      <Heading fontSize='md'>
+      <Heading color='gray.00' fontSize='xl'>
         {data?.brand?.name}
       </Heading>
     </Flex>

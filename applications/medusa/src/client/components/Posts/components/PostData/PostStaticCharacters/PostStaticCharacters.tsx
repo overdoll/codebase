@@ -1,13 +1,13 @@
 import { Tag, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
-import type { PostCharactersFragment$key } from '@//:artifacts/PostCharactersFragment.graphql'
+import type { PostStaticCharactersFragment$key } from '@//:artifacts/PostStaticCharactersFragment.graphql'
 
 interface Props {
-  query: PostCharactersFragment$key
+  query: PostStaticCharactersFragment$key
 }
 
-const PostCharacterFragmentGQL = graphql`
-  fragment PostCharactersFragment on Post {
+const Fragment = graphql`
+  fragment PostStaticCharactersFragment on Post {
     characters {
       name
       series {
@@ -17,8 +17,8 @@ const PostCharacterFragmentGQL = graphql`
   }
 `
 
-export default function PostCharacters ({ query }: Props): JSX.Element {
-  const data = useFragment(PostCharacterFragmentGQL, query)
+export default function PostStaticCharacters ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
 
   return (
 

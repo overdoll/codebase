@@ -20,7 +20,6 @@ export default function PostIndexer ({
     <HStack
       py={2}
       spacing={1}
-      display={length <= slidesPerView ? 'none' : 'flex'}
       align='center'
       justify='center'
       {...rest}

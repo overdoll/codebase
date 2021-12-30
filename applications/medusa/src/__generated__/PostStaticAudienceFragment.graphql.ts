@@ -4,16 +4,16 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type PostCategoriesFragment = {
-    readonly categories: ReadonlyArray<{
+export type PostStaticAudienceFragment = {
+    readonly audience: {
         readonly title: string;
-    }>;
-    readonly " $refType": "PostCategoriesFragment";
+    } | null;
+    readonly " $refType": "PostStaticAudienceFragment";
 };
-export type PostCategoriesFragment$data = PostCategoriesFragment;
-export type PostCategoriesFragment$key = {
-    readonly " $data"?: PostCategoriesFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostCategoriesFragment">;
+export type PostStaticAudienceFragment$data = PostStaticAudienceFragment;
+export type PostStaticAudienceFragment$key = {
+    readonly " $data"?: PostStaticAudienceFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"PostStaticAudienceFragment">;
 };
 
 
@@ -22,15 +22,15 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostCategoriesFragment",
+  "name": "PostStaticAudienceFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "Category",
+      "concreteType": "Audience",
       "kind": "LinkedField",
-      "name": "categories",
-      "plural": true,
+      "name": "audience",
+      "plural": false,
       "selections": [
         {
           "alias": null,
@@ -46,5 +46,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'abeae0d445676c394ca5281e4589239e';
+(node as any).hash = '75afacb1f738f46db46192098d7d0ecd';
 export default node;

@@ -1,21 +1,21 @@
 import { Tag, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
-import type { PostAudienceFragment$key } from '@//:artifacts/PostAudienceFragment.graphql'
+import type { PostStaticAudienceFragment$key } from '@//:artifacts/PostStaticAudienceFragment.graphql'
 
 interface Props {
-  query: PostAudienceFragment$key
+  query: PostStaticAudienceFragment$key
 }
 
-const PostAudienceFragmentGQL = graphql`
-  fragment PostAudienceFragment on Post {
+const Fragment = graphql`
+  fragment PostStaticAudienceFragment on Post {
     audience {
       title
     }
   }
 `
 
-export default function PostAudience ({ query }: Props): JSX.Element {
-  const data = useFragment(PostAudienceFragmentGQL, query)
+export default function PostStaticAudience ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
 
   return (
     <Wrap direction='column'>

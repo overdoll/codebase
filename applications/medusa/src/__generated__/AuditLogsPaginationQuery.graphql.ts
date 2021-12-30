@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash df279f7a6e166e543ea7d0aa92c66081 */
+/* @relayHash 3c139e9660a279e1d3f9b86532f6bbbe */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -86,31 +86,6 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
 fragment PostGalleryContentFragment on Post {
   content {
     type
@@ -120,10 +95,35 @@ fragment PostGalleryContentFragment on Post {
 }
 
 fragment PostPreviewFragment on Post {
-  ...PostAudienceFragment
-  ...PostCharactersFragment
-  ...PostCategoriesFragment
+  ...PostStaticAudienceFragment
+  ...PostStaticCharactersFragment
+  ...PostStaticCategoriesFragment
   ...PostGalleryContentFragment
+}
+
+fragment PostStaticAudienceFragment on Post {
+  audience {
+    title
+    id
+  }
+}
+
+fragment PostStaticCategoriesFragment on Post {
+  categories {
+    title
+    id
+  }
+}
+
+fragment PostStaticCharactersFragment on Post {
+  characters {
+    name
+    series {
+      title
+      id
+    }
+    id
+  }
 }
 
 fragment VideoSnippetFragment on Resource {
@@ -509,7 +509,7 @@ return {
     ]
   },
   "params": {
-    "id": "df279f7a6e166e543ea7d0aa92c66081",
+    "id": "3c139e9660a279e1d3f9b86532f6bbbe",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

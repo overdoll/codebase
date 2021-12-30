@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 47109f714923fb6d2b3a9f4a9d1b4c6a */
+/* @relayHash 7622449edd8833fcad6e9aa5ca271ba8 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -49,36 +49,11 @@ fragment NoPostsPlaceholderFragment on Account {
   }
 }
 
-fragment PostAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
 fragment PostBrandFragment on Post {
   brand {
     name
     thumbnail {
       ...ResourceIconFragment
-    }
-    id
-  }
-}
-
-fragment PostCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
     }
     id
   }
@@ -98,10 +73,35 @@ fragment PostHeaderFragment on Post {
 }
 
 fragment PostPreviewFragment on Post {
-  ...PostAudienceFragment
-  ...PostCharactersFragment
-  ...PostCategoriesFragment
+  ...PostStaticAudienceFragment
+  ...PostStaticCharactersFragment
+  ...PostStaticCategoriesFragment
   ...PostGalleryContentFragment
+}
+
+fragment PostStaticAudienceFragment on Post {
+  audience {
+    title
+    id
+  }
+}
+
+fragment PostStaticCategoriesFragment on Post {
+  categories {
+    title
+    id
+  }
+}
+
+fragment PostStaticCharactersFragment on Post {
+  characters {
+    name
+    series {
+      title
+      id
+    }
+    id
+  }
 }
 
 fragment PostsFragment on Account {
@@ -525,7 +525,7 @@ return {
     ]
   },
   "params": {
-    "id": "47109f714923fb6d2b3a9f4a9d1b4c6a",
+    "id": "7622449edd8833fcad6e9aa5ca271ba8",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

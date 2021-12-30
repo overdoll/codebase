@@ -29,7 +29,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
           <ClickableBox variant='ghost' bg='transparent' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={2} py={2}>
               <ResourceIcon mr={2} query={item.thumbnail as ResourceIconFragment$key} />
-              <Text color='gray.00' fontSize='xl'>{item.title}</Text>
+              <Text fontWeight='semibold' color='gray.00' fontSize='xl'>{item.title}</Text>
             </Flex>
           </ClickableBox>
         </WrapItem>

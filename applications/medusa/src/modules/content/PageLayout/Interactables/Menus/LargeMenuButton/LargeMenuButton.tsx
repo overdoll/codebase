@@ -13,7 +13,7 @@ export default function LargeMenuButton ({ children }: Props): JSX.Element {
     <Menu autoSelect={false}>
       <MenuButton
         bg='transparent'
-        borderRadius='md'
+        borderRadius='lg'
         size='lg'
         aria-label={t`Open Menu`}
         as={IconButton}
@@ -21,12 +21,12 @@ export default function LargeMenuButton ({ children }: Props): JSX.Element {
           <Icon
             icon={NavigationMenuHorizontal}
             w={8}
-            fill='gray.300'
+            fill='gray.500'
             h={8}
           />
         }
       />
-      <MenuList minW='300px' boxShadow='lg'>
+      <MenuList minW='300px' boxShadow='outline'>
         {children}
       </MenuList>
     </Menu>

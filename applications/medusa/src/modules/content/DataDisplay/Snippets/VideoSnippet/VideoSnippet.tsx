@@ -24,7 +24,10 @@ export default function VideoSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  // TODO add a placeholder in case the URL fails to load due to some error
+
   return (
+
     <Box
       as='video'
       ref={innerRef}
@@ -40,7 +43,7 @@ export default function VideoSnippet ({
       {data.urls.map((item, index) => (
         <source
           key={index}
-          src={item.url as string}
+          src={item.url}
           type={item.mimeType}
         />)
       )}
