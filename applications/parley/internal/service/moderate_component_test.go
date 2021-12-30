@@ -37,7 +37,7 @@ func TestPostRejectionReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.PostRejectionReasons.Edges, 2)
-	require.Equal(t, "Reason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason, "correct infraction reason")
+	require.Equal(t, "Reason with infraction", search.PostRejectionReasons.Edges[0].Node.Reason, "correct infraction reason")
 }
 
 type AccountPostAuditLogs struct {
