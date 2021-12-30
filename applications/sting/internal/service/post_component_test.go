@@ -30,7 +30,7 @@ type PostModified struct {
 	State      types.PostState
 	Characters []CharacterModified
 	Audience   *AudienceModified
-	Brand      *BrandModified
+	Club       ClubModified
 	Categories []CategoryModified
 	Content    []types.Resource
 }
@@ -59,7 +59,7 @@ type _Any map[string]interface{}
 type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified
-	} `graphql:"createPost()"`
+	} `graphql:"createPost(input: $input)"`
 }
 
 type Posts struct {
@@ -67,7 +67,7 @@ type Posts struct {
 		Edges []*struct {
 			Node PostModified
 		}
-	} `graphql:"posts(brandSlugs: $brandSlugs, audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
+	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
 }
 
 type UpdatePostContent struct {
@@ -86,12 +86,6 @@ type UpdatePostCharacters struct {
 	UpdatePostCharacters *struct {
 		Post *PostModified
 	} `graphql:"updatePostCharacters(input: $input)"`
-}
-
-type UpdatePostBrand struct {
-	UpdatePostBrand *struct {
-		Post *PostModified
-	} `graphql:"updatePostBrand(input: $input)"`
 }
 
 type UpdatePostAudience struct {
@@ -119,11 +113,23 @@ type AccountPosts struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
+func createPost(t *testing.T, client *graphql.Client) CreatePost {
 	var createPost CreatePost
 
-	err := client.Mutate(context.Background(), &createPost, nil)
+	clb := createClub(t, client)
+
+	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
+		"input": types.CreatePostInput{
+			ClubID: relay.ID(clb.ID),
+		},
+	})
 	require.NoError(t, err)
+
+	return createPost
+}
+
+func createPostFlow(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
+	createPost := createPost(t, client)
 
 	newPostId := createPost.CreatePost.Post.ID
 	newPostReference := createPost.CreatePost.Post.Reference
@@ -138,7 +144,7 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	// update with new content (1 file)
 	var updatePostContent UpdatePostContent
 
-	err = client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
+	err := client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
 		"input": types.UpdatePostContentInput{
 			ID:      relay.ID(newPostId),
 			Content: []string{fileId},
@@ -184,21 +190,6 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 
 	require.Len(t, updatePostCharacters.UpdatePostCharacters.Post.Characters, 1)
 	require.Equal(t, "Aarush Hills", updatePostCharacters.UpdatePostCharacters.Post.Characters[0].Name)
-
-	// update with new brand
-	var updatePostBrand UpdatePostBrand
-
-	err = client.Mutate(context.Background(), &updatePostBrand, map[string]interface{}{
-		"input": types.UpdatePostBrandInput{
-			ID:      relay.ID(newPostId),
-			BrandID: "QnJhbmQ6MXE3TUl3MFU2VEVwRUxIMEZxbnhyY1h0M0Uw",
-		},
-	})
-
-	require.NoError(t, err)
-
-	require.NotNil(t, updatePostBrand.UpdatePostBrand.Post.Brand)
-	require.Equal(t, "Default Brand", updatePostBrand.UpdatePostBrand.Post.Brand.Name)
 
 	// update with new audience
 	var updatePostAudience UpdatePostAudience
@@ -288,10 +279,11 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	env := getWorkflowEnvironment(t)
 	es := bootstrap.InitializeElasticSearchSession()
 
-	createPost(t, client, env, func(postId string) func() {
+	createPostFlow(t, client, env, func(postId string) func() {
 		return func() {
 			// need to refresh the ES index or else the post wont be found
 			_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
+			require.NoError(t, err)
 
 			newPostId = postId
 
@@ -380,7 +372,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
-		"brandSlugs":     []graphql.String{},
 		"categorySlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
 		"characterSlugs": []graphql.String{},
@@ -392,20 +383,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
-		"brandSlugs":     []graphql.String{"default_brand"},
-		"categorySlugs":  []graphql.String{},
-		"characterSlugs": []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
-	})
-
-	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with brand")
-
-	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
 		"categorySlugs":  []graphql.String{"alter"},
-		"brandSlugs":     []graphql.String{},
 		"characterSlugs": []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
@@ -418,7 +396,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"state":          types.PostStatePublished,
 		"characterSlugs": []graphql.String{"aarush_hills"},
 		"categorySlugs":  []graphql.String{},
-		"brandSlugs":     []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
 	})
@@ -431,7 +408,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"audienceSlugs":  []graphql.String{"standard_audience"},
 		"characterSlugs": []graphql.String{},
 		"categorySlugs":  []graphql.String{},
-		"brandSlugs":     []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
 	})
 
@@ -456,7 +432,7 @@ func TestCreatePost_Discard(t *testing.T) {
 
 	var newPostId string
 
-	createPost(t, client, env, func(postId string) func() {
+	createPostFlow(t, client, env, func(postId string) func() {
 
 		return func() {
 			newPostId = postId
@@ -494,7 +470,7 @@ func TestCreatePost_Reject(t *testing.T) {
 
 	var newPostId string
 
-	createPost(t, client, env, func(postId string) func() {
+	createPostFlow(t, client, env, func(postId string) func() {
 		return func() {
 			newPostId = postId
 			// setup another environment since we cant execute multiple workflows
@@ -528,7 +504,7 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	var newPostId string
 
-	createPost(t, client, env, func(postId string) func() {
+	createPostFlow(t, client, env, func(postId string) func() {
 		return func() {
 			newPostId = postId
 			// setup another environment since we cant execute multiple workflows
@@ -551,4 +527,34 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRemoved, post.Post.State)
+}
+
+func TestCreateDraftPost_mp4(t *testing.T) {
+	t.Parallel()
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	createPost := createPost(t, client)
+
+	newPostId := createPost.CreatePost.Post.ID
+
+	// upload some files - this is required before running update command
+	tusClient := getTusClient(t)
+	fileId := uploadFileWithTus(t, tusClient, "applications/sting/internal/service/file_fixtures/test_file_2.mp4")
+
+	var updatePostContent UpdatePostContent
+
+	err := client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
+		"input": types.UpdatePostContentInput{
+			ID:      relay.ID(newPostId),
+			Content: []string{fileId},
+		},
+	})
+
+	require.NoError(t, err)
+
+	// properly identify the content and stuff
+	require.Len(t, updatePostContent.UpdatePostContent.Post.Content, 1)
+	require.Equal(t, types.ResourceTypeVideo, updatePostContent.UpdatePostContent.Post.Content[0].Type)
+	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+fileId+".mp4", string(updatePostContent.UpdatePostContent.Post.Content[0].Urls[0].URL))
 }

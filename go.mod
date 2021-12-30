@@ -18,7 +18,6 @@ require (
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
@@ -45,16 +44,14 @@ require (
 	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.6.0
 	github.com/vektah/gqlparser/v2 v2.2.0
-	go.temporal.io/api v1.4.1-0.20210318194442-3f93fcec559f
-	go.temporal.io/sdk v1.6.0
-	go.uber.org/atomic v1.9.0 // indirect
+	go.temporal.io/api v1.5.0
+	go.temporal.io/sdk v1.12.0
 	go.uber.org/zap v1.18.1
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
-	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	golang.org/x/text v0.3.6
-	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect
-	google.golang.org/grpc v1.38.0
-	google.golang.org/protobuf v1.26.0
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/text v0.3.7
+	google.golang.org/grpc v1.40.0
+	google.golang.org/protobuf v1.27.1
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 

@@ -23,13 +23,13 @@ type CreateClub struct {
 
 type ClubModified struct {
 	ID          string
+	Reference   string
 	Slug        string
 	Name        string
 	SlugAliases []struct {
 		Slug string
 	}
 	SlugAliasesLimit int
-	MembersCount     int
 }
 
 type Club struct {
@@ -41,7 +41,7 @@ func getClub(t *testing.T, client *graphql.Client, id string) Club {
 	var club Club
 
 	err := client.Query(context.Background(), &club, map[string]interface{}{
-		"reference": graphql.String(id),
+		"slug": graphql.String(id),
 	})
 
 	require.NoError(t, err)
@@ -96,7 +96,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 
 	// try and find the club with a new instance
 	newClb := getClub(t, client, oldSlug)
-	require.NotNil(t, newClb, "can find club using default slug")
+	require.NotNil(t, newClb.Club, "can find club using default slug")
 
 	// create a test slug we can use
 	fake := TestClub{}
@@ -116,7 +116,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	require.NoError(t, err, "no error adding slug")
 
 	updatedClb := getClub(t, client, newSlug)
-	require.NotNil(t, updatedClb, "can find club using new slug")
+	require.NotNil(t, updatedClb.Club, "can find club using new slug")
 
 	foundNewAlias := false
 	for _, alias := range updatedClb.Club.SlugAliases {
@@ -151,7 +151,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 
 	// should be able to find club with old slug
 	updatedClb = getClub(t, client, oldSlug)
-	require.NotNil(t, updatedClb, "can find club using old slug")
+	require.NotNil(t, updatedClb.Club, "can find club using old slug")
 
 	// promote the slug to primary
 	var removeClubSlugAlias RemoveClubSlugAlias
@@ -165,7 +165,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 
 	// make sure you cannot find club using that slug anymore
 	updatedClb = getClub(t, client, oldSlug)
-	require.Nil(t, updatedClb, "cannot find club after removing slug")
+	require.Nil(t, updatedClb.Club, "cannot find club after removing slug")
 
 	// make sure it doesn't exist in the list
 	updatedClb = getClub(t, client, newSlug)
@@ -173,7 +173,6 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	require.Len(t, updatedClb.Club.SlugAliases, 0, "alias list should be 0 now")
 }
 
-// updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 type UpdateClubName struct {
 	UpdateClubName *struct {
 		Club *ClubModified

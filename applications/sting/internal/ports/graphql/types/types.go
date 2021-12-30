@@ -164,6 +164,8 @@ type CharactersOrder struct {
 type Club struct {
 	// An ID pointing to this club.
 	ID relay.ID `json:"id"`
+	// An internal reference, uniquely identifying the club.
+	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.

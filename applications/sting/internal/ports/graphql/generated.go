@@ -136,6 +136,7 @@ type ComplexityRoot struct {
 		Name             func(childComplexity int) int
 		Owner            func(childComplexity int) int
 		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Reference        func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		SlugAliases      func(childComplexity int) int
 		SlugAliasesLimit func(childComplexity int) int
@@ -764,6 +765,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+
+	case "Club.reference":
+		if e.complexity.Club.Reference == nil {
+			break
+		}
+
+		return e.complexity.Club.Reference(childComplexity), true
 
 	case "Club.slug":
 		if e.complexity.Club.Slug == nil {
@@ -2017,6 +2025,9 @@ extend type Post {
 	{Name: "schema/club/schema.graphql", Input: `type Club implements Node & Object @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
+
+  """An internal reference, uniquely identifying the club."""
+  reference: String!
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
@@ -5998,6 +6009,41 @@ func (ec *executionContext) _Club_id(ctx context.Context, field graphql.Collecte
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_reference(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_slug(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -12309,6 +12355,11 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = graphql.MarshalString("Club")
 		case "id":
 			out.Values[i] = ec._Club_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+			out.Values[i] = ec._Club_reference(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}

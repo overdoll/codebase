@@ -2,6 +2,9 @@ type Club implements Node & Object @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
 
+  """An internal reference, uniquely identifying the club."""
+  reference: String!
+
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 

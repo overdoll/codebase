@@ -129,6 +129,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
 	return &Club{
 		ID:           relay.NewID(Club{}, result.ID()),
+		Reference:    result.ID(),
 		Name:         result.Name().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:         result.Slug(),
 		SlugAliases:  slugAliases,
