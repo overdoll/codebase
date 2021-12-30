@@ -82,7 +82,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 
 		// delete old username
 		stmt, _ := accountUsernameTable.Delete()
-		batch.Query(stmt, oldUsername)
+		batch.Query(stmt, strings.ToLower(oldUsername))
 
 		// finally, update account
 		stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()

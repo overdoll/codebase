@@ -7,7 +7,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
-	"strings"
 )
 
 var (
@@ -47,7 +46,7 @@ func NewClub(acc *principal.Principal, slug, name string) (*Club, error) {
 
 	return &Club{
 		id:             id.String(),
-		slug:           strings.ToLower(slug),
+		slug:           slug,
 		name:           lc,
 		slugAliases:    []string{},
 		thumbnail:      nil,
@@ -113,13 +112,11 @@ func (m *Club) AddSlugAlias(requester *principal.Principal, slug string) error {
 		return err
 	}
 
-	newSlug := strings.ToLower(slug)
-
 	if len(m.slugAliases) >= maxClubSlugLimit {
 		return ErrClubSlugMax
 	}
 
-	m.slugAliases = append(m.slugAliases, newSlug)
+	m.slugAliases = append(m.slugAliases, slug)
 
 	return nil
 }
@@ -130,12 +127,10 @@ func (m *Club) MakeSlugAliasDefault(requester *principal.Principal, slug string)
 		return err
 	}
 
-	newSlug := strings.ToLower(slug)
-
 	pos := -1
 
 	for i, v := range m.slugAliases {
-		if v == newSlug {
+		if v == slug {
 			pos = i
 			break
 		}
@@ -152,7 +147,7 @@ func (m *Club) MakeSlugAliasDefault(requester *principal.Principal, slug string)
 	m.slugAliases = append(m.slugAliases, m.slug)
 
 	// make default slug
-	m.slug = newSlug
+	m.slug = slug
 
 	return nil
 }
@@ -163,12 +158,10 @@ func (m *Club) RemoveSlugAlias(requester *principal.Principal, slug string) erro
 		return err
 	}
 
-	newSlug := strings.ToLower(slug)
-
 	pos := -1
 
 	for i, v := range m.slugAliases {
-		if v == newSlug {
+		if v == slug {
 			pos = i
 			break
 		}

@@ -133,7 +133,7 @@ func (r MultiFactorCassandraRepository) HasAccountRecoveryCodes(ctx context.Cont
 	}
 
 	type recoveryCodesCount struct {
-		Count int `db:"count(*)"`
+		Count int `db:"count"`
 	}
 
 	var recoveryCodesCounts recoveryCodesCount
@@ -146,7 +146,7 @@ func (r MultiFactorCassandraRepository) HasAccountRecoveryCodes(ctx context.Cont
 			AccountId: accountId,
 		})
 
-	if err := recoveryCodeCount.Select(&recoveryCodesCounts); err != nil {
+	if err := recoveryCodeCount.Get(&recoveryCodesCounts); err != nil {
 		return false, fmt.Errorf("failed to get recovery codes for account: %v", err)
 	}
 

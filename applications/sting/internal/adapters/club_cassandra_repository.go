@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
+	"strings"
 )
 
 var clubTable = table.New(table.Metadata{
@@ -88,7 +89,7 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, slug string)
 	queryBrandSlug := r.session.
 		Query(clubSlugTable.Get()).
 		Consistency(gocql.One).
-		BindStruct(clubSlugs{Slug: slug})
+		BindStruct(clubSlugs{Slug: strings.ToLower(slug)})
 
 	var b clubSlugs
 
@@ -384,7 +385,7 @@ func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubI
 	if err := r.session.
 		Query(clubSlugTable.Delete()).
 		BindStruct(clubSlugs{
-			Slug:   slug,
+			Slug:   strings.ToLower(slug),
 			ClubId: clubId,
 		}).
 		ExecRelease(); err != nil {
@@ -403,7 +404,7 @@ func (r ClubCassandraRepository) createUniqueClubSlug(ctx context.Context, clubI
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
 		BindStruct(clubSlugs{
-			Slug:   slug,
+			Slug:   strings.ToLower(slug),
 			ClubId: clubId,
 		}).
 		ExecCAS()

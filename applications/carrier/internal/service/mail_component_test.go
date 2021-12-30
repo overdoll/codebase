@@ -39,7 +39,7 @@ type Inbox struct {
 type addHeaderTransport struct{}
 
 func (adt *addHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Add("Authorization", "Bearer: "+os.Getenv("TESTMAIL_API_KEY"))
+	req.Header.Add("Authorization", "Bearer "+os.Getenv("TESTMAIL_API_KEY"))
 	return http.DefaultTransport.RoundTrip(req)
 }
 
@@ -62,7 +62,7 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	err := gClient.Query(context.Background(), &queryInbox, map[string]interface{}{
 		"namespace":      graphql.String(os.Getenv("TESTMAIL_NAMESPACE")),
 		"tag":            graphql.String(tag),
-		"timestamp_from": graphql.Int(timestampFrom.Unix()),
+		"timestamp_from": graphql.Float(timestampFrom.Unix()),
 	})
 
 	require.NoError(t, err, "no error for waiting for email to arrive")
@@ -95,7 +95,7 @@ func TestConfirmAccountEmail(t *testing.T) {
 
 	link := doc.Find("a").First()
 
-	require.Contains(t, os.Getenv("APP_URL")+"/confirmation?id="+token, link.Text())
+	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token, link.Text())
 }
 
 func TestNewLoginTokenEmail(t *testing.T) {
@@ -105,8 +105,9 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	email := generateEmail("carrier.new_login_token")
 	token := ksuid.New().String()
+	secret := ksuid.New().String()
 
-	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token})
+	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token, Secret: secret})
 
 	require.NoError(t, err, "no error for sending login token email")
 
@@ -114,5 +115,5 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	link := doc.Find("a").First()
 
-	require.Contains(t, os.Getenv("APP_URL")+"/join?id="+token, link.Text())
+	require.Contains(t, os.Getenv("APP_URL")+"/verify-token?token="+token+"&secret="+secret, link.Text())
 }

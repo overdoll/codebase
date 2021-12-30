@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
@@ -34,18 +35,18 @@ var accountTable = table.New(table.Metadata{
 })
 
 type accounts struct {
-	Id                 string   `db:"id"`
-	Username           string   `db:"username"`
-	Email              string   `db:"email"`
-	Roles              []string `db:"roles"`
-	Verified           bool     `db:"verified"`
-	Avatar             string   `db:"avatar"`
-	Language           string   `db:"language"`
-	Locked             bool     `db:"locked"`
-	LockedUntil        int      `db:"locked_until"`
-	LockedReason       string   `db:"locked_reason"`
-	LastUsernameEdit   int      `db:"last_username_edit"`
-	MultiFactorEnabled bool     `db:"multi_factor_enabled"`
+	Id                 string    `db:"id"`
+	Username           string    `db:"username"`
+	Email              string    `db:"email"`
+	Roles              []string  `db:"roles"`
+	Verified           bool      `db:"verified"`
+	Avatar             string    `db:"avatar"`
+	Language           string    `db:"language"`
+	Locked             bool      `db:"locked"`
+	LockedUntil        int       `db:"locked_until"`
+	LockedReason       string    `db:"locked_reason"`
+	LastUsernameEdit   time.Time `db:"last_username_edit"`
+	MultiFactorEnabled bool      `db:"multi_factor_enabled"`
 }
 
 type AccountRepository struct {
@@ -106,6 +107,7 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.LockedUntil,
 		accountInstance.LockedReason,
 		accountInstance.MultiFactorEnabled,
+		accountInstance.LastUsernameEdit,
 	), nil
 }
 
@@ -145,6 +147,7 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.LockedUntil,
 			accountInstance.LockedReason,
 			accountInstance.MultiFactorEnabled,
+			accountInstance.LastUsernameEdit,
 		))
 	}
 

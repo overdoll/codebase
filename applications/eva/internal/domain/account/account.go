@@ -44,7 +44,7 @@ var (
 	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
 
 	var newRoles []Role
 
@@ -67,6 +67,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		language:           localization.NewLanguageWithFallback(locale),
 		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
+		lastUsernameEdit:   lastUsernameEdit,
 	}
 }
 
@@ -77,10 +78,11 @@ func NewAccount(lang *localization.Language, id, username, email string) (*Accou
 	}
 
 	return &Account{
-		id:       id,
-		username: username,
-		language: lang,
-		email:    email,
+		id:               id,
+		username:         username,
+		language:         lang,
+		email:            email,
+		lastUsernameEdit: time.Now(),
 	}, nil
 }
 

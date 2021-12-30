@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS accounts
     locked               boolean,
     locked_until         int,
     locked_reason        text,
-    last_username_edit   int,
+    last_username_edit   timestamp,
     multi_factor_enabled boolean,
     primary key ( id )
 );
