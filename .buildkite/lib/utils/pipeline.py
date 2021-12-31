@@ -109,6 +109,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "CYPRESS_TESTMAIL_NAMESPACE",
         "CYPRESS_TESTMAIL_API_KEY",
         "CODECOV_API_KEY",
+        "SENDGRID_API_KEY",
         "DOCKER_CONFIG",
         "BUILDKITE_BRANCH",
         "BUILDKITE_COMMAND",
