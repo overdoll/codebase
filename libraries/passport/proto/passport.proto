@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 package libraries.passport.v1;
-import "google/protobuf/timestamp.proto";
 
 message Passport {
   // Each passport has a header that identifies who created the passport

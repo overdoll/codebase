@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 559ace57584e6e7d01d0fe1f25182fcd */
+/* @relayHash f273fb61481243979c6eb915105dc2b0 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -89,7 +89,7 @@ fragment useCheckRequirementsFragment on Post {
     __typename
     id
   }
-  brand {
+  club {
     __typename
     id
   }
@@ -303,9 +303,9 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Brand",
+                            "concreteType": "Club",
                             "kind": "LinkedField",
-                            "name": "brand",
+                            "name": "club",
                             "plural": false,
                             "selections": (v7/*: any*/),
                             "storageKey": null
@@ -394,7 +394,7 @@ return {
     ]
   },
   "params": {
-    "id": "559ace57584e6e7d01d0fe1f25182fcd",
+    "id": "f273fb61481243979c6eb915105dc2b0",
     "metadata": {},
     "name": "DraftPostsPaginationQuery",
     "operationKind": "query",

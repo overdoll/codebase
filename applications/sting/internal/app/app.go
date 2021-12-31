@@ -26,15 +26,22 @@ type Commands struct {
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
-	UpdatePostBrand      command.UpdatePostBrandHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
 
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllSeries     command.IndexAllSeriesHandler
 	IndexAllAudience   command.IndexAllAudienceHandler
-	IndexAllBrands     command.IndexAllBrandsHandler
+	IndexAllClubs      command.IndexAllClubsHandler
 	IndexAllPosts      command.IndexAllPostsHandler
+
+	CreateClub                    command.CreateClubHandler
+	UpdateClubName                command.UpdateClubNameHandler
+	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
+	AddClubSlugAlias              command.AddClubSlugAliasHandler
+	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
+	BecomeClubMember              command.BecomeClubMemberHandler
+	WithdrawClubMembership        command.WithdrawClubMembershipHandler
 }
 
 type Queries struct {
@@ -60,7 +67,14 @@ type Queries struct {
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
 
-	SearchBrands query.SearchBrandsHandler
-	BrandBySlug  query.BrandBySlugHandler
-	BrandById    query.BrandByIdHandler
+	SearchClubs                 query.SearchClubsHandler
+	ClubBySlug                  query.ClubBySlugHandler
+	ClubById                    query.ClubByIdHandler
+	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
+	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
+	AccountClubMemberships      query.AccountClubMembershipsHandler
+	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
+
+	ClubMemberById    query.ClubMemberByIdHandler
+	ClubMembersByClub query.ClubMembersByClubHandler
 }

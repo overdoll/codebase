@@ -111,12 +111,6 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
 	}
 
-	if c.Last() != nil {
-		builder.OrderBy(column, qb.ASC)
-	} else {
-		builder.OrderBy(column, qb.DESC)
-	}
-
 	limit := c.GetLimit()
 
 	if limit > 0 {
@@ -133,12 +127,6 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 
 	if c.Before() != nil {
 		query.Filter(elastic.NewRangeQuery(column).Gt(*c.Before()))
-	}
-
-	if c.Last() != nil {
-		builder.Sort(column, true)
-	} else {
-		builder.Sort(column, false)
 	}
 
 	limit := c.GetLimit()

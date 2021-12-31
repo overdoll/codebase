@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/gateway": "^0.28.1",
+    "@apollographql/graphql-playground-html": "^1.6.29",
     "@casl/ability": "^5.3.1",
     "@casl/react": "^2.3.0",
     "@chakra-ui/react": "^1.7.3",

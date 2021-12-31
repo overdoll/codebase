@@ -32,6 +32,25 @@ func (t *Translation) Translate(lang *Language, fallback string) string {
 	return fallback
 }
 
+func (t *Translation) UpdateDefaultTranslation(data string) error {
+
+	for v, item := range t.translations {
+		if item.tag == defaultLanguage {
+			// remove default translation
+			t.translations = append(t.translations[:v], t.translations[v+1:]...)
+
+			// add a new default translation
+			t.translations = append(t.translations, &TranslatedSupport{
+				tag:  defaultLanguage,
+				data: data,
+			})
+			break
+		}
+	}
+
+	return nil
+}
+
 func MarshalTranslationToDatabase(t *Translation) map[string]string {
 	tran := make(map[string]string)
 
@@ -59,4 +78,19 @@ func UnmarshalTranslationFromDatabase(translations map[string]string) *Translati
 	}
 
 	return &Translation{translations: trans}
+}
+
+func NewDefaultTranslation(name string) (*Translation, error) {
+
+	var trans []*TranslatedSupport
+
+	res, err := unmarshalTranslatedSupportFromDatabase(defaultLanguage.String(), name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	trans = append(trans, res)
+
+	return &Translation{translations: trans}, nil
 }

@@ -21,9 +21,9 @@ type postDocument struct {
 	State          string               `json:"state"`
 	ModeratorId    string               `json:"moderator_id"`
 	ContributorId  string               `json:"contributor_id"`
+	ClubId         string               `json:"club_id"`
 	Content        []string             `json:"content"`
 	Audience       *audienceDocument    `json:"audience"`
-	Brand          *brandDocument       `json:"brand"`
 	Categories     []*categoryDocument  `json:"categories"`
 	Characters     []*characterDocument `json:"characters"`
 	CreatedAt      string               `json:"created_at"`
@@ -52,9 +52,8 @@ const postIndex = `
 					"type": "nested",
 					"properties": ` + audienceIndexProperties + ` 
 				},
-				"brand": {
-					"type": "nested",
-					"properties": ` + brandsIndexProperties + ` 
+                "club_id": {
+					"type": "keyword"
 				},
 				"categories": {
 					"type": "nested",
@@ -121,16 +120,6 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		categoryDocuments = append(categoryDocuments, cat)
 	}
 
-	var brandDoc *brandDocument
-
-	if pst.Brand() != nil {
-		brandDoc, err = marshalBrandToDocument(pst.Brand())
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	var audDoc *audienceDocument
 
 	if pst.Audience() != nil {
@@ -180,7 +169,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		Id:             pst.ID(),
 		State:          pst.State().String(),
 		Audience:       audDoc,
-		Brand:          brandDoc,
+		ClubId:         pst.ClubId(),
 		ModeratorId:    moderatorId,
 		ContributorId:  pst.ContributorId(),
 		Content:        content,
@@ -239,6 +228,10 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
+	if filter.ClubId() != nil {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("club_id", *filter.ClubId()))
+	}
+
 	if filter.ContributorId() != nil {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
 	}
@@ -249,10 +242,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	if len(filter.CharacterSlugs()) > 0 {
 		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermsQueryFromStrings("characters.slug", filter.CharacterSlugs()...)))
-	}
-
-	if len(filter.BrandSlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermsQueryFromStrings("brand.slug", filter.BrandSlugs()...)))
 	}
 
 	if len(filter.AudienceSlugs()) > 0 {
@@ -337,12 +326,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			postedAtTime = &newTime
 		}
 
-		var brand *post.Brand
-
-		if pst.Brand != nil {
-			brand = post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail)
-		}
-
 		var audience *post.Audience
 
 		if pst.Audience != nil {
@@ -355,7 +338,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			&pst.ModeratorId,
 			pst.ContributorId,
 			pst.Content,
-			brand,
+			pst.ClubId,
 			audience,
 			characters,
 			categories,
@@ -427,22 +410,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				categoryDocuments = append(categoryDocuments, catDoc)
 			}
 
-			var brandDoc *brandDocument
-
-			if p.BrandId != nil {
-				brnd, err := rep.GetBrandById(ctx, nil, *p.BrandId)
-
-				if err != nil {
-					return err
-				}
-
-				brandDoc, err = marshalBrandToDocument(brnd)
-
-				if err != nil {
-					return err
-				}
-			}
-
 			var audDoc *audienceDocument
 
 			if p.AudienceId != nil {
@@ -471,7 +438,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				ModeratorId:    moderatorId,
 				ContributorId:  p.ContributorId,
 				Content:        p.Content,
-				Brand:          brandDoc,
+				ClubId:         p.ClubId,
 				Audience:       audDoc,
 				Categories:     categoryDocuments,
 				Characters:     characterDocuments,

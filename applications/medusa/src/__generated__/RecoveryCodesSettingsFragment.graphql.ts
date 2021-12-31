@@ -30,8 +30,8 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "AccountMultiFactorSettings",
+  "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '1c212882ecc3d5e2ba390cb8ef907b94';
+(node as any).hash = '808e386e2ea8bdb010ef6a8aa57ccf3e';
 export default node;

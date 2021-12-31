@@ -42,20 +42,6 @@ describe('Settings - Change Username', () => {
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
 
     cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
-    cy.findByText(newUsername).should('exist')
-  })
-
-  it('should not be able to change to a taken username', () => {
-    cy.visit('/settings/profile')
-    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
-
-    cy.findByRole('button', { name: /Change Username/iu }).click()
-
-    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').type(takenUsername)
-
-    cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
-    cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
-
-    cy.findByText(/USERNAME_TAKEN/iu).should('exist')
+    cy.waitUntil(() => cy.findAllByText(new RegExp(newUsername, 'iu')).should('exist'))
   })
 })

@@ -53,11 +53,15 @@ func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mai
 
 	m.AddPersonalizations(p)
 
-	// TODO: need to capture response and make sure it was successful
-	_, err := r.client.Send(m)
+	res, err := r.client.Send(m)
 
 	if err != nil {
 		return fmt.Errorf("could not send sendgrid email: %v", err)
+	}
+
+	if res.StatusCode >= 400 {
+		zap.S().Error("error sending sendgrid email: ", zap.String("body", res.Body))
+		return fmt.Errorf("email could not be sent. check logs")
 	}
 
 	return nil

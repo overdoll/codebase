@@ -9,7 +9,6 @@ go_library(
         "email.go",
         "email_confirmation.go",
         "repository.go",
-        "username.go",
     ],
     importpath = "overdoll/applications/eva/internal/domain/account",
     visibility = ["//visibility:public"],

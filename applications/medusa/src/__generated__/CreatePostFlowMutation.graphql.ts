@@ -1,10 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f45c22656e3c1382553435a28e17d104 */
+/* @relayHash 8a30aa0a9b989a2aefc5b6d5a2f4da5f */
 
 import { ConcreteRequest } from "relay-runtime";
-export type CreatePostFlowMutationVariables = {};
+export type CreatePostInput = {
+    clubId: string;
+};
+export type CreatePostFlowMutationVariables = {
+    input: CreatePostInput;
+};
 export type CreatePostFlowMutationResponse = {
     readonly createPost: {
         readonly post: {
@@ -20,8 +25,10 @@ export type CreatePostFlowMutation = {
 
 
 /*
-mutation CreatePostFlowMutation {
-  createPost {
+mutation CreatePostFlowMutation(
+  $input: CreatePostInput!
+) {
+  createPost(input: $input) {
     post {
       reference
       id
@@ -31,7 +38,21 @@ mutation CreatePostFlowMutation {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -40,14 +61,14 @@ var v0 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "CreatePostFlowMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "concreteType": "CreatePostPayload",
         "kind": "LinkedField",
         "name": "createPost",
@@ -61,7 +82,7 @@ return {
             "name": "post",
             "plural": false,
             "selections": [
-              (v0/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -74,13 +95,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "CreatePostFlowMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "concreteType": "CreatePostPayload",
         "kind": "LinkedField",
         "name": "createPost",
@@ -94,7 +115,7 @@ return {
             "name": "post",
             "plural": false,
             "selections": [
-              (v0/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -111,7 +132,7 @@ return {
     ]
   },
   "params": {
-    "id": "f45c22656e3c1382553435a28e17d104",
+    "id": "8a30aa0a9b989a2aefc5b6d5a2f4da5f",
     "metadata": {},
     "name": "CreatePostFlowMutation",
     "operationKind": "mutation",
@@ -119,5 +140,5 @@ return {
   }
 };
 })();
-(node as any).hash = '58f2e537beb9700622d56004dac81aa3';
+(node as any).hash = '8da6f5b9d23d59606adb02fed345dfa7';
 export default node;

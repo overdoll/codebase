@@ -72,8 +72,6 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         prepareViewer(store, payload)
-        // don't delete token
-        //  store.delete(data.id)
         removeCookie('token')
         history.push('/profile')
       },

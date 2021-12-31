@@ -5,9 +5,9 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type BrandFragment = {
-    readonly brand: {
+    readonly club: {
         readonly id: string;
-    } | null;
+    };
     readonly " $refType": "BrandFragment";
 };
 export type BrandFragment$data = BrandFragment;
@@ -27,9 +27,9 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Brand",
+      "concreteType": "Club",
       "kind": "LinkedField",
-      "name": "brand",
+      "name": "club",
       "plural": false,
       "selections": [
         {
@@ -46,5 +46,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '2b3291d01b90b18a73173b901f9adf3a';
+(node as any).hash = '54bb0ea1bd88ec9e637b0af96cb2aadd';
 export default node;

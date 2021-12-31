@@ -18,11 +18,7 @@ func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 
 		// Process content (mime-type checks, etc...)
 		// add a prefix
-		if err := h.cr.ProcessResources(ctx, postPrefix, pending.Content()); err != nil {
-			return err
-		}
-
-		return nil
+		return h.rr.ProcessResources(ctx, postPrefix, pending.Content())
 	})
 
 	if err != nil {

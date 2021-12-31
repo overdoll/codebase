@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -102,7 +103,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		}
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
-		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.Avatar, "", false, 0, "", false)
+		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.Avatar, "", false, 0, "", false, time.Now())
 		acc.Node = paging.NewNode(ac.CreatedAt)
 
 		accounts = append(accounts, acc)

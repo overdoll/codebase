@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"strings"
 	"testing"
+	"time"
 )
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
@@ -25,24 +26,14 @@ type AccountEmailModified struct {
 	Status types.AccountEmailStatus
 }
 
-type AccountUsernameModified struct {
-	ID       relay.ID
-	Username string
-}
-
 type ViewerAccountEmailUsernameSettings struct {
 	Viewer struct {
-		Username    string
-		EmailsLimit int
-		Emails      *struct {
+		Username                string
+		EmailsLimit             int
+		UsernameEditAvailableAt time.Time
+		Emails                  *struct {
 			Edges []*struct {
 				Node *AccountEmailModified
-			}
-		}
-		UsernamesLimit int
-		Usernames      *struct {
-			Edges []*struct {
-				Node *AccountUsernameModified
 			}
 		}
 		Sessions *types.AccountSessionConnection
@@ -215,20 +206,13 @@ func TestAccountEmailAndUsernameLimit(t *testing.T) {
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
 	require.Equal(t, settings.Viewer.EmailsLimit, 5, "should show an emails limit")
-	require.Equal(t, settings.Viewer.UsernamesLimit, 5, "should show a usernames limit")
 }
 
-type UpdateAccountUsernameAndRetainPrevious struct {
-	UpdateAccountUsernameAndRetainPrevious struct {
-		AccountUsername *AccountUsernameModified
-		Validation      *types.UpdateAccountUsernameAndRetainPreviousValidation
-	} `graphql:"updateAccountUsernameAndRetainPrevious(input: $input)"`
-}
-
-type DeleteAccountUsername struct {
-	DeleteAccountUsername struct {
-		AccountUsernameId relay.ID
-	} `graphql:"deleteAccountUsername(input: $input)"`
+type UpdateAccountUsername struct {
+	UpdateAccountUsername struct {
+		Account    *AccountModified
+		Validation *types.UpdateAccountUsernameValidation
+	} `graphql:"updateAccountUsername(input: $input)"`
 }
 
 func TestAccountUsername_modify(t *testing.T) {
@@ -248,72 +232,33 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	targetUsername := fake.Username
 
-	var modifyAccountUsername UpdateAccountUsernameAndRetainPrevious
+	var modifyAccountUsername UpdateAccountUsername
 
 	// modify account's username
 	err = client.Mutate(context.Background(), &modifyAccountUsername, map[string]interface{}{
-		"input": types.UpdateAccountUsernameAndRetainPreviousInput{Username: targetUsername},
+		"input": types.UpdateAccountUsernameInput{Username: targetUsername},
 	})
 
 	require.NoError(t, err)
-	require.Nil(t, modifyAccountUsername.UpdateAccountUsernameAndRetainPrevious.Validation, "no validation errors")
-	require.NotNil(t, modifyAccountUsername.UpdateAccountUsernameAndRetainPrevious.AccountUsername)
+	require.Nil(t, modifyAccountUsername.UpdateAccountUsername.Validation, "no validation errors")
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
-
-	var foundUsername *AccountUsernameModified
-
-	// go through the account's usernames and make sure the username exists here
-	for _, username := range settings.Viewer.Usernames.Edges {
-		if username.Node.Username == targetUsername {
-			foundUsername = username.Node
-		}
-	}
-
-	require.NotNil(t, foundUsername, "should have found a username in the list")
 
 	// make sure that the username is modified as well for the "authentication" query
 	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
 
-	var modifyAccountUsernameToPrevious UpdateAccountUsernameAndRetainPrevious
+	require.True(t, settings.Viewer.UsernameEditAvailableAt.After(time.Now()))
 
-	// set username back to the old one
-	err = client.Mutate(context.Background(), &modifyAccountUsernameToPrevious, map[string]interface{}{
-		"input": types.UpdateAccountUsernameAndRetainPreviousInput{Username: oldUsername},
+	// make sure we can't find the account using the old username now
+	accountUsername := getAccountByUsername(t, client, oldUsername)
+	require.Nil(t, accountUsername)
+
+	// make sure that we get an error if we try to change the name again
+	var modifyAccountUsername2 UpdateAccountUsername
+	err = client.Mutate(context.Background(), &modifyAccountUsername2, map[string]interface{}{
+		"input": types.UpdateAccountUsernameInput{Username: oldUsername},
 	})
-
-	require.NoError(t, err)
-	require.Nil(t, modifyAccountUsernameToPrevious.UpdateAccountUsernameAndRetainPrevious.Validation, "no validation errors")
-	require.NotNil(t, modifyAccountUsernameToPrevious.UpdateAccountUsernameAndRetainPrevious.AccountUsername, "account username should be there")
-
-	settings = viewerAccountEmailUsernameSettings(t, client)
-
-	// make suer username is set back to the old one
-	require.Equal(t, oldUsername, settings.Viewer.Username, "username is set back to the old one")
-
-	// delete old username
-	var deleteAccountUsername DeleteAccountUsername
-
-	// delete old username that we set
-	err = client.Mutate(context.Background(), &deleteAccountUsername, map[string]interface{}{
-		"input": types.DeleteAccountUsernameInput{AccountUsernameID: foundUsername.ID},
-	})
-
-	require.NoError(t, err)
-
-	// make sure username no longer shows up
-	settings = viewerAccountEmailUsernameSettings(t, client)
-
-	var foundUsernameOld *AccountUsernameModified
-
-	// make sure old username is gone
-	for _, username := range settings.Viewer.Usernames.Edges {
-		if username.Node.Username == foundUsername.Username {
-			foundUsernameOld = username.Node
-		}
-	}
-
-	require.Nil(t, foundUsernameOld, "should not have the username in the list anymore")
+	require.Error(t, err)
 }
 
 type RevokeAccountSession struct {

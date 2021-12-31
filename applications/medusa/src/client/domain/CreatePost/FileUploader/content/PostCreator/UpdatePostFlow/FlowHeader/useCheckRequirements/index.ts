@@ -17,7 +17,7 @@ const Fragment = graphql`
     audience {
       __typename
     }
-    brand {
+    club {
       __typename
     }
     categories {

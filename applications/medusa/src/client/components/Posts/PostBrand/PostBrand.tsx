@@ -5,7 +5,7 @@ import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceI
 
 const PostBrandFragmentGQL = graphql`
   fragment PostBrandFragment on Post {
-    brand {
+    club {
       name
       thumbnail {
         ...ResourceItemFragment

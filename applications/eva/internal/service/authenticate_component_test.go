@@ -125,8 +125,10 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp struct {
 
 type ViewerAccountSettings struct {
 	Viewer struct {
-		MultiFactorSettings *types.AccountMultiFactorSettings
-		RecoveryCodes       []*types.AccountMultiFactorRecoveryCode
+		RecoveryCodesGenerated    bool
+		MultiFactorEnabled        bool
+		MultiFactorTotpConfigured bool
+		RecoveryCodes             []*types.AccountMultiFactorRecoveryCode
 	} `graphql:"viewer()"`
 }
 
@@ -164,7 +166,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// get settings
 	settings := viewerAccountSettings(t, client)
 
-	require.True(t, settings.Viewer.MultiFactorSettings.RecoveryCodesGenerated, "recovery codes indicated as generated")
+	require.True(t, settings.Viewer.RecoveryCodesGenerated, "recovery codes indicated as generated")
 
 	// ensure recovery code set is the same as the one we generated
 	for _, code := range settings.Viewer.RecoveryCodes {
@@ -211,9 +213,9 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	settings = viewerAccountSettings(t, client)
 
 	// look up settings and ensure MFA is now enabled
-	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled, "multi factor enabled")
+	require.True(t, settings.Viewer.MultiFactorEnabled, "multi factor enabled")
 	// totp should be configured (since this is what we set up)
-	require.True(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured, "multi factor is configured")
+	require.True(t, settings.Viewer.MultiFactorTotpConfigured, "multi factor is configured")
 
 	// log in with TOTP
 	authToken, client, pass := authenticateAndVerifyToken(t, testAccountEmail)
@@ -287,9 +289,9 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	settings = viewerAccountSettings(t, client)
 
 	// look up settings and ensure MFA is now disabled
-	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorEnabled, "multi factor should be disabled")
+	require.False(t, settings.Viewer.MultiFactorEnabled, "multi factor should be disabled")
 	// totp should also be no longer configured (since turning off MFA will remove all multi factor configuration)
-	require.False(t, settings.Viewer.MultiFactorSettings.MultiFactorTotpConfigured, "multi factor not configured")
+	require.False(t, settings.Viewer.MultiFactorTotpConfigured, "multi factor not configured")
 
 	// attempt one last login and ensure it doesn't ask for a MFA code
 	authToken, client, pass = authenticateAndVerifyToken(t, testAccountEmail)

@@ -12,18 +12,19 @@ var (
 )
 
 type PostFilters struct {
-	orderBy        string
-	moderatorId    *string
-	contributorId  *string
+	orderBy       string
+	moderatorId   *string
+	contributorId *string
+	clubId        *string
+
 	state          *string
-	brandSlugs     []string
 	audienceSlugs  []string
 	categorySlugs  []string
 	characterSlugs []string
 	seriesSlugs    []string
 }
 
-func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, brandSlugs, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
+func NewPostFilters(orderBy string, state, moderatorId, contributorId, clubId *string, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
 
 	var newState *string
 
@@ -43,8 +44,8 @@ func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, b
 		state:          newState,
 		moderatorId:    moderatorId,
 		contributorId:  contributorId,
+		clubId:         clubId,
 		audienceSlugs:  audienceSlugs,
-		brandSlugs:     brandSlugs,
 		categorySlugs:  categorySlugs,
 		characterSlugs: characterSlugs,
 		seriesSlugs:    seriesSlugs,
@@ -59,16 +60,16 @@ func (e *PostFilters) ContributorId() *string {
 	return e.contributorId
 }
 
+func (e *PostFilters) ClubId() *string {
+	return e.clubId
+}
+
 func (e *PostFilters) State() *string {
 	return e.state
 }
 
 func (e *PostFilters) OrderBy() string {
 	return e.orderBy
-}
-
-func (e *PostFilters) BrandSlugs() []string {
-	return e.brandSlugs
 }
 
 func (e *PostFilters) AudienceSlugs() []string {

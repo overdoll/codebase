@@ -48,3 +48,7 @@ msgstr ""
 #: src/client/domain/VerifyToken/VerifyToken.tsx:213
 msgid "You may safely close this window"
 msgstr ""
+
+#: src/client/domain/VerifyToken/VerifyToken.tsx:76
+msgid "error.{0}"
+msgstr ""

@@ -30,6 +30,7 @@ steps:
           - ./applications/carrier/internal/service/**/coverage.dat
     targets:
       - //applications/carrier/internal/adapters/...
+      - //applications/carrier/internal/service/...
 
   e2e_test:
     setup:

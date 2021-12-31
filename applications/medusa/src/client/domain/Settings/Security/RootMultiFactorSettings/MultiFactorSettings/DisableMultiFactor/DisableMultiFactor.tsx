@@ -23,7 +23,7 @@ interface Props {
 }
 
 const DisableMultiFactorFragmentGQL = graphql`
-  fragment DisableMultiFactorFragment on AccountMultiFactorSettings {
+  fragment DisableMultiFactorFragment on Account {
     canDisableMultiFactor
   }
 `
@@ -67,10 +67,8 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
       updater: (store, payload) => {
         const viewer = store.getRoot().getLinkedRecord('viewer')
 
-        const multiFactorSettings = viewer?.getLinkedRecord('multiFactorSettings')
-
-        if (multiFactorSettings != null) {
-          multiFactorSettings
+        if (viewer != null) {
+          viewer
             .setValue(payload?.disableAccountMultiFactor?.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
         }
       },

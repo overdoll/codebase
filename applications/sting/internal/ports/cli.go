@@ -40,7 +40,7 @@ func init() {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllBrands.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllClubs.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
@@ -112,7 +112,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllBrands.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllClubs.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

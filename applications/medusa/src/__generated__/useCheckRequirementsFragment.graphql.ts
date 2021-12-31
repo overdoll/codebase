@@ -11,9 +11,9 @@ export type useCheckRequirementsFragment = {
     readonly audience: {
         readonly __typename: string;
     } | null;
-    readonly brand: {
+    readonly club: {
         readonly __typename: string;
-    } | null;
+    };
     readonly categories: ReadonlyArray<{
         readonly __typename: string;
     }>;
@@ -69,9 +69,9 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Brand",
+      "concreteType": "Club",
       "kind": "LinkedField",
-      "name": "brand",
+      "name": "club",
       "plural": false,
       "selections": (v0/*: any*/),
       "storageKey": null
@@ -101,5 +101,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'b17933f1f7c57d1bdb2a54c575d46161';
+(node as any).hash = 'c10167ae87c1a445905d92282dee83dc';
 export default node;

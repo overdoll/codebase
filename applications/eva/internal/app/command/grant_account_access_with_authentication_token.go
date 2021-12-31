@@ -27,7 +27,7 @@ func NewGrantAccountAccessWithAuthenticationTokenHandler(cr token.Repository, ur
 	return GrantAccountAccessWithAuthenticationTokenHandler{cr: cr, ur: ur, mr: mr}
 }
 
-// consume authentication token and return the account assigned to this token
+// Handle consume authentication token and return the account assigned to this token
 // this will only work if the current account is registered
 // if not registered, use other methods
 func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAccountAccessWithAuthenticationToken) (*account.Account, error) {

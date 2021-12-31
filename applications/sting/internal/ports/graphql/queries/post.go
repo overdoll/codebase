@@ -11,7 +11,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -31,7 +31,6 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		ModeratorId:    nil,
 		ContributorId:  nil,
 		AudienceSlugs:  audienceSlugs,
-		BrandSlugs:     brandSlugs,
 		CategorySlugs:  categorySlugs,
 		CharacterSlugs: characterSlugs,
 		SeriesSlugs:    seriesSlugs,

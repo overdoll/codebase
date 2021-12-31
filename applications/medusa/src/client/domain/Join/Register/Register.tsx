@@ -74,7 +74,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         if (viewer !== null) {
           viewer.invalidateRecord()
         }
-        store.delete(data.id)
+
         removeCookie('token')
         history.push('/profile')
 

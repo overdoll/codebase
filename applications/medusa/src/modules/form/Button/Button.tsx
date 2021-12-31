@@ -1,5 +1,6 @@
-import { ForwardedRef, forwardRef, ReactNode, useEffect, useState } from 'react'
+import { ForwardedRef, forwardRef, ReactNode } from 'react'
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
+import useSSRDisable from '../../hooks/useSSRDisable'
 
 interface Props extends ButtonProps {
   loading?: boolean
@@ -17,13 +18,7 @@ const Button = forwardRef<any, Props>(({
   isLoading,
   ...rest
 }: Props, forwardRef) => {
-  const [disableOverride, setDisableOverride] = useState(true)
-
-  // We need this hook here to enable the buttons after SSR hydration occurs
-  // we dont want buttons to be usable until javascript is mounted or else we get issues
-  useEffect(() => {
-    setDisableOverride(false)
-  }, [])
+  const disableOverride = useSSRDisable()
 
   // for type=submit (forms), we show a loading state
   const fullDisable = (disableOverride) || ((disabled || isDisabled))

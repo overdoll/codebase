@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 98732fd54feb841ca29e8d439a9ab5d7 */
+/* @relayHash ea90312bb67123954ec89423da1ef744 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -44,7 +44,7 @@ fragment ImageSnippetFragment on Resource {
 
 fragment ModeratePostFragment on Post {
   id
-  brand {
+  club {
     name
     id
   }
@@ -64,7 +64,7 @@ fragment PostAudienceFragment on Post {
 }
 
 fragment PostBrandFragment on Post {
-  brand {
+  club {
     name
     thumbnail {
       ...ResourceItemFragment
@@ -348,9 +348,9 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Brand",
+                            "concreteType": "Club",
                             "kind": "LinkedField",
-                            "name": "brand",
+                            "name": "club",
                             "plural": false,
                             "selections": [
                               (v5/*: any*/),
@@ -501,7 +501,7 @@ return {
     ]
   },
   "params": {
-    "id": "98732fd54feb841ca29e8d439a9ab5d7",
+    "id": "ea90312bb67123954ec89423da1ef744",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

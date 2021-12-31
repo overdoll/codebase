@@ -17,8 +17,7 @@ type Commands struct {
 	UpdateAccountLanguage                   command.UpdateAccountLanguageHandler
 	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
-	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
-	DeleteAccountUsername                   command.DeleteAccountUsernameHandler
+	UpdateAccountUsername                   command.UpdateAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
 	RevokeAccountSession                    command.RevokeAccountSessionHandler
 	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler
@@ -46,20 +45,18 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchAccounts                  query.SearchAccountsHandler
-	AccountById                     query.AccountByIdHandler
-	AccountsById                    query.AccountsByIdHandler
-	AccountByEmail                  query.AccountByEmailHandler
-	AccountByUsername               query.AccountByUsernameHandler
-	AccountEmailByEmail             query.AccountEmailByEmailHandler
-	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
-	AccountEmailsLimit              query.AccountEmailsLimitHandler
-	AccountUsernamesLimit           query.AccountUsernamesLimitHandler
-	AccountUsernameByUsername       query.AccountUsernameByUsernameHandler
-	AccountUsernamesByAccount       query.AccountUsernamesByAccountHandler
-	AccountSessionById              query.AccountSessionByIdHandler
-	AccountSessionsByAccount        query.AccountSessionsByAccountHandler
-	AccountRecoveryCodesByAccount   query.AccountRecoveryCodesByAccountHandler
-	IsAccountMultiFactorTOTPEnabled query.IsAccountMultiFactorTOTPEnabledHandler
-	ViewAuthenticationToken         query.ViewAuthenticationTokenHandler
+	SearchAccounts                              query.SearchAccountsHandler
+	AccountById                                 query.AccountByIdHandler
+	AccountsById                                query.AccountsByIdHandler
+	AccountByEmail                              query.AccountByEmailHandler
+	AccountByUsername                           query.AccountByUsernameHandler
+	AccountEmailByEmail                         query.AccountEmailByEmailHandler
+	AccountEmailsByAccount                      query.AccountEmailsByAccountHandler
+	AccountEmailsLimit                          query.AccountEmailsLimitHandler
+	AccountSessionById                          query.AccountSessionByIdHandler
+	AccountSessionsByAccount                    query.AccountSessionsByAccountHandler
+	AccountRecoveryCodesByAccount               query.AccountRecoveryCodesByAccountHandler
+	IsAccountMultiFactorTOTPEnabled             query.IsAccountMultiFactorTOTPEnabledHandler
+	AreAccountMultiFactorRecoveryCodesGenerated query.AreAccountMultiFactorRecoveryCodesGeneratedHandler
+	ViewAuthenticationToken                     query.ViewAuthenticationTokenHandler
 }

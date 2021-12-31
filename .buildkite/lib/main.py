@@ -45,7 +45,7 @@ def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = ["HOME"]
+        test_env_vars = ["HOME", "SENDGRID_API_KEY", "TESTMAIL_API_KEY", "TESTMAIL_NAMESPACE"]
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars
@@ -185,7 +185,7 @@ def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = ["HOME"]
+        test_env_vars = ["HOME", "SENDGRID_API_KEY", "TESTMAIL_API_KEY", "TESTMAIL_NAMESPACE"]
 
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
@@ -323,7 +323,7 @@ def print_project_pipeline():
 
 
 def push_images(targets, tmpdir):
-    test_env_vars = ["HOME"]
+    test_env_vars = ["HOME", "SENDGRID_API_KEY", "TESTMAIL_API_KEY", "TESTMAIL_NAMESPACE"]
 
     run_flags, json_profile_out_test = flags.calculate_flags(
         "run_flags", "run", tmpdir, test_env_vars

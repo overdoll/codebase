@@ -64,22 +64,3 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 
 	return types.MarshalAccountSessionToGraphQL(sess), nil
 }
-
-func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	username, err := r.App.Queries.AccountUsernameByUsername.Handle(ctx, query.AccountUsernameByUsername{
-		Principal: principal.FromContext(ctx),
-		AccountId: id.GetCompositePartID(1),
-		Username:  id.GetCompositePartID(0),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalAccountUsernameToGraphQL(username), nil
-}

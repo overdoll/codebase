@@ -21,7 +21,7 @@ interface Props {
 
 const BrandFragmentGQL = graphql`
   fragment BrandFragment on Post {
-    brand {
+    club {
       id
     }
   }

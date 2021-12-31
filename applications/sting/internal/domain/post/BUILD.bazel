@@ -4,7 +4,6 @@ go_library(
     name = "post",
     srcs = [
         "audience.go",
-        "brand.go",
         "category.go",
         "character.go",
         "character_filters.go",
@@ -18,6 +17,7 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/resource",
         "//libraries/localization",
         "//libraries/paging",
