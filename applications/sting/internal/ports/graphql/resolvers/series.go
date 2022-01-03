@@ -15,7 +15,7 @@ type SeriesResolver struct {
 	App *app.Application
 }
 
-func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -33,7 +33,6 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
 		SeriesSlugs:    []string{obj.Slug},
-		BrandSlugs:     brandSlugs,
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,
 		CharacterSlugs: characterSlugs,

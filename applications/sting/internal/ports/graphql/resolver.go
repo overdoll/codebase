@@ -74,8 +74,14 @@ func (r *Resolver) Audience() AudienceResolver {
 	}
 }
 
-func (r *Resolver) Brand() BrandResolver {
-	return &resolvers.BrandResolver{
+func (r *Resolver) Club() ClubResolver {
+	return &resolvers.ClubResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Post() PostResolver {
+	return &resolvers.PostResolver{
 		App: r.app,
 	}
 }

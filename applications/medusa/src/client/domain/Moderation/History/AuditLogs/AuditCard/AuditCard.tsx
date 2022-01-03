@@ -15,7 +15,7 @@ const AuditCardFragmentGQL = graphql`
   fragment AuditCardFragment on PostAuditLog {
     post {
       postedAt
-      brand {
+      club {
         name
       }
     }

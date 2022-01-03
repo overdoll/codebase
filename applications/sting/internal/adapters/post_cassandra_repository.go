@@ -20,7 +20,7 @@ var postTable = table.New(table.Metadata{
 		"content",
 		"moderator_account_id",
 		"contributor_account_id",
-		"brand_id",
+		"club_id",
 		"audience_id",
 		"category_ids",
 		"character_ids",
@@ -38,7 +38,7 @@ type posts struct {
 	Content        []string   `db:"content"`
 	ModeratorId    *string    `db:"moderator_account_id"`
 	ContributorId  string     `db:"contributor_account_id"`
-	BrandId        *string    `db:"brand_id"`
+	ClubId         string     `db:"club_id"`
 	AudienceId     *string    `db:"audience_id"`
 	CategoryIds    []string   `db:"category_ids"`
 	CharacterIds   []string   `db:"character_ids"`
@@ -70,13 +70,6 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		marshalledContent = append(marshalledContent, marshal)
 	}
 
-	var brandId *string
-
-	if pending.Brand() != nil {
-		id := pending.Brand().ID()
-		brandId = &id
-	}
-
 	var audienceId *string
 
 	if pending.Audience() != nil {
@@ -88,7 +81,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		Id:             pending.ID(),
 		State:          pending.State().String(),
 		ModeratorId:    pending.ModeratorId(),
-		BrandId:        brandId,
+		ClubId:         pending.ClubId(),
 		AudienceId:     audienceId,
 		ContributorId:  pending.ContributorId(),
 		Content:        marshalledContent,
@@ -114,16 +107,6 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		return nil, err
 	}
 
-	var brand *post.Brand
-
-	if postPending.BrandId != nil {
-		brand, err = r.GetBrandById(ctx, nil, *postPending.BrandId)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	var audienc *post.Audience
 
 	if postPending.AudienceId != nil {
@@ -140,7 +123,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.Content,
-		brand,
+		postPending.ClubId,
 		audienc,
 		characters,
 		categories,
@@ -298,10 +281,6 @@ func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, request
 
 func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
-}
-
-func (r PostsCassandraRepository) UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"brand_id"})
 }
 
 func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

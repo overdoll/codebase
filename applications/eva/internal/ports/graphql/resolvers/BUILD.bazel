@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "account.go",
         "account_email.go",
-        "account_username.go",
     ],
     importpath = "overdoll/applications/eva/internal/ports/graphql/resolvers",
     visibility = ["//visibility:public"],

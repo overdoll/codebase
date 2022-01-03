@@ -37,7 +37,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	awsSession := bootstrap.InitializeAWSSession()
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
-	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
+	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
+
+	clubRepo := adapters.NewClubCassandraRepository(session)
+	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(client, session)
 
 	resourceRepo := adapters.NewResourceS3Repository(awsSession)
 
@@ -45,53 +48,66 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		Commands: app.Commands{
 			TusComposer: command.NewTusComposerHandler(resourceRepo),
 
-			CreatePost:  command.NewCreatePostHandler(postRepo, indexRepo, eva, parley),
-			PublishPost: command.NewPublishPostHandler(postRepo, indexRepo, eva),
-			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
-			RejectPost:  command.NewRejectPostHandler(postRepo, indexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, indexRepo, parley),
-			RemovePost:  command.NewRemovePostHandler(postRepo, indexRepo),
+			CreatePost:  command.NewCreatePostHandler(postRepo, clubRepo, postIndexRepo, eva, parley),
+			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eva),
+			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo),
+			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley),
+			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo),
 
-			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, indexRepo),
-			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),
-			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			IndexAllBrands:     command.NewIndexAllBrandsHandler(postRepo, indexRepo),
-			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, indexRepo),
+			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),
+			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),
+			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, postIndexRepo),
+			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
+			IndexAllClubs:      command.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
+			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
-			UpdatePostBrand:      command.NewUpdatePostBrandHandler(postRepo, indexRepo),
-			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, indexRepo),
-			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, indexRepo),
-			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, indexRepo, resourceRepo),
-			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, indexRepo),
+			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
+			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
+			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, resourceRepo),
+			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
+
+			CreateClub:                    command.NewCreateClubHandler(clubRepo, clubIndexRepo),
+			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
+			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
+			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
+			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
+			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
+			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 
-			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
+			SearchCharacters: query.NewSearchCharactersHandler(postIndexRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
 			CharacterById:    query.NewCharacterByIdHandler(postRepo),
 
-			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
+			SearchCategories: query.NewSearchCategoriesHandler(postIndexRepo),
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoryById:     query.NewCategoryByIdHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postIndexRepo),
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 
-			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
-			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),
-			BrandById:    query.NewBrandByIdHandler(postRepo),
-
-			SearchAudience: query.NewSearchAudienceHandler(indexRepo),
+			SearchAudience: query.NewSearchAudienceHandler(postIndexRepo),
 			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),
 			AudienceById:   query.NewAudienceByIdHandler(postRepo),
 
-			SearchSeries: query.NewSearchSeriesHandler(indexRepo),
+			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
+
+			SearchClubs:                 query.NewSearchClubsHandler(clubIndexRepo),
+			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
+			ClubById:                    query.NewClubByIdHandler(clubRepo),
+			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
+			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
+			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
+			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
+			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, resourceRepo, parley),
+		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, clubIndexRepo, postIndexRepo, resourceRepo, parley),
 	}
 }

@@ -126,6 +126,33 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 	return codes, nil
 }
 
+func (r MultiFactorCassandraRepository) HasAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string) (bool, error) {
+
+	if err := multi_factor.CanViewRecoveryCodesForAccount(requester, accountId); err != nil {
+		return false, err
+	}
+
+	type recoveryCodesCount struct {
+		Count int `db:"count"`
+	}
+
+	var recoveryCodesCounts recoveryCodesCount
+
+	recoveryCodeCount := accountMultiFactorRecoveryCodeTable.
+		SelectBuilder().
+		CountAll().
+		Query(r.session).
+		BindStruct(&accountMultiFactorRecoveryCodes{
+			AccountId: accountId,
+		})
+
+	if err := recoveryCodeCount.Get(&recoveryCodesCounts); err != nil {
+		return false, fmt.Errorf("failed to get recovery codes for account: %v", err)
+	}
+
+	return recoveryCodesCounts.Count > 0, nil
+}
+
 // RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
 func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 

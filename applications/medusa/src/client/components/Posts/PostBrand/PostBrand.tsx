@@ -5,7 +5,7 @@ import { ResourceIcon } from '@//:modules/content/PageLayout'
 
 const PostBrandFragmentGQL = graphql`
   fragment PostBrandFragment on Post {
-    brand {
+    club {
       name
       thumbnail {
         ...ResourceIconFragment

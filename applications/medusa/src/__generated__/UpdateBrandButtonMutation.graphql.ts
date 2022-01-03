@@ -1,24 +1,20 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c7f2732f829de817ddd5e11ac55249dd */
+/* @relayHash d391681ef6228b425bfa17d8e76317cb */
 
 import { ConcreteRequest } from "relay-runtime";
-export type UpdatePostBrandInput = {
+export type UpdatePostContentInput = {
     id: string;
-    brandId: string;
+    content: Array<string>;
 };
 export type UpdateBrandButtonMutationVariables = {
-    input: UpdatePostBrandInput;
+    input: UpdatePostContentInput;
 };
 export type UpdateBrandButtonMutationResponse = {
-    readonly updatePostBrand: {
+    readonly updatePostContent: {
         readonly post: {
             readonly id: string;
-            readonly brand: {
-                readonly id: string;
-                readonly name: string;
-            } | null;
         } | null;
     } | null;
 };
@@ -31,15 +27,11 @@ export type UpdateBrandButtonMutation = {
 
 /*
 mutation UpdateBrandButtonMutation(
-  $input: UpdatePostBrandInput!
+  $input: UpdatePostContentInput!
 ) {
-  updatePostBrand(input: $input) {
+  updatePostContent(input: $input) {
     post {
       id
-      brand {
-        id
-        name
-      }
     }
   }
 }
@@ -53,14 +45,7 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = [
+v1 = [
   {
     "alias": null,
     "args": [
@@ -70,9 +55,9 @@ v2 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdatePostBrandPayload",
+    "concreteType": "UpdatePostContentPayload",
     "kind": "LinkedField",
-    "name": "updatePostBrand",
+    "name": "updatePostContent",
     "plural": false,
     "selections": [
       {
@@ -83,24 +68,11 @@ v2 = [
         "name": "post",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Brand",
-            "kind": "LinkedField",
-            "name": "brand",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -116,7 +88,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "UpdateBrandButtonMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -125,10 +97,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UpdateBrandButtonMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "c7f2732f829de817ddd5e11ac55249dd",
+    "id": "d391681ef6228b425bfa17d8e76317cb",
     "metadata": {},
     "name": "UpdateBrandButtonMutation",
     "operationKind": "mutation",
@@ -136,5 +108,5 @@ return {
   }
 };
 })();
-(node as any).hash = '8406be183397b42c612b79ad6c6ba26b';
+(node as any).hash = 'ce6128f0acbef559dd8ccb345048673c';
 export default node;

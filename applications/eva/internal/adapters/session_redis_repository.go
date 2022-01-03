@@ -19,7 +19,6 @@ import (
 
 const (
 	sessionPrefix = "session:"
-	accountPrefix = "account:"
 )
 
 type sessions struct {

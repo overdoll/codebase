@@ -32,10 +32,10 @@ interface UsernameValues {
 }
 
 const UsernameMutationGQL = graphql`
-  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!) {
-    updateAccountUsernameAndRetainPrevious(input: $input) {
+  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameInput!) {
+    updateAccountUsername(input: $input) {
       validation
-      accountUsername  {
+      account  {
         id
         username
       }
@@ -98,10 +98,10 @@ export default function ChangeUsernameForm (): JSX.Element {
         }
       },
       onCompleted (data) {
-        if (data?.updateAccountUsernameAndRetainPrevious?.validation != null) {
+        if (data?.updateAccountUsername?.validation != null) {
           setError('username', {
             type: 'mutation',
-            message: data.updateAccountUsernameAndRetainPrevious.validation
+            message: data.updateAccountUsername.validation
           })
           return
         }
@@ -118,8 +118,7 @@ export default function ChangeUsernameForm (): JSX.Element {
           isClosable: true
         })
       }
-    }
-    )
+    })
   }
 
   const success = isDirty && (errors.username == null) && isSubmitted

@@ -12,7 +12,7 @@ interface Props {
 
 const Query = graphql`
   query BrandsQuery {
-    brands {
+    clubs {
       edges {
         node {
           id

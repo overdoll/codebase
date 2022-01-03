@@ -1,17 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5b5160d34dcb5834074b91976301cf80 */
+/* @relayHash 3b37a40cd2479f9a397a7b797d879b57 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type MultiFactorSettingsQueryVariables = {};
 export type MultiFactorSettingsQueryResponse = {
     readonly viewer: {
-        readonly multiFactorSettings: {
-            readonly multiFactorTotpConfigured: boolean;
-            readonly " $fragmentRefs": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
-        };
+        readonly multiFactorTotpConfigured: boolean;
+        readonly " $fragmentRefs": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
     } | null;
 };
 export type MultiFactorSettingsQuery = {
@@ -24,26 +22,24 @@ export type MultiFactorSettingsQuery = {
 /*
 query MultiFactorSettingsQuery {
   viewer {
-    multiFactorSettings {
-      multiFactorTotpConfigured
-      ...DisableMultiFactorFragment
-      ...MultiFactorTotpSettingsFragment
-      ...RecoveryCodesSettingsFragment
-    }
+    multiFactorTotpConfigured
+    ...DisableMultiFactorFragment
+    ...MultiFactorTotpSettingsFragment
+    ...RecoveryCodesSettingsFragment
     id
   }
 }
 
-fragment DisableMultiFactorFragment on AccountMultiFactorSettings {
+fragment DisableMultiFactorFragment on Account {
   canDisableMultiFactor
 }
 
-fragment MultiFactorTotpSettingsFragment on AccountMultiFactorSettings {
+fragment MultiFactorTotpSettingsFragment on Account {
   multiFactorTotpConfigured
   recoveryCodesGenerated
 }
 
-fragment RecoveryCodesSettingsFragment on AccountMultiFactorSettings {
+fragment RecoveryCodesSettingsFragment on Account {
   recoveryCodesGenerated
 }
 */
@@ -71,32 +67,21 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
-            "alias": null,
             "args": null,
-            "concreteType": "AccountMultiFactorSettings",
-            "kind": "LinkedField",
-            "name": "multiFactorSettings",
-            "plural": false,
-            "selections": [
-              (v0/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "DisableMultiFactorFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "MultiFactorTotpSettingsFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "RecoveryCodesSettingsFragment"
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "DisableMultiFactorFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MultiFactorTotpSettingsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RecoveryCodesSettingsFragment"
           }
         ],
         "storageKey": null
@@ -119,30 +104,19 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountMultiFactorSettings",
-            "kind": "LinkedField",
-            "name": "multiFactorSettings",
-            "plural": false,
-            "selections": [
-              (v0/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "canDisableMultiFactor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "recoveryCodesGenerated",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "canDisableMultiFactor",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "recoveryCodesGenerated",
             "storageKey": null
           },
           {
@@ -158,7 +132,7 @@ return {
     ]
   },
   "params": {
-    "id": "5b5160d34dcb5834074b91976301cf80",
+    "id": "3b37a40cd2479f9a397a7b797d879b57",
     "metadata": {},
     "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
@@ -166,5 +140,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'e0d21af380ea23e53f6f016467952bba';
+(node as any).hash = 'f91c3ae32558e806a50a3b2821b9c0ee';
 export default node;

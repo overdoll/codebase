@@ -9,7 +9,7 @@ interface Props {
 }
 
 const MultiFactorTotpFragmentGQL = graphql`
-  fragment MultiFactorTotpSettingsFragment on AccountMultiFactorSettings {
+  fragment MultiFactorTotpSettingsFragment on Account {
     multiFactorTotpConfigured
     recoveryCodesGenerated
   }

@@ -13,9 +13,9 @@ type SearchPosts struct {
 	Cursor        *paging.Cursor
 	ModeratorId   *string
 	ContributorId *string
+	ClubId        *string
 
 	AudienceSlugs  []string
-	BrandSlugs     []string
 	CategorySlugs  []string
 	CharacterSlugs []string
 	SeriesSlugs    []string
@@ -40,7 +40,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,
-		query.BrandSlugs,
+		query.ClubId,
 		query.AudienceSlugs,
 		query.CategorySlugs,
 		query.CharacterSlugs,

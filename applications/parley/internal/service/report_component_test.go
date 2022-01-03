@@ -28,7 +28,7 @@ func TestPostReportReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.PostReportReasons.Edges, 2)
-	require.Equal(t, "Some report reason #2", search.PostReportReasons.Edges[0].Node.Reason)
+	require.Equal(t, "Some report reason", search.PostReportReasons.Edges[0].Node.Reason)
 }
 
 type PostReportModified struct {

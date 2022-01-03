@@ -21,6 +21,9 @@ go_test(
         "component_test.go",
         "mail_component_test.go",
     ],
+    data = [
+        "//applications/carrier:config.toml",
+    ],
     deps = [
         ":service",
         "//applications/carrier/internal/ports",

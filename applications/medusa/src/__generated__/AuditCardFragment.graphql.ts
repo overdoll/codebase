@@ -8,9 +8,9 @@ export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future ad
 export type AuditCardFragment = {
     readonly post: {
         readonly postedAt: unknown | null;
-        readonly brand: {
+        readonly club: {
             readonly name: string;
-        } | null;
+        };
     };
     readonly action: PostAuditLogAction;
     readonly " $fragmentRefs": FragmentRefs<"AuditInspectFragment">;
@@ -48,9 +48,9 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Brand",
+          "concreteType": "Club",
           "kind": "LinkedField",
-          "name": "brand",
+          "name": "club",
           "plural": false,
           "selections": [
             {
@@ -82,5 +82,5 @@ const node: ReaderFragment = {
   "type": "PostAuditLog",
   "abstractKey": null
 };
-(node as any).hash = '9e72e51c9b7f9787926b7eae7a0d23b1';
+(node as any).hash = 'cb47292dd216d712c7c127e8b3c0674e';
 export default node;

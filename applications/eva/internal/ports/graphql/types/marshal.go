@@ -27,14 +27,17 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 	}
 
 	return &Account{
-		ID:          relay.NewID(Account{}, result.ID()),
-		Reference:   result.ID(),
-		Avatar:      result.ConvertAvatarToURI(),
-		Username:    result.Username(),
-		Language:    MarshalLanguageToGraphQL(result.Language()),
-		IsStaff:     result.IsStaff(),
-		IsModerator: result.IsModerator(),
-		Lock:        MarshalAccountLockToGraphQL(result),
+		ID:                      relay.NewID(Account{}, result.ID()),
+		Reference:               result.ID(),
+		Avatar:                  result.ConvertAvatarToURI(),
+		Username:                result.Username(),
+		Language:                MarshalLanguageToGraphQL(result.Language()),
+		IsStaff:                 result.IsStaff(),
+		IsModerator:             result.IsModerator(),
+		Lock:                    MarshalAccountLockToGraphQL(result),
+		UsernameEditAvailableAt: result.UsernameEditAvailableAt(),
+		MultiFactorEnabled:      result.MultiFactorEnabled(),
+		CanDisableMultiFactor:   result.CanDisableMultiFactor(),
 	}
 }
 
@@ -153,13 +156,6 @@ func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
 	}
 }
 
-func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername {
-	return &AccountUsername{
-		ID:       relay.NewID(AccountUsername{}, result.AccountId(), result.Username()),
-		Username: result.Username(),
-	}
-}
-
 func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken, acc *account.Account) *AuthenticationToken {
 
 	p := passport.FromContext(ctx)
@@ -241,65 +237,6 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, cursor *pa
 	}
 
 	conn.Edges = accEmails
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		conn.PageInfo.StartCursor = &res
-		res = results[len(results)-1].Cursor()
-		conn.PageInfo.EndCursor = &res
-	}
-
-	return conn
-}
-
-func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, cursor *paging.Cursor) *AccountUsernameConnection {
-
-	var accUsernames []*AccountUsernameEdge
-
-	conn := &AccountUsernameConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-		Edges: accUsernames,
-	}
-
-	limit := cursor.GetLimit()
-
-	if len(results) == 0 {
-		return conn
-	}
-
-	if len(results) == limit {
-		conn.PageInfo.HasNextPage = cursor.First() != nil
-		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
-		results = results[:len(results)-1]
-	}
-
-	var nodeAt func(int) *account.Username
-
-	if cursor != nil && cursor.Last() != nil {
-		n := len(results) - 1
-		nodeAt = func(i int) *account.Username {
-			return results[n-i]
-		}
-	} else {
-		nodeAt = func(i int) *account.Username {
-			return results[i]
-		}
-	}
-
-	for i := range results {
-		node := nodeAt(i)
-		accUsernames = append(accUsernames, &AccountUsernameEdge{
-			Node:   MarshalAccountUsernameToGraphQL(node),
-			Cursor: node.Cursor(),
-		})
-	}
-
-	conn.Edges = accUsernames
 
 	if len(results) > 0 {
 		res := results[0].Cursor()

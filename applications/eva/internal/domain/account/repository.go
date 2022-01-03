@@ -16,16 +16,13 @@ type Repository interface {
 	UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(account *Account, emails []*Email) error) (*Account, *Email, error)
 
 	GetAccountByUsername(ctx context.Context, username string) (*Account, error)
-	GetAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) (*Username, error)
-	UpdateAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usernames []*Username, account *Account) error) (*Account, *Username, error)
-	GetAccountUsernames(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Username, error)
+	UpdateAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(account *Account) error) (*Account, error)
 
 	AddAccountEmail(ctx context.Context, account *Account, emailConfirmation *EmailConfirmation) (*Email, error)
 	ConfirmAccountEmail(ctx context.Context, requester *principal.Principal, email string) (*Email, error)
 	GetAccountEmails(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Email, error)
 	GetAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) (*Email, error)
 	DeleteAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) error
-	DeleteAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, username string) error
 }
 
 type IndexRepository interface {

@@ -2,7 +2,6 @@ package post
 
 import (
 	"context"
-
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -16,7 +15,6 @@ type Repository interface {
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
-	UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
@@ -25,9 +23,6 @@ type Repository interface {
 	GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
-
-	GetBrandById(ctx context.Context, requester *principal.Principal, brandId string) (*Brand, error)
-	GetBrandBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Brand, error)
 
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
@@ -52,10 +47,6 @@ type IndexRepository interface {
 	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CharacterFilters) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
-
-	IndexAllBrands(ctx context.Context) error
-	DeleteBrandsIndex(ctx context.Context) error
-	SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Brand, error)
 
 	IndexAllAudience(ctx context.Context) error
 	DeleteAudienceIndex(ctx context.Context) error

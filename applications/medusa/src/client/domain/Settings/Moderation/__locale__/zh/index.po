@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:88
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:137
 msgid "Change your status for receiving posts in your Moderation Queue"
 msgstr ""
 
@@ -22,13 +22,25 @@ msgid "Queue"
 msgstr ""
 
 #: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:71
-msgid "There was an error changing your Queue status"
+#~ msgid "There was an error changing your Queue status"
+#~ msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:98
+msgid "There was an error changing your Queue status to Off"
 msgstr ""
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:83
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:122
+msgid "There was an error changing your Queue status to On"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:133
 msgid "Toggle Queue Status"
 msgstr ""
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:64
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:91
 msgid "You are no longer in the Moderator Posts Queue"
+msgstr ""
+
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:115
+msgid "You are now active in the Moderator Posts Queue"
 msgstr ""

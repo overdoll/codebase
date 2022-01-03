@@ -9,7 +9,7 @@ interface Props {
 }
 
 const RecoveryCodesFragmentGQL = graphql`
-  fragment RecoveryCodesSettingsFragment on AccountMultiFactorSettings {
+  fragment RecoveryCodesSettingsFragment on Account {
     recoveryCodesGenerated
   }
 `
