@@ -43,13 +43,11 @@ declare global {
       joinWithNewRandomAccount: (prefix?: string) => Chainable<Element>
 
       /**
-       * Preserve the currently-authenticated account
+       * Do a joining session with a new account, with random username + email
        *
-       * Usually, you authenticate in the before() function and run preserveAccount() in beforeEach()
-       *
-       * @example cy.preserveAccount()
+       * @example cy.joinWithNewRandomGlobalAccount()
        */
-      preserveAccount: () => Chainable<Element>
+      joinWithNewRandomGlobalAccount: () => Chainable<Element>
 
       /**
        * Logout the current account
@@ -57,13 +55,6 @@ declare global {
        * @example cy.logout()
        */
       logout: () => Chainable<Element>
-
-      /**
-       * Cleanup
-       **
-       * @example cy.cleanup()
-       */
-      cleanup: () => Chainable<Element>
 
       /**
        * For the given email, display the last email that was sent to this email

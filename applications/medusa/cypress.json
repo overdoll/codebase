@@ -4,5 +4,6 @@
     "codeCoverage": {
       "url": "https://overdoll.test/__coverage__"
     }
-  }
+  },
+  "experimentalSessionSupport": true
 }

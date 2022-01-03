@@ -40,7 +40,7 @@ type ViewerAccountEmailUsernameSettings struct {
 	} `graphql:"viewer()"`
 }
 
-func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
+func viewerAccountEmailSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
 	var settings ViewerAccountEmailUsernameSettings
 	err := client.Query(context.Background(), &settings, nil)
 	require.NoError(t, err, "no error for grabbing viewer account email settings")
@@ -76,7 +76,7 @@ type UpdateAccountEmailStatusToPrimary struct {
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
 
-	newAcc := createFakeNormalAccount(t)
+	newAcc := seedNormalAccount(t)
 	testAccountId := newAcc.ID()
 	oldEmail := newAcc.Email()
 
@@ -118,7 +118,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	require.NoError(t, err, "no error for confirming account")
 	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail, "email should be available")
 
-	settings := viewerAccountEmailUsernameSettings(t, client)
+	settings := viewerAccountEmailSettings(t, client)
 
 	var oldEmailId relay.ID
 	foundConfirmedEmail := false
@@ -149,7 +149,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email, "emails should be equal")
 
 	// query account settings once more
-	settings = viewerAccountEmailUsernameSettings(t, client)
+	settings = viewerAccountEmailSettings(t, client)
 
 	foundPrimaryEmail := false
 
@@ -181,7 +181,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, removeAccountEmail.DeleteAccountEmail.AccountEmailID)
 
-	settings = viewerAccountEmailUsernameSettings(t, client)
+	settings = viewerAccountEmailSettings(t, client)
 
 	foundNewEmail := false
 
@@ -203,7 +203,7 @@ func TestAccountEmailAndUsernameLimit(t *testing.T) {
 	// use passport with user
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
-	settings := viewerAccountEmailUsernameSettings(t, client)
+	settings := viewerAccountEmailSettings(t, client)
 
 	require.Equal(t, settings.Viewer.EmailsLimit, 5, "should show an emails limit")
 }
@@ -218,7 +218,7 @@ type UpdateAccountUsername struct {
 func TestAccountUsername_modify(t *testing.T) {
 	t.Parallel()
 
-	newAcc := createFakeNormalAccount(t)
+	newAcc := seedNormalAccount(t)
 	testAccountId := newAcc.ID()
 	oldUsername := newAcc.Username()
 
@@ -242,7 +242,7 @@ func TestAccountUsername_modify(t *testing.T) {
 	require.NoError(t, err)
 	require.Nil(t, modifyAccountUsername.UpdateAccountUsername.Validation, "no validation errors")
 
-	settings := viewerAccountEmailUsernameSettings(t, client)
+	settings := viewerAccountEmailSettings(t, client)
 
 	// make sure that the username is modified as well for the "authentication" query
 	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
@@ -288,7 +288,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)
 
 	// query account settings once more
-	settings := viewerAccountEmailUsernameSettings(t, client)
+	settings := viewerAccountEmailSettings(t, client)
 
 	foundSession := false
 	var sessionId relay.ID
@@ -314,7 +314,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	require.NotNil(t, revokeAccountSession.RevokeAccountSession.AccountSessionID)
 
 	// now test to make sure the session does not exist
-	settings = viewerAccountEmailUsernameSettings(t, client)
+	settings = viewerAccountEmailSettings(t, client)
 	foundSession = false
 
 	for _, sess := range settings.Viewer.Sessions.Edges {

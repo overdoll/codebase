@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-type StartPublishPost struct {
+type PublishPost struct {
 	PostId string
 }
 
@@ -20,7 +20,7 @@ func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva EvaS
 	return PublishPostHandler{pr: pr, pi: pi, eva: eva}
 }
 
-func (h PublishPostHandler) Handle(ctx context.Context, cmd StartPublishPost) error {
+func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 		pending.MakePublishing()

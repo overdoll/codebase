@@ -9,13 +9,8 @@ describe('Settings - Add Email', () => {
       pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
     })
 
-  before(() => {
-    cy.cleanup()
-    cy.joinWithNewAccount(currentUsername)
-  })
-
   beforeEach(() => {
-    cy.preserveAccount()
+    cy.joinWithNewAccount(currentUsername)
   })
 
   it('can see current session', () => {
@@ -25,7 +20,8 @@ describe('Settings - Add Email', () => {
   })
 
   it('can see a new session and revoke it', () => {
-    cy.cleanup()
+    cy.visit('/')
+    cy.logout()
     cy.joinWithExistingAccount(currentUsername)
     cy.visit('/settings/security')
     cy.findByText(/Sessions/).should('exist')

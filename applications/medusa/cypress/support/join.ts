@@ -1,12 +1,3 @@
-import ChanceJS from 'chance'
-
-const chance = new ChanceJS()
-
-Cypress.Commands.add('cleanup', () => {
-  cy.clearCookie('od.session')
-  cy.visit('/')
-})
-
 Cypress.Commands.add('logout', () => {
   cy.waitUntil(() => cy.findByRole('button', { name: /Menu/iu }).should('not.be.disabled'))
 
@@ -32,25 +23,10 @@ Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
 
 Cypress.Commands.add('joinWithNewAccount', (name: string) => {
   const email = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`
-  startJoin(email)
-  finishWithNewAccount(name)
-})
-
-Cypress.Commands.add('joinWithNewRandomAccount', (prefix: string = '') => {
-  const name = `${prefix}${
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
-  }`
-
-  const email = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`
-  startJoin(email)
-  finishWithNewAccount(name)
-})
-
-Cypress.Commands.add('preserveAccount', () => {
-  Cypress.Cookies.preserveOnce('od.session')
+  cy.session(email, () => {
+    startJoin(email)
+    finishWithNewAccount(name)
+  })
 })
 
 const finishWithNewAccount = (username: string): void => {

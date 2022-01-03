@@ -28,6 +28,22 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
+func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+
+	bootstrap.NewBootstrap(ctx)
+
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+
+	// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
+	// this makes testing easier because we can get reproducible tests with each run
+	return createApplication(ctx, EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)}, adapters.NewParleyGrpc(parleyClient)),
+		func() {
+			cleanup()
+			cleanup2()
+		}
+}
+
 func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()

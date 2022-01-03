@@ -22,7 +22,6 @@ func NewID(typename interface{}, args ...string) ID {
 		case string:
 			typeName = typename.(string)
 		}
-
 	}
 
 	return ID(strings.Join(append([]string{typeName}, args...), ":"))

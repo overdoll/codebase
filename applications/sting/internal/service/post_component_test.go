@@ -9,7 +9,6 @@ import (
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/testsuite"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
@@ -113,23 +112,27 @@ type AccountPosts struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-func createPost(t *testing.T, client *graphql.Client) CreatePost {
+// TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
+// then, we test our GRPC endpoints for revoking
+func TestCreatePost_Submit_and_publish(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
 	var createPost CreatePost
 
-	clb := createClub(t, client)
+	clb := seedClub(t)
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
 		"input": types.CreatePostInput{
-			ClubID: relay.ID(clb.ID),
+			ClubID: relayId,
 		},
 	})
-	require.NoError(t, err)
 
-	return createPost
-}
-
-func createPostFlow(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
-	createPost := createPost(t, client)
+	require.NoError(t, err, "no error creating a post")
 
 	newPostId := createPost.CreatePost.Post.ID
 	newPostReference := createPost.CreatePost.Post.Reference
@@ -144,7 +147,7 @@ func createPostFlow(t *testing.T, client *graphql.Client, env *testsuite.TestWor
 	// update with new content (1 file)
 	var updatePostContent UpdatePostContent
 
-	err := client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
+	err = client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
 		"input": types.UpdatePostContentInput{
 			ID:      relay.ID(newPostId),
 			Content: []string{fileId},
@@ -245,103 +248,66 @@ func createPostFlow(t *testing.T, client *graphql.Client, env *testsuite.TestWor
 	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
 	require.Equal(t, true, submitPost.SubmitPost.InReview, "expected post submitted to be in review")
 
-	// we need to submit the post, in which our tests will do an action
-	env.RegisterDelayedCallback(callback(newPostReference), time.Hour*24)
+	env := getWorkflowEnvironment(t)
+	postId := submitPost.SubmitPost.Post.Reference
 
-	env.ExecuteWorkflow(workflows.SubmitPost, newPostReference)
+	// we need to submit the post, in which our tests will do an action
+	env.RegisterDelayedCallback(func() {
+		// at this point, our post is put into the moderation queue. check for existence here
+		// grab all pending posts for our moderator
+		client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+		var accountModeratorPosts AccountModeratorPosts
+
+		err := client.Query(context.Background(), &accountModeratorPosts, map[string]interface{}{
+			"representations": []_Any{
+				{
+					"__typename": "Account",
+					"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+				},
+			},
+		})
+
+		require.NoError(t, err)
+
+		exists := false
+
+		for _, post := range accountModeratorPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
+			if post.Node.Reference == postId {
+				exists = true
+			}
+		}
+
+		// ensure this post will exist and is assigned to our moderator
+		require.True(t, exists, "post exists for moderator")
+
+		// setup another environment since we cant execute multiple workflows
+		newEnv := getWorkflowEnvironment(t)
+
+		stingClient := getGrpcClient(t)
+
+		// "publish" pending post
+		_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
+		require.NoError(t, e)
+
+		// execute workflow manually since it wont be executed right here
+		newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
+		require.True(t, newEnv.IsWorkflowCompleted())
+		require.NoError(t, newEnv.GetWorkflowError())
+	}, time.Hour*24)
+
+	env.ExecuteWorkflow(workflows.SubmitPost, postId)
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
-}
 
-type AccountModeratorPosts struct {
-	Entities []struct {
-		Account struct {
-			ID                  string
-			ModeratorPostsQueue *struct {
-				Edges []*struct {
-					Node PostModified
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-// TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
-// then, we test our GRPC endpoints for revoking
-func TestCreatePost_Submit_and_publish(t *testing.T) {
-	t.Parallel()
-
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	var newPostId string
-
-	env := getWorkflowEnvironment(t)
-	es := bootstrap.InitializeElasticSearchSession()
-
-	createPostFlow(t, client, env, func(postId string) func() {
-		return func() {
-			// need to refresh the ES index or else the post wont be found
-			_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
-			require.NoError(t, err)
-
-			newPostId = postId
-
-			// at this point, our post is put into the moderation queue. check for existence here
-			// grab all pending posts for our moderator
-			client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-			var accountModeratorPosts AccountModeratorPosts
-
-			err = client.Query(context.Background(), &accountModeratorPosts, map[string]interface{}{
-				"representations": []_Any{
-					{
-						"__typename": "Account",
-						"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
-					},
-				},
-			})
-
-			require.NoError(t, err)
-
-			exists := false
-
-			for _, post := range accountModeratorPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
-				if post.Node.Reference == postId {
-					exists = true
-				}
-			}
-
-			// ensure this post will exist and is assigned to our moderator
-			require.True(t, exists, "post exists for moderator")
-
-			// setup another environment since we cant execute multiple workflows
-			newEnv := getWorkflowEnvironment(t)
-
-			stingClient := getGrpcClient(t)
-
-			// "publish" pending post
-			_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
-
-			// execute workflow manually since it wont be executed right here
-			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
-			require.True(t, newEnv.IsWorkflowCompleted())
-			require.NoError(t, newEnv.GetWorkflowError())
-		}
-	})
-
-	post := getPost(t, newPostId)
+	post = getPost(t, postId)
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
 	cont := post.Post.Content[0]
 	split := strings.Split(cont.ID, "/")
 	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+post.Post.Reference+"/"+split[len(split)-1]+".webp", string(cont.Urls[0].URL))
-
-	// refresh index
-	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
-	require.NoError(t, err)
 
 	// query accountPosts once more, make sure post is no longer visible
 	var newAccountPosts AccountModeratorPosts
@@ -360,7 +326,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	exists := false
 
 	for _, post := range newAccountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
-		if post.Node.Reference == newPostId {
+		if post.Node.Reference == postId {
 			exists = true
 			break
 		}
@@ -416,44 +382,58 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)
-	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: newPostId})
+	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Contributor.Id).GetID(), data.ContributorId, "should have correct contributor ID assigned")
 	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
+}
+
+type AccountModeratorPosts struct {
+	Entities []struct {
+		Account struct {
+			ID                  string
+			ModeratorPostsQueue *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
 }
 
 // Test_CreatePost_Discard - discard post
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
 	env := getWorkflowEnvironment(t)
 
-	var newPostId string
+	pst := seedPublishingPost(t)
+	postId := pst.ID()
 
-	createPostFlow(t, client, env, func(postId string) func() {
+	// we need to submit the post, in which our tests will do an action
+	env.RegisterDelayedCallback(func() {
+		// setup another environment since we cant execute multiple workflows
+		newEnv := getWorkflowEnvironment(t)
 
-		return func() {
-			newPostId = postId
-			// setup another environment since we cant execute multiple workflows
-			newEnv := getWorkflowEnvironment(t)
+		stingClient := getGrpcClient(t)
 
-			stingClient := getGrpcClient(t)
+		// "discard" pending post
+		_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
+		require.NoError(t, e)
 
-			// "discard" pending post
-			_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
+		// execute workflow manually since it wont be executed right here
+		newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
 
-			// execute workflow manually since it wont be executed right here
-			newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
+		require.True(t, newEnv.IsWorkflowCompleted())
+		require.NoError(t, newEnv.GetWorkflowError())
+	}, time.Hour*24)
 
-			require.True(t, newEnv.IsWorkflowCompleted())
-			require.NoError(t, newEnv.GetWorkflowError())
-		}
-	})
+	env.ExecuteWorkflow(workflows.SubmitPost, postId)
 
-	post := getPost(t, newPostId)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	post := getPost(t, postId)
 
 	// check to make sure post is in a dicarded state
 	require.Equal(t, types.PostStateDiscarded, post.Post.State)
@@ -464,31 +444,33 @@ func TestCreatePost_Discard(t *testing.T) {
 func TestCreatePost_Reject(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
 	env := getWorkflowEnvironment(t)
 
-	var newPostId string
+	pst := seedPublishingPost(t)
+	postId := pst.ID()
 
-	createPostFlow(t, client, env, func(postId string) func() {
-		return func() {
-			newPostId = postId
-			// setup another environment since we cant execute multiple workflows
+	// we need to submit the post, in which our tests will do an action
+	env.RegisterDelayedCallback(func() {
 
-			stingClient := getGrpcClient(t)
+		stingClient := getGrpcClient(t)
 
-			// "reject" pending post
-			_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
+		// "reject" pending post
+		_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
+		require.NoError(t, e)
 
-			post := getPost(t, newPostId)
+		post := getPost(t, postId)
 
-			// make sure post is in rejected state
-			require.Equal(t, types.PostStateRejected, post.Post.State)
-		}
-	})
+		// make sure post is in rejected state
+		require.Equal(t, types.PostStateRejected, post.Post.State)
 
-	post := getPost(t, newPostId)
+	}, time.Hour*24)
+
+	env.ExecuteWorkflow(workflows.SubmitPost, postId)
+
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	post := getPost(t, postId)
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRejected, post.Post.State)
@@ -498,32 +480,32 @@ func TestCreatePost_Reject(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
 	env := getWorkflowEnvironment(t)
 
-	var newPostId string
+	pst := seedPublishingPost(t)
+	postId := pst.ID()
 
-	createPostFlow(t, client, env, func(postId string) func() {
-		return func() {
-			newPostId = postId
-			// setup another environment since we cant execute multiple workflows
+	// we need to submit the post, in which our tests will do an action
+	env.RegisterDelayedCallback(func() {
+		stingClient := getGrpcClient(t)
 
-			stingClient := getGrpcClient(t)
+		// "remove" pending post
+		_, e := stingClient.RemovePost(context.Background(), &sting.PostRequest{Id: postId})
+		require.NoError(t, e)
 
-			// "remove" pending post
-			_, e := stingClient.RemovePost(context.Background(), &sting.PostRequest{Id: postId})
-			require.NoError(t, e)
+		newEnv := getWorkflowEnvironment(t)
+		newEnv.ExecuteWorkflow(workflows.RemovePost, postId)
 
-			newEnv := getWorkflowEnvironment(t)
-			newEnv.ExecuteWorkflow(workflows.RemovePost, postId)
+		require.True(t, newEnv.IsWorkflowCompleted())
+		require.NoError(t, newEnv.GetWorkflowError())
+	}, time.Hour*24)
 
-			require.True(t, newEnv.IsWorkflowCompleted())
-			require.NoError(t, newEnv.GetWorkflowError())
-		}
-	})
+	env.ExecuteWorkflow(workflows.SubmitPost, postId)
 
-	post := getPost(t, newPostId)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	post := getPost(t, postId)
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRemoved, post.Post.State)
@@ -534,9 +516,9 @@ func TestCreateDraftPost_mp4(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	createPost := createPost(t, client)
+	pst := seedDraftPost(t)
 
-	newPostId := createPost.CreatePost.Post.ID
+	relayId := convertPostIdToRelayId(pst.ID())
 
 	// upload some files - this is required before running update command
 	tusClient := getTusClient(t)
@@ -546,7 +528,7 @@ func TestCreateDraftPost_mp4(t *testing.T) {
 
 	err := client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
 		"input": types.UpdatePostContentInput{
-			ID:      relay.ID(newPostId),
+			ID:      relayId,
 			Content: []string{fileId},
 		},
 	})

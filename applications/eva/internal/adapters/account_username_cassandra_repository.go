@@ -74,8 +74,11 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 			return nil, err
 		}
 
-		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
-			return nil, err
+		if strings.ToLower(oldUsername) != strings.ToLower(instance.Username()) {
+			// only a casings change - don't create unqiue username
+			if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
+				return nil, err
+			}
 		}
 
 		batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -89,6 +92,11 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
+
+			if err := r.deleteAccountUsername(ctx, instance.ID(), instance.Username()); err != nil {
+				return nil, err
+			}
+
 			return nil, fmt.Errorf("failed to update account username: %v", err)
 		}
 

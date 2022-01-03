@@ -6,20 +6,8 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
 	"testing"
 )
-
-type TestClub struct {
-	Name string `faker:"title_male"`
-	Slug string `faker:"username"`
-}
-
-type CreateClub struct {
-	CreateClub *struct {
-		Club *ClubModified
-	} `graphql:"createClub(input: $input)"`
-}
 
 type ClubModified struct {
 	ID          string
@@ -49,7 +37,17 @@ func getClub(t *testing.T, client *graphql.Client, id string) Club {
 	return club
 }
 
-func createClub(t *testing.T, client *graphql.Client) *ClubModified {
+type CreateClub struct {
+	CreateClub *struct {
+		Club *ClubModified
+	} `graphql:"createClub(input: $input)"`
+}
+
+func TestCreateClub(t *testing.T) {
+	t.Parallel()
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
 	var createClub CreateClub
 
 	fake := TestClub{}
@@ -62,9 +60,11 @@ func createClub(t *testing.T, client *graphql.Client) *ClubModified {
 			Name: fake.Name,
 		},
 	})
+
 	require.NoError(t, err)
 
-	return createClub.CreateClub.Club
+	newClb := getClub(t, client, fake.Slug)
+	require.Equal(t, newClb.Club.Slug, fake.Slug, "should see club with correct slug")
 }
 
 type AddClubSlugAlias struct {
@@ -90,13 +90,10 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	t.Parallel()
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-	clb := createClub(t, client)
+	clb := seedClub(t)
+	relayId := convertClubIdToRelayId(clb.ID())
 
-	oldSlug := clb.Slug
-
-	// try and find the club with a new instance
-	newClb := getClub(t, client, oldSlug)
-	require.NotNil(t, newClb.Club, "can find club using default slug")
+	oldSlug := clb.Slug()
 
 	// create a test slug we can use
 	fake := TestClub{}
@@ -109,7 +106,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	var addClubSlugAlias AddClubSlugAlias
 	err = client.Mutate(context.Background(), &addClubSlugAlias, map[string]interface{}{
 		"input": types.AddClubSlugAliasInput{
-			ID:   relay.ID(clb.ID),
+			ID:   relayId,
 			Slug: newSlug,
 		},
 	})
@@ -130,7 +127,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	var promoteClubSlugAliasToDefault PromoteClubSlugAliasToDefault
 	err = client.Mutate(context.Background(), &promoteClubSlugAliasToDefault, map[string]interface{}{
 		"input": types.PromoteClubSlugAliasToDefaultInput{
-			ID:   relay.ID(clb.ID),
+			ID:   relayId,
 			Slug: newSlug,
 		},
 	})
@@ -157,7 +154,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	var removeClubSlugAlias RemoveClubSlugAlias
 	err = client.Mutate(context.Background(), &removeClubSlugAlias, map[string]interface{}{
 		"input": types.RemoveClubSlugAliasInput{
-			ID:   relay.ID(clb.ID),
+			ID:   relayId,
 			Slug: oldSlug,
 		},
 	})
@@ -184,7 +181,8 @@ func TestCreateClub_edit_name(t *testing.T) {
 	t.Parallel()
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-	clb := createClub(t, client)
+	clb := seedClub(t)
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	// create a test name
 	fake := TestClub{}
@@ -196,13 +194,13 @@ func TestCreateClub_edit_name(t *testing.T) {
 	var updateClubName UpdateClubName
 	err = client.Mutate(context.Background(), &updateClubName, map[string]interface{}{
 		"input": types.UpdateClubNameInput{
-			ID:   relay.ID(clb.ID),
+			ID:   relayId,
 			Name: newName,
 		},
 	})
 	require.NoError(t, err, "no error updating name")
 
 	// make sure name is updated
-	updatedClb := getClub(t, client, clb.Slug)
+	updatedClb := getClub(t, client, clb.Slug())
 	require.Equal(t, newName, updatedClb.Club.Name)
 }

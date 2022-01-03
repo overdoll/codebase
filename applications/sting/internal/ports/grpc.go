@@ -72,7 +72,7 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 
 func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.PublishPost.Handle(ctx, command.StartPublishPost{
+	if err := s.app.Commands.PublishPost.Handle(ctx, command.PublishPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err

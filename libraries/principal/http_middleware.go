@@ -33,12 +33,14 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 
 		if err != nil {
 			zap.S().Error("unable to get account ", zap.Error(err))
-			c.JSON(401, ErrNotAuthorized)
 			c.Abort()
 			return
 		}
 
-		c.Request = c.Request.WithContext(toContext(c.Request.Context(), principal))
+		if principal != nil {
+			c.Request = c.Request.WithContext(toContext(c.Request.Context(), principal))
+		}
+
 		c.Next()
 	}
 }

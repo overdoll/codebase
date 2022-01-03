@@ -39,6 +39,11 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 	acc, err := s.app.Queries.AccountById.Handle(ctx, request.Id)
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 

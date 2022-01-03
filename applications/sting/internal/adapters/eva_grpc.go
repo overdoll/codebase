@@ -25,5 +25,9 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 		return nil, err
 	}
 
+	if acc == nil {
+		return nil, nil
+	}
+
 	return principal.UnmarshalFromEvaProto(acc), nil
 }

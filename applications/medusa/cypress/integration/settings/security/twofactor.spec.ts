@@ -15,14 +15,9 @@ describe('Settings - Configure Two-Factor', () => {
     cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
   }
 
-  before(() => {
-    cy.cleanup()
-    cy.joinWithNewAccount(name)
-  })
-
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.preserveAccount()
+    cy.joinWithNewAccount(name)
   })
 
   it('can set up recovery codes', () => {
