@@ -49,8 +49,6 @@ export default function Join ({
 
   const [cookies, setCookie] = useCookies<string>(['token'])
 
-  const { i18n } = useLingui()
-
   const onSubmit = ({ email }): void => {
     commit({
       variables: {

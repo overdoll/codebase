@@ -420,6 +420,16 @@ const routes: Route[] = [
         routes: [
           {
             path: '/manage/posts',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Manage/Clubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Manage/MyPosts/RootMyPosts'
@@ -440,10 +450,20 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/manage/brands',
+            path: '/manage/clubs',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Manage/MyPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
-                './domain/Manage/Brands/Brands'
+                './domain/Manage/Clubs/Clubs'
               )
             )
           }
@@ -747,6 +767,16 @@ const routes: Route[] = [
       },
       {
         path: '/post',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         exact: true,
         component: loadable(async () =>
           await import(

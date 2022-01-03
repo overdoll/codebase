@@ -1,7 +1,7 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ViewPostQuery } from '@//:artifacts/ViewPostQuery.graphql'
 import { graphql } from 'react-relay'
-import PostBrand from '../../../components/Posts/PostBrand/PostBrand'
+import PostHeaderClub from '../../../components/Posts/PostHeaderClub/PostHeaderClub'
 import PostGalleryContent from '../../../components/Posts/PostGalleryContent/PostGalleryContent'
 import { Button, Flex, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react'
 import PostIndexer from '../../../components/Posts/PostIndexer/PostIndexer'
@@ -24,7 +24,7 @@ interface Props {
 const Query = graphql`
   query ViewPostQuery($reference: String!) {
     post(reference: $reference) {
-      ...PostBrandFragment
+      ...PostHeaderClubFragment
       ...PostGalleryContentFragment
       ...PostClickableCategoriesFragment
       ...PostClickableCharactersFragment
@@ -68,7 +68,7 @@ export default function ViewPost (props: Props): JSX.Element {
   return (
     <>
       <Stack spacing={2}>
-        <PostBrand query={post} />
+        <PostHeaderClub query={post} />
         <PostGalleryContent query={post}>
           {({
             slidesCount,

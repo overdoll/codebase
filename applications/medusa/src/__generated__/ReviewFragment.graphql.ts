@@ -12,7 +12,7 @@ export type ReviewFragment = {
             readonly mimeType: string;
         }>;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostBrandFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostHeaderClubFragment">;
     readonly " $refType": "ReviewFragment";
 };
 export type ReviewFragment$data = ReviewFragment;
@@ -80,11 +80,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostBrandFragment"
+      "name": "PostHeaderClubFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '9015c8e48847d128def4673ad7289fcb';
+(node as any).hash = 'b6436c46e0bd9aaa7d234e4d2578195f';
 export default node;

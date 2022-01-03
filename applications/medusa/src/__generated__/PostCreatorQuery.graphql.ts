@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 338e0f5aff6111966a43738741bb7e4b */
+/* @relayHash 1876235f0780eaf0dd15c8b7df7ff679 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -128,7 +128,7 @@ fragment FlowForwardButtonFragment on Post {
 }
 
 fragment FlowHeaderFragment on Post {
-  ...useCheckRequirementsFragment
+  ...checkPostRequirementsFragment
 }
 
 fragment FlowStepsFragment on Post {
@@ -147,21 +147,21 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostBrandFragment on Post {
+fragment PostGalleryContentFragment on Post {
+  content {
+    type
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
+  }
+}
+
+fragment PostHeaderClubFragment on Post {
   club {
     name
     thumbnail {
       ...ResourceIconFragment
     }
     id
-  }
-}
-
-fragment PostGalleryContentFragment on Post {
-  content {
-    type
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
   }
 }
 
@@ -194,7 +194,7 @@ fragment ReviewFragment on Post {
     }
   }
   ...PostGalleryContentFragment
-  ...PostBrandFragment
+  ...PostHeaderClubFragment
 }
 
 fragment SubmitPostButtonFragment on Post {
@@ -251,15 +251,11 @@ fragment VideoSnippetFragment on Resource {
   }
 }
 
-fragment useCheckRequirementsFragment on Post {
+fragment checkPostRequirementsFragment on Post {
   content {
     __typename
   }
   audience {
-    __typename
-    id
-  }
-  club {
     __typename
     id
   }
@@ -494,8 +490,7 @@ return {
                   (v7/*: any*/)
                 ],
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -550,7 +545,7 @@ return {
     ]
   },
   "params": {
-    "id": "338e0f5aff6111966a43738741bb7e4b",
+    "id": "1876235f0780eaf0dd15c8b7df7ff679",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

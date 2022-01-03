@@ -41,7 +41,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:74
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:79
 msgid "Current Session"
 msgstr ""
 
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Here is a list of devices that have logged into your account. You can click on one to view the details."
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:99
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:104
 msgid "IP Address"
 msgstr ""
 
@@ -132,11 +132,11 @@ msgstr ""
 msgid "Install an authenticator app for your mobile device."
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:74
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:79
 msgid "Last Accessed {formattedDate}"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:119
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:124
 msgid "Last Login"
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:109
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:114
 msgid "Location"
 msgstr ""
 
@@ -296,6 +296,6 @@ msgstr ""
 msgid "overdoll-recovery-codes"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:65
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:70
 msgid "{0} on {1}"
 msgstr ""

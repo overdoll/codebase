@@ -9,6 +9,8 @@ import { useFragment } from 'react-relay'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { Trans } from '@lingui/macro'
 import { format } from 'date-fns'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   query: PostStateRejectedPreviewFragment$key
@@ -28,7 +30,10 @@ export default function PostStateRejectedPreview ({ query }: Props): JSX.Element
 
   const limitedContent = data.content.slice(0, 3)
 
-  const formattedDate = format(new Date(data?.postedAt as Date), 'eeee h:mm aaa')
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
+  const formattedDate = format(new Date(data?.postedAt as Date), 'eeee h:mm aaa', { locale })
 
   const DisplayContentGrid = (): JSX.Element => {
     return (

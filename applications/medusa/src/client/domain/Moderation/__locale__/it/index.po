@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/Moderation.tsx:35
+#: src/client/domain/Moderation/Moderation.tsx:37
 msgid "History"
 msgstr ""
 
@@ -21,6 +21,6 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/client/domain/Moderation/Moderation.tsx:26
+#: src/client/domain/Moderation/Moderation.tsx:27
 msgid "Queue"
 msgstr ""

@@ -1,7 +1,7 @@
 import { CircularProgress, CircularProgressLabel, Flex, Tooltip } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
-import PostBrand from '../../../../../components/Posts/PostBrand/PostBrand'
+import PostHeaderClub from '../../../../../components/Posts/PostHeaderClub/PostHeaderClub'
 import { Trans } from '@lingui/macro'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 const ContributorFragmentGQL = graphql`
   fragment PostHeaderFragment on Post {
     reassignmentAt
-    ...PostBrandFragment
+    ...PostHeaderClubFragment
   }
 `
 
@@ -46,7 +46,7 @@ export default function PostHeader ({ query }: Props): JSX.Element {
 
   return (
     <Flex align='center' w='100%' justify='space-between'>
-      <PostBrand query={data} />
+      <PostHeaderClub query={data} />
       <Tooltip label={
         <Trans>
           Time you have left to take action on the post before it is reassigned to another moderator

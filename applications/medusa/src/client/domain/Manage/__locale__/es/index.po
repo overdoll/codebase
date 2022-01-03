@@ -21,6 +21,10 @@ msgstr ""
 msgid "Click on a published post to see it live."
 msgstr ""
 
+#: src/client/domain/Manage/Manage.tsx:17
+msgid "Content Management"
+msgstr ""
+
 #: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraft.tsx:59
 #: src/client/domain/Manage/MyPosts/MyPosts/PostStatePublished/PostStatePublished.tsx:64
 msgid "Create a post"
@@ -49,15 +53,15 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: src/client/domain/Manage/Manage.tsx:30
-msgid "Manage Brands"
+#: src/client/domain/Manage/Manage.tsx:32
+msgid "Manage Clubs"
 msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:23
 #~ msgid "Manage Posts"
 #~ msgstr ""
 
-#: src/client/domain/Manage/Manage.tsx:23
+#: src/client/domain/Manage/Manage.tsx:24
 msgid "My Posts"
 msgstr ""
 
@@ -78,10 +82,10 @@ msgid "No Rejected Posts"
 msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:17
-msgid "Post Management"
-msgstr ""
+#~ msgid "Post Management"
+#~ msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReviewPreview/PostStateReviewPreview.tsx:61
+#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReviewPreview/PostStateReviewPreview.tsx:66
 msgid "Posted on {formattedDate}"
 msgstr ""
 
@@ -93,7 +97,7 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejectedPreview/PostStateRejectedPreview.tsx:66
+#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejectedPreview/PostStateRejectedPreview.tsx:71
 msgid "Rejected (Posted on {formattedDate})"
 msgstr ""
 

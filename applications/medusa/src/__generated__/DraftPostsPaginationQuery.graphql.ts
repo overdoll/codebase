@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f273fb61481243979c6eb915105dc2b0 */
+/* @relayHash 0362ce1480249e265f207779693d0741 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -65,7 +65,7 @@ fragment PostStateDraftPreviewFragment on Post {
   content {
     ...ResourceItemFragment
   }
-  ...useCheckRequirementsFragment
+  ...checkPostRequirementsFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -81,15 +81,11 @@ fragment VideoSnippetFragment on Resource {
   }
 }
 
-fragment useCheckRequirementsFragment on Post {
+fragment checkPostRequirementsFragment on Post {
   content {
     __typename
   }
   audience {
-    __typename
-    id
-  }
-  club {
     __typename
     id
   }
@@ -303,16 +299,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Club",
-                            "kind": "LinkedField",
-                            "name": "club",
-                            "plural": false,
-                            "selections": (v7/*: any*/),
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "concreteType": "Category",
                             "kind": "LinkedField",
                             "name": "categories",
@@ -394,7 +380,7 @@ return {
     ]
   },
   "params": {
-    "id": "f273fb61481243979c6eb915105dc2b0",
+    "id": "0362ce1480249e265f207779693d0741",
     "metadata": {},
     "name": "DraftPostsPaginationQuery",
     "operationKind": "query",

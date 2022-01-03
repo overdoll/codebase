@@ -17,14 +17,14 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:46
+#: src/client/domain/Settings/Settings.tsx:49
 msgid "Moderation"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:27
+#: src/client/domain/Settings/Settings.tsx:28
 msgid "Profile"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:36
+#: src/client/domain/Settings/Settings.tsx:38
 msgid "Security"
 msgstr ""

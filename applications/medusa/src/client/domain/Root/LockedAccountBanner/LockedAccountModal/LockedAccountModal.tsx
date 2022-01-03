@@ -19,6 +19,8 @@ import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from
 import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
 import { useEffect, useState } from 'react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -42,8 +44,11 @@ export default function LockedAccountModal ({
 
   // TODO add avatar in "jail" in both here and the menu?
 
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
   const reasons = {
-    POST_INFRACTION: t`The contents of a post you uploaded are not allowed on our platform.`
+    POST_INFRACTION: i18n._(t`The contents of a post you uploaded are not allowed on our platform.`)
   }
 
   const expires = new Date(data.expires as Date)
@@ -59,9 +64,9 @@ export default function LockedAccountModal ({
 
   const canBeUnlocked = isPast(expires)
 
-  const remainingTime = formatDistanceStrict(expires, new Date())
+  const remainingTime = formatDistanceStrict(expires, new Date(), { locale })
 
-  const duration = formatDuration(timer)
+  const duration = formatDuration(timer, { locale })
 
   useEffect(() => {
     const timerObject = setTimeout(() => {
@@ -108,7 +113,7 @@ export default function LockedAccountModal ({
               status='warning'
             >
               <AlertDescription>
-                {reasons[data.reason] ?? t`No reason was found`}
+                {reasons[data.reason] ?? <Trans>No reason was found</Trans>}
               </AlertDescription>
             </Alert>
             <Box>

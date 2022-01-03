@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e08028b11af47533bec708a9c5086db4 */
+/* @relayHash 6c914ae7bd687049482ec28f5e73127b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,7 +10,7 @@ export type ViewPostQueryVariables = {
 };
 export type ViewPostQueryResponse = {
     readonly post: {
-        readonly " $fragmentRefs": FragmentRefs<"PostBrandFragment" | "PostGalleryContentFragment" | "PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"PostHeaderClubFragment" | "PostGalleryContentFragment" | "PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
     } | null;
 };
 export type ViewPostQuery = {
@@ -25,7 +25,7 @@ query ViewPostQuery(
   $reference: String!
 ) {
   post(reference: $reference) {
-    ...PostBrandFragment
+    ...PostHeaderClubFragment
     ...PostGalleryContentFragment
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
@@ -37,16 +37,6 @@ fragment ImageSnippetFragment on Resource {
   urls {
     url
     mimeType
-  }
-}
-
-fragment PostBrandFragment on Post {
-  brand {
-    name
-    thumbnail {
-      ...ResourceIconFragment
-    }
-    id
   }
 }
 
@@ -79,6 +69,16 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+  }
+}
+
+fragment PostHeaderClubFragment on Post {
+  club {
+    name
+    thumbnail {
+      ...ResourceIconFragment
+    }
+    id
   }
 }
 
@@ -198,7 +198,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "PostBrandFragment"
+            "name": "PostHeaderClubFragment"
           },
           {
             "args": null,
@@ -239,9 +239,9 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Brand",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "brand",
+            "name": "club",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -308,7 +308,7 @@ return {
     ]
   },
   "params": {
-    "id": "e08028b11af47533bec708a9c5086db4",
+    "id": "6c914ae7bd687049482ec28f5e73127b",
     "metadata": {},
     "name": "ViewPostQuery",
     "operationKind": "query",
@@ -316,5 +316,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'f6980c5ea3a2b0d17df52a524efdddbf';
+(node as any).hash = 'f33a5154dc078053c129b3a9e9a6a6db';
 export default node;

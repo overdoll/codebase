@@ -6,6 +6,8 @@ import AuditInspect from './AuditInspect/AuditInspect'
 import { format } from 'date-fns'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons/navigation'
 import { CheckCircle, DeleteCircle } from '@//:assets/icons/interface'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   auditLog: AuditCardFragment$key
@@ -27,7 +29,10 @@ const AuditCardFragmentGQL = graphql`
 export default function AuditCard ({ auditLog }: Props): JSX.Element {
   const data = useFragment(AuditCardFragmentGQL, auditLog)
 
-  const formattedDate = format(new Date(data?.post?.postedAt as string), 'eeee h:mm aaa')
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
+  const formattedDate = format(new Date(data?.post?.postedAt as string), 'eeee h:mm aaa', { locale })
 
   return (
     <AccordionItem>
@@ -43,7 +48,7 @@ export default function AuditCard ({ auditLog }: Props): JSX.Element {
                 </GridItem>
                 <GridItem textOverflow='ellipsis' colSpan={3}>
                   <Text textAlign='left' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' fontSize='sm'>
-                    {data?.post?.brand?.name}
+                    {data?.post?.club?.name}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>

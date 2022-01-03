@@ -14,10 +14,6 @@ export default {
   ],
   catalogs: [
     {
-      path: 'src/client/domain/Manage/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/']
-    },
-    {
       path: 'src/client/domain/Root/__locale__/{locale}/index',
       include: ['src/modules/', 'src/client/components/', 'src/client/domain/Root/']
     },
@@ -72,6 +68,18 @@ export default {
     {
       path: 'src/client/domain/ViewPost/__locale__/{locale}/index',
       include: ['src/client/domain/ViewPost']
+    },
+    {
+      path: 'src/client/domain/Manage/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage']
+    },
+    {
+      path: 'src/client/domain/Manage/MyPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/MyPosts']
+    },
+    {
+      path: 'src/client/domain/Manage/Clubs/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/Clubs']
     }
   ],
   format: 'po',

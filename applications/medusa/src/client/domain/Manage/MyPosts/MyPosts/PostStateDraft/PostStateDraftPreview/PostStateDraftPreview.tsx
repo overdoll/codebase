@@ -4,10 +4,10 @@ import { graphql } from 'react-relay/hooks'
 import type { PostStateDraftPreviewFragment$key } from '@//:artifacts/PostStateDraftPreviewFragment.graphql'
 import { useFragment } from 'react-relay'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import useCheckRequirements
-  from '../../../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/useCheckRequirements'
+import checkPostRequirements
+  from '../../../../../CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/checkPostRequirements'
 import progressScore
-  from '../../../../../CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
+  from '../../../../../CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
 import { DeleteBin } from '../../../../../../../assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -24,7 +24,7 @@ const PostStatePreviewFragmentGQL = graphql`
     content {
       ...ResourceItemFragment
     }
-    ...useCheckRequirementsFragment
+    ...checkPostRequirementsFragment
   }
 `
 
@@ -35,9 +35,9 @@ export default function PostStateDraftPreview ({ query }: Props): JSX.Element {
 
   const limitedContent = data.content.slice(0, 3)
 
-  const [content, audience, brand, categories, characters] = useCheckRequirements({ query: data })
+  const postRequirements = checkPostRequirements({ query: data })
 
-  const score = progressScore([content, audience, brand, categories, characters])
+  const score = progressScore([postRequirements.hasRequiredAudience, postRequirements.hasRequiredCategories, postRequirements.hasRequiredCharacters, postRequirements.hasRequiredContent])
 
   const selectPost = (): void => {
     history.push(`/configure/create-post?id=${data.reference}`)
