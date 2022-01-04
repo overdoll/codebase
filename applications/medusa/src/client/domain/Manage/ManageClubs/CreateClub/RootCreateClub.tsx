@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import CreateClub from './CreateClub/CreateClub'
 import { Trans } from '@lingui/macro'
-import Link from '../../../modules/routing/Link'
+import Link from '@//:modules/routing/Link'
 import Button from '@//:modules/form/Button/Button'
 import { Flex } from '@chakra-ui/react'
 
