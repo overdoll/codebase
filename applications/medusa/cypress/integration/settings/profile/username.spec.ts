@@ -9,15 +9,7 @@ describe('Settings - Change Username', () => {
       pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
     })
 
-  const takenUsername =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
-
   before(() => {
-    cy.cleanup()
-    cy.joinWithNewAccount(takenUsername)
     cy.cleanup()
     cy.joinWithNewAccount(currentUsername)
   })
