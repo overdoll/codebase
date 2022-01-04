@@ -39,7 +39,7 @@ const clubsIndexProperties = `
 	"slug_aliases": {
 		"type": "keyword"
 	},
-	"thumbnail": {
+	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
 	"name": ` + localization.ESIndex + `
@@ -82,22 +82,11 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		return nil, err
 	}
 
-	var thumbnail string
-
-	if cat.Thumbnail() != nil {
-
-		thumbnail, err = cat.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &clubDocument{
 		Id:             cat.ID(),
 		Slug:           cat.Slug(),
 		SlugAliases:    cat.SlugAliases(),
-		Thumbnail:      thumbnail,
+		Thumbnail:      cat.ThumbnailResourceId(),
 		Name:           localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt:      strconv.FormatInt(parse.Time().Unix(), 10),
 		MembersCount:   cat.MembersCount(),
@@ -207,7 +196,7 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 				Id:          m.Id,
 				Slug:        m.Slug,
 				SlugAliases: m.SlugAliases,
-				Thumbnail:   m.Thumbnail,
+				Thumbnail:   m.ThumbnailResourceId,
 				Name:        m.Name,
 				CreatedAt:   strconv.FormatInt(parse.Time().Unix(), 10),
 			}

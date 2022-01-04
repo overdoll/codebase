@@ -2,10 +2,10 @@ package queries
 
 import (
 	"context"
+	query2 "overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/sting/internal/domain/club"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
-	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -19,7 +19,7 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchClubs.Handle(ctx, query.SearchClubs{
+	results, err := r.App.Queries.SearchClubs.Handle(ctx, query2.SearchClubs{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		Name:      name,
@@ -36,7 +36,7 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 
 func (r *QueryResolver) Club(ctx context.Context, slug string) (*types.Club, error) {
 
-	media, err := r.App.Queries.ClubBySlug.Handle(ctx, query.BrandBySlug{
+	media, err := r.App.Queries.ClubBySlug.Handle(ctx, query2.BrandBySlug{
 		Principal: principal.FromContext(ctx),
 		Slug:      slug,
 	})

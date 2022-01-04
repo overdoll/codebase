@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/domain/club"
 
 	"overdoll/libraries/principal"
@@ -16,8 +17,8 @@ type CreateClub struct {
 type CreateClubHandler struct {
 	cr     club.Repository
 	ci     club.IndexRepository
-	parley ParleyService
-	eva    EvaService
+	parley command.ParleyService
+	eva    command.EvaService
 }
 
 func NewCreateClubHandler(cr club.Repository, ci club.IndexRepository) CreateClubHandler {

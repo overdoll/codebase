@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS categories
 (
-    id        text,
-    slug      text,
-    title     map<text, text>,
-    thumbnail text,
+    id                    text,
+    slug                  text,
+    title                 map<text, text>,
+    thumbnail_resource_id text,
     primary key ( id )
 );
 
@@ -16,11 +16,11 @@ CREATE TABLE IF NOT EXISTS categories_slugs
 
 CREATE TABLE IF NOT EXISTS characters
 (
-    id        text,
-    slug      text,
-    name      map<text, text>,
-    thumbnail text,
-    series_id text,
+    id                    text,
+    slug                  text,
+    name                  map<text, text>,
+    thumbnail_resource_id text,
+    series_id             text,
     primary key ( id )
 );
 
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS characters_slugs
 
 CREATE TABLE IF NOT EXISTS series
 (
-    id        text,
-    slug      text,
-    title     map<text, text>,
-    thumbnail text,
+    id                    text,
+    slug                  text,
+    title                 map<text, text>,
+    thumbnail_resource_id text,
     primary key ( id )
 );
 
@@ -50,11 +50,11 @@ CREATE TABLE IF NOT EXISTS series_slugs
 
 CREATE TABLE IF NOT EXISTS audience
 (
-    id        text,
-    slug      text,
-    title     map<text, text>,
-    thumbnail text,
-    standard  int,
+    id                    text,
+    slug                  text,
+    title                 map<text, text>,
+    thumbnail_resource_id text,
+    standard              int,
     primary key ( id )
 );
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS posts
     audience_id               text,
     category_ids              list<text>,
     character_ids             list<text>,
-    content                   list<text>,
+    content_resource_ids      list<text>,
     created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
@@ -84,13 +84,13 @@ CREATE TABLE IF NOT EXISTS posts
 
 CREATE TABLE IF NOT EXISTS clubs
 (
-    id               text,
-    slug             text,
-    slug_aliases     set<text>,
-    name             map<text, text>,
-    members_count    int,
-    thumbnail        text,
-    owner_account_id text,
+    id                    text,
+    slug                  text,
+    slug_aliases          set<text>,
+    name                  map<text, text>,
+    members_count         int,
+    thumbnail_resource_id text,
+    owner_account_id      text,
     primary key ( id )
 );
 
@@ -137,4 +137,17 @@ CREATE TABLE IF NOT EXISTS club_members_partitions
     members_count        int,
     max_members_count    int,
     primary key ( club_id, bucket )
+);
+
+CREATE TABLE IF NOT EXISTS resources
+(
+    item_id          text,
+    resource_id      text,
+    type             int,
+    mime_types       list<text>,
+    video_thumbnail  text,
+    processed        boolean,
+    processed_prefix text,
+    processed_id     text,
+    primary key ( item_id, resource_id )
 );

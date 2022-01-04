@@ -3,12 +3,13 @@ package workflows
 import (
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
 func RemoveClubMember(ctx workflow.Context, clubId, accountId string) error {
 
-	ctx = workflow.WithActivityOptions(ctx, options)
+	ctx = workflow.WithActivityOptions(ctx, workflows.options)
 
 	var a *activities.Activities
 

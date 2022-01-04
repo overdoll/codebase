@@ -11,9 +11,12 @@ import (
 	"time"
 )
 
-// Represents an account
-type Object interface {
-	IsObject()
+// A resource represents an image or a video format that contains an ID to uniquely identify it,
+// and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+//
+// We also identify the type of resource (image or video) to make it easy to distinguish them
+type Resource interface {
+	IsResource()
 }
 
 type Account struct {
@@ -54,7 +57,7 @@ type Audience struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
 	// Posts belonging to this audience
@@ -62,7 +65,6 @@ type Audience struct {
 }
 
 func (Audience) IsNode()   {}
-func (Audience) IsObject() {}
 func (Audience) IsEntity() {}
 
 type AudienceConnection struct {
@@ -105,7 +107,7 @@ type Category struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail Resource `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
 	// Posts belonging to this category
@@ -113,7 +115,6 @@ type Category struct {
 }
 
 func (Category) IsNode()   {}
-func (Category) IsObject() {}
 func (Category) IsEntity() {}
 
 type CategoryConnection struct {
@@ -132,7 +133,7 @@ type Character struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail Resource `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
 	// The series linked to this character.
@@ -142,7 +143,6 @@ type Character struct {
 }
 
 func (Character) IsNode()   {}
-func (Character) IsObject() {}
 func (Character) IsEntity() {}
 
 type CharacterConnection struct {
@@ -173,7 +173,7 @@ type Club struct {
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail Resource `json:"thumbnail"`
 	// A name for this club.
 	Name string `json:"name"`
 	// The account that owns this club.
@@ -189,7 +189,6 @@ type Club struct {
 }
 
 func (Club) IsNode()   {}
-func (Club) IsObject() {}
 func (Club) IsEntity() {}
 
 type ClubConnection struct {
@@ -270,6 +269,13 @@ type CreatePostPayload struct {
 	Post *Post `json:"post"`
 }
 
+type ImageResource struct {
+	ID   relay.ID       `json:"id"`
+	Urls []*ResourceURL `json:"urls"`
+}
+
+func (ImageResource) IsResource() {}
+
 type Post struct {
 	ID relay.ID `json:"id"`
 	// The reference of this post. Should always be used to reference this post.
@@ -280,8 +286,8 @@ type Post struct {
 	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
-	// DraggableContent belonging to this post
-	Content []*Resource `json:"content"`
+	// Content belonging to this post
+	Content []Resource `json:"content"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
@@ -345,16 +351,6 @@ type RemoveClubSlugAliasPayload struct {
 	Club *Club `json:"club"`
 }
 
-// A resource represents an image or a video format that contains an ID to uniquely identify it,
-// and urls to access the resources. We have many urls in order to provide a fallback for older browsers
-//
-// We also identify the type of resource (image or video) to make it easy to distinguish them
-type Resource struct {
-	ID   string         `json:"id"`
-	Type ResourceType   `json:"type"`
-	Urls []*ResourceURL `json:"urls"`
-}
-
 // A type representing a url to the resource and the mimetype
 type ResourceURL struct {
 	URL      graphql1.URI `json:"url"`
@@ -367,7 +363,7 @@ type Series struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail Resource `json:"thumbnail"`
 	// A title for this series.
 	Title string `json:"title"`
 	// Posts belonging to this series
@@ -375,7 +371,6 @@ type Series struct {
 }
 
 func (Series) IsNode()   {}
-func (Series) IsObject() {}
 func (Series) IsEntity() {}
 
 type SeriesConnection struct {
@@ -483,6 +478,13 @@ type UpdatePostContentPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }
+
+type VideoResource struct {
+	ID   relay.ID       `json:"id"`
+	Urls []*ResourceURL `json:"urls"`
+}
+
+func (VideoResource) IsResource() {}
 
 // Withdraw club membership.
 type WithdrawClubMembershipInput struct {
@@ -799,45 +801,44 @@ func (e PostsOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Identifies the type of resource
-type ResourceType string
+type ResourceSizes string
 
 const (
-	ResourceTypeImage ResourceType = "IMAGE"
-	ResourceTypeVideo ResourceType = "VIDEO"
+	ResourceSizesSquare   ResourceSizes = "SQUARE"
+	ResourceSizesPortrait ResourceSizes = "PORTRAIT"
 )
 
-var AllResourceType = []ResourceType{
-	ResourceTypeImage,
-	ResourceTypeVideo,
+var AllResourceSizes = []ResourceSizes{
+	ResourceSizesSquare,
+	ResourceSizesPortrait,
 }
 
-func (e ResourceType) IsValid() bool {
+func (e ResourceSizes) IsValid() bool {
 	switch e {
-	case ResourceTypeImage, ResourceTypeVideo:
+	case ResourceSizesSquare, ResourceSizesPortrait:
 		return true
 	}
 	return false
 }
 
-func (e ResourceType) String() string {
+func (e ResourceSizes) String() string {
 	return string(e)
 }
 
-func (e *ResourceType) UnmarshalGQL(v interface{}) error {
+func (e *ResourceSizes) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = ResourceType(str)
+	*e = ResourceSizes(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ResourceType", str)
+		return fmt.Errorf("%s is not a valid ResourceSizes", str)
 	}
 	return nil
 }
 
-func (e ResourceType) MarshalGQL(w io.Writer) {
+func (e ResourceSizes) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"os"
+	adapters2 "overdoll/applications/stella/internal/adapters"
+	command2 "overdoll/applications/stella/internal/app/command"
+	query2 "overdoll/applications/stella/internal/app/query"
 
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
@@ -55,10 +58,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	clubRepo := adapters.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(client, session)
+	clubRepo := adapters2.NewClubCassandraRepository(session)
+	clubIndexRepo := adapters2.NewClubIndexElasticSearchRepository(client, session)
 
-	resourceRepo := adapters.NewResourceS3Repository(awsSession)
+	resourceRepo := adapters.NewResourceS3CassandraRepository(awsSession, session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -75,7 +78,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, postIndexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
-			IndexAllClubs:      command.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
+			IndexAllClubs:      command2.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
@@ -83,13 +86,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, resourceRepo),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
 
-			CreateClub:                    command.NewCreateClubHandler(clubRepo, clubIndexRepo),
-			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
-			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
-			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
-			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
+			CreateClub:                    command2.NewCreateClubHandler(clubRepo, clubIndexRepo),
+			AddClubSlugAlias:              command2.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
+			RemoveClubSlugAlias:           command2.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
+			UpdateClubName:                command2.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
+			PromoteClubSlugAliasToDefault: command2.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
+			BecomeClubMember:              command2.NewBecomeClubMemberHandler(clubRepo),
+			WithdrawClubMembership:        command2.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -114,15 +117,18 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
 
-			SearchClubs:                 query.NewSearchClubsHandler(clubIndexRepo),
-			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
-			ClubById:                    query.NewClubByIdHandler(clubRepo),
-			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
-			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
-			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
-			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
-			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
-			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
+			SearchClubs:                 query2.NewSearchClubsHandler(clubIndexRepo),
+			ClubBySlug:                  query2.NewClubBySlugHandler(clubRepo),
+			ClubById:                    query2.NewClubByIdHandler(clubRepo),
+			ClubSlugAliasesLimit:        query2.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMemberships:      query2.NewAccountClubMembershipsHandler(clubRepo),
+			AccountClubMembershipsLimit: query2.NewAccountClubMembershipsLimitHandler(clubRepo),
+			AccountClubMembershipsCount: query2.NewAccountClubMembershipsCountHandler(clubRepo),
+			ClubMembersByClub:           query2.NewClubMembersByClubHandler(clubRepo),
+			ClubMemberById:              query2.NewClubMemberByIdHandler(clubRepo),
+
+			ResourceById:   query.NewResourceByIdHandler(resourceRepo),
+			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, clubIndexRepo, postIndexRepo, resourceRepo, parley),
 	}

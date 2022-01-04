@@ -17,7 +17,7 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
-		"content",
+		"content_resource_ids",
 		"moderator_account_id",
 		"contributor_account_id",
 		"club_id",
@@ -33,18 +33,18 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id             string     `db:"id"`
-	State          string     `db:"state"`
-	Content        []string   `db:"content"`
-	ModeratorId    *string    `db:"moderator_account_id"`
-	ContributorId  string     `db:"contributor_account_id"`
-	ClubId         string     `db:"club_id"`
-	AudienceId     *string    `db:"audience_id"`
-	CategoryIds    []string   `db:"category_ids"`
-	CharacterIds   []string   `db:"character_ids"`
-	CreatedAt      time.Time  `db:"created_at"`
-	PostedAt       *time.Time `db:"posted_at"`
-	ReassignmentAt *time.Time `db:"moderator_reassignment_at"`
+	Id                 string     `db:"id"`
+	State              string     `db:"state"`
+	ContentResourceIds []string   `db:"content_resource_ids"`
+	ModeratorId        *string    `db:"moderator_account_id"`
+	ContributorId      string     `db:"contributor_account_id"`
+	ClubId             string     `db:"club_id"`
+	AudienceId         *string    `db:"audience_id"`
+	CategoryIds        []string   `db:"category_ids"`
+	CharacterIds       []string   `db:"character_ids"`
+	CreatedAt          time.Time  `db:"created_at"`
+	PostedAt           *time.Time `db:"posted_at"`
+	ReassignmentAt     *time.Time `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -57,19 +57,6 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
-	var marshalledContent []string
-
-	for _, c := range pending.Content() {
-
-		marshal, err := c.MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-
-		marshalledContent = append(marshalledContent, marshal)
-	}
-
 	var audienceId *string
 
 	if pending.Audience() != nil {
@@ -78,18 +65,18 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}
 
 	return &posts{
-		Id:             pending.ID(),
-		State:          pending.State().String(),
-		ModeratorId:    pending.ModeratorId(),
-		ClubId:         pending.ClubId(),
-		AudienceId:     audienceId,
-		ContributorId:  pending.ContributorId(),
-		Content:        marshalledContent,
-		CategoryIds:    pending.CategoryIds(),
-		CharacterIds:   pending.CharacterIds(),
-		CreatedAt:      pending.CreatedAt(),
-		PostedAt:       pending.PostedAt(),
-		ReassignmentAt: pending.ReassignmentAt(),
+		Id:                 pending.ID(),
+		State:              pending.State().String(),
+		ModeratorId:        pending.ModeratorId(),
+		ClubId:             pending.ClubId(),
+		AudienceId:         audienceId,
+		ContributorId:      pending.ContributorId(),
+		ContentResourceIds: pending.ContentResourceIds(),
+		CategoryIds:        pending.CategoryIds(),
+		CharacterIds:       pending.CharacterIds(),
+		CreatedAt:          pending.CreatedAt(),
+		PostedAt:           pending.PostedAt(),
+		ReassignmentAt:     pending.ReassignmentAt(),
 	}, nil
 }
 
@@ -122,7 +109,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.State,
 		postPending.ModeratorId,
 		postPending.ContributorId,
-		postPending.Content,
+		postPending.ContentResourceIds,
 		postPending.ClubId,
 		audienc,
 		characters,

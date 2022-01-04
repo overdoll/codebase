@@ -18,12 +18,12 @@ import (
 )
 
 type audienceDocument struct {
-	Id        string            `json:"id"`
-	Slug      string            `json:"slug"`
-	Title     map[string]string `json:"title"`
-	Thumbnail string            `json:"thumbnail"`
-	Standard  int               `json:"standard"`
-	CreatedAt string            `json:"created_at"`
+	Id                  string            `json:"id"`
+	Slug                string            `json:"slug"`
+	Title               map[string]string `json:"title"`
+	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	Standard            int               `json:"standard"`
+	CreatedAt           string            `json:"created_at"`
 }
 
 const audienceIndexProperties = `
@@ -34,7 +34,7 @@ const audienceIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail": {
+	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
 	"standard": {
@@ -71,24 +71,13 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		stnd = 1
 	}
 
-	var thumbnail string
-
-	if cat.Thumbnail() != nil {
-
-		thumbnail, err = cat.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &audienceDocument{
-		Id:        cat.ID(),
-		Slug:      cat.Slug(),
-		Thumbnail: thumbnail,
-		Title:     localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-		Standard:  stnd,
+		Id:                  cat.ID(),
+		Slug:                cat.Slug(),
+		ThumbnailResourceId: cat.ThumbnailResourceId(),
+		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
+		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		Standard:            stnd,
 	}, nil
 }
 
@@ -137,7 +126,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.Thumbnail, bd.Standard)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard)
 		newAudience.Node = paging.NewNode(bd.CreatedAt)
 
 		audiences = append(audiences, newAudience)
@@ -169,12 +158,12 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 			}
 
 			doc := audienceDocument{
-				Id:        m.Id,
-				Slug:      m.Slug,
-				Thumbnail: m.Thumbnail,
-				Title:     m.Title,
-				Standard:  m.Standard,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:                  m.Id,
+				Slug:                m.Slug,
+				ThumbnailResourceId: m.ThumbnailResourceId,
+				Title:               m.Title,
+				Standard:            m.Standard,
+				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.

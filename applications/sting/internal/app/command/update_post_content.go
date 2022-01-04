@@ -30,21 +30,22 @@ func (h UpdatePostContentHandler) Handle(ctx context.Context, cmd UpdatePostCont
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		// create resources from content
-		resources, err := h.cr.CreateResources(ctx, cmd.Content)
+		resources, err := h.cr.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content)
 
 		if err != nil {
 			return err
 		}
 
-		return post.UpdateContentRequest(cmd.Principal, resources)
+		var resourceIds []string
+
+		for _, i := range resources {
+			resourceIds = append(resourceIds, i.ID())
+		}
+
+		return post.UpdateContentRequest(cmd.Principal, resourceIds)
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	// index the post
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

@@ -74,7 +74,7 @@ type ComplexityRoot struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int) int
+		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
 		Title     func(childComplexity int) int
 	}
 
@@ -96,7 +96,7 @@ type ComplexityRoot struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int) int
+		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
 		Title     func(childComplexity int) int
 	}
 
@@ -116,7 +116,7 @@ type ComplexityRoot struct {
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Series    func(childComplexity int) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int) int
+		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
 	}
 
 	CharacterConnection struct {
@@ -140,7 +140,7 @@ type ComplexityRoot struct {
 		Slug             func(childComplexity int) int
 		SlugAliases      func(childComplexity int) int
 		SlugAliasesLimit func(childComplexity int) int
-		Thumbnail        func(childComplexity int) int
+		Thumbnail        func(childComplexity int, size *types.ResourceSizes) int
 		ViewerMember     func(childComplexity int) int
 	}
 
@@ -192,6 +192,11 @@ type ComplexityRoot struct {
 		FindClubMemberByID func(childComplexity int, id relay.ID) int
 		FindPostByID       func(childComplexity int, id relay.ID) int
 		FindSeriesByID     func(childComplexity int, id relay.ID) int
+	}
+
+	ImageResource struct {
+		ID   func(childComplexity int) int
+		Urls func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -268,12 +273,6 @@ type ComplexityRoot struct {
 		Club func(childComplexity int) int
 	}
 
-	Resource struct {
-		ID   func(childComplexity int) int
-		Type func(childComplexity int) int
-		Urls func(childComplexity int) int
-	}
-
 	ResourceURL struct {
 		MimeType func(childComplexity int) int
 		URL      func(childComplexity int) int
@@ -283,7 +282,7 @@ type ComplexityRoot struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int) int
+		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
 		Title     func(childComplexity int) int
 	}
 
@@ -326,6 +325,11 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	VideoResource struct {
+		ID   func(childComplexity int) int
+		Urls func(childComplexity int) int
+	}
+
 	WithdrawClubMembershipPayload struct {
 		ClubMemberID func(childComplexity int) int
 	}
@@ -344,16 +348,23 @@ type AccountResolver interface {
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Audience, size *types.ResourceSizes) (types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CategoryResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Category, size *types.ResourceSizes) (types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CharacterResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Character, size *types.ResourceSizes) (types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type ClubResolver interface {
 	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
+	Thumbnail(ctx context.Context, obj *types.Club, size *types.ResourceSizes) (types.Resource, error)
 
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
 	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
@@ -385,6 +396,8 @@ type MutationResolver interface {
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 }
 type PostResolver interface {
+	Content(ctx context.Context, obj *types.Post) ([]types.Resource, error)
+
 	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
 }
 type QueryResolver interface {
@@ -402,6 +415,8 @@ type QueryResolver interface {
 	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type SeriesResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Series, size *types.ResourceSizes) (types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 
@@ -527,7 +542,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Audience.Thumbnail(childComplexity), true
+		args, err := ec.field_Audience_thumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Audience.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
 
 	case "Audience.title":
 		if e.complexity.Audience.Title == nil {
@@ -602,7 +622,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Category.Thumbnail(childComplexity), true
+		args, err := ec.field_Category_thumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Category.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
 
 	case "Category.title":
 		if e.complexity.Category.Title == nil {
@@ -684,7 +709,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Character.Thumbnail(childComplexity), true
+		args, err := ec.field_Character_thumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Character.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
 
 	case "CharacterConnection.edges":
 		if e.complexity.CharacterConnection.Edges == nil {
@@ -799,7 +829,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Club.Thumbnail(childComplexity), true
+		args, err := ec.field_Club_thumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Club.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
 
 	case "Club.viewerMember":
 		if e.complexity.Club.ViewerMember == nil {
@@ -1008,6 +1043,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindSeriesByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "ImageResource.id":
+		if e.complexity.ImageResource.ID == nil {
+			break
+		}
+
+		return e.complexity.ImageResource.ID(childComplexity), true
+
+	case "ImageResource.urls":
+		if e.complexity.ImageResource.Urls == nil {
+			break
+		}
+
+		return e.complexity.ImageResource.Urls(childComplexity), true
 
 	case "Mutation.addClubSlugAlias":
 		if e.complexity.Mutation.AddClubSlugAlias == nil {
@@ -1489,27 +1538,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RemoveClubSlugAliasPayload.Club(childComplexity), true
 
-	case "Resource.id":
-		if e.complexity.Resource.ID == nil {
-			break
-		}
-
-		return e.complexity.Resource.ID(childComplexity), true
-
-	case "Resource.type":
-		if e.complexity.Resource.Type == nil {
-			break
-		}
-
-		return e.complexity.Resource.Type(childComplexity), true
-
-	case "Resource.urls":
-		if e.complexity.Resource.Urls == nil {
-			break
-		}
-
-		return e.complexity.Resource.Urls(childComplexity), true
-
 	case "ResourceUrl.mimeType":
 		if e.complexity.ResourceURL.MimeType == nil {
 			break
@@ -1555,7 +1583,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Series.Thumbnail(childComplexity), true
+		args, err := ec.field_Series_thumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Series.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
 
 	case "Series.title":
 		if e.complexity.Series.Title == nil {
@@ -1648,6 +1681,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdatePostContentPayload.Post(childComplexity), true
 
+	case "VideoResource.id":
+		if e.complexity.VideoResource.ID == nil {
+			break
+		}
+
+		return e.complexity.VideoResource.ID(childComplexity), true
+
+	case "VideoResource.urls":
+		if e.complexity.VideoResource.Urls == nil {
+			break
+		}
+
+		return e.complexity.VideoResource.Urls(childComplexity), true
+
 	case "WithdrawClubMembershipPayload.clubMemberId":
 		if e.complexity.WithdrawClubMembershipPayload.ClubMemberID == nil {
 			break
@@ -1726,7 +1773,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/audience/schema.graphql", Input: `type Audience implements Node & Object @key(fields: "id") {
+	{Name: "schema/audience/schema.graphql", Input: `type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
 
@@ -1734,7 +1781,7 @@ var sources = []*ast.Source{
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this audience."""
   title: String!
@@ -1799,7 +1846,7 @@ extend type Post {
   audience: Audience
 }
 `, BuiltIn: false},
-	{Name: "schema/category/schema.graphql", Input: `type Category implements Node & Object @key(fields: "id") {
+	{Name: "schema/category/schema.graphql", Input: `type Category implements Node @key(fields: "id") {
   """An ID pointing to this category."""
   id: ID!
 
@@ -1807,7 +1854,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this category."""
   title: String!
@@ -1870,8 +1917,9 @@ extend type Query {
 extend type Post {
   """Categories that belong to this post"""
   categories: [Category!]!
-}`, BuiltIn: false},
-	{Name: "schema/character/schema.graphql", Input: `type Series implements Node & Object @key(fields: "id") {
+}
+`, BuiltIn: false},
+	{Name: "schema/character/schema.graphql", Input: `type Series implements Node @key(fields: "id") {
   """An ID pointing to this series."""
   id: ID!
 
@@ -1879,7 +1927,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this series."""
   title: String!
@@ -1895,7 +1943,7 @@ type SeriesConnection {
   pageInfo: PageInfo!
 }
 
-type Character implements Node & Object @key(fields: "id") {
+type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
 
@@ -1903,7 +1951,7 @@ type Character implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A name for this character."""
   name: String!
@@ -2021,8 +2069,9 @@ extend type Query {
 extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]!
-}`, BuiltIn: false},
-	{Name: "schema/club/schema.graphql", Input: `type Club implements Node & Object @key(fields: "id") {
+}
+`, BuiltIn: false},
+	{Name: "schema/club/schema.graphql", Input: `type Club implements Node @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
 
@@ -2041,7 +2090,7 @@ extend type Post {
   slugAliasesLimit: Int! @goField(forceResolver: true)
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A name for this club."""
   name: String!
@@ -2380,8 +2429,8 @@ extend type Account {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """DraggableContent belonging to this post"""
-  content: [Resource!]!
+  """Content belonging to this post"""
+  content: [Resource!]! @goField(forceResolver: true)
 
   """The date and time of when this post was created"""
   createdAt: Time!
@@ -2822,13 +2871,7 @@ extend type Audience {
   ): PostConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
-	{Name: "schema/schema.graphql", Input: `"""Identifies the type of resource"""
-enum ResourceType {
-  IMAGE
-  VIDEO
-}
-
-"""A type representing a url to the resource and the mimetype"""
+	{Name: "schema/schema.graphql", Input: `"""A type representing a url to the resource and the mimetype"""
 type ResourceUrl {
   url: URI!
   mimeType: String!
@@ -2840,23 +2883,31 @@ and urls to access the resources. We have many urls in order to provide a fallba
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-type Resource {
-  id: String!
-  type: ResourceType!
+
+interface Resource {
+  id: ID!
   urls: [ResourceUrl!]!
+}
+
+type VideoResource implements Resource {
+  id: ID!
+  urls: [ResourceUrl!]!
+}
+
+type ImageResource implements Resource  {
+  id: ID!
+  urls: [ResourceUrl!]!
+}
+
+enum ResourceSizes {
+  SQUARE
+  PORTRAIT
 }
 
 extend type Account @key(fields: "id")  {
   id: ID! @external
 }
-
-"""
-Represents an account
-"""
-interface Object {
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
-}`, BuiltIn: false},
+`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
@@ -3316,6 +3367,21 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
+func (ec *executionContext) field_Audience_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *types.ResourceSizes
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3403,6 +3469,21 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
+func (ec *executionContext) field_Category_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *types.ResourceSizes
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3478,6 +3559,21 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 		}
 	}
 	args["orderBy"] = arg7
+	return args, nil
+}
+
+func (ec *executionContext) field_Character_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *types.ResourceSizes
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg0
 	return args, nil
 }
 
@@ -3625,6 +3721,21 @@ func (ec *executionContext) field_Club_posts_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["orderBy"] = arg9
+	return args, nil
+}
+
+func (ec *executionContext) field_Club_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *types.ResourceSizes
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg0
 	return args, nil
 }
 
@@ -4609,6 +4720,21 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Series_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *types.ResourceSizes
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -5033,14 +5159,21 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 		Object:     "Audience",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Audience_thumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Audience().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5049,9 +5182,9 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Resource)
+	res := resTmp.(types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -5384,14 +5517,21 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		Object:     "Category",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Category_thumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Category().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5400,9 +5540,9 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Resource)
+	res := resTmp.(types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -5703,14 +5843,21 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		Object:     "Character",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Character_thumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Character().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5719,9 +5866,9 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Resource)
+	res := resTmp.(types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -6162,14 +6309,21 @@ func (ec *executionContext) _Club_thumbnail(ctx context.Context, field graphql.C
 		Object:     "Club",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Club_thumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Club().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6178,9 +6332,9 @@ func (ec *executionContext) _Club_thumbnail(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Resource)
+	res := resTmp.(types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_name(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -7259,6 +7413,76 @@ func (ec *executionContext) _Entity_findSeriesByID(ctx context.Context, field gr
 	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ImageResource_id(ctx context.Context, field graphql.CollectedField, obj *types.ImageResource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ImageResource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ImageResource_urls(ctx context.Context, field graphql.CollectedField, obj *types.ImageResource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ImageResource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Urls, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ResourceURL)
+	fc.Result = res
+	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_becomeClubMember(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8083,14 +8307,14 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Content, nil
+		return ec.resolvers.Post().Content(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8102,9 +8326,9 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Resource)
+	res := resTmp.([]types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -9181,111 +9405,6 @@ func (ec *executionContext) _RemoveClubSlugAliasPayload_club(ctx context.Context
 	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Resource_id(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Resource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Resource_type(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Resource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(types.ResourceType)
-	fc.Result = res
-	return ec.marshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Resource_urls(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Resource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Urls, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ResourceURL)
-	fc.Result = res
-	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9437,14 +9556,21 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 		Object:     "Series",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Series_thumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Series().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9453,9 +9579,9 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Resource)
+	res := resTmp.(types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_title(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -9929,6 +10055,76 @@ func (ec *executionContext) _UpdatePostContentPayload_post(ctx context.Context, 
 	res := resTmp.(*types.Post)
 	fc.Result = res
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _VideoResource_id(ctx context.Context, field graphql.CollectedField, obj *types.VideoResource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "VideoResource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _VideoResource_urls(ctx context.Context, field graphql.CollectedField, obj *types.VideoResource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "VideoResource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Urls, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ResourceURL)
+	fc.Result = res
+	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _WithdrawClubMembershipPayload_clubMemberId(ctx context.Context, field graphql.CollectedField, obj *types.WithdrawClubMembershipPayload) (ret graphql.Marshaler) {
@@ -11714,45 +11910,24 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	}
 }
 
-func (ec *executionContext) _Object(ctx context.Context, sel ast.SelectionSet, obj types.Object) graphql.Marshaler {
+func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj types.Resource) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case types.Audience:
-		return ec._Audience(ctx, sel, &obj)
-	case *types.Audience:
+	case types.VideoResource:
+		return ec._VideoResource(ctx, sel, &obj)
+	case *types.VideoResource:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._Audience(ctx, sel, obj)
-	case types.Category:
-		return ec._Category(ctx, sel, &obj)
-	case *types.Category:
+		return ec._VideoResource(ctx, sel, obj)
+	case types.ImageResource:
+		return ec._ImageResource(ctx, sel, &obj)
+	case *types.ImageResource:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._Category(ctx, sel, obj)
-	case types.Series:
-		return ec._Series(ctx, sel, &obj)
-	case *types.Series:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Series(ctx, sel, obj)
-	case types.Character:
-		return ec._Character(ctx, sel, &obj)
-	case *types.Character:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Character(ctx, sel, obj)
-	case types.Club:
-		return ec._Club(ctx, sel, &obj)
-	case *types.Club:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Club(ctx, sel, obj)
+		return ec._ImageResource(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -11962,7 +12137,7 @@ func (ec *executionContext) _AddClubSlugAliasPayload(ctx context.Context, sel as
 	return out
 }
 
-var audienceImplementors = []string{"Audience", "Node", "Object", "_Entity"}
+var audienceImplementors = []string{"Audience", "Node", "_Entity"}
 
 func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet, obj *types.Audience) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, audienceImplementors)
@@ -11984,7 +12159,16 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			out.Values[i] = ec._Audience_thumbnail(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Audience_thumbnail(ctx, field, obj)
+				return res
+			})
 		case "title":
 			out.Values[i] = ec._Audience_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -12103,7 +12287,7 @@ func (ec *executionContext) _BecomeClubMemberPayload(ctx context.Context, sel as
 	return out
 }
 
-var categoryImplementors = []string{"Category", "Node", "Object", "_Entity"}
+var categoryImplementors = []string{"Category", "Node", "_Entity"}
 
 func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *types.Category) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, categoryImplementors)
@@ -12125,7 +12309,16 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Category_thumbnail(ctx, field, obj)
+				return res
+			})
 		case "title":
 			out.Values[i] = ec._Category_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -12220,7 +12413,7 @@ func (ec *executionContext) _CategoryEdge(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var characterImplementors = []string{"Character", "Node", "Object", "_Entity"}
+var characterImplementors = []string{"Character", "Node", "_Entity"}
 
 func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet, obj *types.Character) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, characterImplementors)
@@ -12242,7 +12435,16 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Character_thumbnail(ctx, field, obj)
+				return res
+			})
 		case "name":
 			out.Values[i] = ec._Character_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -12342,7 +12544,7 @@ func (ec *executionContext) _CharacterEdge(ctx context.Context, sel ast.Selectio
 	return out
 }
 
-var clubImplementors = []string{"Club", "Node", "Object", "_Entity"}
+var clubImplementors = []string{"Club", "Node", "_Entity"}
 
 func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, clubImplementors)
@@ -12388,7 +12590,16 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 				return res
 			})
 		case "thumbnail":
-			out.Values[i] = ec._Club_thumbnail(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_thumbnail(ctx, field, obj)
+				return res
+			})
 		case "name":
 			out.Values[i] = ec._Club_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -12837,6 +13048,38 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var imageResourceImplementors = []string{"ImageResource", "Resource"}
+
+func (ec *executionContext) _ImageResource(ctx context.Context, sel ast.SelectionSet, obj *types.ImageResource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, imageResourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ImageResource")
+		case "id":
+			out.Values[i] = ec._ImageResource_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "urls":
+			out.Values[i] = ec._ImageResource_urls(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -12959,10 +13202,19 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "content":
-			out.Values[i] = ec._Post_content(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_content(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "createdAt":
 			out.Values[i] = ec._Post_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -13329,43 +13581,6 @@ func (ec *executionContext) _RemoveClubSlugAliasPayload(ctx context.Context, sel
 	return out
 }
 
-var resourceImplementors = []string{"Resource"}
-
-func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj *types.Resource) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resourceImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Resource")
-		case "id":
-			out.Values[i] = ec._Resource_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "type":
-			out.Values[i] = ec._Resource_type(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "urls":
-			out.Values[i] = ec._Resource_urls(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var resourceUrlImplementors = []string{"ResourceUrl"}
 
 func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionSet, obj *types.ResourceURL) graphql.Marshaler {
@@ -13398,7 +13613,7 @@ func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
-var seriesImplementors = []string{"Series", "Node", "Object", "_Entity"}
+var seriesImplementors = []string{"Series", "Node", "_Entity"}
 
 func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, obj *types.Series) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, seriesImplementors)
@@ -13420,7 +13635,16 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			out.Values[i] = ec._Series_thumbnail(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Series_thumbnail(ctx, field, obj)
+				return res
+			})
 		case "title":
 			out.Values[i] = ec._Series_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -13674,6 +13898,38 @@ func (ec *executionContext) _UpdatePostContentPayload(ctx context.Context, sel a
 			out.Values[i] = graphql.MarshalString("UpdatePostContentPayload")
 		case "post":
 			out.Values[i] = ec._UpdatePostContentPayload_post(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var videoResourceImplementors = []string{"VideoResource", "Resource"}
+
+func (ec *executionContext) _VideoResource(ctx context.Context, sel ast.SelectionSet, obj *types.VideoResource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, videoResourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("VideoResource")
+		case "id":
+			out.Values[i] = ec._VideoResource_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "urls":
+			out.Values[i] = ec._VideoResource_urls(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14850,7 +15106,17 @@ func (ec *executionContext) unmarshalNRemoveClubSlugAliasInput2overdollᚋapplic
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Resource) graphql.Marshaler {
+func (ec *executionContext) marshalNResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v types.Resource) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResource2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []types.Resource) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -14874,7 +15140,7 @@ func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋsti
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
+			ret[i] = ec.marshalNResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -14892,26 +15158,6 @@ func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋsti
 	}
 
 	return ret
-}
-
-func (ec *executionContext) marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Resource(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx context.Context, v interface{}) (types.ResourceType, error) {
-	var res types.ResourceType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx context.Context, sel ast.SelectionSet, v types.ResourceType) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ResourceURL) graphql.Marshaler {
@@ -15693,11 +15939,27 @@ func (ec *executionContext) marshalORemoveClubSlugAliasPayload2ᚖoverdollᚋapp
 	return ec._RemoveClubSlugAliasPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
+func (ec *executionContext) marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v types.Resource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx context.Context, v interface{}) (*types.ResourceSizes, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.ResourceSizes)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx context.Context, sel ast.SelectionSet, v *types.ResourceSizes) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v *types.Series) graphql.Marshaler {

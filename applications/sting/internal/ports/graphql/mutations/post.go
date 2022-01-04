@@ -2,6 +2,8 @@ package mutations
 
 import (
 	"context"
+	"github.com/google/uuid"
+	workflows2 "overdoll/applications/stella/internal/app/workflows"
 
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
@@ -114,6 +116,17 @@ func (r *MutationResolver) UpdatePostContent(ctx context.Context, input types.Up
 				Content:   input.Content,
 			},
 		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "UpdatePostContent_ProcessResources_" + uuid.New().String(),
+	}
+
+	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows2.ProcessPostContent, pst.ID())
 
 	if err != nil {
 		return nil, err

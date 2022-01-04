@@ -1,4 +1,4 @@
-type Audience implements Node & Object @key(fields: "id") {
+type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
 
@@ -6,7 +6,7 @@ type Audience implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this audience."""
   title: String!

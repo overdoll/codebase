@@ -17,17 +17,17 @@ var seriesTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail",
+		"thumbnail_resource_ids",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type series struct {
-	Id        string            `db:"id"`
-	Slug      string            `db:"slug"`
-	Title     map[string]string `db:"title"`
-	Thumbnail string            `db:"thumbnail"`
+	Id                  string            `db:"id"`
+	Slug                string            `db:"slug"`
+	Title               map[string]string `db:"title"`
+	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -99,7 +99,7 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 		med.Id,
 		med.Slug,
 		med.Title,
-		med.Thumbnail,
+		med.ThumbnailResourceId,
 	), nil
 }
 
@@ -129,7 +129,7 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 			med.Id,
 			med.Slug,
 			med.Title,
-			med.Thumbnail,
+			med.ThumbnailResourceId,
 		))
 	}
 

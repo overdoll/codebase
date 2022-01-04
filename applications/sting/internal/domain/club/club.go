@@ -2,7 +2,6 @@ package club
 
 import (
 	"errors"
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -23,11 +22,11 @@ const (
 type Club struct {
 	*paging.Node
 
-	id          string
-	slug        string
-	slugAliases []string
-	name        *localization.Translation
-	thumbnail   *resource.Resource
+	id                  string
+	slug                string
+	slugAliases         []string
+	name                *localization.Translation
+	thumbnailResourceId string
 
 	newClubMembers []string
 
@@ -45,32 +44,25 @@ func NewClub(acc *principal.Principal, slug, name string) (*Club, error) {
 	}
 
 	return &Club{
-		id:             id.String(),
-		slug:           slug,
-		name:           lc,
-		slugAliases:    []string{},
-		thumbnail:      nil,
-		membersCount:   0,
-		ownerAccountId: acc.AccountId(),
+		id:                  id.String(),
+		slug:                slug,
+		name:                lc,
+		slugAliases:         []string{},
+		thumbnailResourceId: "",
+		membersCount:        0,
+		ownerAccountId:      acc.AccountId(),
 	}, nil
 }
 
 func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string) *Club {
-
-	var res *resource.Resource
-
-	if thumbnail != "" {
-		res = resource.UnmarshalResourceFromDatabase(thumbnail)
-	}
-
 	return &Club{
-		id:             id,
-		slug:           slug,
-		slugAliases:    alternativeSlugs,
-		name:           localization.UnmarshalTranslationFromDatabase(name),
-		thumbnail:      res,
-		ownerAccountId: ownerAccountId,
-		membersCount:   membersCount,
+		id:                  id,
+		slug:                slug,
+		slugAliases:         alternativeSlugs,
+		name:                localization.UnmarshalTranslationFromDatabase(name),
+		thumbnailResourceId: thumbnail,
+		ownerAccountId:      ownerAccountId,
+		membersCount:        membersCount,
 	}
 }
 
@@ -90,8 +82,8 @@ func (m *Club) Name() *localization.Translation {
 	return m.name
 }
 
-func (m *Club) Thumbnail() *resource.Resource {
-	return m.thumbnail
+func (m *Club) ThumbnailResourceId() string {
+	return m.thumbnailResourceId
 }
 
 func (m *Club) MembersCount() int {

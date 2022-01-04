@@ -7,6 +7,7 @@ import (
 	"log"
 	"mime"
 	"os"
+	adapters2 "overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
@@ -133,7 +134,7 @@ func seedClub(t *testing.T) *club.Club {
 
 	session := bootstrap.InitializeDatabaseSession()
 
-	adapter := adapters.NewClubCassandraRepository(session)
+	adapter := adapters2.NewClubCassandraRepository(session)
 	err := adapter.CreateClub(context.Background(), newPrincipal(t), pst)
 	require.NoError(t, err)
 	return pst

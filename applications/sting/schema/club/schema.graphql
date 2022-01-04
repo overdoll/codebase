@@ -1,4 +1,4 @@
-type Club implements Node & Object @key(fields: "id") {
+type Club implements Node @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
 
@@ -17,7 +17,7 @@ type Club implements Node & Object @key(fields: "id") {
   slugAliasesLimit: Int! @goField(forceResolver: true)
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A name for this club."""
   name: String!

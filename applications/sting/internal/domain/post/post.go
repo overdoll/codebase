@@ -5,7 +5,6 @@ import (
 	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
@@ -38,10 +37,10 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	content        []*resource.Resource
-	createdAt      time.Time
-	postedAt       *time.Time
-	reassignmentAt *time.Time
+	contentResourceIds []string
+	createdAt          time.Time
+	postedAt           *time.Time
+	reassignmentAt     *time.Time
 }
 
 func NewPost(contributor *principal.Principal, club *club.Club) (*Post, error) {
@@ -56,29 +55,23 @@ func NewPost(contributor *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, content []string, clubId string, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
-
-	var resources []*resource.Resource
-
-	for _, res := range content {
-		resources = append(resources, resource.UnmarshalResourceFromDatabase(res))
-	}
+func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, contentIds []string, clubId string, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 
 	return &Post{
-		id:             id,
-		moderatorId:    moderatorId,
-		state:          ps,
-		clubId:         clubId,
-		audience:       audience,
-		contributorId:  contributorId,
-		content:        resources,
-		characters:     characters,
-		categories:     categories,
-		createdAt:      createdAt,
-		postedAt:       postedAt,
-		reassignmentAt: reassignmentAt,
+		id:                 id,
+		moderatorId:        moderatorId,
+		state:              ps,
+		clubId:             clubId,
+		audience:           audience,
+		contributorId:      contributorId,
+		contentResourceIds: contentIds,
+		characters:         characters,
+		categories:         categories,
+		createdAt:          createdAt,
+		postedAt:           postedAt,
+		reassignmentAt:     reassignmentAt,
 	}
 }
 
@@ -106,8 +99,8 @@ func (p *Post) State() State {
 	return p.state
 }
 
-func (p *Post) Content() []*resource.Resource {
-	return p.content
+func (p *Post) ContentResourceIds() []string {
+	return p.contentResourceIds
 }
 
 func (p *Post) UpdateModerator(moderatorId string) error {
@@ -197,7 +190,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.content = []*resource.Resource{}
+	p.contentResourceIds = []string{}
 
 	return nil
 }
@@ -224,7 +217,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.content = []*resource.Resource{}
+	p.contentResourceIds = []string{}
 
 	return nil
 }
@@ -280,10 +273,6 @@ func (p *Post) IsDiscarding() bool {
 	return p.state == Discarding
 }
 
-func (p *Post) UpdateContent(resources []*resource.Resource) {
-	p.content = resources
-}
-
 func (p *Post) MakeReview() error {
 	p.state = Review
 
@@ -321,13 +310,13 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	return nil
 }
 
-func (p *Post) UpdateContentRequest(requester *principal.Principal, content []*resource.Resource) error {
+func (p *Post) UpdateContentRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
-	p.content = content
+	p.contentResourceIds = contentIds
 	return nil
 }
 

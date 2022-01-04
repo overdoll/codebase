@@ -67,12 +67,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		state = PostStateRemoved
 	}
 
-	var content []*Resource
+	var content []Resource
 
-	for _, id := range result.Content() {
-		if id != nil {
-			content = append(content, MarshalResourceToGraphQL(ctx, id))
-		}
+	for _, id := range result.ContentResourceIds() {
+		content = append(content, &ImageResource{ID: relay.NewID(ImageResource{}, id)})
 	}
 
 	var audience *Audience
@@ -115,10 +113,10 @@ func MarshalClubMemberToGraphql(ctx context.Context, result *club.Member) *ClubM
 
 func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
-	var res *Resource
+	var res Resource
 
-	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
+	if result.ThumbnailResourceId() != "" {
+		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
 	}
 
 	var slugAliases []*ClubSlugAlias
@@ -141,10 +139,10 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
 func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audience {
 
-	var res *Resource
+	var res Resource
 
-	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
+	if result.ThumbnailResourceId() != "" {
+		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
 	}
 
 	return &Audience{
@@ -157,10 +155,10 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
-	var res *Resource
+	var res Resource
 
-	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
+	if result.ThumbnailResourceId() != "" {
+		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
 	}
 
 	return &Series{
@@ -173,10 +171,10 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Category {
 
-	var res *Resource
+	var res Resource
 
-	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
+	if result.ThumbnailResourceId() != "" {
+		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
 	}
 
 	return &Category{
@@ -189,10 +187,10 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Character {
 
-	var res *Resource
+	var res Resource
 
-	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
+	if result.ThumbnailResourceId() != "" {
+		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
 	}
 
 	return &Character{
@@ -204,31 +202,36 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 	}
 }
 
-func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
-	var resourceType ResourceType
+func MarshalResourcesToGraphQL(ctx context.Context, res []*resource.Resource, size *ResourceSizes) []Resource {
+	var resources []Resource
 
-	if res.IsImage() {
-		resourceType = ResourceTypeImage
+	for _, r := range res {
+		resources = append(resources, MarshalResourceToGraphQL(ctx, r, size))
 	}
 
-	if res.IsVideo() {
-		resourceType = ResourceTypeVideo
-	}
+	return resources
+}
+
+func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource, size *ResourceSizes) Resource {
 
 	var urls []*ResourceURL
 
-	for _, url := range res.FullUrls() {
+	for _, url := range res.FullUrls(size.String()) {
 		urls = append(urls, &ResourceURL{
 			URL:      graphql.URI(url.GetFullUrl()),
 			MimeType: url.GetMimeType(),
 		})
 	}
 
-	return &Resource{
-		ID:   res.Url(),
-		Type: resourceType,
-		Urls: urls,
+	if res.IsImage() {
+		return &ImageResource{ID: relay.NewID(ImageResource{}, res.ID()), Urls: urls}
 	}
+
+	if res.IsVideo() {
+		return &VideoResource{ID: relay.NewID(ImageResource{}, res.ID()), Urls: urls}
+	}
+
+	return nil
 }
 
 func MarshalCategoryToGraphQLConnection(ctx context.Context, results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
@@ -520,6 +523,20 @@ func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, 
 	}
 
 	return conn
+}
+
+func GetResourceIdsFromResources(ctx context.Context, resources []Resource) []string {
+	var resourceIds []string
+
+	for _, r := range resources {
+		resourceIds = append(resourceIds, r.(ImageResource).ID.GetID())
+	}
+
+	return resourceIds
+}
+
+func GetResourceIdFromResource(ctx context.Context, r Resource) string {
+	return r.(ImageResource).ID.GetID()
 }
 
 func MarshalAudienceToGraphQLConnection(ctx context.Context, results []*post.Audience, cursor *paging.Cursor) *AudienceConnection {

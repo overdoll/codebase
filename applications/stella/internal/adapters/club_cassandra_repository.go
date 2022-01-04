@@ -19,7 +19,7 @@ var clubTable = table.New(table.Metadata{
 		"slug",
 		"slug_aliases",
 		"name",
-		"thumbnail",
+		"thumbnail_resource_id",
 		"members_count",
 		"owner_account_id",
 	},
@@ -28,13 +28,13 @@ var clubTable = table.New(table.Metadata{
 })
 
 type clubs struct {
-	Id             string            `db:"id"`
-	Slug           string            `db:"slug"`
-	SlugAliases    []string          `db:"slug_aliases"`
-	Name           map[string]string `db:"name"`
-	Thumbnail      string            `db:"thumbnail"`
-	MembersCount   int               `db:"members_count"`
-	OwnerAccountId string            `db:"owner_account_id"`
+	Id                  string            `db:"id"`
+	Slug                string            `db:"slug"`
+	SlugAliases         []string          `db:"slug_aliases"`
+	Name                map[string]string `db:"name"`
+	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	MembersCount        int               `db:"members_count"`
+	OwnerAccountId      string            `db:"owner_account_id"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -61,26 +61,14 @@ func NewClubCassandraRepository(session gocqlx.Session) ClubCassandraRepository 
 }
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
-
-	var thumbnail string
-	var err error
-
-	if cl.Thumbnail() != nil {
-		thumbnail, err = cl.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &clubs{
-		Id:             cl.ID(),
-		Slug:           cl.Slug(),
-		SlugAliases:    cl.SlugAliases(),
-		Name:           localization.MarshalTranslationToDatabase(cl.Name()),
-		Thumbnail:      thumbnail,
-		MembersCount:   cl.MembersCount(),
-		OwnerAccountId: cl.OwnerAccountId(),
+		Id:                  cl.ID(),
+		Slug:                cl.Slug(),
+		SlugAliases:         cl.SlugAliases(),
+		Name:                localization.MarshalTranslationToDatabase(cl.Name()),
+		ThumbnailResourceId: cl.ThumbnailResourceId(),
+		MembersCount:        cl.MembersCount(),
+		OwnerAccountId:      cl.OwnerAccountId(),
 	}, nil
 }
 
@@ -128,7 +116,7 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
-		b.Thumbnail,
+		b.ThumbnailResourceId,
 		b.MembersCount,
 		b.OwnerAccountId,
 	), nil
@@ -363,7 +351,7 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *prin
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.Thumbnail, cla.MembersCount, cla.OwnerAccountId)
+	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.OwnerAccountId)
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {

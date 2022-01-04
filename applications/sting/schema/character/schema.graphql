@@ -1,4 +1,4 @@
-type Series implements Node & Object @key(fields: "id") {
+type Series implements Node @key(fields: "id") {
   """An ID pointing to this series."""
   id: ID!
 
@@ -6,7 +6,7 @@ type Series implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this series."""
   title: String!
@@ -22,7 +22,7 @@ type SeriesConnection {
   pageInfo: PageInfo!
 }
 
-type Character implements Node & Object @key(fields: "id") {
+type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
 
@@ -30,7 +30,7 @@ type Character implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A name for this character."""
   name: String!

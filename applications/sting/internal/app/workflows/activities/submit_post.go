@@ -9,16 +9,7 @@ import (
 func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
-		// make post in review
-		if err := pending.MakeReview(); err != nil {
-			return err
-		}
-
-		postPrefix := "/posts/" + pending.ID() + "/"
-
-		// Process content (mime-type checks, etc...)
-		// add a prefix
-		return h.rr.ProcessResources(ctx, postPrefix, pending.Content())
+		return pending.MakeReview()
 	})
 
 	if err != nil {

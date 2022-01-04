@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	query2 "overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
@@ -21,7 +22,7 @@ func (r AccountResolver) ClubMembershipsLimit(ctx context.Context, obj *types.Ac
 		return 0, err
 	}
 
-	return r.App.Queries.AccountClubMembershipsLimit.Handle(ctx, query.AccountClubMembershipsLimit{
+	return r.App.Queries.AccountClubMembershipsLimit.Handle(ctx, query2.AccountClubMembershipsLimit{
 		AccountId: obj.ID.GetID(),
 		Principal: principal.FromContext(ctx),
 	})
@@ -33,7 +34,7 @@ func (r AccountResolver) ClubMembershipsCount(ctx context.Context, obj *types.Ac
 		return 0, err
 	}
 
-	results, err := r.App.Queries.AccountClubMembershipsCount.Handle(ctx, query.AccountClubMembershipsCount{
+	results, err := r.App.Queries.AccountClubMembershipsCount.Handle(ctx, query2.AccountClubMembershipsCount{
 		Principal: principal.FromContext(ctx),
 		AccountId: obj.ID.GetID(),
 	})
@@ -59,7 +60,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 
 	accountId := obj.ID.GetID()
 
-	results, err := r.App.Queries.SearchClubs.Handle(ctx, query.SearchClubs{
+	results, err := r.App.Queries.SearchClubs.Handle(ctx, query2.SearchClubs{
 		Principal:      principal.FromContext(ctx),
 		Cursor:         cursor,
 		OwnerAccountId: &accountId,
@@ -87,7 +88,7 @@ func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountClubMemberships.Handle(ctx, query.AccountClubMemberships{
+	results, err := r.App.Queries.AccountClubMemberships.Handle(ctx, query2.AccountClubMemberships{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		AccountId: obj.ID.GetID(),

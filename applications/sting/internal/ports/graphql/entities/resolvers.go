@@ -2,6 +2,7 @@ package entities
 
 import (
 	"context"
+	query2 "overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/domain/club"
@@ -17,7 +18,7 @@ type EntityResolver struct {
 
 func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error) {
 
-	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
+	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query2.ClubMemberById{
 		ClubId:    id.GetCompositePartID(1),
 		AccountId: id.GetCompositePartID(0),
 	})
@@ -55,7 +56,7 @@ func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*typ
 
 func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
 
-	media, err := r.App.Queries.ClubById.Handle(ctx, query.ClubById{
+	media, err := r.App.Queries.ClubById.Handle(ctx, query2.ClubById{
 		Principal: principal.FromContext(ctx),
 		Id:        id.GetID(),
 	})

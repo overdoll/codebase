@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	query2 "overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/passport"
 
@@ -17,13 +18,27 @@ type ClubResolver struct {
 	App *app.Application
 }
 
+func (r ClubResolver) Thumbnail(ctx context.Context, obj *types.Club, size *types.ResourceSizes) (types.Resource, error) {
+
+	resource, err := r.App.Queries.ResourceById.Handle(ctx, query.ResourceById{
+		ItemId:     obj.ID.GetID(),
+		ResourceId: types.GetResourceIdFromResource(ctx, obj.Thumbnail),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalResourceToGraphQL(ctx, resource, size), nil
+}
+
 func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
+	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query2.ClubMemberById{
 		ClubId:    obj.ID.GetID(),
 		AccountId: principal.FromContext(ctx).AccountId(),
 	})
@@ -48,7 +63,7 @@ func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.ClubMembersByClub.Handle(ctx, query.ClubMembersByClub{
+	results, err := r.App.Queries.ClubMembersByClub.Handle(ctx, query2.ClubMembersByClub{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		ClubId:    obj.ID.GetID(),
@@ -67,7 +82,7 @@ func (r ClubResolver) SlugAliasesLimit(ctx context.Context, obj *types.Club) (in
 		return 0, err
 	}
 
-	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query.ClubSlugAliasesLimit{
+	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query2.ClubSlugAliasesLimit{
 		AccountId: obj.Owner.ID.GetID(),
 		Principal: principal.FromContext(ctx),
 	})

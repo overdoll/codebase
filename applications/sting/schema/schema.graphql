@@ -1,9 +1,3 @@
-"""Identifies the type of resource"""
-enum ResourceType {
-  IMAGE
-  VIDEO
-}
-
 """A type representing a url to the resource and the mimetype"""
 type ResourceUrl {
   url: URI!
@@ -16,20 +10,27 @@ and urls to access the resources. We have many urls in order to provide a fallba
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-type Resource {
-  id: String!
-  type: ResourceType!
+
+interface Resource {
+  id: ID!
   urls: [ResourceUrl!]!
+}
+
+type VideoResource implements Resource {
+  id: ID!
+  urls: [ResourceUrl!]!
+}
+
+type ImageResource implements Resource  {
+  id: ID!
+  urls: [ResourceUrl!]!
+}
+
+enum ResourceSizes {
+  SQUARE
+  PORTRAIT
 }
 
 extend type Account @key(fields: "id")  {
   id: ID! @external
-}
-
-"""
-Represents an account
-"""
-interface Object {
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
 }

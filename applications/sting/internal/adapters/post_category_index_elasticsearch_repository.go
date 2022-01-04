@@ -18,11 +18,11 @@ import (
 )
 
 type categoryDocument struct {
-	Id        string            `json:"id"`
-	Slug      string            `json:"slug"`
-	Thumbnail string            `json:"thumbnail"`
-	Title     map[string]string `json:"title"`
-	CreatedAt string            `json:"created_at"`
+	Id                  string            `json:"id"`
+	Slug                string            `json:"slug"`
+	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	Title               map[string]string `json:"title"`
+	CreatedAt           string            `json:"created_at"`
 }
 
 const categoryIndexProperties = `
@@ -33,7 +33,7 @@ const categoryIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail": {
+	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
 	"title":  ` + localization.ESIndex + `
@@ -61,23 +61,12 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
-	var thumbnail string
-
-	if cat.Thumbnail() != nil {
-
-		thumbnail, err = cat.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &categoryDocument{
-		Id:        cat.ID(),
-		Slug:      cat.Slug(),
-		Thumbnail: thumbnail,
-		Title:     localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+		Id:                  cat.ID(),
+		Slug:                cat.Slug(),
+		ThumbnailResourceId: cat.ThumbnailResourceId(),
+		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
+		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
 
@@ -151,7 +140,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
 		}
 
-		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.Thumbnail)
+		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.ThumbnailResourceId)
 		newCategory.Node = paging.NewNode(pst.CreatedAt)
 
 		cats = append(cats, newCategory)
@@ -183,11 +172,11 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 			}
 
 			doc := categoryDocument{
-				Id:        c.Id,
-				Slug:      c.Slug,
-				Thumbnail: c.Thumbnail,
-				Title:     c.Title,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:                  c.Id,
+				Slug:                c.Slug,
+				ThumbnailResourceId: c.ThumbnailResourceId,
+				Title:               c.Title,
+				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.

@@ -1,4 +1,4 @@
-type Category implements Node & Object @key(fields: "id") {
+type Category implements Node @key(fields: "id") {
   """An ID pointing to this category."""
   id: ID!
 
@@ -6,7 +6,7 @@ type Category implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
 
   """A title for this category."""
   title: String!

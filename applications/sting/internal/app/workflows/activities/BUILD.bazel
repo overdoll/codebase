@@ -6,6 +6,8 @@ go_library(
         "activities.go",
         "add_club_member_to_list.go",
         "discard_post.go",
+        "index_post.go",
+        "process_post_content.go",
         "publish_post.go",
         "reassign_moderator.go",
         "remove_club_member_from_list.go",

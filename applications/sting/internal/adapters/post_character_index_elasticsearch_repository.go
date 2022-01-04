@@ -19,12 +19,12 @@ import (
 )
 
 type characterDocument struct {
-	Id        string            `json:"id"`
-	Slug      string            `json:"slug"`
-	Thumbnail string            `json:"thumbnail"`
-	Name      map[string]string `json:"name"`
-	Series    seriesDocument    `json:"series"`
-	CreatedAt string            `json:"created_at"`
+	Id                  string            `json:"id"`
+	Slug                string            `json:"slug"`
+	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	Name                map[string]string `json:"name"`
+	Series              seriesDocument    `json:"series"`
+	CreatedAt           string            `json:"created_at"`
 }
 
 const characterIndexProperties = `
@@ -35,7 +35,7 @@ const characterIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail": {
+	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
 	"name": ` + localization.ESIndex + `
@@ -74,39 +74,18 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
-	var charThumb string
-	var seriesThumb string
-
-	if char.Thumbnail() != nil {
-
-		charThumb, err = char.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if media.Thumbnail() != nil {
-
-		seriesThumb, err = media.Thumbnail().MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &characterDocument{
-		Id:        char.ID(),
-		Thumbnail: charThumb,
-		Name:      localization.MarshalTranslationToDatabase(char.Name()),
-		Slug:      char.Slug(),
-		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+		Id:                  char.ID(),
+		ThumbnailResourceId: char.ThumbnailResourceId(),
+		Name:                localization.MarshalTranslationToDatabase(char.Name()),
+		Slug:                char.Slug(),
+		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		Series: seriesDocument{
-			Id:        media.ID(),
-			Thumbnail: seriesThumb,
-			Slug:      media.Slug(),
-			Title:     localization.MarshalTranslationToDatabase(media.Title()),
-			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
+			Id:                  media.ID(),
+			ThumbnailResourceId: media.ThumbnailResourceId(),
+			Slug:                media.Slug(),
+			Title:               localization.MarshalTranslationToDatabase(media.Title()),
+			CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
 	}, nil
 }
@@ -182,7 +161,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.Thumbnail, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.Thumbnail))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.ThumbnailResourceId, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.ThumbnailResourceId))
 		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
@@ -227,17 +206,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 			}
 
 			doc := characterDocument{
-				Id:        c.Id,
-				Thumbnail: c.Thumbnail,
-				Name:      c.Name,
-				Slug:      c.Slug,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:                  c.Id,
+				ThumbnailResourceId: c.ThumbnailResourceId,
+				Name:                c.Name,
+				Slug:                c.Slug,
+				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 				Series: seriesDocument{
-					Id:        m.Id,
-					Thumbnail: m.Thumbnail,
-					Title:     m.Title,
-					Slug:      m.Slug,
-					CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
+					Id:                  m.Id,
+					ThumbnailResourceId: m.ThumbnailResourceId,
+					Title:               m.Title,
+					Slug:                m.Slug,
+					CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
 				},
 			}
 

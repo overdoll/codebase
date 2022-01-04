@@ -15,6 +15,20 @@ type CharacterResolver struct {
 	App *app.Application
 }
 
+func (r CharacterResolver) Thumbnail(ctx context.Context, obj *types.Character, size *types.ResourceSizes) (types.Resource, error) {
+
+	resource, err := r.App.Queries.ResourceById.Handle(ctx, query.ResourceById{
+		ItemId:     obj.ID.GetID(),
+		ResourceId: types.GetResourceIdFromResource(ctx, obj.Thumbnail),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalResourceToGraphQL(ctx, resource, size), nil
+}
+
 func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

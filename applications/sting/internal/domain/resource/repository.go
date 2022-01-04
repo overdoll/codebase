@@ -7,15 +7,14 @@ import (
 )
 
 type Repository interface {
-	// process a list of resources
-	// prefix can be added
-	ProcessResources(ctx context.Context, prefix string, resources []*Resource) error
+	GetResourcesByIds(ctx context.Context, itemId string, resourceIds []string) ([]*Resource, error)
+	GetResourceById(ctx context.Context, itemId string, resourceId string) (*Resource, error)
 
-	// create resources
-	CreateResources(ctx context.Context, uploads []string) ([]*Resource, error)
+	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, uploadIds []string) ([]*Resource, error)
 
-	// delete resources that were processed
-	DeleteProcessedResources(ctx context.Context, resources []*Resource) error
+	ProcessResourcesFromIds(ctx context.Context, prefix string, itemId string, resourceIds []string) error
+
+	DeleteResources(ctx context.Context, resources []*Resource) error
 
 	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
 }

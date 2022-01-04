@@ -6,6 +6,7 @@ go_library(
         "add_club_member.go",
         "discard_post.go",
         "options.go",
+        "process_post_content.go",
         "publish_post.go",
         "remove_club_member.go",
         "remove_post.go",

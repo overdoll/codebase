@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/sting/internal/app/workflows"
+	workflows2 "overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"testing"
 	"time"
@@ -89,9 +89,9 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error becoming a club member")
 
 	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	env.RegisterWorkflow(workflows2.UpdateClubMemberTotalCount)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflows.AddClubMember, clb.ID(), testingAccountId)
+	env.ExecuteWorkflow(workflows2.AddClubMember, clb.ID(), testingAccountId)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -136,9 +136,9 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error withdrawing club membership")
 
 	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	env.RegisterWorkflow(workflows2.UpdateClubMemberTotalCount)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflows.RemoveClubMember, clb.ID(), testingAccountId)
+	env.ExecuteWorkflow(workflows2.RemoveClubMember, clb.ID(), testingAccountId)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
