@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 28b6e38a3fdd17495d251e383eaa38c0 */
+/* @relayHash 1dab4d484800a1ffa4e4c81010218b48 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -46,8 +46,8 @@ fragment ManageClubsFragment on Account {
     edges {
       node {
         ...ClubPreviewFragment
+        slug
         id
-        name
         __typename
       }
       cursor
@@ -260,18 +260,6 @@ return {
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "kind": "ClientExtension",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__id",
-                    "storageKey": null
-                  }
-                ]
               }
             ],
             "storageKey": "clubs(first:3)"
@@ -294,7 +282,7 @@ return {
     ]
   },
   "params": {
-    "id": "28b6e38a3fdd17495d251e383eaa38c0",
+    "id": "1dab4d484800a1ffa4e4c81010218b48",
     "metadata": {},
     "name": "ManageClubsQuery",
     "operationKind": "query",

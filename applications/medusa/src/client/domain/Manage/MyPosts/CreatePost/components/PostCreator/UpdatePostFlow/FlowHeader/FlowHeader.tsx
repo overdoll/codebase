@@ -24,11 +24,11 @@ import checkPostRequirements from './checkPostRequirements'
 import progressScore from './progressScore'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
-import ExternalLink from '../../../../../../components/ContentHints/ExternalLink/ExternalLink'
+import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { DispatchContext, StateContext, UppyContext } from '../../../../context'
-import ClubPreview from '../../../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
+import ClubPreview from '../../../../../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {

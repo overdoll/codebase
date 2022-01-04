@@ -6,11 +6,9 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ManageClubsFragment = {
     readonly clubs: {
-        readonly __id: string;
         readonly edges: ReadonlyArray<{
             readonly node: {
-                readonly id: string;
-                readonly name: string;
+                readonly slug: string;
                 readonly " $fragmentRefs": FragmentRefs<"ClubPreviewFragment">;
             };
         }>;
@@ -29,14 +27,7 @@ export type ManageClubsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "clubs"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -113,12 +104,11 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "name",
+                  "name": "slug",
                   "storageKey": null
                 },
                 {
@@ -170,27 +160,21 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
-(node as any).hash = '0dd1299fd467239269b4ae4a26b4f1cd';
+(node as any).hash = '1bd60f7e14432ab3140d729307f36cce';
 export default node;

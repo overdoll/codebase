@@ -3,10 +3,10 @@ import { Stack } from '@chakra-ui/react'
 import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import PostGalleryContent from '../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
-import PostHeaderClub from '../../../../../../../components/Posts/PostHeaderClub/PostHeaderClub'
+import PostGalleryContent from '../../../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostHeaderClub from '../../../../../../../../../components/Posts/PostHeaderClub/PostHeaderClub'
 import { Trans } from '@lingui/macro'
-import PostIndexer from '../../../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
+import PostIndexer from '../../../../../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
 
 interface Props {
   query: ReviewFragment$key

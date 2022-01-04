@@ -18,7 +18,7 @@ interface Props {
 export default function RootMyPosts (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader(
     MyPostsQuery,
-    props.prepared.myPostsQuery
+    props.prepared.myPostsQuery,
   )
 
   return (

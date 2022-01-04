@@ -8,7 +8,7 @@ import {
   LargeGridItem,
   Selector,
   SelectorTextOverlay
-} from '../../../../../../../../../components/ContentSelection'
+} from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'

@@ -18,9 +18,9 @@ import Button from '@//:modules/form/Button/Button'
 import { Link } from '@//:modules/routing'
 import { useContext, useEffect } from 'react'
 import { DispatchContext, StateContext } from '../../context'
-import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../components/ContentSelection'
+import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../../../components/ContentSelection'
 import { EVENTS } from '../../constants/constants'
-import ClubPreview from '../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
+import ClubPreview from '../../../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
 
 const Query = graphql`
   query ClubSelectorQuery {

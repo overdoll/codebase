@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9063c569303c8fc2d0a875ce8634bce6 */
+/* @relayHash 6e4fa5c81d295a82bd9f13c9002340fd */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -57,8 +57,8 @@ fragment ManageClubsFragment_3cTRis on Account {
     edges {
       node {
         ...ClubPreviewFragment
+        slug
         id
-        name
         __typename
       }
       cursor
@@ -324,18 +324,6 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "kind": "ClientExtension",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__id",
-                        "storageKey": null
-                      }
-                    ]
                   }
                 ],
                 "storageKey": null
@@ -361,7 +349,7 @@ return {
     ]
   },
   "params": {
-    "id": "9063c569303c8fc2d0a875ce8634bce6",
+    "id": "6e4fa5c81d295a82bd9f13c9002340fd",
     "metadata": {},
     "name": "ManageClubsPaginationFragment",
     "operationKind": "query",
@@ -369,5 +357,5 @@ return {
   }
 };
 })();
-(node as any).hash = '0dd1299fd467239269b4ae4a26b4f1cd';
+(node as any).hash = '1bd60f7e14432ab3140d729307f36cce';
 export default node;

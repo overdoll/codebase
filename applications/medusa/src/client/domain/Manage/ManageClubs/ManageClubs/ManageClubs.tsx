@@ -9,6 +9,7 @@ import Icon from '../../../../../modules/content/Icon/Icon'
 import { AddPlus } from '@//:assets/icons/interface'
 import { Link } from '@//:modules/routing'
 import ClubPreview from '../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
+import { Fragment } from 'react'
 
 interface Props {
   query: PreloadedQuery<ManageClubsQuery>
@@ -22,7 +23,7 @@ const Query = graphql`
   }
 `
 
-const Fragment = graphql`
+const FragmentGQL = graphql`
   fragment ManageClubsFragment on Account
   @argumentDefinitions(
     first: {type: Int, defaultValue: 3}
@@ -36,12 +37,10 @@ const Fragment = graphql`
       after: $after,
       name: $name
     ) @connection(key: "ManageClubs_clubs") {
-      __id
       edges {
         node {
           ...ClubPreviewFragment
-          id
-          name
+          slug
         }
       }
     }
@@ -59,7 +58,7 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
     isLoadingNext,
     hasNext
   } = usePaginationFragment<ManageClubsQuery, any>(
-    Fragment,
+    FragmentGQL,
     queryData.viewer
   )
 
@@ -105,9 +104,13 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
         </SmallBackgroundBox>
         : <ListSpacer>
           {data.clubs.edges.map((item, index) =>
-            <ClickableBox key={index}>
-              <ClubPreview query={item.node} />
-            </ClickableBox>)}
+            <Fragment key={index}>
+              <Link to={`/${item.node.slug as string}`}>
+                <ClickableBox>
+                  <ClubPreview query={item.node} />
+                </ClickableBox>
+              </Link>
+            </Fragment>)}
         </ListSpacer>}
       {hasNext &&
         <Flex justify='center'>

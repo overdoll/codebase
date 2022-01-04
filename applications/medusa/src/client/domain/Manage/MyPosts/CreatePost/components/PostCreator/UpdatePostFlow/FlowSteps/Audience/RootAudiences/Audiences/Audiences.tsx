@@ -5,7 +5,7 @@ import {
   RowWrap,
   Selector,
   SelectorTextOverlay
-} from '../../../../../../../../../components/ContentSelection'
+} from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 

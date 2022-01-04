@@ -15,10 +15,10 @@ import {
   Spinner,
   Text
 } from '@chakra-ui/react'
-import ExternalLink from '../../../../../components/ContentHints/ExternalLink/ExternalLink'
+import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import SuspenseImage from '@//:modules/operations/SuspenseImage'
-import CopyCodeToClipboard from '../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard from '../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 
 import TotpActivationForm from './TotpActivationForm/TotpActivationForm'

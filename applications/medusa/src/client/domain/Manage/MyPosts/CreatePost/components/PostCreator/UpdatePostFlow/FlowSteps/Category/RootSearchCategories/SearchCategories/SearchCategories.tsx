@@ -7,7 +7,7 @@ import {
   Selector,
   SelectorTextOverlay,
   SmallGridItem
-} from '../../../../../../../../../components/ContentSelection'
+} from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
