@@ -122,7 +122,8 @@ _RUNTIME_DEPS = [
     "@npm//path-to-regexp",
     "@npm//history",
     "@npm//@lingui/react",
-    "@npm//@apollographql/graphql-playground-html"
+    "@npm//@apollographql/graphql-playground-html",
+    "@npm//url-slug"
 ]
 
 TEST_DEPS = [

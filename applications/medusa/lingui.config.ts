@@ -30,10 +30,6 @@ export default {
       include: ['src/client/domain/VerifyToken/']
     },
     {
-      path: 'src/client/domain/ConfirmEmail/__locale__/{locale}/index',
-      include: ['src/client/domain/ConfirmEmail/']
-    },
-    {
       path: 'src/client/domain/Settings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Settings.tsx']
     },
@@ -62,24 +58,12 @@ export default {
       include: ['src/client/domain/Moderation/Queue']
     },
     {
-      path: 'src/client/domain/CreatePost/__locale__/{locale}/index',
-      include: ['src/client/domain/CreatePost']
-    },
-    {
-      path: 'src/client/domain/ViewPost/__locale__/{locale}/index',
-      include: ['src/client/domain/ViewPost']
-    },
-    {
       path: 'src/client/domain/Manage/__locale__/{locale}/index',
       include: ['src/client/domain/Manage']
     },
     {
-      path: 'src/client/domain/Manage/MyPosts/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/MyPosts']
-    },
-    {
-      path: 'src/client/domain/CreateClub/__locale__/{locale}/index',
-      include: ['src/client/domain/CreateClub']
+      path: 'src/client/domain/Manage/ManagePosts/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManagePosts']
     },
     {
       path: 'src/client/domain/Manage/ManageClubs/__locale__/{locale}/index',

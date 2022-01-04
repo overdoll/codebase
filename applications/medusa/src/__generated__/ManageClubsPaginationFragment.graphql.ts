@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6e4fa5c81d295a82bd9f13c9002340fd */
+/* @relayHash a378f32bc094f6778ddce030cd2d7f1b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -13,7 +13,7 @@ export type ManageClubsPaginationFragmentVariables = {
 };
 export type ManageClubsPaginationFragmentResponse = {
     readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ManageClubsFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"MyClubsFragment">;
     } | null;
 };
 export type ManageClubsPaginationFragment = {
@@ -32,7 +32,7 @@ query ManageClubsPaginationFragment(
 ) {
   node(id: $id) {
     __typename
-    ...ManageClubsFragment_3cTRis
+    ...MyClubsFragment_3cTRis
     id
   }
 }
@@ -52,7 +52,7 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment ManageClubsFragment_3cTRis on Account {
+fragment MyClubsFragment_3cTRis on Account {
   clubs(first: $first, after: $after, name: $name) {
     edges {
       node {
@@ -171,7 +171,7 @@ return {
           {
             "args": (v5/*: any*/),
             "kind": "FragmentSpread",
-            "name": "ManageClubsFragment"
+            "name": "MyClubsFragment"
           }
         ],
         "storageKey": null
@@ -349,7 +349,7 @@ return {
     ]
   },
   "params": {
-    "id": "6e4fa5c81d295a82bd9f13c9002340fd",
+    "id": "a378f32bc094f6778ddce030cd2d7f1b",
     "metadata": {},
     "name": "ManageClubsPaginationFragment",
     "operationKind": "query",
@@ -357,5 +357,5 @@ return {
   }
 };
 })();
-(node as any).hash = '1bd60f7e14432ab3140d729307f36cce';
+(node as any).hash = '6e158293faba83fa2bf1e6ecaf0263aa';
 export default node;

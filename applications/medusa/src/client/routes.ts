@@ -424,7 +424,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Manage/ManageClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Manage/ManagePosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -432,15 +432,15 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Manage/MyPosts/RootMyPosts'
+                './domain/Manage/ManagePosts/ManagePosts'
               )
             ),
             prepare: params => {
-              const MyPostsQuery = require('@//:artifacts/MyPostsQuery.graphql')
+              const Query = require('@//:artifacts/MyPostsQuery.graphql')
 
               return {
-                myPostsQuery: {
-                  query: MyPostsQuery,
+                postsQuery: {
+                  query: Query,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -455,7 +455,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Manage/MyPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Manage/ManageClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -463,15 +463,15 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Manage/ManageClubs/RootManageClubs'
+                './domain/Manage/ManageClubs/ManageClubs'
               )
             ),
             prepare: params => {
-              const ManageClubsQuery = require('@//:artifacts/ManageClubsQuery.graphql')
+              const Query = require('@//:artifacts/MyClubsQuery.graphql')
 
               return {
-                manageClubsQuery: {
-                  query: ManageClubsQuery,
+                clubsQuery: {
+                  query: Query,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -727,14 +727,14 @@ const routes: Route[] = [
         path: '/configure/create-post',
         component: loadable(async () =>
           await import(
-            './domain/Manage/MyPosts/CreatePost/CreatePost'
+            './domain/Manage/ManagePosts/CreatePost/CreatePost'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Manage/MyPosts/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Manage/ManagePosts/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -816,7 +816,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Manage/MyPosts/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Manage/ManagePosts/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -825,7 +825,7 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Manage/MyPosts/ViewPost/ViewPostRoot'
+            './domain/Manage/ManagePosts/ViewPost/ViewPostRoot'
           )
         ),
         prepare: ({

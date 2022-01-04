@@ -104,11 +104,14 @@ export default function CreateClub (): JSX.Element {
           title: t`Club ${formValues.name} was created successfully`,
           isClosable: true
         })
-        // history.push('/manage/clubs')
+        history.push('/manage/clubs')
       },
       updater: (store, payload) => {
         // TODO somehow update store to have the new club?
         const storyRecord = store.getRoot()?.getLinkedRecord('viewer')?.getLinkedRecord('clubs')
+
+        // if store exists, invalidate it
+        // if it doesn't, do nothing since loading the page will load the queries anyways
         /*
 
         return

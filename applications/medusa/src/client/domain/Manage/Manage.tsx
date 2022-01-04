@@ -29,7 +29,7 @@ export default function Manage ({ children }: Props): JSX.Element {
           to='/manage/clubs'
           colorScheme='teal'
           title={
-            <Trans>Manage Clubs</Trans>
+            <Trans>My Clubs</Trans>
           }
           icon={SettingHammer}
         />

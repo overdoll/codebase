@@ -6,3 +6,101 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:220
+msgid "A unique link"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:89
+msgid "Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:104
+msgid "Club {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:99
+msgid "Clubs allow you to organize your posts and community all in one place. You need to create or have access to at least one club to be able to upload posts."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:232
+msgid "Create Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/RootCreateClub.tsx:16
+msgid "Create a Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:159
+msgid "Error creating club {0}"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/RootCreateClub.tsx:28
+msgid "Go back to Manage Clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:123
+msgid "Load more clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:72
+msgid "Please enter a club link"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:61
+msgid "Please enter a name for your club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:197
+msgid "The best name you can come up with"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:75
+msgid "The club link can only contain numbers, letters, and dashes."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:74
+msgid "The club link cannot exceed 15 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:73
+msgid "The club link must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:63
+msgid "The name cannot exceed 15 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:62
+msgid "The name must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:198
+msgid "This is the name everyone will see"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:221
+msgid "This is the unique link everyone will use to see your club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:187
+msgid "Your Club Name"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:71
+msgid "Your Clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:203
+msgid "Your Unique Club Link"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:210
+msgid "overdoll.com/"
+msgstr ""
