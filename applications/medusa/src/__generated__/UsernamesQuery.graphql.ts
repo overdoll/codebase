@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d3c358aa75ea117805bc34ad8cd10703 */
+/* @relayHash 3b6638f090dfe40224eaaa6e68a7779b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -28,6 +28,7 @@ query UsernamesQuery {
 
 fragment UsernamesSettingsFragment on Account {
   username
+  usernameEditAvailableAt
 }
 */
 
@@ -83,6 +84,13 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "usernameEditAvailableAt",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "id",
             "storageKey": null
           }
@@ -92,7 +100,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "d3c358aa75ea117805bc34ad8cd10703",
+    "id": "3b6638f090dfe40224eaaa6e68a7779b",
     "metadata": {},
     "name": "UsernamesQuery",
     "operationKind": "query",

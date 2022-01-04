@@ -65,7 +65,7 @@ msgstr ""
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:110
+#: src/client/domain/Join/Grant/Grant.tsx:108
 msgid "Logging in"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:118
+#: src/client/domain/Join/Grant/Grant.tsx:116
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -93,11 +93,11 @@ msgstr ""
 #~ msgid "Submitting"
 #~ msgstr ""
 
-#: src/client/domain/Join/Join/Join.tsx:126
+#: src/client/domain/Join/Join/Join.tsx:124
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
-#: src/client/domain/Join/Grant/Grant.tsx:83
+#: src/client/domain/Join/Grant/Grant.tsx:81
 msgid "There was an error logging you in"
 msgstr ""
 
@@ -109,11 +109,11 @@ msgstr ""
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
-#: src/client/domain/Join/Join/Join.tsx:98
+#: src/client/domain/Join/Join/Join.tsx:96
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/client/domain/Join/Register/Register.tsx:90
+#: src/client/domain/Join/Register/Register.tsx:89
 msgid "There was an issue with registration."
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Join/Register/Register.tsx:83
+#: src/client/domain/Join/Register/Register.tsx:82
 msgid "Welcome to overdoll!"
 msgstr ""
 

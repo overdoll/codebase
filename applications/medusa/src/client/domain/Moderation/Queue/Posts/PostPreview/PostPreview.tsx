@@ -1,11 +1,11 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
-import PostAudience from './PostAudience/PostAudience'
-import PostCharacters from './PostCharacters/PostCharacters'
-import PostCategories from './PostCategories/PostCategories'
+import PostStaticAudience from '../../../../../components/Posts/components/PostData/PostStaticAudience/PostStaticAudience'
+import PostStaticCharacters from '../../../../../components/Posts/components/PostData/PostStaticCharacters/PostStaticCharacters'
+import PostStaticCategories from '../../../../../components/Posts/components/PostData/PostStaticCategories/PostStaticCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
 import PostGalleryContent from '../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
-import PostIndexer from '../../../../../components/Posts/PostIndexer/PostIndexer'
+import PostIndexer from '../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
 import { Trans } from '@lingui/macro'
 
 interface Props {
@@ -14,9 +14,9 @@ interface Props {
 
 const PostPreviewGQL = graphql`
   fragment PostPreviewFragment on Post {
-    ...PostAudienceFragment
-    ...PostCharactersFragment
-    ...PostCategoriesFragment
+    ...PostStaticAudienceFragment
+    ...PostStaticCharactersFragment
+    ...PostStaticCategoriesFragment
     ...PostGalleryContentFragment
   }
 `
@@ -41,7 +41,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
                 Audience
               </Trans>
             </Heading>
-            <PostAudience query={data} />
+            <PostStaticAudience query={data} />
           </Flex>
           <Flex direction='column'>
             <Heading mb={1} fontSize='md' color='gray.300'>
@@ -49,7 +49,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
                 Characters
               </Trans>
             </Heading>
-            <PostCharacters query={data} />
+            <PostStaticCharacters query={data} />
           </Flex>
           <Flex direction='column'>
             <Heading mb={1} fontSize='md' color='gray.300'>
@@ -57,7 +57,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
                 Categories
               </Trans>
             </Heading>
-            <PostCategories query={data} />
+            <PostStaticCategories query={data} />
           </Flex>
         </Stack>
       </Stack>

@@ -65,8 +65,8 @@ const HorizontalNavigationDropdownMenu = ({
               }}
               aria-label={label}
               bg={isOpen ? 'gray.500' : 'transparent'}
-              h='48px'
-              w='48px'
+              h='46px'
+              w='42px'
             >
               <Flex w='100%' align='center' justify='center'>
                 <Icon
@@ -88,7 +88,6 @@ const HorizontalNavigationDropdownMenu = ({
             <ModalOverlay />
             <ModalContent
               bg='gray.800'
-              boxShadow='none'
             >
               <ModalBody my={4}>
                 <Stack

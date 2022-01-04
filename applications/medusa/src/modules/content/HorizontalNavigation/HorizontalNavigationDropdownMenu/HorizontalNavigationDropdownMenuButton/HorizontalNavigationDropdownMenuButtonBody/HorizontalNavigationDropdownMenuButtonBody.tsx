@@ -9,6 +9,7 @@ interface Props {
   onClick?: () => void
   isDisabled?: boolean
   isActive: boolean
+  colorScheme?: string
   color?: string
   children?: ReactNode
 }
@@ -16,12 +17,15 @@ interface Props {
 export default function HorizontalNavigationDropdownMenuButtonBody ({
   children,
   icon,
+  colorScheme = 'gray',
   color,
   label,
   isActive,
   isDisabled,
   onClick
 }: Props): JSX.Element {
+  const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
+
   return (
     <ClickableBox
       onClick={onClick}
@@ -35,7 +39,7 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
             align='center'
             p={1}
             mr={3}
-            bg={isActive ? (color != null ? 'gray.00' : 'primary.400') : 'gray.500'}
+            bg={isActive ? colorPalette : 'gray.500'}
           >
             <Icon
               icon={icon}
@@ -48,7 +52,7 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
         )}
         {label != null && (
           <Heading
-            color={(color ?? (isActive ? 'primary.400' : 'gray.100'))}
+            color={(color ?? (isActive ? colorPalette : 'gray.100'))}
             fontSize='lg'
           >
             {label}

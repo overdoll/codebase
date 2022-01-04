@@ -8,6 +8,7 @@ export default function MainMenu (): JSX.Element {
     <>
       <HorizontalNavigation.Button
         exact
+        colorScheme='primary'
         to='/'
         icon={BirdHouse}
         label={
@@ -18,7 +19,7 @@ export default function MainMenu (): JSX.Element {
       />
       <Can I='moderate' a='Post'>
         <HorizontalNavigation.Button
-          exact
+          colorScheme='purple'
           to='/moderation/queue'
           icon={LoginKeys}
           label={
@@ -31,6 +32,7 @@ export default function MainMenu (): JSX.Element {
       <Can I='create' a='Post'>
         <HorizontalNavigation.Button
           exact
+          colorScheme='teal'
           to='/configure/create-post'
           icon={ContentBrushPen}
           label={

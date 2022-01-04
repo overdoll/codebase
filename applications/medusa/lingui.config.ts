@@ -14,10 +14,6 @@ export default {
   ],
   catalogs: [
     {
-      path: 'src/client/domain/Manage/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/']
-    },
-    {
       path: 'src/client/domain/Root/__locale__/{locale}/index',
       include: ['src/modules/', 'src/client/components/', 'src/client/domain/Root/']
     },
@@ -32,10 +28,6 @@ export default {
     {
       path: 'src/client/domain/VerifyToken/__locale__/{locale}/index',
       include: ['src/client/domain/VerifyToken/']
-    },
-    {
-      path: 'src/client/domain/ConfirmEmail/__locale__/{locale}/index',
-      include: ['src/client/domain/ConfirmEmail/']
     },
     {
       path: 'src/client/domain/Settings/__locale__/{locale}/index',
@@ -66,8 +58,16 @@ export default {
       include: ['src/client/domain/Moderation/Queue']
     },
     {
-      path: 'src/client/domain/CreatePost/__locale__/{locale}/index',
-      include: ['src/client/domain/CreatePost']
+      path: 'src/client/domain/Manage/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage']
+    },
+    {
+      path: 'src/client/domain/Manage/ManagePosts/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManagePosts']
+    },
+    {
+      path: 'src/client/domain/Manage/ManageClubs/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManageClubs']
     }
   ],
   format: 'po',

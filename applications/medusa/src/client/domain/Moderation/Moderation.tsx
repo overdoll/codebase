@@ -22,6 +22,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
       >
         <VerticalNavigation.Button
           to='/moderation/queue'
+          colorScheme='purple'
           title={
             <Trans>
               Queue
@@ -31,6 +32,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
         />
         <VerticalNavigation.Button
           to='/moderation/history'
+          colorScheme='purple'
           title={
             <Trans>
               History

@@ -80,14 +80,14 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post created by ${data?.brand?.name} was approved successfully`,
+          title: t`Post created by ${data?.club?.name} was approved successfully`,
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error approving a post created by ${data?.brand?.name}`,
+          title: t`There was an error approving a post created by ${data?.club?.name}`,
           isClosable: true
         })
       }
@@ -106,7 +106,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post created by ${data?.brand?.name} was successfully rejected`,
+          title: t`Post created by ${data?.club?.name} was successfully rejected`,
           isClosable: true
         })
         onClose()
@@ -114,7 +114,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error rejecting the post created by ${data?.brand?.name}`,
+          title: t`There was an error rejecting the post created by ${data?.club?.name}`,
           isClosable: true
         })
       }

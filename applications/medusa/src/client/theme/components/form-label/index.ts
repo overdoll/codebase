@@ -1,14 +1,13 @@
 const baseStyle = {
   fontWeight: 'semibold',
-  fontFamily: 'heading',
+  fontFamily: 'body',
   fontSize: 'md',
   marginEnd: 2,
   mb: 1,
-
   color: 'gray.00',
   transitionProperty: 'common',
   transitionDuration: 'normal',
-  letterSpacing: 'wide',
+  letterSpacing: 'wider',
   _disabled: {
     opacity: 0.4
   }

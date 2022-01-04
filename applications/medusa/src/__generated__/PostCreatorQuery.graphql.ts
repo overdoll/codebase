@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 338e0f5aff6111966a43738741bb7e4b */
+/* @relayHash aeee16d402c5063f8a1671887b8eb897 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -64,12 +64,6 @@ fragment AudienceFragment on Post {
   }
 }
 
-fragment BrandFragment on Post {
-  club {
-    id
-  }
-}
-
 fragment CategoryFragment on Post {
   categories {
     id
@@ -104,6 +98,14 @@ fragment CharacterFragment on Post {
   }
 }
 
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+  }
+}
+
 fragment DraggableContentFragment on Resource {
   id
   type
@@ -121,20 +123,22 @@ fragment FlowFooterFragment on Post {
 fragment FlowForwardButtonFragment on Post {
   ...SubmitPostButtonFragment
   ...UpdateAudienceButton
-  ...UpdateBrandButtonFragment
   ...UpdateCategoryButtonFragment
   ...UpdateCharacterButtonFragment
   ...UpdateContentButtonFragment
 }
 
 fragment FlowHeaderFragment on Post {
-  ...useCheckRequirementsFragment
+  ...checkPostRequirementsFragment
+  club {
+    ...ClubPreviewFragment
+    id
+  }
 }
 
 fragment FlowStepsFragment on Post {
   ...ArrangeFragment
   ...AudienceFragment
-  ...BrandFragment
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
@@ -147,21 +151,21 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostBrandFragment on Post {
-  club {
-    name
-    thumbnail {
-      ...ResourceItemFragment
-    }
-    id
-  }
-}
-
 fragment PostGalleryContentFragment on Post {
   content {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+  }
+}
+
+fragment PostHeaderClubFragment on Post {
+  club {
+    name
+    thumbnail {
+      ...ResourceIconFragment
+    }
+    id
   }
 }
 
@@ -173,6 +177,10 @@ fragment ProcessUploadsFragment on Post {
       url
     }
   }
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -190,7 +198,11 @@ fragment ReviewFragment on Post {
     }
   }
   ...PostGalleryContentFragment
-  ...PostBrandFragment
+  ...PostHeaderClubFragment
+  club {
+    name
+    id
+  }
 }
 
 fragment SubmitPostButtonFragment on Post {
@@ -200,13 +212,6 @@ fragment SubmitPostButtonFragment on Post {
 fragment UpdateAudienceButton on Post {
   id
   audience {
-    id
-  }
-}
-
-fragment UpdateBrandButtonFragment on Post {
-  id
-  club {
     id
   }
 }
@@ -247,15 +252,11 @@ fragment VideoSnippetFragment on Resource {
   }
 }
 
-fragment useCheckRequirementsFragment on Post {
+fragment checkPostRequirementsFragment on Post {
   content {
     __typename
   }
   audience {
-    __typename
-    id
-  }
-  club {
     __typename
     id
   }
@@ -351,17 +352,10 @@ v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -384,6 +378,13 @@ v12 = {
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -471,33 +472,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Club",
-            "kind": "LinkedField",
-            "name": "club",
-            "plural": false,
-            "selections": [
-              (v4/*: any*/),
-              (v10/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
-                "selections": [
-                  (v8/*: any*/),
-                  (v7/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v2/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Category",
             "kind": "LinkedField",
             "name": "categories",
@@ -505,8 +479,8 @@ return {
             "selections": [
               (v4/*: any*/),
               (v9/*: any*/),
+              (v10/*: any*/),
               (v11/*: any*/),
-              (v12/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -520,7 +494,7 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v10/*: any*/),
+              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -534,9 +508,36 @@ return {
                 ],
                 "storageKey": null
               },
+              (v10/*: any*/),
               (v11/*: any*/),
-              (v12/*: any*/),
               (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v12/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": [
+                  (v8/*: any*/),
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/),
+              (v10/*: any*/)
             ],
             "storageKey": null
           }
@@ -546,7 +547,7 @@ return {
     ]
   },
   "params": {
-    "id": "338e0f5aff6111966a43738741bb7e4b",
+    "id": "aeee16d402c5063f8a1671887b8eb897",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

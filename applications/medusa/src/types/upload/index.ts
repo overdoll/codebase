@@ -55,15 +55,15 @@ export interface Audiences {
   [audience: string]: Audience
 }
 
-export interface Brand {
+export interface Club {
   id?: string
   slug?: string
   thumbnail?: Thumbnails
-  title: string
+  name: string
 }
 
-export interface Brands {
-  [brand: string]: Brand
+export interface Clubs {
+  [brand: string]: Club
 }
 
 export interface Series {
@@ -108,7 +108,7 @@ export interface QueryArgs {
   }
 }
 
-export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'
+export type Step = 'ARRANGE' | 'AUDIENCE' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'
 
 export type Event =
   | 'urls'
@@ -118,7 +118,7 @@ export type Event =
   | 'progress'
   | 'characters'
   | 'audience'
-  | 'brand'
+  | 'club'
   | 'categories'
   | 'cleanup'
   | 'isInReview'
@@ -129,7 +129,7 @@ export interface State {
   step: Step
   content: string[] | null
   progress: Progress
-  brand: string | null
+  club: string | null
   audience: string | null
   characters: Characters
   categories: Categories

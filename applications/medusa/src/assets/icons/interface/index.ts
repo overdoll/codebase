@@ -17,3 +17,4 @@ export { default as ShareExternalLink } from './mini-bold/actions/share-external
 export { default as InfoCircle } from './mini-bold/validation/info-circle.svg'
 export { default as DownloadArrow } from './mini-bold/actions/download-arrow.svg'
 export { default as MailEnvelope } from './mini-bold/actions/mail-envelope.svg'
+export { default as AddPlus } from './mini-bold/actions/add-plus.svg'

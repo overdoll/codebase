@@ -1,6 +1,7 @@
 import { Flex, Text, useDisclosure } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   children: string
@@ -15,6 +16,8 @@ export default function SpoilerText ({
     isOpen,
     onToggle
   } = useDisclosure()
+
+  const { i18n } = useLingui()
 
   return (
     <Button
@@ -32,7 +35,7 @@ export default function SpoilerText ({
           color='gray.200'
           fontSize='sm'
         >
-          {isOpen ? children : (text !== '' ? text : t`Reveal Spoiler`)}
+          {isOpen ? children : (text !== '' ? text : i18n._(t`Reveal Spoiler`))}
         </Text>
       </Flex>
     </Button>

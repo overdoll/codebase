@@ -12,7 +12,10 @@ export type ReviewFragment = {
             readonly mimeType: string;
         }>;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostBrandFragment">;
+    readonly club: {
+        readonly name: string;
+    };
+    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostHeaderClubFragment">;
     readonly " $refType": "ReviewFragment";
 };
 export type ReviewFragment$data = ReviewFragment;
@@ -73,6 +76,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostGalleryContentFragment"
@@ -80,11 +101,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostBrandFragment"
+      "name": "PostHeaderClubFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '9015c8e48847d128def4673ad7289fcb';
+(node as any).hash = '7bb7a9489a6ccb7017a85f4e7fdc2f0f';
 export default node;

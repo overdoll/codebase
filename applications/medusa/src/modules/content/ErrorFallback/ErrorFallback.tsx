@@ -32,7 +32,7 @@ export default function ErrorFallback ({
           <AlertIcon />
           <AlertDescription>
             <Trans>
-              Error
+              Error {error?.message}
             </Trans>
           </AlertDescription>
         </Flex>

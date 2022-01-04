@@ -45,25 +45,6 @@ const InfractionsGQL = graphql`
   }
 `
 
-const schema = Joi.object({
-  rejectionId: Joi
-    .string()
-    .required()
-    .messages({
-      'any.required': 'Please select a rejection reason'
-    }),
-  note: Joi
-    .string()
-    .min(5)
-    .max(255)
-    .required()
-    .messages({
-      'string.empty': 'Please add a note',
-      'string.min': 'The note needs at least 5 characters',
-      'string.max': 'The note cannot exceed 255 characters'
-    })
-})
-
 export default function RejectionReasons (props: Props): JSX.Element {
   const data = useFragment(InfractionsGQL, props.infractions)
 
@@ -74,6 +55,25 @@ export default function RejectionReasons (props: Props): JSX.Element {
   const findInfraction = (id): void => {
     setInfraction(data.postRejectionReasons.edges.filter((item) => item.node.id === id)[0]?.node.infraction)
   }
+
+  const schema = Joi.object({
+    rejectionId: Joi
+      .string()
+      .required()
+      .messages({
+        'any.required': i18n._(t`Please select a rejection reason`)
+      }),
+    note: Joi
+      .string()
+      .min(5)
+      .max(255)
+      .required()
+      .messages({
+        'string.empty': i18n._(t`Please add a note`),
+        'string.min': i18n._(t`The note needs at least 5 characters`),
+        'string.max': i18n._(t`The note cannot exceed 255 characters`)
+      })
+  })
 
   const {
     control,

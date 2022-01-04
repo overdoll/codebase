@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ef535640097c71e1954412cc8e4483ea */
+/* @relayHash 7a6ccaba000b0ceeee3a7cf04c97330b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -67,7 +67,7 @@ fragment PostStateDraftPreviewFragment on Post {
   content {
     ...ResourceItemFragment
   }
-  ...useCheckRequirementsFragment
+  ...checkPostRequirementsFragment
 }
 
 fragment PostStatePublishedFragment on Account {
@@ -89,6 +89,7 @@ fragment PostStatePublishedFragment on Account {
 }
 
 fragment PostStatePublishedPreviewFragment on Post {
+  reference
   ...PostGalleryContentFragment
 }
 
@@ -157,15 +158,11 @@ fragment VideoSnippetFragment on Resource {
   }
 }
 
-fragment useCheckRequirementsFragment on Post {
+fragment checkPostRequirementsFragment on Post {
   content {
     __typename
   }
   audience {
-    __typename
-    id
-  }
-  club {
     __typename
     id
   }
@@ -438,16 +435,6 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Club",
-                        "kind": "LinkedField",
-                        "name": "club",
-                        "plural": false,
-                        "selections": (v7/*: any*/),
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "Category",
                         "kind": "LinkedField",
                         "name": "categories",
@@ -561,6 +548,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v2/*: any*/),
                       (v13/*: any*/),
                       (v6/*: any*/),
                       (v5/*: any*/)
@@ -638,7 +626,7 @@ return {
     ]
   },
   "params": {
-    "id": "ef535640097c71e1954412cc8e4483ea",
+    "id": "7a6ccaba000b0ceeee3a7cf04c97330b",
     "metadata": {},
     "name": "MyPostsQuery",
     "operationKind": "query",

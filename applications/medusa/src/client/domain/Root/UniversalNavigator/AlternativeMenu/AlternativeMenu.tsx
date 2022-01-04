@@ -59,7 +59,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           <HorizontalNavigationDropdownMenu.Button
             to='/join'
             icon={LoginKeys}
-            color='green.500'
+            colorScheme='green'
             label={
               <Trans>
                 Join
@@ -71,6 +71,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           <DropdownMenuButtonProfile queryRef={data} />
           <HorizontalNavigationDropdownMenu.Button
             to='/manage/posts'
+            colorScheme='teal'
             icon={ContentPens}
             label={
               <Trans>
@@ -80,6 +81,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
           <HorizontalNavigationDropdownMenu.Button
             to='/settings/profile'
+            colorScheme='green'
             icon={CogDouble}
             label={
               <Trans>

@@ -6,7 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type PostHeaderFragment = {
     readonly reassignmentAt: unknown | null;
-    readonly " $fragmentRefs": FragmentRefs<"PostBrandFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"PostHeaderClubFragment">;
     readonly " $refType": "PostHeaderFragment";
 };
 export type PostHeaderFragment$data = PostHeaderFragment;
@@ -33,11 +33,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostBrandFragment"
+      "name": "PostHeaderClubFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'b8e7fb28012b7383556c5d32b065ad32';
+(node as any).hash = '7e11147528c37f19210164add4613fa9';
 export default node;
