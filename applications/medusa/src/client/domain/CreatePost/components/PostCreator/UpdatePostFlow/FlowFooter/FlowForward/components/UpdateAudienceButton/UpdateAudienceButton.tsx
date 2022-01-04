@@ -53,7 +53,7 @@ export default function UpdateAudienceButton ({
   const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
-      value: STEPS.BRAND
+      value: STEPS.CATEGORY
     })
   }
 

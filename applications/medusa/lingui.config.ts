@@ -82,8 +82,8 @@ export default {
       include: ['src/client/domain/CreateClub']
     },
     {
-      path: 'src/client/domain/Manage/Clubs/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/Clubs']
+      path: 'src/client/domain/Manage/ManageClubs/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManageClubs']
     }
   ],
   format: 'po',

@@ -83,7 +83,7 @@ export default function SubmitPostButton ({
 
   return (
     <Button
-      colorScheme='primary'
+      colorScheme='teal'
       size='lg'
       isLoading={isSubmittingPost}
       onClick={onSubmitPost}

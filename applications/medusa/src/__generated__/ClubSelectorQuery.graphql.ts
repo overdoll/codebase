@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 498101c7657bba224c4777c936a4e678 */
+/* @relayHash 8f0ba95979aa23e9169020d2e32a4562 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -26,6 +26,14 @@ query ClubSelectorQuery {
   }
 }
 
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+  }
+}
+
 fragment ClubSelectorFragment on Account {
   clubs(first: 3) {
     edges {
@@ -33,9 +41,7 @@ fragment ClubSelectorFragment on Account {
         id
         name
         slug
-        thumbnail {
-          ...ResourceItemFragment
-        }
+        ...ClubPreviewFragment
         __typename
       }
       cursor
@@ -53,6 +59,10 @@ fragment ImageSnippetFragment on Resource {
     url
     mimeType
   }
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -273,7 +283,7 @@ return {
     ]
   },
   "params": {
-    "id": "498101c7657bba224c4777c936a4e678",
+    "id": "8f0ba95979aa23e9169020d2e32a4562",
     "metadata": {},
     "name": "ClubSelectorQuery",
     "operationKind": "query",

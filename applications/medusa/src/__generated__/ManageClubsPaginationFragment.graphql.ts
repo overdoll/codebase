@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 05e55ca0bcca75b9e9c8a8ac4c556c40 */
+/* @relayHash 9063c569303c8fc2d0a875ce8634bce6 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -26,7 +26,7 @@ export type ManageClubsPaginationFragment = {
 /*
 query ManageClubsPaginationFragment(
   $after: String
-  $first: Int = 5
+  $first: Int = 3
   $name: String
   $id: ID!
 ) {
@@ -34,6 +34,14 @@ query ManageClubsPaginationFragment(
     __typename
     ...ManageClubsFragment_3cTRis
     id
+  }
+}
+
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
   }
 }
 
@@ -48,12 +56,9 @@ fragment ManageClubsFragment_3cTRis on Account {
   clubs(first: $first, after: $after, name: $name) {
     edges {
       node {
+        ...ClubPreviewFragment
         id
         name
-        slug
-        thumbnail {
-          ...ResourceItemFragment
-        }
         __typename
       }
       cursor
@@ -64,6 +69,10 @@ fragment ManageClubsFragment_3cTRis on Account {
     }
   }
   id
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -87,7 +96,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 5,
+  "defaultValue": 3,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -219,7 +228,6 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -277,6 +285,7 @@ return {
                             ],
                             "storageKey": null
                           },
+                          (v7/*: any*/),
                           (v6/*: any*/)
                         ],
                         "storageKey": null
@@ -352,7 +361,7 @@ return {
     ]
   },
   "params": {
-    "id": "05e55ca0bcca75b9e9c8a8ac4c556c40",
+    "id": "9063c569303c8fc2d0a875ce8634bce6",
     "metadata": {},
     "name": "ManageClubsPaginationFragment",
     "operationKind": "query",
@@ -360,5 +369,5 @@ return {
   }
 };
 })();
-(node as any).hash = '4e98de0586184e8cc10ac80209fc5823';
+(node as any).hash = '0dd1299fd467239269b4ae4a26b4f1cd';
 export default node;

@@ -11,8 +11,6 @@ import { CreateClubMutation } from '@//:artifacts/CreateClubMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import { useEffect } from 'react'
 import urlSlug from 'url-slug'
-import type { RecordProxy } from 'relay-runtime'
-import { ConnectionHandler } from 'relay-runtime'
 
 interface ClubValues {
   name: string
@@ -109,11 +107,10 @@ export default function CreateClub (): JSX.Element {
         // history.push('/manage/clubs')
       },
       updater: (store, payload) => {
-        if (payload.createClub == null) return
+        // TODO somehow update store to have the new club?
+        const storyRecord = store.getRoot()?.getLinkedRecord('viewer')?.getLinkedRecord('clubs')
+        /*
 
-        const storyRecord = store.getRoot().getLinkedRecord('clubs')
-
-        console.log(storyRecord)
         return
         if (storyRecord == null) return
 
@@ -141,7 +138,6 @@ export default function CreateClub (): JSX.Element {
         // const clubsRecord = store.get('ManageClubs_clubs')
 
         console.log(payload.createClub.club)
-        /*
         // Get the edge inside the payload
         const serverEdge = payload.getLinkedRecord('club');
 

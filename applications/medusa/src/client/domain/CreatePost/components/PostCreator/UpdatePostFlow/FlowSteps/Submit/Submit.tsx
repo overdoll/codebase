@@ -1,22 +1,16 @@
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
 import { Box, Heading, Text } from '@chakra-ui/react'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import { EVENTS, INITIAL_STATE } from '../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
+import { useContext } from 'react'
+import { DispatchContext, StateContext } from '../../../../../context'
+import { Link } from '@//:modules/routing'
 
-interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
-}
+export default function Submit (): JSX.Element {
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
-export default function Submit ({
-  uppy,
-  state,
-  dispatch
-}: Props): JSX.Element {
   const onRetry = (): void => {
     dispatch({
       type: EVENTS.CLEANUP,
@@ -42,7 +36,7 @@ export default function Submit ({
         </Box>
         <Button
           variant='solid'
-          colorScheme='primary'
+          colorScheme='teal'
           size='lg'
           onClick={onRetry}
         ><Trans>Post again</Trans>
@@ -65,13 +59,14 @@ export default function Submit ({
           </Trans>
         </Text>
       </Box>
-      <Button
-        variant='solid'
-        colorScheme='primary'
-        size='lg'
-        onClick={onRetry}
-      ><Trans>Post again</Trans>
-      </Button>
+      <Link to='manage/posts'>
+        <Button
+          variant='solid'
+          colorScheme='teal'
+          size='lg'
+        ><Trans>Go to my posts</Trans>
+        </Button>
+      </Link>
     </PostPlaceholder>
   )
 }

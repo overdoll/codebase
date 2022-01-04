@@ -1,25 +1,23 @@
-import type { Uppy } from '@uppy/core'
 import { UppyFile } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
 import { CloseButton, HStack, Progress } from '@chakra-ui/react'
 import { EVENTS } from '../../../../../../../constants/constants'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import { useContext } from 'react'
+import { DispatchContext, StateContext, UppyContext } from '../../../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
   file: UppyFile
-  dispatch: Dispatch
   disabled: boolean
 }
 
 export default function File ({
-  state,
   file,
-  dispatch,
-  uppy,
   disabled
 }: Props): JSX.Element {
+  const uppy = useContext(UppyContext)
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
+
   const progress = state.progress[file.id]
   const progressValue = progress != null &&
     ((progress[0] / progress[1]) * 100)

@@ -12,6 +12,9 @@ export type ReviewFragment = {
             readonly mimeType: string;
         }>;
     }>;
+    readonly club: {
+        readonly name: string;
+    };
     readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostHeaderClubFragment">;
     readonly " $refType": "ReviewFragment";
 };
@@ -73,6 +76,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostGalleryContentFragment"
@@ -86,5 +107,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'b6436c46e0bd9aaa7d234e4d2578195f';
+(node as any).hash = '7bb7a9489a6ccb7017a85f4e7fdc2f0f';
 export default node;

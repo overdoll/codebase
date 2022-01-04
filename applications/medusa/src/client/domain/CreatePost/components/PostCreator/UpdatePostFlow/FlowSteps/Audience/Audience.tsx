@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
+import { useContext, useEffect } from 'react'
 import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
@@ -11,11 +9,9 @@ import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 import RootAudiences from './RootAudiences/RootAudiences'
 import { Trans } from '@lingui/macro'
+import { DispatchContext } from '../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: AudienceFragment$key
 }
 
@@ -29,12 +25,11 @@ const AudienceFragmentGQL = graphql`
 `
 
 export default function Audience ({
-  uppy,
-  state,
-  dispatch,
   query
 }: Props): JSX.Element {
   const data = useFragment(AudienceFragmentGQL, query)
+
+  const dispatch = useContext(DispatchContext)
 
   const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.audience?.id as string })
 

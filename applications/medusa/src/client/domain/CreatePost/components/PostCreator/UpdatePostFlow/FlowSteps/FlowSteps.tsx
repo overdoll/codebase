@@ -1,21 +1,17 @@
 import { STEPS } from '../../../../constants/constants'
 import Arrange from './Arrange/Arrange'
 import Audience from './Audience/Audience'
-import Brand from './Brand/Brand'
 import Category from './Category/Category'
 import Character from './Character/Character'
 import Review from './Review/Review'
 import Submit from './Submit/Submit'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
 import { graphql } from 'react-relay/hooks'
 import type { FlowStepsFragment$key } from '@//:artifacts/FlowStepsFragment.graphql'
 import { useFragment } from 'react-relay'
+import { useContext } from 'react'
+import { StateContext } from '../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: FlowStepsFragment$key
 }
 
@@ -23,7 +19,6 @@ const FlowStepsFragmentGQL = graphql`
   fragment FlowStepsFragment on Post {
     ...ArrangeFragment
     ...AudienceFragment
-    ...BrandFragment
     ...CategoryFragment
     ...CharacterFragment
     ...ReviewFragment
@@ -31,39 +26,34 @@ const FlowStepsFragmentGQL = graphql`
 `
 
 export default function FlowSteps ({
-  uppy,
-  dispatch,
-  state,
   query
 }: Props): JSX.Element {
   const data = useFragment(FlowStepsFragmentGQL, query)
 
+  const state = useContext(StateContext)
+
   switch (state.step) {
     case STEPS.AUDIENCE:
 
-      return <Audience uppy={uppy} dispatch={dispatch} state={state} query={data} />
-
-    case STEPS.BRAND:
-
-      return <Brand uppy={uppy} dispatch={dispatch} state={state} query={data} />
+      return <Audience query={data} />
 
     case STEPS.CATEGORY:
 
-      return <Category uppy={uppy} dispatch={dispatch} state={state} query={data} />
+      return <Category query={data} />
 
     case STEPS.CHARACTER:
 
-      return <Character uppy={uppy} dispatch={dispatch} state={state} query={data} />
+      return <Character query={data} />
 
     case STEPS.REVIEW:
 
-      return <Review uppy={uppy} dispatch={dispatch} state={state} query={data} />
+      return <Review query={data} />
 
     case STEPS.SUBMIT:
 
-      return <Submit uppy={uppy} dispatch={dispatch} state={state} />
+      return <Submit />
 
     default:
-      return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={data} />
+      return <Arrange query={data} />
   }
 }

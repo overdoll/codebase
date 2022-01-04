@@ -12,6 +12,7 @@ import {
   Flex,
   Heading,
   Progress,
+  Stack,
   Text
 } from '@chakra-ui/react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
@@ -27,6 +28,8 @@ import ExternalLink from '../../../../../../components/ContentHints/ExternalLink
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { DispatchContext, StateContext, UppyContext } from '../../../../context'
+import ClubPreview from '../../../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: FlowHeaderFragment$key
@@ -35,6 +38,9 @@ interface Props {
 const FlowHeaderFragmentGQL = graphql`
   fragment FlowHeaderFragment on Post {
     ...checkPostRequirementsFragment
+    club {
+      ...ClubPreviewFragment
+    }
   }
 `
 
@@ -74,41 +80,42 @@ export default function FlowHeader ({
 
   const findText = (): string[] => {
     switch (state.step) {
-      case STEPS.ARRANGE:
-        return [i18n._(t`Step 1`), i18n._(t`Arrange your uploads`)]
       case STEPS.AUDIENCE:
         return [i18n._(t`Step 2`), i18n._(t`Select an audience`)]
-      case STEPS.BRAND:
-        return [i18n._(t`Step 3`), i18n._(t`Select a brand`)]
       case STEPS.CATEGORY:
-        return [i18n._(t`Step 4`), i18n._(t`Add categories`)]
+        return [i18n._(t`Step 3`), i18n._(t`Add categories`)]
       case STEPS.CHARACTER:
-        return [i18n._(t`Step 5`), i18n._(t`Add characters`)]
+        return [i18n._(t`Step 4`), i18n._(t`Add characters`)]
       case STEPS.REVIEW:
-        return [i18n._(t`Step 6`), i18n._(t`Review your post`)]
+        return [i18n._(t`Step 5`), i18n._(t`Review your post`)]
       default:
-        return ['', '']
+        return [i18n._(t`Step 1`), i18n._(t`Arrange your uploads`)]
     }
   }
 
   const [header, text] = findText()
 
   return (
-    <>
-      <Box>
-        <Flex align='center' justify='space-between' mb={2}>
-          <Flex direction='column'>
-            <Heading color='gray.00' fontSize='2xl'>
-              {header}
-            </Heading>
-            <Text color='gray.100' fontSize='md'>
-              {text}
-            </Text>
+    <Box>
+      <Stack spacing={2}>
+        <SmallBackgroundBox>
+          <ClubPreview query={data.club} />
+        </SmallBackgroundBox>
+        <SmallBackgroundBox>
+          <Flex align='center' justify='space-between' mb={2}>
+            <Flex direction='column'>
+              <Heading color='gray.00' fontSize='2xl'>
+                {header}
+              </Heading>
+              <Text color='gray.100' fontSize='md'>
+                {text}
+              </Text>
+            </Flex>
+            <CloseButton size='lg' onClick={onOpen} />
           </Flex>
-          <CloseButton size='lg' onClick={onOpen} />
-        </Flex>
-        <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'teal'} value={score} />
-      </Box>
+          <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'teal'} value={score} />
+        </SmallBackgroundBox>
+      </Stack>
       <AlertDialog
         preserveScrollBarGap
         isCentered
@@ -151,6 +158,6 @@ export default function FlowHeader ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </Box>
   )
 }

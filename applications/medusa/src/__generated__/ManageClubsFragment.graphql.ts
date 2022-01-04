@@ -11,10 +11,7 @@ export type ManageClubsFragment = {
             readonly node: {
                 readonly id: string;
                 readonly name: string;
-                readonly slug: string;
-                readonly thumbnail: {
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                } | null;
+                readonly " $fragmentRefs": FragmentRefs<"ClubPreviewFragment">;
             };
         }>;
     };
@@ -48,7 +45,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 5,
+      "defaultValue": 3,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -128,31 +125,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "slug",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceItemFragment"
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ClubPreviewFragment"
                 }
               ],
               "storageKey": null
@@ -213,5 +192,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '4e98de0586184e8cc10ac80209fc5823';
+(node as any).hash = '0dd1299fd467239269b4ae4a26b4f1cd';
 export default node;

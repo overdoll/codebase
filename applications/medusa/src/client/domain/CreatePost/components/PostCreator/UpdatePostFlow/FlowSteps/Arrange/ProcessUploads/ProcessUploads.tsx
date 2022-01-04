@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
+import { useContext, useEffect, useState } from 'react'
 import { Alert, AlertDescription, AlertIcon, Flex, Stack } from '@chakra-ui/react'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
@@ -13,11 +11,9 @@ import Icon from '@//:modules/content/Icon/Icon'
 import FilePicker from '../../../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
+import { DispatchContext, StateContext, UppyContext } from '../../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: ProcessUploadsFragment$key
 }
 
@@ -53,11 +49,11 @@ const ProcessUploadsMutationGQL = graphql`
 `
 
 export default function ProcessUploads ({
-  state,
-  dispatch,
-  uppy,
   query
 }: Props): JSX.Element {
+  const uppy = useContext(UppyContext)
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
   const data = useFragment(ProcessUploadsFragmentGQL, query)
 
   const [updateContent, isUpdatingContent] = useMutation<ProcessUploadsMutation>(ProcessUploadsMutationGQL)
@@ -170,10 +166,7 @@ export default function ProcessUploads ({
             <File
               disabled={isUpdatingContent}
               key={index}
-              uppy={uppy}
-              state={state}
               file={file}
-              dispatch={dispatch}
             />
           )
         })}

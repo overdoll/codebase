@@ -20,7 +20,6 @@ const FlowForwardButtonFragmentGQL = graphql`
   fragment FlowForwardButtonFragment on Post {
     ...SubmitPostButtonFragment
     ...UpdateAudienceButton
-    ...UpdateBrandButtonFragment
     ...UpdateCategoryButtonFragment
     ...UpdateCharacterButtonFragment
     ...UpdateContentButtonFragment

@@ -11,9 +11,7 @@ export type ClubSelectorFragment = {
                 readonly id: string;
                 readonly name: string;
                 readonly slug: string;
-                readonly thumbnail: {
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                } | null;
+                readonly " $fragmentRefs": FragmentRefs<"ClubPreviewFragment">;
             };
         }>;
     };
@@ -133,25 +131,14 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceItemFragment"
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ClubPreviewFragment"
                 }
               ],
               "storageKey": null
@@ -200,5 +187,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '445dad4a8889335dddaaeb66a46f3ee8';
+(node as any).hash = 'ad00b3e7e5554d4b2b1bb01b36e329a2';
 export default node;

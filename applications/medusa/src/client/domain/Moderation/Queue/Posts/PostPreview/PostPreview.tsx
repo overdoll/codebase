@@ -5,7 +5,7 @@ import PostStaticCategories from '../../../../../components/Posts/components/Pos
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
 import PostGalleryContent from '../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
-import PostIndexer from '../../../../../components/Posts/PostIndexer/PostIndexer'
+import PostIndexer from '../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
 import { Trans } from '@lingui/macro'
 
 interface Props {

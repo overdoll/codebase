@@ -1,11 +1,26 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { ClubSelectorQuery } from '@//:artifacts/ClubSelectorQuery.graphql'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { ClickableBox, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Alert, AlertDescription, AlertIcon, Stack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Collapse,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  useDisclosure
+} from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { Link } from '@//:modules/routing'
+import { useContext, useEffect } from 'react'
+import { DispatchContext, StateContext } from '../../context'
+import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../components/ContentSelection'
+import { EVENTS } from '../../constants/constants'
+import ClubPreview from '../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
 
 const Query = graphql`
   query ClubSelectorQuery {
@@ -35,9 +50,7 @@ const Fragment = graphql`
           id
           name
           slug
-          thumbnail {
-            ...ResourceItemFragment
-          }
+          ...ClubPreviewFragment
         }
       }
     }
@@ -60,9 +73,35 @@ export default function ClubSelector (): JSX.Element {
     queryData.viewer
   )
 
-  const clubs = data.clubs.edges
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
-  if (clubs.length < 1) {
+  const clubIsSelected = state.club !== null
+
+  const {
+    isOpen,
+    onToggle,
+    onClose
+  } = useDisclosure({ defaultIsOpen: !clubIsSelected })
+
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: null })
+
+  const currentClubSelection = data.clubs.edges.filter((item) => item.node.id === currentSelection)
+
+  const onSelect = (id): void => {
+    setCurrentSelection(id)
+    if (currentSelection === id) return
+    onClose()
+  }
+
+  useEffect(() => {
+    dispatch({
+      type: EVENTS.CLUB,
+      value: currentSelection
+    })
+  }, [currentSelection])
+
+  if (data.clubs.edges.length < 1) {
     return (
       <SmallBackgroundBox>
         <Stack>
@@ -91,6 +130,63 @@ export default function ClubSelector (): JSX.Element {
   }
 
   return (
-    <>select club</>
+    <Stack spacing={2}>
+      <SmallBackgroundBox>
+        <Flex h={12} justify='space-between' align='center'>
+          {currentClubSelection.length < 1
+            ? <Heading fontSize='2xl' color='gray.00'>
+              <Trans>
+                No Club Selected
+              </Trans>
+            </Heading>
+            : <ClubPreview query={currentClubSelection[0].node} />}
+          <Button onClick={onToggle} size='md' colorScheme={clubIsSelected ? 'gray' : 'teal'}>
+            {clubIsSelected
+              ? <Trans>
+                Change
+              </Trans>
+              : <Trans>
+                Select
+              </Trans>}
+          </Button>
+        </Flex>
+      </SmallBackgroundBox>
+      <Collapse in={isOpen}>
+        <RowWrap>
+          {data.clubs.edges.map((item, index) => (
+            <RowItem h='100%' key={index}>
+              <Selector
+                onSelect={onSelect}
+                selected={(currentSelection != null) ? [currentSelection] : []}
+                id={item.node.id}
+              >
+                <Flex
+                  px={2}
+                  py={2}
+                >
+                  <ClubPreview query={item.node} />
+                </Flex>
+              </Selector>
+            </RowItem>
+          )
+          )}
+          {hasNext &&
+            <RowItem>
+              <ClickableBox
+                onClick={() => loadNext(3)}
+                isLoading={isLoadingNext}
+              >
+                <Flex justify='center'>
+                  <Text>
+                    <Trans>
+                      Load more clubs
+                    </Trans>
+                  </Text>
+                </Flex>
+              </ClickableBox>
+            </RowItem>}
+        </RowWrap>
+      </Collapse>
+    </Stack>
   )
 }

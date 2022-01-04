@@ -1,4 +1,4 @@
-import { Collapse, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
@@ -6,6 +6,9 @@ import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { ListSpacer, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import { formatDistanceStrict, isPast } from 'date-fns'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery {
@@ -18,6 +21,7 @@ const UsernameQueryGQL = graphql`
 const UsernameFragmentGQL = graphql`
   fragment UsernamesSettingsFragment on Account {
     username
+    usernameEditAvailableAt
   }
 `
 
@@ -37,6 +41,15 @@ export default function Usernames (props: Props): JSX.Element | null {
     isOpen: isFormOpen,
     onToggle: onToggleForm
   } = useDisclosure()
+
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
+  const usernameTimer = new Date(data?.usernameEditAvailableAt as Date)
+
+  const remainingTime = formatDistanceStrict(usernameTimer, new Date(), { locale })
+
+  const canEditUsername = isPast(usernameTimer)
 
   return (
     <>
@@ -60,9 +73,17 @@ export default function Usernames (props: Props): JSX.Element | null {
           </Trans>
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
-          <Flex>
-            <ChangeUsernameForm />
-          </Flex>
+          <Stack spacing={2}>
+            <Alert status='warning'>
+              <AlertIcon />
+              <AlertDescription>
+                <Trans>
+                  You have recently made a username edit. You may edit your username again in {remainingTime}.
+                </Trans>
+              </AlertDescription>
+            </Alert>
+            <ChangeUsernameForm isDisabled={!canEditUsername} />
+          </Stack>
         </Collapse>
       </ListSpacer>
     </>

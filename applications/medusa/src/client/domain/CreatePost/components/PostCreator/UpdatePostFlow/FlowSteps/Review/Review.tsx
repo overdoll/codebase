@@ -1,19 +1,14 @@
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
 import type { ReviewFragment$key } from '@//:artifacts/ReviewFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import PostGalleryContent from '../../../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
 import PostHeaderClub from '../../../../../../../components/Posts/PostHeaderClub/PostHeaderClub'
 import { Trans } from '@lingui/macro'
-import PostIndexer from '../../../../../../../components/Posts/PostIndexer/PostIndexer'
+import PostIndexer from '../../../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: ReviewFragment$key
 }
 
@@ -28,13 +23,13 @@ const ReviewFragmentGQL = graphql`
     }
     ...PostGalleryContentFragment
     ...PostHeaderClubFragment
+    club {
+      name
+    }
   }
 `
 
 export default function Review ({
-  uppy,
-  state,
-  dispatch,
   query
 }: Props): JSX.Element {
   const data = useFragment(ReviewFragmentGQL, query)

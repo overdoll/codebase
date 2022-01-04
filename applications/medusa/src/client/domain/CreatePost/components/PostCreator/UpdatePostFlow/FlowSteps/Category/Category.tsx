@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { useFragment } from 'react-relay'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
 import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
@@ -10,11 +8,9 @@ import { EVENTS } from '../../../../../constants/constants'
 import SearchInput from '../../../SearchInput/SearchInput'
 import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
 import { t, Trans } from '@lingui/macro'
+import { DispatchContext, StateContext } from '../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: CategoryFragment$key
 }
 
@@ -36,12 +32,12 @@ const CategoryFragmentGQL = graphql`
 `
 
 export default function Category ({
-  uppy,
-  state,
-  dispatch,
   query
 }: Props): JSX.Element {
   const data = useFragment(CategoryFragmentGQL, query)
+
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
   const currentCategories = data.categories.map((item) => item.id)
 

@@ -1,19 +1,15 @@
-import type { Dispatch, State } from '@//:types/upload'
 import { Flex, Stack, Text } from '@chakra-ui/react'
-import type { Uppy } from '@uppy/core'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import { EVENTS } from '../../../../../../constants/constants'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import DraggableContent from './DraggableContent/DraggableContent'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
+import { DispatchContext, StateContext, UppyContext } from '../../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: ArrangeUploadsFragment$key
 }
 
@@ -42,12 +38,13 @@ const reorder = (
 }
 
 export default function ArrangeUploads ({
-  state,
-  uppy,
-  dispatch,
   query
 }: Props): JSX.Element {
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
+
+  const uppy = useContext(UppyContext)
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
   const [displayData, setDisplayData] = useState(data.content)
 

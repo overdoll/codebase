@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 37cb0db6efb457d3746e7b22f4a70d9c */
+/* @relayHash 2a0053b971b72bb63da96c55397905fd */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -37,6 +37,14 @@ query ClubSelectorPaginationFragment(
   }
 }
 
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+  }
+}
+
 fragment ClubSelectorFragment_3cTRis on Account {
   clubs(first: $first, after: $after, name: $name) {
     edges {
@@ -44,9 +52,7 @@ fragment ClubSelectorFragment_3cTRis on Account {
         id
         name
         slug
-        thumbnail {
-          ...ResourceItemFragment
-        }
+        ...ClubPreviewFragment
         __typename
       }
       cursor
@@ -64,6 +70,10 @@ fragment ImageSnippetFragment on Resource {
     url
     mimeType
   }
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -340,7 +350,7 @@ return {
     ]
   },
   "params": {
-    "id": "37cb0db6efb457d3746e7b22f4a70d9c",
+    "id": "2a0053b971b72bb63da96c55397905fd",
     "metadata": {},
     "name": "ClubSelectorPaginationFragment",
     "operationKind": "query",
@@ -348,5 +358,5 @@ return {
   }
 };
 })();
-(node as any).hash = '445dad4a8889335dddaaeb66a46f3ee8';
+(node as any).hash = 'ad00b3e7e5554d4b2b1bb01b36e329a2';
 export default node;

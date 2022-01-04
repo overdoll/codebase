@@ -6,6 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type UsernamesSettingsFragment = {
     readonly username: string;
+    readonly usernameEditAvailableAt: unknown;
     readonly " $refType": "UsernamesSettingsFragment";
 };
 export type UsernamesSettingsFragment$data = UsernamesSettingsFragment;
@@ -28,10 +29,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "username",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "usernameEditAvailableAt",
+      "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'b0fe70753b1c4919598f89b8d6a7e3e9';
+(node as any).hash = 'a916a8808878280fb46d0525815ae532';
 export default node;

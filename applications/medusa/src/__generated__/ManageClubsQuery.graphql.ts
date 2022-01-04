@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d82c962f96fbd24ecb941cf4494d5e2f */
+/* @relayHash 28b6e38a3fdd17495d251e383eaa38c0 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -26,6 +26,14 @@ query ManageClubsQuery {
   }
 }
 
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+  }
+}
+
 fragment ImageSnippetFragment on Resource {
   urls {
     url
@@ -34,15 +42,12 @@ fragment ImageSnippetFragment on Resource {
 }
 
 fragment ManageClubsFragment on Account {
-  clubs(first: 5) {
+  clubs(first: 3) {
     edges {
       node {
+        ...ClubPreviewFragment
         id
         name
-        slug
-        thumbnail {
-          ...ResourceItemFragment
-        }
         __typename
       }
       cursor
@@ -53,6 +58,10 @@ fragment ManageClubsFragment on Account {
     }
   }
   id
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -74,7 +83,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 5
+    "value": 3
   }
 ],
 v1 = {
@@ -149,7 +158,6 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -207,6 +215,7 @@ return {
                         ],
                         "storageKey": null
                       },
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -265,7 +274,7 @@ return {
                 ]
               }
             ],
-            "storageKey": "clubs(first:5)"
+            "storageKey": "clubs(first:3)"
           },
           {
             "alias": null,
@@ -285,7 +294,7 @@ return {
     ]
   },
   "params": {
-    "id": "d82c962f96fbd24ecb941cf4494d5e2f",
+    "id": "28b6e38a3fdd17495d251e383eaa38c0",
     "metadata": {},
     "name": "ManageClubsQuery",
     "operationKind": "query",

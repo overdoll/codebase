@@ -8,7 +8,7 @@ import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFra
 
 import FlowFooter from './FlowFooter/FlowFooter'
 import { useContext } from 'react'
-import { DispatchContext, StateContext, UppyContext } from '../../../context'
+import { StateContext } from '../../../context'
 
 interface Props {
   query: UpdatePostFlowFragment$key
@@ -26,10 +26,7 @@ export default function UpdatePostFlow ({
   query
 }: Props): JSX.Element {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
-
-  const uppy = useContext(UppyContext)
   const state = useContext(StateContext)
-  const dispatch = useContext(DispatchContext)
 
   return (
     <Stack spacing={4}>
@@ -38,10 +35,10 @@ export default function UpdatePostFlow ({
           <FlowHeader query={data} />
         </Box>}
       <Stack spacing={2}>
-        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
+        <FlowSteps query={data} />
       </Stack>
       <Flex justify='center'>
-        <FlowFooter uppy={uppy} dispatch={dispatch} state={state} query={data} />
+        <FlowFooter query={data} />
       </Flex>
     </Stack>
   )

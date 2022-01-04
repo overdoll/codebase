@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FlowForwardButtonFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateBrandButtonFragment" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "UpdateContentButtonFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "UpdateContentButtonFragment">;
     readonly " $refType": "FlowForwardButtonFragment";
 };
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -35,11 +35,6 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "UpdateBrandButtonFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "UpdateCategoryButtonFragment"
     },
     {
@@ -56,5 +51,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '6fe4a9ab10d22a0c992f9824c4a8302f';
+(node as any).hash = '570586559fa6fc58fa445093415a1033';
 export default node;

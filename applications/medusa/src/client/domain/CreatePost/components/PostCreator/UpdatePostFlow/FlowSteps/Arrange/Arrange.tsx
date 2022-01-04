@@ -1,17 +1,13 @@
-import { useEffect } from 'react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
+import { useContext, useEffect } from 'react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql'
 import ProcessUploads from './ProcessUploads/ProcessUploads'
 import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import { DispatchContext, StateContext, UppyContext } from '../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: ArrangeFragment$key
 }
 
@@ -30,12 +26,13 @@ const ArrangeFragmentGQL = graphql`
 `
 
 export default function Arrange ({
-  uppy,
-  dispatch,
-  state,
   query
 }: Props): JSX.Element {
   const data = useFragment(ArrangeFragmentGQL, query)
+
+  const uppy = useContext(UppyContext)
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
   const contentData = state.content ?? data?.content
 
@@ -47,7 +44,7 @@ export default function Arrange ({
       uppy.cancelAll()
       data.content.forEach(async file => {
         const resource = file.urls[0]
-        const tempUrl = resource.url as string
+        const tempUrl = resource.url
         await fetch(tempUrl)
           .then(async (response) => await response.blob()) // returns a Blob
           .then((blob) => {
@@ -84,8 +81,8 @@ export default function Arrange ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
-      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
+      <ProcessUploads query={data} />
+      <ArrangeUploads query={data} />
     </>
   )
 }

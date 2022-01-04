@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-import type { Uppy } from '@uppy/core'
-import type { Dispatch, State } from '@//:types/upload'
+import { useContext, useEffect, useState } from 'react'
 import type { CharacterFragment$key } from '@//:artifacts/CharacterFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
@@ -10,11 +8,9 @@ import SearchInput from '../../../SearchInput/SearchInput'
 import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'
 import { t, Trans } from '@lingui/macro'
+import { DispatchContext, StateContext } from '../../../../../context'
 
 interface Props {
-  uppy: Uppy
-  state: State
-  dispatch: Dispatch
   query: CharacterFragment$key
 }
 
@@ -39,12 +35,12 @@ const CharacterFragmentGQL = graphql`
 `
 
 export default function Category ({
-  uppy,
-  state,
-  dispatch,
   query
 }: Props): JSX.Element {
   const data = useFragment(CharacterFragmentGQL, query)
+
+  const state = useContext(StateContext)
+  const dispatch = useContext(DispatchContext)
 
   const currentCharacters = data.characters.map((item) => item.id)
 

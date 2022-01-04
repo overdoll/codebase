@@ -2,12 +2,13 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import type { ManageClubsQuery } from '@//:artifacts/ManageClubsQuery.graphql'
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
-import { ListSpacer, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { ClickableBox, ListSpacer, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import Icon from '../../../../../modules/content/Icon/Icon'
 import { AddPlus } from '@//:assets/icons/interface'
 import { Link } from '@//:modules/routing'
+import ClubPreview from '../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
 
 interface Props {
   query: PreloadedQuery<ManageClubsQuery>
@@ -24,7 +25,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment ManageClubsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 5}
+    first: {type: Int, defaultValue: 3}
     after: {type: String},
     name: {type: String}
   )
@@ -38,12 +39,9 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          ...ClubPreviewFragment
           id
           name
-          slug
-          thumbnail {
-            ...ResourceItemFragment
-          }
         }
       }
     }
@@ -65,8 +63,6 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
     queryData.viewer
   )
 
-  const clubs = data.clubs.edges
-
   return (
     <Stack spacing={4}>
       <SmallBackgroundBox w='100%'>
@@ -85,11 +81,11 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
                   icon={AddPlus}
                   w={4}
                   h={4}
-                  fill='teal.900'
+                  fill={data.clubs.edges.length < 1 ? 'teal.900' : 'gray.100'}
                 />
               }
               size='md'
-              colorScheme='teal'
+              colorScheme={data.clubs.edges.length < 1 ? 'teal' : 'gray'}
             >
               <Trans>
                 Club
@@ -98,7 +94,7 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
           </Link>
         </Flex>
       </SmallBackgroundBox>
-      {clubs.length < 1
+      {data.clubs.edges.length < 1
         ? <SmallBackgroundBox>
           <Text fontSize='sm'>
             <Trans>
@@ -108,20 +104,26 @@ export default function ManageClubs ({ query }: Props): JSX.Element {
           </Text>
         </SmallBackgroundBox>
         : <ListSpacer>
-          {clubs.map((item, index) => <Box key={index}>{item.node.name}</Box>)}
-          {hasNext &&
-            <Flex justify='center'>
-              <Button
-                onClick={() => loadNext(3)}
-                isLoading={isLoadingNext}
-                color='gray.200'
-                variant='link'
-              ><Trans>
-                Load more clubs
-              </Trans>
-              </Button>
-            </Flex>}
+          {data.clubs.edges.map((item, index) =>
+            <ClickableBox key={index}>
+              <ClubPreview query={item.node} />
+            </ClickableBox>)}
         </ListSpacer>}
+      {hasNext &&
+        <Flex justify='center'>
+          <ClickableBox
+            onClick={() => loadNext(3)}
+            isLoading={isLoadingNext}
+          >
+            <Flex justify='center'>
+              <Text>
+                <Trans>
+                  Load more clubs
+                </Trans>
+              </Text>
+            </Flex>
+          </ClickableBox>
+        </Flex>}
     </Stack>
   )
 }
