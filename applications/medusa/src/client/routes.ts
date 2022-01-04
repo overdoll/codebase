@@ -424,7 +424,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Manage/Clubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Manage/ManageClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -463,9 +463,22 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Manage/Clubs/Clubs'
+                './domain/Manage/ManageClubs/RootManageClubs'
               )
-            )
+            ),
+            prepare: params => {
+              const ManageClubsQuery = require('@//:artifacts/ManageClubsQuery.graphql')
+
+              return {
+                manageClubsQuery: {
+                  query: ManageClubsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -738,6 +751,38 @@ const routes: Route[] = [
               return true
             }
             history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/configure/create-club',
+        component: loadable(async () =>
+          await import(
+            './domain/CreateClub/RootCreateClub'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('create', 'Post')) {
+              return true
+            }
+            history.push('/')
             return false
           }
         ]

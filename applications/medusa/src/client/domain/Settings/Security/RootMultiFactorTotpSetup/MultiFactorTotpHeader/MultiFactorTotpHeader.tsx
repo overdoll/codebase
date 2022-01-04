@@ -54,7 +54,7 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
 
   return (
     <>
-      {queryData.viewer.multiFactorTotpConfigured === true &&
+      {queryData?.viewer.multiFactorTotpConfigured === true &&
         <Flex mb={3} direction='column' align='center'>
           <Alert status='warning'>
             <AlertIcon />

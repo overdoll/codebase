@@ -21,6 +21,14 @@ msgstr ""
 msgid "Click on a published post to see it live."
 msgstr ""
 
+#: src/client/domain/Manage/ManageClubs/ManageClubs/ManageClubs.tsx:94
+msgid "Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/ManageClubs/ManageClubs.tsx:104
+msgid "Clubs allow you to organize your posts and community all in one place. You need to create or have access to at least one club to be able to upload posts."
+msgstr ""
+
 #: src/client/domain/Manage/Manage.tsx:17
 msgid "Content Management"
 msgstr ""
@@ -59,6 +67,10 @@ msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:23
 #~ msgid "Manage Posts"
+#~ msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:32
+#~ msgid "Manage RootManageClubs"
 #~ msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:24
@@ -115,4 +127,8 @@ msgstr ""
 
 #: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReview.tsx:55
 msgid "When you submit a post, it'll appear here if it needs to be reviewed before going public."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/ManageClubs/ManageClubs.tsx:76
+msgid "Your Clubs"
 msgstr ""

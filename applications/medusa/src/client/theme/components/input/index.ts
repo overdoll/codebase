@@ -151,9 +151,9 @@ const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
       }
     },
     addon: {
-      border: '1px solid',
-      borderColor: mode('inherit', 'gray.50')(props),
-      bg: mode('gray.100', 'gray.300')(props)
+      border: 'none',
+      bg: mode('gray.100', 'gray.500')(props),
+      color: mode('gray.100', 'gray.100')(props)
     }
   }
 }

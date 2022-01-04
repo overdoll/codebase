@@ -77,7 +77,7 @@ const reducer = (state: State, action: Action): State => {
         [act]: action.value
       }
     }
-    case EVENTS.BRAND: {
+    case EVENTS.CLUB: {
       if (action.remove === true) {
         return {
           ...state,

@@ -16,7 +16,8 @@ import { useHistory } from '@//:modules/routing'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 import { Trans } from '@lingui/macro'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
-import { DispatchContext, StateContext, UppyContext } from '../../context'
+import { StateContext } from '../../context'
+import ClubSelector from '../ClubSelector/ClubSelector'
 
 const Query = graphql`
   query PostCreatorQuery ($reference: String!) {
@@ -31,9 +32,7 @@ const Query = graphql`
 export default function PostCreator (): JSX.Element {
   const [postReference] = useQueryParam<string | null | undefined>('id')
 
-  const uppy = useContext(UppyContext)
   const state = useContext(StateContext)
-  const dispatch = useContext(DispatchContext)
 
   const data = useLazyLoadQuery<PostCreatorQuery>(
     Query,
@@ -48,6 +47,13 @@ export default function PostCreator (): JSX.Element {
   if (postData == null && (state.step !== STEPS.SUBMIT)) {
     return (
       <Stack spacing={4}>
+        <QueryErrorBoundary loadQuery={() => {
+        }}
+        >
+          <Suspense fallback={<SkeletonStack />}>
+            <ClubSelector />
+          </Suspense>
+        </QueryErrorBoundary>
         <CreatePostFlow />
         <Box>
           <Heading color='gray.00' fontSize='xl'>

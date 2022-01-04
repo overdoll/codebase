@@ -78,6 +78,10 @@ export default {
       include: ['src/client/domain/Manage/MyPosts']
     },
     {
+      path: 'src/client/domain/CreateClub/__locale__/{locale}/index',
+      include: ['src/client/domain/CreateClub']
+    },
+    {
       path: 'src/client/domain/Manage/Clubs/__locale__/{locale}/index',
       include: ['src/client/domain/Manage/Clubs']
     }

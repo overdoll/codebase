@@ -12,9 +12,10 @@ const baseStyleHelperText: SystemStyleFunction = (props) => {
   return {
     lineHeight: 'normal',
     fontSize: 'md',
-    color: 'orange.300',
-    pl: 1,
-    h: 8
+    color: 'gray.200',
+    mt: 1,
+    display: 'flex',
+    alignItems: 'center'
   }
 }
 

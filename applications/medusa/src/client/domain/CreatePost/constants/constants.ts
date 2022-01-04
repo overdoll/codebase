@@ -3,7 +3,6 @@ import type { Event, State, Step } from '@//:types/upload'
 interface steps {
   ARRANGE: Step
   AUDIENCE: Step
-  BRAND: Step
   CATEGORY: Step
   CHARACTER: Step
   REVIEW: Step
@@ -13,7 +12,6 @@ interface steps {
 const STEPS: steps = {
   ARRANGE: 'ARRANGE',
   AUDIENCE: 'AUDIENCE',
-  BRAND: 'BRAND',
   CATEGORY: 'CATEGORY',
   CHARACTER: 'CHARACTER',
   REVIEW: 'REVIEW',
@@ -27,7 +25,7 @@ interface events {
   STEP: Event
   PROGRESS: Event
   AUDIENCE: Event
-  BRAND: Event
+  CLUB: Event
   CHARACTERS: Event
   CATEGORIES: Event
   CLEANUP: Event
@@ -41,7 +39,7 @@ const EVENTS: events = {
   STEP: 'step',
   PROGRESS: 'progress',
   AUDIENCE: 'audience',
-  BRAND: 'brand',
+  CLUB: 'club',
   CHARACTERS: 'characters',
   CATEGORIES: 'categories',
   CLEANUP: 'cleanup',
@@ -55,7 +53,7 @@ const INITIAL_STATE: State = {
   step: STEPS.ARRANGE,
   progress: {},
   audience: null,
-  brand: null,
+  club: null,
   characters: {},
   categories: {},
   cleanup: () => {

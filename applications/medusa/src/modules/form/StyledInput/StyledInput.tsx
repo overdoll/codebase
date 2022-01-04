@@ -1,16 +1,26 @@
-import { Box, FormErrorMessage, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import {
+  Box,
+  FormErrorMessage,
+  FormHelperText,
+  HTMLChakraProps,
+  Input,
+  InputGroup,
+  InputRightElement
+} from '@chakra-ui/react'
 import { Icon } from '../../content'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   register: any
   success: boolean
   error: boolean
   placeholder: ReactNode
   errorMessage?: string
+  helperText?: string | undefined
   size?: string
   variant?: string
+  inputLeftAddon?: ReactNode
 }
 
 export default function StyledInput ({
@@ -19,49 +29,67 @@ export default function StyledInput ({
   error,
   placeholder,
   errorMessage,
-  size,
-  variant
+  helperText,
+  size = 'md',
+  variant = 'filled',
+  inputLeftAddon,
+  ...rest
 }: Props): JSX.Element {
-  const determineMargin = (): number | undefined => {
-    if (size == null) return undefined
-
-    if (['xl', 'lg'].includes(size)) {
+  const determineMargin = (): number => {
+    if (['xl'].includes(size)) {
       return 2
     }
     return 0
   }
 
-  const determinePadding = (): number | undefined => {
-    if (size == null) return undefined
-
-    if (['md'].includes(size)) {
+  const determinePadding = (): number => {
+    if (['md', 'lg'].includes(size)) {
       return 3
     }
     return 2
   }
 
-  const determineTextSizing = (): string | undefined => {
-    if (size == null) return undefined
-
+  const determineTextSizing = (): string => {
     if (['xs', 'sm', 'md', 'lg'].includes(size)) {
       return 'sm'
     }
     return size
   }
 
+  const InputFooter = (): JSX.Element => {
+    if (errorMessage == null && helperText != null) {
+      return (
+        <FormHelperText fontSize={determineTextSizing()}>
+          {helperText}
+        </FormHelperText>
+      )
+    }
+
+    if (errorMessage != null) {
+      return (
+        <FormErrorMessage fontSize={determineTextSizing()}>
+          {errorMessage}
+        </FormErrorMessage>
+      )
+    }
+
+    return <></>
+  }
+
   return (
     <Box w='100%'>
-      <InputGroup>
+      <InputGroup size={size ?? 'sm'}>
+        {inputLeftAddon}
         <Input
           {...register}
-          variant={variant ?? 'filled'}
-          size={size ?? 'sm'}
+          variant={variant}
           placeholder={placeholder}
+          {...rest}
         />
         {(error || success) && (
           <InputRightElement
-            p={determinePadding() ?? 2}
-            mr={determineMargin() ?? 0}
+            p={determinePadding()}
+            mr={determineMargin()}
             h='100%'
             pointerEvents='none'
           >
@@ -73,9 +101,7 @@ export default function StyledInput ({
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage fontSize={determineTextSizing() ?? 'sm'}>
-        {errorMessage}
-      </FormErrorMessage>
+      <InputFooter />
     </Box>
   )
 }
