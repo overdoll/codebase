@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
@@ -57,24 +56,16 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ClubMemberships      func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
-		ClubMembershipsCount func(childComplexity int) int
-		ClubMembershipsLimit func(childComplexity int) int
-		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
-		ID                   func(childComplexity int) int
-		ModeratorPostsQueue  func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
-		Posts                func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
-	}
-
-	AddClubSlugAliasPayload struct {
-		Club func(childComplexity int) int
+		ID                  func(childComplexity int) int
+		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts               func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 	}
 
 	Audience struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
+		Thumbnail func(childComplexity int, size *int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -88,15 +79,11 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	BecomeClubMemberPayload struct {
-		ClubMember func(childComplexity int) int
-	}
-
 	Category struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
+		Thumbnail func(childComplexity int, size *int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -116,7 +103,7 @@ type ComplexityRoot struct {
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Series    func(childComplexity int) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
+		Thumbnail func(childComplexity int, size *int) int
 	}
 
 	CharacterConnection struct {
@@ -130,53 +117,8 @@ type ComplexityRoot struct {
 	}
 
 	Club struct {
-		ID               func(childComplexity int) int
-		Members          func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
-		MembersCount     func(childComplexity int) int
-		Name             func(childComplexity int) int
-		Owner            func(childComplexity int) int
-		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
-		Reference        func(childComplexity int) int
-		Slug             func(childComplexity int) int
-		SlugAliases      func(childComplexity int) int
-		SlugAliasesLimit func(childComplexity int) int
-		Thumbnail        func(childComplexity int, size *types.ResourceSizes) int
-		ViewerMember     func(childComplexity int) int
-	}
-
-	ClubConnection struct {
-		Edges    func(childComplexity int) int
-		PageInfo func(childComplexity int) int
-	}
-
-	ClubEdge struct {
-		Cursor func(childComplexity int) int
-		Node   func(childComplexity int) int
-	}
-
-	ClubMember struct {
-		Account  func(childComplexity int) int
-		Club     func(childComplexity int) int
-		ID       func(childComplexity int) int
-		JoinedAt func(childComplexity int) int
-	}
-
-	ClubMemberConnection struct {
-		Edges    func(childComplexity int) int
-		PageInfo func(childComplexity int) int
-	}
-
-	ClubMemberEdge struct {
-		Cursor func(childComplexity int) int
-		Node   func(childComplexity int) int
-	}
-
-	ClubSlugAlias struct {
-		Slug func(childComplexity int) int
-	}
-
-	CreateClubPayload struct {
-		Club func(childComplexity int) int
+		ID    func(childComplexity int) int
+		Posts func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 	}
 
 	CreatePostPayload struct {
@@ -184,35 +126,22 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindAccountByID    func(childComplexity int, id relay.ID) int
-		FindAudienceByID   func(childComplexity int, id relay.ID) int
-		FindCategoryByID   func(childComplexity int, id relay.ID) int
-		FindCharacterByID  func(childComplexity int, id relay.ID) int
-		FindClubByID       func(childComplexity int, id relay.ID) int
-		FindClubMemberByID func(childComplexity int, id relay.ID) int
-		FindPostByID       func(childComplexity int, id relay.ID) int
-		FindSeriesByID     func(childComplexity int, id relay.ID) int
-	}
-
-	ImageResource struct {
-		ID   func(childComplexity int) int
-		Urls func(childComplexity int) int
+		FindAccountByID   func(childComplexity int, id relay.ID) int
+		FindAudienceByID  func(childComplexity int, id relay.ID) int
+		FindCategoryByID  func(childComplexity int, id relay.ID) int
+		FindCharacterByID func(childComplexity int, id relay.ID) int
+		FindClubByID      func(childComplexity int, id relay.ID) int
+		FindPostByID      func(childComplexity int, id relay.ID) int
+		FindSeriesByID    func(childComplexity int, id relay.ID) int
 	}
 
 	Mutation struct {
-		AddClubSlugAlias              func(childComplexity int, input types.AddClubSlugAliasInput) int
-		BecomeClubMember              func(childComplexity int, input types.BecomeClubMemberInput) int
-		CreateClub                    func(childComplexity int, input types.CreateClubInput) int
-		CreatePost                    func(childComplexity int, input types.CreatePostInput) int
-		PromoteClubSlugAliasToDefault func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
-		RemoveClubSlugAlias           func(childComplexity int, input types.RemoveClubSlugAliasInput) int
-		SubmitPost                    func(childComplexity int, input types.SubmitPostInput) int
-		UpdateClubName                func(childComplexity int, input types.UpdateClubNameInput) int
-		UpdatePostAudience            func(childComplexity int, input types.UpdatePostAudienceInput) int
-		UpdatePostCategories          func(childComplexity int, input types.UpdatePostCategoriesInput) int
-		UpdatePostCharacters          func(childComplexity int, input types.UpdatePostCharactersInput) int
-		UpdatePostContent             func(childComplexity int, input types.UpdatePostContentInput) int
-		WithdrawClubMembership        func(childComplexity int, input types.WithdrawClubMembershipInput) int
+		CreatePost           func(childComplexity int, input types.CreatePostInput) int
+		SubmitPost           func(childComplexity int, input types.SubmitPostInput) int
+		UpdatePostAudience   func(childComplexity int, input types.UpdatePostAudienceInput) int
+		UpdatePostCategories func(childComplexity int, input types.UpdatePostCategoriesInput) int
+		UpdatePostCharacters func(childComplexity int, input types.UpdatePostCharactersInput) int
+		UpdatePostContent    func(childComplexity int, input types.UpdatePostContentInput) int
 	}
 
 	PageInfo struct {
@@ -248,10 +177,6 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	PromoteClubSlugAliasToDefaultPayload struct {
-		Club func(childComplexity int) int
-	}
-
 	Query struct {
 		Audience           func(childComplexity int, slug string) int
 		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.AudiencesOrder) int
@@ -259,8 +184,6 @@ type ComplexityRoot struct {
 		Category           func(childComplexity int, slug string) int
 		Character          func(childComplexity int, slug string, seriesSlug string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) int
-		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Serial             func(childComplexity int, slug string) int
@@ -269,20 +192,15 @@ type ComplexityRoot struct {
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
-	RemoveClubSlugAliasPayload struct {
-		Club func(childComplexity int) int
-	}
-
-	ResourceURL struct {
-		MimeType func(childComplexity int) int
-		URL      func(childComplexity int) int
+	Resource struct {
+		ID func(childComplexity int) int
 	}
 
 	Series struct {
 		ID        func(childComplexity int) int
 		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *types.ResourceSizes) int
+		Thumbnail func(childComplexity int, size *int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -299,10 +217,6 @@ type ComplexityRoot struct {
 	SubmitPostPayload struct {
 		InReview func(childComplexity int) int
 		Post     func(childComplexity int) int
-	}
-
-	UpdateClubNamePayload struct {
-		Club func(childComplexity int) int
 	}
 
 	UpdatePostAudiencePayload struct {
@@ -325,49 +239,31 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
-	VideoResource struct {
-		ID   func(childComplexity int) int
-		Urls func(childComplexity int) int
-	}
-
-	WithdrawClubMembershipPayload struct {
-		ClubMemberID func(childComplexity int) int
-	}
-
 	Service struct {
 		SDL func(childComplexity int) int
 	}
 }
 
 type AccountResolver interface {
-	ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error)
-	ClubMembershipsCount(ctx context.Context, obj *types.Account) (int, error)
-	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
-	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
 	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Audience, size *types.ResourceSizes) (types.Resource, error)
+	Thumbnail(ctx context.Context, obj *types.Audience, size *int) (*types.Resource, error)
 
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CategoryResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Category, size *types.ResourceSizes) (types.Resource, error)
+	Thumbnail(ctx context.Context, obj *types.Category, size *int) (*types.Resource, error)
 
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CharacterResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Character, size *types.ResourceSizes) (types.Resource, error)
+	Thumbnail(ctx context.Context, obj *types.Character, size *int) (*types.Resource, error)
 
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type ClubResolver interface {
-	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
-	Thumbnail(ctx context.Context, obj *types.Club, size *types.ResourceSizes) (types.Resource, error)
-
-	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
-	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
 	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type EntityResolver interface {
@@ -376,18 +272,10 @@ type EntityResolver interface {
 	FindCategoryByID(ctx context.Context, id relay.ID) (*types.Category, error)
 	FindCharacterByID(ctx context.Context, id relay.ID) (*types.Character, error)
 	FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error)
-	FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error)
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error)
 }
 type MutationResolver interface {
-	BecomeClubMember(ctx context.Context, input types.BecomeClubMemberInput) (*types.BecomeClubMemberPayload, error)
-	WithdrawClubMembership(ctx context.Context, input types.WithdrawClubMembershipInput) (*types.WithdrawClubMembershipPayload, error)
-	CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error)
-	AddClubSlugAlias(ctx context.Context, input types.AddClubSlugAliasInput) (*types.AddClubSlugAliasPayload, error)
-	RemoveClubSlugAlias(ctx context.Context, input types.RemoveClubSlugAliasInput) (*types.RemoveClubSlugAliasPayload, error)
-	PromoteClubSlugAliasToDefault(ctx context.Context, input types.PromoteClubSlugAliasToDefaultInput) (*types.PromoteClubSlugAliasToDefaultPayload, error)
-	UpdateClubName(ctx context.Context, input types.UpdateClubNameInput) (*types.UpdateClubNamePayload, error)
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
 	UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error)
 	UpdatePostContent(ctx context.Context, input types.UpdatePostContentInput) (*types.UpdatePostContentPayload, error)
@@ -396,9 +284,7 @@ type MutationResolver interface {
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 }
 type PostResolver interface {
-	Content(ctx context.Context, obj *types.Post) ([]types.Resource, error)
-
-	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
+	Content(ctx context.Context, obj *types.Post) ([]*types.Resource, error)
 }
 type QueryResolver interface {
 	Audiences(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.AudiencesOrder) (*types.AudienceConnection, error)
@@ -409,13 +295,11 @@ type QueryResolver interface {
 	Serial(ctx context.Context, slug string) (*types.Series, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) (*types.CharacterConnection, error)
 	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
-	Club(ctx context.Context, slug string) (*types.Club, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
 	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type SeriesResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Series, size *types.ResourceSizes) (types.Resource, error)
+	Thumbnail(ctx context.Context, obj *types.Series, size *int) (*types.Resource, error)
 
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
@@ -434,44 +318,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Account.clubMemberships":
-		if e.complexity.Account.ClubMemberships == nil {
-			break
-		}
-
-		args, err := ec.field_Account_clubMemberships_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.ClubMemberships(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder)), true
-
-	case "Account.clubMembershipsCount":
-		if e.complexity.Account.ClubMembershipsCount == nil {
-			break
-		}
-
-		return e.complexity.Account.ClubMembershipsCount(childComplexity), true
-
-	case "Account.clubMembershipsLimit":
-		if e.complexity.Account.ClubMembershipsLimit == nil {
-			break
-		}
-
-		return e.complexity.Account.ClubMembershipsLimit(childComplexity), true
-
-	case "Account.clubs":
-		if e.complexity.Account.Clubs == nil {
-			break
-		}
-
-		args, err := ec.field_Account_clubs_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder)), true
 
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
@@ -503,13 +349,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
-
-	case "AddClubSlugAliasPayload.club":
-		if e.complexity.AddClubSlugAliasPayload.Club == nil {
-			break
-		}
-
-		return e.complexity.AddClubSlugAliasPayload.Club(childComplexity), true
 
 	case "Audience.id":
 		if e.complexity.Audience.ID == nil {
@@ -547,7 +386,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Audience.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
+		return e.complexity.Audience.Thumbnail(childComplexity, args["size"].(*int)), true
 
 	case "Audience.title":
 		if e.complexity.Audience.Title == nil {
@@ -583,13 +422,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AudienceEdge.Node(childComplexity), true
-
-	case "BecomeClubMemberPayload.clubMember":
-		if e.complexity.BecomeClubMemberPayload.ClubMember == nil {
-			break
-		}
-
-		return e.complexity.BecomeClubMemberPayload.ClubMember(childComplexity), true
 
 	case "Category.id":
 		if e.complexity.Category.ID == nil {
@@ -627,7 +459,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Category.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
+		return e.complexity.Category.Thumbnail(childComplexity, args["size"].(*int)), true
 
 	case "Category.title":
 		if e.complexity.Category.Title == nil {
@@ -714,7 +546,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Character.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
+		return e.complexity.Character.Thumbnail(childComplexity, args["size"].(*int)), true
 
 	case "CharacterConnection.edges":
 		if e.complexity.CharacterConnection.Edges == nil {
@@ -751,39 +583,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.ID(childComplexity), true
 
-	case "Club.members":
-		if e.complexity.Club.Members == nil {
-			break
-		}
-
-		args, err := ec.field_Club_members_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Club.Members(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder)), true
-
-	case "Club.membersCount":
-		if e.complexity.Club.MembersCount == nil {
-			break
-		}
-
-		return e.complexity.Club.MembersCount(childComplexity), true
-
-	case "Club.name":
-		if e.complexity.Club.Name == nil {
-			break
-		}
-
-		return e.complexity.Club.Name(childComplexity), true
-
-	case "Club.owner":
-		if e.complexity.Club.Owner == nil {
-			break
-		}
-
-		return e.complexity.Club.Owner(childComplexity), true
-
 	case "Club.posts":
 		if e.complexity.Club.Posts == nil {
 			break
@@ -795,151 +594,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
-
-	case "Club.reference":
-		if e.complexity.Club.Reference == nil {
-			break
-		}
-
-		return e.complexity.Club.Reference(childComplexity), true
-
-	case "Club.slug":
-		if e.complexity.Club.Slug == nil {
-			break
-		}
-
-		return e.complexity.Club.Slug(childComplexity), true
-
-	case "Club.slugAliases":
-		if e.complexity.Club.SlugAliases == nil {
-			break
-		}
-
-		return e.complexity.Club.SlugAliases(childComplexity), true
-
-	case "Club.slugAliasesLimit":
-		if e.complexity.Club.SlugAliasesLimit == nil {
-			break
-		}
-
-		return e.complexity.Club.SlugAliasesLimit(childComplexity), true
-
-	case "Club.thumbnail":
-		if e.complexity.Club.Thumbnail == nil {
-			break
-		}
-
-		args, err := ec.field_Club_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Club.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
-
-	case "Club.viewerMember":
-		if e.complexity.Club.ViewerMember == nil {
-			break
-		}
-
-		return e.complexity.Club.ViewerMember(childComplexity), true
-
-	case "ClubConnection.edges":
-		if e.complexity.ClubConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.ClubConnection.Edges(childComplexity), true
-
-	case "ClubConnection.pageInfo":
-		if e.complexity.ClubConnection.PageInfo == nil {
-			break
-		}
-
-		return e.complexity.ClubConnection.PageInfo(childComplexity), true
-
-	case "ClubEdge.cursor":
-		if e.complexity.ClubEdge.Cursor == nil {
-			break
-		}
-
-		return e.complexity.ClubEdge.Cursor(childComplexity), true
-
-	case "ClubEdge.node":
-		if e.complexity.ClubEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.ClubEdge.Node(childComplexity), true
-
-	case "ClubMember.account":
-		if e.complexity.ClubMember.Account == nil {
-			break
-		}
-
-		return e.complexity.ClubMember.Account(childComplexity), true
-
-	case "ClubMember.club":
-		if e.complexity.ClubMember.Club == nil {
-			break
-		}
-
-		return e.complexity.ClubMember.Club(childComplexity), true
-
-	case "ClubMember.id":
-		if e.complexity.ClubMember.ID == nil {
-			break
-		}
-
-		return e.complexity.ClubMember.ID(childComplexity), true
-
-	case "ClubMember.joinedAt":
-		if e.complexity.ClubMember.JoinedAt == nil {
-			break
-		}
-
-		return e.complexity.ClubMember.JoinedAt(childComplexity), true
-
-	case "ClubMemberConnection.edges":
-		if e.complexity.ClubMemberConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.ClubMemberConnection.Edges(childComplexity), true
-
-	case "ClubMemberConnection.pageInfo":
-		if e.complexity.ClubMemberConnection.PageInfo == nil {
-			break
-		}
-
-		return e.complexity.ClubMemberConnection.PageInfo(childComplexity), true
-
-	case "ClubMemberEdge.cursor":
-		if e.complexity.ClubMemberEdge.Cursor == nil {
-			break
-		}
-
-		return e.complexity.ClubMemberEdge.Cursor(childComplexity), true
-
-	case "ClubMemberEdge.node":
-		if e.complexity.ClubMemberEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.ClubMemberEdge.Node(childComplexity), true
-
-	case "ClubSlugAlias.slug":
-		if e.complexity.ClubSlugAlias.Slug == nil {
-			break
-		}
-
-		return e.complexity.ClubSlugAlias.Slug(childComplexity), true
-
-	case "CreateClubPayload.club":
-		if e.complexity.CreateClubPayload.Club == nil {
-			break
-		}
-
-		return e.complexity.CreateClubPayload.Club(childComplexity), true
 
 	case "CreatePostPayload.post":
 		if e.complexity.CreatePostPayload.Post == nil {
@@ -1008,18 +662,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindClubByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "Entity.findClubMemberByID":
-		if e.complexity.Entity.FindClubMemberByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findClubMemberByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindClubMemberByID(childComplexity, args["id"].(relay.ID)), true
-
 	case "Entity.findPostByID":
 		if e.complexity.Entity.FindPostByID == nil {
 			break
@@ -1044,56 +686,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindSeriesByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "ImageResource.id":
-		if e.complexity.ImageResource.ID == nil {
-			break
-		}
-
-		return e.complexity.ImageResource.ID(childComplexity), true
-
-	case "ImageResource.urls":
-		if e.complexity.ImageResource.Urls == nil {
-			break
-		}
-
-		return e.complexity.ImageResource.Urls(childComplexity), true
-
-	case "Mutation.addClubSlugAlias":
-		if e.complexity.Mutation.AddClubSlugAlias == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_addClubSlugAlias_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.AddClubSlugAlias(childComplexity, args["input"].(types.AddClubSlugAliasInput)), true
-
-	case "Mutation.becomeClubMember":
-		if e.complexity.Mutation.BecomeClubMember == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_becomeClubMember_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.BecomeClubMember(childComplexity, args["input"].(types.BecomeClubMemberInput)), true
-
-	case "Mutation.createClub":
-		if e.complexity.Mutation.CreateClub == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createClub_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateClub(childComplexity, args["input"].(types.CreateClubInput)), true
-
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
 			break
@@ -1106,30 +698,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreatePost(childComplexity, args["input"].(types.CreatePostInput)), true
 
-	case "Mutation.promoteClubSlugAliasToDefault":
-		if e.complexity.Mutation.PromoteClubSlugAliasToDefault == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_promoteClubSlugAliasToDefault_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.PromoteClubSlugAliasToDefault(childComplexity, args["input"].(types.PromoteClubSlugAliasToDefaultInput)), true
-
-	case "Mutation.removeClubSlugAlias":
-		if e.complexity.Mutation.RemoveClubSlugAlias == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_removeClubSlugAlias_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.RemoveClubSlugAlias(childComplexity, args["input"].(types.RemoveClubSlugAliasInput)), true
-
 	case "Mutation.submitPost":
 		if e.complexity.Mutation.SubmitPost == nil {
 			break
@@ -1141,18 +709,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SubmitPost(childComplexity, args["input"].(types.SubmitPostInput)), true
-
-	case "Mutation.updateClubName":
-		if e.complexity.Mutation.UpdateClubName == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateClubName_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateClubName(childComplexity, args["input"].(types.UpdateClubNameInput)), true
 
 	case "Mutation.updatePostAudience":
 		if e.complexity.Mutation.UpdatePostAudience == nil {
@@ -1201,18 +757,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePostContent(childComplexity, args["input"].(types.UpdatePostContentInput)), true
-
-	case "Mutation.withdrawClubMembership":
-		if e.complexity.Mutation.WithdrawClubMembership == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_withdrawClubMembership_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.WithdrawClubMembership(childComplexity, args["input"].(types.WithdrawClubMembershipInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1361,13 +905,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostEdge.Node(childComplexity), true
 
-	case "PromoteClubSlugAliasToDefaultPayload.club":
-		if e.complexity.PromoteClubSlugAliasToDefaultPayload.Club == nil {
-			break
-		}
-
-		return e.complexity.PromoteClubSlugAliasToDefaultPayload.Club(childComplexity), true
-
 	case "Query.audience":
 		if e.complexity.Query.Audience == nil {
 			break
@@ -1440,30 +977,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["seriesSlug"].(*string), args["name"].(*string), args["orderBy"].(types.CharactersOrder)), true
 
-	case "Query.club":
-		if e.complexity.Query.Club == nil {
-			break
-		}
-
-		args, err := ec.field_Query_club_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Club(childComplexity, args["slug"].(string)), true
-
-	case "Query.clubs":
-		if e.complexity.Query.Clubs == nil {
-			break
-		}
-
-		args, err := ec.field_Query_clubs_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder)), true
-
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
 			break
@@ -1531,26 +1044,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
-	case "RemoveClubSlugAliasPayload.club":
-		if e.complexity.RemoveClubSlugAliasPayload.Club == nil {
+	case "Resource.id":
+		if e.complexity.Resource.ID == nil {
 			break
 		}
 
-		return e.complexity.RemoveClubSlugAliasPayload.Club(childComplexity), true
-
-	case "ResourceUrl.mimeType":
-		if e.complexity.ResourceURL.MimeType == nil {
-			break
-		}
-
-		return e.complexity.ResourceURL.MimeType(childComplexity), true
-
-	case "ResourceUrl.url":
-		if e.complexity.ResourceURL.URL == nil {
-			break
-		}
-
-		return e.complexity.ResourceURL.URL(childComplexity), true
+		return e.complexity.Resource.ID(childComplexity), true
 
 	case "Series.id":
 		if e.complexity.Series.ID == nil {
@@ -1588,7 +1087,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Series.Thumbnail(childComplexity, args["size"].(*types.ResourceSizes)), true
+		return e.complexity.Series.Thumbnail(childComplexity, args["size"].(*int)), true
 
 	case "Series.title":
 		if e.complexity.Series.Title == nil {
@@ -1639,13 +1138,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SubmitPostPayload.Post(childComplexity), true
 
-	case "UpdateClubNamePayload.club":
-		if e.complexity.UpdateClubNamePayload.Club == nil {
-			break
-		}
-
-		return e.complexity.UpdateClubNamePayload.Club(childComplexity), true
-
 	case "UpdatePostAudiencePayload.post":
 		if e.complexity.UpdatePostAudiencePayload.Post == nil {
 			break
@@ -1680,27 +1172,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostContentPayload.Post(childComplexity), true
-
-	case "VideoResource.id":
-		if e.complexity.VideoResource.ID == nil {
-			break
-		}
-
-		return e.complexity.VideoResource.ID(childComplexity), true
-
-	case "VideoResource.urls":
-		if e.complexity.VideoResource.Urls == nil {
-			break
-		}
-
-		return e.complexity.VideoResource.Urls(childComplexity), true
-
-	case "WithdrawClubMembershipPayload.clubMemberId":
-		if e.complexity.WithdrawClubMembershipPayload.ClubMemberID == nil {
-			break
-		}
-
-		return e.complexity.WithdrawClubMembershipPayload.ClubMemberID(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
@@ -1781,7 +1252,7 @@ var sources = []*ast.Source{
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
+  thumbnail(size: Int): Resource @goField(forceResolver: true)
 
   """A title for this audience."""
   title: String!
@@ -1854,7 +1325,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
+  thumbnail(size: Int): Resource @goField(forceResolver: true)
 
   """A title for this category."""
   title: String!
@@ -1927,7 +1398,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
+  thumbnail(size: Int): Resource @goField(forceResolver: true)
 
   """A title for this series."""
   title: String!
@@ -1951,7 +1422,7 @@ type Character implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
+  thumbnail(size: Int): Resource @goField(forceResolver: true)
 
   """A name for this character."""
   name: String!
@@ -2071,349 +1542,6 @@ extend type Post {
   characters: [Character!]!
 }
 `, BuiltIn: false},
-	{Name: "schema/club/schema.graphql", Input: `type Club implements Node @key(fields: "id") {
-  """An ID pointing to this club."""
-  id: ID!
-
-  """An internal reference, uniquely identifying the club."""
-  reference: String!
-
-  """A url-friendly ID. Should be used when searching"""
-  slug: String!
-
-  """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
-  slugAliases: [ClubSlugAlias!]!
-
-  """
-  Maximum amount of slug aliases that can be created for this club.
-  """
-  slugAliasesLimit: Int! @goField(forceResolver: true)
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail(size: ResourceSizes): Resource @goField(forceResolver: true)
-
-  """A name for this club."""
-  name: String!
-
-  """The account that owns this club."""
-  owner: Account!
-
-  """The total amount of members in this club."""
-  membersCount: Int!
-
-  """Whether or not the viewer is a member of this club."""
-  viewerMember: ClubMember @goField(forceResolver: true)
-
-  """Club members."""
-  members(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
-  ): ClubMemberConnection! @goField(forceResolver: true)
-}
-
-"""The club slug alias"""
-type ClubSlugAlias {
-  """The slug alias"""
-  slug: String!
-}
-
-type ClubEdge {
-  cursor: String!
-  node: Club!
-}
-
-type ClubConnection {
-  edges: [ClubEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Ordering options for clubs"""
-input ClubsOrder {
-  """The field to order clubs by."""
-  field: ClubsOrderField!
-}
-
-"""Properties by which club connections can be ordered."""
-enum ClubsOrderField {
-  """Club by created time"""
-  CREATED_AT
-}
-
-type ClubMemberEdge {
-  cursor: String!
-  node: ClubMember!
-}
-
-type ClubMemberConnection {
-  edges: [ClubMemberEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Ordering options for club members"""
-input ClubMembersOrder {
-  """The field to order clubs by."""
-  field: ClubMembersOrderField!
-}
-
-"""Properties by which club member connections can be ordered."""
-enum ClubMembersOrderField {
-  """By joined at"""
-  JOINED_AT
-}
-
-type ClubMember implements Node @key(fields: "id") {
-  """An ID pointing to this club member."""
-  id: ID!
-
-  """When the membership was created (when the account originally joined)."""
-  joinedAt: Time!
-
-  """The club that this membership belongs to."""
-  club: Club!
-
-  """The account that belongs to this membership."""
-  account: Account!
-}
-
-"""Add alias slug."""
-input AddClubSlugAliasInput {
-  """The club to update"""
-  id: ID!
-
-  """The chosen slug for the club."""
-  slug: String!
-}
-
-"""Remove alias slug."""
-input RemoveClubSlugAliasInput {
-  """The club to update"""
-  id: ID!
-
-  """The chosen slug for the club."""
-  slug: String!
-}
-
-"""Create club."""
-input CreateClubInput {
-  """The chosen slug for the club."""
-  slug: String!
-
-  """The chosen name for the club."""
-  name: String!
-}
-
-"""Become a club member."""
-input BecomeClubMemberInput {
-  """The chosen club ID."""
-  clubId: ID!
-}
-
-"""Withdraw club membership."""
-input WithdrawClubMembershipInput {
-  """The chosen club ID."""
-  clubId: ID!
-}
-
-"""Update club name."""
-input UpdateClubNameInput {
-  """The club to update"""
-  id: ID!
-
-  """The chosen name for the club."""
-  name: String!
-}
-
-"""Update alias slug to default."""
-input PromoteClubSlugAliasToDefaultInput {
-  """The club to update"""
-  id: ID!
-
-  """The chosen slug for the club."""
-  slug: String!
-}
-
-"""Payload for a new club"""
-type CreateClubPayload {
-  """The club after creation"""
-  club: Club
-}
-
-"""Payload for a new club member"""
-type BecomeClubMemberPayload {
-  """The membership after creation"""
-  clubMember: ClubMember
-}
-
-"""Payload for withdrawing club membership"""
-type WithdrawClubMembershipPayload {
-  """The club membership that was removed"""
-  clubMemberId: ID!
-}
-
-"""Payload for a new alt slug"""
-type AddClubSlugAliasPayload {
-  """The club after update"""
-  club: Club
-}
-
-"""Payload for a new alt slug"""
-type RemoveClubSlugAliasPayload {
-  """The club after update"""
-  club: Club
-}
-
-"""Payload for a new alt slug"""
-type PromoteClubSlugAliasToDefaultPayload {
-  """The club after update"""
-  club: Club
-}
-
-"""Payload for updating the name"""
-type UpdateClubNamePayload {
-  """The club after update"""
-  club: Club
-}
-
-extend type Mutation {
-  """
-  Become a member of a club
-  """
-  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
-
-  """
-  Withdraw membership from a club
-  """
-  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
-
-  """
-  Create a new club
-  """
-  createClub(input: CreateClubInput!): CreateClubPayload
-
-  """
-  Add an alternative slug to the club
-  """
-  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
-
-  """
-  Remove an alternative slug from the club
-  """
-  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
-
-  """
-  Make the alias slug the default, swapping out the old slug into the alias list.
-  """
-  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
-
-  """
-  Update the club's name (english-only for now)
-  """
-  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
-}
-
-extend type Query {
-  """Search multiple clubs."""
-  clubs(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by club slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the club."""
-    name: String
-
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
-  ): ClubConnection!
-
-  """Get a single club."""
-  club(
-    """Search by slug of the club."""
-    slug: String!
-  ): Club
-}
-
-extend type Post {
-  """Represents the club that this post belongs to"""
-  club: Club! @goField(forceResolver: true)
-}
-
-extend type Account {
-  """
-  Maximum amount of clubs that you can join as an account.
-  """
-  clubMembershipsLimit: Int! @goField(forceResolver: true)
-
-  """
-  Current count of club memberships. Should be compared against the limit before joining a club.
-  """
-  clubMembershipsCount: Int! @goField(forceResolver: true)
-
-  """Represents the clubs that the account has write access to."""
-  clubs(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by club slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the club."""
-    name: String
-
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
-  ): ClubConnection! @goField(forceResolver: true)
-
-  """Represents the club memberships that the account has."""
-  clubMemberships(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
-  ): ClubMemberConnection! @goField(forceResolver: true)
-}
-`, BuiltIn: false},
 	{Name: "schema/post/schema.graphql", Input: `type Post implements Node @key(fields: "id") {
   id: ID!
 
@@ -2428,6 +1556,9 @@ extend type Account {
 
   """The contributor who contributed this post"""
   contributor: Account!
+
+  """The club belonging to the post"""
+  club: Club!
 
   """Content belonging to this post"""
   content: [Resource!]! @goField(forceResolver: true)
@@ -2871,40 +2002,15 @@ extend type Audience {
   ): PostConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
-	{Name: "schema/schema.graphql", Input: `"""A type representing a url to the resource and the mimetype"""
-type ResourceUrl {
-  url: URI!
-  mimeType: String!
+	{Name: "schema/schema.graphql", Input: `extend type Account @key(fields: "id")  {
+  id: ID! @external
 }
 
-"""
-A resource represents an image or a video format that contains an ID to uniquely identify it,
-and urls to access the resources. We have many urls in order to provide a fallback for older browsers
-
-We also identify the type of resource (image or video) to make it easy to distinguish them
-"""
-
-interface Resource {
-  id: ID!
-  urls: [ResourceUrl!]!
+extend type Resource @key(fields: "id")  {
+  id: ID! @external
 }
 
-type VideoResource implements Resource {
-  id: ID!
-  urls: [ResourceUrl!]!
-}
-
-type ImageResource implements Resource  {
-  id: ID!
-  urls: [ResourceUrl!]!
-}
-
-enum ResourceSizes {
-  SQUARE
-  PORTRAIT
-}
-
-extend type Account @key(fields: "id")  {
+extend type Club @key(fields: "id")  {
   id: ID! @external
 }
 `, BuiltIn: false},
@@ -2937,7 +2043,7 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Audience | Category | Character | Club | ClubMember | Post | Series
+union _Entity = Account | Audience | Category | Character | Club | Post | Resource | Series
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -2946,7 +2052,6 @@ type Entity {
 	findCategoryByID(id: ID!,): Category!
 	findCharacterByID(id: ID!,): Character!
 	findClubByID(id: ID!,): Club!
-	findClubMemberByID(id: ID!,): ClubMember!
 	findPostByID(id: ID!,): Post!
 	findSeriesByID(id: ID!,): Series!
 
@@ -2967,126 +2072,6 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
-
-func (ec *executionContext) field_Account_clubMemberships_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 types.ClubMembersOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg4
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_clubs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 []string
-	if tmp, ok := rawArgs["slugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
-		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["slugs"] = arg4
-	var arg5 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["name"] = arg5
-	var arg6 types.ClubsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg6, err = ec.unmarshalNClubsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg6
-	return args, nil
-}
 
 func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -3370,10 +2355,10 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 func (ec *executionContext) field_Audience_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *types.ResourceSizes
+	var arg0 *int
 	if tmp, ok := rawArgs["size"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3472,10 +2457,10 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 func (ec *executionContext) field_Category_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *types.ResourceSizes
+	var arg0 *int
 	if tmp, ok := rawArgs["size"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3565,66 +2550,15 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 func (ec *executionContext) field_Character_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *types.ResourceSizes
+	var arg0 *int
 	if tmp, ok := rawArgs["size"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["size"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Club_members_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 types.ClubMembersOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg4
 	return args, nil
 }
 
@@ -3724,21 +2658,6 @@ func (ec *executionContext) field_Club_posts_args(ctx context.Context, rawArgs m
 	return args, nil
 }
 
-func (ec *executionContext) field_Club_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *types.ResourceSizes
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3814,21 +2733,6 @@ func (ec *executionContext) field_Entity_findClubByID_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Entity_findClubMemberByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Entity_findPostByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3859,51 +2763,6 @@ func (ec *executionContext) field_Entity_findSeriesByID_args(ctx context.Context
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_addClubSlugAlias_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.AddClubSlugAliasInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNAddClubSlugAliasInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_becomeClubMember_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.BecomeClubMemberInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNBecomeClubMemberInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.CreateClubInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateClubInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3919,36 +2778,6 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_promoteClubSlugAliasToDefault_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.PromoteClubSlugAliasToDefaultInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNPromoteClubSlugAliasToDefaultInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_removeClubSlugAlias_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.RemoveClubSlugAliasInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRemoveClubSlugAliasInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubSlugAliasInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_submitPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3956,21 +2785,6 @@ func (ec *executionContext) field_Mutation_submitPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSubmitPostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSubmitPostInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateClubName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdateClubNameInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateClubNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubNameInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4031,21 +2845,6 @@ func (ec *executionContext) field_Mutation_updatePostContent_args(ctx context.Co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostContentInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_withdrawClubMembership_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.WithdrawClubMembershipInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNWithdrawClubMembershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4354,90 +3153,6 @@ func (ec *executionContext) field_Query_characters_args(ctx context.Context, raw
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_club_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["slug"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["slug"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 []string
-	if tmp, ok := rawArgs["slugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
-		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["slugs"] = arg4
-	var arg5 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["name"] = arg5
-	var arg6 types.ClubsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg6, err = ec.unmarshalNClubsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["orderBy"] = arg6
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_post_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4723,10 +3438,10 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Series_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *types.ResourceSizes
+	var arg0 *int
 	if tmp, ok := rawArgs["size"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4772,160 +3487,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _Account_clubMembershipsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ClubMembershipsLimit(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_clubMembershipsCount(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ClubMembershipsCount(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_clubs(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_clubs_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Clubs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubConnection)
-	fc.Result = res
-	return ec.marshalNClubConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_clubMemberships(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_clubMemberships_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ClubMemberships(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMemberConnection)
-	fc.Result = res
-	return ec.marshalNClubMemberConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberConnection(ctx, field.Selections, res)
-}
 
 func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
@@ -5046,38 +3607,6 @@ func (ec *executionContext) _Account_id(ctx context.Context, field graphql.Colle
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AddClubSlugAliasPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.AddClubSlugAliasPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AddClubSlugAliasPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Audience_id(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5173,7 +3702,7 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
+		return ec.resolvers.Audience().Thumbnail(rctx, obj, args["size"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5182,9 +3711,9 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(types.Resource)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -5404,38 +3933,6 @@ func (ec *executionContext) _AudienceEdge_node(ctx context.Context, field graphq
 	return ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BecomeClubMemberPayload_clubMember(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubMemberPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BecomeClubMemberPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ClubMember, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMember)
-	fc.Result = res
-	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5531,7 +4028,7 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
+		return ec.resolvers.Category().Thumbnail(rctx, obj, args["size"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5540,9 +4037,9 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(types.Resource)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -5857,7 +4354,7 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
+		return ec.resolvers.Character().Thumbnail(rctx, obj, args["size"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5866,9 +4363,9 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(types.Resource)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -6123,399 +4620,6 @@ func (ec *executionContext) _CharacterEdge_node(ctx context.Context, field graph
 	return ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_reference(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Reference, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_slug(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Slug, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_slugAliases(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SlugAliases, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ClubSlugAlias)
-	fc.Result = res
-	return ec.marshalNClubSlugAlias2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAliasᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_slugAliasesLimit(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().SlugAliasesLimit(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_thumbnail(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Club_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(types.Resource)
-	fc.Result = res
-	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_name(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_owner(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Owner, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_membersCount(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MembersCount, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_viewerMember(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().ViewerMember(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMember)
-	fc.Result = res
-	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Club_members(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Club",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Club_members_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Members(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMemberConnection)
-	fc.Result = res
-	return ec.marshalNClubMemberConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberConnection(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Club_posts(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6558,7 +4662,7 @@ func (ec *executionContext) _Club_posts(ctx context.Context, field graphql.Colle
 	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClubConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6566,147 +4670,7 @@ func (ec *executionContext) _ClubConnection_edges(ctx context.Context, field gra
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "ClubConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ClubEdge)
-	fc.Result = res
-	return ec.marshalNClubEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageInfo, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*relay.PageInfo)
-	fc.Result = res
-	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cursor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMember_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMember",
+		Object:     "Club",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6731,318 +4695,6 @@ func (ec *executionContext) _ClubMember_id(ctx context.Context, field graphql.Co
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMember_joinedAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMember",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.JoinedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMember_club(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMember",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMember_account(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMember",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMemberConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMemberConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ClubMemberEdge)
-	fc.Result = res
-	return ec.marshalNClubMemberEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMemberConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMemberConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageInfo, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*relay.PageInfo)
-	fc.Result = res
-	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMemberEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMemberEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cursor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubMemberEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubMemberEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMember)
-	fc.Result = res
-	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ClubSlugAlias_slug(ctx context.Context, field graphql.CollectedField, obj *types.ClubSlugAlias) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ClubSlugAlias",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Slug, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _CreateClubPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.CreateClubPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "CreateClubPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreatePostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.CreatePostPayload) (ret graphql.Marshaler) {
@@ -7287,48 +4939,6 @@ func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field grap
 	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Entity_findClubMemberByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findClubMemberByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindClubMemberByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMember)
-	fc.Result = res
-	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Entity_findPostByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7411,349 +5021,6 @@ func (ec *executionContext) _Entity_findSeriesByID(ctx context.Context, field gr
 	res := resTmp.(*types.Series)
 	fc.Result = res
 	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ImageResource_id(ctx context.Context, field graphql.CollectedField, obj *types.ImageResource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ImageResource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ImageResource_urls(ctx context.Context, field graphql.CollectedField, obj *types.ImageResource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ImageResource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Urls, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ResourceURL)
-	fc.Result = res
-	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_becomeClubMember(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_becomeClubMember_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().BecomeClubMember(rctx, args["input"].(types.BecomeClubMemberInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.BecomeClubMemberPayload)
-	fc.Result = res
-	return ec.marshalOBecomeClubMemberPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_withdrawClubMembership(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_withdrawClubMembership_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().WithdrawClubMembership(rctx, args["input"].(types.WithdrawClubMembershipInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.WithdrawClubMembershipPayload)
-	fc.Result = res
-	return ec.marshalOWithdrawClubMembershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_createClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_createClub_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateClub(rctx, args["input"].(types.CreateClubInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.CreateClubPayload)
-	fc.Result = res
-	return ec.marshalOCreateClubPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_addClubSlugAlias(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_addClubSlugAlias_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddClubSlugAlias(rctx, args["input"].(types.AddClubSlugAliasInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.AddClubSlugAliasPayload)
-	fc.Result = res
-	return ec.marshalOAddClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_removeClubSlugAlias(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_removeClubSlugAlias_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RemoveClubSlugAlias(rctx, args["input"].(types.RemoveClubSlugAliasInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.RemoveClubSlugAliasPayload)
-	fc.Result = res
-	return ec.marshalORemoveClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubSlugAliasPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_promoteClubSlugAliasToDefault(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_promoteClubSlugAliasToDefault_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().PromoteClubSlugAliasToDefault(rctx, args["input"].(types.PromoteClubSlugAliasToDefaultInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.PromoteClubSlugAliasToDefaultPayload)
-	fc.Result = res
-	return ec.marshalOPromoteClubSlugAliasToDefaultPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_updateClubName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_updateClubName_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateClubName(rctx, args["input"].(types.UpdateClubNameInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateClubNamePayload)
-	fc.Result = res
-	return ec.marshalOUpdateClubNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubNamePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8296,6 +5563,41 @@ func (ec *executionContext) _Post_contributor(ctx context.Context, field graphql
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Post_club(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Post_content(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8326,9 +5628,9 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]types.Resource)
+	res := resTmp.([]*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -8532,41 +5834,6 @@ func (ec *executionContext) _Post_characters(ctx context.Context, field graphql.
 	return ec.marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Post_club(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Post",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Post().Club(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _PostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8705,38 +5972,6 @@ func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.Co
 	res := resTmp.(*types.Post)
 	fc.Result = res
 	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _PromoteClubSlugAliasToDefaultPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.PromoteClubSlugAliasToDefaultPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "PromoteClubSlugAliasToDefaultPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_audiences(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -9063,87 +6298,6 @@ func (ec *executionContext) _Query_character(ctx context.Context, field graphql.
 	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_clubs_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubConnection)
-	fc.Result = res
-	return ec.marshalNClubConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_club(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_club_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Club(rctx, args["slug"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9373,7 +6527,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _RemoveClubSlugAliasPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.RemoveClubSlugAliasPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _Resource_id(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9381,7 +6535,7 @@ func (ec *executionContext) _RemoveClubSlugAliasPayload_club(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "RemoveClubSlugAliasPayload",
+		Object:     "Resource",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -9391,39 +6545,7 @@ func (ec *executionContext) _RemoveClubSlugAliasPayload_club(ctx context.Context
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ResourceUrl",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9435,44 +6557,9 @@ func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(relay.ID)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _ResourceUrl_mimeType(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "ResourceUrl",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MimeType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_id(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -9570,7 +6657,7 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Series().Thumbnail(rctx, obj, args["size"].(*types.ResourceSizes))
+		return ec.resolvers.Series().Thumbnail(rctx, obj, args["size"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9579,9 +6666,9 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(types.Resource)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_title(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -9865,38 +6952,6 @@ func (ec *executionContext) _SubmitPostPayload_inReview(ctx context.Context, fie
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateClubNamePayload_club(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubNamePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "UpdateClubNamePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _UpdatePostAudiencePayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostAudiencePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10055,111 +7110,6 @@ func (ec *executionContext) _UpdatePostContentPayload_post(ctx context.Context, 
 	res := resTmp.(*types.Post)
 	fc.Result = res
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _VideoResource_id(ctx context.Context, field graphql.CollectedField, obj *types.VideoResource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "VideoResource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _VideoResource_urls(ctx context.Context, field graphql.CollectedField, obj *types.VideoResource) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "VideoResource",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Urls, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.ResourceURL)
-	fc.Result = res
-	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _WithdrawClubMembershipPayload_clubMemberId(ctx context.Context, field graphql.CollectedField, obj *types.WithdrawClubMembershipPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "WithdrawClubMembershipPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ClubMemberID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -11316,37 +8266,6 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputAddClubSlugAliasInput(ctx context.Context, obj interface{}) (types.AddClubSlugAliasInput, error) {
-	var it types.AddClubSlugAliasInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "slug":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputAudiencesOrder(ctx context.Context, obj interface{}) (types.AudiencesOrder, error) {
 	var it types.AudiencesOrder
 	asMap := map[string]interface{}{}
@@ -11361,29 +8280,6 @@ func (ec *executionContext) unmarshalInputAudiencesOrder(ctx context.Context, ob
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
 			it.Field, err = ec.unmarshalNAudiencesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrderField(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputBecomeClubMemberInput(ctx context.Context, obj interface{}) (types.BecomeClubMemberInput, error) {
-	var it types.BecomeClubMemberInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11439,83 +8335,6 @@ func (ec *executionContext) unmarshalInputCharactersOrder(ctx context.Context, o
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputClubMembersOrder(ctx context.Context, obj interface{}) (types.ClubMembersOrder, error) {
-	var it types.ClubMembersOrder
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "field":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNClubMembersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputClubsOrder(ctx context.Context, obj interface{}) (types.ClubsOrder, error) {
-	var it types.ClubsOrder
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "field":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNClubsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, obj interface{}) (types.CreateClubInput, error) {
-	var it types.CreateClubInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "slug":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, obj interface{}) (types.CreatePostInput, error) {
 	var it types.CreatePostInput
 	asMap := map[string]interface{}{}
@@ -11562,68 +8381,6 @@ func (ec *executionContext) unmarshalInputPostsOrder(ctx context.Context, obj in
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx context.Context, obj interface{}) (types.PromoteClubSlugAliasToDefaultInput, error) {
-	var it types.PromoteClubSlugAliasToDefaultInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "slug":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputRemoveClubSlugAliasInput(ctx context.Context, obj interface{}) (types.RemoveClubSlugAliasInput, error) {
-	var it types.RemoveClubSlugAliasInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "slug":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputSeriesOrder(ctx context.Context, obj interface{}) (types.SeriesOrder, error) {
 	var it types.SeriesOrder
 	asMap := map[string]interface{}{}
@@ -11661,37 +8418,6 @@ func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateClubNameInput(ctx context.Context, obj interface{}) (types.UpdateClubNameInput, error) {
-	var it types.UpdateClubNameInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11825,29 +8551,6 @@ func (ec *executionContext) unmarshalInputUpdatePostContentInput(ctx context.Con
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputWithdrawClubMembershipInput(ctx context.Context, obj interface{}) (types.WithdrawClubMembershipInput, error) {
-	var it types.WithdrawClubMembershipInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -11884,20 +8587,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Character(ctx, sel, obj)
-	case types.Club:
-		return ec._Club(ctx, sel, &obj)
-	case *types.Club:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Club(ctx, sel, obj)
-	case types.ClubMember:
-		return ec._ClubMember(ctx, sel, &obj)
-	case *types.ClubMember:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ClubMember(ctx, sel, obj)
 	case types.Post:
 		return ec._Post(ctx, sel, &obj)
 	case *types.Post:
@@ -11905,29 +8594,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Post(ctx, sel, obj)
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
-func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj types.Resource) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	case types.VideoResource:
-		return ec._VideoResource(ctx, sel, &obj)
-	case *types.VideoResource:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._VideoResource(ctx, sel, obj)
-	case types.ImageResource:
-		return ec._ImageResource(ctx, sel, &obj)
-	case *types.ImageResource:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ImageResource(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -11972,13 +8638,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Club(ctx, sel, obj)
-	case types.ClubMember:
-		return ec._ClubMember(ctx, sel, &obj)
-	case *types.ClubMember:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._ClubMember(ctx, sel, obj)
 	case types.Post:
 		return ec._Post(ctx, sel, &obj)
 	case *types.Post:
@@ -11986,6 +8645,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Post(ctx, sel, obj)
+	case types.Resource:
+		return ec._Resource(ctx, sel, &obj)
+	case *types.Resource:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Resource(ctx, sel, obj)
 	case types.Series:
 		return ec._Series(ctx, sel, &obj)
 	case *types.Series:
@@ -12013,62 +8679,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
-		case "clubMembershipsLimit":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_clubMembershipsLimit(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "clubMembershipsCount":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_clubMembershipsCount(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "clubs":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_clubs(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "clubMemberships":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_clubMemberships(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		case "moderatorPostsQueue":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -12102,30 +8712,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var addClubSlugAliasPayloadImplementors = []string{"AddClubSlugAliasPayload"}
-
-func (ec *executionContext) _AddClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, obj *types.AddClubSlugAliasPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, addClubSlugAliasPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AddClubSlugAliasPayload")
-		case "club":
-			out.Values[i] = ec._AddClubSlugAliasPayload_club(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12252,30 +8838,6 @@ func (ec *executionContext) _AudienceEdge(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var becomeClubMemberPayloadImplementors = []string{"BecomeClubMemberPayload"}
-
-func (ec *executionContext) _BecomeClubMemberPayload(ctx context.Context, sel ast.SelectionSet, obj *types.BecomeClubMemberPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, becomeClubMemberPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("BecomeClubMemberPayload")
-		case "clubMember":
-			out.Values[i] = ec._BecomeClubMemberPayload_clubMember(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12544,7 +9106,7 @@ func (ec *executionContext) _CharacterEdge(ctx context.Context, sel ast.Selectio
 	return out
 }
 
-var clubImplementors = []string{"Club", "Node", "_Entity"}
+var clubImplementors = []string{"Club", "_Entity"}
 
 func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, clubImplementors)
@@ -12555,91 +9117,6 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Club")
-		case "id":
-			out.Values[i] = ec._Club_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "reference":
-			out.Values[i] = ec._Club_reference(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "slug":
-			out.Values[i] = ec._Club_slug(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "slugAliases":
-			out.Values[i] = ec._Club_slugAliases(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "slugAliasesLimit":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_slugAliasesLimit(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "thumbnail":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_thumbnail(ctx, field, obj)
-				return res
-			})
-		case "name":
-			out.Values[i] = ec._Club_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "owner":
-			out.Values[i] = ec._Club_owner(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "membersCount":
-			out.Values[i] = ec._Club_membersCount(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "viewerMember":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_viewerMember(ctx, field, obj)
-				return res
-			})
-		case "members":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_members(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		case "posts":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -12654,227 +9131,11 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				return res
 			})
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubConnectionImplementors = []string{"ClubConnection"}
-
-func (ec *executionContext) _ClubConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubConnection")
-		case "edges":
-			out.Values[i] = ec._ClubConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "pageInfo":
-			out.Values[i] = ec._ClubConnection_pageInfo(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubEdgeImplementors = []string{"ClubEdge"}
-
-func (ec *executionContext) _ClubEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubEdgeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubEdge")
-		case "cursor":
-			out.Values[i] = ec._ClubEdge_cursor(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "node":
-			out.Values[i] = ec._ClubEdge_node(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubMemberImplementors = []string{"ClubMember", "Node", "_Entity"}
-
-func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSet, obj *types.ClubMember) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubMemberImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubMember")
 		case "id":
-			out.Values[i] = ec._ClubMember_id(ctx, field, obj)
+			out.Values[i] = ec._Club_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
-		case "joinedAt":
-			out.Values[i] = ec._ClubMember_joinedAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "club":
-			out.Values[i] = ec._ClubMember_club(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "account":
-			out.Values[i] = ec._ClubMember_account(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubMemberConnectionImplementors = []string{"ClubMemberConnection"}
-
-func (ec *executionContext) _ClubMemberConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubMemberConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubMemberConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubMemberConnection")
-		case "edges":
-			out.Values[i] = ec._ClubMemberConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "pageInfo":
-			out.Values[i] = ec._ClubMemberConnection_pageInfo(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubMemberEdgeImplementors = []string{"ClubMemberEdge"}
-
-func (ec *executionContext) _ClubMemberEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubMemberEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubMemberEdgeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubMemberEdge")
-		case "cursor":
-			out.Values[i] = ec._ClubMemberEdge_cursor(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "node":
-			out.Values[i] = ec._ClubMemberEdge_node(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var clubSlugAliasImplementors = []string{"ClubSlugAlias"}
-
-func (ec *executionContext) _ClubSlugAlias(ctx context.Context, sel ast.SelectionSet, obj *types.ClubSlugAlias) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, clubSlugAliasImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ClubSlugAlias")
-		case "slug":
-			out.Values[i] = ec._ClubSlugAlias_slug(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var createClubPayloadImplementors = []string{"CreateClubPayload"}
-
-func (ec *executionContext) _CreateClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateClubPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createClubPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateClubPayload")
-		case "club":
-			out.Values[i] = ec._CreateClubPayload_club(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12995,20 +9256,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 				}
 				return res
 			})
-		case "findClubMemberByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findClubMemberByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		case "findPostByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -13048,38 +9295,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
-var imageResourceImplementors = []string{"ImageResource", "Resource"}
-
-func (ec *executionContext) _ImageResource(ctx context.Context, sel ast.SelectionSet, obj *types.ImageResource) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, imageResourceImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("ImageResource")
-		case "id":
-			out.Values[i] = ec._ImageResource_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "urls":
-			out.Values[i] = ec._ImageResource_urls(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -13095,20 +9310,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "becomeClubMember":
-			out.Values[i] = ec._Mutation_becomeClubMember(ctx, field)
-		case "withdrawClubMembership":
-			out.Values[i] = ec._Mutation_withdrawClubMembership(ctx, field)
-		case "createClub":
-			out.Values[i] = ec._Mutation_createClub(ctx, field)
-		case "addClubSlugAlias":
-			out.Values[i] = ec._Mutation_addClubSlugAlias(ctx, field)
-		case "removeClubSlugAlias":
-			out.Values[i] = ec._Mutation_removeClubSlugAlias(ctx, field)
-		case "promoteClubSlugAliasToDefault":
-			out.Values[i] = ec._Mutation_promoteClubSlugAliasToDefault(ctx, field)
-		case "updateClubName":
-			out.Values[i] = ec._Mutation_updateClubName(ctx, field)
 		case "createPost":
 			out.Values[i] = ec._Mutation_createPost(ctx, field)
 		case "updatePostAudience":
@@ -13201,6 +9402,11 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "club":
+			out.Values[i] = ec._Post_club(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "content":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -13236,20 +9442,6 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "club":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Post_club(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13314,30 +9506,6 @@ func (ec *executionContext) _PostEdge(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var promoteClubSlugAliasToDefaultPayloadImplementors = []string{"PromoteClubSlugAliasToDefaultPayload"}
-
-func (ec *executionContext) _PromoteClubSlugAliasToDefaultPayload(ctx context.Context, sel ast.SelectionSet, obj *types.PromoteClubSlugAliasToDefaultPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, promoteClubSlugAliasToDefaultPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("PromoteClubSlugAliasToDefaultPayload")
-		case "club":
-			out.Values[i] = ec._PromoteClubSlugAliasToDefaultPayload_club(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13464,31 +9632,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_character(ctx, field)
 				return res
 			})
-		case "clubs":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_clubs(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "club":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_club(ctx, field)
-				return res
-			})
 		case "post":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -13557,48 +9700,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var removeClubSlugAliasPayloadImplementors = []string{"RemoveClubSlugAliasPayload"}
+var resourceImplementors = []string{"Resource", "_Entity"}
 
-func (ec *executionContext) _RemoveClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RemoveClubSlugAliasPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, removeClubSlugAliasPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("RemoveClubSlugAliasPayload")
-		case "club":
-			out.Values[i] = ec._RemoveClubSlugAliasPayload_club(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var resourceUrlImplementors = []string{"ResourceUrl"}
-
-func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionSet, obj *types.ResourceURL) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, resourceUrlImplementors)
+func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj *types.Resource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("ResourceUrl")
-		case "url":
-			out.Values[i] = ec._ResourceUrl_url(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "mimeType":
-			out.Values[i] = ec._ResourceUrl_mimeType(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("Resource")
+		case "id":
+			out.Values[i] = ec._Resource_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -13765,30 +9879,6 @@ func (ec *executionContext) _SubmitPostPayload(ctx context.Context, sel ast.Sele
 	return out
 }
 
-var updateClubNamePayloadImplementors = []string{"UpdateClubNamePayload"}
-
-func (ec *executionContext) _UpdateClubNamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubNamePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubNamePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateClubNamePayload")
-		case "club":
-			out.Values[i] = ec._UpdateClubNamePayload_club(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var updatePostAudiencePayloadImplementors = []string{"UpdatePostAudiencePayload"}
 
 func (ec *executionContext) _UpdatePostAudiencePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostAudiencePayload) graphql.Marshaler {
@@ -13898,65 +9988,6 @@ func (ec *executionContext) _UpdatePostContentPayload(ctx context.Context, sel a
 			out.Values[i] = graphql.MarshalString("UpdatePostContentPayload")
 		case "post":
 			out.Values[i] = ec._UpdatePostContentPayload_post(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var videoResourceImplementors = []string{"VideoResource", "Resource"}
-
-func (ec *executionContext) _VideoResource(ctx context.Context, sel ast.SelectionSet, obj *types.VideoResource) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, videoResourceImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("VideoResource")
-		case "id":
-			out.Values[i] = ec._VideoResource_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "urls":
-			out.Values[i] = ec._VideoResource_urls(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var withdrawClubMembershipPayloadImplementors = []string{"WithdrawClubMembershipPayload"}
-
-func (ec *executionContext) _WithdrawClubMembershipPayload(ctx context.Context, sel ast.SelectionSet, obj *types.WithdrawClubMembershipPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, withdrawClubMembershipPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("WithdrawClubMembershipPayload")
-		case "clubMemberId":
-			out.Values[i] = ec._WithdrawClubMembershipPayload_clubMemberId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14256,11 +10287,6 @@ func (ec *executionContext) marshalNAccount2ᚖoverdollᚋapplicationsᚋsting�
 	return ec._Account(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAddClubSlugAliasInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasInput(ctx context.Context, v interface{}) (types.AddClubSlugAliasInput, error) {
-	res, err := ec.unmarshalInputAddClubSlugAliasInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNAudience2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx context.Context, sel ast.SelectionSet, v types.Audience) graphql.Marshaler {
 	return ec._Audience(ctx, sel, &v)
 }
@@ -14356,11 +10382,6 @@ func (ec *executionContext) unmarshalNAudiencesOrderField2overdollᚋapplication
 
 func (ec *executionContext) marshalNAudiencesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrderField(ctx context.Context, sel ast.SelectionSet, v types.AudiencesOrderField) graphql.Marshaler {
 	return v
-}
-
-func (ec *executionContext) unmarshalNBecomeClubMemberInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberInput(ctx context.Context, v interface{}) (types.BecomeClubMemberInput, error) {
-	res, err := ec.unmarshalInputBecomeClubMemberInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -14674,245 +10695,6 @@ func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋin
 	return ec._Club(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNClubConnection2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubConnection) graphql.Marshaler {
-	return ec._ClubConnection(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNClubConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubConnection) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubConnection(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNClubEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubEdge) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNClubEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubEdge(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNClubEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubEdge) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubEdge(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNClubMember2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v types.ClubMember) graphql.Marshaler {
-	return ec._ClubMember(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v *types.ClubMember) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubMember(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNClubMemberConnection2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubMemberConnection) graphql.Marshaler {
-	return ec._ClubMemberConnection(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNClubMemberConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubMemberConnection) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubMemberConnection(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNClubMemberEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubMemberEdge) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNClubMemberEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberEdge(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNClubMemberEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMemberEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubMemberEdge) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubMemberEdge(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx context.Context, v interface{}) (types.ClubMembersOrder, error) {
-	res, err := ec.unmarshalInputClubMembersOrder(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNClubMembersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx context.Context, v interface{}) (types.ClubMembersOrderField, error) {
-	var res types.ClubMembersOrderField
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNClubMembersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx context.Context, sel ast.SelectionSet, v types.ClubMembersOrderField) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) marshalNClubSlugAlias2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAliasᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubSlugAlias) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNClubSlugAlias2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAlias(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNClubSlugAlias2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSlugAlias(ctx context.Context, sel ast.SelectionSet, v *types.ClubSlugAlias) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ClubSlugAlias(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNClubsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx context.Context, v interface{}) (types.ClubsOrder, error) {
-	res, err := ec.unmarshalInputClubsOrder(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNClubsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx context.Context, v interface{}) (types.ClubsOrderField, error) {
-	var res types.ClubsOrderField
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNClubsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx context.Context, sel ast.SelectionSet, v types.ClubsOrderField) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) unmarshalNCreateClubInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInput(ctx context.Context, v interface{}) (types.CreateClubInput, error) {
-	res, err := ec.unmarshalInputCreateClubInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx context.Context, v interface{}) (types.CreatePostInput, error) {
 	res, err := ec.unmarshalInputCreatePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -14962,21 +10744,6 @@ func (ec *executionContext) marshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelay
 	}
 
 	return ret
-}
-
-func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
-	res, err := graphql.UnmarshalInt(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
-	res := graphql.MarshalInt(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
@@ -15096,17 +10863,51 @@ func (ec *executionContext) marshalNPostsOrderField2overdollᚋapplicationsᚋst
 	return v
 }
 
-func (ec *executionContext) unmarshalNPromoteClubSlugAliasToDefaultInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultInput(ctx context.Context, v interface{}) (types.PromoteClubSlugAliasToDefaultInput, error) {
-	res, err := ec.unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Resource) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
-func (ec *executionContext) unmarshalNRemoveClubSlugAliasInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubSlugAliasInput(ctx context.Context, v interface{}) (types.RemoveClubSlugAliasInput, error) {
-	res, err := ec.unmarshalInputRemoveClubSlugAliasInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v types.Resource) graphql.Marshaler {
+func (ec *executionContext) marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -15114,104 +10915,6 @@ func (ec *executionContext) marshalNResource2overdollᚋapplicationsᚋstingᚋi
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNResource2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []types.Resource) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ResourceURL) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *types.ResourceURL) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._ResourceUrl(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSeries2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v types.Series) graphql.Marshaler {
@@ -15382,21 +11085,6 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (graphql1.URI, error) {
-	var res graphql1.URI
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, sel ast.SelectionSet, v graphql1.URI) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) unmarshalNUpdateClubNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubNameInput(ctx context.Context, v interface{}) (types.UpdateClubNameInput, error) {
-	res, err := ec.unmarshalInputUpdateClubNameInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNUpdatePostAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostAudienceInput(ctx context.Context, v interface{}) (types.UpdatePostAudienceInput, error) {
 	res, err := ec.unmarshalInputUpdatePostAudienceInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -15414,11 +11102,6 @@ func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋappli
 
 func (ec *executionContext) unmarshalNUpdatePostContentInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentInput(ctx context.Context, v interface{}) (types.UpdatePostContentInput, error) {
 	res, err := ec.unmarshalInputUpdatePostContentInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNWithdrawClubMembershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipInput(ctx context.Context, v interface{}) (types.WithdrawClubMembershipInput, error) {
-	res, err := ec.unmarshalInputWithdrawClubMembershipInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -15800,25 +11483,11 @@ func (ec *executionContext) marshalOAccount2ᚖoverdollᚋapplicationsᚋsting�
 	return ec._Account(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAddClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, v *types.AddClubSlugAliasPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AddClubSlugAliasPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx context.Context, sel ast.SelectionSet, v *types.Audience) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Audience(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOBecomeClubMemberPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberPayload(ctx context.Context, sel ast.SelectionSet, v *types.BecomeClubMemberPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._BecomeClubMemberPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -15857,27 +11526,6 @@ func (ec *executionContext) marshalOCharacter2ᚖoverdollᚋapplicationsᚋsting
 		return graphql.Null
 	}
 	return ec._Character(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Club(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOClubMember2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v *types.ClubMember) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._ClubMember(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCreateClubPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateClubPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateClubPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostPayload) graphql.Marshaler {
@@ -15925,41 +11573,11 @@ func (ec *executionContext) marshalOPostState2ᚖoverdollᚋapplicationsᚋsting
 	return v
 }
 
-func (ec *executionContext) marshalOPromoteClubSlugAliasToDefaultPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultPayload(ctx context.Context, sel ast.SelectionSet, v *types.PromoteClubSlugAliasToDefaultPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._PromoteClubSlugAliasToDefaultPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalORemoveClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, v *types.RemoveClubSlugAliasPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._RemoveClubSlugAliasPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOResource2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v types.Resource) graphql.Marshaler {
+func (ec *executionContext) marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx context.Context, v interface{}) (*types.ResourceSizes, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(types.ResourceSizes)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOResourceSizes2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceSizes(ctx context.Context, sel ast.SelectionSet, v *types.ResourceSizes) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 func (ec *executionContext) marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v *types.Series) graphql.Marshaler {
@@ -16057,13 +11675,6 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return graphql.MarshalTime(*v)
 }
 
-func (ec *executionContext) marshalOUpdateClubNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubNamePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubNamePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateClubNamePayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOUpdatePostAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostAudiencePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -16090,13 +11701,6 @@ func (ec *executionContext) marshalOUpdatePostContentPayload2ᚖoverdollᚋappli
 		return graphql.Null
 	}
 	return ec._UpdatePostContentPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOWithdrawClubMembershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipPayload(ctx context.Context, sel ast.SelectionSet, v *types.WithdrawClubMembershipPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._WithdrawClubMembershipPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

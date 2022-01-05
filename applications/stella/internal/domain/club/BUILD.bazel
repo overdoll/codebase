@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "club",
+    srcs = [
+        "club.go",
+        "club_filters.go",
+        "club_member.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/domain/club",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//libraries/localization",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/uuid",
+    ],
+)

@@ -9,15 +9,8 @@ import (
 func (h *Activities) DiscardPost(ctx context.Context, postId string) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
-
-		res, err := h.rr.GetResourcesByIds(ctx, postId, pending.ContentResourceIds())
-
-		if err != nil {
-			return err
-		}
-
-		// On discarded posts, delete the content from S3
-		if err := h.rr.DeleteResources(ctx, res); err != nil {
+		// Delete all resources
+		if err := h.loader.DeleteResources(ctx, postId, pending.ContentResourceIds()); err != nil {
 			return err
 		}
 

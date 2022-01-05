@@ -3,13 +3,12 @@ package workflows
 import (
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/workflows"
-	"overdoll/applications/sting/internal/app/workflows/activities"
+	"overdoll/applications/stella/internal/app/workflows/activities"
 )
 
 func AddClubMember(ctx workflow.Context, clubId, accountId string) error {
 
-	ctx = workflow.WithActivityOptions(ctx, workflows.options)
+	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 

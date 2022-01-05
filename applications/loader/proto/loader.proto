@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package applications.grpc.loader.v1;
+
+message DeleteResourcesRequest {
+  string itemId = 1;
+  repeated string resourceIds = 2;
+}
+
+message CreateOrGetResourcesFromUploadsRequest {
+  string itemId = 1;
+  repeated string resourceIds = 2;
+}
+
+message CreateOrGetResourcesFromUploadsResponse {
+  repeated string allResourceIds = 1;
+}
+
+message DeleteResourcesResponse {}
+
+service Loader {
+  rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
+  rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
+}

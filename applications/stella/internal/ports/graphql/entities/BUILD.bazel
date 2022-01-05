@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "entities",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/stella/internal/ports/graphql/entities",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/app/query",
+        "//applications/stella/internal/domain/club",
+        "//applications/stella/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
+        "//libraries/principal",
+    ],
+)

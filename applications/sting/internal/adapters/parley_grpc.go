@@ -15,6 +15,7 @@ func NewParleyGrpc(client parley.ParleyClient) ParleyGrpc {
 }
 
 func (s ParleyGrpc) GetNextModeratorId(ctx context.Context) (string, error) {
+
 	md, err := s.client.GetNextModerator(ctx, &parley.GetModeratorRequest{})
 
 	if err != nil {

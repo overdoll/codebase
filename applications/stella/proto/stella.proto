@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package applications.grpc.stella.v1;
+
+message GetClubRequest {
+  string id = 1;
+}
+
+message GetClubResponse {}
+
+service Stella {
+  rpc GetClub(GetClubRequest) returns (GetClubResponse);
+}

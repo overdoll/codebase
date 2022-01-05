@@ -2,31 +2,27 @@ package resolvers
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"strconv"
 )
 
 type CategoryResolver struct {
 	App *app.Application
 }
 
-func (r CategoryResolver) Thumbnail(ctx context.Context, obj *types.Category, size *types.ResourceSizes) (types.Resource, error) {
+func (r CategoryResolver) Thumbnail(ctx context.Context, obj *types.Category, size *int) (*types.Resource, error) {
 
-	resource, err := r.App.Queries.ResourceById.Handle(ctx, query.ResourceById{
-		ItemId:     obj.ID.GetID(),
-		ResourceId: types.GetResourceIdFromResource(ctx, obj.Thumbnail),
-	})
-
-	if err != nil {
-		return nil, err
+	if size != nil {
+		return &types.Resource{ID: relay.NewID(types.Resource{}, strconv.Itoa(*size), obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 	}
 
-	return types.MarshalResourceToGraphQL(ctx, resource, size), nil
+	return &types.Resource{ID: relay.NewID(types.Resource{}, obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 }
 
 func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {

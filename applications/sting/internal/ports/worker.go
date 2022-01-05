@@ -2,7 +2,6 @@ package ports
 
 import (
 	"context"
-	workflows2 "overdoll/applications/stella/internal/app/workflows"
 
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/worker"
@@ -24,10 +23,6 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.SubmitPost)
 	w.RegisterWorkflow(workflows.DiscardPost)
 	w.RegisterWorkflow(workflows.PublishPost)
-	w.RegisterWorkflow(workflows2.UpdateClubMemberTotalCount)
-	w.RegisterWorkflow(workflows2.AddClubMember)
-	w.RegisterWorkflow(workflows2.RemoveClubMember)
-	w.RegisterWorkflow(workflows2.ProcessPostContent)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

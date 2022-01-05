@@ -2,7 +2,6 @@ package post
 
 import (
 	"errors"
-	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -43,12 +42,12 @@ type Post struct {
 	reassignmentAt     *time.Time
 }
 
-func NewPost(contributor *principal.Principal, club *club.Club) (*Post, error) {
+func NewPost(contributor *principal.Principal, clubId string) (*Post, error) {
 	id := uuid.New()
 
 	return &Post{
 		id:            id.String(),
-		clubId:        club.ID(),
+		clubId:        clubId,
 		state:         Draft,
 		contributorId: contributor.AccountId(),
 		createdAt:     time.Now(),

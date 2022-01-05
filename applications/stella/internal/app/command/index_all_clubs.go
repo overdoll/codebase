@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/club"
 )
 
 type IndexAllClubsHandler struct {

@@ -2,8 +2,8 @@ package service_test
 
 import (
 	"context"
-	"os"
-	"strings"
+	"github.com/segmentio/ksuid"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 
@@ -29,7 +29,9 @@ type PostModified struct {
 	State      types.PostState
 	Characters []CharacterModified
 	Audience   *AudienceModified
-	Club       ClubModified
+	Club       struct {
+		Id string
+	}
 	Categories []CategoryModified
 	Content    []types.Resource
 }
@@ -123,8 +125,9 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	var createPost CreatePost
 
-	clb := seedClub(t)
-	relayId := convertClubIdToRelayId(clb.ID())
+	clubId := ksuid.New().String()
+
+	relayId := convertClubIdToRelayId(clubId)
 
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
 		"input": types.CreatePostInput{
@@ -140,26 +143,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// check to make sure post is in a draft state
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
 
-	// upload some files - this is required before running update command
-	tusClient := getTusClient(t)
-	fileId := uploadFileWithTus(t, tusClient, "applications/sting/internal/service/file_fixtures/test_file_1.png")
-
 	// update with new content (1 file)
 	var updatePostContent UpdatePostContent
 
 	err = client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
 		"input": types.UpdatePostContentInput{
 			ID:      relay.ID(newPostId),
-			Content: []string{fileId},
+			Content: []string{uuid.New().String()},
 		},
 	})
 
 	require.NoError(t, err)
-
-	// properly identify the content and stuff
-	require.Len(t, updatePostContent.UpdatePostContent.Post.Content, 1)
-	require.Equal(t, types.ResourceTypeImage, updatePostContent.UpdatePostContent.Post.Content[0].Type)
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+fileId+".png", string(updatePostContent.UpdatePostContent.Post.Content[0].Urls[0].URL))
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories
@@ -305,9 +299,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
-	cont := post.Post.Content[0]
-	split := strings.Split(cont.ID, "/")
-	require.Equal(t, os.Getenv("STATIC_URL")+"/posts/"+post.Post.Reference+"/"+split[len(split)-1]+".webp", string(cont.Urls[0].URL))
 
 	// query accountPosts once more, make sure post is no longer visible
 	var newAccountPosts AccountModeratorPosts
@@ -509,34 +500,4 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRemoved, post.Post.State)
-}
-
-func TestCreateDraftPost_mp4(t *testing.T) {
-	t.Parallel()
-
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	pst := seedDraftPost(t)
-
-	relayId := convertPostIdToRelayId(pst.ID())
-
-	// upload some files - this is required before running update command
-	tusClient := getTusClient(t)
-	fileId := uploadFileWithTus(t, tusClient, "applications/sting/internal/service/file_fixtures/test_file_2.mp4")
-
-	var updatePostContent UpdatePostContent
-
-	err := client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
-		"input": types.UpdatePostContentInput{
-			ID:      relayId,
-			Content: []string{fileId},
-		},
-	})
-
-	require.NoError(t, err)
-
-	// properly identify the content and stuff
-	require.Len(t, updatePostContent.UpdatePostContent.Post.Content, 1)
-	require.Equal(t, types.ResourceTypeVideo, updatePostContent.UpdatePostContent.Post.Content[0].Type)
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+fileId+".mp4", string(updatePostContent.UpdatePostContent.Post.Content[0].Urls[0].URL))
 }

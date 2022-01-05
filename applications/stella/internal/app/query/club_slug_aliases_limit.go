@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/principal"
 )
 

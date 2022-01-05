@@ -1,0 +1,7 @@
+extend type Resource @key(fields: "id")  {
+  id: ID! @external
+}
+
+extend type Account @key(fields: "id")  {
+  id: ID! @external
+}

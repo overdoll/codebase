@@ -14,10 +14,11 @@ go_library(
     importpath = "overdoll/applications/sting/internal/ports/graphql/resolvers",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/stella/internal/app/query",
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
-        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

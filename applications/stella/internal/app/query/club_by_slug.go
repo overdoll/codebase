@@ -2,12 +2,12 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/club"
 
 	"overdoll/libraries/principal"
 )
 
-type BrandBySlug struct {
+type ClubBySlug struct {
 	Principal *principal.Principal
 	Slug      string
 }
@@ -20,7 +20,7 @@ func NewClubBySlugHandler(cr club.Repository) ClubBySlugHandler {
 	return ClubBySlugHandler{cr: cr}
 }
 
-func (h ClubBySlugHandler) Handle(ctx context.Context, query BrandBySlug) (*club.Club, error) {
+func (h ClubBySlugHandler) Handle(ctx context.Context, query ClubBySlug) (*club.Club, error) {
 
 	result, err := h.cr.GetClubBySlug(ctx, query.Slug)
 

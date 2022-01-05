@@ -7,7 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"sort"

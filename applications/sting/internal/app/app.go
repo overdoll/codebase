@@ -1,7 +1,6 @@
 package app
 
 import (
-	command2 "overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/app/workflows/activities"
@@ -14,9 +13,6 @@ type Application struct {
 }
 
 type Commands struct {
-	// Tusd instance
-	TusComposer command.TusComposerHandler
-
 	CreatePost  command.CreatePostHandler
 	DiscardPost command.DiscardPostHandler
 	PublishPost command.PublishPostHandler
@@ -33,7 +29,6 @@ type Commands struct {
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllSeries     command.IndexAllSeriesHandler
 	IndexAllAudience   command.IndexAllAudienceHandler
-	IndexAllClubs      command2.IndexAllClubsHandler
 	IndexAllPosts      command.IndexAllPostsHandler
 }
 
@@ -59,7 +54,4 @@ type Queries struct {
 	SearchAudience query.SearchAudienceHandler
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
-
-	ResourceById   query.ResourceByIdHandler
-	ResourcesByIds query.ResourcesByIdsHandler
 }

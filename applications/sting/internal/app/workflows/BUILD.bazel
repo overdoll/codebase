@@ -3,21 +3,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
-        "add_club_member.go",
         "discard_post.go",
         "options.go",
-        "process_post_content.go",
         "publish_post.go",
-        "remove_club_member.go",
         "remove_post.go",
         "submit_post.go",
-        "update_club_member_total_count.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/app/workflows/activities",
-        "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",
     ],

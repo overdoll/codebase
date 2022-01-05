@@ -3,26 +3,19 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"github.com/bxcodec/faker/v3"
+	"github.com/segmentio/ksuid"
 	"log"
-	"mime"
 	"os"
-	adapters2 "overdoll/applications/stella/internal/adapters"
+
 	"overdoll/applications/sting/internal/adapters"
-	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
-	"path"
-	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/CapsLock-Studio/go-webpbin"
-	"github.com/bazelbuild/rules_go/go/tools/bazel"
-	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
@@ -39,7 +32,6 @@ import (
 
 const StingHttpAddr = ":6666"
 const StingGraphqlClientAddr = "http://:6666/api/graphql"
-const StingTusClientAddr = "http://:6666/api/upload/"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
@@ -58,92 +50,10 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
-func getTusClient(t *testing.T) *tus.Client {
-
-	// use a custom http client so we can attach our passport
-	cfg := tus.DefaultConfig()
-
-	client, err := tus.NewClient(StingTusClientAddr, cfg)
-	require.NoError(t, err)
-
-	return client
-}
-
-func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) string {
-
-	// use bazel runfiles path
-	dir, err := bazel.RunfilesPath()
-	require.NoError(t, err)
-
-	f, err := os.Open(path.Join(dir, filePath))
-	require.NoError(t, err)
-
-	defer f.Close()
-
-	fi, err := f.Stat()
-	require.NoError(t, err)
-
-	// create the tus client.
-	// create an upload from a file.
-	upload, _ := tus.NewUploadFromFile(f)
-
-	// set filetype extension header or else
-	// filetype wont be set up properly
-	fileTypeEncoded := mime.TypeByExtension(filepath.Ext(filePath))
-	upload.Metadata["filetype"] = fileTypeEncoded
-	upload.Metadata["type"] = fileTypeEncoded
-	upload.Metadata["name"] = fi.Name()
-
-	// create the uploader.
-	uploader, _ := tusClient.CreateUpload(upload)
-
-	// start the uploading process.
-	err = uploader.Upload()
-	require.NoError(t, err)
-
-	split := strings.Split(uploader.Url(), "/")
-
-	// get last part of url = ID of the upload
-	return split[len(split)-1]
-}
-
-type TestClub struct {
-	Name string `faker:"title_male"`
-	Slug string `faker:"username"`
-}
-
-func newPrincipal(t *testing.T) *principal.Principal {
-	return principal.NewPrincipal("1q7MJ3JkhcdcJJNqZezdfQt5pZ6", nil, false, false)
-}
-
-func newClub(t *testing.T) *club.Club {
-
-	fake := TestClub{}
-	err := faker.FakeData(&fake)
-	require.NoError(t, err)
-
-	clb, err := club.NewClub(newPrincipal(t), fake.Slug, fake.Name)
-	require.NoError(t, err)
-
-	return clb
-}
-
-// helper which seeds a new post in the database
-func seedClub(t *testing.T) *club.Club {
-	pst := newClub(t)
-
-	session := bootstrap.InitializeDatabaseSession()
-
-	adapter := adapters2.NewClubCassandraRepository(session)
-	err := adapter.CreateClub(context.Background(), newPrincipal(t), pst)
-	require.NoError(t, err)
-	return pst
-}
-
 func newPublishingPost(t *testing.T) *post.Post {
 	testingAccountId := newFakeAccount(t)
 
-	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), seedClub(t))
+	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), ksuid.New().String())
 	require.NoError(t, err)
 
 	err = pst.SubmitPostRequest(principal.NewPrincipal(testingAccountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
@@ -155,7 +65,7 @@ func newPublishingPost(t *testing.T) *post.Post {
 func newDraftPost(t *testing.T) *post.Post {
 	testingAccountId := newFakeAccount(t)
 
-	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), seedClub(t))
+	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), ksuid.New().String())
 	require.NoError(t, err)
 	return pst
 }

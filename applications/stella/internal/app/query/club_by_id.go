@@ -2,14 +2,11 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
-
-	"overdoll/libraries/principal"
+	"overdoll/applications/stella/internal/domain/club"
 )
 
 type ClubById struct {
-	Principal *principal.Principal
-	Id        string
+	Id string
 }
 
 type ClubByIdHandler struct {

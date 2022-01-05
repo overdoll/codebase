@@ -3,10 +3,6 @@ package service
 import (
 	"context"
 	"os"
-	adapters2 "overdoll/applications/stella/internal/adapters"
-	command2 "overdoll/applications/stella/internal/app/command"
-	query2 "overdoll/applications/stella/internal/app/query"
-
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
@@ -23,11 +19,19 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewParleyGrpc(parleyClient)),
+	return createApplication(ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewLoaderGrpc(loaderClient)),
 		func() {
 			cleanup()
 			cleanup2()
+			cleanup3()
+			cleanup4()
 		}
 }
 
@@ -37,37 +41,36 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
-	// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-	// this makes testing easier because we can get reproducible tests with each run
-	return createApplication(ctx, EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)}, adapters.NewParleyGrpc(parleyClient)),
+	return createApplication(ctx,
+			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
+			// this makes testing easier because we can get reproducible tests with each run
+			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
+			adapters.NewParleyGrpc(parleyClient),
+			StellaServiceMock{adapter: adapters.NewStellaGrpc(stellaClient)},
+			adapters.NewLoaderGrpc(loaderClient)),
 		func() {
 			cleanup()
 			cleanup2()
+			cleanup3()
+			cleanup4()
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella command.StellaService, loader command.LoaderService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
 	client := bootstrap.InitializeElasticSearchSession()
 
-	awsSession := bootstrap.InitializeAWSSession()
-
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	clubRepo := adapters2.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters2.NewClubIndexElasticSearchRepository(client, session)
-
-	resourceRepo := adapters.NewResourceS3CassandraRepository(awsSession, session)
-
 	return app.Application{
 		Commands: app.Commands{
-			TusComposer: command.NewTusComposerHandler(resourceRepo),
-
-			CreatePost:  command.NewCreatePostHandler(postRepo, clubRepo, postIndexRepo, eva, parley),
+			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo, eva, parley, stella),
 			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eva),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
@@ -78,21 +81,12 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, postIndexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
-			IndexAllClubs:      command2.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
-			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, resourceRepo),
+			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, loader),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
-
-			CreateClub:                    command2.NewCreateClubHandler(clubRepo, clubIndexRepo),
-			AddClubSlugAlias:              command2.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			RemoveClubSlugAlias:           command2.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			UpdateClubName:                command2.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
-			PromoteClubSlugAliasToDefault: command2.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
-			BecomeClubMember:              command2.NewBecomeClubMemberHandler(clubRepo),
-			WithdrawClubMembership:        command2.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -116,20 +110,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
-
-			SearchClubs:                 query2.NewSearchClubsHandler(clubIndexRepo),
-			ClubBySlug:                  query2.NewClubBySlugHandler(clubRepo),
-			ClubById:                    query2.NewClubByIdHandler(clubRepo),
-			ClubSlugAliasesLimit:        query2.NewClubSlugAliasesLimitHandler(clubRepo),
-			AccountClubMemberships:      query2.NewAccountClubMembershipsHandler(clubRepo),
-			AccountClubMembershipsLimit: query2.NewAccountClubMembershipsLimitHandler(clubRepo),
-			AccountClubMembershipsCount: query2.NewAccountClubMembershipsCountHandler(clubRepo),
-			ClubMembersByClub:           query2.NewClubMembersByClubHandler(clubRepo),
-			ClubMemberById:              query2.NewClubMemberByIdHandler(clubRepo),
-
-			ResourceById:   query.NewResourceByIdHandler(resourceRepo),
-			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, clubIndexRepo, postIndexRepo, resourceRepo, parley),
+		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}
 }

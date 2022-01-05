@@ -13,6 +13,9 @@ type Post implements Node @key(fields: "id") {
   """The contributor who contributed this post"""
   contributor: Account!
 
+  """The club belonging to the post"""
+  club: Club!
+
   """Content belonging to this post"""
   content: [Resource!]! @goField(forceResolver: true)
 

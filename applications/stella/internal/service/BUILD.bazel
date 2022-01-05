@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "service",
+    srcs = ["application.go"],
+    importpath = "overdoll/applications/stella/internal/service",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/adapters",
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/app/command",
+        "//applications/stella/internal/app/query",
+        "//applications/stella/internal/app/workflows/activities",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "club_component_test.go",
+        "club_members_component_test.go",
+    ],
+    deps = [
+        "//applications/stella/internal/app/workflows",
+        "//applications/sting/internal/ports/graphql/types",
+        "//applications/sting/internal/service",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+    ],
+)

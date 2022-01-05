@@ -2,10 +2,7 @@ package types
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource"
-	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -67,10 +64,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		state = PostStateRemoved
 	}
 
-	var content []Resource
+	var content []*Resource
 
 	for _, id := range result.ContentResourceIds() {
-		content = append(content, &ImageResource{ID: relay.NewID(ImageResource{}, id)})
+		content = append(content, &Resource{ID: relay.NewID(Resource{}, result.ID(), id)})
 	}
 
 	var audience *Audience
@@ -102,47 +99,12 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 	}
 }
 
-func MarshalClubMemberToGraphql(ctx context.Context, result *club.Member) *ClubMember {
-	return &ClubMember{
-		ID:       relay.NewID(ClubMember{}, result.ClubId(), result.AccountId()),
-		JoinedAt: result.JoinedAt(),
-		Club:     &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Account:  &Account{ID: relay.NewID(Account{}, result.AccountId())},
-	}
-}
-
-func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
-
-	var res Resource
-
-	if result.ThumbnailResourceId() != "" {
-		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
-	}
-
-	var slugAliases []*ClubSlugAlias
-
-	for _, s := range result.SlugAliases() {
-		slugAliases = append(slugAliases, &ClubSlugAlias{Slug: s})
-	}
-
-	return &Club{
-		ID:           relay.NewID(Club{}, result.ID()),
-		Reference:    result.ID(),
-		Name:         result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:         result.Slug(),
-		SlugAliases:  slugAliases,
-		MembersCount: result.MembersCount(),
-		Thumbnail:    res,
-		Owner:        &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-	}
-}
-
 func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audience {
 
-	var res Resource
+	var res *Resource
 
 	if result.ThumbnailResourceId() != "" {
-		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
 	return &Audience{
@@ -155,10 +117,10 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
-	var res Resource
+	var res *Resource
 
 	if result.ThumbnailResourceId() != "" {
-		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
 	return &Series{
@@ -171,10 +133,10 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Category {
 
-	var res Resource
+	var res *Resource
 
 	if result.ThumbnailResourceId() != "" {
-		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
 	return &Category{
@@ -187,10 +149,10 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Character {
 
-	var res Resource
+	var res *Resource
 
 	if result.ThumbnailResourceId() != "" {
-		res = &ImageResource{ID: relay.NewID(ImageResource{}, result.ThumbnailResourceId())}
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
 	return &Character{
@@ -200,38 +162,6 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		Thumbnail: res,
 		Series:    MarshalSeriesToGraphQL(ctx, result.Series()),
 	}
-}
-
-func MarshalResourcesToGraphQL(ctx context.Context, res []*resource.Resource, size *ResourceSizes) []Resource {
-	var resources []Resource
-
-	for _, r := range res {
-		resources = append(resources, MarshalResourceToGraphQL(ctx, r, size))
-	}
-
-	return resources
-}
-
-func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource, size *ResourceSizes) Resource {
-
-	var urls []*ResourceURL
-
-	for _, url := range res.FullUrls(size.String()) {
-		urls = append(urls, &ResourceURL{
-			URL:      graphql.URI(url.GetFullUrl()),
-			MimeType: url.GetMimeType(),
-		})
-	}
-
-	if res.IsImage() {
-		return &ImageResource{ID: relay.NewID(ImageResource{}, res.ID()), Urls: urls}
-	}
-
-	if res.IsVideo() {
-		return &VideoResource{ID: relay.NewID(ImageResource{}, res.ID()), Urls: urls}
-	}
-
-	return nil
 }
 
 func MarshalCategoryToGraphQLConnection(ctx context.Context, results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
@@ -407,136 +337,6 @@ func MarshalSeriesToGraphQLConnection(ctx context.Context, results []*post.Serie
 	}
 
 	return conn
-}
-
-func MarshalClubMembersToGraphQLConnection(ctx context.Context, results []*club.Member, cursor *paging.Cursor) *ClubMemberConnection {
-	var clubs []*ClubMemberEdge
-
-	conn := &ClubMemberConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-		Edges: clubs,
-	}
-
-	limit := cursor.GetLimit()
-
-	if len(results) == 0 {
-		return conn
-	}
-
-	if len(results) == limit {
-		conn.PageInfo.HasNextPage = cursor.First() != nil
-		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
-		results = results[:len(results)-1]
-	}
-
-	var nodeAt func(int) *club.Member
-
-	if cursor != nil && cursor.Last() != nil {
-		n := len(results) - 1
-		nodeAt = func(i int) *club.Member {
-			return results[n-i]
-		}
-	} else {
-		nodeAt = func(i int) *club.Member {
-			return results[i]
-		}
-	}
-
-	for i := range results {
-		node := nodeAt(i)
-		clubs = append(clubs, &ClubMemberEdge{
-			Node:   MarshalClubMemberToGraphql(ctx, node),
-			Cursor: node.Cursor(),
-		})
-	}
-
-	conn.Edges = clubs
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		conn.PageInfo.StartCursor = &res
-		res = results[len(results)-1].Cursor()
-		conn.PageInfo.EndCursor = &res
-	}
-
-	return conn
-}
-
-func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {
-	var clubs []*ClubEdge
-
-	conn := &ClubConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-		Edges: clubs,
-	}
-
-	limit := cursor.GetLimit()
-
-	if len(results) == 0 {
-		return conn
-	}
-
-	if len(results) == limit {
-		conn.PageInfo.HasNextPage = cursor.First() != nil
-		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
-		results = results[:len(results)-1]
-	}
-
-	var nodeAt func(int) *club.Club
-
-	if cursor != nil && cursor.Last() != nil {
-		n := len(results) - 1
-		nodeAt = func(i int) *club.Club {
-			return results[n-i]
-		}
-	} else {
-		nodeAt = func(i int) *club.Club {
-			return results[i]
-		}
-	}
-
-	for i := range results {
-		node := nodeAt(i)
-		clubs = append(clubs, &ClubEdge{
-			Node:   MarshalClubToGraphQL(ctx, node),
-			Cursor: node.Cursor(),
-		})
-	}
-
-	conn.Edges = clubs
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		conn.PageInfo.StartCursor = &res
-		res = results[len(results)-1].Cursor()
-		conn.PageInfo.EndCursor = &res
-	}
-
-	return conn
-}
-
-func GetResourceIdsFromResources(ctx context.Context, resources []Resource) []string {
-	var resourceIds []string
-
-	for _, r := range resources {
-		resourceIds = append(resourceIds, r.(ImageResource).ID.GetID())
-	}
-
-	return resourceIds
-}
-
-func GetResourceIdFromResource(ctx context.Context, r Resource) string {
-	return r.(ImageResource).ID.GetID()
 }
 
 func MarshalAudienceToGraphQLConnection(ctx context.Context, results []*post.Audience, cursor *paging.Cursor) *AudienceConnection {

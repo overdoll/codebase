@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = [
+        "club_cassandra_repository.go",
+        "club_index_elasticsearch_repository.go",
+        "club_members_cassandra_repository.go",
+        "eva_grpc.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/adapters",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/stella/internal/domain/club",
+        "//libraries/localization",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/scan",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_olivere_elastic_v7//:elastic",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//qb",
+        "@com_github_scylladb_gocqlx_v2//table",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)

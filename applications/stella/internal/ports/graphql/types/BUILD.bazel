@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "types",
+    srcs = [
+        "marshal.go",
+        "types.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/ports/graphql/types",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/domain/club",
+        "//libraries/graphql/relay",
+        "//libraries/paging",
+        "//libraries/passport",
+    ],
+)

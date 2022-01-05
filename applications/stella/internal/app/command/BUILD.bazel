@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "command",
+    srcs = [
+        "add_club_slug_alias.go",
+        "become_club_member.go",
+        "create_club.go",
+        "index_all_clubs.go",
+        "promote_club_slug_alias_to_default.go",
+        "remove_club_slug_alias.go",
+        "services.go",
+        "update_club_name.go",
+        "withdraw_club_membership.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/app/command",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/domain/club",
+        "//libraries/principal",
+    ],
+)

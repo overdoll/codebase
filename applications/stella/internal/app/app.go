@@ -1,9 +1,9 @@
 package app
 
 import (
-	command2 "overdoll/applications/stella/internal/app/command"
-	query2 "overdoll/applications/stella/internal/app/query"
-	"overdoll/applications/sting/internal/app/workflows/activities"
+	"overdoll/applications/stella/internal/app/command"
+	"overdoll/applications/stella/internal/app/query"
+	"overdoll/applications/stella/internal/app/workflows/activities"
 )
 
 type Application struct {
@@ -13,26 +13,27 @@ type Application struct {
 }
 
 type Commands struct {
-	IndexAllClubs command2.IndexAllClubsHandler
+	IndexAllClubs command.IndexAllClubsHandler
 
-	CreateClub                    command2.CreateClubHandler
-	UpdateClubName                command2.UpdateClubNameHandler
-	RemoveClubSlugAlias           command2.RemoveClubSlugAliasHandler
-	AddClubSlugAlias              command2.AddClubSlugAliasHandler
-	PromoteClubSlugAliasToDefault command2.PromoteClubSlugAliasToDefaultHandler
-	BecomeClubMember              command2.BecomeClubMemberHandler
-	WithdrawClubMembership        command2.WithdrawClubMembershipHandler
+	CreateClub                    command.CreateClubHandler
+	UpdateClubName                command.UpdateClubNameHandler
+	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
+	AddClubSlugAlias              command.AddClubSlugAliasHandler
+	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
+	BecomeClubMember              command.BecomeClubMemberHandler
+	WithdrawClubMembership        command.WithdrawClubMembershipHandler
 }
 
 type Queries struct {
-	SearchClubs                 query2.SearchClubsHandler
-	ClubBySlug                  query2.ClubBySlugHandler
-	ClubById                    query2.ClubByIdHandler
-	ClubSlugAliasesLimit        query2.ClubSlugAliasesLimitHandler
-	AccountClubMembershipsLimit query2.AccountClubMembershipsLimitHandler
-	AccountClubMemberships      query2.AccountClubMembershipsHandler
-	AccountClubMembershipsCount query2.AccountClubMembershipsCountHandler
+	SearchClubs                 query.SearchClubsHandler
+	ClubBySlug                  query.ClubBySlugHandler
+	ClubById                    query.ClubByIdHandler
+	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
+	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
+	AccountClubMemberships      query.AccountClubMembershipsHandler
+	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 
-	ClubMemberById    query2.ClubMemberByIdHandler
-	ClubMembersByClub query2.ClubMembersByClubHandler
+	PrincipalById     query.PrincipalByIdHandler
+	ClubMemberById    query.ClubMemberByIdHandler
+	ClubMembersByClub query.ClubMembersByClubHandler
 }

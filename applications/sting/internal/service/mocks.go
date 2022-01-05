@@ -26,3 +26,11 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 	return prin, nil
 }
+
+type StellaServiceMock struct {
+	adapter adapters.StellaGrpc
+}
+
+func (e StellaServiceMock) GetClub(ctx context.Context, s string) (bool, error) {
+	return true, nil
+}
