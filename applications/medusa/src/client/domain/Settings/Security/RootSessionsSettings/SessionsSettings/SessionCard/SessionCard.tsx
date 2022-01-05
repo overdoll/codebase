@@ -9,6 +9,8 @@ import { DesktopComputer, MobilePhone } from '@//:assets/icons/interface'
 import { t, Trans } from '@lingui/macro'
 import RevokeSession from './RevokeSession/RevokeSession'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons/navigation'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   connectionID: string
@@ -37,9 +39,12 @@ export default function SessionCard ({
 }: Props): JSX.Element {
   const data = useFragment(SessionGQL, query)
 
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
   const userAgent = UAParser(data.device)
-  const formattedDate = format(new Date(data?.lastSeen as Date), 'LLLL Lo, y')
-  const signedInDate = format(new Date(data?.created as Date), 'LLLL Lo, y')
+  const formattedDate = format(new Date(data?.lastSeen as Date), 'LLLL Lo, y', { locale })
+  const signedInDate = format(new Date(data?.created as Date), 'LLLL Lo, y', { locale })
 
   return (
     <AccordionItem>

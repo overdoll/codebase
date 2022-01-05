@@ -22,7 +22,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/Moderation/History/History.tsx:53
-msgid "Brand"
+#~ msgid "Brand"
+#~ msgstr ""
+
+#: src/client/domain/Moderation/History/History.tsx:53
+msgid "Club"
 msgstr ""
 
 #: src/client/domain/Moderation/History/History.tsx:46

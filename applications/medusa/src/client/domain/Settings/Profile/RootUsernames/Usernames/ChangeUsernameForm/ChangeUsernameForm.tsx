@@ -31,6 +31,10 @@ interface UsernameValues {
   username: string
 }
 
+interface Props {
+  isDisabled: boolean
+}
+
 const UsernameMutationGQL = graphql`
   mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameInput!) {
     updateAccountUsername(input: $input) {
@@ -43,7 +47,7 @@ const UsernameMutationGQL = graphql`
   }
 `
 
-export default function ChangeUsernameForm (): JSX.Element {
+export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element {
   const [changeUsername, isChangingUsername] = useMutation<ChangeUsernameFormMutation>(
     UsernameMutationGQL
   )
@@ -130,13 +134,14 @@ export default function ChangeUsernameForm (): JSX.Element {
           isInvalid={errors.username != null}
           id='username'
         >
-          <FormLabel>
+          <FormLabel fontSize='sm'>
             <Trans>
               Enter a new username
             </Trans>
           </FormLabel>
           <HStack align='flex-start'>
             <StyledInput
+              size='sm'
               register={register('username')}
               success={success}
               error={errors.username != null}
@@ -148,7 +153,7 @@ export default function ChangeUsernameForm (): JSX.Element {
               variant='solid'
               colorScheme='gray'
               type='submit'
-              disabled={errors.username != null}
+              disabled={errors.username != null || isDisabled}
               isLoading={isChangingUsername}
             >
               <Trans>

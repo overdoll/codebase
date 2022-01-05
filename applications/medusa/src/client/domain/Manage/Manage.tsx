@@ -14,20 +14,22 @@ export default function Manage ({ children }: Props): JSX.Element {
   return (
     <VerticalNavigation>
       <VerticalNavigation.Content title={(
-        <Trans>Post Management</Trans>
+        <Trans>Content Management</Trans>
       )}
       >
         <VerticalNavigation.Button
           to='/manage/posts'
+          colorScheme='teal'
           title={
             <Trans>My Posts</Trans>
           }
           icon={ContentBookEdit}
         />
         <VerticalNavigation.Button
-          to='/manage/brands'
+          to='/manage/clubs'
+          colorScheme='teal'
           title={
-            <Trans>Manage Brands</Trans>
+            <Trans>My Clubs</Trans>
           }
           icon={SettingHammer}
         />

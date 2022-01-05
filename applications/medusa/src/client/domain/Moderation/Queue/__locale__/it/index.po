@@ -57,9 +57,17 @@ msgstr ""
 msgid "Note"
 msgstr ""
 
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:72
+msgid "Please add a note"
+msgstr ""
+
 #: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:98
 #~ msgid "Please select a rejection option"
 #~ msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:64
+msgid "Please select a rejection reason"
+msgstr ""
 
 #: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:83
 msgid "Post created by {0} was approved successfully"
@@ -101,9 +109,13 @@ msgstr ""
 #~ msgid "The note cannot be empty"
 #~ msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:116
-#~ msgid "The note cannot exceed 255 characters"
-#~ msgstr ""
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:74
+msgid "The note cannot exceed 255 characters"
+msgstr ""
+
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:73
+msgid "The note needs at least 5 characters"
+msgstr ""
 
 #: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:74
 msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash dcca6afbe8860ce317809b415b1d7cbd */
+/* @relayHash d5598181beb78f9f1b82a404f83f87f1 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -49,41 +49,6 @@ fragment NoPostsPlaceholderFragment on Account {
   }
 }
 
-fragment PostAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostBrandFragment on Post {
-  club {
-    name
-    thumbnail {
-      ...ResourceItemFragment
-    }
-    id
-  }
-}
-
-fragment PostCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
 fragment PostGalleryContentFragment on Post {
   content {
     type
@@ -92,16 +57,51 @@ fragment PostGalleryContentFragment on Post {
   }
 }
 
+fragment PostHeaderClubFragment on Post {
+  club {
+    name
+    thumbnail {
+      ...ResourceIconFragment
+    }
+    id
+  }
+}
+
 fragment PostHeaderFragment on Post {
   reassignmentAt
-  ...PostBrandFragment
+  ...PostHeaderClubFragment
 }
 
 fragment PostPreviewFragment on Post {
-  ...PostAudienceFragment
-  ...PostCharactersFragment
-  ...PostCategoriesFragment
+  ...PostStaticAudienceFragment
+  ...PostStaticCharactersFragment
+  ...PostStaticCategoriesFragment
   ...PostGalleryContentFragment
+}
+
+fragment PostStaticAudienceFragment on Post {
+  audience {
+    title
+    id
+  }
+}
+
+fragment PostStaticCategoriesFragment on Post {
+  categories {
+    title
+    id
+  }
+}
+
+fragment PostStaticCharactersFragment on Post {
+  characters {
+    name
+    series {
+      title
+      id
+    }
+    id
+  }
 }
 
 fragment PostsFragment on Account {
@@ -136,6 +136,10 @@ fragment RejectionReasonsFragment on Query {
       }
     }
   }
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
 }
 
 fragment ResourceItemFragment on Resource {
@@ -521,7 +525,7 @@ return {
     ]
   },
   "params": {
-    "id": "dcca6afbe8860ce317809b415b1d7cbd",
+    "id": "d5598181beb78f9f1b82a404f83f87f1",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

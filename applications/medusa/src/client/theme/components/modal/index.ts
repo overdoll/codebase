@@ -38,7 +38,7 @@ const baseStyleDialog: SystemStyleFunction = (props) => {
     my: '3.75rem',
     zIndex: 'modal',
     maxH: scrollBehavior === 'inside' ? 'calc(100% - 7.5rem)' : undefined,
-    boxShadow: 'none'
+    boxShadow: 'md'
   }
 }
 

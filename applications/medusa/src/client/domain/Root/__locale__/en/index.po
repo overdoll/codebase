@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:91
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:96
 msgid "Account Locked"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:85
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:87
 msgid "Account Settings"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 #~ msgid "Banned for {0}"
 #~ msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:92
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:97
 msgid "Banned for {remainingTime}"
 msgstr ""
 
@@ -50,24 +50,28 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:37
+#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:39
 msgid "Create a Post"
 msgstr ""
 
 #: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
-msgid "Error"
+#~ msgid "Error"
+#~ msgstr ""
+
+#: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
+msgid "Error {0}"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:50
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:25
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:26
 msgid "Go to my profile"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:101
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:106
 msgid "Here's the reason..."
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:14
+#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:15
 msgid "Home"
 msgstr ""
 
@@ -84,7 +88,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:95
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:100
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -92,18 +96,19 @@ msgstr ""
 #~ msgid "Manage"
 #~ msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:76
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:77
 msgid "Manage Content"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:25
+#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:26
 msgid "Moderation"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:111
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:116
 msgid "No reason was found"
 msgstr ""
 
+#: src/modules/content/PageLayout/Interactables/Menus/LargeMenuButton/LargeMenuButton.tsx:18
 #: src/modules/content/PageLayout/Interactables/Menus/SmallMenuButton/SmallMenuButton.tsx:18
 msgid "Open Menu"
 msgstr ""
@@ -132,7 +137,7 @@ msgstr ""
 #~ msgid "Please enter an email address"
 #~ msgstr "aasdasdasdasd"
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:116
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:121
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
@@ -140,7 +145,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/client/components/ContentHints/SpoilerText/SpoilerText.tsx:35
+#: src/client/components/ContentHints/SpoilerText/SpoilerText.tsx:38
 msgid "Reveal Spoiler"
 msgstr ""
 
@@ -156,7 +161,7 @@ msgstr ""
 msgid "The code must be 6 digits long"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:46
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:51
 msgid "The contents of a post you uploaded are not allowed on our platform."
 msgstr ""
 
@@ -192,7 +197,7 @@ msgstr ""
 msgid "You have been logged out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:124
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:129
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
@@ -200,7 +205,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:127
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:132
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
@@ -221,6 +226,6 @@ msgstr ""
 msgid "od"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:135
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:140
 msgid "{duration}"
 msgstr ""

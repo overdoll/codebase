@@ -9,7 +9,7 @@ export type PostStateDraftPreviewFragment = {
     readonly content: ReadonlyArray<{
         readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"useCheckRequirementsFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"checkPostRequirementsFragment">;
     readonly " $refType": "PostStateDraftPreviewFragment";
 };
 export type PostStateDraftPreviewFragment$data = PostStateDraftPreviewFragment;
@@ -52,11 +52,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "useCheckRequirementsFragment"
+      "name": "checkPostRequirementsFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '3b5a5081a107abaaf972381cefa22278';
+(node as any).hash = 'bec4b22840e222e786dbc4824a33b668';
 export default node;

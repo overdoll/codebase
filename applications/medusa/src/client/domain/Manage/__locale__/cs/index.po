@@ -13,102 +13,513 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraft.tsx:72
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:220
+msgid "A unique link"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:86
+msgid "Add categories"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:88
+msgid "Add characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:86
+msgid "Add some categories"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:79
+msgid "Add, arrange, or remove the files you're uploading."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:66
+msgid "All characters must be of legal age"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:135
+msgid "Are you sure you'd like to exit the post creator? You can resume your progress from your"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:92
+msgid "Arrange your uploads"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:60
+msgid "As a reminder of the guidelines..."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowBackwardButton/FlowBackwardButton.tsx:53
+msgid "Back"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:85
+msgid "Before you can upload, you need to select a club from the list above."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:145
+msgid "Change"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:72
 msgid "Click on a draft post to continue editing it"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStatePublished/PostStatePublished.tsx:77
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:77
 msgid "Click on a published post to see it live."
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraft.tsx:59
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStatePublished/PostStatePublished.tsx:64
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:89
+msgid "Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:104
+msgid "Club {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:99
+msgid "Clubs allow you to organize your posts and community all in one place. You need to create or have access to at least one club to be able to upload posts."
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:17
+msgid "Content Management"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:232
+msgid "Create Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/RootCreateClub.tsx:16
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:122
+msgid "Create a Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:59
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:64
 msgid "Create a post"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraftPreview/PostStateDraftPreview.tsx:98
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:98
+msgid "Creating your post..."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraftPreview/PostStateDraftPreview.tsx:98
 msgid "Discard Draft"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/MyPosts.tsx:49
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:49
 msgid "Drafts"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejected.tsx:55
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:107
+msgid "Drop your files to upload them"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/SearchInput/SearchInput.tsx:30
+msgid "Enter a search term"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:159
+msgid "Error creating club {0}"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:129
+msgid "Exit Post Creator"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:103
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:149
+msgid "Go back"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/RootCreateClub.tsx:28
+msgid "Go back to Manage Clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:67
+msgid "Go to my posts"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:59
+msgid "Home"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:55
 msgid "If one of your posts is rejected, it will show up here."
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/MyPosts.tsx:61
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:61
 msgid "In Review"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraft.tsx:91
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStatePublished/PostStatePublished.tsx:93
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejected.tsx:87
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReview.tsx:87
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:83
+msgid "Like"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:91
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:93
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:87
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:87
 msgid "Load More"
 msgstr ""
 
-#: src/client/domain/Manage/Manage.tsx:30
-msgid "Manage Brands"
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/RootSearchCategories/SearchCategories/SearchCategories.tsx:134
+msgid "Load More Categories"
 msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/RootSearchCharacters/SearchCharacters/SearchCharacters.tsx:133
+msgid "Load More Characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:123
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:181
+msgid "Load more clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:46
+msgid "Make sure you like what you see before you submit the post."
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:32
+#~ msgid "Manage Clubs"
+#~ msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:32
+#~ msgid "Manage ManageClubs"
+#~ msgstr ""
 
 #: src/client/domain/Manage/Manage.tsx:23
 #~ msgid "Manage Posts"
 #~ msgstr ""
 
-#: src/client/domain/Manage/Manage.tsx:23
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:103
+msgid "Moderate"
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:32
+msgid "My Clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:141
+msgid "My Content"
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:24
 msgid "My Posts"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateDraft/PostStateDraft.tsx:50
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:107
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:123
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:122
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:134
+msgid "Next"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:138
+msgid "No Club Selected"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:50
 msgid "No Draft Posts"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReview.tsx:50
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:50
 msgid "No Posts in Review"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStatePublished/PostStatePublished.tsx:55
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:55
 msgid "No Published Posts"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejected.tsx:50
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:50
 msgid "No Rejected Posts"
 msgstr ""
 
-#: src/client/domain/Manage/Manage.tsx:17
-msgid "Post Management"
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/RootSearchCategories/SearchCategories/SearchCategories.tsx:95
+msgid "No categories were found with the title {0}"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReviewPreview/PostStateReviewPreview.tsx:61
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/RootSearchCharacters/SearchCharacters/SearchCharacters.tsx:94
+msgid "No characters were found with the name {0}"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:65
+msgid "Nothing extremely offensive or shocking"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:72
+msgid "Please enter a club link"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:61
+msgid "Please enter a name for your club"
+msgstr ""
+
+#: src/client/domain/Manage/Manage.tsx:17
+#~ msgid "Post Management"
+#~ msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:47
+msgid "Post Not Found"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:52
+msgid "Post Submitted"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:42
+msgid "Post again"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReviewPreview/PostStateReviewPreview.tsx:66
 msgid "Posted on {formattedDate}"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/MyPosts.tsx:73
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:74
+msgid "Posting {0} Media"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:73
 msgid "Published"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/MyPosts.tsx:85
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:85
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejectedPreview/PostStateRejectedPreview.tsx:66
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejectedPreview/PostStateRejectedPreview.tsx:71
 msgid "Rejected (Posted on {formattedDate})"
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateRejected/PostStateRejected.tsx:68
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:134
+msgid "Retry"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:90
+msgid "Review your post"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:41
+msgid "Review your selections"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:93
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:109
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:109
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:120
+msgid "Save"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:96
+msgid "Search for a category"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:99
+msgid "Search for a character by name"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:148
+msgid "Select"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:80
+msgid "Select A Club"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:84
+msgid "Select an audience"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:91
+msgid "Select the categories that would be most applicable to the content you have uploaded."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:94
+msgid "Select the character(s) that are the primary focus in your content."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:61
+msgid "Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We only show a person content they are interested in seeing."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:92
+msgid "Step 1"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:84
+msgid "Step 2"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:86
+msgid "Step 3"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:88
+msgid "Step 4"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:90
+msgid "Step 5"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:90
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:26
+msgid "Submitted For Review"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:52
+msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:197
+msgid "The best name you can come up with"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:75
+msgid "The club link can only contain numbers, letters, and dashes."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:74
+msgid "The club link cannot exceed 15 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:73
+msgid "The club link must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:63
+msgid "The name cannot exceed 15 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:62
+msgid "The name must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:46
+msgid "There was an error creating a draft post"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:128
+msgid "There was an error processing your files"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:78
+msgid "There was an error saving the audience"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:93
+msgid "There was an error saving the categories"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:94
+msgid "There was an error saving the characters"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:77
+msgid "There was an error submitting your post"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:104
+msgid "There was an error updating the post content"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:68
 msgid "These posts were rejected from being visible to the public for violating the community guidelines."
 msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReview.tsx:68
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:68
 msgid "These posts will be reviewed to ensure they comply with our community guidelines before going live."
 msgstr ""
 
-#: src/client/domain/Manage/CreatePost/FileUploader/content/PostCreator/CreatePostFlow/CreatePostFlow.tsx:91
-#~ msgid "Upload Files"
-#~ msgstr ""
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:198
+msgid "This is the name everyone will see"
+msgstr ""
 
-#: src/client/domain/Manage/MyPosts/MyPosts/PostStateReview/PostStateReview.tsx:55
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:221
+msgid "This is the unique link everyone will use to see your club"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:50
+msgid "This post could not be found"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:93
+msgid "This post was already submitted"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:115
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:152
+msgid "Upload Files"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:120
+msgid "Upload one or more files by dragging and dropping them or by clicking here"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:72
+msgid "Upstanding netizens shall read all the rules before posting"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:55
 msgid "When you submit a post, it'll appear here if it needs to be reviewed before going public."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:89
+msgid "Who is in your post?"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:47
+msgid "Who is the target audience?"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:23
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:27
+msgid "Why is this required"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:154
+msgid "Yes, exit"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:111
+msgid "You don't have any clubs. You need to have access to at least one before you can create a post."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:67
+msgid "You own the rights to the content you upload"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ArrangeUploads/ArrangeUploads.tsx:104
+msgid "You'll need to upload at least one file to continue"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:187
+msgid "Your Club Name"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:71
+msgid "Your Clubs"
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:203
+msgid "Your Unique Club Link"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:57
+msgid "Your post is now visible to the public"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:31
+msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."
+msgstr ""
+
+#: src/client/domain/Manage/ManageClubs/CreateClub/CreateClub/CreateClub.tsx:210
+msgid "overdoll.com/"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:143
+msgid "page at any time."
 msgstr ""

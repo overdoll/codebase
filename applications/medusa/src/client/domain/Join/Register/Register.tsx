@@ -46,7 +46,6 @@ export default function Register ({ queryRef }: Props): JSX.Element {
   const [, , removeCookie] = useCookies<string>(['token'])
 
   const history = useHistory()
-  const { i18n } = useLingui()
 
   const onSubmit = ({ username }): void => {
     commit({

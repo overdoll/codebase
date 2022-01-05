@@ -51,7 +51,7 @@ export default function History (props: Props): JSX.Element | null {
             <GridItem color='gray.200' colSpan={3}>
               <Text>
                 <Trans>
-                  Brand
+                  Club
                 </Trans>
               </Text>
             </GridItem>

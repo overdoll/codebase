@@ -23,6 +23,8 @@ export default function ImageSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  // TODO add a placeholder in case the URL fails to load due to some error
+
   return (
     <Box>
       <picture>
@@ -30,10 +32,10 @@ export default function ImageSnippet ({
           (
             <source
               key={index}
-              srcSet={item.url as string}
+              srcSet={item.url}
               type={item.mimeType}
             />
-          ),
+          )
         )}
         <SuspenseImage
           alt='thumbnail'
@@ -41,7 +43,7 @@ export default function ImageSnippet ({
           h='inherit'
           objectFit='cover'
           userSelect='none'
-          src={data.urls[data.urls.length - 1].url as string}
+          src={data.urls[data.urls.length - 1].url}
           fallback={<Skeleton w='100%' h='100%' />}
           {...rest}
         />

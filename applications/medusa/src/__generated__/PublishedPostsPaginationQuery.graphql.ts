@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d0d238a0e870a22e83ae1ce5394a254b */
+/* @relayHash 4630637734facb482648f789867762a2 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -69,6 +69,7 @@ fragment PostStatePublishedFragment_2HEEH6 on Account {
 }
 
 fragment PostStatePublishedPreviewFragment on Post {
+  reference
   ...PostGalleryContentFragment
 }
 
@@ -214,6 +215,13 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "reference",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "Resource",
                             "kind": "LinkedField",
                             "name": "content",
@@ -318,7 +326,7 @@ return {
     ]
   },
   "params": {
-    "id": "d0d238a0e870a22e83ae1ce5394a254b",
+    "id": "4630637734facb482648f789867762a2",
     "metadata": {},
     "name": "PublishedPostsPaginationQuery",
     "operationKind": "query",

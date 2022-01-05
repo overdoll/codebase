@@ -20,6 +20,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
   return (
     <HorizontalNavigation.Button
       w='42px'
+      h='42px'
       to='/profile'
       label={
         <Trans>

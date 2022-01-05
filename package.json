@@ -64,6 +64,7 @@
     "ua-parser-js": "^0.7.28",
     "universal-cookie": "^4.0.4",
     "universal-cookie-express": "^4.0.3",
+    "url-slug": "^3.0.2",
     "use-query-params": "^1.2.3",
     "wait-port": "^0.2.9",
     "winston": "^3.3.3"

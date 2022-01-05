@@ -1,14 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8a30aa0a9b989a2aefc5b6d5a2f4da5f */
+/* @relayHash 4507276f7be03af7c8648e69f1b14017 */
 
 import { ConcreteRequest } from "relay-runtime";
-export type CreatePostInput = {
-    clubId: string;
-};
 export type CreatePostFlowMutationVariables = {
-    input: CreatePostInput;
+    clubId: string;
 };
 export type CreatePostFlowMutationResponse = {
     readonly createPost: {
@@ -26,9 +23,9 @@ export type CreatePostFlowMutation = {
 
 /*
 mutation CreatePostFlowMutation(
-  $input: CreatePostInput!
+  $clubId: ID!
 ) {
-  createPost(input: $input) {
+  createPost(input: {clubId: $clubId}) {
     post {
       reference
       id
@@ -42,14 +39,20 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "input"
+    "name": "clubId"
   }
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "clubId",
+        "variableName": "clubId"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "input"
   }
 ],
 v2 = {
@@ -132,7 +135,7 @@ return {
     ]
   },
   "params": {
-    "id": "8a30aa0a9b989a2aefc5b6d5a2f4da5f",
+    "id": "4507276f7be03af7c8648e69f1b14017",
     "metadata": {},
     "name": "CreatePostFlowMutation",
     "operationKind": "mutation",
@@ -140,5 +143,5 @@ return {
   }
 };
 })();
-(node as any).hash = '8da6f5b9d23d59606adb02fed345dfa7';
+(node as any).hash = 'a6db6645e4e8be71575635c46dcde872';
 export default node;

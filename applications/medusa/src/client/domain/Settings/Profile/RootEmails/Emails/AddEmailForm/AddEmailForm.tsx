@@ -102,17 +102,18 @@ export default function AddEmailForm ({
               </Trans>
             </AlertDescription>
           </Alert>}
-        <FormLabel>
+        <FormLabel fontSize='sm'>
           <Trans>
             Add an email
           </Trans>
         </FormLabel>
         <HStack align='flex-start'>
           <StyledInput
+            size='sm'
             register={register('email')}
             success={success}
             error={errors.email != null}
-            placeholder={t`Enter a new email address`}
+            placeholder={i18n._(t`Enter a new email address`)}
             errorMessage={errors?.email?.message}
           />
           <Button

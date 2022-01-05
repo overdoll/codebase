@@ -19,5 +19,9 @@ export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/Li
 
 export { default as SmallMenuButton } from './Interactables/Menus/SmallMenuButton/SmallMenuButton'
 export { default as SmallMenuItem } from './Interactables/Menus/SmallMenuItem/SmallMenuItem'
+export { default as LargeMenuButton } from './Interactables/Menus/LargeMenuButton/LargeMenuButton'
+export { default as LargeMenuItem } from './Interactables/Menus/LargeMenuItem/LargeMenuItem'
 
 export { default as PostPlaceholder } from './Flair/PostPlaceholder/PostPlaceholder'
+
+export { default as ResourceIcon } from '../DataDisplay/ResourceIcon/ResourceIcon'

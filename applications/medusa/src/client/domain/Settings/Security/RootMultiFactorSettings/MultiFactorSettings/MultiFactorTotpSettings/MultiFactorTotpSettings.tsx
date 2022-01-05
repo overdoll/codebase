@@ -23,7 +23,7 @@ export default function MultiFactorTotpSettings (props: Props): JSX.Element {
       disabled={!data.recoveryCodesGenerated}
       path='/configure/multi-factor/totp'
     >
-      <PagePanelIcon icon={QrCode} colorScheme='purple' />
+      <PagePanelIcon icon={QrCode} colorScheme='green' />
       <PagePanelText
         title={<Trans>Authenticator App</Trans>}
         description={data?.recoveryCodesGenerated
