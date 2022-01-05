@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	resource2 "overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/resource"
 )
 
 type ResourceById struct {
@@ -11,14 +11,14 @@ type ResourceById struct {
 }
 
 type ResourceByIdHandler struct {
-	rr resource2.Repository
+	rr resource.Repository
 }
 
-func NewResourceByIdHandler(rr resource2.Repository) ResourceByIdHandler {
+func NewResourceByIdHandler(rr resource.Repository) ResourceByIdHandler {
 	return ResourceByIdHandler{rr: rr}
 }
 
-func (h ResourceByIdHandler) Handle(ctx context.Context, query ResourceById) (*resource2.Resource, error) {
+func (h ResourceByIdHandler) Handle(ctx context.Context, query ResourceById) (*resource.Resource, error) {
 
 	result, err := h.rr.GetResourceById(ctx, query.ItemId, query.ResourceId)
 

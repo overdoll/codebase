@@ -18,7 +18,6 @@ var resourcesTable = table.New(table.Metadata{
 		"type",
 		"mime_types",
 		"processed",
-		"processed_prefix",
 		"processed_id",
 	},
 	PartKey: []string{"item_id"},
@@ -26,13 +25,12 @@ var resourcesTable = table.New(table.Metadata{
 })
 
 type resources struct {
-	ItemId          string   `db:"item_id"`
-	ResourceId      string   `db:"resource_id"`
-	Type            int      `db:"type"`
-	MimeTypes       []string `db:"mime_types"`
-	Processed       bool     `db:"processed"`
-	ProcessedPrefix string   `db:"processed_prefix"`
-	ProcessedId     string   `db:"processed_id"`
+	ItemId      string   `db:"item_id"`
+	ResourceId  string   `db:"resource_id"`
+	Type        int      `db:"type"`
+	MimeTypes   []string `db:"mime_types"`
+	Processed   bool     `db:"processed"`
+	ProcessedId string   `db:"processed_id"`
 }
 
 type ResourceCassandraRepository struct {
@@ -56,13 +54,12 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 	}
 
 	return &resources{
-		ItemId:          r.ItemId(),
-		ResourceId:      r.ID(),
-		Type:            typ,
-		MimeTypes:       nil,
-		Processed:       r.IsProcessed(),
-		ProcessedPrefix: r.ProcessedPrefix(),
-		ProcessedId:     r.ProcessedId(),
+		ItemId:      r.ItemId(),
+		ResourceId:  r.ID(),
+		Type:        typ,
+		MimeTypes:   r.MimeTypes(),
+		Processed:   r.IsProcessed(),
+		ProcessedId: r.ProcessedId(),
 	}
 }
 
@@ -86,10 +83,6 @@ func (r ResourceCassandraRepository) CreateResources(ctx context.Context, res []
 	return nil
 }
 
-func (r ResourceCassandraRepository) UpdateResources(ctx context.Context, resources []*resource.Resource) error {
-	return nil
-}
-
 func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, itemId string, resourceIds []string) ([]*resource.Resource, error) {
 
 	queryResources := resourcesTable.
@@ -110,7 +103,7 @@ func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, item
 	var resourcesResult []*resource.Resource
 
 	for _, i := range b {
-		resourcesResult = append(resourcesResult, resource.UnmarshalResourceFromDatabase(i.ItemId, i.ResourceId, i.Type, i.MimeTypes, i.Processed, i.ProcessedPrefix, i.ProcessedId))
+		resourcesResult = append(resourcesResult, resource.UnmarshalResourceFromDatabase(i.ItemId, i.ResourceId, i.Type, i.MimeTypes, i.Processed, i.ProcessedId))
 	}
 
 	return resourcesResult, nil
@@ -134,5 +127,33 @@ func (r ResourceCassandraRepository) GetResourceById(ctx context.Context, itemId
 		return nil, fmt.Errorf("failed to get resource by id: %v", err)
 	}
 
-	return resource.UnmarshalResourceFromDatabase(b.ItemId, b.ResourceId, b.Type, b.MimeTypes, b.Processed, b.ProcessedPrefix, b.ProcessedId), nil
+	return resource.UnmarshalResourceFromDatabase(b.ItemId, b.ResourceId, b.Type, b.MimeTypes, b.Processed, b.ProcessedId), nil
+}
+
+func (r ResourceCassandraRepository) UpdateResources(ctx context.Context, resources []*resource.Resource) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	for _, r := range resources {
+		// update all resources
+		stmt, _ := resourcesTable.Update("mime_types", "processed", "processed_id")
+		batch.Query(stmt, r.ItemId(), r.ID(), r.MimeTypes(), r.IsProcessed(), r.ProcessedId())
+	}
+
+	// execute batch.
+	return r.session.ExecuteBatch(batch)
+}
+
+func (r ResourceCassandraRepository) DeleteResources(ctx context.Context, resources []*resource.Resource) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	for _, r := range resources {
+		// remove selected resources
+		stmt, _ := resourcesTable.Delete()
+		batch.Query(stmt, r.ItemId(), r.ID())
+	}
+
+	// execute batch.
+	return r.session.ExecuteBatch(batch)
 }

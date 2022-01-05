@@ -3,7 +3,7 @@ package resolvers
 import (
 	"context"
 	"overdoll/applications/stella/internal/app"
-	query2 "overdoll/applications/stella/internal/app/query"
+	"overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -35,7 +35,7 @@ func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types
 		return nil, err
 	}
 
-	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query2.ClubMemberById{
+	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
 		ClubId:    obj.ID.GetID(),
 		AccountId: principal.FromContext(ctx).AccountId(),
 	})
@@ -60,7 +60,7 @@ func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.ClubMembersByClub.Handle(ctx, query2.ClubMembersByClub{
+	results, err := r.App.Queries.ClubMembersByClub.Handle(ctx, query.ClubMembersByClub{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		ClubId:    obj.ID.GetID(),
@@ -79,7 +79,7 @@ func (r ClubResolver) SlugAliasesLimit(ctx context.Context, obj *types.Club) (in
 		return 0, err
 	}
 
-	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query2.ClubSlugAliasesLimit{
+	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query.ClubSlugAliasesLimit{
 		AccountId: obj.Owner.ID.GetID(),
 		Principal: principal.FromContext(ctx),
 	})

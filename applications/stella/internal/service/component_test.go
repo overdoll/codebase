@@ -35,12 +35,12 @@ import (
 	"testing"
 )
 
-const StellaHttpAddr = ":6666"
-const StellaGraphqlClientAddr = "http://:6666/api/graphql"
-const StellaTusClientAddr = "http://:6666/api/upload/"
+const StellaHttpAddr = ":2222"
+const StellaGraphqlClientAddr = "http://:2222/api/graphql"
+const StellaTusClientAddr = "http://:2222/api/upload/"
 
-const StellaGrpcAddr = "localhost:6667"
-const StellaGrpcClientAddr = "localhost:6667"
+const StellaGrpcAddr = "localhost:2223"
+const StellaGrpcClientAddr = "localhost:2223"
 
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 

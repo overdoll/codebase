@@ -107,6 +107,50 @@ applications = {
             sync("applications/puppy/.env", "/app/applications/puppy/internal/local-image.binary.runfiles/overdoll/applications/puppy/.env"),
         ],
     },
+    "stella": {
+        "type": "go",
+        "directory": "stella",
+        "image_reference": "stella-image",
+        "image_target": "//applications/stella/internal:local-image",
+        "binary_target": "//applications/stella/internal:internal",
+        "binary_output": "applications/stella/internal/internal_/internal",
+        "container_workdir": "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/stella/internal/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/stella/internal:local-image",
+        "disable_resource": False,
+        "dependencies": [
+            "applications/stella/.env",
+            "applications/stella/config.toml",
+            "applications/stella/database",
+        ],
+        "live_update": [
+            sync("applications/stella/.env", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/.env"),
+            sync("applications/stella/config.toml", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/config.toml"),
+            sync("applications/stella/database", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/database"),
+        ],
+    },
+    "loader": {
+        "type": "go",
+        "directory": "loader",
+        "image_reference": "loader-image",
+        "image_target": "//applications/loader/internal:local-image",
+        "binary_target": "//applications/loader/internal:internal",
+        "binary_output": "applications/loader/internal/internal_/internal",
+        "container_workdir": "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/loader/internal/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/loader/internal:local-image",
+        "disable_resource": False,
+        "dependencies": [
+            "applications/loader/.env",
+            "applications/loader/config.toml",
+            "applications/loader/database",
+        ],
+        "live_update": [
+            sync("applications/loader/.env", "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/applications/loader/.env"),
+            sync("applications/loader/config.toml", "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/applications/loader/config.toml"),
+            sync("applications/loader/database", "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/applications/loader/database"),
+        ],
+    },
 }
 
 # Build applications with our helper function

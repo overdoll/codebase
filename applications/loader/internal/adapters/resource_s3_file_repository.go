@@ -30,14 +30,6 @@ func NewResourceS3FileRepository(session *session.Session) ResourceS3FileReposit
 	return ResourceS3FileRepository{session: session}
 }
 
-func getUploadIdWithoutExtension(uploadId string) string {
-	// strip any urls or extensions
-	splitPath := strings.Split(uploadId, "/")
-	idWithOrWithoutExtension := splitPath[len(strings.Split(uploadId, "/"))-1]
-
-	return strings.Split(idWithOrWithoutExtension, ".")[0]
-}
-
 func (r ResourceS3FileRepository) DeleteResources(ctx context.Context, resources []*resource.Resource) error {
 
 	s3Client := s3.New(r.session)
@@ -68,9 +60,7 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 
 	for _, uploadId := range uploads {
 
-		idWithoutExtension := getUploadIdWithoutExtension(uploadId)
-
-		fileId := strings.Split(idWithoutExtension, "+")[0]
+		fileId := strings.Split(uploadId, "+")[0]
 
 		resp, err := s3Client.HeadObject(&s3.HeadObjectInput{
 			Bucket: aws.String(UploadsBucket),
@@ -85,7 +75,7 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 
 		fileType := resp.Metadata["Filetype"]
 
-		newResource, err := resource.NewResource(itemId, idWithoutExtension, *fileType)
+		newResource, err := resource.NewResource(itemId, uploadId, *fileType)
 
 		if err != nil {
 			return nil, err
@@ -100,7 +90,7 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 // UploadProcessedResources - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
 // expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
 // it was uploaded through TUS
-func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, prefix string, resources []*resource.Resource) error {
+func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, resources []*resource.Resource) error {
 	downloader := s3manager.NewDownloader(r.session)
 	s3Client := s3.New(r.session)
 
@@ -132,7 +122,7 @@ func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, 
 		}
 
 		// process resource, by passing a prefix (where the file should be going) and the file that needs to be processed
-		targetsToMove, err := target.ProcessResource(prefix, file)
+		targetsToMove, err := target.ProcessResource(file)
 
 		if err != nil {
 			return fmt.Errorf("failed to process resource: %v", err)

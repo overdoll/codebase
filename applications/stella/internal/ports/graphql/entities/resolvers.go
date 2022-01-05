@@ -3,11 +3,10 @@ package entities
 import (
 	"context"
 	"overdoll/applications/stella/internal/app"
-	query2 "overdoll/applications/stella/internal/app/query"
-	club2 "overdoll/applications/stella/internal/domain/club"
+	"overdoll/applications/stella/internal/app/query"
+	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/principal"
 )
 
 type EntityResolver struct {
@@ -20,14 +19,14 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 
 func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error) {
 
-	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query2.ClubMemberById{
+	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
 		ClubId:    id.GetCompositePartID(1),
 		AccountId: id.GetCompositePartID(0),
 	})
 
 	if err != nil {
 
-		if err == club2.ErrClubMemberNotFound {
+		if err == club.ErrClubMemberNotFound {
 			return nil, nil
 		}
 
@@ -39,14 +38,13 @@ func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*t
 
 func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
 
-	media, err := r.App.Queries.ClubById.Handle(ctx, query2.ClubById{
-		Principal: principal.FromContext(ctx),
-		Id:        id.GetID(),
+	media, err := r.App.Queries.ClubById.Handle(ctx, query.ClubById{
+		Id: id.GetID(),
 	})
 
 	if err != nil {
 
-		if err == club2.ErrClubNotFound {
+		if err == club.ErrClubNotFound {
 			return nil, nil
 		}
 

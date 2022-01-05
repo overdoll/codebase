@@ -4,13 +4,13 @@ import (
 	"context"
 	"net/http"
 	"overdoll/applications/loader/internal/app"
+	gen "overdoll/applications/loader/internal/ports/graphql"
 
 	"github.com/gin-gonic/gin"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"go.temporal.io/sdk/client"
 	"go.uber.org/zap"
 	"overdoll/libraries/graphql"
-	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
 )
 
@@ -18,22 +18,9 @@ type GraphQLServer struct {
 	app *app.Application
 }
 
-func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal.Principal, error) {
-
-	acc, err := s.app.Queries.PrincipalById.Handle(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return acc, nil
-}
-
 func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 
 	rtr := router.NewGinRouter()
-
-	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
 
 	// graphql
 	rtr.POST("/api/graphql",

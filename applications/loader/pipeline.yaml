@@ -1,0 +1,50 @@
+steps:
+  build:
+    targets:
+      - //applications/loader/internal:internal
+
+  unit_test:
+    coverage:
+      - name: loader.unit
+        paths:
+          - ./applications/loader/**/coverage.dat
+    targets:
+      - //applications/loader/internal/app/...
+      - //applications/loader/internal/domain/...
+      - //applications/loader/internal/ports/...
+
+  push_image:
+    targets:
+      - //applications/loader/internal:publish-testing
+
+  integration_test:
+    coverage:
+      - name: loader.integration
+        paths:
+          - ./applications/loader/internal/adapters/**/coverage.dat
+      - name: stella.component
+        paths:
+          - ./applications/loader/internal/service/**/coverage.dat
+    setup:
+      dockerfile:
+        - ./applications/loader/docker-compose.ci.yaml
+    network_dependencies:
+      - host: loader
+        port: 8000
+    targets:
+      - //applications/loader/internal/adapters/...
+      - //applications/loader/internal/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/loader/docker-compose.ci.yaml
+        - ./applications/loader/docker-compose.ci.e2e.yaml
+    network_dependencies:
+      - host: loader
+        port: 8000
+        priority: 0
+
+  publish_image:
+    targets:
+      - //applications/loader/internal:publish

@@ -76,9 +76,8 @@ type Resource struct {
 	// url should be a Url to the resource (since sometimes an object might want to have different URLs for each resource
 	// the Url should NOT contain an extension or else it will be stripped (we keep track of mimetypes and sizes already so it's not necessary)
 
-	processed       bool
-	processedId     string
-	processedPrefix string
+	processed   bool
+	processedId string
 
 	mimeTypes    []string
 	sizes        []int
@@ -118,7 +117,7 @@ func NewResource(itemId, id, mimeType string) (*Resource, error) {
 
 // process resource - should be at a new Url and any additional mimetypes that are available
 // must pass the file that needs to be processed (usually the current file, gotten from Url())
-func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error) {
+func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
 	var mimeTypes []string
 	var moveTargets []*Move
@@ -185,7 +184,7 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 	}
 
 	fileName := uuid.New().String()
-	fileKey := prefix + fileName
+	fileKey := fileName
 
 	// the second file we need to move - a file that was existing already
 	moveTargets = append(moveTargets, &Move{
@@ -201,7 +200,6 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 		})
 	}
 
-	r.processedPrefix = prefix
 	r.processedId = fileName
 	r.mimeTypes = mimeTypes
 	r.processed = true
@@ -222,7 +220,11 @@ func (r *Resource) ItemId() string {
 }
 
 func (r *Resource) Url() string {
-	return r.processedPrefix + "/" + r.processedId
+	return r.itemId + "/" + r.processedId
+}
+
+func (r *Resource) MimeTypes() []string {
+	return r.mimeTypes
 }
 
 func (r *Resource) MakeImage() error {
@@ -239,10 +241,6 @@ func (r *Resource) IsProcessed() bool {
 	return r.processed
 }
 
-func (r *Resource) ProcessedPrefix() string {
-	return r.processedPrefix
-}
-
 func (r *Resource) ProcessedId() string {
 	return r.processedId
 }
@@ -255,7 +253,7 @@ func (r *Resource) IsVideo() bool {
 	return r.resourceType == videoType
 }
 
-func (r *Resource) FullUrls(size string) []*Url {
+func (r *Resource) FullUrls() []*Url {
 
 	var generatedContent []*Url
 
@@ -285,15 +283,14 @@ func (r *Resource) FullUrls(size string) []*Url {
 	return generatedContent
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedPrefix, processedId string) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string) *Resource {
 
 	return &Resource{
-		id:              resourceId,
-		itemId:          itemId,
-		processedPrefix: processedPrefix,
-		processedId:     processedId,
-		mimeTypes:       mimeTypes,
-		resourceType:    resourceType(tp),
-		processed:       processed,
+		id:           resourceId,
+		itemId:       itemId,
+		processedId:  processedId,
+		mimeTypes:    mimeTypes,
+		resourceType: resourceType(tp),
+		processed:    processed,
 	}
 }

@@ -3,6 +3,7 @@ package app
 import (
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
+	"overdoll/applications/loader/internal/app/workflows/activities"
 )
 
 type Application struct {
@@ -12,7 +13,8 @@ type Application struct {
 }
 
 type Commands struct {
-	TusComposer command.TusComposerHandler
+	TusComposer                        command.TusComposerHandler
+	NewCreateOrGetResourcesFromUploads command.CreateOrGetResourcesFromUploadsHandler
 }
 
 type Queries struct {

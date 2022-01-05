@@ -5,8 +5,8 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app"
-	command2 "overdoll/applications/stella/internal/app/command"
-	workflows2 "overdoll/applications/stella/internal/app/workflows"
+	"overdoll/applications/stella/internal/app/command"
+	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -26,7 +26,7 @@ func (r *MutationResolver) CreateClub(ctx context.Context, input types.CreateClu
 	pst, err := r.App.Commands.CreateClub.
 		Handle(
 			ctx,
-			command2.CreateClub{
+			command.CreateClub{
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				Name:      input.Name,
@@ -51,7 +51,7 @@ func (r *MutationResolver) AddClubSlugAlias(ctx context.Context, input types.Add
 	pst, err := r.App.Commands.AddClubSlugAlias.
 		Handle(
 			ctx,
-			command2.AddClubSlugAlias{
+			command.AddClubSlugAlias{
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				ClubId:    input.ID.GetID(),
@@ -76,7 +76,7 @@ func (r *MutationResolver) RemoveClubSlugAlias(ctx context.Context, input types.
 	pst, err := r.App.Commands.RemoveClubSlugAlias.
 		Handle(
 			ctx,
-			command2.RemoveClubSlugAlias{
+			command.RemoveClubSlugAlias{
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				ClubId:    input.ID.GetID(),
@@ -101,7 +101,7 @@ func (r *MutationResolver) PromoteClubSlugAliasToDefault(ctx context.Context, in
 	pst, err := r.App.Commands.PromoteClubSlugAliasToDefault.
 		Handle(
 			ctx,
-			command2.PromoteClubSlugAliasToDefault{
+			command.PromoteClubSlugAliasToDefault{
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				ClubId:    input.ID.GetID(),
@@ -126,7 +126,7 @@ func (r *MutationResolver) UpdateClubName(ctx context.Context, input types.Updat
 	pst, err := r.App.Commands.UpdateClubName.
 		Handle(
 			ctx,
-			command2.UpdateClubName{
+			command.UpdateClubName{
 				Principal: principal.FromContext(ctx),
 				Name:      input.Name,
 				ClubId:    input.ID.GetID(),
@@ -154,7 +154,7 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 	clb, err := r.App.Commands.BecomeClubMember.
 		Handle(
 			ctx,
-			command2.BecomeClubMember{
+			command.BecomeClubMember{
 				Principal: principal.FromContext(ctx),
 				ClubId:    clubId,
 			},
@@ -169,7 +169,7 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 		ID:        "AddClubMember_" + clubId + "_" + accountId,
 	}
 
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows2.AddClubMember, clubId, accountId)
+	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, clubId, accountId)
 
 	if err != nil {
 		return nil, err
@@ -192,7 +192,7 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 	if err := r.App.Commands.WithdrawClubMembership.
 		Handle(
 			ctx,
-			command2.WithdrawClubMembership{
+			command.WithdrawClubMembership{
 				Principal: principal.FromContext(ctx),
 				ClubId:    clubId,
 			},
@@ -205,7 +205,7 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 		ID:        "RemoveClubMember_" + clubId + "_" + accountId,
 	}
 
-	_, err := r.Client.ExecuteWorkflow(ctx, options, workflows2.RemoveClubMember, clubId, accountId)
+	_, err := r.Client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, clubId, accountId)
 
 	if err != nil {
 		return nil, err
