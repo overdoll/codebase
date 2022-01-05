@@ -26,7 +26,7 @@ func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, eva EvaSe
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	validClub, err := h.stella.GetClub(ctx, cmd.ClubId)
+	validClub, err := h.stella.CanAccountPostUnderClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err

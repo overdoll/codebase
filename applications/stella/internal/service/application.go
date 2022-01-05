@@ -66,7 +66,8 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById: query.NewPrincipalByIdHandler(eva),
+			PrincipalById:           query.NewPrincipalByIdHandler(eva),
+			CanAccountPostUnderClub: query.NewCanAccountPostUnderClubHandler(clubRepo),
 
 			SearchClubs:                 query.NewSearchClubsHandler(clubIndexRepo),
 			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),

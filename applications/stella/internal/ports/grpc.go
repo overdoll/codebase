@@ -21,10 +21,11 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 	}
 }
 
-func (s Server) GetClub(ctx context.Context, request *stella.GetClubRequest) (*stella.GetClubResponse, error) {
+func (s Server) CanAccountPostUnderClub(ctx context.Context, request *stella.CanAccountPostUnderClubRequest) (*stella.CanAccountPostUnderClubResponse, error) {
 
-	_, err := s.app.Queries.ClubById.Handle(ctx, query.ClubById{
-		Id: request.Id,
+	res, err := s.app.Queries.CanAccountPostUnderClub.Handle(ctx, query.CanAccountPostUnderClub{
+		ClubId:    request.ClubId,
+		AccountId: request.AccountId,
 	})
 
 	if err != nil {
@@ -35,5 +36,5 @@ func (s Server) GetClub(ctx context.Context, request *stella.GetClubRequest) (*s
 		return nil, err
 	}
 
-	return &stella.GetClubResponse{}, nil
+	return &stella.CanAccountPostUnderClubResponse{Allowed: res}, nil
 }

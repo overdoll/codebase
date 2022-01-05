@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/bxcodec/faker/v3"
 	"github.com/eventials/go-tus"
@@ -189,12 +188,6 @@ func startService() bool {
 
 	if !ok {
 		log.Println("timed out waiting for sting GRPC to come up")
-		return false
-	}
-
-	// pre-install webp so that our workflows dont have to
-	if err := webpbin.NewCWebP().BinWrapper.Run(); err != nil {
-		log.Printf("could not install webp: %v", err)
 		return false
 	}
 

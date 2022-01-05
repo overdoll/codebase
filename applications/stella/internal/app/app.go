@@ -32,6 +32,7 @@ type Queries struct {
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
+	CanAccountPostUnderClub     query.CanAccountPostUnderClubHandler
 
 	PrincipalById     query.PrincipalByIdHandler
 	ClubMemberById    query.ClubMemberByIdHandler

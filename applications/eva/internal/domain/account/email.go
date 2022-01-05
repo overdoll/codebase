@@ -54,6 +54,14 @@ func UnmarshalEmailFromDatabase(email, accountId string, status int) *Email {
 	}
 }
 
+func NewConfirmedEmail(email, accountId string) *Email {
+	return &Email{
+		email:     email,
+		status:    EmailConfirmed,
+		accountId: accountId,
+	}
+}
+
 func (c *Email) Email() string {
 	return c.email
 }
@@ -84,16 +92,6 @@ func (c *Email) IsPrimary() bool {
 
 func (c *Email) MakePrimary() {
 	c.status = EmailPrimary
-}
-
-func (c *Email) MakeConfirmed(requester *principal.Principal) error {
-	c.status = EmailConfirmed
-
-	if err := requester.BelongsToAccount(c.accountId); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (c *Email) CanView(requester *principal.Principal) error {

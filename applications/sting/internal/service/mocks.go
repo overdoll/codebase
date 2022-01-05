@@ -31,6 +31,6 @@ type StellaServiceMock struct {
 	adapter adapters.StellaGrpc
 }
 
-func (e StellaServiceMock) GetClub(ctx context.Context, s string) (bool, error) {
+func (e StellaServiceMock) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
 	return true, nil
 }

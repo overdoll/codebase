@@ -46,11 +46,11 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 	var typ int
 
 	if r.IsVideo() {
-		typ = 1
+		typ = 2
 	}
 
 	if r.IsImage() {
-		typ = 0
+		typ = 1
 	}
 
 	return &resources{

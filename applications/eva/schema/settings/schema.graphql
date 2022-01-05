@@ -153,7 +153,7 @@ input UpdateAccountEmailStatusToPrimaryInput {
 input EnrollAccountMultiFactorTotpInput {
 
   """
-  The TOTP ID, sent intially
+  The TOTP ID, sent initially
   """
   id: String!
 
@@ -169,6 +169,9 @@ input ConfirmAccountEmailInput {
   The ID that is sent for confirmation
   """
   id: String!
+
+  """The secret for email confirmation."""
+  secret: String!
 }
 
 """Email to add the account"""

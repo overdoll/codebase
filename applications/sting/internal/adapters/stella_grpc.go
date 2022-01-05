@@ -13,9 +13,9 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) GetClub(ctx context.Context, id string) (bool, error) {
+func (s StellaGrpc) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
 
-	md, err := s.client.GetClub(ctx, &stella.GetClubRequest{Id: id})
+	md, err := s.client.CanAccountPostUnderClub(ctx, &stella.CanAccountPostUnderClubRequest{ClubId: clubId, AccountId: accountId})
 
 	if err != nil {
 		return false, err
@@ -25,5 +25,5 @@ func (s StellaGrpc) GetClub(ctx context.Context, id string) (bool, error) {
 		return false, nil
 	}
 
-	return true, nil
+	return md.Allowed, nil
 }

@@ -190,6 +190,10 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
+func (m *Club) AccountIdCanPost(accountId string) bool {
+	return m.ownerAccountId == accountId
+}
+
 func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err

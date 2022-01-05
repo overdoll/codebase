@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
@@ -285,6 +284,10 @@ type ComplexityRoot struct {
 		Viewer                  func(childComplexity int) int
 		__resolve__service      func(childComplexity int) int
 		__resolve_entities      func(childComplexity int, representations []map[string]interface{}) int
+	}
+
+	Resource struct {
+		ID func(childComplexity int) int
 	}
 
 	RevokeAccountAccessPayload struct {
@@ -1479,6 +1482,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "Resource.id":
+		if e.complexity.Resource.ID == nil {
+			break
+		}
+
+		return e.complexity.Resource.ID(childComplexity), true
+
 	case "RevokeAccountAccessPayload.revokedAccountId":
 		if e.complexity.RevokeAccountAccessPayload.RevokedAccountID == nil {
 			break
@@ -1662,11 +1672,8 @@ var sources = []*ast.Source{
   """The ID that the account can be referenced by"""
   reference: String!
 
-  """A URL pointing to the accounts's public avatar."""
-  avatar(
-    """The size of the resulting square image."""
-    size: Int
-  ): URI!
+  """A URL pointing to the account's public avatar."""
+  avatar(size: Int): Resource
 
   """The username of the account."""
   username: String!
@@ -1855,6 +1862,10 @@ type Location {
 
   """Longitude"""
   longitude: Float!
+}
+`, BuiltIn: false},
+	{Name: "schema/schema.graphql", Input: `extend type Resource @key(fields: "id")  {
+  id: ID! @external
 }
 `, BuiltIn: false},
 	{Name: "schema/session/schema.graphql", Input: `"""Session belonging to a specific account"""
@@ -2108,6 +2119,9 @@ input ConfirmAccountEmailInput {
   The ID that is sent for confirmation
   """
   id: String!
+
+  """The secret for email confirmation."""
+  secret: String!
 }
 
 """Email to add the account"""
@@ -2640,7 +2654,7 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountEmail | AccountSession
+union _Entity = Account | AccountEmail | AccountSession | Resource
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -3370,14 +3384,11 @@ func (ec *executionContext) _Account_avatar(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_username(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -7972,6 +7983,41 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Resource_id(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _RevokeAccountAccessPayload_revokedAccountId(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountAccessPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9701,6 +9747,14 @@ func (ec *executionContext) unmarshalInputConfirmAccountEmailInput(ctx context.C
 			if err != nil {
 				return it, err
 			}
+		case "secret":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("secret"))
+			it.Secret, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -10205,6 +10259,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountSession(ctx, sel, obj)
+	case types.Resource:
+		return ec._Resource(ctx, sel, &obj)
+	case *types.Resource:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Resource(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -10237,9 +10298,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "avatar":
 			out.Values[i] = ec._Account_avatar(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "username":
 			out.Values[i] = ec._Account_username(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -11691,6 +11749,33 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var resourceImplementors = []string{"Resource", "_Entity"}
+
+func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj *types.Resource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Resource")
+		case "id":
+			out.Values[i] = ec._Resource_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var revokeAccountAccessPayloadImplementors = []string{"RevokeAccountAccessPayload"}
 
 func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountAccessPayload) graphql.Marshaler {
@@ -12840,16 +12925,6 @@ func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (graphql1.URI, error) {
-	var res graphql1.URI
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, sel ast.SelectionSet, v graphql1.URI) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) unmarshalNUpdateAccountEmailStatusToPrimaryInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryInput(ctx context.Context, v interface{}) (types.UpdateAccountEmailStatusToPrimaryInput, error) {
 	res, err := ec.unmarshalInputUpdateAccountEmailStatusToPrimaryInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13565,6 +13640,13 @@ func (ec *executionContext) marshalOMultiFactorTotp2ᚖoverdollᚋapplications�
 		return graphql.Null
 	}
 	return ec._MultiFactorTotp(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOResource2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Resource(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORevokeAccountAccessPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountAccessPayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountAccessPayload) graphql.Marshaler {

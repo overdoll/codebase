@@ -15,7 +15,6 @@ import (
 	"overdoll/libraries/uuid"
 	"testing"
 
-	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
@@ -157,12 +156,6 @@ func startService() bool {
 
 	if !ok {
 		log.Println("timed out waiting for sting GRPC to come up")
-		return false
-	}
-
-	// pre-install webp so that our workflows dont have to
-	if err := webpbin.NewCWebP().BinWrapper.Run(); err != nil {
-		log.Printf("could not install webp: %v", err)
 		return false
 	}
 

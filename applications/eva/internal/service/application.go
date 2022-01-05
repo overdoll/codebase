@@ -51,7 +51,8 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis)
-	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(session)
+	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
 	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
@@ -65,8 +66,8 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccountOperator:                       command.NewLockAccountOperatorHandler(accountRepo),
 			UnlockAccount:                             command.NewUnlockUserHandler(accountRepo),
-			AddAccountEmail:                           command.NewAddAccountEmailHandler(accountRepo, carrier),
-			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo),
+			AddAccountEmail:                           command.NewAddAccountEmailHandler(accountRepo, confirmEmailRepo, carrier),
+			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo, confirmEmailRepo),
 			UpdateAccountUsername:                     command.NewUpdateAccountUsernameHandler(accountRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),

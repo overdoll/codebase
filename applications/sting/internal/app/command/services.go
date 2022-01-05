@@ -15,7 +15,7 @@ type ParleyService interface {
 }
 
 type StellaService interface {
-	GetClub(context.Context, string) (bool, error)
+	CanAccountPostUnderClub(context.Context, string, string) (bool, error)
 }
 
 type LoaderService interface {

@@ -21,6 +21,7 @@ func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.
 	email, err := r.App.Commands.ConfirmAccountEmail.Handle(ctx, command.ConfirmAccountEmail{
 		Principal: principal.FromContext(ctx),
 		Id:        input.ID,
+		Secret:    input.Secret,
 	})
 
 	if err != nil {
@@ -141,23 +142,20 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 		return nil, err
 	}
 
-	email, err := r.App.Commands.AddAccountEmail.Handle(ctx, command.AddAccountEmail{
+	confirmEmail, err := r.App.Commands.AddAccountEmail.Handle(ctx, command.AddAccountEmail{
 		Principal: principal.FromContext(ctx),
 		Email:     input.Email,
 	})
 
 	if err != nil {
-
-		// TODO: detect invalid email??
-		//if err == validation.ErrInvalidEmail {
-		//	invalid := types.AddAccountEmailValidationInvalidEmail
-		//	return &types.AddAccountEmailPayload{Validation: &invalid}, nil
-		//}
-
 		return nil, err
 	}
 
-	return &types.AddAccountEmailPayload{AccountEmail: types.MarshalAccountEmailToGraphQL(email)}, nil
+	return &types.AddAccountEmailPayload{AccountEmail: &types.AccountEmail{
+		ID:     relay.NewID(types.AccountEmail{}, confirmEmail.AccountId(), confirmEmail.Email()),
+		Email:  confirmEmail.Email(),
+		Status: types.AccountEmailStatusUnconfirmed,
+	}}, nil
 }
 
 func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error) {

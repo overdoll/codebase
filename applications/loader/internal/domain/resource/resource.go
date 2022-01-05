@@ -33,34 +33,6 @@ var (
 	videoAcceptedTypes = []string{"video/mp4"}
 )
 
-// Move is a struct that contains the info that would tell a repository where a file is located in the OS,
-// and where it needs to be moved in a remote storage (s3, etc...)
-type Move struct {
-	osFileLocation  string
-	remoteUrlTarget string
-}
-
-func (r *Move) OsFileLocation() string {
-	return r.osFileLocation
-}
-
-func (r *Move) RemoteUrlTarget() string {
-	return r.remoteUrlTarget
-}
-
-type Url struct {
-	fullUrl  string
-	mimeType string
-}
-
-func (r *Url) GetFullUrl() string {
-	return r.fullUrl
-}
-
-func (r *Url) GetMimeType() string {
-	return r.mimeType
-}
-
 // Resource represents a media resource that can either be an image or a video
 // it will contain an ID to identify the resource, as well as the available mimeTypes for the specific resource
 // it is most often useful for static content such as posts or thumbnails for tags, where we need image & video fallbacks as
@@ -115,7 +87,7 @@ func NewResource(itemId, id, mimeType string) (*Resource, error) {
 	}, nil
 }
 
-// process resource - should be at a new Url and any additional mimetypes that are available
+// ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
 // must pass the file that needs to be processed (usually the current file, gotten from Url())
 func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
