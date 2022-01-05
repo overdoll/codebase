@@ -17,7 +17,7 @@ msgstr ""
 msgid "A unique link"
 msgstr ""
 
-#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:89
+#: src/client/domain/Manage/ManageClubs/MyClubs/ClubListSelect.tsx:89
 msgid "Club"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:99
+#: src/client/domain/Manage/ManageClubs/MyClubs/ClubListSelect.tsx:99
 msgid "Clubs allow you to organize your posts and community all in one place. You need to create or have access to at least one club to be able to upload posts."
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Go back to Manage Clubs"
 msgstr ""
 
-#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:123
+#: src/client/domain/Manage/ManageClubs/MyClubs/ClubListSelect.tsx:123
 msgid "Load more clubs"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Your Club Name"
 msgstr ""
 
-#: src/client/domain/Manage/ManageClubs/MyClubs/MyClubs.tsx:71
+#: src/client/domain/Manage/ManageClubs/MyClubs/ClubListSelect.tsx:71
 msgid "Your Clubs"
 msgstr ""
 

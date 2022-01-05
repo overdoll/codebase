@@ -10,12 +10,14 @@ interface Props {
   exact?: boolean
   icon: FunctionComponent<any>
   colorScheme?: string
+  strict?: boolean
 }
 
 export default function VerticalNavigationButton ({
   title,
   icon,
   exact = false,
+  strict = false,
   to,
   colorScheme = 'gray'
 }: Props): JSX.Element {
@@ -25,6 +27,7 @@ export default function VerticalNavigationButton ({
     <NavLink
       exact={exact}
       to={to}
+      strict={strict}
     >
       {({ isActive }) => (
         <ClickableBox

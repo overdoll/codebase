@@ -847,6 +847,58 @@ const routes: Route[] = [
         }
       },
       {
+        path: '/club/:slug',
+        component: loadable(async () =>
+          await import(
+            './domain/MyClubs/RootMyClubs'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/SelectClubsQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                slug: params.slug
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        routes: [
+          {
+            path: '/club/:slug/settings',
+            component: loadable(async () =>
+              await import(
+                './domain/MyClubs/RootClubSettings/RootClubSettings'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubSettingsQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
         path: '*',
         exact: false,
         dependencies: [
