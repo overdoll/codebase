@@ -22,6 +22,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/loader/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/stella/proto:v1_go_proto",
         "//applications/sting/internal/domain/post",

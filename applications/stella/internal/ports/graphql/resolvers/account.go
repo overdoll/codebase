@@ -15,6 +15,36 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) ClubsLimit(ctx context.Context, obj *types.Account) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	return r.App.Queries.AccountClubsLimit.Handle(ctx, query.AccountClubsLimit{
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+}
+
+func (r AccountResolver) ClubsCount(ctx context.Context, obj *types.Account) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	results, err := r.App.Queries.AccountClubsCount.Handle(ctx, query.AccountClubsCount{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return results, nil
+}
+
 func (r AccountResolver) ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

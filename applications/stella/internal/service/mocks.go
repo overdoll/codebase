@@ -26,3 +26,9 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 	return prin, nil
 }
+
+type LoaderServiceMock struct{}
+
+func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
+	return resourceIds, nil
+}

@@ -8,5 +8,6 @@ go_library(
     deps = [
         "//applications/loader/internal/app/command",
         "//applications/loader/internal/app/query",
+        "//applications/loader/internal/app/workflows/activities",
     ],
 )

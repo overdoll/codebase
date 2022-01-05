@@ -151,11 +151,7 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 		return nil, err
 	}
 
-	return &types.AddAccountEmailPayload{AccountEmail: &types.AccountEmail{
-		ID:     relay.NewID(types.AccountEmail{}, confirmEmail.AccountId(), confirmEmail.Email()),
-		Email:  confirmEmail.Email(),
-		Status: types.AccountEmailStatusUnconfirmed,
-	}}, nil
+	return &types.AddAccountEmailPayload{AccountEmail: types.MarshalConfirmEmailToGraphQL(confirmEmail, input.Email)}, nil
 }
 
 func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error) {

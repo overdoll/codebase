@@ -4,7 +4,6 @@ go_library(
     name = "command",
     srcs = [
         "create_or_get_resources_from_uploads.go",
-        "process_resources_from_ids.go",
         "tus_composer.go",
     ],
     importpath = "overdoll/applications/loader/internal/app/command",

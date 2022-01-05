@@ -34,3 +34,20 @@ func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resource
 
 	return nil
 }
+
+func (s LoaderGrpc) AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error) {
+
+	res, err := s.client.GetResources(ctx, &loader.GetResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
+
+	if err != nil {
+		return false, err
+	}
+
+	for _, item := range res.Resources {
+		if !item.Processed {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}

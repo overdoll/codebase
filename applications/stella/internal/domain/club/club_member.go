@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	maxAccountClubsLimit = 500
+	maxAccountClubMembershipLimit = 500
 )
 
 var (
@@ -65,7 +65,7 @@ func (m *Member) JoinedAt() time.Time {
 
 func IsAccountClubMembershipReached(requester *principal.Principal, accountId string, currentClubIds []*Member) (bool, error) {
 
-	lim, err := ViewAccountClubMemberLimit(requester, accountId)
+	lim, err := ViewAccountClubMembershipsLimit(requester, accountId)
 
 	if err != nil {
 		return false, err
@@ -78,12 +78,12 @@ func IsAccountClubMembershipReached(requester *principal.Principal, accountId st
 	return false, nil
 }
 
-func ViewAccountClubMemberLimit(requester *principal.Principal, accountId string) (int, error) {
+func ViewAccountClubMembershipsLimit(requester *principal.Principal, accountId string) (int, error) {
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
 	}
 
-	return maxAccountClubsLimit, nil
+	return maxAccountClubMembershipLimit, nil
 }
 
 func CanViewAccountClubMemberships(requester *principal.Principal, accountId string) error {

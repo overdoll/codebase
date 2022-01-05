@@ -29,8 +29,9 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 	}
 
 	return &Resource{
-		ID:   relay.NewID(Resource{}, res.ID()),
-		Type: tp,
-		Urls: urls,
+		ID:        relay.NewID(Resource{}, res.ItemId(), res.ID()),
+		Processed: res.IsProcessed(),
+		Type:      tp,
+		Urls:      urls,
 	}
 }

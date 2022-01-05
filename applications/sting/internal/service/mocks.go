@@ -27,10 +27,22 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 	return prin, nil
 }
 
-type StellaServiceMock struct {
-	adapter adapters.StellaGrpc
-}
+type StellaServiceMock struct{}
 
 func (e StellaServiceMock) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
+	return true, nil
+}
+
+type LoaderServiceMock struct{}
+
+func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
+	return resourceIds, nil
+}
+
+func (l LoaderServiceMock) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
+	return nil
+}
+
+func (l LoaderServiceMock) AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error) {
 	return true, nil
 }

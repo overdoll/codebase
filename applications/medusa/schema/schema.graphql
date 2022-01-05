@@ -2301,6 +2301,21 @@ enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
 }
 
+"""Update club thumbnail."""
+input UpdateClubThumbnailInput {
+  """The club to update"""
+  id: ID!
+
+  """The thumbnail for the club."""
+  thumbnail: String!
+}
+
+"""Payload for updating the thumbnail"""
+type UpdateClubThumbnailPayload {
+  """The club after update"""
+  club: Club
+}
+
 """Update club name."""
 input UpdateClubNameInput {
   """The club to update"""

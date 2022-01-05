@@ -63,9 +63,10 @@ type ComplexityRoot struct {
 	}
 
 	Resource struct {
-		ID   func(childComplexity int) int
-		Type func(childComplexity int) int
-		Urls func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Processed func(childComplexity int) int
+		Type      func(childComplexity int) int
+		Urls      func(childComplexity int) int
 	}
 
 	ResourceURL struct {
@@ -162,6 +163,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Resource.ID(childComplexity), true
+
+	case "Resource.processed":
+		if e.complexity.Resource.Processed == nil {
+			break
+		}
+
+		return e.complexity.Resource.Processed(childComplexity), true
 
 	case "Resource.type":
 		if e.complexity.Resource.Type == nil {
@@ -268,8 +276,16 @@ We also identify the type of resource (image or video) to make it easy to distin
 """
 
 type Resource implements Node @key(fields: "id")  {
+  """An ID uniquely identifying this resource."""
   id: ID!
+
+  """The type of resource - either an image or a video."""
   type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
   urls: [ResourceUrl!]!
 }
 `, BuiltIn: false},
@@ -801,6 +817,41 @@ func (ec *executionContext) _Resource_type(ctx context.Context, field graphql.Co
 	res := resTmp.(types.ResourceType)
 	fc.Result = res
 	return ec.marshalNResourceType2overdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Resource_processed(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Processed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Resource_urls(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
@@ -2254,6 +2305,11 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "type":
 			out.Values[i] = ec._Resource_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "processed":
+			out.Values[i] = ec._Resource_processed(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

@@ -2,7 +2,18 @@ syntax = "proto3";
 
 package applications.grpc.loader.v1;
 
+message Resource {
+  string id = 1;
+  string itemId = 2;
+  bool processed = 3;
+}
+
 message DeleteResourcesRequest {
+  string itemId = 1;
+  repeated string resourceIds = 2;
+}
+
+message GetResourcesRequest {
   string itemId = 1;
   repeated string resourceIds = 2;
 }
@@ -18,7 +29,12 @@ message CreateOrGetResourcesFromUploadsResponse {
 
 message DeleteResourcesResponse {}
 
+message GetResourcesResponse {
+  repeated Resource resources = 1;
+}
+
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
   rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
+  rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
 }

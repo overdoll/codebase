@@ -18,7 +18,15 @@ We also identify the type of resource (image or video) to make it easy to distin
 """
 
 type Resource implements Node @key(fields: "id")  {
+  """An ID uniquely identifying this resource."""
   id: ID!
+
+  """The type of resource - either an image or a video."""
   type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
   urls: [ResourceUrl!]!
 }

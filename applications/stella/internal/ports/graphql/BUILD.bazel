@@ -5,10 +5,16 @@ go_library(
     srcs = [
         "federation.go",
         "generated.go",
+        "resolver.go",
     ],
     importpath = "overdoll/applications/stella/internal/ports/graphql",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/ports/graphql/entities",
+        "//applications/stella/internal/ports/graphql/mutations",
+        "//applications/stella/internal/ports/graphql/queries",
+        "//applications/stella/internal/ports/graphql/resolvers",
         "//applications/stella/internal/ports/graphql/types",
         "//libraries/graphql/relay",
         "@com_github_99designs_gqlgen//graphql",
@@ -16,5 +22,6 @@ go_library(
         "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
         "@com_github_vektah_gqlparser_v2//:gqlparser",
         "@com_github_vektah_gqlparser_v2//ast",
+        "@io_temporal_go_sdk//client",
     ],
 )

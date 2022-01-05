@@ -3,16 +3,22 @@ package service_test
 import (
 	"context"
 	"github.com/CapsLock-Studio/go-webpbin"
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
+	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
+	"mime"
 	"os"
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"path"
+	"path/filepath"
+	"strings"
 
-	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -28,11 +34,53 @@ const LoaderTusClientAddr = "http://:3333/api/upload/"
 const LoaderGrpcAddr = "localhost:3334"
 const LoaderGrpcClientAddr = "localhost:3334"
 
-func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
+func getTusClient(t *testing.T) *tus.Client {
 
-	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
+	// use a custom http client so we can attach our passport
+	cfg := tus.DefaultConfig()
 
-	return graphql.NewClient(LoaderGraphqlClientAddr, client)
+	client, err := tus.NewClient(LoaderTusClientAddr, cfg)
+	require.NoError(t, err)
+
+	return client
+}
+
+func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) string {
+
+	// use bazel runfiles path
+	dir, err := bazel.RunfilesPath()
+	require.NoError(t, err)
+
+	f, err := os.Open(path.Join(dir, filePath))
+	require.NoError(t, err)
+
+	defer f.Close()
+
+	fi, err := f.Stat()
+	require.NoError(t, err)
+
+	// create the tus client.
+	// create an upload from a file.
+	upload, _ := tus.NewUploadFromFile(f)
+
+	// set filetype extension header or else
+	// filetype wont be set up properly
+	fileTypeEncoded := mime.TypeByExtension(filepath.Ext(filePath))
+	upload.Metadata["filetype"] = fileTypeEncoded
+	upload.Metadata["type"] = fileTypeEncoded
+	upload.Metadata["name"] = fi.Name()
+
+	// create the uploader.
+	uploader, _ := tusClient.CreateUpload(upload)
+
+	// start the uploading process.
+	err = uploader.Upload()
+	require.NoError(t, err)
+
+	split := strings.Split(uploader.Url(), "/")
+
+	// get last part of url = ID of the upload
+	return split[len(split)-1]
 }
 
 func getGraphqlClient(t *testing.T) *graphql.Client {
@@ -42,11 +90,11 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(LoaderGraphqlClientAddr, client)
 }
 
-func getGrpcClient(t *testing.T) sting.StingClient {
+func getGrpcClient(t *testing.T) loader.LoaderClient {
 
-	stingClient, _ := clients.NewStingClient(context.Background(), LoaderGrpcClientAddr)
+	loaderClient, _ := clients.NewLoaderClient(context.Background(), LoaderGrpcClientAddr)
 
-	return stingClient
+	return loaderClient
 }
 
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {

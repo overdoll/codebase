@@ -8,14 +8,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type EmailStatus string
-
-const (
-	EmailConfirmed   EmailStatus = "confirmed"
-	EmailUnconfirmed EmailStatus = "unconfirmed"
-	EmailPrimary     EmailStatus = "primary"
-)
-
 type Email struct {
 	*paging.Node
 	email     string
@@ -24,8 +16,7 @@ type Email struct {
 }
 
 var (
-	ErrEmailNotConfirmed     = errors.New("email not confirmed")
-	ErrMaxEmailsLimitReached = errors.New("reached maximum emails limit. delete an email to add more")
+	ErrEmailNotConfirmed = errors.New("email not confirmed")
 )
 
 const (
@@ -34,10 +25,6 @@ const (
 
 func UnmarshalEmailFromDatabase(email, accountId string, status int) *Email {
 	var st EmailStatus
-
-	if status == 0 {
-		st = EmailUnconfirmed
-	}
 
 	if status == 1 {
 		st = EmailConfirmed
@@ -80,10 +67,6 @@ func (c *Email) Status() EmailStatus {
 
 func (c *Email) IsConfirmed() bool {
 	return c.status == EmailConfirmed
-}
-
-func (c *Email) IsUnconfirmed() bool {
-	return c.status == EmailUnconfirmed
 }
 
 func (c *Email) IsPrimary() bool {

@@ -55,7 +55,7 @@ func newPublishingPost(t *testing.T) *post.Post {
 	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), ksuid.New().String())
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(principal.NewPrincipal(testingAccountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	err = pst.SubmitPostRequest(principal.NewPrincipal(testingAccountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
 
 	require.NoError(t, err)
 	return pst

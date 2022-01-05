@@ -12,11 +12,13 @@ var (
 	ErrClubNotFound                = errors.New("club not found")
 	ErrClubSlugNotUnique           = errors.New("club slug is not unique")
 	ErrClubSlugMax                 = errors.New("maximum slugs reached for club")
+	ErrAccountTooManyClubs         = errors.New("account has created too many clubs")
 	ErrClubSlugDoesNotBelongToClub = errors.New("club slug does not belong to club")
 )
 
 const (
-	maxClubSlugLimit = 5
+	maxClubSlugLimit     = 5
+	maxAccountClubsLimit = 5
 )
 
 type Club struct {
@@ -34,7 +36,18 @@ type Club struct {
 	ownerAccountId string
 }
 
-func NewClub(acc *principal.Principal, slug, name string) (*Club, error) {
+func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
+
+	res, err := IsAccountClubsLimitReached(acc, acc.AccountId(), currentClubCount)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if res {
+		return nil, ErrAccountTooManyClubs
+	}
+
 	id := uuid.New()
 
 	lc, err := localization.NewDefaultTranslation(name)
@@ -168,6 +181,17 @@ func (m *Club) RemoveSlugAlias(requester *principal.Principal, slug string) erro
 	return nil
 }
 
+func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	m.thumbnailResourceId = thumbnail
+
+	return nil
+}
+
 func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 	if err := m.canUpdate(requester); err != nil {
@@ -194,10 +218,41 @@ func (m *Club) AccountIdCanPost(accountId string) bool {
 	return m.ownerAccountId == accountId
 }
 
+func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {
+
+	lim, err := ViewAccountClubsLimit(requester, accountId)
+
+	if err != nil {
+		return false, err
+	}
+
+	if currentClubCount >= lim {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
 	}
 
 	return maxClubSlugLimit, nil
+}
+
+func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (int, error) {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return 0, err
+	}
+
+	return maxAccountClubsLimit, nil
+}
+
+func CanViewAccountClubs(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

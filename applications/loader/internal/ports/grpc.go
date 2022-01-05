@@ -7,6 +7,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
+	"overdoll/applications/loader/internal/app/query"
 	"overdoll/applications/loader/internal/app/workflows"
 	loader "overdoll/applications/loader/proto"
 )
@@ -62,4 +63,28 @@ func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResou
 	}
 
 	return &loader.DeleteResourcesResponse{}, nil
+}
+
+func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRequest) (*loader.GetResourcesResponse, error) {
+
+	allResources, err := s.app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
+		ItemId:      request.ItemId,
+		ResourceIds: request.ResourceIds,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var responseResources []*loader.Resource
+
+	for _, resource := range allResources {
+		responseResources = append(responseResources, &loader.Resource{
+			Id:        resource.ID(),
+			ItemId:    resource.ItemId(),
+			Processed: resource.IsProcessed(),
+		})
+	}
+
+	return &loader.GetResourcesResponse{Resources: responseResources}, nil
 }

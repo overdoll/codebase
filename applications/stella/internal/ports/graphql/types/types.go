@@ -11,12 +11,16 @@ import (
 )
 
 type Account struct {
+	// Maximum amount of clubs that you can create.
+	ClubsLimit int `json:"clubsLimit"`
+	// Current count of the amount of clubs that the account has created.
+	ClubsCount int `json:"clubsCount"`
+	// Represents the clubs that the account has created.
+	Clubs *ClubConnection `json:"clubs"`
 	// Maximum amount of clubs that you can join as an account.
 	ClubMembershipsLimit int `json:"clubMembershipsLimit"`
 	// Current count of club memberships. Should be compared against the limit before joining a club.
 	ClubMembershipsCount int `json:"clubMembershipsCount"`
-	// Represents the clubs that the account has write access to.
-	Clubs *ClubConnection `json:"clubs"`
 	// Represents the club memberships that the account has.
 	ClubMemberships *ClubMemberConnection `json:"clubMemberships"`
 	ID              relay.ID              `json:"id"`
@@ -36,6 +40,8 @@ type AddClubSlugAliasInput struct {
 type AddClubSlugAliasPayload struct {
 	// The club after update
 	Club *Club `json:"club"`
+	// Validation for adding a new club
+	Validation *AddClubSlugAliasValidation `json:"validation"`
 }
 
 // Become a club member.
@@ -57,20 +63,20 @@ type Club struct {
 	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
-	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
-	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
+	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
+	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this club.
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
-	// The total amount of members in this club.
-	MembersCount int `json:"membersCount"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
+	// The total amount of members in this club.
+	MembersCount int `json:"membersCount"`
 	// Club members.
 	Members *ClubMemberConnection `json:"members"`
 }
@@ -142,6 +148,8 @@ type CreateClubInput struct {
 type CreateClubPayload struct {
 	// The club after creation
 	Club *Club `json:"club"`
+	// Validation for creating a new club
+	Validation *CreateClubValidation `json:"validation"`
 }
 
 // Update alias slug to default.
@@ -192,6 +200,20 @@ type UpdateClubNamePayload struct {
 	Club *Club `json:"club"`
 }
 
+// Update club thumbnail.
+type UpdateClubThumbnailInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The thumbnail for the club.
+	Thumbnail string `json:"thumbnail"`
+}
+
+// Payload for updating the thumbnail
+type UpdateClubThumbnailPayload struct {
+	// The club after update
+	Club *Club `json:"club"`
+}
+
 // Withdraw club membership.
 type WithdrawClubMembershipInput struct {
 	// The chosen club ID.
@@ -202,6 +224,46 @@ type WithdrawClubMembershipInput struct {
 type WithdrawClubMembershipPayload struct {
 	// The club membership that was removed
 	ClubMemberID relay.ID `json:"clubMemberId"`
+}
+
+// Validation for adding a new slug to a club
+type AddClubSlugAliasValidation string
+
+const (
+	AddClubSlugAliasValidationSlugTaken AddClubSlugAliasValidation = "SLUG_TAKEN"
+)
+
+var AllAddClubSlugAliasValidation = []AddClubSlugAliasValidation{
+	AddClubSlugAliasValidationSlugTaken,
+}
+
+func (e AddClubSlugAliasValidation) IsValid() bool {
+	switch e {
+	case AddClubSlugAliasValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e AddClubSlugAliasValidation) String() string {
+	return string(e)
+}
+
+func (e *AddClubSlugAliasValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AddClubSlugAliasValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AddClubSlugAliasValidation", str)
+	}
+	return nil
+}
+
+func (e AddClubSlugAliasValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // Properties by which club member connections can be ordered.
@@ -283,5 +345,45 @@ func (e *ClubsOrderField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ClubsOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new club
+type CreateClubValidation string
+
+const (
+	CreateClubValidationSlugTaken CreateClubValidation = "SLUG_TAKEN"
+)
+
+var AllCreateClubValidation = []CreateClubValidation{
+	CreateClubValidationSlugTaken,
+}
+
+func (e CreateClubValidation) IsValid() bool {
+	switch e {
+	case CreateClubValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateClubValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateClubValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateClubValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateClubValidation", str)
+	}
+	return nil
+}
+
+func (e CreateClubValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

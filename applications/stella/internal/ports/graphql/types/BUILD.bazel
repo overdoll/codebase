@@ -12,6 +12,5 @@ go_library(
         "//applications/stella/internal/domain/club",
         "//libraries/graphql/relay",
         "//libraries/paging",
-        "//libraries/passport",
     ],
 )

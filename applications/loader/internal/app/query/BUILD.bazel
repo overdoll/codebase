@@ -3,15 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
-        "principal_by_id.go",
         "resource_by_id.go",
         "resources_by_ids.go",
-        "services.go",
     ],
     importpath = "overdoll/applications/loader/internal/app/query",
     visibility = ["//applications/loader:__subpackages__"],
-    deps = [
-        "//applications/loader/internal/domain/resource",
-        "//libraries/principal",
-    ],
+    deps = ["//applications/loader/internal/domain/resource"],
 )

@@ -3,11 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
-        "account_cassandra_redis_repository.go",
-        "account_email_cassandra_redis_repository.go",
+        "account_cassandra_repository.go",
         "account_index_elasticsearch_repository.go",
-        "account_username_cassandra_repository.go",
         "carrier_grpc.go",
+        "confirm_email_redis_repository.go",
         "location_maxmind_repository.go",
         "multi_factor_cassandra_repository.go",
         "session_redis_repository.go",
@@ -18,6 +17,7 @@ go_library(
     deps = [
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/confirm_email",
         "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
@@ -41,7 +41,7 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
-        "account_cassandra_redis_repository_test.go",
+        "account_cassandra_repository_test.go",
         "repository_test.go",
     ],
     data = ["//applications/eva:config.toml"],

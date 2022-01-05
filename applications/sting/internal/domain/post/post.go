@@ -278,10 +278,14 @@ func (p *Post) MakeReview() error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string) error {
+func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string, allResourcesProcessed bool) error {
 
 	if err := p.CanView(requester); err != nil {
 		return err
+	}
+
+	if !allResourcesProcessed {
+		return errors.New("all resources must be processed before submitting")
 	}
 
 	if p.state != Draft {

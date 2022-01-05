@@ -11,6 +11,7 @@ go_library(
         "remove_club_slug_alias.go",
         "services.go",
         "update_club_name.go",
+        "update_club_thumbnail.go",
         "withdraw_club_membership.go",
     ],
     importpath = "overdoll/applications/stella/internal/app/command",

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/confirm_email"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
@@ -135,16 +136,21 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 	return nil
 }
 
+func MarshalConfirmEmailToGraphQL(confirmEmail *confirm_email.ConfirmEmail, email string) *AccountEmail {
+
+	return &AccountEmail{
+		ID:     relay.NewID(AccountEmail{}, confirmEmail.AccountId(), email),
+		Email:  email,
+		Status: AccountEmailStatusUnconfirmed,
+	}
+}
+
 func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
 
 	var status AccountEmailStatus
 
 	if result.IsConfirmed() {
 		status = AccountEmailStatusConfirmed
-	}
-
-	if result.IsUnconfirmed() {
-		status = AccountEmailStatusUnconfirmed
 	}
 
 	if result.IsPrimary() {

@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "resolvers",
-    srcs = ["club.go"],
+    srcs = [
+        "account.go",
+        "club.go",
+    ],
     importpath = "overdoll/applications/stella/internal/ports/graphql/resolvers",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
@@ -10,6 +13,7 @@ go_library(
         "//applications/stella/internal/app/query",
         "//applications/stella/internal/domain/club",
         "//applications/stella/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

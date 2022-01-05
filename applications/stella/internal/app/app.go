@@ -17,6 +17,7 @@ type Commands struct {
 
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
+	UpdateClubThumbnail           command.UpdateClubThumbnailHandler
 	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
 	AddClubSlugAlias              command.AddClubSlugAliasHandler
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
@@ -28,11 +29,15 @@ type Queries struct {
 	SearchClubs                 query.SearchClubsHandler
 	ClubBySlug                  query.ClubBySlugHandler
 	ClubById                    query.ClubByIdHandler
+	ClubsByIds                  query.ClubsByIdsHandler
 	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 	CanAccountPostUnderClub     query.CanAccountPostUnderClubHandler
+
+	AccountClubsCount query.AccountClubsCountHandler
+	AccountClubsLimit query.AccountClubsLimitHandler
 
 	PrincipalById     query.PrincipalByIdHandler
 	ClubMemberById    query.ClubMemberByIdHandler

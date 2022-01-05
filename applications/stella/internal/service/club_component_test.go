@@ -6,6 +6,8 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/stella/internal/ports/graphql/types"
+	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/graphql/relay"
 	"testing"
 )
 
@@ -16,6 +18,9 @@ type ClubModified struct {
 	Name        string
 	SlugAliases []struct {
 		Slug string
+	}
+	Thumbnail *struct {
+		ID relay.ID
 	}
 	SlugAliasesLimit int
 }
@@ -37,16 +42,36 @@ func getClub(t *testing.T, client *graphql.Client, id string) Club {
 	return club
 }
 
+type AccountClubs struct {
+	Entities []struct {
+		Account struct {
+			ID         string
+			ClubsLimit int
+			ClubsCount int
+			Clubs      *struct {
+				Edges []*struct {
+					Node struct {
+						ID string
+					}
+				}
+			} `graphql:"clubs()"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+type _Any map[string]interface{}
+
 type CreateClub struct {
 	CreateClub *struct {
 		Club *ClubModified
 	} `graphql:"createClub(input: $input)"`
 }
 
-func TestCreateClub(t *testing.T) {
+func TestCreateClub_and_check_permission(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	var createClub CreateClub
 
@@ -65,6 +90,31 @@ func TestCreateClub(t *testing.T) {
 
 	newClb := getClub(t, client, fake.Slug)
 	require.Equal(t, newClb.Club.Slug, fake.Slug, "should see club with correct slug")
+
+	grpcClient := getGrpcClient(t)
+
+	// check permissions
+	res, err := grpcClient.CanAccountPostUnderClub(context.Background(), &stella.CanAccountPostUnderClubRequest{
+		ClubId:    newClb.Club.Reference,
+		AccountId: testingAccountId,
+	})
+
+	require.NoError(t, err, "no error checking permission")
+	require.True(t, res.Allowed, "should be allowed")
+
+	var accountClubs AccountClubs
+	err = client.Query(context.Background(), &accountClubs, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(testingAccountId),
+			},
+		},
+	})
+	require.NoError(t, err)
+	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 club")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 5 limit")
 }
 
 type AddClubSlugAlias struct {
@@ -89,8 +139,10 @@ type RemoveClubSlugAlias struct {
 func TestCreateClub_edit_slugs(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-	clb := seedClub(t)
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
 	oldSlug := clb.Slug()
@@ -180,8 +232,10 @@ type UpdateClubName struct {
 func TestCreateClub_edit_name(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-	clb := seedClub(t)
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
 	// create a test name
@@ -203,4 +257,38 @@ func TestCreateClub_edit_name(t *testing.T) {
 	// make sure name is updated
 	updatedClb := getClub(t, client, clb.Slug())
 	require.Equal(t, newName, updatedClb.Club.Name)
+}
+
+type UpdateClubThumbnail struct {
+	UpdateClubName *struct {
+		Club *ClubModified
+	} `graphql:"updateClubThumbnail(input: $input)"`
+}
+
+// TestCreateClub_edit_thumbnail - create a club and edit the thumbnail
+func TestCreateClub_edit_thumbnail(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
+
+	thumbnailId := "test-thumbnail"
+
+	var updateClubThumbnail UpdateClubThumbnail
+	err := client.Mutate(context.Background(), &updateClubThumbnail, map[string]interface{}{
+		"input": types.UpdateClubThumbnailInput{
+			ID:        relayId,
+			Thumbnail: thumbnailId,
+		},
+	})
+
+	require.NoError(t, err, "no error updating thumbnail")
+
+	// make sure thumbnail is set
+	updatedClb := getClub(t, client, clb.Slug())
+	require.NotNil(t, updatedClb.Club.Thumbnail, "thumbnail is not nil")
+	require.Equal(t, thumbnailId, updatedClb.Club.Thumbnail.ID.GetID(), "id is our thumbnail id")
 }

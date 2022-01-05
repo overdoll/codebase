@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "internal_lib",
+    srcs = ["main.go"],
+    importpath = "overdoll/applications/stella/internal",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//applications/stella/internal/ports",
+        "//applications/stella/internal/service",
+        "//applications/stella/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/commands",
+        "//libraries/config",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "internal",
+    embed = [":internal_lib"],
+    visibility = ["//applications/stella:__subpackages__"],
+)

@@ -13,8 +13,11 @@ go_library(
 go_library(
     name = "resource",
     srcs = [
+        "move.go",
         "repository.go",
         "resource.go",
+        "resource_type.go",
+        "url.go",
     ],
     importpath = "overdoll/applications/loader/internal/domain/resource",
     visibility = ["//applications/sting:__subpackages__"],
@@ -23,6 +26,5 @@ go_library(
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_h2non_filetype//:filetype",
         "@com_github_tus_tusd//pkg/handler",
-        "@io_opencensus_go//resource",
     ],
 )

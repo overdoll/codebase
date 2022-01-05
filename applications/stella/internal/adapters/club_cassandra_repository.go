@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/localization"
@@ -50,6 +51,21 @@ var clubSlugTable = table.New(table.Metadata{
 type clubSlugs struct {
 	ClubId string `db:"club_id"`
 	Slug   string `db:"slug"`
+}
+
+var accountClubsTable = table.New(table.Metadata{
+	Name: "clubs",
+	Columns: []string{
+		"account_id",
+		"club_id",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{"club_id"},
+})
+
+type accountClubs struct {
+	ClubId    string `db:"club_id"`
+	AccountId string `db:"account_id"`
 }
 
 type ClubCassandraRepository struct {
@@ -120,6 +136,38 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 		b.MembersCount,
 		b.OwnerAccountId,
 	), nil
+}
+
+func (r ClubCassandraRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
+
+	queryClubs := qb.
+		Select(clubTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.LocalOne).
+		Bind(clubIds)
+
+	var databaseClubs []clubs
+
+	if err := queryClubs.Select(&databaseClubs); err != nil {
+		return nil, fmt.Errorf("failed to get clubs by ids: %v", err)
+	}
+
+	var clbs []*club.Club
+
+	for _, b := range databaseClubs {
+		clbs = append(clbs, club.UnmarshalClubFromDatabase(
+			b.Id,
+			b.Slug,
+			b.SlugAliases,
+			b.Name,
+			b.ThumbnailResourceId,
+			b.MembersCount,
+			b.OwnerAccountId,
+		))
+	}
+
+	return clbs, nil
 }
 
 func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
@@ -283,6 +331,10 @@ func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, requester *
 	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"name"})
 }
 
+func (r ClubCassandraRepository) UpdateClubThumbnail(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"thumbnail_resource_id"})
+}
+
 func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
 
 	clubUpdate := r.session.
@@ -330,6 +382,34 @@ func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, requeste
 	return currentClub, nil
 }
 
+func (r ClubCassandraRepository) GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
+
+	if err := club.CanViewAccountClubs(requester, accountId); err != nil {
+		return 0, err
+	}
+
+	type accountClubsCount struct {
+		Count int `db:"count"`
+	}
+
+	var clubsCount accountClubsCount
+
+	queryAccountsClubCount := accountClubsTable.
+		SelectBuilder().
+		CountAll().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountClubs{
+			AccountId: accountId,
+		})
+
+	if err := queryAccountsClubCount.Get(&clubsCount); err != nil {
+		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	return clubsCount.Count, nil
+}
+
 func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *principal.Principal, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)
@@ -352,6 +432,11 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *prin
 
 	// create actual club table entry
 	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.OwnerAccountId)
+
+	stmt, _ = accountClubsTable.Insert()
+
+	// create entry for account's clubs
+	batch.Query(stmt, cla.OwnerAccountId, cla.Id)
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {

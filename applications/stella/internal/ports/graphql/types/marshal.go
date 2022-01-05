@@ -5,7 +5,6 @@ import (
 	club2 "overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 func MarshalClubMemberToGraphql(ctx context.Context, result *club2.Member) *ClubMember {
@@ -34,7 +33,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 	return &Club{
 		ID:           relay.NewID(Club{}, result.ID()),
 		Reference:    result.ID(),
-		Name:         result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Name:         result.Name().TranslateDefault(""),
 		Slug:         result.Slug(),
 		SlugAliases:  slugAliases,
 		MembersCount: result.MembersCount(),

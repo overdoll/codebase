@@ -15,8 +15,13 @@ import (
 //
 // We also identify the type of resource (image or video) to make it easy to distinguish them
 type Resource struct {
-	ID   relay.ID       `json:"id"`
-	Type ResourceType   `json:"type"`
+	// An ID uniquely identifying this resource.
+	ID relay.ID `json:"id"`
+	// The type of resource - either an image or a video.
+	Type ResourceType `json:"type"`
+	// Whether or not the resource is processed. Can be used for additional permission checks.
+	Processed bool `json:"processed"`
+	// URLs to access the resource.
 	Urls []*ResourceURL `json:"urls"`
 }
 

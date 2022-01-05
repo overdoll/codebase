@@ -7,11 +7,13 @@ go_library(
         "club_index_elasticsearch_repository.go",
         "club_members_cassandra_repository.go",
         "eva_grpc.go",
+        "loader_grpc.go",
     ],
     importpath = "overdoll/applications/stella/internal/adapters",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/loader/proto:v1_go_proto",
         "//applications/stella/internal/domain/club",
         "//libraries/localization",
         "//libraries/paging",

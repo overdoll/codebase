@@ -24,7 +24,14 @@ func NewCreateClubHandler(cr club.Repository, ci club.IndexRepository) CreateClu
 
 func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Club, error) {
 
-	clb, err := club.NewClub(cmd.Principal, cmd.Slug, cmd.Name)
+	// get clubs count for account
+	currentCount, err := h.cr.GetAccountClubsCount(ctx, cmd.Principal, cmd.Principal.AccountId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	clb, err := club.NewClub(cmd.Principal, cmd.Slug, cmd.Name, currentCount)
 
 	if err != nil {
 		return nil, err

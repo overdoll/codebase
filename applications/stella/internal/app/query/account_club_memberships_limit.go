@@ -20,5 +20,5 @@ func NewAccountClubMembershipsLimitHandler(cr club.Repository) AccountClubMember
 }
 
 func (h AccountClubMembershipsLimitHandler) Handle(ctx context.Context, query AccountClubMembershipsLimit) (int, error) {
-	return club.ViewAccountClubMemberLimit(query.Principal, query.AccountId)
+	return club.ViewAccountClubMembershipsLimit(query.Principal, query.AccountId)
 }

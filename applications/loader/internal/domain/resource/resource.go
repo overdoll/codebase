@@ -15,16 +15,8 @@ import (
 )
 
 var (
-	ErrAlreadyProcessed   = errors.New("resource already processed")
 	ErrResourceNotFound   = errors.New("resource not found")
 	ErrFileTypeNotAllowed = errors.New("filetype not allowed")
-)
-
-type resourceType int
-
-const (
-	imageType resourceType = 1
-	videoType              = 2
 )
 
 // accepted formats
@@ -53,27 +45,27 @@ type Resource struct {
 
 	mimeTypes    []string
 	sizes        []int
-	resourceType resourceType
+	resourceType Type
 }
 
 func NewResource(itemId, id, mimeType string) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
-	var rType resourceType
+	var rType Type
 
 	for _, m := range imageAcceptedTypes {
 		if m == mimeType {
-			rType = imageType
+			rType = Image
 		}
 	}
 
 	for _, m := range videoAcceptedTypes {
 		if m == mimeType {
-			rType = videoType
+			rType = Video
 		}
 	}
 
-	if rType == 0 {
+	if rType.Int() == 0 {
 		return nil, ErrFileTypeNotAllowed
 	}
 
@@ -143,13 +135,13 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		// our resource will contain 2 mimetypes - a PNG and a webp
 		mimeTypes = append(mimeTypes, "image/webp")
 		mimeTypes = append(mimeTypes, "image/png")
-		r.resourceType = imageType
+		r.resourceType = Image
 
 	} else if kind.MIME.Value == "video/mp4" {
 		// TODO: video processing pipeline??
 		mimeTypes = append(mimeTypes, "video/mp4")
 
-		r.resourceType = videoType
+		r.resourceType = Video
 
 	} else {
 		return nil, fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
@@ -200,12 +192,12 @@ func (r *Resource) MimeTypes() []string {
 }
 
 func (r *Resource) MakeImage() error {
-	r.resourceType = imageType
+	r.resourceType = Image
 	return nil
 }
 
 func (r *Resource) MakeVideo() error {
-	r.resourceType = videoType
+	r.resourceType = Video
 	return nil
 }
 
@@ -218,11 +210,11 @@ func (r *Resource) ProcessedId() string {
 }
 
 func (r *Resource) IsImage() bool {
-	return r.resourceType == imageType
+	return r.resourceType == Image
 }
 
 func (r *Resource) IsVideo() bool {
-	return r.resourceType == videoType
+	return r.resourceType == Video
 }
 
 func (r *Resource) FullUrls() []*Url {
@@ -257,12 +249,14 @@ func (r *Resource) FullUrls() []*Url {
 
 func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string) *Resource {
 
+	typ, _ := TypeFromInt(tp)
+
 	return &Resource{
 		id:           resourceId,
 		itemId:       itemId,
 		processedId:  processedId,
 		mimeTypes:    mimeTypes,
-		resourceType: resourceType(tp),
+		resourceType: typ,
 		processed:    processed,
 	}
 }

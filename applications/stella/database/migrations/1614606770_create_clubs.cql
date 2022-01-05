@@ -1,3 +1,10 @@
+CREATE TABLE IF NOT EXISTS account_clubs
+(
+    account_id text,
+    club_id    text,
+    primary key ( account_id, club_id )
+);
+
 CREATE TABLE IF NOT EXISTS clubs
 (
     id                    text,

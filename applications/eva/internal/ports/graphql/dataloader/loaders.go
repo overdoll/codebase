@@ -23,7 +23,7 @@ func NewLoader(app *app.Application) *Loaders {
 				accounts := make([]*types.Account, len(ids))
 				accountById := map[string]*types.Account{}
 
-				accs, err := app.Queries.AccountsById.Handle(context.Background(), query.AccountsById{AccountIds: ids})
+				accs, err := app.Queries.AccountsByIds.Handle(context.Background(), query.AccountsByIds{AccountIds: ids})
 
 				if err == nil {
 					for _, acc := range accs {

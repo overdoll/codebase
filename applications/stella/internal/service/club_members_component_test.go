@@ -78,7 +78,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	testingAccountId := newFakeAccount(t)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := seedClub(t)
+	clb := seedClub(t, testingAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
 	// become a club member

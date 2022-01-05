@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "dataloader",
+    srcs = [
+        "clubloader_gen.go",
+        "loaders.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/ports/graphql/dataloader",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/app/query",
+        "//applications/stella/internal/ports/graphql/types",
+        "//libraries/graphql",
+    ],
+)

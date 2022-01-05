@@ -186,9 +186,8 @@ func seedNormalAccount(t *testing.T) *account.Account {
 	usr := newTestAccount(t)
 
 	session := bootstrap.InitializeDatabaseSession()
-	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
+	adapter := adapters.NewAccountCassandraRedisRepository(session)
 	err := adapter.CreateAccount(context.Background(), usr)
 	require.NoError(t, err)
 	return usr
@@ -201,9 +200,8 @@ func seedMfaAccount(t *testing.T) *account.Account {
 	require.NoError(t, err)
 
 	session := bootstrap.InitializeDatabaseSession()
-	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
+	adapter := adapters.NewAccountCassandraRedisRepository(session)
 	err = adapter.CreateAccount(context.Background(), usr)
 	require.NoError(t, err)
 	return usr

@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/query"
-	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/applications/stella/internal/ports/graphql/dataloader"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -25,11 +25,6 @@ func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*t
 	})
 
 	if err != nil {
-
-		if err == club.ErrClubMemberNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -37,19 +32,5 @@ func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*t
 }
 
 func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
-
-	media, err := r.App.Queries.ClubById.Handle(ctx, query.ClubById{
-		Id: id.GetID(),
-	})
-
-	if err != nil {
-
-		if err == club.ErrClubNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalClubToGraphQL(ctx, media), nil
+	return dataloader.For(ctx).ClubById.Load(id.GetID())
 }

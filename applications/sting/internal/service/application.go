@@ -41,21 +41,17 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
-	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
-	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
 	return createApplication(ctx,
 			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			adapters.NewParleyGrpc(parleyClient),
-			StellaServiceMock{adapter: adapters.NewStellaGrpc(stellaClient)},
-			adapters.NewLoaderGrpc(loaderClient)),
+			StellaServiceMock{},
+			LoaderServiceMock{}),
 		func() {
 			cleanup()
 			cleanup2()
-			cleanup3()
-			cleanup4()
 		}
 }
 
@@ -74,7 +70,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eva),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley, loader),
 			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),

@@ -8,13 +8,13 @@ type Club implements Node @key(fields: "id") {
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 
-  """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
-  slugAliases: [ClubSlugAlias!]!
-
   """
   Maximum amount of slug aliases that can be created for this club.
   """
   slugAliasesLimit: Int! @goField(forceResolver: true)
+
+  """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
+  slugAliases: [ClubSlugAlias!]!
 
   """A URL pointing to the object's thumbnail."""
   thumbnail(size: Int): Resource @goField(forceResolver: true)
@@ -25,11 +25,11 @@ type Club implements Node @key(fields: "id") {
   """The account that owns this club."""
   owner: Account!
 
-  """The total amount of members in this club."""
-  membersCount: Int!
-
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
+
+  """The total amount of members in this club."""
+  membersCount: Int!
 
   """Club members."""
   members(
@@ -162,6 +162,15 @@ input UpdateClubNameInput {
   name: String!
 }
 
+"""Update club thumbnail."""
+input UpdateClubThumbnailInput {
+  """The club to update"""
+  id: ID!
+
+  """The thumbnail for the club."""
+  thumbnail: String!
+}
+
 """Update alias slug to default."""
 input PromoteClubSlugAliasToDefaultInput {
   """The club to update"""
@@ -171,10 +180,18 @@ input PromoteClubSlugAliasToDefaultInput {
   slug: String!
 }
 
+"""Validation for creating a new club"""
+enum CreateClubValidation {
+  SLUG_TAKEN
+}
+
 """Payload for a new club"""
 type CreateClubPayload {
   """The club after creation"""
   club: Club
+
+  """Validation for creating a new club"""
+  validation: CreateClubValidation
 }
 
 """Payload for a new club member"""
@@ -189,10 +206,18 @@ type WithdrawClubMembershipPayload {
   clubMemberId: ID!
 }
 
+"""Validation for adding a new slug to a club"""
+enum AddClubSlugAliasValidation {
+  SLUG_TAKEN
+}
+
 """Payload for a new alt slug"""
 type AddClubSlugAliasPayload {
   """The club after update"""
   club: Club
+
+  """Validation for adding a new club"""
+  validation: AddClubSlugAliasValidation
 }
 
 """Payload for a new alt slug"""
@@ -209,6 +234,12 @@ type PromoteClubSlugAliasToDefaultPayload {
 
 """Payload for updating the name"""
 type UpdateClubNamePayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the thumbnail"""
+type UpdateClubThumbnailPayload {
   """The club after update"""
   club: Club
 }
@@ -248,6 +279,11 @@ extend type Mutation {
   Update the club's name (english-only for now)
   """
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """
+  Update the club thumbnail
+  """
+  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
 }
 
 extend type Query {
@@ -283,17 +319,18 @@ extend type Query {
 }
 
 extend type Account {
-  """
-  Maximum amount of clubs that you can join as an account.
-  """
-  clubMembershipsLimit: Int! @goField(forceResolver: true)
 
   """
-  Current count of club memberships. Should be compared against the limit before joining a club.
+  Maximum amount of clubs that you can create.
   """
-  clubMembershipsCount: Int! @goField(forceResolver: true)
+  clubsLimit: Int! @goField(forceResolver: true)
 
-  """Represents the clubs that the account has write access to."""
+  """
+  Current count of the amount of clubs that the account has created.
+  """
+  clubsCount: Int! @goField(forceResolver: true)
+
+  """Represents the clubs that the account has created."""
   clubs(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -316,6 +353,16 @@ extend type Account {
     """Ordering options for clubs."""
     orderBy: ClubsOrder! = { field: CREATED_AT }
   ): ClubConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of clubs that you can join as an account.
+  """
+  clubMembershipsLimit: Int! @goField(forceResolver: true)
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int! @goField(forceResolver: true)
 
   """Represents the club memberships that the account has."""
   clubMemberships(

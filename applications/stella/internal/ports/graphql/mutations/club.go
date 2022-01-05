@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/stella/internal/app/workflows"
+	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -34,6 +35,12 @@ func (r *MutationResolver) CreateClub(ctx context.Context, input types.CreateClu
 		)
 
 	if err != nil {
+
+		if err == club.ErrClubSlugNotUnique {
+			taken := types.CreateClubValidationSlugTaken
+			return &types.CreateClubPayload{Validation: &taken}, nil
+		}
+
 		return nil, err
 	}
 
@@ -59,6 +66,12 @@ func (r *MutationResolver) AddClubSlugAlias(ctx context.Context, input types.Add
 		)
 
 	if err != nil {
+
+		if err == club.ErrClubSlugNotUnique {
+			taken := types.AddClubSlugAliasValidationSlugTaken
+			return &types.AddClubSlugAliasPayload{Validation: &taken}, nil
+		}
+
 		return nil, err
 	}
 
@@ -138,6 +151,31 @@ func (r *MutationResolver) UpdateClubName(ctx context.Context, input types.Updat
 	}
 
 	return &types.UpdateClubNamePayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
+func (r *MutationResolver) UpdateClubThumbnail(ctx context.Context, input types.UpdateClubThumbnailInput) (*types.UpdateClubThumbnailPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.UpdateClubThumbnail.
+		Handle(
+			ctx,
+			command.UpdateClubThumbnail{
+				Principal: principal.FromContext(ctx),
+				Thumbnail: input.Thumbnail,
+				ClubId:    input.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateClubThumbnailPayload{
 		Club: types.MarshalClubToGraphQL(ctx, pst),
 	}, nil
 }
