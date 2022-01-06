@@ -6,7 +6,11 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type DropdownMenuButtonProfileFragment = {
     readonly username: string;
-    readonly avatar: string;
+    readonly avatar: {
+        readonly urls: ReadonlyArray<{
+            readonly url: string;
+        }>;
+    } | null;
     readonly " $refType": "DropdownMenuButtonProfileFragment";
 };
 export type DropdownMenuButtonProfileFragment$data = DropdownMenuButtonProfileFragment;
@@ -33,13 +37,35 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "Resource",
+      "kind": "LinkedField",
       "name": "avatar",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ResourceUrl",
+          "kind": "LinkedField",
+          "name": "urls",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '291730f3ad925ce9c8fe367b212efc9e';
+(node as any).hash = '27b027ff6771aefb9c77d10e5ccd7c80';
 export default node;

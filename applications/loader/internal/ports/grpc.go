@@ -68,7 +68,7 @@ func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResou
 func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRequest) (*loader.GetResourcesResponse, error) {
 
 	allResources, err := s.app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
-		ItemId:      request.ItemId,
+		ItemIds:     []string{request.ItemId},
 		ResourceIds: request.ResourceIds,
 	})
 

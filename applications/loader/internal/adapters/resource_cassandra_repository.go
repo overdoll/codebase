@@ -80,11 +80,11 @@ func (r ResourceCassandraRepository) CreateResources(ctx context.Context, res []
 	return r.session.ExecuteBatch(batch)
 }
 
-func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, itemId string, resourceIds []string) ([]*resource.Resource, error) {
+func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
 
 	queryResources := qb.
 		Select(resourcesTable.Name()).
-		Where(qb.Eq("item_id")).
+		Where(qb.In("item_id")).
 		Query(r.session).
 		BindMap(map[string]interface{}{
 			"item_id": itemId,

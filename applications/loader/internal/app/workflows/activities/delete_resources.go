@@ -6,7 +6,7 @@ import (
 
 func (h *Activities) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
 
-	res, err := h.rr.GetResourcesByIds(ctx, itemId, resourceIds)
+	res, err := h.rr.GetResourcesByIds(ctx, []string{itemId}, resourceIds)
 
 	if err != nil {
 		return err

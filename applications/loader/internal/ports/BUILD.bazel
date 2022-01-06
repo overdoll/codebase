@@ -15,6 +15,7 @@ go_library(
         "//applications/loader/internal/app/query",
         "//applications/loader/internal/app/workflows",
         "//applications/loader/internal/ports/graphql",
+        "//applications/loader/internal/ports/graphql/dataloader",
         "//applications/loader/proto:v1_go_proto",
         "//libraries/clients",
         "//libraries/graphql",

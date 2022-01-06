@@ -5,11 +5,8 @@ type Account implements Node {
   """The ID that the account can be referenced by"""
   reference: String!
 
-  """A URL pointing to the accounts's public avatar."""
-  avatar(
-    """The size of the resulting square image."""
-    size: Int
-  ): URI!
+  """A URL pointing to the account's public avatar."""
+  avatar(size: Int): Resource
 
   """The username of the account."""
   username: String!
@@ -25,9 +22,9 @@ type Account implements Node {
 
   """
   The language of the account.
-
+  
   Note: this is the language that will be used to determine which emails should be sent where.
-
+  
   You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
   consistent experience. Use "UpdateLanguage" when the languages are mismatched.
   """
@@ -35,7 +32,7 @@ type Account implements Node {
 
   """
   Sessions linked to this account
-
+  
   Only queryable if the currently logged-in account belongs to the requested account
   """
   sessions(
@@ -62,7 +59,7 @@ type Account implements Node {
 
   """
   Emails for account (multiple emails per account)
-
+  
   Only queryable if the currently logged-in account belongs to the requested account
   """
   emails(
@@ -99,64 +96,10 @@ type Account implements Node {
 
   """
   MFA Recovery codes belonging to this account
-
+  
   Only queryable if the currently logged-in account belongs to the requested account
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
-
-  """Maximum amount of clubs that you can join as an account."""
-  clubMembershipsLimit: Int!
-
-  """
-  Current count of club memberships. Should be compared against the limit before joining a club.
-  """
-  clubMembershipsCount: Int!
-
-  """Represents the clubs that the account has write access to."""
-  clubs(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by club slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the club."""
-    name: String
-
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = {field: CREATED_AT}
-  ): ClubConnection!
-
-  """Represents the club memberships that the account has."""
-  clubMemberships(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = {field: JOINED_AT}
-  ): ClubMemberConnection!
 
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
@@ -230,7 +173,7 @@ type Account implements Node {
 
   """
   Post Audit Logs linked to this account
-
+  
   Viewable by either the currently logged-in account or staff+
   """
   postAuditLogs(
@@ -254,7 +197,7 @@ type Account implements Node {
 
   """
   Infraction history for this account
-
+  
   Viewable by the currently authenticated account or staff+
   """
   infractions(
@@ -275,10 +218,70 @@ type Account implements Node {
 
   """
   Moderator settings and status for this account
-
+  
   Viewable by the currently authenticated account or staff+
   """
   moderatorSettings: ModeratorSettings!
+
+  """Maximum amount of clubs that you can create."""
+  clubsLimit: Int!
+
+  """Current count of the amount of clubs that the account has created."""
+  clubsCount: Int!
+
+  """Represents the clubs that the account has created."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Ordering options for clubs."""
+    orderBy: ClubsOrder! = {field: CREATED_AT}
+  ): ClubConnection!
+
+  """Maximum amount of clubs that you can join as an account."""
+  clubMembershipsLimit: Int!
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int!
+
+  """Represents the club memberships that the account has."""
+  clubMemberships(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Ordering options for club members."""
+    orderBy: ClubMembersOrder! = {field: JOINED_AT}
+  ): ClubMemberConnection!
 }
 
 """Connection of the account"""
@@ -306,7 +309,7 @@ type AccountEmail implements Node {
 
   """
   The account that this email belongs to
-
+  
   May be null because unconfirmed emails are not yet actually attached to the account
   """
   account: Account
@@ -438,6 +441,14 @@ input AddClubSlugAliasInput {
 type AddClubSlugAliasPayload {
   """The club after update"""
   club: Club
+
+  """Validation for adding a new club"""
+  validation: AddClubSlugAliasValidation
+}
+
+"""Validation for adding a new slug to a club"""
+enum AddClubSlugAliasValidation {
+  SLUG_TAKEN
 }
 
 """Add moderator to posts queue."""
@@ -488,7 +499,7 @@ type AssignAccountStaffRolePayload {
   account: Account
 }
 
-type Audience implements Node & Object {
+type Audience implements Node {
   """An ID pointing to this audience."""
   id: ID!
 
@@ -496,7 +507,7 @@ type Audience implements Node & Object {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: Int): Resource
 
   """A title for this audience."""
   title: String!
@@ -630,7 +641,7 @@ enum CategoriesOrderField {
   CREATED_AT
 }
 
-type Category implements Node & Object {
+type Category implements Node {
   """An ID pointing to this category."""
   id: ID!
 
@@ -638,7 +649,7 @@ type Category implements Node & Object {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: Int): Resource
 
   """A title for this category."""
   title: String!
@@ -686,7 +697,7 @@ type CategoryEdge {
   node: Category!
 }
 
-type Character implements Node & Object {
+type Character implements Node {
   """An ID pointing to this character."""
   id: ID!
 
@@ -694,7 +705,7 @@ type Character implements Node & Object {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: Int): Resource
 
   """A name for this character."""
   name: String!
@@ -754,7 +765,7 @@ enum CharactersOrderField {
   CREATED_AT
 }
 
-type Club implements Node & Object {
+type Club implements Node {
   """An ID pointing to this club."""
   id: ID!
 
@@ -764,17 +775,17 @@ type Club implements Node & Object {
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 
+  """Maximum amount of slug aliases that can be created for this club."""
+  slugAliasesLimit: Int!
+
   """
   An alias list of slugs. These are valid, as in, you can find the club using
   the slug. However, it should always be replaced by the default slug.
   """
   slugAliases: [ClubSlugAlias!]!
 
-  """Maximum amount of slug aliases that can be created for this club."""
-  slugAliasesLimit: Int!
-
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: Int): Resource
 
   """A name for this club."""
   name: String!
@@ -782,11 +793,11 @@ type Club implements Node & Object {
   """The account that owns this club."""
   owner: Account!
 
-  """The total amount of members in this club."""
-  membersCount: Int!
-
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember
+
+  """The total amount of members in this club."""
+  membersCount: Int!
 
   """Club members."""
   members(
@@ -910,7 +921,7 @@ enum ClubsOrderField {
 
 """Input for confirming the account email"""
 input ConfirmAccountEmailInput {
-  """The ID that is sent for confirmation."""
+  """The ID that is sent for confirmation"""
   id: String!
 
   """The secret for email confirmation."""
@@ -973,6 +984,14 @@ input CreateClubInput {
 type CreateClubPayload {
   """The club after creation"""
   club: Club
+
+  """Validation for creating a new club"""
+  validation: CreateClubValidation
+}
+
+"""Validation for creating a new club"""
+enum CreateClubValidation {
+  SLUG_TAKEN
 }
 
 """Create a new post. A club ID is required."""
@@ -1221,7 +1240,7 @@ type Mutation {
 
   """
   Update the language of the account.
-
+  
   Note: that this is only a value, and in order to see anything in the browser,
   you should use the "UpdateLanguage" mutation.
   """
@@ -1240,14 +1259,14 @@ type Mutation {
 
   """
   Update the account username
-
+  
   Will retain the old username
   """
   updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
 
   """
   Update the account email status to primary
-
+  
   Cannot update if the email is not confirmed
   """
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
@@ -1264,7 +1283,7 @@ type Mutation {
 
   """
   Enroll into TOTP.
-
+  
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
@@ -1272,9 +1291,9 @@ type Mutation {
 
   """
   Disable account multi factor
-
+  
   Will delete all multi factor settings (if TOTP is set up, etc...)
-
+  
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload
@@ -1296,7 +1315,7 @@ type Mutation {
 
   """
   Grant authentication token
-
+  
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
   """
@@ -1304,7 +1323,7 @@ type Mutation {
 
   """
   Revoke authentication token
-
+  
   Creating accounts and completing authentication flows will not be possible once it's revoked
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
@@ -1314,7 +1333,7 @@ type Mutation {
 
   """
   Grant account access with authentication token
-
+  
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
   verified first
   """
@@ -1322,14 +1341,14 @@ type Mutation {
 
   """
   Grant account access using an authentication token and a multi factor option
-
+  
   Set "code" when authenticating with a TOTP code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
   """
   Grant account access using an authentication token and a multi factor option
-
+  
   Set "recoveryCode" when authenticating with a recovery code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
@@ -1341,29 +1360,6 @@ type Mutation {
 
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload
-
-  """Become a member of a club"""
-  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
-
-  """Withdraw membership from a club"""
-  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
-
-  """Create a new club"""
-  createClub(input: CreateClubInput!): CreateClubPayload
-
-  """Add an alternative slug to the club"""
-  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
-
-  """Remove an alternative slug from the club"""
-  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
-
-  """
-  Make the alias slug the default, swapping out the old slug into the alias list.
-  """
-  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
-
-  """Update the club's name (english-only for now)"""
-  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 
   """Create a new post"""
   createPost(input: CreatePostInput!): CreatePostPayload
@@ -1402,6 +1398,32 @@ type Mutation {
 
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
+
+  """Become a member of a club"""
+  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
+
+  """Withdraw membership from a club"""
+  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
+
+  """Create a new club"""
+  createClub(input: CreateClubInput!): CreateClubPayload
+
+  """Add an alternative slug to the club"""
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
+
+  """Remove an alternative slug from the club"""
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
+
+  """
+  Make the alias slug the default, swapping out the old slug into the alias list.
+  """
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
+
+  """Update the club's name (english-only for now)"""
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """Update the club thumbnail"""
+  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
 }
 
 """
@@ -1410,12 +1432,6 @@ Follows the [Relay Global Object Identification Specification](https://relay.dev
 """
 interface Node {
   id: ID!
-}
-
-"""Represents an account"""
-interface Object {
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
 }
 
 type PageInfo {
@@ -1442,7 +1458,10 @@ type Post implements Node {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """DraggableContent belonging to this post"""
+  """The club belonging to the post"""
+  club: Club!
+
+  """Content belonging to this post"""
   content: [Resource!]!
 
   """The date and time of when this post was created"""
@@ -1462,9 +1481,6 @@ type Post implements Node {
 
   """Characters that belong to this post"""
   characters: [Character!]!
-
-  """Represents the club that this post belongs to"""
-  club: Club!
 
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -1724,16 +1740,16 @@ type Query {
 
   """
   The current language that is set
-
+  
   Note: this is only temporary, per-browser language
-
+  
   For a permanent language on an account level, see "Language" as part of viewer
   """
   language: Language!
 
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
-
+  
   Note: you can only view the authentication token if you're the originating
   device or you have entered a valid secret (not from same device)
   """
@@ -1856,7 +1872,7 @@ type Query {
 
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
-
+    
     Only one slug is allowed for now since you don't want inaccurate results
     """
     seriesSlug: String
@@ -1876,38 +1892,6 @@ type Query {
     """A series slug is required since character slugs are unique-per-series."""
     seriesSlug: String!
   ): Character
-
-  """Search multiple clubs."""
-  clubs(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by club slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the club."""
-    name: String
-
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = {field: CREATED_AT}
-  ): ClubConnection!
-
-  """Get a single club."""
-  club(
-    """Search by slug of the club."""
-    slug: String!
-  ): Club
 
   """Look up a single post"""
   post(
@@ -1952,7 +1936,7 @@ type Query {
 
   """
   Get rejection reasons that can be used for pending posts
-
+  
   Only viewable by moderators+
   """
   postRejectionReasons(
@@ -1973,7 +1957,7 @@ type Query {
 
   """
   Get rejection reasons that can be used for pending posts
-
+  
   Viewable by everyone who is authenticated
   """
   postReportReasons(
@@ -1991,6 +1975,38 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostReportReasonConnection!
+
+  """Search multiple clubs."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Ordering options for clubs."""
+    orderBy: ClubsOrder! = {field: CREATED_AT}
+  ): ClubConnection!
+
+  """Get a single club."""
+  club(
+    """Search by slug of the club."""
+    slug: String!
+  ): Club
   node(id: ID!): Node
 }
 
@@ -2078,9 +2094,19 @@ and urls to access the resources. We have many urls in order to provide a fallba
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-type Resource {
-  id: String!
+type Resource implements Node {
+  """An ID uniquely identifying this resource."""
+  id: ID!
+
+  """The type of resource - either an image or a video."""
   type: ResourceType!
+
+  """
+  Whether or not the resource is processed. Can be used for additional permission checks.
+  """
+  processed: Boolean!
+
+  """URLs to access the resource."""
   urls: [ResourceUrl!]!
 }
 
@@ -2155,7 +2181,7 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
-type Series implements Node & Object {
+type Series implements Node {
   """An ID pointing to this series."""
   id: ID!
 
@@ -2163,7 +2189,7 @@ type Series implements Node & Object {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail(size: Int): Resource
 
   """A title for this series."""
   title: String!
@@ -2301,21 +2327,6 @@ enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
 }
 
-"""Update club thumbnail."""
-input UpdateClubThumbnailInput {
-  """The club to update"""
-  id: ID!
-
-  """The thumbnail for the club."""
-  thumbnail: String!
-}
-
-"""Payload for updating the thumbnail"""
-type UpdateClubThumbnailPayload {
-  """The club after update"""
-  club: Club
-}
-
 """Update club name."""
 input UpdateClubNameInput {
   """The club to update"""
@@ -2327,6 +2338,21 @@ input UpdateClubNameInput {
 
 """Payload for updating the name"""
 type UpdateClubNamePayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Update club thumbnail."""
+input UpdateClubThumbnailInput {
+  """The club to update"""
+  id: ID!
+
+  """The thumbnail for the club."""
+  thumbnail: String!
+}
+
+"""Payload for updating the thumbnail"""
+type UpdateClubThumbnailPayload {
   """The club after update"""
   club: Club
 }

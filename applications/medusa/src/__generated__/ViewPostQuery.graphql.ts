@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6c914ae7bd687049482ec28f5e73127b */
+/* @relayHash 51a9e8eeac33f5fef0888688583d5487 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -45,6 +45,7 @@ fragment PostClickableCategoriesFragment on Post {
     title
     thumbnail {
       ...ResourceIconFragment
+      id
     }
     id
   }
@@ -59,6 +60,7 @@ fragment PostClickableCharactersFragment on Post {
     }
     thumbnail {
       ...ResourceIconFragment
+      id
     }
     id
   }
@@ -69,6 +71,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -77,6 +80,7 @@ fragment PostHeaderClubFragment on Post {
     name
     thumbnail {
       ...ResourceIconFragment
+      id
     }
     id
   }
@@ -122,7 +126,14 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -154,23 +165,17 @@ v3 = [
       }
     ],
     "storageKey": null
-  }
+  },
+  (v3/*: any*/)
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v3/*: any*/),
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
+  "selections": (v4/*: any*/),
   "storageKey": null
 },
 v6 = {
@@ -245,8 +250,8 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v5/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -257,7 +262,7 @@ return {
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -269,8 +274,8 @@ return {
             "plural": true,
             "selections": [
               (v6/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v5/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -292,23 +297,23 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v5/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v5/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "6c914ae7bd687049482ec28f5e73127b",
+    "id": "51a9e8eeac33f5fef0888688583d5487",
     "metadata": {},
     "name": "ViewPostQuery",
     "operationKind": "query",

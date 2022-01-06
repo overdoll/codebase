@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"overdoll/applications/loader/internal/app"
 	gen "overdoll/applications/loader/internal/ports/graphql"
+	"overdoll/applications/loader/internal/ports/graphql/dataloader"
 
 	"github.com/gin-gonic/gin"
 	tusd "github.com/tus/tusd/pkg/handler"
@@ -18,12 +19,21 @@ type GraphQLServer struct {
 	app *app.Application
 }
 
+func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewDataLoader(app))
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}
+
 func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 
 	rtr := router.NewGinRouter()
 
 	// graphql
 	rtr.POST("/api/graphql",
+		dataLoaderToContext(app),
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 			Resolvers: gen.NewResolver(app, client),
 		})),

@@ -8,7 +8,7 @@ import (
 func (h *Activities) ProcessResources(ctx context.Context, itemId string, resourceIds []string) error {
 
 	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, itemId, resourceIds)
+	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{itemId}, resourceIds)
 
 	if err != nil {
 		return err

@@ -13,7 +13,7 @@ type FileRepository interface {
 }
 
 type Repository interface {
-	GetResourcesByIds(ctx context.Context, itemId string, resourceIds []string) ([]*Resource, error)
+	GetResourcesByIds(ctx context.Context, itemIds, resourceIds []string) ([]*Resource, error)
 	GetResourceById(ctx context.Context, itemId string, resourceId string) (*Resource, error)
 	CreateResources(ctx context.Context, res []*Resource) error
 	UpdateResources(ctx context.Context, res []*Resource) error

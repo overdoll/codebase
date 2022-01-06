@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0e6e325b2c54ff847f2ed9d322747298 */
+/* @relayHash a7eb51177d6e389fb48fbe7274b18199 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -35,6 +35,7 @@ query AudiencesQuery {
         title
         thumbnail {
           ...ResourceItemFragment
+          id
         }
       }
     }
@@ -210,7 +211,8 @@ return {
                           }
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v0/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -226,7 +228,7 @@ return {
     ]
   },
   "params": {
-    "id": "0e6e325b2c54ff847f2ed9d322747298",
+    "id": "a7eb51177d6e389fb48fbe7274b18199",
     "metadata": {},
     "name": "AudiencesQuery",
     "operationKind": "query",

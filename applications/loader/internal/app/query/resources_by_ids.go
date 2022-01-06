@@ -6,7 +6,7 @@ import (
 )
 
 type ResourcesByIds struct {
-	ItemId      string
+	ItemIds     []string
 	ResourceIds []string
 }
 
@@ -20,7 +20,7 @@ func NewResourcesByIdsHandler(rr resource.Repository) ResourcesByIdsHandler {
 
 func (h ResourcesByIdsHandler) Handle(ctx context.Context, query ResourcesByIds) ([]*resource.Resource, error) {
 
-	result, err := h.rr.GetResourcesByIds(ctx, query.ItemId, query.ResourceIds)
+	result, err := h.rr.GetResourcesByIds(ctx, query.ItemIds, query.ResourceIds)
 
 	if err != nil {
 		return nil, err

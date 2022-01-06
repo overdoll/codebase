@@ -30,7 +30,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 	}
 
 	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, cmd.ItemId, newUploadIds)
+	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{cmd.ItemId}, newUploadIds)
 
 	if err != nil {
 		return nil, err

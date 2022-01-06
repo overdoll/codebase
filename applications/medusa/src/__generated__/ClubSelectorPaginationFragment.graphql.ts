@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2a0053b971b72bb63da96c55397905fd */
+/* @relayHash 4df75ca5cad8ad8846d15dbc4a133c99 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -42,6 +42,7 @@ fragment ClubPreviewFragment on Club {
   slug
   thumbnail {
     ...ResourceIconFragment
+    id
   }
 }
 
@@ -283,7 +284,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v7/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -350,7 +352,7 @@ return {
     ]
   },
   "params": {
-    "id": "2a0053b971b72bb63da96c55397905fd",
+    "id": "4df75ca5cad8ad8846d15dbc4a133c99",
     "metadata": {},
     "name": "ClubSelectorPaginationFragment",
     "operationKind": "query",

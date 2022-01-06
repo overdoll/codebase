@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1dce49362c52f65850c7e1178633488a */
+/* @relayHash d78bdf6063db2073170144c745fd3aea */
 
 import { ConcreteRequest } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -62,6 +62,7 @@ mutation UpdateCharacterButtonMutation(
             mimeType
             url
           }
+          id
         }
       }
     }
@@ -115,41 +116,30 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
-  "concreteType": "Resource",
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
   "kind": "LinkedField",
-  "name": "thumbnail",
-  "plural": false,
+  "name": "urls",
+  "plural": true,
   "selections": [
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
+      "name": "mimeType",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "mimeType",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        }
-      ],
+      "kind": "ScalarField",
+      "name": "url",
       "storageKey": null
     }
   ],
@@ -202,7 +192,19 @@ return {
                     "storageKey": null
                   },
                   (v5/*: any*/),
-                  (v6/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "thumbnail",
+                    "plural": false,
+                    "selections": [
+                      (v6/*: any*/),
+                      (v7/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -263,7 +265,20 @@ return {
                     "storageKey": null
                   },
                   (v5/*: any*/),
-                  (v6/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "thumbnail",
+                    "plural": false,
+                    "selections": [
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -276,7 +291,7 @@ return {
     ]
   },
   "params": {
-    "id": "1dce49362c52f65850c7e1178633488a",
+    "id": "d78bdf6063db2073170144c745fd3aea",
     "metadata": {},
     "name": "UpdateCharacterButtonMutation",
     "operationKind": "mutation",

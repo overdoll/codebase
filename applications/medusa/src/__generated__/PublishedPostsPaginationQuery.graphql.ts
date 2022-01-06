@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4630637734facb482648f789867762a2 */
+/* @relayHash 13623869a58e56d03579b640a3518e81 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -47,6 +47,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -258,7 +259,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -326,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "4630637734facb482648f789867762a2",
+    "id": "13623869a58e56d03579b640a3518e81",
     "metadata": {},
     "name": "PublishedPostsPaginationQuery",
     "operationKind": "query",

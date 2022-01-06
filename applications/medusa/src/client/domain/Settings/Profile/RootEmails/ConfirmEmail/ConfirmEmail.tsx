@@ -6,7 +6,6 @@ import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
 import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -22,12 +21,11 @@ const ConfirmEmailMutationGQL = graphql`
 
 export default function ConfirmEmail (): JSX.Element {
   const [queryToken] = useQueryParam<string>('id')
+  const [querySecret] = useQueryParam<string>('secret')
 
   const [commit] = useMutation<ConfirmEmailMutation>(
     ConfirmEmailMutationGQL
   )
-
-  const { i18n } = useLingui()
 
   const history = useHistory()
 
@@ -37,7 +35,8 @@ export default function ConfirmEmail (): JSX.Element {
     commit({
       variables: {
         input: {
-          id: queryToken
+          id: queryToken,
+          secret: querySecret
         }
       },
       updater: (store, payload) => {

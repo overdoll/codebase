@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b63ba835422d6adab77ee01ef7d893b6 */
+/* @relayHash a598189a8b7d4481aa860471c16ddf60 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -64,6 +64,7 @@ fragment PostStateRejectedPreviewFragment on Post {
   postedAt
   content {
     ...ResourceItemFragment
+    id
   }
 }
 
@@ -258,7 +259,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -326,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "b63ba835422d6adab77ee01ef7d893b6",
+    "id": "a598189a8b7d4481aa860471c16ddf60",
     "metadata": {},
     "name": "RejectedPostsPaginationQuery",
     "operationKind": "query",

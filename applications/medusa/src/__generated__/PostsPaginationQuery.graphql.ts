@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 06d1b44517d76ebe18ac9001e7fe3bfb */
+/* @relayHash 12b2a1f22bdf1b960cf7f3eb624c2f70 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -61,6 +61,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -69,6 +70,7 @@ fragment PostHeaderClubFragment on Post {
     name
     thumbnail {
       ...ResourceIconFragment
+      id
     }
     id
   }
@@ -241,7 +243,8 @@ v6 = [
       }
     ],
     "storageKey": null
-  }
+  },
+  (v4/*: any*/)
 ],
 v7 = [
   {
@@ -505,7 +508,7 @@ return {
     ]
   },
   "params": {
-    "id": "06d1b44517d76ebe18ac9001e7fe3bfb",
+    "id": "12b2a1f22bdf1b960cf7f3eb624c2f70",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

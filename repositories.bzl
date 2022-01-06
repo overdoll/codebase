@@ -659,6 +659,13 @@ def go_repositories():
         sum = "h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=",
         version = "v1.4.2",
     )
+    go_repository(
+        name = "com_github_graph_gophers_dataloader",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/graph-gophers/dataloader",
+        sum = "h1:R+yjsbrNq1Mo3aPG+Z/EKYrXrXXUNJHOgbRt+U6jOug=",
+        version = "v5.0.0+incompatible",
+    )
 
     go_repository(
         name = "com_github_grpc_ecosystem_go_grpc_middleware",

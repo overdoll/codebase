@@ -10,7 +10,11 @@ interface Props {
 
 const QuickAccessButtonProfileGQL = graphql`
   fragment QuickAccessButtonProfileFragment on Account {
-    avatar
+    avatar {
+      urls {
+        url
+      }
+    }
   }
 `
 
@@ -35,7 +39,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
       >
         <Avatar
           borderRadius='25%'
-          src={data?.avatar}
+          src={data?.avatar?.urls[0]?.url}
           m={0}
           h='38px'
           w='38px'
