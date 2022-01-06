@@ -6,7 +6,7 @@ import {
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap,
-  SmallBackgroundBox
+  SmallBackgroundBox,
 } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'

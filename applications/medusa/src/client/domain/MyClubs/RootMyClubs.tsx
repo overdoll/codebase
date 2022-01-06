@@ -1,7 +1,7 @@
 import { ReactNode, Suspense, useMemo } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
-import { ContentBookEdit } from '@//:assets/icons/navigation'
+import { BirdHouse, SettingCog } from '@//:assets/icons/navigation'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import SelectClubsQuery, { SelectClubsQuery as SelectClubsQueryType } from '@//:artifacts/SelectClubsQuery.graphql'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
@@ -32,6 +32,8 @@ export default function RootMyClubs (props: Props): JSX.Element {
   const location = useLocation()
 
   const match = useParams()
+
+  const clubPage = `/${match.slug as string}`
 
   const basePath = useMemo((): string => {
     if (match?.slug == null) return ''
@@ -77,7 +79,7 @@ export default function RootMyClubs (props: Props): JSX.Element {
           title={
             <Trans>Home</Trans>
           }
-          icon={ContentBookEdit}
+          icon={BirdHouse}
         />
         <VerticalNavigation.Button
           to={`${basePath}/settings`}
@@ -86,8 +88,15 @@ export default function RootMyClubs (props: Props): JSX.Element {
           title={
             <Trans>Settings</Trans>
           }
-          icon={ContentBookEdit}
+          icon={SettingCog}
         />
+        <NavLink exact to={clubPage}>
+          {({ isActive }) => (
+            <Button w='100%' size='sm' variant='ghost' colorScheme='gray'>
+              <Trans>View Public Club Page</Trans>
+            </Button>
+          )}
+        </NavLink>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {location.pathname === basePath ? <Redirect to={`${basePath}/home`} /> : props.children}

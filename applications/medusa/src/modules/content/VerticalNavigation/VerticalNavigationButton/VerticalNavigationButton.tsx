@@ -1,5 +1,5 @@
 import ClickableBox from '../../PageLayout/Interactables/ClickableBox/ClickableBox'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import Icon from '../../Icon/Icon'
 import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
@@ -56,12 +56,13 @@ export default function VerticalNavigationButton ({
                 />
               </Flex>
             )}
-            <Heading
+            <Text
               lineHeight='0.5px'
               fontSize='md'
+              fontWeight='semibold'
             >
               {title}
-            </Heading>
+            </Text>
           </Flex>
         </ClickableBox>
       )}

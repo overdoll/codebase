@@ -5,7 +5,7 @@ const baseStyle: SystemStyleObject = {
   lineHeight: '1.2',
   borderRadius: 'md',
   fontWeight: 'bold',
-  fontFamily: 'heading',
+  fontFamily: 'body',
   letterSpacing: 'wide',
   _focus: {
     boxShadow: 'outline'
@@ -310,14 +310,16 @@ const sizes = {
     minW: 12,
     fontSize: 'lg',
     borderRadius: 'lg',
-    px: 6
+    px: 6,
+    fontWeight: 'bold'
   },
   md: {
     h: 10,
     minW: 10,
     fontSize: 'md',
     px: 5,
-    borderRadius: 'semi'
+    borderRadius: 'semi',
+    fontWeight: 'semibold'
   },
   sm: {
     h: 8,

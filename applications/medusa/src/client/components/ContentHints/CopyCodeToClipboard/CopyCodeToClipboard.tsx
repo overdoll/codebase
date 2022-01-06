@@ -24,6 +24,7 @@ export default function CopyCodeToClipboard ({
       onClick={onCopy}
       borderWidth={2}
       borderColor='gray.400'
+      bg='gray.900'
       {...rest}
     >
       <Flex
