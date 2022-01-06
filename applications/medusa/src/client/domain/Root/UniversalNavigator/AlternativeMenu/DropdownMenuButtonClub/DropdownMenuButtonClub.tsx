@@ -33,7 +33,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
         icon={AddPlus}
         label={
           <Trans>
-            Create a club
+            Create a Club
           </Trans>
         }
       />
@@ -54,7 +54,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
       icon={SettingHammer}
       label={
         <Trans>
-          My Club {selectedClub.name}
+          {selectedClub.name}
         </Trans>
       }
     />
