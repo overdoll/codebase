@@ -1,7 +1,8 @@
-import { BirdHouse, ContentBrushPen, LoginKeys } from '@//:assets/icons/navigation'
+import { BirdHouse } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
+import MainMenuButtonCreatePost from './MainMenuButtonCreatePost/MainMenuButtonCreatePost'
 
 export default function MainMenu (): JSX.Element {
   return (
@@ -17,30 +18,8 @@ export default function MainMenu (): JSX.Element {
           </Trans>
         }
       />
-      <Can I='moderate' a='Post'>
-        <HorizontalNavigation.Button
-          colorScheme='purple'
-          to='/moderation/queue'
-          icon={LoginKeys}
-          label={
-            <Trans>
-              Moderation
-            </Trans>
-          }
-        />
-      </Can>
       <Can I='create' a='Post'>
-        <HorizontalNavigation.Button
-          exact
-          colorScheme='teal'
-          to='/configure/create-post'
-          icon={ContentBrushPen}
-          label={
-            <Trans>
-              Create a Post
-            </Trans>
-          }
-        />
+        <MainMenuButtonCreatePost />
       </Can>
     </>
   )

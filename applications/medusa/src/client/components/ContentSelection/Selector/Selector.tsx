@@ -24,7 +24,7 @@ export default function Selector ({
   return (
     <ClickableBox
       onClick={onClick}
-      borderColor={isSelected ? 'green.500' : 'gray.900'}
+      borderColor={isSelected ? 'green.500' : 'transparent'}
       borderWidth={2}
       overflow='hidden'
       m={0}

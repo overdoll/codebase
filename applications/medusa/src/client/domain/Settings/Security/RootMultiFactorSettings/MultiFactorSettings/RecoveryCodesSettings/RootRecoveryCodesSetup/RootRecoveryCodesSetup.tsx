@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Flex } from '@chakra-ui/react'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type {
   RecoveryCodesSetupQuery as RecoveryCodesSetupQueryType

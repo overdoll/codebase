@@ -5,9 +5,9 @@ import type { PostStateDraftPreviewFragment$key } from '@//:artifacts/PostStateD
 import { useFragment } from 'react-relay'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import checkPostRequirements
-  from '../../../CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/checkPostRequirements'
+  from '../../../../../MyClubs/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/checkPostRequirements'
 import progressScore
-  from '../../../CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
+  from '../../../../../MyClubs/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/progressScore'
 import { DeleteBin } from '../../../../../../../assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/Icon/Icon'

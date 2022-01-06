@@ -46,7 +46,8 @@ const baseStyleHeader: SystemStyleObject = {
   px: 6,
   py: 4,
   fontSize: 'xl',
-  fontWeight: 'semibold'
+  fontWeight: 'semibold',
+  color: 'gray.00'
 }
 
 const baseStyleCloseButton: SystemStyleObject = {

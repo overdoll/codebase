@@ -55,17 +55,6 @@ export interface Audiences {
   [audience: string]: Audience
 }
 
-export interface Club {
-  id?: string
-  slug?: string
-  thumbnail?: Thumbnails
-  name: string
-}
-
-export interface Clubs {
-  [brand: string]: Club
-}
-
 export interface Series {
   id: string
   slug: string
@@ -118,7 +107,6 @@ export type Event =
   | 'progress'
   | 'characters'
   | 'audience'
-  | 'club'
   | 'categories'
   | 'cleanup'
   | 'isInReview'
@@ -129,7 +117,6 @@ export interface State {
   step: Step
   content: string[] | null
   progress: Progress
-  club: string | null
   audience: string | null
   characters: Characters
   categories: Categories

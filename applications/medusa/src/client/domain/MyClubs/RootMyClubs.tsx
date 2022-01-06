@@ -1,15 +1,20 @@
-import { ReactNode, Suspense } from 'react'
+import { ReactNode, Suspense, useMemo } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
 import { ContentBookEdit } from '@//:assets/icons/navigation'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import SelectClubsQuery, { SelectClubsQuery as SelectClubsQueryType } from '@//:artifacts/SelectClubsQuery.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import SelectClubs from './SelectClubs/SelectClubs'
 import { useLocation } from '@//:modules/routing'
-import { generatePath, matchPath } from 'react-router'
-import { Box } from '@chakra-ui/react'
+import { Box, Skeleton } from '@chakra-ui/react'
+import Redirect from '@//:modules/routing/Redirect'
+import { useParams } from '@//:modules/routing/useParams'
+import generatePath from '@//:modules/routing/generatePath'
+import Button from '@//:modules/form/Button/Button'
+import NavLink from '@//:modules/routing/NavLink'
+import Icon from '../../../modules/content/Icon/Icon'
+import { AddPlus } from '@//:assets/icons/interface'
 
 interface Props {
   children: ReactNode
@@ -26,31 +31,56 @@ export default function RootMyClubs (props: Props): JSX.Element {
 
   const location = useLocation()
 
-  const match = matchPath(location.pathname, {
-    path: '/club/:slug'
-  })
+  const match = useParams()
 
-  const settingsPath = generatePath('/club/:slug/settings', {
-    slug: match.params.slug
-  })
+  const basePath = useMemo((): string => {
+    if (match?.slug == null) return ''
+
+    return generatePath('/club/:slug', {
+      slug: match.slug
+    })
+  }, [match])
 
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content title={
-        <Trans>
-          My Clubs
-        </Trans>
-      }
-      >
+      <VerticalNavigation.Content>
         <Box>
-          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.params.slug })}>
-            <Suspense fallback={<SkeletonStack />}>
+          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
+            <Suspense fallback={<Skeleton borderRadius='sm' h={16} />}>
               <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>
         </Box>
+        <NavLink exact to={`${basePath}/create-post`}>
+          {({ isActive }) => (
+            <Button
+              leftIcon={
+                <Icon
+                  icon={AddPlus}
+                  w={4}
+                  h={4}
+                  fill={isActive ? 'gray.100' : 'teal.900'}
+                />
+              }
+              w='100%'
+              colorScheme={isActive ? 'gray' : 'teal'}
+              size='lg'
+            >
+              <Trans>Create a Post</Trans>
+            </Button>
+          )}
+        </NavLink>
         <VerticalNavigation.Button
-          to={settingsPath}
+          to={`${basePath}/home`}
+          exact
+          colorScheme='teal'
+          title={
+            <Trans>Home</Trans>
+          }
+          icon={ContentBookEdit}
+        />
+        <VerticalNavigation.Button
+          to={`${basePath}/settings`}
           exact
           colorScheme='teal'
           title={
@@ -60,7 +90,7 @@ export default function RootMyClubs (props: Props): JSX.Element {
         />
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
-        {props.children}
+        {location.pathname === basePath ? <Redirect to={`${basePath}/home`} /> : props.children}
       </VerticalNavigation.Page>
     </VerticalNavigation>
   )

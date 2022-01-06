@@ -112,6 +112,7 @@ const HorizontalNavigationDropdownMenu = ({
             flip
             preventOverflow
             isOpen={isOpenMenu}
+            isLazy
             onClose={onCloseMenu}
             offset={[-10, 20]}
           >

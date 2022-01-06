@@ -387,102 +387,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/manage',
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/Manage'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ],
-        routes: [
-          {
-            path: '/manage/posts',
-            dependencies: [
-              {
-                resource: loadable(async (environment) =>
-                  await import(
-                    `./domain/Manage/ManagePosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-                  )
-                ),
-                then: loadMessages
-              }
-            ],
-            component: loadable(async () =>
-              await import(
-                './domain/Manage/ManagePosts/ManagePosts'
-              )
-            ),
-            prepare: params => {
-              const Query = require('@//:artifacts/MyPostsQuery.graphql')
-
-              return {
-                postsQuery: {
-                  query: Query,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
-          },
-          {
-            path: '/manage/clubs',
-            dependencies: [
-              {
-                resource: loadable(async (environment) =>
-                  await import(
-                    `./domain/Manage/ManageClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-                  )
-                ),
-                then: loadMessages
-              }
-            ],
-            component: loadable(async () =>
-              await import(
-                './domain/Manage/ManageClubs/ManageClubs'
-              )
-            ),
-            prepare: params => {
-              const Query = require('@//:artifacts/MyClubsQuery.graphql')
-
-              return {
-                clubsQuery: {
-                  query: Query,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      {
         path: '/settings',
         component: loadable(async () =>
           await import(
@@ -724,70 +628,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/configure/create-post',
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/ManagePosts/CreatePost/CreatePost'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/ManagePosts/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ]
-      },
-      {
-        path: '/configure/create-club',
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/ManageClubs/CreateClub/RootCreateClub'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/ManageClubs/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/')
-            return false
-          }
-        ]
-      },
-      {
         path: '/profile',
         exact: true,
         component: loadable(async () =>
@@ -847,6 +687,38 @@ const routes: Route[] = [
         }
       },
       {
+        path: '/configure/create-club',
+        component: loadable(async () =>
+          await import(
+            './domain/MyClubs/CreateClub/RootCreateClub'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/MyClubs/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('create', 'Post')) {
+              return true
+            }
+            history.push('/')
+            return false
+          }
+        ]
+      },
+      {
         path: '/club/:slug',
         component: loadable(async () =>
           await import(
@@ -872,10 +744,10 @@ const routes: Route[] = [
         },
         routes: [
           {
-            path: '/club/:slug/settings',
+            path: '/club/:slug/:entity(settings)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/RootClubSettings/RootClubSettings'
+                './domain/MyClubs/ClubSettings/RootClubSettings'
               )
             ),
             prepare: ({
@@ -887,6 +759,67 @@ const routes: Route[] = [
                 query: {
                   query: Query,
                   variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(home)',
+            component: loadable(async () =>
+              await import(
+                './domain/MyClubs/ClubSettings/RootClubSettings'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubSettingsQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(create-post)',
+            component: loadable(async () =>
+              await import(
+                './domain/MyClubs/CreatePost/CreatePost'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/MyClubs/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/PostCreatorQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: query.get('post') ?? '',
                     slug: params.slug
                   },
                   options: {

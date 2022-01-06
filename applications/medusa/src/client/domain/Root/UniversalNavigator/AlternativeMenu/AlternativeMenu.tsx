@@ -1,4 +1,4 @@
-import { CogDouble, ContentPens, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
+import { CogDouble, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { RenderOnDesktop } from '@//:modules/content/PageLayout'
@@ -10,10 +10,13 @@ import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuBut
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 import LanguageManager from './LanguageManager/LanguageManager'
-import { MenuDivider, Skeleton } from '@chakra-ui/react'
+import { MenuDivider } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
+import SkeletonDropdownMenuButton
+  from '@//:modules/content/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -69,16 +72,26 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can I='manage' a='Account'>
           <DropdownMenuButtonProfile queryRef={data} />
+        </Can>
+        <Can I='moderate' a='Post'>
           <HorizontalNavigationDropdownMenu.Button
-            to='/manage/posts'
-            colorScheme='teal'
-            icon={ContentPens}
+            to='/moderation/queue'
+            colorScheme='purple'
+            icon={LoginKeys}
             label={
               <Trans>
-                Manage Content
+                Content Moderation
               </Trans>
             }
           />
+        </Can>
+        <Can I='manage' a='Account'>
+          <Suspense fallback={
+            <SkeletonDropdownMenuButton />
+          }
+          >
+            <DropdownMenuButtonClub />
+          </Suspense>
           <HorizontalNavigationDropdownMenu.Button
             to='/settings/profile'
             colorScheme='green'
@@ -93,10 +106,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <MenuDivider mb={1} borderColor='gray.500' borderWidth={2} />
         <Suspense fallback={
-          <Skeleton
-            borderRadius={5}
-            h={12}
-          />
+          <SkeletonDropdownMenuButton />
         }
         >
           <LanguageManager queryRef={data} />

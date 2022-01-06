@@ -22,7 +22,7 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
   label,
   isActive,
   isDisabled,
-  onClick
+  onClick,
 }: Props): JSX.Element {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 

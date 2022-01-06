@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
-  title: ReactNode
+  title?: ReactNode | null
 }
 
 export default function VerticalNavigationContent (props: Props): JSX.Element {
@@ -27,9 +27,9 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           zIndex='sidebar'
         >
           <SmallBackgroundBox>
-            <PageSectionWrap>
+            {props.title != null && <PageSectionWrap>
               <PageSectionTitle>{props.title}</PageSectionTitle>
-            </PageSectionWrap>
+            </PageSectionWrap>}
             <Stack spacing={2}>
               {props.children}
             </Stack>
