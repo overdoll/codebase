@@ -17,6 +17,8 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/principal",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
     ],
 )
 
@@ -26,6 +28,9 @@ go_test(
         "club_component_test.go",
         "club_members_component_test.go",
         "component_test.go",
+    ],
+    data = [
+        "//applications/stella:config.toml",
     ],
     deps = [
         ":service",

@@ -51,10 +51,13 @@ type AccountClubs struct {
 			Clubs      *struct {
 				Edges []*struct {
 					Node struct {
-						ID string
+						ID    string
+						Owner struct {
+							ID string
+						}
 					}
 				}
-			} `graphql:"clubs()"`
+			}
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -102,6 +105,9 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.NoError(t, err, "no error checking permission")
 	require.True(t, res.Allowed, "should be allowed")
 
+	// refresh index or else we don't see it
+	refreshClubESIndex(t)
+
 	var accountClubs AccountClubs
 	err = client.Query(context.Background(), &accountClubs, map[string]interface{}{
 		"representations": []_Any{
@@ -111,6 +117,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 			},
 		},
 	})
+
 	require.NoError(t, err)
 	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 club")
 	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
@@ -290,5 +297,4 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
 	require.NotNil(t, updatedClb.Club.Thumbnail, "thumbnail is not nil")
-	require.Equal(t, thumbnailId, updatedClb.Club.Thumbnail.ID.GetID(), "id is our thumbnail id")
 }

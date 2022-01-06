@@ -63,7 +63,7 @@ const clubsIndex = `
 	}
 }`
 
-const clubsIndexName = "clubs"
+const ClubsIndexName = "clubs"
 
 type ClubIndexElasticSearchRepository struct {
 	session gocqlx.Session
@@ -104,7 +104,7 @@ func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *c
 
 	_, err = r.client.
 		Index().
-		Index(clubsIndexName).
+		Index(ClubsIndexName).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -119,13 +119,17 @@ func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *c
 func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
-		Index(clubsIndexName)
+		Index(ClubsIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
 	}
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	if filter.OwnerAccountId() != nil {
+		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))
+	}
 
 	if filter.Search() != nil {
 		query.Must(
@@ -203,7 +207,7 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 
 			_, err = r.client.
 				Index().
-				Index(clubsIndexName).
+				Index(ClubsIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -225,20 +229,20 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 
 func (r ClubIndexElasticSearchRepository) DeleteClubsIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(clubsIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(ClubsIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(clubsIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(ClubsIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(clubsIndexName).BodyString(clubsIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(ClubsIndexName).BodyString(clubsIndex).Do(ctx); err != nil {
 		return err
 	}
 

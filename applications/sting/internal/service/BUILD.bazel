@@ -17,6 +17,8 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/principal",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
     ],
 )
 
@@ -32,7 +34,6 @@ go_test(
     ],
     data = [
         "//applications/sting:config.toml",
-        "//applications/sting/internal/service/file_fixtures:all",
     ],
     deps = [
         ":service",

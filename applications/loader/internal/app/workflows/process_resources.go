@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/loader/internal/app/workflows/activities"
 )
 
-func ProcessResources(ctx workflow.Context, itemId, resourceIds []string) error {
+func ProcessResources(ctx workflow.Context, itemId string, resourceIds []string) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 

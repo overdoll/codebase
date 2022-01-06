@@ -114,12 +114,26 @@ type AccountPosts struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
+type AccountModeratorPosts struct {
+	Entities []struct {
+		Account struct {
+			ID                  string
+			ModeratorPostsQueue *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
 // TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
 // then, we test our GRPC endpoints for revoking
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	moderatorAccountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -213,7 +227,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Account",
-				"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+				"id":         convertAccountIdToRelayId(testingAccountId),
 			},
 		},
 		"state": types.PostStateDraft,
@@ -247,9 +261,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// we need to submit the post, in which our tests will do an action
 	env.RegisterDelayedCallback(func() {
+
+		// refresh ES index or we wont see it
+		refreshPostESIndex(t)
+
 		// at this point, our post is put into the moderation queue. check for existence here
 		// grab all pending posts for our moderator
-		client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+		client := getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
 
 		var accountModeratorPosts AccountModeratorPosts
 
@@ -257,7 +275,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			"representations": []_Any{
 				{
 					"__typename": "Account",
-					"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+					"id":         convertAccountIdToRelayId(moderatorAccountId),
 				},
 			},
 		})
@@ -295,10 +313,15 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
+	// refresh ES index or we wont see it
+	refreshPostESIndex(t)
+
 	post = getPost(t, postId)
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
+
+	client = getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
 
 	// query accountPosts once more, make sure post is no longer visible
 	var newAccountPosts AccountModeratorPosts
@@ -307,7 +330,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Account",
-				"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+				"id":         convertAccountIdToRelayId(moderatorAccountId),
 			},
 		},
 	})
@@ -324,6 +347,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	}
 
 	require.False(t, exists, "should no longer be in the moderator posts queue")
+
+	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	var posts Posts
 
@@ -379,26 +404,15 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
 }
 
-type AccountModeratorPosts struct {
-	Entities []struct {
-		Account struct {
-			ID                  string
-			ModeratorPostsQueue *struct {
-				Edges []*struct {
-					Node PostModified
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
 // Test_CreatePost_Discard - discard post
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
 	env := getWorkflowEnvironment(t)
 
-	pst := seedPublishingPost(t)
+	testingAccountId := newFakeAccount(t)
+
+	pst := seedPublishingPost(t, testingAccountId)
 	postId := pst.ID()
 
 	// we need to submit the post, in which our tests will do an action
@@ -437,7 +451,9 @@ func TestCreatePost_Reject(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 
-	pst := seedPublishingPost(t)
+	testingAccountId := newFakeAccount(t)
+
+	pst := seedPublishingPost(t, testingAccountId)
 	postId := pst.ID()
 
 	// we need to submit the post, in which our tests will do an action
@@ -473,7 +489,9 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 
-	pst := seedPublishingPost(t)
+	testingAccountId := newFakeAccount(t)
+
+	pst := seedPublishingPost(t, testingAccountId)
 	postId := pst.ID()
 
 	// we need to submit the post, in which our tests will do an action

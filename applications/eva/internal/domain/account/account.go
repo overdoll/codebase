@@ -137,13 +137,18 @@ func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
 }
 
-func (a *Account) ToggleMultiFactor() error {
+func (a *Account) DisableMultiFactor() error {
 
 	if a.multiFactorEnabled && !a.CanDisableMultiFactor() {
 		return ErrAccountPrivileged
 	}
 
-	a.multiFactorEnabled = !a.multiFactorEnabled
+	a.multiFactorEnabled = false
+	return nil
+}
+
+func (a *Account) EnableMultiFactor() error {
+	a.multiFactorEnabled = true
 	return nil
 }
 

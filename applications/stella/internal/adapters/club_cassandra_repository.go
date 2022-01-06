@@ -54,7 +54,7 @@ type clubSlugs struct {
 }
 
 var accountClubsTable = table.New(table.Metadata{
-	Name: "clubs",
+	Name: "account_clubs",
 	Columns: []string{
 		"account_id",
 		"club_id",

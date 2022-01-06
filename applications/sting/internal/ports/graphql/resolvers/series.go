@@ -18,6 +18,10 @@ type SeriesResolver struct {
 
 func (r SeriesResolver) Thumbnail(ctx context.Context, obj *types.Series, size *int) (*types.Resource, error) {
 
+	if obj.Thumbnail == nil {
+		return nil, nil
+	}
+
 	if size != nil {
 		return &types.Resource{ID: relay.NewID(types.Resource{}, strconv.Itoa(*size), obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 	}

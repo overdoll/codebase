@@ -94,7 +94,7 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.DiscardPost.Handle(ctx, command.StartDiscardPost{
+	if err := s.app.Commands.DiscardPost.Handle(ctx, command.DiscardPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err

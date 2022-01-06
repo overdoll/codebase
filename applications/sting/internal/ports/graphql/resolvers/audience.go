@@ -17,6 +17,11 @@ type AudienceResolver struct {
 }
 
 func (r AudienceResolver) Thumbnail(ctx context.Context, obj *types.Audience, size *int) (*types.Resource, error) {
+
+	if obj.Thumbnail == nil {
+		return nil, nil
+	}
+
 	if size != nil {
 		return &types.Resource{ID: relay.NewID(types.Resource{}, strconv.Itoa(*size), obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 	}

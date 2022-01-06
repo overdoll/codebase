@@ -41,7 +41,7 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 	if err != nil {
 
 		if err == account.ErrAccountNotFound {
-			return nil, nil
+			return nil, status.Error(codes.NotFound, err.Error())
 		}
 
 		return nil, status.Error(codes.Internal, err.Error())

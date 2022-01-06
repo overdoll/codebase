@@ -38,13 +38,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 		return nil, err
 	}
 
-	emailString, err := confirmEmail.Email()
-
-	if err != nil {
-		return nil, err
-	}
-
-	email := account.NewConfirmedEmail(emailString, confirmEmail.AccountId())
+	email := account.NewConfirmedEmail(confirmEmail.Email(), confirmEmail.AccountId())
 
 	// create a new confirmed email
 	if err := h.ar.CreateAccountEmail(ctx, cmd.Principal, email); err != nil {

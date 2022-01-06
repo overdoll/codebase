@@ -1,16 +1,6 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "content",
-    srcs = [
-        "content.go",
-        "repository.go",
-    ],
-    importpath = "overdoll/applications/sting/internal/domain/content",
-    visibility = ["//visibility:public"],
-)
-
-go_library(
     name = "resource",
     srcs = [
         "move.go",
@@ -20,7 +10,7 @@ go_library(
         "url.go",
     ],
     importpath = "overdoll/applications/loader/internal/domain/resource",
-    visibility = ["//applications/sting:__subpackages__"],
+    visibility = ["//applications/loader:__subpackages__"],
     deps = [
         "//libraries/uuid",
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",

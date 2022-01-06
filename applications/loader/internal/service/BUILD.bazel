@@ -21,6 +21,10 @@ go_test(
         "component_test.go",
         "resource_component_test.go",
     ],
+    data = [
+        "//applications/loader:config.toml",
+        "//applications/loader/internal/service/file_fixtures:all",
+    ],
     deps = [
         ":service",
         "//applications/loader/internal/app/workflows",

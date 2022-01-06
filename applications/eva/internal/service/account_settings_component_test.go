@@ -14,10 +14,10 @@ import (
 	"time"
 )
 
-func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
-	res, err := service.GetEmailConfirmationTokenFromEmail(email)
+func getEmailConfirmationTokenFromEmail(t *testing.T, email string) (string, string) {
+	res, sec, err := service.GetEmailConfirmationTokenFromEmail(email)
 	require.NoError(t, err, "no error for grabbing confirmation token")
-	return res
+	return res, sec
 }
 
 type AccountEmailModified struct {
@@ -104,7 +104,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed, "email should be unconfirmed")
 
 	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmationTokenFromEmail(t, targetEmail)
+	confirmationKey, secret := getEmailConfirmationTokenFromEmail(t, targetEmail)
 
 	require.NotEmpty(t, confirmationKey)
 
@@ -112,7 +112,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// confirm the account's new email
 	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey, Secret: secret},
 	})
 
 	require.NoError(t, err, "no error for confirming account")

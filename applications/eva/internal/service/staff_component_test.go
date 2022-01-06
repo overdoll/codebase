@@ -28,7 +28,9 @@ func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
 	accountUsername := accs.Username()
 	accountRelayId := convertAccountIdToRelayId(accountId)
 
-	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
+	moderatorAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+
+	client, _ := getHttpClientWithAuthenticatedAccount(t, moderatorAccountId)
 
 	var assignAccountModeratorRole AssignAccountModeratorRole
 
@@ -74,8 +76,9 @@ func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
 	accountId := accs.ID()
 	accountUsername := accs.Username()
 	accountRelayId := convertAccountIdToRelayId(accountId)
+	moderatorAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
 
-	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
+	client, _ := getHttpClientWithAuthenticatedAccount(t, moderatorAccountId)
 
 	var assignAccountStaffRole AssignAccountStaffRole
 

@@ -184,7 +184,12 @@ func (r *Resource) ItemId() string {
 }
 
 func (r *Resource) Url() string {
-	return r.itemId + "/" + r.processedId
+
+	if r.processed {
+		return "/" + r.itemId + "/" + r.processedId
+	}
+
+	return r.id
 }
 
 func (r *Resource) MimeTypes() []string {

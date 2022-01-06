@@ -49,22 +49,13 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
-func newPublishingPost(t *testing.T) *post.Post {
-	testingAccountId := newFakeAccount(t)
+func newPublishingPost(t *testing.T, accountId string) *post.Post {
 
-	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), ksuid.New().String())
+	pst, err := post.NewPost(principal.NewPrincipal(accountId, nil, false, false), ksuid.New().String())
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(principal.NewPrincipal(testingAccountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
+	err = pst.SubmitPostRequest(principal.NewPrincipal(accountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
 
-	require.NoError(t, err)
-	return pst
-}
-
-func newDraftPost(t *testing.T) *post.Post {
-	testingAccountId := newFakeAccount(t)
-
-	pst, err := post.NewPost(principal.NewPrincipal(testingAccountId, nil, false, false), ksuid.New().String())
 	require.NoError(t, err)
 	return pst
 }
@@ -73,8 +64,8 @@ func newFakeAccount(t *testing.T) string {
 	return uuid.New().String()
 }
 
-func seedPublishingPost(t *testing.T) *post.Post {
-	pst := newPublishingPost(t)
+func seedPublishingPost(t *testing.T, accountId string) *post.Post {
+	pst := newPublishingPost(t, accountId)
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -83,30 +74,27 @@ func seedPublishingPost(t *testing.T) *post.Post {
 	require.NoError(t, err)
 
 	es := bootstrap.InitializeElasticSearchSession()
-
 	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session)
 	err = adapterEs.IndexPost(context.Background(), pst)
 	require.NoError(t, err)
 
-	_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
-	require.NoError(t, err)
+	refreshPostESIndex(t)
 
 	return pst
 }
 
-func seedDraftPost(t *testing.T) *post.Post {
-	pst := newDraftPost(t)
-
-	session := bootstrap.InitializeDatabaseSession()
-
-	adapter := adapters.NewPostsCassandraRepository(session)
-	err := adapter.CreatePost(context.Background(), pst)
+func refreshPostESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
 	require.NoError(t, err)
-	return pst
 }
 
 func convertClubIdToRelayId(clubId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
+}
+
+func convertAccountIdToRelayId(accountId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
 }
 
 func convertPostIdToRelayId(postId string) relay.ID {
@@ -123,7 +111,7 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _ := service.NewApplication(context.Background())
+	newApp, _ := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(newApp.Activities)
 
 	return env

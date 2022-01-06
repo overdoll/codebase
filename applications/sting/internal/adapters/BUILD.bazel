@@ -19,7 +19,7 @@ go_library(
         "stella_grpc.go",
     ],
     importpath = "overdoll/applications/sting/internal/adapters",
-    visibility = ["//visibility:public"],
+    visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
         "//applications/loader/proto:v1_go_proto",

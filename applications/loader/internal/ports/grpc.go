@@ -80,9 +80,10 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 
 	for _, resource := range allResources {
 		responseResources = append(responseResources, &loader.Resource{
-			Id:        resource.ID(),
-			ItemId:    resource.ItemId(),
-			Processed: resource.IsProcessed(),
+			Id:          resource.ID(),
+			ItemId:      resource.ItemId(),
+			Processed:   resource.IsProcessed(),
+			ProcessedId: resource.ProcessedId(),
 		})
 	}
 

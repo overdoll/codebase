@@ -34,7 +34,7 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 			return err
 		}
 
-		return clb.UpdateName(cmd.Principal, resourceIds[0])
+		return clb.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
 
 	if err != nil {

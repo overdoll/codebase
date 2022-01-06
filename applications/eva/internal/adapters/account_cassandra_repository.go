@@ -24,7 +24,7 @@ var accountTable = table.New(table.Metadata{
 		"email",
 		"roles",
 		"verified",
-		"avatar",
+		"avatar_resource_id",
 		"locked",
 		"locked_until",
 		"language",
@@ -42,7 +42,7 @@ type accounts struct {
 	Email              string    `db:"email"`
 	Roles              []string  `db:"roles"`
 	Verified           bool      `db:"verified"`
-	Avatar             string    `db:"avatar"`
+	AvatarResourceId   string    `db:"avatar_resource_id"`
 	Language           string    `db:"language"`
 	Locked             bool      `db:"locked"`
 	LockedUntil        int       `db:"locked_until"`
@@ -112,7 +112,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		Email:              usr.Email(),
 		Username:           usr.Username(),
 		Roles:              usr.RolesAsString(),
-		Avatar:             usr.AvatarResourceId(),
+		AvatarResourceId:   usr.AvatarResourceId(),
 		Verified:           usr.Verified(),
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
@@ -149,7 +149,7 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.Email,
 		accountInstance.Roles,
 		accountInstance.Verified,
-		accountInstance.Avatar,
+		accountInstance.AvatarResourceId,
 		accountInstance.Language,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
@@ -189,7 +189,7 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.Email,
 			accountInstance.Roles,
 			accountInstance.Verified,
-			accountInstance.Avatar,
+			accountInstance.AvatarResourceId,
 			accountInstance.Language,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
@@ -363,7 +363,20 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, _ = accountTable.Insert()
 
-	batch.Query(stmt, instance.ID(), instance.Username(), instance.Email(), []string{}, false, nil, false, 0, instance.Language().Locale(), nil, nil, false)
+	batch.Query(stmt,
+		instance.ID(),
+		instance.Username(),
+		instance.Email(),
+		instance.RolesAsString(),
+		instance.Verified(),
+		instance.AvatarResourceId(),
+		instance.IsLocked(),
+		instance.LockedUntil(),
+		instance.Language().Locale(),
+		instance.LockedReason().String(),
+		instance.LastUsernameEdit(),
+		instance.MultiFactorEnabled(),
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
@@ -411,7 +424,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 					"language",
 					"locked",
 					"locked_reason",
-					"avatar",
+					"avatar_resource_id",
 					"multi_factor_enabled",
 				),
 			).

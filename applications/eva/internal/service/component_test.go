@@ -196,7 +196,7 @@ func seedNormalAccount(t *testing.T) *account.Account {
 func seedMfaAccount(t *testing.T) *account.Account {
 	usr := newTestAccount(t)
 
-	err := usr.ToggleMultiFactor()
+	err := usr.EnableMultiFactor()
 	require.NoError(t, err)
 
 	session := bootstrap.InitializeDatabaseSession()

@@ -65,33 +65,29 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 
 func (r ResourceCassandraRepository) CreateResources(ctx context.Context, res []*resource.Resource) error {
 
-	var b []*resources
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	for _, i := range res {
-		b = append(b, marshalResourceToDatabase(i))
+	for _, r := range res {
+		// remove selected resources
+		stmt, _ := resourcesTable.Insert()
+
+		marshalled := marshalResourceToDatabase(r)
+
+		batch.Query(stmt, marshalled.ItemId, marshalled.ResourceId, marshalled.Type, marshalled.MimeTypes, marshalled.Processed, marshalled.ProcessedId)
 	}
 
-	insertResources := r.session.
-		Query(resourcesTable.Insert()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(b)
-
-	if err := insertResources.ExecRelease(); err != nil {
-		return fmt.Errorf("failed to insert new resources: %v", err)
-	}
-
-	return nil
+	// execute batch.
+	return r.session.ExecuteBatch(batch)
 }
 
 func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, itemId string, resourceIds []string) ([]*resource.Resource, error) {
 
-	queryResources := resourcesTable.
-		SelectBuilder().
-		Where(qb.In("resource_id")).
+	queryResources := qb.
+		Select(resourcesTable.Name()).
+		Where(qb.Eq("item_id")).
 		Query(r.session).
 		BindMap(map[string]interface{}{
-			"item_id":     itemId,
-			"resource_id": resourceIds,
+			"item_id": itemId,
 		})
 
 	var b []resources
@@ -103,7 +99,13 @@ func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, item
 	var resourcesResult []*resource.Resource
 
 	for _, i := range b {
-		resourcesResult = append(resourcesResult, resource.UnmarshalResourceFromDatabase(i.ItemId, i.ResourceId, i.Type, i.MimeTypes, i.Processed, i.ProcessedId))
+
+		for _, target := range resourceIds {
+			if target == i.ResourceId {
+				resourcesResult = append(resourcesResult, resource.UnmarshalResourceFromDatabase(i.ItemId, i.ResourceId, i.Type, i.MimeTypes, i.Processed, i.ProcessedId))
+				break
+			}
+		}
 	}
 
 	return resourcesResult, nil
@@ -137,7 +139,7 @@ func (r ResourceCassandraRepository) UpdateResources(ctx context.Context, resour
 	for _, r := range resources {
 		// update all resources
 		stmt, _ := resourcesTable.Update("mime_types", "processed", "processed_id")
-		batch.Query(stmt, r.ItemId(), r.ID(), r.MimeTypes(), r.IsProcessed(), r.ProcessedId())
+		batch.Query(stmt, r.MimeTypes(), r.IsProcessed(), r.ProcessedId(), r.ItemId(), r.ID())
 	}
 
 	// execute batch.
@@ -150,8 +152,8 @@ func (r ResourceCassandraRepository) DeleteResources(ctx context.Context, resour
 
 	for _, r := range resources {
 		// remove selected resources
-		stmt, _ := resourcesTable.Delete()
-		batch.Query(stmt, r.ItemId(), r.ID())
+		stmt, _ := qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()
+		batch.Query(stmt, r.ItemId())
 	}
 
 	// execute batch.

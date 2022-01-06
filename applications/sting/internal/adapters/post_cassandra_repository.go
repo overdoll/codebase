@@ -216,7 +216,6 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 			"moderator_reassignment_at",
 			"posted_at",
 			"moderator_account_id",
-			"content",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst)
@@ -263,7 +262,7 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 }
 
 func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids"})
 }
 
 func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

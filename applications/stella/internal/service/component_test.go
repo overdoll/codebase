@@ -50,7 +50,7 @@ func getGrpcClient(t *testing.T) stella.StellaClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _ := service.NewApplication(context.Background())
+	newApp, _ := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(newApp.Activities)
 
 	return env
@@ -75,6 +75,12 @@ func newClub(t *testing.T, accountId string) *club.Club {
 	require.NoError(t, err)
 
 	return clb
+}
+
+func refreshClubESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubsIndexName).Do(context.Background())
+	require.NoError(t, err)
 }
 
 // helper which seeds a new post in the database

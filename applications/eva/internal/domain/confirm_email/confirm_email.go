@@ -47,13 +47,8 @@ func NewConfirmEmail(accountId, email string) (*ConfirmEmail, string, error) {
 	}, secret, nil
 }
 
-func (c *ConfirmEmail) Email() (string, error) {
-
-	if c.email == "" {
-		return "", errors.New("not confirmed yet")
-	}
-
-	return c.email, nil
+func (c *ConfirmEmail) Email() string {
+	return c.email
 }
 
 func (c *ConfirmEmail) ConfirmEmail(requester *principal.Principal, secret string) error {

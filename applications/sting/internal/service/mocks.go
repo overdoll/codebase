@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/principal"
 )
@@ -17,11 +19,15 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 	prin, err := e.adapter.GetAccount(ctx, s)
 
 	if err != nil {
-		return nil, err
-	}
 
-	if prin == nil {
-		return principal.NewPrincipal(s, nil, false, false), nil
+		if e, ok := status.FromError(err); ok {
+			switch e.Code() {
+			case codes.NotFound:
+				return principal.NewPrincipal(s, nil, false, false), nil
+			}
+		}
+
+		return nil, err
 	}
 
 	return prin, nil
