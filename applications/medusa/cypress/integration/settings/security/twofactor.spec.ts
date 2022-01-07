@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
-import { join, logout } from '../../join/join.spec'
+import { logout } from '../../join/join.spec'
 
 describe('Settings - Configure Two-Factor', () => {
   const [username, email] = generateUsernameAndEmail()
@@ -13,9 +13,7 @@ describe('Settings - Configure Two-Factor', () => {
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
     cy.joinWithNewAccount(username, email)
-  })
 
-  it('can set up recovery codes', () => {
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -43,7 +41,7 @@ describe('Settings - Configure Two-Factor', () => {
     })
   })
 
-  it('can set up authenticator app', () => {
+  it('can set up authenticator app and login using OTP, and recovery codes', () => {
     gotoSettingsPage()
 
     // Set up authenticator app
@@ -61,13 +59,12 @@ describe('Settings - Configure Two-Factor', () => {
         cy.findByText(/You have successfully set up/iu).should('exist')
       })
     })
-  })
 
-  it('login using one time password', () => {
-    // logout first
     logout()
-    // then join with an existing account
-    join(email)
+
+    cy.joinWithExistingAccount(email)
+
+    cy.visit('/join')
 
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
@@ -81,13 +78,12 @@ describe('Settings - Configure Two-Factor', () => {
         })
       })
     })
-  })
 
-  it('login using a recovery code and disable two factor', () => {
-    // logout first
     logout()
-    // then join with an existing account
-    join(email)
+
+    cy.joinWithExistingAccount(email)
+
+    cy.visit('/join')
 
     // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')

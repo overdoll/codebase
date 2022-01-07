@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"fmt"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
@@ -32,6 +33,7 @@ func NewGrantAccountAccessWithAuthenticationTokenHandler(cr token.Repository, ur
 // if not registered, use other methods
 func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAccountAccessWithAuthenticationToken) (*account.Account, error) {
 
+	fmt.Println("grant")
 	// Redeem cookie
 	ck, err := h.cr.GetAuthenticationToken(ctx, cmd.Passport, cmd.Token, nil)
 

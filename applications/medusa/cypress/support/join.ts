@@ -1,13 +1,39 @@
 import { generateEmailFromExistingUsername } from './generate'
+import URL from 'url-parse'
 import { getEmail } from './email'
 import { parse } from 'node-html-parser'
-import { URL } from 'url'
 
-const verify = (token: string, secret: string, cb: (token: string) => void): void => {
+const Tokens = require('csrf')
+const sign = require('cookie-signature').sign
+const Cookie = require('cookie')
+
+const getGraphqlRequest = (): any => {
+  const tokens = new Tokens()
+
+  const secret = tokens.secretSync()
+
+  const token = tokens.create(secret)
+
+  const val = `s:${sign(secret, Cypress.env('SESSION_SECRET')) as string}`
+
+  return {
+    method: 'POST',
+    url: '/api/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-csrf-token': token,
+      Cookie: Cookie.serialize('_csrf', val)
+    }
+  }
+}
+
+const verifyToken = (token: string, secret: string): void => {
   const verifyMutation = `mutation VerifyTokenMutation($input: VerifyAuthenticationTokenInput!) {
     verifyAuthenticationToken(input: $input) {
+      validation
       authenticationToken {
         token
+        verified
       }
     }
   }`
@@ -15,26 +41,24 @@ const verify = (token: string, secret: string, cb: (token: string) => void): voi
   // verify token
   cy
     .request(
-      'POST',
-      '/api/graphql',
       {
-        query: verifyMutation,
-        variables: {
-          input: {
-            token,
-            secret
+        ...getGraphqlRequest(),
+        body: {
+          query: verifyMutation,
+          variables: {
+            input: {
+              token,
+              secret
+            }
           }
         }
       }
-    )
-    .then((data) => {
-      // @ts-expect-error
-      const token = data?.verifyAuthenticationToken?.authenticationToken?.token
-      cb(token)
+    ).then(({ body }) => {
+      expect(body.data.verifyAuthenticationToken.validation).to.equal(null)
     })
 }
 
-const joinAndVerify = (email: string, cb: (token: string) => void): void => {
+const joinAndVerify = (email: string): void => {
   const joinMutation = `mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
     grantAuthenticationToken(input: $input) {
       authenticationToken {
@@ -45,68 +69,81 @@ const joinAndVerify = (email: string, cb: (token: string) => void): void => {
 
   const startTimestamp = new Date().getTime()
 
-  cy.session(email, () => {
-    // first, run the join mutation, and save the token ID
-    cy
-      .request(
-        'POST',
-        '/api/graphql',
-        {
+  // first, run the join mutation, and save the token ID
+  cy
+    .request(
+      {
+        ...getGraphqlRequest(),
+        body: {
           query: joinMutation,
-          variables: { input: { email } }
+          variables: {
+            input: { email }
+          }
         }
-      )
-      .then((data) => {
-        if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
-          // read email logs directly from carrier service
-          cy
-            .exec('kubectl logs --tail 1 -l app.kubernetes.io/instance=carrier')
-            .then(result => {
-              const urlRegex = /(https?:\/\/[^ ]*)/
-              const matches = result.stdout.match(urlRegex)
+      }
+    )
+    .then(({ body }) => {
+      expect(body.data.grantAuthenticationToken.authenticationToken).to.not.equal(null)
+    })
+    .its('body.data.grantAuthenticationToken.authenticationToken.token')
+    .as('token')
 
-              if (matches == null) {
-                throw new Error('misconfigured carrier')
-              }
+  if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
+    // read email logs directly from carrier service if no testmail API key is set
+    cy
+      .exec('kubectl logs --tail 1 -l app.kubernetes.io/instance=carrier')
+      .then(result => {
+        const urlRegex = /(https?:\/\/[^ ]*)/
+        const matches = result.stdout.match(urlRegex)
 
-              const url = new URL(matches[1])
+        expect(matches).to.not.equal(null)
 
-              const token = url.searchParams.get('token') as string
-              const secret = url.searchParams.get('secret') as string
-
-              verify(token, secret, cb)
-            })
-        } else {
-          cy
-            .wrap(null)
-            .as(`Awaiting Verification Email ${email}`)
-            .then({ timeout: 1000 * 60 * 5 }, async () => {
-              try {
-                const res = await getEmail(startTimestamp, email)
-                const inbox = res.inbox
-
-                expect(inbox.result).to.equal('success')
-                expect(inbox.count).to.equal(1)
-
-                const html = inbox.emails[0].html
-
-                const root = parse(html)
-
-                const link = root?.querySelector('a')?.getAttribute('href')
-
-                const url = new URL(link as string)
-
-                const token = url.searchParams.get('token') as string
-                const secret = url.searchParams.get('secret') as string
-                verify(token, secret, cb)
-              } catch (e) {
-                const message = `Failed "${email}" due to ${e as string}`
-                throw new Error(message)
-              }
-            })
+        if (matches == null) {
+          throw new Error('misconfigured carrier')
         }
+
+        const url = new URL(matches[1])
+
+        const query = new URLSearchParams(url.query)
+
+        const token = query.get('token') as string
+        const secret = query.get('secret') as string
+
+        verifyToken(token, secret)
       })
-  })
+
+    return
+  }
+
+  cy
+    .wrap(null)
+    .as(`Awaiting Verification Email ${email}`)
+    .then({ timeout: 1000 * 60 * 5 }, async () => {
+      try {
+        const res = await getEmail(startTimestamp, email)
+        const inbox = res.inbox
+
+        expect(inbox.result).to.equal('success')
+        expect(inbox.count).to.equal(1)
+
+        const html = inbox.emails[0].html
+
+        const root = parse(html)
+
+        const link = root?.querySelector('a')?.getAttribute('href')
+
+        const url = new URL(link as string)
+        const query = new URLSearchParams(url.query)
+
+        const token = query.get('token') as string
+        const secret = query.get('secret') as string
+
+        verifyToken(token, secret)
+      } catch (e) {
+        const message = `Failed "${email}" due to ${e as string}`
+        throw new Error(message)
+      }
+    })
 }
 
 Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
@@ -120,21 +157,28 @@ Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
     }
   }`
 
-  cy.session(email, () => {
-    joinAndVerify(email, (token) => {
+  cy.session(email, function () {
+    joinAndVerify(email)
+
+    cy.get('@token').then((token) => {
       cy
         .request(
-          'POST',
-          '/api/graphql',
           {
-            query: grantMutation,
-            variables: { input: { token } }
+            ...getGraphqlRequest(),
+            body: {
+              query: grantMutation,
+              variables: {
+                input: { token }
+              }
+            }
           }
         )
-        .then(() => {
-          cy.getCookie('od.session').should('exist')
+        .then(({ body }) => {
+          expect(body.data.grantAccountAccessWithAuthenticationToken.account).to.not.equal(null)
         })
     })
+
+    cy.getCookie('od.session').should('exist')
   })
 })
 
@@ -143,7 +187,6 @@ Cypress.Commands.add('joinWithNewAccount', (username: string) => {
 
   const registerMutation = `mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
     createAccountWithAuthenticationToken(input: $input) {
-      validation
       account {
         id
       }
@@ -151,24 +194,28 @@ Cypress.Commands.add('joinWithNewAccount', (username: string) => {
   }`
 
   cy.session(email, () => {
-    joinAndVerify(email, (token) => {
+    joinAndVerify(email)
+
+    cy.get('@token').then((token) => {
       cy
         .request(
-          'POST',
-          '/api/graphql',
           {
-            query: registerMutation,
-            variables: {
-              input: {
-                token,
-                username
+            ...getGraphqlRequest(),
+            body: {
+              query: registerMutation,
+              variables: {
+                input: {
+                  token,
+                  username
+                }
               }
             }
           }
-        )
-        .then(() => {
-          cy.getCookie('od.session').should('exist')
+        ).then(({ body }) => {
+          expect(body.data.createAccountWithAuthenticationToken.account).to.not.equal(null)
         })
     })
+
+    cy.getCookie('od.session').should('exist')
   })
 })

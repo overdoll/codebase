@@ -1,6 +1,6 @@
 import { generateEmailFromExistingUsername, generateUsernameAndEmail } from '../../support/generate'
 
-export const join = (email: string): void => {
+const join = (email: string): void => {
   cy.visit('/join')
 
   const startTimestamp = Date.now()

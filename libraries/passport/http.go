@@ -141,8 +141,8 @@ func fromResponse(res *http.Response) (*Passport, error) {
 			return nil, err
 		}
 
-		newBody, _ := sjson.Delete(string(bd), bodyKey)
-		res.Body = ioutil.NopCloser(bytes.NewBufferString(newBody))
+		//newBody, _ := sjson.Delete(string(bd), bodyKey)
+		//res.Body = ioutil.NopCloser(bytes.NewBufferString(newBody))
 
 		return pass, nil
 	}
