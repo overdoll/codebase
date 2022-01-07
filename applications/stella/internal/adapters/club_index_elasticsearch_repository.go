@@ -18,14 +18,14 @@ import (
 )
 
 type clubDocument struct {
-	Id             string            `json:"id"`
-	Slug           string            `json:"slug"`
-	SlugAliases    []string          `json:"slug_aliases"`
-	Thumbnail      string            `json:"thumbnail"`
-	Name           map[string]string `json:"name"`
-	CreatedAt      string            `json:"created_at"`
-	MembersCount   int               `json:"members_count"`
-	OwnerAccountId string            `json:"owner_account_id"`
+	Id                  string            `json:"id"`
+	Slug                string            `json:"slug"`
+	SlugAliases         []string          `json:"slug_aliases"`
+	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	Name                map[string]string `json:"name"`
+	CreatedAt           string            `json:"created_at"`
+	MembersCount        int               `json:"members_count"`
+	OwnerAccountId      string            `json:"owner_account_id"`
 }
 
 const clubsIndexProperties = `
@@ -83,14 +83,14 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 	}
 
 	return &clubDocument{
-		Id:             cat.ID(),
-		Slug:           cat.Slug(),
-		SlugAliases:    cat.SlugAliases(),
-		Thumbnail:      cat.ThumbnailResourceId(),
-		Name:           localization.MarshalTranslationToDatabase(cat.Name()),
-		CreatedAt:      strconv.FormatInt(parse.Time().Unix(), 10),
-		MembersCount:   cat.MembersCount(),
-		OwnerAccountId: cat.OwnerAccountId(),
+		Id:                  cat.ID(),
+		Slug:                cat.Slug(),
+		SlugAliases:         cat.SlugAliases(),
+		ThumbnailResourceId: cat.ThumbnailResourceId(),
+		Name:                localization.MarshalTranslationToDatabase(cat.Name()),
+		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		MembersCount:        cat.MembersCount(),
+		OwnerAccountId:      cat.OwnerAccountId(),
 	}, nil
 }
 
@@ -165,7 +165,7 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.Thumbnail, bd.MembersCount, bd.OwnerAccountId)
+		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId)
 		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
 		brands = append(brands, newBrand)
@@ -197,12 +197,12 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 			}
 
 			doc := clubDocument{
-				Id:          m.Id,
-				Slug:        m.Slug,
-				SlugAliases: m.SlugAliases,
-				Thumbnail:   m.ThumbnailResourceId,
-				Name:        m.Name,
-				CreatedAt:   strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:                  m.Id,
+				Slug:                m.Slug,
+				SlugAliases:         m.SlugAliases,
+				ThumbnailResourceId: m.ThumbnailResourceId,
+				Name:                m.Name,
+				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.
