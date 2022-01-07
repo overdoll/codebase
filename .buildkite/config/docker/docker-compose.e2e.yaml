@@ -4,7 +4,7 @@ services:
 
   run:
     working_dir: /workdir
-    image: "cypress/included:7.2.0"
+    image: "cypress/included:9.2.0"
     entrypoint: ""
     privileged: true
     environment:
