@@ -18,7 +18,7 @@ var (
 
 const (
 	maxClubSlugLimit     = 5
-	maxAccountClubsLimit = 1
+	maxAccountClubsLimit = 3
 )
 
 type Club struct {

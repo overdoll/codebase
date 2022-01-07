@@ -121,7 +121,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 club")
 	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
-	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 5 limit")
+	require.Equal(t, 3, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
 }
 
 type AddClubSlugAlias struct {
