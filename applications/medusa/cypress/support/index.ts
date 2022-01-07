@@ -10,51 +10,32 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
+
       /**
        * Start the joining session for an account that already exists in the system.
        *
-       * All you need to provide is the "name" and it will append the proper email variables
-       * @example cy.joinWithExistingAccount('poisonminion')
+       * Note that this will not do a full join flow - depending on API keys set, it will:
+       *
+       * 1. Make manual API calls instead of going through the interface
+       * 2. If testmail API keys are set, will read the actual emails
+       * 3. If testmail API keys are not set, will read from server logs
+       *
+       * @example cy.joinWithExistingAccount('poisonminion@test.com')
        */
-      joinWithExistingAccount: (name: string) => Chainable<Element>
+      joinWithExistingAccount: (email: string) => Chainable<Element>
 
       /**
-       * Do the joining session but don't check if it finished (useful for other flows, like 2FA)
+       * Do a joining session with a new account, with a specific username + email
        *
-       * @example cy.join('poisonminion')
-       */
-      join: (name: string) => Chainable<Element>
-
-      /**
-       * Do a joining session with a new account.
+       * Note that this will not do a full join flow - depending on API keys set, it will:
        *
-       * All you need to provide is the "name" and it will create the proper email and username
-       * @example cy.joinWithNewAccount('poisonminion')
-       */
-      joinWithNewAccount: (name: string) => Chainable<Element>
-
-      /**
-       * Do a joining session with a new account, with random username + email
+       * 1. Make manual API calls instead of going through the interface
+       * 2. If testmail API keys are set, will read the actual emails
+       * 3. If testmail API keys are not set, will read from server logs
        *
-       * Can optionally add a prefix
-       *
-       * @example cy.joinWithNewRandomAccount()
+       * @example cy.joinWithNewRandomAccount('poisonminion@test.com', 'poisonminion')
        */
-      joinWithNewRandomAccount: (prefix?: string) => Chainable<Element>
-
-      /**
-       * Do a joining session with a new account, with random username + email
-       *
-       * @example cy.joinWithNewRandomGlobalAccount()
-       */
-      joinWithNewRandomGlobalAccount: () => Chainable<Element>
-
-      /**
-       * Logout the current account
-       **
-       * @example cy.logout()
-       */
-      logout: () => Chainable<Element>
+      joinWithNewAccount: (username: string, email: string) => Chainable<Element>
 
       /**
        * For the given email, display the last email that was sent to this email
@@ -66,6 +47,11 @@ declare global {
        * @example cy.displayLastEmail(Date.now(), 'register email', 'test.123@testmail.app')
        */
       displayLastEmail: (startTimestamp: number, name: string, email: string) => Chainable<Element>
+
+      /**
+       * Ensures that before this suite runs, testmail API keys are configured since you need this in order to run the suite
+       */
+      validateEmailServerIsConfigured: () => Chainable<Element>
     }
   }
 }

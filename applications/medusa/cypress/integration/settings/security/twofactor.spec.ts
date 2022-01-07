@@ -1,13 +1,8 @@
-import ChanceJS from 'chance'
-
-const chance = new ChanceJS()
+import { generateUsernameAndEmail } from '../../../support/generate'
+import { join, logout } from '../../join/join.spec'
 
 describe('Settings - Configure Two-Factor', () => {
-  const name =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
+  const [username, email] = generateUsernameAndEmail()
 
   const gotoSettingsPage = (): void => {
     cy.visit('/settings/security')
@@ -17,7 +12,7 @@ describe('Settings - Configure Two-Factor', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.joinWithNewAccount(name)
+    cy.joinWithNewAccount(username, email)
   })
 
   it('can set up recovery codes', () => {
@@ -70,9 +65,9 @@ describe('Settings - Configure Two-Factor', () => {
 
   it('login using one time password', () => {
     // logout first
-    cy.logout()
+    logout()
     // then join with an existing account
-    cy.join(name)
+    join(email)
 
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
@@ -90,9 +85,9 @@ describe('Settings - Configure Two-Factor', () => {
 
   it('login using a recovery code and disable two factor', () => {
     // logout first
-    cy.logout()
+    logout()
     // then join with an existing account
-    cy.join(name)
+    join(email)
 
     // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')

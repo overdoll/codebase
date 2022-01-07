@@ -1,16 +1,11 @@
-import ChanceJS from 'chance'
-
-const chance = new ChanceJS()
+import { generateUsernameAndEmail } from '../../../support/generate'
+import { logout } from '../../join/join.spec'
 
 describe('Settings - Add Email', () => {
-  const currentUsername =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
+  const [username, email] = generateUsernameAndEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(currentUsername)
+    cy.joinWithNewAccount(username, email)
   })
 
   it('can see current session', () => {
@@ -21,8 +16,8 @@ describe('Settings - Add Email', () => {
 
   it('can see a new session and revoke it', () => {
     cy.visit('/')
-    cy.logout()
-    cy.joinWithExistingAccount(currentUsername)
+    logout()
+    cy.joinWithExistingAccount(username)
     cy.visit('/settings/security')
     cy.findByText(/Sessions/).should('exist')
     cy.findByText(/Last Accessed/iu).should('exist').click()

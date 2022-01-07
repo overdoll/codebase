@@ -1,25 +1,17 @@
-import ChanceJS from 'chance'
-
-const chance = new ChanceJS()
+import { generateEmail, generateUsernameAndEmail } from '../../../support/generate'
 
 describe('Settings - Add Email', () => {
+  before(() => {
+    cy.validateEmailServerIsConfigured()
+  })
+
   const startTimestamp = Date.now()
 
-  const newEmail = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })}@inbox.testmail.app`
-
-  const currentUsername =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
-
-  const currentEmail = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${currentUsername}@inbox.testmail.app`
+  const [username, currentEmail] = generateUsernameAndEmail()
+  const newEmail = generateEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(currentUsername)
+    cy.joinWithNewAccount(username, currentEmail)
   })
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {

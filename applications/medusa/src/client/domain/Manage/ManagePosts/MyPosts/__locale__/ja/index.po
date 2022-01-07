@@ -1,0 +1,88 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-01-07 10:42-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ja\n"
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:72
+msgid "Click on a draft post to continue editing it"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:77
+msgid "Click on a published post to see it live."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:59
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:64
+msgid "Create a post"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraftPreview/PostStateDraftPreview.tsx:98
+msgid "Discard Draft"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:49
+msgid "Drafts"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:55
+msgid "If one of your posts is rejected, it will show up here."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:61
+msgid "In Review"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:91
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:93
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:87
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:87
+msgid "Load More"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateDraft/PostStateDraft.tsx:50
+msgid "No Draft Posts"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:50
+msgid "No Posts in Review"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStatePublished/PostStatePublished.tsx:55
+msgid "No Published Posts"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:50
+msgid "No Rejected Posts"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReviewPreview/PostStateReviewPreview.tsx:66
+msgid "Posted on {formattedDate}"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:73
+msgid "Published"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/MyPosts.tsx:85
+msgid "Rejected"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejectedPreview/PostStateRejectedPreview.tsx:71
+msgid "Rejected (Posted on {formattedDate})"
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateRejected/PostStateRejected.tsx:68
+msgid "These posts were rejected from being visible to the public for violating the community guidelines."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:68
+msgid "These posts will be reviewed to ensure they comply with our community guidelines before going live."
+msgstr ""
+
+#: src/client/domain/Manage/ManagePosts/MyPosts/PostStateReview/PostStateReview.tsx:55
+msgid "When you submit a post, it'll appear here if it needs to be reviewed before going public."
+msgstr ""

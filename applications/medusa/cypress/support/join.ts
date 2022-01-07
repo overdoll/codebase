@@ -1,74 +1,174 @@
-Cypress.Commands.add('logout', () => {
-  cy.waitUntil(() => cy.findByRole('button', { name: /Menu/iu }).should('not.be.disabled'))
+import { generateEmailFromExistingUsername } from './generate'
+import { getEmail } from './email'
+import { parse } from 'node-html-parser'
+import { URL } from 'url'
 
-  cy.findByRole('button', { name: /Menu/iu })
-    .click()
+const verify = (token: string, secret: string, cb: (token: string) => void): void => {
+  const verifyMutation = `mutation VerifyTokenMutation($input: VerifyAuthenticationTokenInput!) {
+    verifyAuthenticationToken(input: $input) {
+      authenticationToken {
+        token
+      }
+    }
+  }`
 
-  cy.findByRole('button', { name: /Log Out/iu })
-    .click()
+  // verify token
+  cy
+    .request(
+      'POST',
+      '/api/graphql',
+      {
+        query: verifyMutation,
+        variables: {
+          input: {
+            token,
+            secret
+          }
+        }
+      }
+    )
+    .then((data) => {
+      // @ts-expect-error
+      const token = data?.verifyAuthenticationToken?.authenticationToken?.token
+      cb(token)
+    })
+}
 
-  cy.url().should('include', '/')
-})
+const joinAndVerify = (email: string, cb: (token: string) => void): void => {
+  const joinMutation = `mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
+    grantAuthenticationToken(input: $input) {
+      authenticationToken {
+        token
+      }
+    }
+  }`
 
-Cypress.Commands.add('join', (name: string) => {
-  const email = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`
-  startJoin(email)
-})
+  const startTimestamp = new Date().getTime()
+
+  cy.session(email, () => {
+    // first, run the join mutation, and save the token ID
+    cy
+      .request(
+        'POST',
+        '/api/graphql',
+        {
+          query: joinMutation,
+          variables: { input: { email } }
+        }
+      )
+      .then((data) => {
+        if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
+          // read email logs directly from carrier service
+          cy
+            .exec('kubectl logs --tail 1 -l app.kubernetes.io/instance=carrier')
+            .then(result => {
+              const urlRegex = /(https?:\/\/[^ ]*)/
+              const matches = result.stdout.match(urlRegex)
+
+              if (matches == null) {
+                throw new Error('misconfigured carrier')
+              }
+
+              const url = new URL(matches[1])
+
+              const token = url.searchParams.get('token') as string
+              const secret = url.searchParams.get('secret') as string
+
+              verify(token, secret, cb)
+            })
+        } else {
+          cy
+            .wrap(null)
+            .as(`Awaiting Verification Email ${email}`)
+            .then({ timeout: 1000 * 60 * 5 }, async () => {
+              try {
+                const res = await getEmail(startTimestamp, email)
+                const inbox = res.inbox
+
+                expect(inbox.result).to.equal('success')
+                expect(inbox.count).to.equal(1)
+
+                const html = inbox.emails[0].html
+
+                const root = parse(html)
+
+                const link = root?.querySelector('a')?.getAttribute('href')
+
+                const url = new URL(link as string)
+
+                const token = url.searchParams.get('token') as string
+                const secret = url.searchParams.get('secret') as string
+                verify(token, secret, cb)
+              } catch (e) {
+                const message = `Failed "${email}" due to ${e as string}`
+                throw new Error(message)
+              }
+            })
+        }
+      })
+  })
+}
 
 Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
-  const email = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`
-  startJoin(email)
-  cy.url().should('include', '/profile')
-})
+  const email = generateEmailFromExistingUsername(name)
 
-Cypress.Commands.add('joinWithNewAccount', (name: string) => {
-  const email = `${Cypress.env('TESTMAIL_NAMESPACE') as string}.${name}@inbox.testmail.app`
+  const grantMutation = `mutation GrantMutation($input: GrantAccountAccessWithAuthenticationTokenInput!) {
+    grantAccountAccessWithAuthenticationToken(input: $input) {
+      account {
+        id
+      }
+    }
+  }`
+
   cy.session(email, () => {
-    startJoin(email)
-    finishWithNewAccount(name)
+    joinAndVerify(email, (token) => {
+      cy
+        .request(
+          'POST',
+          '/api/graphql',
+          {
+            query: grantMutation,
+            variables: { input: { token } }
+          }
+        )
+        .then(() => {
+          cy.getCookie('od.session').should('exist')
+        })
+    })
   })
 })
 
-const finishWithNewAccount = (username: string): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled'))
+Cypress.Commands.add('joinWithNewAccount', (username: string) => {
+  const email = generateEmailFromExistingUsername(username)
 
-  cy.findByRole('textbox', { name: /username/iu })
-    .type(username)
+  const registerMutation = `mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+    createAccountWithAuthenticationToken(input: $input) {
+      validation
+      account {
+        id
+      }
+    }
+  }`
 
-  cy.findByRole('button', { name: /Register/iu })
-    .click()
-
-  cy.url().should('include', '/profile')
-}
-
-const startJoin = (email: string): void => {
-  cy.visit('/join')
-
-  const startTimestamp = Date.now()
-
-  // wait until button isn't disabled (it's ready to be interacted with)
-  cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled'))
-
-  cy.findByRole('textbox', { name: /email/iu })
-    .type(email)
-
-  cy.findByRole('button', { name: /Continue/iu })
-    .click()
-
-  cy.contains(email)
-
-  cy.displayLastEmail(startTimestamp, 'Join Email', email)
-
-  // we dont want to "click" on the link or else the test will break, so we just visit it
-  cy.findByText('authenticate').then(ln => {
-    const url = ln.prop('href')
-    cy.visit(url)
+  cy.session(email, () => {
+    joinAndVerify(email, (token) => {
+      cy
+        .request(
+          'POST',
+          '/api/graphql',
+          {
+            query: registerMutation,
+            variables: {
+              input: {
+                token,
+                username
+              }
+            }
+          }
+        )
+        .then(() => {
+          cy.getCookie('od.session').should('exist')
+        })
+    })
   })
-
-  cy.url().should('include', '/verify-token')
-
-  cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
-
-  cy.findByRole('button', { name: /I closed the original tab/iu })
-    .click()
-}
+})

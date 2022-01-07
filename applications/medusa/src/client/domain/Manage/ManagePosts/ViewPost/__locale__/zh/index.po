@@ -13,22 +13,22 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ViewPost/ViewPost/ViewPost.tsx:59
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:59
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/ViewPost/ViewPost/ViewPost.tsx:83
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:83
 msgid "Like"
 msgstr ""
 
-#: src/client/domain/ViewPost/ViewPost/ViewPost.tsx:103
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:103
 msgid "Moderate"
 msgstr ""
 
-#: src/client/domain/ViewPost/ViewPost/ViewPost.tsx:47
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:47
 msgid "Post Not Found"
 msgstr ""
 
-#: src/client/domain/ViewPost/ViewPost/ViewPost.tsx:50
+#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:50
 msgid "This post could not be found"
 msgstr ""
