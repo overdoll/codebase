@@ -16,8 +16,8 @@ services:
       - elasticsearch
       - minio
     ports:
-      - 3040:8000
-      - 3050:8080
+      - 3340:8000
+      - 3350:8080
     deploy:
       restart_policy:
         condition: on-failure
