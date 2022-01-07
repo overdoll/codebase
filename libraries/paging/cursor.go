@@ -3,6 +3,7 @@ package paging
 import (
 	"encoding/base64"
 	"errors"
+	"sort"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -140,6 +141,8 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 
 // take redis keys, and based on cursor, sort results
 func (c *Cursor) BuildRedis(k []string) []string {
+
+	sort.Strings(k)
 
 	keys := k
 

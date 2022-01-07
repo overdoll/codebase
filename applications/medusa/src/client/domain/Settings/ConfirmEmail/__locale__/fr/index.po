@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: pt\n"
+"Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:86
+#: src/client/domain/Settings/ConfirmEmail/ConfirmEmail.tsx:85
 msgid "Confirming Email"
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:94
+#: src/client/domain/Settings/ConfirmEmail/ConfirmEmail.tsx:93
 msgid "Please wait while we confirm your email..."
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:48
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:57
+#: src/client/domain/Settings/ConfirmEmail/ConfirmEmail.tsx:47
+#: src/client/domain/Settings/ConfirmEmail/ConfirmEmail.tsx:56
 msgid "This confirmation link is either invalid or has expired"
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:51
+#: src/client/domain/Settings/ConfirmEmail/ConfirmEmail.tsx:50
 msgid "{0} was confirmed successfully"
 msgstr ""

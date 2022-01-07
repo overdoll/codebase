@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
-import { logout } from '../../join/join.spec'
+import { logout } from '../../../support/join_actions'
 
 describe('Settings - Add Email', () => {
   const [username, email] = generateUsernameAndEmail()
@@ -16,7 +16,8 @@ describe('Settings - Add Email', () => {
 
   it('can see a new session and revoke it', () => {
     cy.visit('/')
-    logout()
+    cy.clearCookies()
+
     cy.joinWithExistingAccount(username)
     cy.visit('/settings/security')
     cy.findByText(/Sessions/).should('exist')

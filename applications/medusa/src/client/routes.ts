@@ -249,14 +249,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail'
+            './domain/Settings/ConfirmEmail/ConfirmEmail'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Settings/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages

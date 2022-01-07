@@ -50,8 +50,8 @@ msgid "Confirm Username Change"
 msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:85
-msgid "Confirming Email"
-msgstr ""
+#~ msgid "Confirming Email"
+#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/RootEmails.tsx:26
 msgid "Emails"
@@ -91,8 +91,8 @@ msgid "Needs to be confirmed through email link"
 msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:93
-msgid "Please wait while we confirm your email..."
-msgstr ""
+#~ msgid "Please wait while we confirm your email..."
+#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete.tsx:73
 msgid "Remove"
@@ -121,8 +121,8 @@ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:47
 #: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:56
-msgid "This confirmation link is either invalid or has expired"
-msgstr ""
+#~ msgid "This confirmation link is either invalid or has expired"
+#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/EmailCard.tsx:42
 msgid "Used to log into your account"
@@ -161,8 +161,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:50
-msgid "{0} was confirmed successfully"
-msgstr ""
+#~ msgid "{0} was confirmed successfully"
+#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete.tsx:52
 msgid "{0} was removed"

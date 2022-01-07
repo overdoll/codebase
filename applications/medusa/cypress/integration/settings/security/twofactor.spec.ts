@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
-import { logout } from '../../join/join.spec'
+import { join, logout } from '../../../support/join_actions'
 
 describe('Settings - Configure Two-Factor', () => {
   const [username, email] = generateUsernameAndEmail()
@@ -10,10 +10,10 @@ describe('Settings - Configure Two-Factor', () => {
     cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
   }
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.joinWithNewAccount(username, email)
+  before(() => {
+    cy.validateEmailServerIsConfigured()
 
+    cy.joinWithNewAccount(username, email)
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -22,6 +22,11 @@ describe('Settings - Configure Two-Factor', () => {
     cy.findByText(/No recovery codes/iu).should('exist')
     cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
     cy.findByText(/Your recovery codes/iu).should('exist')
+  })
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
+    cy.joinWithNewAccount(username, email)
   })
 
   it('can generate new recovery codes', () => {
@@ -34,14 +39,19 @@ describe('Settings - Configure Two-Factor', () => {
       cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
       cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').should('not.equal', initialText)
     })
+  })
+
+  it('can set up authenticator app and login using OTP, and recovery codes', () => {
+    gotoSettingsPage()
+
+    cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Recovery Codes/ }).click()
 
     // Store recovery code as if the user "saved" it somewhere
     cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').then(text => {
       cy.setCookie('cypressTestRecoveryCode', text.slice(0, 8))
     })
-  })
 
-  it('can set up authenticator app and login using OTP, and recovery codes', () => {
     gotoSettingsPage()
 
     // Set up authenticator app
@@ -62,9 +72,7 @@ describe('Settings - Configure Two-Factor', () => {
 
     logout()
 
-    cy.joinWithExistingAccount(email)
-
-    cy.visit('/join')
+    join(email)
 
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
@@ -81,13 +89,12 @@ describe('Settings - Configure Two-Factor', () => {
 
     logout()
 
-    cy.joinWithExistingAccount(email)
-
-    cy.visit('/join')
+    join(email)
 
     // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
+      console.log(cookie)
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
       cy.findByRole('button', { name: /I lost access/iu }).click()
       cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)
