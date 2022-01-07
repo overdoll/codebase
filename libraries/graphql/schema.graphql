@@ -5,3 +5,5 @@ scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
+
+directive @entityResolver(multi: Boolean) on OBJECT

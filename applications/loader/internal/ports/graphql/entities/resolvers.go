@@ -6,7 +6,6 @@ import (
 	"overdoll/applications/loader/internal/ports/graphql/dataloader"
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"strings"
 )
 
 type EntityResolver struct {
@@ -14,5 +13,5 @@ type EntityResolver struct {
 }
 
 func (e EntityResolver) FindResourceByID(ctx context.Context, id relay.ID) (*types.Resource, error) {
-	return dataloader.For(ctx).GetResourceById(ctx, strings.Join([]string{id.GetCompositePartID(1), id.GetCompositePartID(0)}, "|"))
+	return dataloader.For(ctx).GetResourceById(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 }

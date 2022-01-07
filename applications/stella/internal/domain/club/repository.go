@@ -11,6 +11,7 @@ type Repository interface {
 	GetClubsByIds(ctx context.Context, clubIds []string) ([]*Club, error)
 	GetClubById(ctx context.Context, clubId string) (*Club, error)
 	GetClubBySlug(ctx context.Context, slug string) (*Club, error)
+
 	CreateClub(ctx context.Context, requester *principal.Principal, club *Club) error
 
 	UpdateClubThumbnail(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)

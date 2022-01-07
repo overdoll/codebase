@@ -11,5 +11,6 @@ go_library(
         "//applications/stella/internal/ports/graphql/dataloader",
         "//applications/stella/internal/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/principal",
     ],
 )

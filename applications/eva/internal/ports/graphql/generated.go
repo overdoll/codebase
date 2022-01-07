@@ -47,6 +47,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
+	EntityResolver func(ctx context.Context, obj interface{}, next graphql.Resolver, multi *bool) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -338,7 +339,7 @@ type ComplexityRoot struct {
 		Validation          func(childComplexity int) int
 	}
 
-	Service struct {
+	_Service struct {
 		SDL func(childComplexity int) int
 	}
 }
@@ -1595,11 +1596,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.VerifyAuthenticationTokenPayload.Validation(childComplexity), true
 
 	case "_Service.sdl":
-		if e.complexity.Service.SDL == nil {
+		if e.complexity._Service.SDL == nil {
 			break
 		}
 
-		return e.complexity.Service.SDL(childComplexity), true
+		return e.complexity._Service.SDL(childComplexity), true
 
 	}
 	return 0, false
@@ -2103,7 +2104,7 @@ input UpdateAccountEmailStatusToPrimaryInput {
 input EnrollAccountMultiFactorTotpInput {
 
   """
-  The TOTP ID, sent intially
+  The TOTP ID, sent initially
   """
   id: String!
 
@@ -2631,7 +2632,10 @@ type Query {
 scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
-  | FIELD_DEFINITION`, BuiltIn: false},
+  | FIELD_DEFINITION
+
+directive @entityResolver(multi: Boolean) on OBJECT
+`, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -2649,8 +2653,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
-directive @extends on OBJECT
+directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -2679,6 +2683,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *bool
+	if tmp, ok := rawArgs["multi"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("multi"))
+		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["multi"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Account_avatar_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -7860,7 +7879,7 @@ func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.__resolve_entities(ctx, args["representations"].([]map[string]interface{}))
+		return ec.__resolve_entities(ctx, args["representations"].([]map[string]interface{})), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10279,7 +10298,6 @@ var accountImplementors = []string{"Account", "Node", "_Entity"}
 
 func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, obj *types.Account) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10287,35 +10305,66 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
 		case "id":
-			out.Values[i] = ec._Account_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "reference":
-			out.Values[i] = ec._Account_reference(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_reference(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "avatar":
-			out.Values[i] = ec._Account_avatar(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_avatar(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "username":
-			out.Values[i] = ec._Account_username(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_username(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "isStaff":
-			out.Values[i] = ec._Account_isStaff(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_isStaff(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "isModerator":
-			out.Values[i] = ec._Account_isModerator(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_isModerator(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "lock":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10323,15 +10372,26 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				}()
 				res = ec._Account_lock(ctx, field, obj)
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "language":
-			out.Values[i] = ec._Account_language(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_language(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "sessions":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10342,10 +10402,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "usernameEditAvailableAt":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10356,10 +10422,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "emailsLimit":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10370,10 +10442,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "emails":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10384,10 +10462,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "recoveryCodesGenerated":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10398,10 +10482,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "multiFactorEnabled":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10412,10 +10502,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "canDisableMultiFactor":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10426,10 +10522,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "multiFactorTotpConfigured":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10440,10 +10542,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		case "recoveryCodes":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10454,6 +10562,11 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -10470,7 +10583,6 @@ var accountConnectionImplementors = []string{"AccountConnection"}
 
 func (ec *executionContext) _AccountConnection(ctx context.Context, sel ast.SelectionSet, obj *types.AccountConnection) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountConnectionImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10478,12 +10590,22 @@ func (ec *executionContext) _AccountConnection(ctx context.Context, sel ast.Sele
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountConnection")
 		case "edges":
-			out.Values[i] = ec._AccountConnection_edges(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "pageInfo":
-			out.Values[i] = ec._AccountConnection_pageInfo(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10502,7 +10624,6 @@ var accountEdgeImplementors = []string{"AccountEdge"}
 
 func (ec *executionContext) _AccountEdge(ctx context.Context, sel ast.SelectionSet, obj *types.AccountEdge) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountEdgeImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10510,12 +10631,22 @@ func (ec *executionContext) _AccountEdge(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountEdge")
 		case "node":
-			out.Values[i] = ec._AccountEdge_node(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "cursor":
-			out.Values[i] = ec._AccountEdge_cursor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10534,7 +10665,6 @@ var accountEmailImplementors = []string{"AccountEmail", "Node", "_Entity"}
 
 func (ec *executionContext) _AccountEmail(ctx context.Context, sel ast.SelectionSet, obj *types.AccountEmail) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountEmailImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10542,23 +10672,39 @@ func (ec *executionContext) _AccountEmail(ctx context.Context, sel ast.Selection
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountEmail")
 		case "id":
-			out.Values[i] = ec._AccountEmail_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmail_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "email":
-			out.Values[i] = ec._AccountEmail_email(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmail_email(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "status":
-			out.Values[i] = ec._AccountEmail_status(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmail_status(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "account":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -10566,6 +10712,11 @@ func (ec *executionContext) _AccountEmail(ctx context.Context, sel ast.Selection
 				}()
 				res = ec._AccountEmail_account(ctx, field, obj)
 				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
 			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -10582,7 +10733,6 @@ var accountEmailConnectionImplementors = []string{"AccountEmailConnection"}
 
 func (ec *executionContext) _AccountEmailConnection(ctx context.Context, sel ast.SelectionSet, obj *types.AccountEmailConnection) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountEmailConnectionImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10590,12 +10740,22 @@ func (ec *executionContext) _AccountEmailConnection(ctx context.Context, sel ast
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountEmailConnection")
 		case "pageInfo":
-			out.Values[i] = ec._AccountEmailConnection_pageInfo(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmailConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "edges":
-			out.Values[i] = ec._AccountEmailConnection_edges(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmailConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10614,7 +10774,6 @@ var accountEmailEdgeImplementors = []string{"AccountEmailEdge"}
 
 func (ec *executionContext) _AccountEmailEdge(ctx context.Context, sel ast.SelectionSet, obj *types.AccountEmailEdge) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountEmailEdgeImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10622,12 +10781,22 @@ func (ec *executionContext) _AccountEmailEdge(ctx context.Context, sel ast.Selec
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountEmailEdge")
 		case "cursor":
-			out.Values[i] = ec._AccountEmailEdge_cursor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmailEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "node":
-			out.Values[i] = ec._AccountEmailEdge_node(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountEmailEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10646,7 +10815,6 @@ var accountLockImplementors = []string{"AccountLock"}
 
 func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionSet, obj *types.AccountLock) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountLockImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10654,12 +10822,22 @@ func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountLock")
 		case "expires":
-			out.Values[i] = ec._AccountLock_expires(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountLock_expires(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "reason":
-			out.Values[i] = ec._AccountLock_reason(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountLock_reason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10678,7 +10856,6 @@ var accountMultiFactorRecoveryCodeImplementors = []string{"AccountMultiFactorRec
 
 func (ec *executionContext) _AccountMultiFactorRecoveryCode(ctx context.Context, sel ast.SelectionSet, obj *types.AccountMultiFactorRecoveryCode) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountMultiFactorRecoveryCodeImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10686,7 +10863,12 @@ func (ec *executionContext) _AccountMultiFactorRecoveryCode(ctx context.Context,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountMultiFactorRecoveryCode")
 		case "code":
-			out.Values[i] = ec._AccountMultiFactorRecoveryCode_code(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountMultiFactorRecoveryCode_code(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10705,7 +10887,6 @@ var accountSessionImplementors = []string{"AccountSession", "Node", "_Entity"}
 
 func (ec *executionContext) _AccountSession(ctx context.Context, sel ast.SelectionSet, obj *types.AccountSession) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountSessionImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10713,37 +10894,72 @@ func (ec *executionContext) _AccountSession(ctx context.Context, sel ast.Selecti
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountSession")
 		case "id":
-			out.Values[i] = ec._AccountSession_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "device":
-			out.Values[i] = ec._AccountSession_device(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_device(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "ip":
-			out.Values[i] = ec._AccountSession_ip(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_ip(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "location":
-			out.Values[i] = ec._AccountSession_location(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_location(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "created":
-			out.Values[i] = ec._AccountSession_created(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_created(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "lastSeen":
-			out.Values[i] = ec._AccountSession_lastSeen(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_lastSeen(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "current":
-			out.Values[i] = ec._AccountSession_current(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSession_current(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10762,7 +10978,6 @@ var accountSessionConnectionImplementors = []string{"AccountSessionConnection"}
 
 func (ec *executionContext) _AccountSessionConnection(ctx context.Context, sel ast.SelectionSet, obj *types.AccountSessionConnection) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountSessionConnectionImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10770,12 +10985,22 @@ func (ec *executionContext) _AccountSessionConnection(ctx context.Context, sel a
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountSessionConnection")
 		case "pageInfo":
-			out.Values[i] = ec._AccountSessionConnection_pageInfo(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSessionConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "edges":
-			out.Values[i] = ec._AccountSessionConnection_edges(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSessionConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10794,7 +11019,6 @@ var accountSessionEdgeImplementors = []string{"AccountSessionEdge"}
 
 func (ec *executionContext) _AccountSessionEdge(ctx context.Context, sel ast.SelectionSet, obj *types.AccountSessionEdge) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountSessionEdgeImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10802,12 +11026,22 @@ func (ec *executionContext) _AccountSessionEdge(ctx context.Context, sel ast.Sel
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountSessionEdge")
 		case "cursor":
-			out.Values[i] = ec._AccountSessionEdge_cursor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSessionEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "node":
-			out.Values[i] = ec._AccountSessionEdge_node(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountSessionEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -10826,7 +11060,6 @@ var addAccountEmailPayloadImplementors = []string{"AddAccountEmailPayload"}
 
 func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.AddAccountEmailPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, addAccountEmailPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10834,9 +11067,19 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AddAccountEmailPayload")
 		case "accountEmail":
-			out.Values[i] = ec._AddAccountEmailPayload_accountEmail(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AddAccountEmailPayload_accountEmail(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "validation":
-			out.Values[i] = ec._AddAccountEmailPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AddAccountEmailPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10852,7 +11095,6 @@ var assignAccountModeratorRolePayloadImplementors = []string{"AssignAccountModer
 
 func (ec *executionContext) _AssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountModeratorRolePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10860,7 +11102,12 @@ func (ec *executionContext) _AssignAccountModeratorRolePayload(ctx context.Conte
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AssignAccountModeratorRolePayload")
 		case "account":
-			out.Values[i] = ec._AssignAccountModeratorRolePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AssignAccountModeratorRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10876,7 +11123,6 @@ var assignAccountStaffRolePayloadImplementors = []string{"AssignAccountStaffRole
 
 func (ec *executionContext) _AssignAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountStaffRolePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountStaffRolePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10884,7 +11130,12 @@ func (ec *executionContext) _AssignAccountStaffRolePayload(ctx context.Context, 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AssignAccountStaffRolePayload")
 		case "account":
-			out.Values[i] = ec._AssignAccountStaffRolePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AssignAccountStaffRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10900,7 +11151,6 @@ var authenticationTokenImplementors = []string{"AuthenticationToken"}
 
 func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.SelectionSet, obj *types.AuthenticationToken) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationTokenImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10908,42 +11158,82 @@ func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.Se
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AuthenticationToken")
 		case "id":
-			out.Values[i] = ec._AuthenticationToken_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "token":
-			out.Values[i] = ec._AuthenticationToken_token(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_token(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "sameDevice":
-			out.Values[i] = ec._AuthenticationToken_sameDevice(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_sameDevice(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "verified":
-			out.Values[i] = ec._AuthenticationToken_verified(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_verified(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "secure":
-			out.Values[i] = ec._AuthenticationToken_secure(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_secure(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "userAgent":
-			out.Values[i] = ec._AuthenticationToken_userAgent(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_userAgent(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "location":
-			out.Values[i] = ec._AuthenticationToken_location(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_location(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "accountStatus":
-			out.Values[i] = ec._AuthenticationToken_accountStatus(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationToken_accountStatus(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10959,7 +11249,6 @@ var authenticationTokenAccountStatusImplementors = []string{"AuthenticationToken
 
 func (ec *executionContext) _AuthenticationTokenAccountStatus(ctx context.Context, sel ast.SelectionSet, obj *types.AuthenticationTokenAccountStatus) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationTokenAccountStatusImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10967,12 +11256,22 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus(ctx context.Contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AuthenticationTokenAccountStatus")
 		case "registered":
-			out.Values[i] = ec._AuthenticationTokenAccountStatus_registered(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationTokenAccountStatus_registered(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "multiFactor":
-			out.Values[i] = ec._AuthenticationTokenAccountStatus_multiFactor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AuthenticationTokenAccountStatus_multiFactor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10988,7 +11287,6 @@ var confirmAccountEmailPayloadImplementors = []string{"ConfirmAccountEmailPayloa
 
 func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.ConfirmAccountEmailPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, confirmAccountEmailPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -10996,9 +11294,19 @@ func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("ConfirmAccountEmailPayload")
 		case "validation":
-			out.Values[i] = ec._ConfirmAccountEmailPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ConfirmAccountEmailPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "accountEmail":
-			out.Values[i] = ec._ConfirmAccountEmailPayload_accountEmail(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ConfirmAccountEmailPayload_accountEmail(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11014,7 +11322,6 @@ var createAccountWithAuthenticationTokenPayloadImplementors = []string{"CreateAc
 
 func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateAccountWithAuthenticationTokenPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, createAccountWithAuthenticationTokenPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11022,11 +11329,26 @@ func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload(ctx con
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CreateAccountWithAuthenticationTokenPayload")
 		case "validation":
-			out.Values[i] = ec._CreateAccountWithAuthenticationTokenPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateAccountWithAuthenticationTokenPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "account":
-			out.Values[i] = ec._CreateAccountWithAuthenticationTokenPayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateAccountWithAuthenticationTokenPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "revokedAuthenticationTokenId":
-			out.Values[i] = ec._CreateAccountWithAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateAccountWithAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11045,7 +11367,6 @@ var deleteAccountEmailPayloadImplementors = []string{"DeleteAccountEmailPayload"
 
 func (ec *executionContext) _DeleteAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountEmailPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccountEmailPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11053,7 +11374,12 @@ func (ec *executionContext) _DeleteAccountEmailPayload(ctx context.Context, sel 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("DeleteAccountEmailPayload")
 		case "accountEmailId":
-			out.Values[i] = ec._DeleteAccountEmailPayload_accountEmailId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DeleteAccountEmailPayload_accountEmailId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11072,7 +11398,6 @@ var disableAccountMultiFactorPayloadImplementors = []string{"DisableAccountMulti
 
 func (ec *executionContext) _DisableAccountMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DisableAccountMultiFactorPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, disableAccountMultiFactorPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11080,7 +11405,12 @@ func (ec *executionContext) _DisableAccountMultiFactorPayload(ctx context.Contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("DisableAccountMultiFactorPayload")
 		case "accountMultiFactorTotpEnabled":
-			out.Values[i] = ec._DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11096,7 +11426,6 @@ var enrollAccountMultiFactorTotpPayloadImplementors = []string{"EnrollAccountMul
 
 func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload(ctx context.Context, sel ast.SelectionSet, obj *types.EnrollAccountMultiFactorTotpPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, enrollAccountMultiFactorTotpPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11104,9 +11433,19 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload(ctx context.Con
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("EnrollAccountMultiFactorTotpPayload")
 		case "validation":
-			out.Values[i] = ec._EnrollAccountMultiFactorTotpPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._EnrollAccountMultiFactorTotpPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "accountMultiFactorTotpEnabled":
-			out.Values[i] = ec._EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11122,7 +11461,6 @@ var entityImplementors = []string{"Entity"}
 
 func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, entityImplementors)
-
 	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
 		Object: "Entity",
 	})
@@ -11130,12 +11468,18 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
+		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
+			Object: field.Name,
+			Field:  field,
+		})
+
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
 		case "findAccountByID":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11146,10 +11490,19 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "findAccountEmailByID":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11160,10 +11513,19 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "findAccountSessionByID":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11174,6 +11536,14 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -11190,7 +11560,6 @@ var generateAccountMultiFactorRecoveryCodesPayloadImplementors = []string{"Gener
 
 func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateAccountMultiFactorRecoveryCodesPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, generateAccountMultiFactorRecoveryCodesPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11198,7 +11567,12 @@ func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload(ctx 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GenerateAccountMultiFactorRecoveryCodesPayload")
 		case "accountMultiFactorRecoveryCodes":
-			out.Values[i] = ec._GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11217,7 +11591,6 @@ var generateAccountMultiFactorTotpPayloadImplementors = []string{"GenerateAccoun
 
 func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateAccountMultiFactorTotpPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, generateAccountMultiFactorTotpPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11225,7 +11598,12 @@ func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload(ctx context.C
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GenerateAccountMultiFactorTotpPayload")
 		case "multiFactorTotp":
-			out.Values[i] = ec._GenerateAccountMultiFactorTotpPayload_multiFactorTotp(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GenerateAccountMultiFactorTotpPayload_multiFactorTotp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11241,7 +11619,6 @@ var grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayloadIm
 
 func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11249,11 +11626,26 @@ func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFa
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload")
 		case "validation":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "account":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "revokedAuthenticationTokenId":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_revokedAuthenticationTokenId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11272,7 +11664,6 @@ var grantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayloadImplemento
 
 func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11280,11 +11671,26 @@ func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFa
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload")
 		case "validation":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "account":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "revokedAuthenticationTokenId":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11303,7 +11709,6 @@ var grantAccountAccessWithAuthenticationTokenPayloadImplementors = []string{"Gra
 
 func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11311,11 +11716,26 @@ func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenPayload(ct
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenPayload")
 		case "validation":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "account":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenPayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "revokedAuthenticationTokenId":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAccountAccessWithAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11334,7 +11754,6 @@ var grantAuthenticationTokenPayloadImplementors = []string{"GrantAuthenticationT
 
 func (ec *executionContext) _GrantAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAuthenticationTokenPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, grantAuthenticationTokenPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11342,9 +11761,19 @@ func (ec *executionContext) _GrantAuthenticationTokenPayload(ctx context.Context
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GrantAuthenticationTokenPayload")
 		case "authenticationToken":
-			out.Values[i] = ec._GrantAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "validation":
-			out.Values[i] = ec._GrantAuthenticationTokenPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._GrantAuthenticationTokenPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11360,7 +11789,6 @@ var languageImplementors = []string{"Language"}
 
 func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11368,12 +11796,22 @@ func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Language")
 		case "locale":
-			out.Values[i] = ec._Language_locale(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Language_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "name":
-			out.Values[i] = ec._Language_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Language_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11392,7 +11830,6 @@ var locationImplementors = []string{"Location"}
 
 func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet, obj *types.Location) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, locationImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11400,32 +11837,62 @@ func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Location")
 		case "city":
-			out.Values[i] = ec._Location_city(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_city(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "country":
-			out.Values[i] = ec._Location_country(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_country(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "postalCode":
-			out.Values[i] = ec._Location_postalCode(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_postalCode(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "subdivision":
-			out.Values[i] = ec._Location_subdivision(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_subdivision(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "latitude":
-			out.Values[i] = ec._Location_latitude(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_latitude(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "longitude":
-			out.Values[i] = ec._Location_longitude(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Location_longitude(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11444,7 +11911,6 @@ var multiFactorImplementors = []string{"MultiFactor"}
 
 func (ec *executionContext) _MultiFactor(ctx context.Context, sel ast.SelectionSet, obj *types.MultiFactor) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, multiFactorImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11452,7 +11918,12 @@ func (ec *executionContext) _MultiFactor(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("MultiFactor")
 		case "totp":
-			out.Values[i] = ec._MultiFactor_totp(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._MultiFactor_totp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11471,7 +11942,6 @@ var multiFactorTotpImplementors = []string{"MultiFactorTotp"}
 
 func (ec *executionContext) _MultiFactorTotp(ctx context.Context, sel ast.SelectionSet, obj *types.MultiFactorTotp) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, multiFactorTotpImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11479,17 +11949,32 @@ func (ec *executionContext) _MultiFactorTotp(ctx context.Context, sel ast.Select
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("MultiFactorTotp")
 		case "id":
-			out.Values[i] = ec._MultiFactorTotp_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._MultiFactorTotp_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "secret":
-			out.Values[i] = ec._MultiFactorTotp_secret(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._MultiFactorTotp_secret(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "imageSrc":
-			out.Values[i] = ec._MultiFactorTotp_imageSrc(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._MultiFactorTotp_imageSrc(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11508,7 +11993,6 @@ var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, mutationImplementors)
-
 	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
 		Object: "Mutation",
 	})
@@ -11516,59 +12000,189 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
+		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
+			Object: field.Name,
+			Field:  field,
+		})
+
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "grantAuthenticationToken":
-			out.Values[i] = ec._Mutation_grantAuthenticationToken(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_grantAuthenticationToken(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAuthenticationToken":
-			out.Values[i] = ec._Mutation_revokeAuthenticationToken(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAuthenticationToken(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "createAccountWithAuthenticationToken":
-			out.Values[i] = ec._Mutation_createAccountWithAuthenticationToken(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createAccountWithAuthenticationToken(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "grantAccountAccessWithAuthenticationToken":
-			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationToken(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_grantAccountAccessWithAuthenticationToken(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp":
-			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode":
-			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "verifyAuthenticationToken":
-			out.Values[i] = ec._Mutation_verifyAuthenticationToken(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_verifyAuthenticationToken(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAccountAccess":
-			out.Values[i] = ec._Mutation_revokeAccountAccess(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountAccess(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "unlockAccount":
-			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_unlockAccount(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updateLanguage":
-			out.Values[i] = ec._Mutation_updateLanguage(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateLanguage(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updateAccountLanguage":
-			out.Values[i] = ec._Mutation_updateAccountLanguage(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAccountLanguage(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAccountSession":
-			out.Values[i] = ec._Mutation_revokeAccountSession(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountSession(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "addAccountEmail":
-			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addAccountEmail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "deleteAccountEmail":
-			out.Values[i] = ec._Mutation_deleteAccountEmail(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteAccountEmail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updateAccountUsername":
-			out.Values[i] = ec._Mutation_updateAccountUsername(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAccountUsername(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updateAccountEmailStatusToPrimary":
-			out.Values[i] = ec._Mutation_updateAccountEmailStatusToPrimary(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAccountEmailStatusToPrimary(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "generateAccountMultiFactorRecoveryCodes":
-			out.Values[i] = ec._Mutation_generateAccountMultiFactorRecoveryCodes(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_generateAccountMultiFactorRecoveryCodes(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "generateAccountMultiFactorTotp":
-			out.Values[i] = ec._Mutation_generateAccountMultiFactorTotp(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_generateAccountMultiFactorTotp(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "enrollAccountMultiFactorTotp":
-			out.Values[i] = ec._Mutation_enrollAccountMultiFactorTotp(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_enrollAccountMultiFactorTotp(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "disableAccountMultiFactor":
-			out.Values[i] = ec._Mutation_disableAccountMultiFactor(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_disableAccountMultiFactor(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "confirmAccountEmail":
-			out.Values[i] = ec._Mutation_confirmAccountEmail(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_confirmAccountEmail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "assignAccountModeratorRole":
-			out.Values[i] = ec._Mutation_assignAccountModeratorRole(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_assignAccountModeratorRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "assignAccountStaffRole":
-			out.Values[i] = ec._Mutation_assignAccountStaffRole(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_assignAccountStaffRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAccountModeratorRole":
-			out.Values[i] = ec._Mutation_revokeAccountModeratorRole(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountModeratorRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAccountStaffRole":
-			out.Values[i] = ec._Mutation_revokeAccountStaffRole(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountStaffRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11584,7 +12198,6 @@ var pageInfoImplementors = []string{"PageInfo"}
 
 func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *relay.PageInfo) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11592,19 +12205,39 @@ func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("PageInfo")
 		case "hasNextPage":
-			out.Values[i] = ec._PageInfo_hasNextPage(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PageInfo_hasNextPage(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "hasPreviousPage":
-			out.Values[i] = ec._PageInfo_hasPreviousPage(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PageInfo_hasPreviousPage(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "startCursor":
-			out.Values[i] = ec._PageInfo_startCursor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PageInfo_startCursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "endCursor":
-			out.Values[i] = ec._PageInfo_endCursor(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PageInfo_endCursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11620,7 +12253,6 @@ var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, queryImplementors)
-
 	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
 		Object: "Query",
 	})
@@ -11628,12 +12260,18 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
+		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
+			Object: field.Name,
+			Field:  field,
+		})
+
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
 		case "viewAuthenticationToken":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11641,10 +12279,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}()
 				res = ec._Query_viewAuthenticationToken(ctx, field)
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "viewer":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11652,10 +12299,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}()
 				res = ec._Query_viewer(ctx, field)
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "account":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11663,10 +12319,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}()
 				res = ec._Query_account(ctx, field)
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "accounts":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11677,10 +12342,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "languages":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11691,10 +12365,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "language":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11705,10 +12388,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "_entities":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11719,10 +12411,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "_service":
 			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
@@ -11733,11 +12434,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					atomic.AddUint32(&invalids, 1)
 				}
 				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
 			})
 		case "__type":
-			out.Values[i] = ec._Query___type(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Query___type(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "__schema":
-			out.Values[i] = ec._Query___schema(ctx, field)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Query___schema(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11753,7 +12472,6 @@ var resourceImplementors = []string{"Resource", "_Entity"}
 
 func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj *types.Resource) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resourceImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11761,7 +12479,12 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Resource")
 		case "id":
-			out.Values[i] = ec._Resource_id(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Resource_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11780,7 +12503,6 @@ var revokeAccountAccessPayloadImplementors = []string{"RevokeAccountAccessPayloa
 
 func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountAccessPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountAccessPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11788,7 +12510,12 @@ func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RevokeAccountAccessPayload")
 		case "revokedAccountId":
-			out.Values[i] = ec._RevokeAccountAccessPayload_revokedAccountId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountAccessPayload_revokedAccountId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11807,7 +12534,6 @@ var revokeAccountModeratorRolePayloadImplementors = []string{"RevokeAccountModer
 
 func (ec *executionContext) _RevokeAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountModeratorRolePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountModeratorRolePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11815,7 +12541,12 @@ func (ec *executionContext) _RevokeAccountModeratorRolePayload(ctx context.Conte
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RevokeAccountModeratorRolePayload")
 		case "account":
-			out.Values[i] = ec._RevokeAccountModeratorRolePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountModeratorRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11831,7 +12562,6 @@ var revokeAccountSessionPayloadImplementors = []string{"RevokeAccountSessionPayl
 
 func (ec *executionContext) _RevokeAccountSessionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountSessionPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountSessionPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11839,7 +12569,12 @@ func (ec *executionContext) _RevokeAccountSessionPayload(ctx context.Context, se
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RevokeAccountSessionPayload")
 		case "accountSessionId":
-			out.Values[i] = ec._RevokeAccountSessionPayload_accountSessionId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountSessionPayload_accountSessionId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11858,7 +12593,6 @@ var revokeAccountStaffRolePayloadImplementors = []string{"RevokeAccountStaffRole
 
 func (ec *executionContext) _RevokeAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountStaffRolePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountStaffRolePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11866,7 +12600,12 @@ func (ec *executionContext) _RevokeAccountStaffRolePayload(ctx context.Context, 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RevokeAccountStaffRolePayload")
 		case "account":
-			out.Values[i] = ec._RevokeAccountStaffRolePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountStaffRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11882,7 +12621,6 @@ var revokeAuthenticationTokenPayloadImplementors = []string{"RevokeAuthenticatio
 
 func (ec *executionContext) _RevokeAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAuthenticationTokenPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAuthenticationTokenPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11890,7 +12628,12 @@ func (ec *executionContext) _RevokeAuthenticationTokenPayload(ctx context.Contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("RevokeAuthenticationTokenPayload")
 		case "revokedAuthenticationTokenId":
-			out.Values[i] = ec._RevokeAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11909,7 +12652,6 @@ var unlockAccountPayloadImplementors = []string{"UnlockAccountPayload"}
 
 func (ec *executionContext) _UnlockAccountPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UnlockAccountPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, unlockAccountPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11917,7 +12659,12 @@ func (ec *executionContext) _UnlockAccountPayload(ctx context.Context, sel ast.S
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UnlockAccountPayload")
 		case "account":
-			out.Values[i] = ec._UnlockAccountPayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UnlockAccountPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11933,7 +12680,6 @@ var updateAccountEmailStatusToPrimaryPayloadImplementors = []string{"UpdateAccou
 
 func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountEmailStatusToPrimaryPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountEmailStatusToPrimaryPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11941,9 +12687,19 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload(ctx contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountEmailStatusToPrimaryPayload")
 		case "primaryAccountEmail":
-			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "updatedAccountEmail":
-			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11959,7 +12715,6 @@ var updateAccountLanguagePayloadImplementors = []string{"UpdateAccountLanguagePa
 
 func (ec *executionContext) _UpdateAccountLanguagePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountLanguagePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountLanguagePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11967,9 +12722,19 @@ func (ec *executionContext) _UpdateAccountLanguagePayload(ctx context.Context, s
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountLanguagePayload")
 		case "language":
-			out.Values[i] = ec._UpdateAccountLanguagePayload_language(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountLanguagePayload_language(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "Account":
-			out.Values[i] = ec._UpdateAccountLanguagePayload_Account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountLanguagePayload_Account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11985,7 +12750,6 @@ var updateAccountUsernamePayloadImplementors = []string{"UpdateAccountUsernamePa
 
 func (ec *executionContext) _UpdateAccountUsernamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountUsernamePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountUsernamePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -11993,9 +12757,19 @@ func (ec *executionContext) _UpdateAccountUsernamePayload(ctx context.Context, s
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountUsernamePayload")
 		case "validation":
-			out.Values[i] = ec._UpdateAccountUsernamePayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountUsernamePayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "account":
-			out.Values[i] = ec._UpdateAccountUsernamePayload_account(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountUsernamePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12011,7 +12785,6 @@ var updateLanguagePayloadImplementors = []string{"UpdateLanguagePayload"}
 
 func (ec *executionContext) _UpdateLanguagePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateLanguagePayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, updateLanguagePayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12019,7 +12792,12 @@ func (ec *executionContext) _UpdateLanguagePayload(ctx context.Context, sel ast.
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateLanguagePayload")
 		case "language":
-			out.Values[i] = ec._UpdateLanguagePayload_language(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateLanguagePayload_language(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12035,7 +12813,6 @@ var verifyAuthenticationTokenPayloadImplementors = []string{"VerifyAuthenticatio
 
 func (ec *executionContext) _VerifyAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.VerifyAuthenticationTokenPayload) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, verifyAuthenticationTokenPayloadImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12043,9 +12820,19 @@ func (ec *executionContext) _VerifyAuthenticationTokenPayload(ctx context.Contex
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("VerifyAuthenticationTokenPayload")
 		case "validation":
-			out.Values[i] = ec._VerifyAuthenticationTokenPayload_validation(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._VerifyAuthenticationTokenPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "authenticationToken":
-			out.Values[i] = ec._VerifyAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._VerifyAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12061,7 +12848,6 @@ var _ServiceImplementors = []string{"_Service"}
 
 func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet, obj *fedruntime.Service) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, _ServiceImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12069,7 +12855,12 @@ func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("_Service")
 		case "sdl":
-			out.Values[i] = ec.__Service_sdl(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.__Service_sdl(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12085,7 +12876,6 @@ var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __DirectiveImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12093,24 +12883,49 @@ func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Directive")
 		case "name":
-			out.Values[i] = ec.___Directive_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Directive_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "description":
-			out.Values[i] = ec.___Directive_description(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Directive_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "locations":
-			out.Values[i] = ec.___Directive_locations(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Directive_locations(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "args":
-			out.Values[i] = ec.___Directive_args(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Directive_args(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "isRepeatable":
-			out.Values[i] = ec.___Directive_isRepeatable(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Directive_isRepeatable(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12129,7 +12944,6 @@ var __EnumValueImplementors = []string{"__EnumValue"}
 
 func (ec *executionContext) ___EnumValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.EnumValue) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __EnumValueImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12137,19 +12951,39 @@ func (ec *executionContext) ___EnumValue(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__EnumValue")
 		case "name":
-			out.Values[i] = ec.___EnumValue_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___EnumValue_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "description":
-			out.Values[i] = ec.___EnumValue_description(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___EnumValue_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "isDeprecated":
-			out.Values[i] = ec.___EnumValue_isDeprecated(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___EnumValue_isDeprecated(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "deprecationReason":
-			out.Values[i] = ec.___EnumValue_deprecationReason(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___EnumValue_deprecationReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12165,7 +12999,6 @@ var __FieldImplementors = []string{"__Field"}
 
 func (ec *executionContext) ___Field(ctx context.Context, sel ast.SelectionSet, obj *introspection.Field) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __FieldImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12173,29 +13006,59 @@ func (ec *executionContext) ___Field(ctx context.Context, sel ast.SelectionSet, 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Field")
 		case "name":
-			out.Values[i] = ec.___Field_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "description":
-			out.Values[i] = ec.___Field_description(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "args":
-			out.Values[i] = ec.___Field_args(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_args(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "type":
-			out.Values[i] = ec.___Field_type(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_type(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "isDeprecated":
-			out.Values[i] = ec.___Field_isDeprecated(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_isDeprecated(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "deprecationReason":
-			out.Values[i] = ec.___Field_deprecationReason(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Field_deprecationReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12211,7 +13074,6 @@ var __InputValueImplementors = []string{"__InputValue"}
 
 func (ec *executionContext) ___InputValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.InputValue) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __InputValueImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12219,19 +13081,39 @@ func (ec *executionContext) ___InputValue(ctx context.Context, sel ast.Selection
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__InputValue")
 		case "name":
-			out.Values[i] = ec.___InputValue_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___InputValue_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "description":
-			out.Values[i] = ec.___InputValue_description(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___InputValue_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "type":
-			out.Values[i] = ec.___InputValue_type(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___InputValue_type(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "defaultValue":
-			out.Values[i] = ec.___InputValue_defaultValue(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___InputValue_defaultValue(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12247,7 +13129,6 @@ var __SchemaImplementors = []string{"__Schema"}
 
 func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet, obj *introspection.Schema) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __SchemaImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12255,21 +13136,46 @@ func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet,
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Schema")
 		case "types":
-			out.Values[i] = ec.___Schema_types(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_types(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "queryType":
-			out.Values[i] = ec.___Schema_queryType(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_queryType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "mutationType":
-			out.Values[i] = ec.___Schema_mutationType(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_mutationType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "subscriptionType":
-			out.Values[i] = ec.___Schema_subscriptionType(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_subscriptionType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "directives":
-			out.Values[i] = ec.___Schema_directives(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_directives(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12288,7 +13194,6 @@ var __TypeImplementors = []string{"__Type"}
 
 func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, obj *introspection.Type) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, __TypeImplementors)
-
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
@@ -12296,26 +13201,71 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Type")
 		case "kind":
-			out.Values[i] = ec.___Type_kind(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_kind(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "name":
-			out.Values[i] = ec.___Type_name(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "description":
-			out.Values[i] = ec.___Type_description(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "fields":
-			out.Values[i] = ec.___Type_fields(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_fields(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "interfaces":
-			out.Values[i] = ec.___Type_interfaces(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_interfaces(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "possibleTypes":
-			out.Values[i] = ec.___Type_possibleTypes(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_possibleTypes(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "enumValues":
-			out.Values[i] = ec.___Type_enumValues(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_enumValues(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "inputFields":
-			out.Values[i] = ec.___Type_inputFields(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_inputFields(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "ofType":
-			out.Values[i] = ec.___Type_ofType(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_ofType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12717,18 +13667,18 @@ func (ec *executionContext) unmarshalNEnrollAccountMultiFactorTotpInput2overdoll
 }
 
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
-	res, err := graphql.UnmarshalFloat(v)
+	res, err := graphql.UnmarshalFloatContext(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
-	res := graphql.MarshalFloat(v)
+	res := graphql.MarshalFloatContext(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 	}
-	return res
+	return graphql.WrapContextMarshaler(ctx, res)
 }
 
 func (ec *executionContext) unmarshalNGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput(ctx context.Context, v interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput, error) {
@@ -12974,11 +13924,7 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -13130,11 +14076,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -13399,7 +14341,8 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	return graphql.MarshalBoolean(v)
+	res := graphql.MarshalBoolean(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -13414,7 +14357,8 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalBoolean(*v)
+	res := graphql.MarshalBoolean(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, v *types.ConfirmAccountEmailPayload) graphql.Marshaler {
@@ -13618,7 +14562,8 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalInt(*v)
+	res := graphql.MarshalInt(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
@@ -13690,7 +14635,8 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	return graphql.MarshalString(v)
+	res := graphql.MarshalString(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
@@ -13705,7 +14651,8 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalString(*v)
+	res := graphql.MarshalString(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOUnlockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnlockAccountPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnlockAccountPayload) graphql.Marshaler {

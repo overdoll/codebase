@@ -2,15 +2,14 @@ package ports
 
 import (
 	"context"
-	"net/http"
-	"overdoll/applications/loader/internal/app"
-	gen "overdoll/applications/loader/internal/ports/graphql"
-	"overdoll/applications/loader/internal/ports/graphql/dataloader"
-
 	"github.com/gin-gonic/gin"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"go.temporal.io/sdk/client"
 	"go.uber.org/zap"
+	"net/http"
+	"overdoll/applications/loader/internal/app"
+	gen "overdoll/applications/loader/internal/ports/graphql"
+	"overdoll/applications/loader/internal/ports/graphql/dataloader"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/router"
 )

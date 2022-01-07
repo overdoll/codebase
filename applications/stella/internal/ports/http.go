@@ -32,7 +32,7 @@ func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal
 
 func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewLoader(app))
+		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewDataLoader(app))
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}

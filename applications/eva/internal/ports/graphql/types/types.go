@@ -268,7 +268,7 @@ type DisableAccountMultiFactorPayload struct {
 
 // Input for enrolling the account into TOTP
 type EnrollAccountMultiFactorTotpInput struct {
-	// The TOTP ID, sent intially
+	// The TOTP ID, sent initially
 	ID string `json:"id"`
 	// The code that the TOTP expects
 	Code string `json:"code"`

@@ -39,7 +39,7 @@ func NewDataLoader(app *app.Application) *DataLoader {
 					resourceIds = append(resourceIds, res[1])
 				}
 
-				res, err := app.Queries.ResourcesByIds.Handle(context.Background(), query.ResourcesByIds{
+				res, err := app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
 					ItemIds:     itemIds,
 					ResourceIds: resourceIds,
 				})
@@ -74,13 +74,16 @@ func NewDataLoader(app *app.Application) *DataLoader {
 	}
 }
 
-func (i *DataLoader) GetResourceById(ctx context.Context, userID string) (*types.Resource, error) {
-	thunk := i.resourceById.Load(ctx, dataloader.StringKey(userID))
+func (i *DataLoader) GetResourceById(ctx context.Context, itemId, resourceId string) (*types.Resource, error) {
+
+	thunk := i.resourceById.Load(ctx, dataloader.StringKey(itemId+"|"+resourceId))
 	result, err := thunk()
+
 	if err != nil {
 		return nil, err
 	}
-	return result.(*types.Resource), nil
+
+	return result.(*types.Resource), err
 }
 
 func For(ctx context.Context) *DataLoader {
