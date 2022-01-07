@@ -34,7 +34,7 @@ func (h DisableAccountMultiFactorHandler) Handle(ctx context.Context, cmd Disabl
 			return err
 		}
 
-		return a.ToggleMultiFactor()
+		return a.DisableMultiFactor()
 	})
 
 	if err != nil {

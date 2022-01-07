@@ -35,6 +35,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/confirm_email",
         "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",

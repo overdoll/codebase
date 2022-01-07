@@ -12,7 +12,8 @@ import (
 type ConfirmAccountEmail struct {
 	AccountId    string
 	AccountEmail string
-	EmailToken   string
+	EmailId      string
+	EmailSecret  string
 }
 
 type ConfirmAccountEmailHandler struct {
@@ -40,10 +41,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 
 	u.Path = path.Join(u.Path, "confirm-email")
 
-	q := u.Query()
-	q.Set("id", cmd.EmailToken)
-
-	u.RawQuery = q.Encode()
+	u.RawQuery = "id=" + cmd.EmailId + "&secret=" + cmd.EmailSecret
 
 	template, err := mailing.NewTemplate("d-5c81a4ac00d44a9dba2dd58ebed8bcf6", map[string]interface{}{
 		"link": u.String(),

@@ -1,0 +1,57 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "service",
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/service",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/adapters",
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/app/command",
+        "//applications/stella/internal/app/query",
+        "//applications/stella/internal/app/workflows/activities",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/principal",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "club_component_test.go",
+        "club_members_component_test.go",
+        "component_test.go",
+    ],
+    data = [
+        "//applications/stella:config.toml",
+    ],
+    deps = [
+        ":service",
+        "//applications/stella/internal/adapters",
+        "//applications/stella/internal/app/workflows",
+        "//applications/stella/internal/domain/club",
+        "//applications/stella/internal/ports",
+        "//applications/stella/internal/ports/graphql/types",
+        "//applications/stella/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
+        "//libraries/testing_tools",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_google_uuid//:uuid",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@io_temporal_go_sdk//testsuite",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

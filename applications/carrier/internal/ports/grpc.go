@@ -24,7 +24,8 @@ func (s Server) ConfirmAccountEmail(ctx context.Context, request *carrier.Confir
 	if err := s.app.Commands.ConfirmAccountEmail.Handle(ctx, command.ConfirmAccountEmail{
 		AccountId:    request.Account.Id,
 		AccountEmail: request.Email,
-		EmailToken:   request.Token,
+		EmailId:      request.Id,
+		EmailSecret:  request.Secret,
 	}); err != nil {
 		return nil, err
 	}

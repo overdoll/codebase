@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS accounts
     email                text,
     roles                list<text>,
     verified             boolean,
-    avatar               text,
+    avatar_resource_id   text,
     language             text,
     locked               boolean,
     locked_until         int,

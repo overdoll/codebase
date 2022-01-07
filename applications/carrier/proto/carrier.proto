@@ -16,7 +16,8 @@ message Account {
 message ConfirmAccountEmailRequest {
   Account account = 1;
   string email = 2;
-  string token = 3;
+  string id = 3;
+  string secret = 4;
 }
 
 message NewLoginTokenRequest {

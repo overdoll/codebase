@@ -15,10 +15,8 @@ go_library(
         "series.go",
     ],
     importpath = "overdoll/applications/sting/internal/domain/post",
-    visibility = ["//visibility:public"],
+    visibility = ["//applications/sting:__subpackages__"],
     deps = [
-        "//applications/sting/internal/domain/club",
-        "//applications/sting/internal/domain/resource",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",

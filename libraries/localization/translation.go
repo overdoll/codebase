@@ -9,6 +9,22 @@ type Translation struct {
 	translations []*TranslatedSupport
 }
 
+func (t *Translation) TranslateDefault(fallback string) string {
+	englishTag := ""
+
+	for _, item := range t.translations {
+		if item.tag == defaultLanguage {
+			englishTag = item.data
+		}
+	}
+
+	if englishTag != "" {
+		return englishTag
+	}
+
+	return fallback
+}
+
 func (t *Translation) Translate(lang *Language, fallback string) string {
 
 	// english as a fallback if we dont find our target language

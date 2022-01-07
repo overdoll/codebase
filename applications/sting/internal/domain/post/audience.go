@@ -3,7 +3,6 @@ package post
 import (
 	"errors"
 
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -15,10 +14,10 @@ var (
 type Audience struct {
 	*paging.Node
 
-	id        string
-	slug      string
-	title     *localization.Translation
-	thumbnail *resource.Resource
+	id                  string
+	slug                string
+	title               *localization.Translation
+	thumbnailResourceId string
 
 	standard bool
 }
@@ -35,8 +34,8 @@ func (m *Audience) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *Audience) Thumbnail() *resource.Resource {
-	return m.thumbnail
+func (m *Audience) ThumbnailResourceId() string {
+	return m.thumbnailResourceId
 }
 
 // a "standard" audience is an audience that the majority will consume
@@ -46,10 +45,10 @@ func (m *Audience) IsStandard() bool {
 
 func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail string, standard int) *Audience {
 	return &Audience{
-		id:        id,
-		slug:      slug,
-		title:     localization.UnmarshalTranslationFromDatabase(title),
-		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
-		standard:  standard == 1,
+		id:                  id,
+		slug:                slug,
+		title:               localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailResourceId: thumbnail,
+		standard:            standard == 1,
 	}
 }

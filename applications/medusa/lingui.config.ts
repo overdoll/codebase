@@ -46,6 +46,10 @@ export default {
       include: ['src/client/domain/Settings/Security']
     },
     {
+      path: 'src/client/domain/Settings/ConfirmEmail/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/ConfirmEmail']
+    },
+    {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',
       include: ['src/client/domain/Moderation/Moderation.tsx']
     },
@@ -59,15 +63,35 @@ export default {
     },
     {
       path: 'src/client/domain/Manage/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage']
+      include: ['src/client/domain/Manage/Manage']
     },
     {
       path: 'src/client/domain/Manage/ManagePosts/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/ManagePosts']
+      include: ['src/client/domain/Manage/ManagePosts/ManagePosts']
+    },
+    {
+      path: 'src/client/domain/Manage/ManagePosts/CreatePost/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManagePosts/CreatePost']
+    },
+    {
+      path: 'src/client/domain/Manage/ManagePosts/MyPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManagePosts/MyPosts']
+    },
+    {
+      path: 'src/client/domain/Manage/ManagePosts/ViewPost/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManagePosts/ViewPost']
     },
     {
       path: 'src/client/domain/Manage/ManageClubs/__locale__/{locale}/index',
-      include: ['src/client/domain/Manage/ManageClubs']
+      include: ['src/client/domain/Manage/ManageClubs/ManageClubs']
+    },
+    {
+      path: 'src/client/domain/Manage/ManageClubs/CreateClub/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManageClubs/CreateClub']
+    },
+    {
+      path: 'src/client/domain/Manage/ManageClubs/MyClubs/__locale__/{locale}/index',
+      include: ['src/client/domain/Manage/ManageClubs/MyClubs']
     }
   ],
   format: 'po',

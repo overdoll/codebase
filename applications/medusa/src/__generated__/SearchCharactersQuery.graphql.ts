@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c24f236d4d723278c57ed5e5b0663d1f */
+/* @relayHash 0077facef5e14717ca597ebe15addc30 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -51,6 +51,7 @@ fragment SearchCharactersFragment_2aiVTE on Query {
         slug
         thumbnail {
           ...ResourceItemFragment
+          id
         }
         __typename
       }
@@ -220,7 +221,8 @@ return {
                           }
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -286,7 +288,7 @@ return {
     ]
   },
   "params": {
-    "id": "c24f236d4d723278c57ed5e5b0663d1f",
+    "id": "0077facef5e14717ca597ebe15addc30",
     "metadata": {},
     "name": "SearchCharactersQuery",
     "operationKind": "query",

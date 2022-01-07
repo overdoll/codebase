@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 34aa054bc096d4ba41c8cccbf52c9d7d */
+/* @relayHash 2c4efdd192933db4408b592d0110f18f */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -56,6 +56,7 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
             mimeType
             url
           }
+          id
         }
         __typename
       }
@@ -110,7 +111,14 @@ v1 = [
     "name": "title",
     "variableName": "title"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -157,13 +165,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -217,7 +219,8 @@ return {
                           }
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -283,7 +286,7 @@ return {
     ]
   },
   "params": {
-    "id": "34aa054bc096d4ba41c8cccbf52c9d7d",
+    "id": "2c4efdd192933db4408b592d0110f18f",
     "metadata": {},
     "name": "SearchCategoriesPaginationFragment",
     "operationKind": "query",

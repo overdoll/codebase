@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "confirm_email",
+    srcs = [
+        "confirm_email.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/domain/confirm_email",
+    visibility = ["//applications/eva:__subpackages__"],
+    deps = [
+        "//libraries/crypt",
+        "//libraries/principal",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)

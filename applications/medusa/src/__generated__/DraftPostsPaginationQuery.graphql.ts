@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0362ce1480249e265f207779693d0741 */
+/* @relayHash 0768a751893be8d52f85dab9bee410ba */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -64,6 +64,7 @@ fragment PostStateDraftPreviewFragment on Post {
   reference
   content {
     ...ResourceItemFragment
+    id
   }
   ...checkPostRequirementsFragment
 }
@@ -84,6 +85,7 @@ fragment VideoSnippetFragment on Resource {
 fragment checkPostRequirementsFragment on Post {
   content {
     __typename
+    id
   }
   audience {
     __typename
@@ -282,6 +284,7 @@ return {
                                 ],
                                 "storageKey": null
                               },
+                              (v5/*: any*/),
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -380,7 +383,7 @@ return {
     ]
   },
   "params": {
-    "id": "0362ce1480249e265f207779693d0741",
+    "id": "0768a751893be8d52f85dab9bee410ba",
     "metadata": {},
     "name": "DraftPostsPaginationQuery",
     "operationKind": "query",

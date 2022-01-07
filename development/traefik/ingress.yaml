@@ -47,7 +47,7 @@ spec:
     - match: Host(`overdoll.test`) && (PathPrefix(`/api/upload/{document}`) || PathPrefix(`/api/upload`) || PathPrefix(`/api/upload/`))
       kind: Rule
       services:
-        - name: sting
+        - name: loader
           port: 8000
       middlewares:
         - name: status-pages
@@ -89,7 +89,7 @@ spec:
     - match: Host(`overdoll.test`) && (PathPrefix(`/api/upload/{document}`) || PathPrefix(`/api/upload`) || PathPrefix(`/api/upload/`))
       kind: Rule
       services:
-        - name: sting
+        - name: loader
           port: 8000
       middlewares:
         - name: redirect-https

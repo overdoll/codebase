@@ -16,7 +16,7 @@ var audienceTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail",
+		"thumbnail_resource_id",
 		"standard",
 	},
 	PartKey: []string{"id"},
@@ -24,11 +24,11 @@ var audienceTable = table.New(table.Metadata{
 })
 
 type audience struct {
-	Id        string            `db:"id"`
-	Slug      string            `db:"slug"`
-	Title     map[string]string `db:"title"`
-	Thumbnail string            `db:"thumbnail"`
-	Standard  int               `db:"standard"`
+	Id                  string            `db:"id"`
+	Slug                string            `db:"slug"`
+	Title               map[string]string `db:"title"`
+	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	Standard            int               `db:"standard"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{
@@ -89,7 +89,7 @@ func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester
 		b.Id,
 		b.Slug,
 		b.Title,
-		b.Thumbnail,
+		b.ThumbnailResourceId,
 		b.Standard,
 	), nil
 }

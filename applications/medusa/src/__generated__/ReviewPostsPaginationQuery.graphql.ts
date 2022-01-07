@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5802fd0083b24aadfbae41476f817276 */
+/* @relayHash a13f5ff988778087fcb6ceeb977ad244 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -66,6 +66,7 @@ fragment PostStateReviewPreviewFragment on Post {
   postedAt
   content {
     ...ResourceItemFragment
+    id
   }
 }
 
@@ -268,7 +269,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -335,7 +337,7 @@ return {
     ]
   },
   "params": {
-    "id": "5802fd0083b24aadfbae41476f817276",
+    "id": "a13f5ff988778087fcb6ceeb977ad244",
     "metadata": {},
     "name": "ReviewPostsPaginationQuery",
     "operationKind": "query",

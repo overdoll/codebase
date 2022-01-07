@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "resource",
+    srcs = [
+        "move.go",
+        "repository.go",
+        "resource.go",
+        "resource_type.go",
+        "url.go",
+    ],
+    importpath = "overdoll/applications/loader/internal/domain/resource",
+    visibility = ["//applications/loader:__subpackages__"],
+    deps = [
+        "//libraries/uuid",
+        "@com_github_capslock_studio_go_webpbin//:go-webpbin",
+        "@com_github_h2non_filetype//:filetype",
+        "@com_github_tus_tusd//pkg/handler",
+    ],
+)

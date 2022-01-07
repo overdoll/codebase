@@ -47,7 +47,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, ck.Token(), nil); err != nil {
+	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, cmd.Token, nil); err != nil {
 		return nil, err
 	}
 

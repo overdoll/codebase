@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "add_club_member_to_list.go",
+        "remove_club_member_from_list.go",
+        "update_club_member_total_count.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/app/workflows/activities",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = ["//applications/stella/internal/domain/club"],
+)

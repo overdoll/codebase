@@ -9,7 +9,6 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: JoinFragment$key | null

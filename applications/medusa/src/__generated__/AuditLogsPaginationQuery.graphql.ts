@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9510d6ccd3d552d37849bd5522407ad3 */
+/* @relayHash 796927774bb4243ca2154382dbbe4c72 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -91,6 +91,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -424,7 +425,8 @@ return {
                                       }
                                     ],
                                     "storageKey": null
-                                  }
+                                  },
+                                  (v9/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -509,7 +511,7 @@ return {
     ]
   },
   "params": {
-    "id": "9510d6ccd3d552d37849bd5522407ad3",
+    "id": "796927774bb4243ca2154382dbbe4c72",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

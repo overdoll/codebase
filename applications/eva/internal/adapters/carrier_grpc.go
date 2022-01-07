@@ -14,12 +14,13 @@ func NewCarrierGrpc(client carrier.CarrierClient) CarrierGrpc {
 	return CarrierGrpc{client: client}
 }
 
-func (s CarrierGrpc) ConfirmAccountEmail(ctx context.Context, accountId, email, token string) error {
+func (s CarrierGrpc) ConfirmAccountEmail(ctx context.Context, accountId, email, id, secret string) error {
 
 	_, err := s.client.ConfirmAccountEmail(ctx, &carrier.ConfirmAccountEmailRequest{
 		Account: &carrier.Account{Id: accountId},
 		Email:   email,
-		Token:   token,
+		Id:      id,
+		Secret:  secret,
 	})
 
 	return err

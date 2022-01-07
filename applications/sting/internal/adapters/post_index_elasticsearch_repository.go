@@ -17,18 +17,18 @@ import (
 )
 
 type postDocument struct {
-	Id             string               `json:"id"`
-	State          string               `json:"state"`
-	ModeratorId    string               `json:"moderator_id"`
-	ContributorId  string               `json:"contributor_id"`
-	ClubId         string               `json:"club_id"`
-	Content        []string             `json:"content"`
-	Audience       *audienceDocument    `json:"audience"`
-	Categories     []*categoryDocument  `json:"categories"`
-	Characters     []*characterDocument `json:"characters"`
-	CreatedAt      string               `json:"created_at"`
-	PostedAt       string               `json:"posted_at"`
-	ReassignmentAt string               `json:"reassignment_at"`
+	Id                 string               `json:"id"`
+	State              string               `json:"state"`
+	ModeratorId        string               `json:"moderator_id"`
+	ContributorId      string               `json:"contributor_id"`
+	ClubId             string               `json:"club_id"`
+	ContentResourceIds []string             `json:"content_resource_ids"`
+	Audience           *audienceDocument    `json:"audience"`
+	Categories         []*categoryDocument  `json:"categories"`
+	Characters         []*characterDocument `json:"characters"`
+	CreatedAt          string               `json:"created_at"`
+	PostedAt           string               `json:"posted_at"`
+	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -63,7 +63,7 @@ const postIndex = `
 					"type": "nested",
 					"properties": ` + characterIndexProperties + ` 
 				},
-				"content": {
+				"content_resource_ids": {
                      "type": "keyword"
 				},
 				"created_at": {
@@ -130,19 +130,6 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		}
 	}
 
-	var content []string
-
-	for _, cnt := range pst.Content() {
-
-		contentThumb, err := cnt.MarshalResourceToDatabase()
-
-		if err != nil {
-			return nil, err
-		}
-
-		content = append(content, contentThumb)
-	}
-
 	var moderatorId string
 
 	if pst.ModeratorId() != nil {
@@ -166,18 +153,18 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	}
 
 	return &postDocument{
-		Id:             pst.ID(),
-		State:          pst.State().String(),
-		Audience:       audDoc,
-		ClubId:         pst.ClubId(),
-		ModeratorId:    moderatorId,
-		ContributorId:  pst.ContributorId(),
-		Content:        content,
-		Categories:     categoryDocuments,
-		Characters:     characterDocuments,
-		CreatedAt:      strconv.FormatInt(pst.CreatedAt().Unix(), 10),
-		PostedAt:       postedAt,
-		ReassignmentAt: reassignmentAt,
+		Id:                 pst.ID(),
+		State:              pst.State().String(),
+		Audience:           audDoc,
+		ClubId:             pst.ClubId(),
+		ModeratorId:        moderatorId,
+		ContributorId:      pst.ContributorId(),
+		ContentResourceIds: pst.ContentResourceIds(),
+		Categories:         categoryDocuments,
+		Characters:         characterDocuments,
+		CreatedAt:          strconv.FormatInt(pst.CreatedAt().Unix(), 10),
+		PostedAt:           postedAt,
+		ReassignmentAt:     reassignmentAt,
 	}, nil
 }
 
@@ -284,13 +271,13 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var characters []*post.Character
 
 		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Slug, char.Name, char.Thumbnail, post.UnmarshalSeriesFromDatabase(char.Series.Id, char.Series.Slug, char.Series.Title, char.Series.Thumbnail)))
+			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Slug, char.Name, char.ThumbnailResourceId, post.UnmarshalSeriesFromDatabase(char.Series.Id, char.Series.Slug, char.Series.Title, char.Series.ThumbnailResourceId)))
 		}
 
 		var categories []*post.Category
 
 		for _, cat := range pst.Categories {
-			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail))
+			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId))
 		}
 
 		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
@@ -329,7 +316,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var audience *post.Audience
 
 		if pst.Audience != nil {
-			audience = post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.Thumbnail, pst.Audience.Standard)
+			audience = post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.ThumbnailResourceId, pst.Audience.Standard)
 		}
 
 		createdPost := post.UnmarshalPostFromDatabase(
@@ -337,7 +324,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			pst.State,
 			&pst.ModeratorId,
 			pst.ContributorId,
-			pst.Content,
+			pst.ContentResourceIds,
 			pst.ClubId,
 			audience,
 			characters,
@@ -433,18 +420,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			}
 
 			doc := postDocument{
-				Id:             p.Id,
-				State:          p.State,
-				ModeratorId:    moderatorId,
-				ContributorId:  p.ContributorId,
-				Content:        p.Content,
-				ClubId:         p.ClubId,
-				Audience:       audDoc,
-				Categories:     categoryDocuments,
-				Characters:     characterDocuments,
-				CreatedAt:      strconv.FormatInt(p.CreatedAt.Unix(), 10),
-				PostedAt:       strconv.FormatInt(p.PostedAt.Unix(), 10),
-				ReassignmentAt: strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
+				Id:                 p.Id,
+				State:              p.State,
+				ModeratorId:        moderatorId,
+				ContributorId:      p.ContributorId,
+				ContentResourceIds: p.ContentResourceIds,
+				ClubId:             p.ClubId,
+				Audience:           audDoc,
+				Categories:         categoryDocuments,
+				Characters:         characterDocuments,
+				CreatedAt:          strconv.FormatInt(p.CreatedAt.Unix(), 10),
+				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
+				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
 			}
 
 			_, err = r.client.

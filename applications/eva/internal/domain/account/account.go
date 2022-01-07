@@ -2,12 +2,10 @@ package account
 
 import (
 	"errors"
-	"os"
 	"overdoll/libraries/localization"
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -17,12 +15,12 @@ type Account struct {
 
 	id string
 
-	username string
-	email    string
-	roles    []Role
-	verified bool
-	avatar   string
-	language *localization.Language
+	username         string
+	email            string
+	roles            []Role
+	verified         bool
+	avatarResourceId string
+	language         *localization.Language
 
 	locked       bool
 	lockedUntil  int
@@ -61,7 +59,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		email:              email,
 		roles:              newRoles,
 		verified:           verified,
-		avatar:             avatar,
+		avatarResourceId:   avatar,
 		lockedUntil:        lockedUntil,
 		locked:             locked,
 		language:           localization.NewLanguageWithFallback(locale),
@@ -106,13 +104,8 @@ func (a *Account) Verified() bool {
 	return a.verified
 }
 
-func (a *Account) Avatar() string {
-	return a.avatar
-}
-
-func (a *Account) ConvertAvatarToURI() graphql.URI {
-	var staticURL = os.Getenv("STATIC_URL")
-	return graphql.NewURI(staticURL + "/avatars/" + a.avatar)
+func (a *Account) AvatarResourceId() string {
+	return a.avatarResourceId
 }
 
 func (a *Account) LockedUntil() int {
@@ -144,13 +137,18 @@ func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
 }
 
-func (a *Account) ToggleMultiFactor() error {
+func (a *Account) DisableMultiFactor() error {
 
 	if a.multiFactorEnabled && !a.CanDisableMultiFactor() {
 		return ErrAccountPrivileged
 	}
 
-	a.multiFactorEnabled = !a.multiFactorEnabled
+	a.multiFactorEnabled = false
+	return nil
+}
+
+func (a *Account) EnableMultiFactor() error {
+	a.multiFactorEnabled = true
 	return nil
 }
 

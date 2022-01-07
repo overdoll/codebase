@@ -40,10 +40,6 @@ func init() {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllClubs.Handle(ctx); err != nil {
-				log.Fatalf(err.Error())
-			}
-
 			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
@@ -96,23 +92,6 @@ func init() {
 			defer cleanup()
 
 			if err := application.Commands.IndexAllSeries.Handle(ctx); err != nil {
-				log.Fatalf(err.Error())
-			}
-		},
-	})
-
-	Cli.AddCommand(&cobra.Command{
-		Use:   "brands",
-		Short: "Index the whole brands table into elasticsearch",
-		Run: func(cmd *cobra.Command, args []string) {
-			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-			defer cancelFn()
-
-			application, cleanup := service.NewApplication(ctx)
-
-			defer cleanup()
-
-			if err := application.Commands.IndexAllClubs.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

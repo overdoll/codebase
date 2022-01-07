@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b7804a513e665c6929125ca7a3e5a5cb */
+/* @relayHash 77631c12a7198e832d5bfc9550a211ed */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -52,6 +52,7 @@ fragment SearchCategoriesFragment_3FzUSU on Query {
             mimeType
             url
           }
+          id
         }
         __typename
       }
@@ -92,7 +93,14 @@ v2 = [
     "value": 5
   },
   (v1/*: any*/)
-];
+],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -141,13 +149,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -201,7 +203,8 @@ return {
                           }
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -267,7 +270,7 @@ return {
     ]
   },
   "params": {
-    "id": "b7804a513e665c6929125ca7a3e5a5cb",
+    "id": "77631c12a7198e832d5bfc9550a211ed",
     "metadata": {},
     "name": "SearchCategoriesQuery",
     "operationKind": "query",

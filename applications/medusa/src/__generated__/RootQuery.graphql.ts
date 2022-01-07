@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash fe40ae3a0471a5a206760c0c1ea28c92 */
+/* @relayHash b2687e1e8024eb12709eab1f6793677f */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -50,7 +50,12 @@ fragment AlternativeMenuFragment on Account {
 
 fragment DropdownMenuButtonProfileFragment on Account {
   username
-  avatar
+  avatar {
+    urls {
+      url
+    }
+    id
+  }
 }
 
 fragment LanguageManagerFragment on Account {
@@ -71,7 +76,12 @@ fragment LockedAccountModalFragment on AccountLock {
 }
 
 fragment QuickAccessButtonProfileFragment on Account {
-  avatar
+  avatar {
+    urls {
+      url
+    }
+    id
+  }
 }
 
 fragment UniversalNavigatorFragment on Account {
@@ -96,6 +106,13 @@ var v0 = {
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -206,18 +223,35 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "Resource",
+            "kind": "LinkedField",
             "name": "avatar",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "urls",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "url",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
             "storageKey": null
           },
           (v0/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
+          (v1/*: any*/)
         ],
         "storageKey": null
       },
@@ -225,7 +259,7 @@ return {
     ]
   },
   "params": {
-    "id": "fe40ae3a0471a5a206760c0c1ea28c92",
+    "id": "b2687e1e8024eb12709eab1f6793677f",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

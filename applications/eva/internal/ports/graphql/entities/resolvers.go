@@ -17,7 +17,7 @@ type EntityResolver struct {
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-	return dataloader.For(ctx).AccountById.Load(id.GetID())
+	return dataloader.For(ctx).GetAccountById(ctx, id.GetID())
 }
 
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {

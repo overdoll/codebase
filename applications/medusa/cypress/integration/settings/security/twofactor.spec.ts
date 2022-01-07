@@ -1,13 +1,8 @@
-import ChanceJS from 'chance'
-
-const chance = new ChanceJS()
+import { generateUsernameAndEmail } from '../../../support/generate'
+import { join, logout } from '../../../support/join_actions'
 
 describe('Settings - Configure Two-Factor', () => {
-  const name =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
+  const [username, email] = generateUsernameAndEmail()
 
   const gotoSettingsPage = (): void => {
     cy.visit('/settings/security')
@@ -16,16 +11,9 @@ describe('Settings - Configure Two-Factor', () => {
   }
 
   before(() => {
-    cy.cleanup()
-    cy.joinWithNewAccount(name)
-  })
+    cy.validateEmailServerIsConfigured()
 
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.preserveAccount()
-  })
-
-  it('can set up recovery codes', () => {
+    cy.joinWithNewAccount(username, email)
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -34,6 +22,11 @@ describe('Settings - Configure Two-Factor', () => {
     cy.findByText(/No recovery codes/iu).should('exist')
     cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
     cy.findByText(/Your recovery codes/iu).should('exist')
+  })
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
+    cy.joinWithNewAccount(username, email)
   })
 
   it('can generate new recovery codes', () => {
@@ -46,14 +39,19 @@ describe('Settings - Configure Two-Factor', () => {
       cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
       cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').should('not.equal', initialText)
     })
+  })
+
+  it('can set up authenticator app and login using OTP, and recovery codes', () => {
+    gotoSettingsPage()
+
+    cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
+    cy.findByRole('button', { name: /Recovery Codes/ }).click()
 
     // Store recovery code as if the user "saved" it somewhere
     cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').then(text => {
       cy.setCookie('cypressTestRecoveryCode', text.slice(0, 8))
     })
-  })
 
-  it('can set up authenticator app', () => {
     gotoSettingsPage()
 
     // Set up authenticator app
@@ -71,13 +69,10 @@ describe('Settings - Configure Two-Factor', () => {
         cy.findByText(/You have successfully set up/iu).should('exist')
       })
     })
-  })
 
-  it('login using one time password', () => {
-    // logout first
-    cy.logout()
-    // then join with an existing account
-    cy.join(name)
+    logout()
+
+    join(email)
 
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestOtpSecret').then(cookie => {
@@ -91,17 +86,15 @@ describe('Settings - Configure Two-Factor', () => {
         })
       })
     })
-  })
 
-  it('login using a recovery code and disable two factor', () => {
-    // logout first
-    cy.logout()
-    // then join with an existing account
-    cy.join(name)
+    logout()
+
+    join(email)
 
     // Login using recovery code
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
+      console.log(cookie)
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
       cy.findByRole('button', { name: /I lost access/iu }).click()
       cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)

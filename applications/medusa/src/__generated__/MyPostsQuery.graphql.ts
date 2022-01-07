@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7a6ccaba000b0ceeee3a7cf04c97330b */
+/* @relayHash a87df66f01c2038d3bdceb42567adee5 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -41,6 +41,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -66,6 +67,7 @@ fragment PostStateDraftPreviewFragment on Post {
   reference
   content {
     ...ResourceItemFragment
+    id
   }
   ...checkPostRequirementsFragment
 }
@@ -115,6 +117,7 @@ fragment PostStateRejectedPreviewFragment on Post {
   postedAt
   content {
     ...ResourceItemFragment
+    id
   }
 }
 
@@ -142,6 +145,7 @@ fragment PostStateReviewPreviewFragment on Post {
   postedAt
   content {
     ...ResourceItemFragment
+    id
   }
 }
 
@@ -161,6 +165,7 @@ fragment VideoSnippetFragment on Resource {
 fragment checkPostRequirementsFragment on Post {
   content {
     __typename
+    id
   }
   audience {
     __typename
@@ -234,19 +239,19 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v7 = [
-  (v5/*: any*/),
-  (v6/*: any*/)
+  (v6/*: any*/),
+  (v5/*: any*/)
 ],
 v8 = {
   "alias": null,
@@ -307,7 +312,8 @@ v13 = {
   "plural": true,
   "selections": [
     (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -418,7 +424,8 @@ return {
                         "selections": [
                           (v3/*: any*/),
                           (v4/*: any*/),
-                          (v5/*: any*/)
+                          (v5/*: any*/),
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -452,8 +459,8 @@ return {
                         "selections": (v7/*: any*/),
                         "storageKey": null
                       },
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v5/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -474,7 +481,7 @@ return {
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v6/*: any*/),
+          (v5/*: any*/),
           {
             "alias": "reviewPosts",
             "args": (v11/*: any*/),
@@ -499,11 +506,11 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/),
+                      (v5/*: any*/),
                       (v2/*: any*/),
                       (v12/*: any*/),
                       (v13/*: any*/),
-                      (v5/*: any*/)
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -550,8 +557,8 @@ return {
                     "selections": [
                       (v2/*: any*/),
                       (v13/*: any*/),
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v5/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -598,8 +605,8 @@ return {
                     "selections": [
                       (v12/*: any*/),
                       (v13/*: any*/),
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v5/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -626,7 +633,7 @@ return {
     ]
   },
   "params": {
-    "id": "7a6ccaba000b0ceeee3a7cf04c97330b",
+    "id": "a87df66f01c2038d3bdceb42567adee5",
     "metadata": {},
     "name": "MyPostsQuery",
     "operationKind": "query",

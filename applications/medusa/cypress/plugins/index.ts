@@ -11,7 +11,17 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-require('dotenv').config()
+const path = require('path')
+
+if (process.env.BUILDKITE_BUILD_ID != null) {
+  // load CI .env.ci when in CI
+  require('dotenv').config({
+    path: path.resolve(process.cwd(), '.env.ci')
+  })
+} else {
+  // load local .env
+  require('dotenv').config()
+}
 
 /**
  * @type {Cypress.PluginConfig}
@@ -22,14 +32,10 @@ module.exports = (on, config) => {
   on('task', {
     generateOTP: require('cypress-otp')
   })
-  // add other tasks to be registered here
-
   // copy any needed variables from process.env to config.env
   config.env.TESTMAIL_API_KEY = process.env.TESTMAIL_API_KEY
   config.env.TESTMAIL_NAMESPACE = process.env.TESTMAIL_NAMESPACE
-
-  config.env.CYPRESS_TESTMAIL_API_KEY = process.env.TESTMAIL_API_KEY
-  config.env.CYPRESS_TESTMAIL_NAMESPACE = process.env.TESTMAIL_NAMESPACE
+  config.env.SESSION_SECRET = process.env.SESSION_SECRET
 
   // IMPORTANT to return the config object
   // with the any changed environment variables

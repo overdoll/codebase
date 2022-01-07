@@ -6,19 +6,19 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 )
 
-type AccountsById struct {
+type AccountsByIds struct {
 	AccountIds []string
 }
 
-type AccountsByIdHandler struct {
+type AccountsByIdsHandler struct {
 	ur account.Repository
 }
 
-func NewAccountsByIdHandler(ur account.Repository) AccountsByIdHandler {
-	return AccountsByIdHandler{ur: ur}
+func NewAccountsByIdsHandler(ur account.Repository) AccountsByIdsHandler {
+	return AccountsByIdsHandler{ur: ur}
 }
 
-func (h AccountsByIdHandler) Handle(ctx context.Context, query AccountsById) ([]*account.Account, error) {
+func (h AccountsByIdsHandler) Handle(ctx context.Context, query AccountsByIds) ([]*account.Account, error) {
 
 	accounts, err := h.ur.GetAccountsById(ctx, query.AccountIds)
 

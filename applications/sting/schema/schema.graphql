@@ -1,35 +1,11 @@
-"""Identifies the type of resource"""
-enum ResourceType {
-  IMAGE
-  VIDEO
-}
-
-"""A type representing a url to the resource and the mimetype"""
-type ResourceUrl {
-  url: URI!
-  mimeType: String!
-}
-
-"""
-A resource represents an image or a video format that contains an ID to uniquely identify it,
-and urls to access the resources. We have many urls in order to provide a fallback for older browsers
-
-We also identify the type of resource (image or video) to make it easy to distinguish them
-"""
-type Resource {
-  id: String!
-  type: ResourceType!
-  urls: [ResourceUrl!]!
-}
-
 extend type Account @key(fields: "id")  {
   id: ID! @external
 }
 
-"""
-Represents an account
-"""
-interface Object {
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+extend type Resource @key(fields: "id")  {
+  id: ID! @external
+}
+
+extend type Club @key(fields: "id")  {
+  id: ID! @external
 }

@@ -17,13 +17,13 @@ import (
 )
 
 type accountDocument struct {
-	Id        string   `json:"id"`
-	Avatar    string   `json:"avatar"`
-	Username  string   `json:"username"`
-	Language  string   `json:"language"`
-	Verified  bool     `json:"verified"`
-	Roles     []string `json:"roles"`
-	CreatedAt string   `json:"created_at"`
+	Id               string   `json:"id"`
+	AvatarResourceId string   `json:"avatar_resource_id"`
+	Username         string   `json:"username"`
+	Language         string   `json:"language"`
+	Verified         bool     `json:"verified"`
+	Roles            []string `json:"roles"`
+	CreatedAt        string   `json:"created_at"`
 }
 
 const accountIndex = `
@@ -34,7 +34,7 @@ const accountIndex = `
 			"id": {
 				"type": "keyword"
 			},
-			"avatar": {
+			"avatar_resource_id": {
 				"type": "keyword"
 			},
 			"username": {
@@ -103,7 +103,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		}
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
-		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.Avatar, "", false, 0, "", false, time.Now())
+		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.AvatarResourceId, "", false, 0, "", false, time.Now())
 		acc.Node = paging.NewNode(ac.CreatedAt)
 
 		accounts = append(accounts, acc)
@@ -137,12 +137,12 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 			}
 
 			doc := accountDocument{
-				Id:        a.Id,
-				Avatar:    a.Avatar,
-				Username:  a.Username,
-				Verified:  a.Verified,
-				Roles:     a.Roles,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:               a.Id,
+				AvatarResourceId: a.AvatarResourceId,
+				Username:         a.Username,
+				Verified:         a.Verified,
+				Roles:            a.Roles,
+				CreatedAt:        strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.

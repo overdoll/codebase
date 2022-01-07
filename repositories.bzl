@@ -12,8 +12,8 @@ def go_repositories():
         name = "com_github_99designs_gqlgen",
         build_file_proto_mode = "disable",
         importpath = "github.com/99designs/gqlgen",
-        sum = "h1:Wg8aNYQUjMR/4v+W3xD+7SizOy6lSvVeQ06AobNQAXI=",
-        version = "v0.14.0",
+        sum = "h1:kwMX8Upw8Wc0+NGEolXk9/qRVnbRps6lq3+3ml3PSZs=",
+        version = "v0.14.1-0.20220105021018-47015f12e3aa",
     )
 
     go_repository(
@@ -282,8 +282,8 @@ def go_repositories():
         name = "com_github_cpuguy83_go_md2man_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/cpuguy83/go-md2man/v2",
-        sum = "h1:EoUDS0afbrsXAZ9YQ9jdu/mZ2sXgT1/2yyNng4PGlyM=",
-        version = "v2.0.0",
+        sum = "h1:r/myEWzV9lfsM1tFLgDyu0atFtJ1fXn261LKYj/3DxU=",
+        version = "v2.0.1",
     )
     go_repository(
         name = "com_github_creack_pty",
@@ -631,20 +631,7 @@ def go_repositories():
         sum = "h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=",
         version = "v0.0.0-20181017120253-0766667cb4d1",
     )
-    go_repository(
-        name = "com_github_gorilla_context",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gorilla/context",
-        sum = "h1:9oNbS1z4rVpbnkHBdPZU4jo9bSmrLpII768arSyMFgk=",
-        version = "v0.0.0-20160226214623-1ea25387ff6f",
-    )
-    go_repository(
-        name = "com_github_gorilla_mux",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gorilla/mux",
-        sum = "h1:KOwqsTYZdeuMacU7CxjMNYEKeBvLbxW+psodrbcEa3A=",
-        version = "v1.6.1",
-    )
+
     go_repository(
         name = "com_github_gorilla_securecookie",
         build_file_proto_mode = "disable",
@@ -658,6 +645,13 @@ def go_repositories():
         importpath = "github.com/gorilla/websocket",
         sum = "h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=",
         version = "v1.4.2",
+    )
+    go_repository(
+        name = "com_github_graph_gophers_dataloader",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/graph-gophers/dataloader",
+        sum = "h1:R+yjsbrNq1Mo3aPG+Z/EKYrXrXXUNJHOgbRt+U6jOug=",
+        version = "v5.0.0+incompatible",
     )
 
     go_repository(
@@ -918,6 +912,13 @@ def go_repositories():
         sum = "h1:TDTW5Yz1mjftljbcKqRcrYhd4XeOoI98t+9HbQbYf7g=",
         version = "v1.2.0",
     )
+    go_repository(
+        name = "com_github_kevinmbeaulieu_eq_go",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/kevinmbeaulieu/eq-go",
+        sum = "h1:AQgYHURDOmnVJ62jnEk0W/7yFKEn+Lv8RHN6t7mB0Zo=",
+        version = "v1.0.0",
+    )
 
     go_repository(
         name = "com_github_kisielk_errcheck",
@@ -998,13 +999,12 @@ def go_repositories():
         sum = "h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=",
         version = "v1.2.0",
     )
-
     go_repository(
-        name = "com_github_logrusorgru_aurora",
+        name = "com_github_logrusorgru_aurora_v3",
         build_file_proto_mode = "disable",
-        importpath = "github.com/logrusorgru/aurora",
-        sum = "h1:bqDmpDG49ZRnB5PcgP0RXtQvnMSgIF14M7CBd2shtXs=",
-        version = "v0.0.0-20200102142835-e9ef32dff381",
+        importpath = "github.com/logrusorgru/aurora/v3",
+        sum = "h1:R6zcoZZbvVcGMvDCKo45A9U/lzYyzl5NfYIvznmDfE4=",
+        version = "v3.0.0",
     )
 
     go_repository(
@@ -1027,8 +1027,8 @@ def go_repositories():
         name = "com_github_matryer_moq",
         build_file_proto_mode = "disable",
         importpath = "github.com/matryer/moq",
-        sum = "h1:reVOUXwnhsYv/8UqjvhrMOu5CNT9UapHFLbQ2JcXsmg=",
-        version = "v0.0.0-20200106131100-75d0ddfc0007",
+        sum = "h1:Q06vEqnBYjjfx5KKgHfYRKE/lvlRu+Nj+xodG4YdHnU=",
+        version = "v0.2.3",
     )
     go_repository(
         name = "com_github_mattn_go_colorable",
@@ -1213,14 +1213,6 @@ def go_repositories():
     )
 
     go_repository(
-        name = "com_github_opentracing_basictracer_go",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/opentracing/basictracer-go",
-        sum = "h1:YyUAhaEfjoWXclZVJ9sGoNct7j4TVk7lZWlQw5UXuoo=",
-        version = "v1.0.0",
-    )
-
-    go_repository(
         name = "com_github_opentracing_opentracing_go",
         build_file_proto_mode = "disable",
         importpath = "github.com/opentracing/opentracing-go",
@@ -1383,20 +1375,13 @@ def go_repositories():
         sum = "h1:RR9dF3JtopPvtkroDZuVD7qquD0bnHlKSqaQhgwt8yk=",
         version = "v1.3.0",
     )
-    go_repository(
-        name = "com_github_rs_cors",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/rs/cors",
-        sum = "h1:G9tHG9lebljV9mfp9SNPDL36nCDxmo3zTlAf1YgvzmI=",
-        version = "v1.6.0",
-    )
 
     go_repository(
         name = "com_github_russross_blackfriday_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/russross/blackfriday/v2",
-        sum = "h1:lPqVAte+HuHNfhJ/0LC98ESWRz8afy9tM/0RK8m9o+Q=",
-        version = "v2.0.1",
+        sum = "h1:JIOH55/0cWyOuilr9/qlrm0BSXldqnqwMsf35Ld67mk=",
+        version = "v2.1.0",
     )
     go_repository(
         name = "com_github_ryanuber_columnize",
@@ -1474,27 +1459,11 @@ def go_repositories():
     )
 
     go_repository(
-        name = "com_github_shurcool_httpfs",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/shurcooL/httpfs",
-        sum = "h1:SWV2fHctRpRrp49VXJ6UZja7gU9QLHwRpIPBN89SKEo=",
-        version = "v0.0.0-20171119174359-809beceb2371",
-    )
-
-    go_repository(
         name = "com_github_shurcool_sanitized_anchor_name",
         build_file_proto_mode = "disable",
         importpath = "github.com/shurcooL/sanitized_anchor_name",
         sum = "h1:PdmoCO6wvbs+7yrJyMORt4/BmY5IYyJwS/kOiWx8mHo=",
         version = "v1.0.0",
-    )
-
-    go_repository(
-        name = "com_github_shurcool_vfsgen",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/shurcooL/vfsgen",
-        sum = "h1:JJV9CsgM9EC9w2iVkwuz+sMx8yRFe89PJRUrv6hPCIA=",
-        version = "v0.0.0-20180121065927-ffb13db8def0",
     )
 
     go_repository(
@@ -1693,17 +1662,10 @@ def go_repositories():
         name = "com_github_urfave_cli_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/urfave/cli/v2",
-        sum = "h1:Qt8FeAtxE/vfdrLmR3rxR6JRE0RoVmbXu8+6kZtYU4k=",
-        version = "v2.1.1",
+        sum = "h1:qph92Y649prgesehzOrQjdWyxFOp/QVM+6imKHad91M=",
+        version = "v2.3.0",
     )
 
-    go_repository(
-        name = "com_github_vektah_dataloaden",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/vektah/dataloaden",
-        sum = "h1:+w0Zm/9gaWpEAyDlU1eKOuk5twTjAjuevXqcJJw8hrg=",
-        version = "v0.2.1-0.20190515034641-a19b9a6e7c9e",
-    )
     go_repository(
         name = "com_github_vektah_gqlparser_v2",
         build_file_proto_mode = "disable",
@@ -1791,21 +1753,6 @@ def go_repositories():
         importpath = "dmitri.shuralyov.com/gpu/mtl",
         sum = "h1:VpgP7xuJadIUuKccphEpTJnWhS2jkQyMt6Y7pJCD7fY=",
         version = "v0.0.0-20190408044501-666a987793e9",
-    )
-
-    go_repository(
-        name = "com_sourcegraph_sourcegraph_appdash",
-        build_file_proto_mode = "disable",
-        importpath = "sourcegraph.com/sourcegraph/appdash",
-        sum = "h1:ucqkfpjg9WzSUubAO62csmucvxl4/JeW3F4I4909XkM=",
-        version = "v0.0.0-20190731080439-ebfcffb1b5c0",
-    )
-    go_repository(
-        name = "com_sourcegraph_sourcegraph_appdash_data",
-        build_file_proto_mode = "disable",
-        importpath = "sourcegraph.com/sourcegraph/appdash-data",
-        sum = "h1:e1sMhtVq9AfcEy8AXNb8eSg6gbzfdpYhoNqnPJa+GzI=",
-        version = "v0.0.0-20151005221446-73f23eafcf67",
     )
 
     go_repository(

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash aeee16d402c5063f8a1671887b8eb897 */
+/* @relayHash edc1ba88332b3aad03bec64478542bac */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -75,6 +75,7 @@ fragment CategoryFragment on Post {
         mimeType
         url
       }
+      id
     }
   }
 }
@@ -94,6 +95,7 @@ fragment CharacterFragment on Post {
         mimeType
         url
       }
+      id
     }
   }
 }
@@ -103,6 +105,7 @@ fragment ClubPreviewFragment on Club {
   slug
   thumbnail {
     ...ResourceIconFragment
+    id
   }
 }
 
@@ -156,6 +159,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -164,6 +168,7 @@ fragment PostHeaderClubFragment on Post {
     name
     thumbnail {
       ...ResourceIconFragment
+      id
     }
     id
   }
@@ -176,6 +181,7 @@ fragment ProcessUploadsFragment on Post {
     urls {
       url
     }
+    id
   }
 }
 
@@ -196,6 +202,7 @@ fragment ReviewFragment on Post {
       url
       mimeType
     }
+    id
   }
   ...PostGalleryContentFragment
   ...PostHeaderClubFragment
@@ -236,6 +243,7 @@ fragment UpdateContentButtonFragment on Post {
     urls {
       url
     }
+    id
   }
 }
 
@@ -255,6 +263,7 @@ fragment VideoSnippetFragment on Resource {
 fragment checkPostRequirementsFragment on Post {
   content {
     __typename
+    id
   }
   audience {
     __typename
@@ -376,7 +385,8 @@ v11 = {
         (v5/*: any*/)
       ],
       "storageKey": null
-    }
+    },
+    (v4/*: any*/)
   ],
   "storageKey": null
 },
@@ -532,7 +542,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v8/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -547,7 +558,7 @@ return {
     ]
   },
   "params": {
-    "id": "aeee16d402c5063f8a1671887b8eb897",
+    "id": "edc1ba88332b3aad03bec64478542bac",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

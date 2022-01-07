@@ -2,11 +2,13 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"log"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -180,16 +182,33 @@ func newTestAccount(t *testing.T) *account.Account {
 }
 
 // helper which creates fake account in the repository so tests can be more predictable
-func createFakeNormalAccount(t *testing.T) *account.Account {
+func seedNormalAccount(t *testing.T) *account.Account {
 	usr := newTestAccount(t)
 
 	session := bootstrap.InitializeDatabaseSession()
-	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
+	adapter := adapters.NewAccountCassandraRedisRepository(session)
 	err := adapter.CreateAccount(context.Background(), usr)
 	require.NoError(t, err)
 	return usr
+}
+
+func seedMfaAccount(t *testing.T) *account.Account {
+	usr := newTestAccount(t)
+
+	err := usr.EnableMultiFactor()
+	require.NoError(t, err)
+
+	session := bootstrap.InitializeDatabaseSession()
+
+	adapter := adapters.NewAccountCassandraRedisRepository(session)
+	err = adapter.CreateAccount(context.Background(), usr)
+	require.NoError(t, err)
+	return usr
+}
+
+func convertAccountIdToRelayId(accountId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
 }
 
 func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {

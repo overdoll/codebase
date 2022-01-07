@@ -86,8 +86,9 @@ func TestConfirmAccountEmail(t *testing.T) {
 
 	email := generateEmail("carrier-confirm_account_email")
 	token := ksuid.New().String()
+	secret := ksuid.New().String()
 
-	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Token: token})
+	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Id: token, Secret: secret})
 
 	require.NoError(t, err, "no error for sending confirm account email")
 
@@ -98,7 +99,7 @@ func TestConfirmAccountEmail(t *testing.T) {
 	val, exists := link.Attr("href")
 	require.True(t, exists)
 
-	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token, val)
+	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token+"&secret="+secret, val)
 }
 
 func TestNewLoginTokenEmail(t *testing.T) {

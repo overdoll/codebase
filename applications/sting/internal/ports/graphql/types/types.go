@@ -5,26 +5,12 @@ package types
 import (
 	"fmt"
 	"io"
-	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
 )
 
-// Represents an account
-type Object interface {
-	IsObject()
-}
-
 type Account struct {
-	// Maximum amount of clubs that you can join as an account.
-	ClubMembershipsLimit int `json:"clubMembershipsLimit"`
-	// Current count of club memberships. Should be compared against the limit before joining a club.
-	ClubMembershipsCount int `json:"clubMembershipsCount"`
-	// Represents the clubs that the account has write access to.
-	Clubs *ClubConnection `json:"clubs"`
-	// Represents the club memberships that the account has.
-	ClubMemberships *ClubMemberConnection `json:"clubMemberships"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
@@ -33,20 +19,6 @@ type Account struct {
 }
 
 func (Account) IsEntity() {}
-
-// Add alias slug.
-type AddClubSlugAliasInput struct {
-	// The club to update
-	ID relay.ID `json:"id"`
-	// The chosen slug for the club.
-	Slug string `json:"slug"`
-}
-
-// Payload for a new alt slug
-type AddClubSlugAliasPayload struct {
-	// The club after update
-	Club *Club `json:"club"`
-}
 
 type Audience struct {
 	// An ID pointing to this audience.
@@ -62,7 +34,6 @@ type Audience struct {
 }
 
 func (Audience) IsNode()   {}
-func (Audience) IsObject() {}
 func (Audience) IsEntity() {}
 
 type AudienceConnection struct {
@@ -79,18 +50,6 @@ type AudienceEdge struct {
 type AudiencesOrder struct {
 	// The field to order audiences by.
 	Field AudiencesOrderField `json:"field"`
-}
-
-// Become a club member.
-type BecomeClubMemberInput struct {
-	// The chosen club ID.
-	ClubID relay.ID `json:"clubId"`
-}
-
-// Payload for a new club member
-type BecomeClubMemberPayload struct {
-	// The membership after creation
-	ClubMember *ClubMember `json:"clubMember"`
 }
 
 // Ordering options for categories
@@ -113,7 +72,6 @@ type Category struct {
 }
 
 func (Category) IsNode()   {}
-func (Category) IsObject() {}
 func (Category) IsEntity() {}
 
 type CategoryConnection struct {
@@ -142,7 +100,6 @@ type Character struct {
 }
 
 func (Character) IsNode()   {}
-func (Character) IsObject() {}
 func (Character) IsEntity() {}
 
 type CharacterConnection struct {
@@ -162,101 +119,12 @@ type CharactersOrder struct {
 }
 
 type Club struct {
-	// An ID pointing to this club.
-	ID relay.ID `json:"id"`
-	// An internal reference, uniquely identifying the club.
-	Reference string `json:"reference"`
-	// A url-friendly ID. Should be used when searching
-	Slug string `json:"slug"`
-	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
-	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
-	// Maximum amount of slug aliases that can be created for this club.
-	SlugAliasesLimit int `json:"slugAliasesLimit"`
-	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
-	// A name for this club.
-	Name string `json:"name"`
-	// The account that owns this club.
-	Owner *Account `json:"owner"`
-	// The total amount of members in this club.
-	MembersCount int `json:"membersCount"`
-	// Whether or not the viewer is a member of this club.
-	ViewerMember *ClubMember `json:"viewerMember"`
-	// Club members.
-	Members *ClubMemberConnection `json:"members"`
 	// Posts belonging to this club
 	Posts *PostConnection `json:"posts"`
+	ID    relay.ID        `json:"id"`
 }
 
-func (Club) IsNode()   {}
-func (Club) IsObject() {}
 func (Club) IsEntity() {}
-
-type ClubConnection struct {
-	Edges    []*ClubEdge     `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
-}
-
-type ClubEdge struct {
-	Cursor string `json:"cursor"`
-	Node   *Club  `json:"node"`
-}
-
-type ClubMember struct {
-	// An ID pointing to this club member.
-	ID relay.ID `json:"id"`
-	// When the membership was created (when the account originally joined).
-	JoinedAt time.Time `json:"joinedAt"`
-	// The club that this membership belongs to.
-	Club *Club `json:"club"`
-	// The account that belongs to this membership.
-	Account *Account `json:"account"`
-}
-
-func (ClubMember) IsNode()   {}
-func (ClubMember) IsEntity() {}
-
-type ClubMemberConnection struct {
-	Edges    []*ClubMemberEdge `json:"edges"`
-	PageInfo *relay.PageInfo   `json:"pageInfo"`
-}
-
-type ClubMemberEdge struct {
-	Cursor string      `json:"cursor"`
-	Node   *ClubMember `json:"node"`
-}
-
-// Ordering options for club members
-type ClubMembersOrder struct {
-	// The field to order clubs by.
-	Field ClubMembersOrderField `json:"field"`
-}
-
-// The club slug alias
-type ClubSlugAlias struct {
-	// The slug alias
-	Slug string `json:"slug"`
-}
-
-// Ordering options for clubs
-type ClubsOrder struct {
-	// The field to order clubs by.
-	Field ClubsOrderField `json:"field"`
-}
-
-// Create club.
-type CreateClubInput struct {
-	// The chosen slug for the club.
-	Slug string `json:"slug"`
-	// The chosen name for the club.
-	Name string `json:"name"`
-}
-
-// Payload for a new club
-type CreateClubPayload struct {
-	// The club after creation
-	Club *Club `json:"club"`
-}
 
 // Create a new post. A club ID is required.
 type CreatePostInput struct {
@@ -280,7 +148,9 @@ type Post struct {
 	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
-	// DraggableContent belonging to this post
+	// The club belonging to the post
+	Club *Club `json:"club"`
+	// Content belonging to this post
 	Content []*Resource `json:"content"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
@@ -294,8 +164,6 @@ type Post struct {
 	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
 	Characters []*Character `json:"characters"`
-	// Represents the club that this post belongs to
-	Club *Club `json:"club"`
 }
 
 func (Post) IsNode()   {}
@@ -317,49 +185,11 @@ type PostsOrder struct {
 	Field PostsOrderField `json:"field"`
 }
 
-// Update alias slug to default.
-type PromoteClubSlugAliasToDefaultInput struct {
-	// The club to update
-	ID relay.ID `json:"id"`
-	// The chosen slug for the club.
-	Slug string `json:"slug"`
-}
-
-// Payload for a new alt slug
-type PromoteClubSlugAliasToDefaultPayload struct {
-	// The club after update
-	Club *Club `json:"club"`
-}
-
-// Remove alias slug.
-type RemoveClubSlugAliasInput struct {
-	// The club to update
-	ID relay.ID `json:"id"`
-	// The chosen slug for the club.
-	Slug string `json:"slug"`
-}
-
-// Payload for a new alt slug
-type RemoveClubSlugAliasPayload struct {
-	// The club after update
-	Club *Club `json:"club"`
-}
-
-// A resource represents an image or a video format that contains an ID to uniquely identify it,
-// and urls to access the resources. We have many urls in order to provide a fallback for older browsers
-//
-// We also identify the type of resource (image or video) to make it easy to distinguish them
 type Resource struct {
-	ID   string         `json:"id"`
-	Type ResourceType   `json:"type"`
-	Urls []*ResourceURL `json:"urls"`
+	ID relay.ID `json:"id"`
 }
 
-// A type representing a url to the resource and the mimetype
-type ResourceURL struct {
-	URL      graphql1.URI `json:"url"`
-	MimeType string       `json:"mimeType"`
-}
+func (Resource) IsEntity() {}
 
 type Series struct {
 	// An ID pointing to this series.
@@ -375,7 +205,6 @@ type Series struct {
 }
 
 func (Series) IsNode()   {}
-func (Series) IsObject() {}
 func (Series) IsEntity() {}
 
 type SeriesConnection struct {
@@ -406,20 +235,6 @@ type SubmitPostPayload struct {
 	Post *Post `json:"post"`
 	// Whether or not the submitted post is going in review
 	InReview *bool `json:"inReview"`
-}
-
-// Update club name.
-type UpdateClubNameInput struct {
-	// The club to update
-	ID relay.ID `json:"id"`
-	// The chosen name for the club.
-	Name string `json:"name"`
-}
-
-// Payload for updating the name
-type UpdateClubNamePayload struct {
-	// The club after update
-	Club *Club `json:"club"`
 }
 
 // Update post audience.
@@ -482,18 +297,6 @@ type UpdatePostContentInput struct {
 type UpdatePostContentPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
-}
-
-// Withdraw club membership.
-type WithdrawClubMembershipInput struct {
-	// The chosen club ID.
-	ClubID relay.ID `json:"clubId"`
-}
-
-// Payload for withdrawing club membership
-type WithdrawClubMembershipPayload struct {
-	// The club membership that was removed
-	ClubMemberID relay.ID `json:"clubMemberId"`
 }
 
 // Properties by which audience connections can be ordered.
@@ -619,88 +422,6 @@ func (e CharactersOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which club member connections can be ordered.
-type ClubMembersOrderField string
-
-const (
-	// By joined at
-	ClubMembersOrderFieldJoinedAt ClubMembersOrderField = "JOINED_AT"
-)
-
-var AllClubMembersOrderField = []ClubMembersOrderField{
-	ClubMembersOrderFieldJoinedAt,
-}
-
-func (e ClubMembersOrderField) IsValid() bool {
-	switch e {
-	case ClubMembersOrderFieldJoinedAt:
-		return true
-	}
-	return false
-}
-
-func (e ClubMembersOrderField) String() string {
-	return string(e)
-}
-
-func (e *ClubMembersOrderField) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = ClubMembersOrderField(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ClubMembersOrderField", str)
-	}
-	return nil
-}
-
-func (e ClubMembersOrderField) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Properties by which club connections can be ordered.
-type ClubsOrderField string
-
-const (
-	// Club by created time
-	ClubsOrderFieldCreatedAt ClubsOrderField = "CREATED_AT"
-)
-
-var AllClubsOrderField = []ClubsOrderField{
-	ClubsOrderFieldCreatedAt,
-}
-
-func (e ClubsOrderField) IsValid() bool {
-	switch e {
-	case ClubsOrderFieldCreatedAt:
-		return true
-	}
-	return false
-}
-
-func (e ClubsOrderField) String() string {
-	return string(e)
-}
-
-func (e *ClubsOrderField) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = ClubsOrderField(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ClubsOrderField", str)
-	}
-	return nil
-}
-
-func (e ClubsOrderField) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 type PostState string
 
 const (
@@ -796,48 +517,6 @@ func (e *PostsOrderField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e PostsOrderField) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// Identifies the type of resource
-type ResourceType string
-
-const (
-	ResourceTypeImage ResourceType = "IMAGE"
-	ResourceTypeVideo ResourceType = "VIDEO"
-)
-
-var AllResourceType = []ResourceType{
-	ResourceTypeImage,
-	ResourceTypeVideo,
-}
-
-func (e ResourceType) IsValid() bool {
-	switch e {
-	case ResourceTypeImage, ResourceTypeVideo:
-		return true
-	}
-	return false
-}
-
-func (e ResourceType) String() string {
-	return string(e)
-}
-
-func (e *ResourceType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = ResourceType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ResourceType", str)
-	}
-	return nil
-}
-
-func (e ResourceType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

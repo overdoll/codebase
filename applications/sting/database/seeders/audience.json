@@ -5,7 +5,6 @@
     "title": {
       "en": "Standard Audience"
     },
-    "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "standard": 1
   },
   {
@@ -14,7 +13,6 @@
     "title": {
       "en": "Non-Standard Audience"
     },
-    "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "standard": 0
   }
 ]
