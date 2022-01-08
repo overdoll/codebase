@@ -7,7 +7,7 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 
 interface Props extends HTMLChakraProps<any> {
-  query: ResourceIconFragment$key
+  query: ResourceIconFragment$key | null | undefined
 }
 
 const Fragment = graphql`
@@ -20,6 +20,8 @@ export default function ResourceIcon ({
   query,
   ...rest
 }: Props): JSX.Element {
+  if (query === undefined) return <></>
+
   const data = useFragment(Fragment, query)
 
   if (data == null) return <Box bg='gray.500' w={8} h={8} borderRadius='25%' {...rest} />

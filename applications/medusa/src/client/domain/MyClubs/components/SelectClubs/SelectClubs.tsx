@@ -72,9 +72,9 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
         onClick={onOpen}
         p={2}
       >
-        <Flex pr={2} align='center' w='100%' justify='space-between'>
+        <Flex px={2} align='center' w='100%' justify='space-between'>
           <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
-          <Icon icon={SwapCircle} h={5} w={5} fill='gray.300' />
+          <Icon ml={3} icon={SwapCircle} h={5} w={5} fill='gray.300' />
         </Flex>
       </ClickableBox>
       <Modal

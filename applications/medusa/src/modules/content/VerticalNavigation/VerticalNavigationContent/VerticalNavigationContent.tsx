@@ -25,6 +25,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           bg='gray.800'
           borderRadius='base'
           zIndex='sidebar'
+          overflowX='hidden'
         >
           <SmallBackgroundBox>
             {props.title != null && <PageSectionWrap mb={4}>
@@ -51,6 +52,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         flexShrink={0}
         position='fixed'
         zIndex='sidebar'
+        overflowX='hidden'
         display={{
           base: 'none',
           md: 'initial'

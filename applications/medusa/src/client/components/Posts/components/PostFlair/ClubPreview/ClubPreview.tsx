@@ -30,8 +30,15 @@ export default function ClubPreview ({
       align='center'
     >
       <ResourceIcon mr={3} query={data?.thumbnail as ResourceIconFragment$key} />
-      <Box>
-        <Heading fontSize='lg' color='gray.00'>
+      <Box
+        whiteSpace='nowrap'
+        textOverflow='ellipsis'
+        overflow='hidden'
+      >
+        <Heading
+          fontSize='lg'
+          color='gray.00'
+        >
           {data.name}
         </Heading>
         <Text

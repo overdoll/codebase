@@ -1,4 +1,4 @@
-export default function abbreviateNumber (value: number, numberLength = 3): string {
+export default function abbreviateNumber (value: number, decimalSize = 3): string {
   let newValue = value
   let suffixNum = 0
   const suffixes = ['', 'K', 'M', 'B', 'T']
@@ -10,5 +10,5 @@ export default function abbreviateNumber (value: number, numberLength = 3): stri
     suffixNum++
   }
 
-  return newValue.toPrecision(numberLength) + suffixes[suffixNum]
+  return `${newValue.toPrecision(decimalSize).replace(/\.0+$/, '')}${suffixes[suffixNum]}`
 }
