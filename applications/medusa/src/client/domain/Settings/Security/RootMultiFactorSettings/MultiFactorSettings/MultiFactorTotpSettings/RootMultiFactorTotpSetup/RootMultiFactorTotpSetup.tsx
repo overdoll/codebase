@@ -31,7 +31,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
       <Helmet title='authenticator setup' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle>
+          <PageSectionTitle colorScheme='green'>
             <Trans>
               Set up two-factor authentication
             </Trans>

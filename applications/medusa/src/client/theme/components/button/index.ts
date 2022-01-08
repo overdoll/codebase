@@ -143,11 +143,11 @@ const variantOutline: SystemStyleFunction = (props) => {
     color: c === 'gray' ? borderColor : combinedColor,
     bg: 'transparent',
     _hover: {
-      color: mode(`${c}.50`, `${c}.400`)(props),
+      color: mode(`${c}.50`, `${c}.500`)(props),
       bg: 'transparent'
     },
     _active: {
-      color: mode(`${c}.100`, `${c}.500`)(props),
+      color: mode(`${c}.100`, `${c}.400`)(props),
       bg: 'transparent',
       boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`
     },

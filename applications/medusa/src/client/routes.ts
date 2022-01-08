@@ -651,12 +651,12 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/post',
+        path: '/post/:reference',
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Manage/ManagePosts/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -665,7 +665,7 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Manage/ManagePosts/ViewPost/ViewPostRoot'
+            './domain/Public/ViewPost/ViewPostRoot'
           )
         ),
         prepare: ({
@@ -677,7 +677,7 @@ const routes: Route[] = [
             query: {
               query: ViewPostQuery,
               variables: {
-                reference: query.get('r') ?? ''
+                reference: params.reference ?? ''
               },
               options: {
                 fetchPolicy: 'store-or-network'
@@ -690,14 +690,14 @@ const routes: Route[] = [
         path: '/configure/create-club',
         component: loadable(async () =>
           await import(
-            './domain/MyClubs/CreateClub/RootCreateClub'
+            './domain/MyClubs/pages/CreateClub/RootCreateClub'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/MyClubs/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/MyClubs/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -744,10 +744,35 @@ const routes: Route[] = [
         },
         routes: [
           {
+            path: '/club/:slug/:entity(home)',
+            component: loadable(async () =>
+              await import(
+                './domain/MyClubs/pages/ClubHome/RootClubHome'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubHomeQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
             path: '/club/:slug/:entity(settings)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/ClubSettings/RootClubSettings'
+                './domain/MyClubs/pages/ClubSettings/RootClubSettings'
               )
             ),
             prepare: ({
@@ -769,17 +794,17 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/club/:slug/:entity(home)',
+            path: '/club/:slug/:entity(posts)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/ClubSettings/RootClubSettings'
+                './domain/MyClubs/pages/ManagePosts/ManagePosts'
               )
             ),
             prepare: ({
               params,
               query
             }) => {
-              const Query = require('@//:artifacts/ClubSettingsQuery.graphql')
+              const Query = require('@//:artifacts/MyPostsQuery.graphql')
               return {
                 query: {
                   query: Query,
@@ -797,14 +822,14 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(create-post)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/CreatePost/CreatePost'
+                './domain/MyClubs/pages/CreatePost/CreatePost'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/MyClubs/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/MyClubs/pages/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -830,6 +855,31 @@ const routes: Route[] = [
             }
           }
         ]
+      },
+      {
+        path: '/:slug',
+        component: loadable(async () =>
+          await import(
+            './domain/Public/ViewClub/RootViewClub'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/ViewClubQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                slug: params.slug
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '*',

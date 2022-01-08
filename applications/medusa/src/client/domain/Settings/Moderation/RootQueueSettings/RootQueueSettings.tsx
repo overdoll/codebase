@@ -22,7 +22,7 @@ export default function RootQueueSettings (props: Props): JSX.Element | null {
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='purple'>
           <Trans>
             Queue
           </Trans>

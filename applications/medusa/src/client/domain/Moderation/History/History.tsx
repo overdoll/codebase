@@ -28,7 +28,7 @@ export default function History (props: Props): JSX.Element | null {
       <Helmet title='history' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle>
+          <PageSectionTitle colorScheme='purple'>
             <Trans>
               Moderation History
             </Trans>

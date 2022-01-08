@@ -1,14 +1,19 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7a6ccaba000b0ceeee3a7cf04c97330b */
+/* @relayHash 4be24943284bcb50c7c34d5883728a29 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type MyPostsQueryVariables = {};
+export type MyPostsQueryVariables = {
+    slug: string;
+};
 export type MyPostsQueryResponse = {
+    readonly club: {
+        readonly " $fragmentRefs": FragmentRefs<"PostStatePublishedFragment">;
+    } | null;
     readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"PostStateDraftFragment" | "PostStateReviewFragment" | "PostStatePublishedFragment" | "PostStateRejectedFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"PostStateDraftFragment" | "PostStateReviewFragment" | "PostStateRejectedFragment">;
     } | null;
 };
 export type MyPostsQuery = {
@@ -19,11 +24,16 @@ export type MyPostsQuery = {
 
 
 /*
-query MyPostsQuery {
+query MyPostsQuery(
+  $slug: String!
+) {
+  club(slug: $slug) {
+    ...PostStatePublishedFragment
+    id
+  }
   viewer {
     ...PostStateDraftFragment
     ...PostStateReviewFragment
-    ...PostStatePublishedFragment
     ...PostStateRejectedFragment
     id
   }
@@ -70,7 +80,7 @@ fragment PostStateDraftPreviewFragment on Post {
   ...checkPostRequirementsFragment
 }
 
-fragment PostStatePublishedFragment on Account {
+fragment PostStatePublishedFragment on Club {
   publishedPosts: posts(first: 3, state: PUBLISHED) {
     edges {
       node {
@@ -178,34 +188,48 @@ fragment checkPostRequirementsFragment on Post {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "slug"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "slug",
+    "variableName": "slug"
+  }
+],
+v2 = {
   "kind": "Literal",
   "name": "first",
   "value": 3
 },
-v1 = [
-  (v0/*: any*/),
+v3 = [
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "state",
-    "value": "DRAFT"
+    "value": "PUBLISHED"
   }
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "reference",
   "storageKey": null
 },
-v3 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v4 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -230,32 +254,41 @@ v4 = {
   ],
   "storageKey": null
 },
-v5 = {
+v7 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
+  "concreteType": "Resource",
+  "kind": "LinkedField",
+  "name": "content",
+  "plural": true,
+  "selections": [
+    (v5/*: any*/),
+    (v6/*: any*/)
+  ],
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v7 = [
-  (v5/*: any*/),
-  (v6/*: any*/)
-],
-v8 = {
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -280,47 +313,38 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = [
+v12 = [
   "state"
 ],
-v11 = [
-  (v0/*: any*/),
+v13 = [
+  (v2/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "DRAFT"
+  }
+],
+v14 = [
+  (v9/*: any*/),
+  (v8/*: any*/)
+],
+v15 = [
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "state",
     "value": "REVIEW"
   }
 ],
-v12 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "postedAt",
   "storageKey": null
 },
-v13 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "content",
-  "plural": true,
-  "selections": [
-    (v3/*: any*/),
-    (v4/*: any*/)
-  ],
-  "storageKey": null
-},
-v14 = [
-  (v0/*: any*/),
-  {
-    "kind": "Literal",
-    "name": "state",
-    "value": "PUBLISHED"
-  }
-],
-v15 = [
-  (v0/*: any*/),
+v17 = [
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "state",
@@ -329,11 +353,27 @@ v15 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "MyPostsQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PostStatePublishedFragment"
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -355,11 +395,6 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "PostStatePublishedFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
             "name": "PostStateRejectedFragment"
           }
         ],
@@ -371,10 +406,70 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "MyPostsQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          {
+            "alias": "publishedPosts",
+            "args": (v3/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "posts",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Post",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v9/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v10/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v11/*: any*/)
+            ],
+            "storageKey": "posts(first:3,state:\"PUBLISHED\")"
+          },
+          {
+            "alias": "publishedPosts",
+            "args": (v3/*: any*/),
+            "filters": (v12/*: any*/),
+            "handle": "connection",
+            "key": "PublishedPostsPaginationQuery_publishedPosts",
+            "kind": "LinkedHandle",
+            "name": "posts"
+          },
+          (v8/*: any*/)
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -385,7 +480,7 @@ return {
         "selections": [
           {
             "alias": "draftPosts",
-            "args": (v1/*: any*/),
+            "args": (v13/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -407,7 +502,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -416,9 +511,9 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
-                          (v4/*: any*/),
-                          (v5/*: any*/)
+                          (v5/*: any*/),
+                          (v6/*: any*/),
+                          (v9/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -429,7 +524,7 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
-                        "selections": (v7/*: any*/),
+                        "selections": (v14/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -439,7 +534,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
-                        "selections": (v7/*: any*/),
+                        "selections": (v14/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -449,35 +544,35 @@ return {
                         "kind": "LinkedField",
                         "name": "characters",
                         "plural": true,
-                        "selections": (v7/*: any*/),
+                        "selections": (v14/*: any*/),
                         "storageKey": null
                       },
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v8/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v8/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": "posts(first:3,state:\"DRAFT\")"
           },
           {
             "alias": "draftPosts",
-            "args": (v1/*: any*/),
-            "filters": (v10/*: any*/),
+            "args": (v13/*: any*/),
+            "filters": (v12/*: any*/),
             "handle": "connection",
             "key": "DraftPostsPaginationQuery_draftPosts",
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v6/*: any*/),
+          (v8/*: any*/),
           {
             "alias": "reviewPosts",
-            "args": (v11/*: any*/),
+            "args": (v15/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -499,82 +594,34 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/),
-                      (v2/*: any*/),
-                      (v12/*: any*/),
-                      (v13/*: any*/),
-                      (v5/*: any*/)
+                      (v8/*: any*/),
+                      (v4/*: any*/),
+                      (v16/*: any*/),
+                      (v7/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v8/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": "posts(first:3,state:\"REVIEW\")"
           },
           {
             "alias": "reviewPosts",
-            "args": (v11/*: any*/),
-            "filters": (v10/*: any*/),
+            "args": (v15/*: any*/),
+            "filters": (v12/*: any*/),
             "handle": "connection",
             "key": "ReviewPostsPaginationQuery_reviewPosts",
             "kind": "LinkedHandle",
             "name": "posts"
           },
           {
-            "alias": "publishedPosts",
-            "args": (v14/*: any*/),
-            "concreteType": "PostConnection",
-            "kind": "LinkedField",
-            "name": "posts",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PostEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Post",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v13/*: any*/),
-                      (v6/*: any*/),
-                      (v5/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v8/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v9/*: any*/)
-            ],
-            "storageKey": "posts(first:3,state:\"PUBLISHED\")"
-          },
-          {
-            "alias": "publishedPosts",
-            "args": (v14/*: any*/),
-            "filters": (v10/*: any*/),
-            "handle": "connection",
-            "key": "PublishedPostsPaginationQuery_publishedPosts",
-            "kind": "LinkedHandle",
-            "name": "posts"
-          },
-          {
             "alias": "rejectedPosts",
-            "args": (v15/*: any*/),
+            "args": (v17/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -596,25 +643,25 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v12/*: any*/),
-                      (v13/*: any*/),
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v16/*: any*/),
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v8/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": "posts(first:3,state:\"REJECTED\")"
           },
           {
             "alias": "rejectedPosts",
-            "args": (v15/*: any*/),
-            "filters": (v10/*: any*/),
+            "args": (v17/*: any*/),
+            "filters": (v12/*: any*/),
             "handle": "connection",
             "key": "RejectedPostsPaginationQuery_rejectedPosts",
             "kind": "LinkedHandle",
@@ -626,7 +673,7 @@ return {
     ]
   },
   "params": {
-    "id": "7a6ccaba000b0ceeee3a7cf04c97330b",
+    "id": "4be24943284bcb50c7c34d5883728a29",
     "metadata": {},
     "name": "MyPostsQuery",
     "operationKind": "query",
@@ -634,5 +681,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'b392ab6527a14bd7adaf05528701ac7a';
+(node as any).hash = 'e3df5b14da841beb72343c27b7e84876';
 export default node;

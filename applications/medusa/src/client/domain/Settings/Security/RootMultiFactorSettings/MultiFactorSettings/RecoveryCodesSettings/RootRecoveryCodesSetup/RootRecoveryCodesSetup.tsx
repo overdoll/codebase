@@ -31,7 +31,7 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
       <Helmet title='recovery setup' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle>
+          <PageSectionTitle colorScheme='teal'>
             <Trans>
               Set up two-factor recovery codes
             </Trans>

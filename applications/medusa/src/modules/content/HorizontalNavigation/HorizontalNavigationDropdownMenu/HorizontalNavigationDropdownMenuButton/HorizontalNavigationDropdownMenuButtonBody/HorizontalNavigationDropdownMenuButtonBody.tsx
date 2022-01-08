@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import Icon from '../../../../Icon/Icon'
 import { ClickableBox } from '../../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
@@ -22,7 +22,7 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
   label,
   isActive,
   isDisabled,
-  onClick,
+  onClick
 }: Props): JSX.Element {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 
@@ -30,7 +30,9 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
     <ClickableBox
       onClick={onClick}
       isDisabled={isDisabled}
-      bg={isActive ? 'gray.700' : 'gray.800'}
+      borderRadius='md'
+      bg={isActive ? 'gray.900' : 'gray.800'}
+      p={2}
     >
       <Flex align='center'>
         {(icon != null) && (
@@ -51,12 +53,13 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
           </Flex>
         )}
         {label != null && (
-          <Heading
+          <Text
             color={(color ?? (isActive ? colorPalette : 'gray.100'))}
             fontSize='lg'
+            fontWeight='semibold'
           >
             {label}
-          </Heading>
+          </Text>
         )}
         {(icon == null) && children}
       </Flex>

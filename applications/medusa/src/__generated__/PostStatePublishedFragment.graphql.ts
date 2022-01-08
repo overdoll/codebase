@@ -159,9 +159,9 @@ return {
       "storageKey": null
     }
   ],
-  "type": "Account",
+  "type": "Club",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f6d6b10ada5bbf89118eb4a7abf1520b';
+(node as any).hash = '7a2cb38862b91600dddef820c973b1e9';
 export default node;

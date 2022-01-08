@@ -22,8 +22,6 @@ export default function CopyCodeToClipboard ({
     <ClickableBox
       aria-label={i18n._(t`Copy`)}
       onClick={onCopy}
-      borderWidth={2}
-      borderColor='gray.400'
       bg='gray.900'
       {...rest}
     >
@@ -38,7 +36,7 @@ export default function CopyCodeToClipboard ({
           bg='transparent'
           fontWeight='normal'
           fontStyle='mono'
-          color='teal.300'
+          color='gray.100'
           p={0}
         >
           {children}

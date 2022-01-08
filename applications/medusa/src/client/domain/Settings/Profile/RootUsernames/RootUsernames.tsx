@@ -22,7 +22,7 @@ export default function RootUsernames (props: Props): JSX.Element | null {
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='green'>
           <Trans>
             Username
           </Trans>

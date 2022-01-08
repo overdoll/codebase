@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4630637734facb482648f789867762a2 */
+/* @relayHash 52fea7aa8d94926511ee7013355ca507 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -50,7 +50,7 @@ fragment PostGalleryContentFragment on Post {
   }
 }
 
-fragment PostStatePublishedFragment_2HEEH6 on Account {
+fragment PostStatePublishedFragment_2HEEH6 on Club {
   publishedPosts: posts(first: $first, after: $after, state: PUBLISHED) {
     edges {
       node {
@@ -317,7 +317,7 @@ return {
                 "name": "posts"
               }
             ],
-            "type": "Account",
+            "type": "Club",
             "abstractKey": null
           }
         ],
@@ -326,7 +326,7 @@ return {
     ]
   },
   "params": {
-    "id": "4630637734facb482648f789867762a2",
+    "id": "52fea7aa8d94926511ee7013355ca507",
     "metadata": {},
     "name": "PublishedPostsPaginationQuery",
     "operationKind": "query",
@@ -334,5 +334,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'f6d6b10ada5bbf89118eb4a7abf1520b';
+(node as any).hash = '7a2cb38862b91600dddef820c973b1e9';
 export default node;

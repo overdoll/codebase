@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Box, Center, Flex, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '../../PageLayout'
 import { ReactNode } from 'react'
 
@@ -27,10 +27,12 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           zIndex='sidebar'
         >
           <SmallBackgroundBox>
-            {props.title != null && <PageSectionWrap>
-              <PageSectionTitle>{props.title}</PageSectionTitle>
+            {props.title != null && <PageSectionWrap mb={4}>
+              <PageSectionTitle>
+                {props.title}
+              </PageSectionTitle>
             </PageSectionWrap>}
-            <Stack spacing={2}>
+            <Stack spacing={3}>
               {props.children}
             </Stack>
           </SmallBackgroundBox>
@@ -38,7 +40,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
       </Center>
       <Box
         bg='gray.800'
-        w='260px'
+        w='300px'
         h='calc(100vh - 54px)'
         pr={4}
         pb={6}
@@ -54,20 +56,12 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           md: 'initial'
         }}
       >
-        <Flex
-          w='100%'
-          align='center'
-          justify='space-between'
-          mb={3}
-        >
-          <Heading
-            color='gray.00'
-            ml={1}
-            size='md'
-          >{props.title}
-          </Heading>
-        </Flex>
-        <Stack spacing={2}>
+        {props.title != null && <PageSectionWrap mb={4}>
+          <PageSectionTitle>
+            {props.title}
+          </PageSectionTitle>
+        </PageSectionWrap>}
+        <Stack spacing={3}>
           {props.children}
         </Stack>
       </Box>

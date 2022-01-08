@@ -28,7 +28,7 @@ export default function Queue (props: Props): JSX.Element | null {
       <Helmet title='queue' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle>
+          <PageSectionTitle colorScheme='purple'>
             <Trans>
               Moderation Queue
             </Trans>

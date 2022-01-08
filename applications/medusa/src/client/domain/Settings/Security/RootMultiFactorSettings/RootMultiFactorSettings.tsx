@@ -24,7 +24,7 @@ export default function RootMultiFactorSettings (props: Props): JSX.Element | nu
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='green'>
           <Trans>
             Two-factor Authentication
           </Trans>
