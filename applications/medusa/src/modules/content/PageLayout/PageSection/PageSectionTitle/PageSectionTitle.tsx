@@ -19,7 +19,6 @@ export default function PageSectionTitle ({
         textOverflow='ellipsis'
         fontSize='2xl'
         color='gray.00'
-        lineHeight={1.2}
       >
         {children}
       </Heading>

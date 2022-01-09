@@ -23,7 +23,15 @@ export default function LargeClubHeader ({ query }: Props): JSX.Element {
   return (
     <Flex align='center'>
       <ResourceIcon mr={8} h={20} w={20} query={data?.thumbnail} />
-      <Text fontWeight='bold' fontSize='5xl' color='gray.00'>
+      <Text
+        h={20}
+        whiteSpace='nowrap'
+        textOverflow='ellipsis'
+        overflow='hidden'
+        fontWeight='bold'
+        fontSize='5xl'
+        color='gray.00'
+      >
         {data?.name}
       </Text>
     </Flex>
