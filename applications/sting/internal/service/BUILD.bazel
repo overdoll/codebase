@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = ["application.go"],
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
     importpath = "overdoll/applications/sting/internal/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -13,6 +16,9 @@ go_library(
         "//applications/sting/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/principal",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
     ],
 )
 
@@ -22,20 +28,18 @@ go_test(
         "audience_component_test.go",
         "category_component_test.go",
         "character_component_test.go",
-        "club_component_test.go",
-        "club_members_component_test.go",
         "component_test.go",
         "post_component_test.go",
         "series_component_test.go",
     ],
     data = [
         "//applications/sting:config.toml",
-        "//applications/sting/internal/service/file_fixtures:all",
     ],
     deps = [
         ":service",
         "//applications/sting/internal/adapters",
         "//applications/sting/internal/app/workflows",
+        "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports",
         "//applications/sting/internal/ports/graphql/types",
         "//applications/sting/proto:v1_go_proto",
@@ -44,13 +48,12 @@ go_test(
         "//libraries/config",
         "//libraries/graphql/relay",
         "//libraries/passport",
+        "//libraries/principal",
         "//libraries/testing_tools",
-        "@com_github_bxcodec_faker_v3//:faker",
-        "@com_github_capslock_studio_go_webpbin//:go-webpbin",
-        "@com_github_eventials_go_tus//:go-tus",
+        "//libraries/uuid",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",
-        "@io_bazel_rules_go//go/tools/bazel:go_default_library",
         "@io_temporal_go_sdk//testsuite",
         "@org_golang_google_grpc//:go_default_library",
     ],

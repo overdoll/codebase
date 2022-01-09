@@ -1,0 +1,8 @@
+image:
+  repository: stella-image
+
+nameOverride: "stella"
+
+service: true
+http: true
+grpc: true

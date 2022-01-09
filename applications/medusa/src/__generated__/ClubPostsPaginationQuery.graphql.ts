@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsPaginationQuery.graphql.ts
 /* @relayHash b8aac6c005f0e1e1c30d9f01dccafb4f */
+=======
+/* @relayHash a598189a8b7d4481aa860471c16ddf60 */
+>>>>>>> master:applications/medusa/src/__generated__/RejectedPostsPaginationQuery.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -58,10 +62,18 @@ fragment ClubPostsFragment_2HEEH6 on Account {
   id
 }
 
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsPaginationQuery.graphql.ts
 fragment ImageSnippetFragment on Resource {
   urls {
     url
     mimeType
+=======
+fragment PostStateRejectedPreviewFragment on Post {
+  postedAt
+  content {
+    ...ResourceItemFragment
+    id
+>>>>>>> master:applications/medusa/src/__generated__/RejectedPostsPaginationQuery.graphql.ts
   }
 }
 
@@ -278,7 +290,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -346,7 +359,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsPaginationQuery.graphql.ts
     "id": "b8aac6c005f0e1e1c30d9f01dccafb4f",
+=======
+    "id": "a598189a8b7d4481aa860471c16ddf60",
+>>>>>>> master:applications/medusa/src/__generated__/RejectedPostsPaginationQuery.graphql.ts
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

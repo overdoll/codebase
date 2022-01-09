@@ -2,24 +2,27 @@ package account
 
 import "errors"
 
-type LockReason struct {
+var (
+	Unknown   = Role{""}
+	Staff     = Role{"staff"}
+	Moderator = Role{"moderator"}
+)
+
+type Role struct {
 	slug string
 }
 
-var (
-	Unlocked       = LockReason{""}
-	PostInfraction = LockReason{"POST_INFRACTION"}
-)
-
-func (r LockReason) String() string {
+func (r Role) String() string {
 	return r.slug
 }
 
-func LockReasonFromString(s string) (LockReason, error) {
+func RoleFromString(s string) (Role, error) {
 	switch s {
-	case PostInfraction.slug:
-		return PostInfraction, nil
+	case Staff.slug:
+		return Staff, nil
+	case Moderator.slug:
+		return Moderator, nil
 	}
 
-	return Unlocked, errors.New("unknown lock reason: " + s)
+	return Unknown, errors.New("unknown role: " + s)
 }

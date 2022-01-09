@@ -2,7 +2,6 @@ package mutations
 
 import (
 	"context"
-
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/command"

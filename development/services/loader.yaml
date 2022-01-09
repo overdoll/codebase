@@ -1,0 +1,8 @@
+image:
+  repository: loader-image
+
+nameOverride: "loader"
+
+service: true
+http: true
+grpc: true

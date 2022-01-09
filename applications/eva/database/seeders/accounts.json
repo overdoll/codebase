@@ -6,7 +6,6 @@
     "roles": [
       "moderator"
     ],
-    "avatar": "1pcKa98Yh8UrjoN8b14yodwV8AM.png",
     "verified": true,
     "language": "en"
   },
@@ -17,7 +16,6 @@
     "roles": [
       "staff"
     ],
-    "avatar": "1pcKaGUjkwnQmrD6v4XquttgnVo.png",
     "verified": true,
     "language": "en"
   },
@@ -26,7 +24,6 @@
     "username": "artist_unverified",
     "email": "i2fhz.artist_unverified@inbox.testmail.app",
     "roles": [],
-    "avatar": "1pcKaM9zDCZB3TTVYChSqsJZVqt.png",
     "verified": false,
     "language": "en"
   },
@@ -35,7 +32,6 @@
     "username": "artist_verified",
     "email": "i2fhz.artist_verified@inbox.testmail.app",
     "roles": [],
-    "avatar": "1pcKZxqh6vKnun2ZBXxEKEi686B.png",
     "verified": true,
     "language": "en"
   },

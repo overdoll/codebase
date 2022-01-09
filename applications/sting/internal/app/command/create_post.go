@@ -2,8 +2,7 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/club"
-
+	"errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -16,24 +15,28 @@ type CreatePost struct {
 type CreatePostHandler struct {
 	pr     post.Repository
 	pi     post.IndexRepository
-	cr     club.Repository
 	parley ParleyService
 	eva    EvaService
+	stella StellaService
 }
 
-func NewCreatePostHandler(pr post.Repository, cr club.Repository, pi post.IndexRepository, eva EvaService, parley ParleyService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, cr: cr, pi: pi, eva: eva, parley: parley}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, eva EvaService, parley ParleyService, stella StellaService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi, eva: eva, parley: parley, stella: stella}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	cl, err := h.cr.GetClubById(ctx, cmd.ClubId)
+	validClub, err := h.stella.CanAccountPostUnderClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err
 	}
 
-	pendingPost, err := post.NewPost(cmd.Principal, cl)
+	if !validClub {
+		return nil, errors.New("bad club given")
+	}
+
+	pendingPost, err := post.NewPost(cmd.Principal, cmd.ClubId)
 
 	if err != nil {
 		return nil, err

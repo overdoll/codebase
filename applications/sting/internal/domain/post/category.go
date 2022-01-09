@@ -3,7 +3,6 @@ package post
 import (
 	"errors"
 
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -15,10 +14,10 @@ var (
 type Category struct {
 	*paging.Node
 
-	id        string
-	slug      string
-	title     *localization.Translation
-	thumbnail *resource.Resource
+	id                  string
+	slug                string
+	title               *localization.Translation
+	thumbnailResourceId string
 }
 
 func (c *Category) ID() string {
@@ -33,15 +32,15 @@ func (c *Category) Title() *localization.Translation {
 	return c.title
 }
 
-func (c *Category) Thumbnail() *resource.Resource {
-	return c.thumbnail
+func (c *Category) ThumbnailResourceId() string {
+	return c.thumbnailResourceId
 }
 
 func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail string) *Category {
 	return &Category{
-		id:        id,
-		slug:      slug,
-		title:     localization.UnmarshalTranslationFromDatabase(title),
-		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
+		id:                  id,
+		slug:                slug,
+		title:               localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailResourceId: thumbnail,
 	}
 }

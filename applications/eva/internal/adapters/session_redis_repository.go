@@ -107,16 +107,40 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 // GetSessionsByAccountId - Get sessions
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 
-	// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
-	keys, _, err := r.client.Scan(ctx, 0, sessionPrefix+session.GetSearchTermForAccounts(accountId), 100).Result()
+	var keys []string
 
-	if err != nil {
+	curse := 0
 
-		if err == redis.Nil {
-			return nil, session.ErrSessionsNotFound
+	getKeys := func() ([]string, uint64, error) {
+		// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
+		newKeys, newCursor, err := r.client.Scan(ctx, uint64(curse), sessionPrefix+session.GetSearchTermForAccounts(accountId), 100).Result()
+
+		if err != nil {
+
+			if err == redis.Nil {
+				return nil, 0, session.ErrSessionsNotFound
+			}
+
+			return nil, 0, fmt.Errorf("failed to get sessions for account: %v", err)
 		}
 
-		return nil, fmt.Errorf("failed to get sessions for account: %v", err)
+		return newKeys, newCursor, nil
+	}
+
+	for {
+		newKeys, newCursor, err := getKeys()
+
+		if err != nil {
+			return nil, err
+		}
+
+		keys = append(keys, newKeys...)
+
+		if newCursor == 0 {
+			break
+		} else {
+			curse = int(newCursor)
+		}
 	}
 
 	// sort keys - based on cursor

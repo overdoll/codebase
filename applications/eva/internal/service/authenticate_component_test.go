@@ -148,8 +148,9 @@ func viewerAccountSettings(t *testing.T, client *graphql.Client) ViewerAccountSe
 func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	t.Parallel()
 
-	testAccountId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
-	testAccountEmail := "i2fhz.artist_verified@inbox.testmail.app"
+	newAcc := seedNormalAccount(t)
+	testAccountId := newAcc.ID()
+	testAccountEmail := newAcc.Email()
 
 	// use passport with user
 	client, _ := getHttpClientWithAuthenticatedAccount(t, testAccountId)

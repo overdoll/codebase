@@ -47,7 +47,7 @@ type Commands struct {
 type Queries struct {
 	SearchAccounts                              query.SearchAccountsHandler
 	AccountById                                 query.AccountByIdHandler
-	AccountsById                                query.AccountsByIdHandler
+	AccountsByIds                               query.AccountsByIdsHandler
 	AccountByEmail                              query.AccountByEmailHandler
 	AccountByUsername                           query.AccountByUsernameHandler
 	AccountEmailByEmail                         query.AccountEmailByEmailHandler

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9aacafc9f212d148d1878eb09b2aa758 */
+/* @relayHash ad100ea88997618636e9a1868c8ce91d */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -55,6 +55,7 @@ fragment SearchCharactersFragment_3cTRis on Query {
         slug
         thumbnail {
           ...ResourceItemFragment
+          id
         }
         __typename
       }
@@ -236,7 +237,8 @@ return {
                           }
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -302,7 +304,7 @@ return {
     ]
   },
   "params": {
-    "id": "9aacafc9f212d148d1878eb09b2aa758",
+    "id": "ad100ea88997618636e9a1868c8ce91d",
     "metadata": {},
     "name": "SearchCharactersPaginationFragment",
     "operationKind": "query",

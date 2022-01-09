@@ -85,7 +85,7 @@ type UnlockAccount struct {
 func TestAccount_lock_unlock(t *testing.T) {
 	t.Parallel()
 
-	acc := createFakeNormalAccount(t)
+	acc := seedNormalAccount(t)
 	accountId := acc.ID()
 
 	client, _ := getGrpcClient(t)

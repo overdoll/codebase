@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsQuery.graphql.ts
 /* @relayHash 57c10671f63d6084e00f484cf486c8c1 */
+=======
+/* @relayHash 24ad781fb7666b08216fa153646ab0dd */
+>>>>>>> master:applications/medusa/src/__generated__/MyClubsQuery.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -33,9 +37,27 @@ query ClubPostsQuery(
   club(slug: $slug) {
     id
   }
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsQuery.graphql.ts
   viewer {
     ...ClubPostsFragment
     id
+=======
+}
+
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+    id
+  }
+}
+
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+>>>>>>> master:applications/medusa/src/__generated__/MyClubsQuery.graphql.ts
   }
 }
 
@@ -252,7 +274,8 @@ return {
                               }
                             ],
                             "storageKey": null
-                          }
+                          },
+                          (v1/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -323,7 +346,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPostsQuery.graphql.ts
     "id": "57c10671f63d6084e00f484cf486c8c1",
+=======
+    "id": "24ad781fb7666b08216fa153646ab0dd",
+>>>>>>> master:applications/medusa/src/__generated__/MyClubsQuery.graphql.ts
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

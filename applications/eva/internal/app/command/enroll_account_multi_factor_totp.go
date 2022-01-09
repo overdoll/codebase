@@ -53,7 +53,7 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 	// if user doesn't have 2FA enabled, enable it
 	if !acc.MultiFactorEnabled() {
 		if _, err := h.ar.UpdateAccount(ctx, acc.ID(), func(a *account.Account) error {
-			return a.ToggleMultiFactor()
+			return a.EnableMultiFactor()
 		}); err != nil {
 			return err
 		}

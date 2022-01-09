@@ -30,12 +30,11 @@ type AuthenticationToken struct {
 }
 
 var (
-	ErrAlreadyVerified   = errors.New("token already verified")
-	ErrNotVerified       = errors.New("token not yet verified")
-	ErrTokenNotRevocable = errors.New("token cannot be revoked by the current user")
-	ErrInvalidSecret     = errors.New("token secret is invalid")
-	ErrTokenNotFound     = errors.New("token not found")
-	ErrInvalidDevice     = errors.New("token viewed or used on an invalid device")
+	ErrAlreadyVerified = errors.New("token already verified")
+	ErrNotVerified     = errors.New("token not yet verified")
+	ErrInvalidSecret   = errors.New("token secret is invalid")
+	ErrTokenNotFound   = errors.New("token not found")
+	ErrInvalidDevice   = errors.New("token viewed or used on an invalid device")
 )
 
 func NewAuthenticationToken(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {

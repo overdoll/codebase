@@ -4,8 +4,6 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/principal"
@@ -13,25 +11,6 @@ import (
 
 type EntityResolver struct {
 	App *app.Application
-}
-
-func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error) {
-
-	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
-		ClubId:    id.GetCompositePartID(1),
-		AccountId: id.GetCompositePartID(0),
-	})
-
-	if err != nil {
-
-		if err == club.ErrClubMemberNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalClubMemberToGraphql(ctx, clb), nil
 }
 
 func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*types.Audience, error) {
@@ -42,34 +21,10 @@ func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*typ
 	})
 
 	if err != nil {
-
-		if err == post.ErrAudienceNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
 	return types.MarshalAudienceToGraphQL(ctx, media), nil
-}
-
-func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
-
-	media, err := r.App.Queries.ClubById.Handle(ctx, query.ClubById{
-		Principal: principal.FromContext(ctx),
-		Id:        id.GetID(),
-	})
-
-	if err != nil {
-
-		if err == club.ErrClubNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalClubToGraphQL(ctx, media), nil
 }
 
 func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error) {
@@ -80,11 +35,6 @@ func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types
 	})
 
 	if err != nil {
-
-		if err == post.ErrSeriesNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -99,11 +49,6 @@ func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*typ
 	})
 
 	if err != nil {
-
-		if err == post.ErrCategoryNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -118,11 +63,6 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 	})
 
 	if err != nil {
-
-		if err == post.ErrCharacterNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -135,6 +75,12 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 	}, nil
 }
 
+func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
+	return &types.Club{
+		ID: id,
+	}, nil
+}
+
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
 
 	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
@@ -143,11 +89,6 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 	})
 
 	if err != nil {
-
-		if err == post.ErrNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 

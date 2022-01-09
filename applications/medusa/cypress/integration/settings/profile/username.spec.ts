@@ -1,21 +1,13 @@
 import ChanceJS from 'chance'
+import { generateUsernameAndEmail } from '../../../support/generate'
 
 const chance = new ChanceJS()
 
 describe('Settings - Change Username', () => {
-  const currentUsername =
-    chance.string({
-      length: 12,
-      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-    })
-
-  before(() => {
-    cy.cleanup()
-    cy.joinWithNewAccount(currentUsername)
-  })
+  const [username, email] = generateUsernameAndEmail()
 
   beforeEach(() => {
-    cy.preserveAccount()
+    cy.joinWithNewAccount(username, email)
   })
 
   it('should be able to change username', () => {

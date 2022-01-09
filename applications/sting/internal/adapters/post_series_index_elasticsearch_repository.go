@@ -18,11 +18,11 @@ import (
 )
 
 type seriesDocument struct {
-	Id        string            `json:"id"`
-	Slug      string            `json:"slug"`
-	Thumbnail string            `json:"thumbnail"`
-	Title     map[string]string `json:"title"`
-	CreatedAt string            `json:"created_at"`
+	Id                  string            `json:"id"`
+	Slug                string            `json:"slug"`
+	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	Title               map[string]string `json:"title"`
+	CreatedAt           string            `json:"created_at"`
 }
 
 const seriesIndexProperties = `
@@ -33,7 +33,7 @@ const seriesIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail": {
+	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
 	"title":  ` + localization.ESIndex + `
@@ -98,7 +98,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.Thumbnail)
+		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.ThumbnailResourceId)
 		newMedia.Node = paging.NewNode(md.CreatedAt)
 
 		meds = append(meds, newMedia)
@@ -130,11 +130,11 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 			}
 
 			doc := seriesDocument{
-				Id:        m.Id,
-				Slug:      m.Slug,
-				Thumbnail: m.Thumbnail,
-				Title:     m.Title,
-				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+				Id:                  m.Id,
+				Slug:                m.Slug,
+				ThumbnailResourceId: m.ThumbnailResourceId,
+				Title:               m.Title,
+				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.

@@ -7,9 +7,19 @@ import (
 )
 
 type EvaService interface {
-	GetAccount(context.Context, string) (*principal.Principal, error)
+	GetAccount(ctx context.Context, accountId string) (*principal.Principal, error)
 }
 
 type ParleyService interface {
-	GetNextModeratorId(context.Context) (string, error)
+	GetNextModeratorId(ctx context.Context) (string, error)
+}
+
+type StellaService interface {
+	CanAccountPostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
+}
+
+type LoaderService interface {
+	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error)
+	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
+	AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error)
 }

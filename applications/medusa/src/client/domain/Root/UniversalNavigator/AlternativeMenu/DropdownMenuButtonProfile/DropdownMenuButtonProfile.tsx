@@ -12,7 +12,11 @@ interface Props {
 const DropdownMenuButtonProfileGQL = graphql`
   fragment DropdownMenuButtonProfileFragment on Account {
     username
-    avatar
+    avatar {
+      urls {
+        url
+      }
+    }
   }
 `
 
@@ -28,7 +32,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
         align='center'
       >
         <Avatar
-          src={data?.avatar as string}
+          src={data?.avatar?.urls[0]?.url}
           pointerEvents='none'
           mr={4}
           borderRadius='25%'

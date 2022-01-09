@@ -5,7 +5,9 @@ go_library(
     srcs = [
         "carrier.go",
         "eva.go",
+        "loader.go",
         "parley.go",
+        "stella.go",
         "sting.go",
         "temporal.go",
     ],
@@ -14,7 +16,9 @@ go_library(
     deps = [
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
+        "//applications/loader/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
+        "//applications/stella/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/passport",
         "@com_github_grpc_ecosystem_go_grpc_middleware//retry",

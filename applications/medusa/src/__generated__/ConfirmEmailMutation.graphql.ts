@@ -7,6 +7,7 @@ import { ConcreteRequest } from "relay-runtime";
 export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type ConfirmAccountEmailInput = {
     id: string;
+    secret: string;
 };
 export type ConfirmEmailMutationVariables = {
     input: ConfirmAccountEmailInput;

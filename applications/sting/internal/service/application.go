@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"os"
-
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
@@ -20,60 +19,70 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewParleyGrpc(parleyClient)),
+	return createApplication(ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewLoaderGrpc(loaderClient)),
+		func() {
+			cleanup()
+			cleanup2()
+			cleanup3()
+			cleanup4()
+		}
+}
+
+func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+
+	bootstrap.NewBootstrap(ctx)
+
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+
+	return createApplication(ctx,
+			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
+			// this makes testing easier because we can get reproducible tests with each run
+			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
+			adapters.NewParleyGrpc(parleyClient),
+			StellaServiceMock{},
+			LoaderServiceMock{}),
 		func() {
 			cleanup()
 			cleanup2()
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella command.StellaService, loader command.LoaderService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
 	client := bootstrap.InitializeElasticSearchSession()
 
-	awsSession := bootstrap.InitializeAWSSession()
-
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	clubRepo := adapters.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(client, session)
-
-	resourceRepo := adapters.NewResourceS3Repository(awsSession)
-
 	return app.Application{
 		Commands: app.Commands{
-			TusComposer: command.NewTusComposerHandler(resourceRepo),
-
-			CreatePost:  command.NewCreatePostHandler(postRepo, clubRepo, postIndexRepo, eva, parley),
+			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo, eva, parley, stella),
 			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eva),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley, loader),
 			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, postIndexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
-			IndexAllClubs:      command.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
-			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, resourceRepo),
+			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, loader),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
-
-			CreateClub:                    command.NewCreateClubHandler(clubRepo, clubIndexRepo),
-			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
-			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
-			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
-			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -97,17 +106,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
-
-			SearchClubs:                 query.NewSearchClubsHandler(clubIndexRepo),
-			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
-			ClubById:                    query.NewClubByIdHandler(clubRepo),
-			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
-			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
-			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
-			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
-			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
-			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, clubIndexRepo, postIndexRepo, resourceRepo, parley),
+		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}
 }

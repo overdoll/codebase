@@ -10,7 +10,6 @@ import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 interface Props {
   queryRef: RegisterFragment$key

@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
 /* @relayHash 014f9302f275696bce3a67eeb418df85 */
+=======
+/* @relayHash 295d8f39142d85d775d1c5ad0a5b97b0 */
+>>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -33,8 +37,18 @@ query SelectClubsQuery(
     ...ClubPreviewFragment
     id
   }
+<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
   viewer {
     ...ClubListSelectorFragment
+=======
+}
+
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+>>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
     id
   }
 }
@@ -274,10 +288,72 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
                       (v2/*: any*/),
                       (v3/*: any*/),
                       (v4/*: any*/),
                       (v5/*: any*/),
+=======
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "slug",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "thumbnail",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "type",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ResourceUrl",
+                            "kind": "LinkedField",
+                            "name": "urls",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "url",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "mimeType",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          (v1/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+>>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
                       {
                         "alias": null,
                         "args": null,
@@ -344,7 +420,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
     "id": "014f9302f275696bce3a67eeb418df85",
+=======
+    "id": "295d8f39142d85d775d1c5ad0a5b97b0",
+>>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

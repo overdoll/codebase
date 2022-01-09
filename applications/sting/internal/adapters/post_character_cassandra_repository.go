@@ -18,7 +18,7 @@ var characterTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"name",
-		"thumbnail",
+		"thumbnail_resource_id",
 		"series_id",
 	},
 	PartKey: []string{"id"},
@@ -26,11 +26,11 @@ var characterTable = table.New(table.Metadata{
 })
 
 type character struct {
-	Id        string            `db:"id"`
-	Slug      string            `db:"slug"`
-	Name      map[string]string `db:"name"`
-	Thumbnail string            `db:"thumbnail"`
-	SeriesId  string            `db:"series_id"`
+	Id                  string            `db:"id"`
+	Slug                string            `db:"slug"`
+	Name                map[string]string `db:"name"`
+	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	SeriesId            string            `db:"series_id"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -143,12 +143,12 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			char.Id,
 			char.Slug,
 			char.Name,
-			char.Thumbnail,
+			char.ThumbnailResourceId,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
 				serial.Title,
-				serial.Thumbnail,
+				serial.ThumbnailResourceId,
 			),
 		))
 	}
@@ -184,7 +184,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 		char.Id,
 		char.Slug,
 		char.Name,
-		char.Thumbnail,
+		char.ThumbnailResourceId,
 		media,
 	), nil
 }

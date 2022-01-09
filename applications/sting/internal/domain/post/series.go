@@ -3,7 +3,6 @@ package post
 import (
 	"errors"
 
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -15,10 +14,10 @@ var (
 type Series struct {
 	*paging.Node
 
-	id        string
-	slug      string
-	title     *localization.Translation
-	thumbnail *resource.Resource
+	id                  string
+	slug                string
+	title               *localization.Translation
+	thumbnailResourceId string
 }
 
 func (m *Series) ID() string {
@@ -33,15 +32,15 @@ func (m *Series) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *Series) Thumbnail() *resource.Resource {
-	return m.thumbnail
+func (m *Series) ThumbnailResourceId() string {
+	return m.thumbnailResourceId
 }
 
 func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail string) *Series {
 	return &Series{
-		id:        id,
-		slug:      slug,
-		title:     localization.UnmarshalTranslationFromDatabase(title),
-		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
+		id:                  id,
+		slug:                slug,
+		title:               localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailResourceId: thumbnail,
 	}
 }

@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPublicPostsPaginationQuery.graphql.ts
 /* @relayHash ecd48f33fc548199cdd9e0a132f39796 */
+=======
+/* @relayHash 13623869a58e56d03579b640a3518e81 */
+>>>>>>> master:applications/medusa/src/__generated__/PublishedPostsPaginationQuery.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -47,6 +51,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -245,7 +250,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -310,7 +316,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubPublicPostsPaginationQuery.graphql.ts
     "id": "ecd48f33fc548199cdd9e0a132f39796",
+=======
+    "id": "13623869a58e56d03579b640a3518e81",
+>>>>>>> master:applications/medusa/src/__generated__/PublishedPostsPaginationQuery.graphql.ts
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

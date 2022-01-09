@@ -1,8 +1,6 @@
 package session
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"overdoll/applications/eva/internal/domain/location"
 	"time"
@@ -51,7 +49,7 @@ func NewSession(accountId, userAgent, ip string, location *location.Location) (*
 	// account ID is hashed so you dont know who the session belongs to
 
 	return &Session{
-		id:        ksuid.New().String() + ":account:" + hashAccountId(accountId),
+		id:        ksuid.New().String() + ":account:" + accountId,
 		device:    userAgent,
 		ip:        ip,
 		location:  location,
@@ -124,10 +122,5 @@ func (s *Session) CanRevoke(requester *principal.Principal) error {
 }
 
 func GetSearchTermForAccounts(accountId string) string {
-	return "*:account:" + hashAccountId(accountId)
-}
-
-func hashAccountId(accountId string) string {
-	hash := sha256.Sum256([]byte(accountId))
-	return hex.EncodeToString(hash[:])
+	return "*:account:" + accountId
 }

@@ -4,22 +4,18 @@ go_library(
     name = "activities",
     srcs = [
         "activities.go",
-        "add_club_member_to_list.go",
         "discard_post.go",
+        "index_post.go",
         "publish_post.go",
         "reassign_moderator.go",
-        "remove_club_member_from_list.go",
         "remove_post.go",
         "services.go",
         "submit_post.go",
-        "update_club_member_total_count.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
-        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
-        "//applications/sting/internal/domain/resource",
         "@com_github_pkg_errors//:errors",
     ],
 )

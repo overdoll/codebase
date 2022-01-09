@@ -2,7 +2,6 @@ package account
 
 import (
 	"context"
-
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -18,8 +17,7 @@ type Repository interface {
 	GetAccountByUsername(ctx context.Context, username string) (*Account, error)
 	UpdateAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(account *Account) error) (*Account, error)
 
-	AddAccountEmail(ctx context.Context, account *Account, emailConfirmation *EmailConfirmation) (*Email, error)
-	ConfirmAccountEmail(ctx context.Context, requester *principal.Principal, email string) (*Email, error)
+	CreateAccountEmail(ctx context.Context, requester *principal.Principal, email *Email) error
 	GetAccountEmails(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Email, error)
 	GetAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) (*Email, error)
 	DeleteAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) error

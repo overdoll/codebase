@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-type StartDiscardPost struct {
+type DiscardPost struct {
 	PostId string
 }
 
@@ -19,7 +19,7 @@ func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository) DiscardP
 	return DiscardPostHandler{pr: pr, pi: pi}
 }
 
-func (h DiscardPostHandler) Handle(ctx context.Context, cmd StartDiscardPost) error {
+func (h DiscardPostHandler) Handle(ctx context.Context, cmd DiscardPost) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 		return pending.MakeDiscarding()

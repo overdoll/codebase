@@ -1,0 +1,32 @@
+"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
+  url: URI!
+  mimeType: String!
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+
+type Resource implements Node @key(fields: "id") {
+  """An ID uniquely identifying this resource."""
+  id: ID!
+
+  """The type of resource - either an image or a video."""
+  type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
+  urls: [ResourceUrl!]!
+}

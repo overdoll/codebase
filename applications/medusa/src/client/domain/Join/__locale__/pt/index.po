@@ -93,7 +93,7 @@ msgstr ""
 #~ msgid "Submitting"
 #~ msgstr ""
 
-#: src/client/domain/Join/Join/Join.tsx:124
+#: src/client/domain/Join/Join/Join.tsx:123
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
@@ -109,11 +109,11 @@ msgstr ""
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
-#: src/client/domain/Join/Join/Join.tsx:96
+#: src/client/domain/Join/Join/Join.tsx:95
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/client/domain/Join/Register/Register.tsx:89
+#: src/client/domain/Join/Register/Register.tsx:88
 msgid "There was an issue with registration."
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Join/Register/Register.tsx:82
+#: src/client/domain/Join/Register/Register.tsx:81
 msgid "Welcome to overdoll!"
 msgstr ""
 

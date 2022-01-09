@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
 /* @relayHash 90654f1dcf22efa49208a73bcf292896 */
+=======
+/* @relayHash a13f5ff988778087fcb6ceeb977ad244 */
+>>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -102,8 +106,19 @@ fragment PublicClubPostsFragment on Club {
   id
 }
 
+<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
 fragment ResourceIconFragment on Resource {
   ...ResourceItemFragment
+=======
+fragment PostStateReviewPreviewFragment on Post {
+  id
+  reference
+  postedAt
+  content {
+    ...ResourceItemFragment
+    id
+  }
+>>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
 }
 
 fragment ResourceItemFragment on Resource {
@@ -370,8 +385,71 @@ return {
                         "name": "account",
                         "plural": false,
                         "selections": [
+<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
                           (v6/*: any*/),
                           (v2/*: any*/)
+=======
+                          (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "reference",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "postedAt",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "content",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceUrl",
+                                "kind": "LinkedField",
+                                "name": "urls",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "url",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              },
+                              (v5/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          (v4/*: any*/)
+>>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
                         ],
                         "storageKey": null
                       },
@@ -501,7 +579,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
     "id": "90654f1dcf22efa49208a73bcf292896",
+=======
+    "id": "a13f5ff988778087fcb6ceeb977ad244",
+>>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
     "metadata": {},
     "name": "ViewClubQuery",
     "operationKind": "query",

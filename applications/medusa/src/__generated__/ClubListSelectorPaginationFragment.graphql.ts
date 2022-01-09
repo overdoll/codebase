@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubListSelectorPaginationFragment.graphql.ts
 /* @relayHash 03e1a13324b86942dbcf32bfd52ca983 */
+=======
+/* @relayHash 2309779fe6c4ed90cac9fbd2495f9f59 */
+>>>>>>> master:applications/medusa/src/__generated__/ManageClubsPaginationFragment.graphql.ts
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -37,7 +41,27 @@ query ClubListSelectorPaginationFragment(
   }
 }
 
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubListSelectorPaginationFragment.graphql.ts
 fragment ClubListSelectorFragment_3cTRis on Account {
+=======
+fragment ClubPreviewFragment on Club {
+  name
+  slug
+  thumbnail {
+    ...ResourceIconFragment
+    id
+  }
+}
+
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment MyClubsFragment_3cTRis on Account {
+>>>>>>> master:applications/medusa/src/__generated__/ManageClubsPaginationFragment.graphql.ts
   clubs(first: $first, after: $after, name: $name) {
     edges {
       node {
@@ -281,7 +305,8 @@ return {
                                   }
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v7/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -349,7 +374,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/ClubListSelectorPaginationFragment.graphql.ts
     "id": "03e1a13324b86942dbcf32bfd52ca983",
+=======
+    "id": "2309779fe6c4ed90cac9fbd2495f9f59",
+>>>>>>> master:applications/medusa/src/__generated__/ManageClubsPaginationFragment.graphql.ts
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

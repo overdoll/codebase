@@ -1,0 +1,5 @@
+[db]
+keyspace = "stella"
+
+[temporal]
+queue = "stella"

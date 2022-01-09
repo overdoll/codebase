@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/stella/proto/v1_go_proto_/overdoll/applications/stella/proto/stella.pb.go

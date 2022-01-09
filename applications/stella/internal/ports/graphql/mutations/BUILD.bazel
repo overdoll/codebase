@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mutations",
+    srcs = ["club.go"],
+    importpath = "overdoll/applications/stella/internal/ports/graphql/mutations",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/app",
+        "//applications/stella/internal/app/command",
+        "//applications/stella/internal/app/workflows",
+        "//applications/stella/internal/domain/club",
+        "//applications/stella/internal/ports/graphql/types",
+        "//libraries/passport",
+        "//libraries/principal",
+        "@com_github_spf13_viper//:viper",
+        "@io_temporal_go_sdk//client",
+    ],
+)

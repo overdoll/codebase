@@ -5,8 +5,6 @@ import (
 
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
-	"overdoll/applications/parley/internal/domain/infraction"
-	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -38,11 +36,6 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 	})
 
 	if err != nil {
-
-		if err == infraction.ErrAccountInfractionHistoryNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -61,11 +54,6 @@ func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (
 	})
 
 	if err != nil {
-
-		if err == infraction.ErrPostAuditLogNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -84,11 +72,6 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 	})
 
 	if err != nil {
-
-		if err == infraction.ErrPostRejectionReasonNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -107,11 +90,6 @@ func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*t
 	})
 
 	if err != nil {
-
-		if err == report.ErrPostReportNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -130,11 +108,6 @@ func (r EntityResolver) FindPostReportReasonByID(ctx context.Context, id relay.I
 	})
 
 	if err != nil {
-
-		if err == report.ErrPostReportReasonNotFound {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 

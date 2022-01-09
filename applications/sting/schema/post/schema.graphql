@@ -13,8 +13,11 @@ type Post implements Node @key(fields: "id") {
   """The contributor who contributed this post"""
   contributor: Account!
 
-  """DraggableContent belonging to this post"""
-  content: [Resource!]!
+  """The club belonging to the post"""
+  club: Club!
+
+  """Content belonging to this post"""
+  content: [Resource!]! @goField(forceResolver: true)
 
   """The date and time of when this post was created"""
   createdAt: Time!
