@@ -24,6 +24,11 @@ bazel-*
 build
 .nyc_output
 applications/medusa/coverage
+tmp
+dist
+artifacts
+.next
+out
 
 # IDEA
 .ijwb
