@@ -11,8 +11,8 @@ export default function LargeGridItem ({
 }: Props): JSX.Element {
   return (
     <WrapItem
-      h='45%'
       w='45%'
+      h='100-40vw'
       {...rest}
     >
       {children}

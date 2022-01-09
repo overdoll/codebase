@@ -19,7 +19,7 @@ export default function StatisticNumber ({
           {text}
         </Text>
       </Flex>
-      <Text w={48} lineHeight={1} color={`${colorScheme}.100`} fontSize='7xl' fontWeight='bold'>
+      <Text lineHeight={1} color={`${colorScheme}.100`} fontSize='7xl' fontWeight='bold'>
         {value}
       </Text>
     </Box>

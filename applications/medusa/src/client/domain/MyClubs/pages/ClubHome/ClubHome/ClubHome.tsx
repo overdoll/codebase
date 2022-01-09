@@ -1,5 +1,10 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubHomeQuery } from '@//:artifacts/ClubHomeQuery.graphql'
+import LargeClubHeader from '../../../components/LargeClubHeader/LargeClubHeader'
+import { Stack } from '@chakra-ui/react'
+import { t } from '@lingui/macro'
+import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -8,7 +13,8 @@ interface Props {
 const Query = graphql`
   query ClubHomeQuery($slug: String!) {
     club(slug: $slug) {
-      name
+      membersCount
+      ...LargeClubHeaderFragment
     }
   }
 `
@@ -19,7 +25,14 @@ export default function ClubHome ({ query }: Props): JSX.Element {
     query
   )
 
+  const { i18n } = useLingui()
+
+  const number = queryData?.club?.membersCount.toLocaleString() as string
+
   return (
-    <>home for club {queryData?.club?.name}</>
+    <Stack spacing={8}>
+      <LargeClubHeader query={queryData?.club} />
+      <StatisticNumber value={number} text={i18n._(t`Members`)} />
+    </Stack>
   )
 }

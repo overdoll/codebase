@@ -797,14 +797,14 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(posts)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/pages/ManagePosts/ManagePosts'
+                './domain/MyClubs/pages/ClubPosts/RootClubPosts'
               )
             ),
             prepare: ({
               params,
               query
             }) => {
-              const Query = require('@//:artifacts/MyPostsQuery.graphql')
+              const Query = require('@//:artifacts/ClubPostsQuery.graphql')
               return {
                 query: {
                   query: Query,
