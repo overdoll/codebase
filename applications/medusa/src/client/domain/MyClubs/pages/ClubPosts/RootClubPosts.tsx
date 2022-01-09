@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
@@ -11,6 +11,8 @@ import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorB
 import { useParams } from '@//:modules/routing/useParams'
 import { Box, Select, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
+import { useQueryParam } from 'use-query-params'
+import { PostState } from '@//:artifacts/ClubPostsFragment.graphql'
 
 interface Props {
   prepared: {
@@ -26,12 +28,18 @@ export default function RootClubPosts (props: Props): JSX.Element {
 
   const match = useParams()
 
+  const [postState, setPostState] = useQueryParam<PostState | null | undefined>('state')
+
   const onChange = (e): void => {
+    setPostState(e.target.value)
+  }
+
+  useEffect(() => {
     loadQuery({
       slug: match.slug as string,
-      state: e.target.value
+      state: postState
     })
-  }
+  }, [postState])
 
   return (
     <>
@@ -44,7 +52,7 @@ export default function RootClubPosts (props: Props): JSX.Element {
                 Club Posts
               </PageSectionTitle>
             </PageSectionWrap>
-            <Select placeholder='' onChange={onChange}>
+            <Select placeholder='' defaultValue={postState ?? 'PUBLISHED'} onChange={onChange}>
               <option value='PUBLISHED'><Trans>
                 Published
               </Trans>

@@ -809,7 +809,8 @@ const routes: Route[] = [
                 query: {
                   query: Query,
                   variables: {
-                    slug: params.slug
+                    slug: params.slug,
+                    state: query.get('state')
                   },
                   options: {
                     fetchPolicy: 'store-or-network'

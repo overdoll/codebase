@@ -3,9 +3,12 @@ import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { GridWrap, LargeGridItem } from '../../../../../components/ContentSelection'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Heading } from '@chakra-ui/react'
+import { Heading, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent from '../../../../../components/Posts/PostPreviewContent/PostPreviewContent'
+import { Link } from '@//:modules/routing'
+import generatePath from '@//:modules/routing/generatePath'
+import { useParams } from '@//:modules/routing/useParams'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -60,12 +63,59 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     queryData.viewer
   )
 
+  const match = useParams()
+
+  if (data.posts.edges.length < 1) {
+    return (
+      <Text>
+        <Trans>
+          No posts found
+        </Trans>
+      </Text>
+    )
+  }
+
   return (
     <GridWrap spacing={0}>
-      {data.posts.edges.map((item, index) =>
-        <LargeGridItem h={230} key={index}>
-          <PostPreviewContent query={item.node} />
-        </LargeGridItem>
+      {data.posts.edges.map((item, index) => {
+        const draftPostPath = (): string => {
+          if (match?.slug == null) return ''
+
+          return generatePath('/club/:slug/:entity', {
+            slug: match?.slug,
+            entity: 'create-post'
+          })
+        }
+
+        switch (item.node.state) {
+          case 'DRAFT':
+            return (
+              <LargeGridItem h={230} key={index}>
+                <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
+                  <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
+                    <PostPreviewContent query={item.node} />
+                  </Link>
+                </ClickableBox>
+              </LargeGridItem>
+            )
+          case 'PUBLISHED':
+            return (
+              <LargeGridItem h={230} key={index}>
+                <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
+                  <Link to={`/post/${item.node.reference as string}`}>
+                    <PostPreviewContent query={item.node} />
+                  </Link>
+                </ClickableBox>
+              </LargeGridItem>
+            )
+          default:
+            return (
+              <LargeGridItem h={230} key={index}>
+                <PostPreviewContent query={item.node} />
+              </LargeGridItem>
+            )
+        }
+      }
       )}
       {hasNext &&
         <LargeGridItem>
@@ -84,79 +134,4 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         </LargeGridItem>}
     </GridWrap>
   )
-
-  /*
-
-  return (
-    <Tabs isFitted variant='soft-rounded' colorScheme='gray'>
-      <TabList>
-        <SimpleGrid align='center' w='100%' columns={2}>
-          <Tab _selected={{
-            color: 'teal.400',
-            bg: 'gray.800'
-          }}
-          >
-            <Flex align='center' direction='column'>
-              <Icon mb={1} icon={ContentBrushPen} fill='inherit' w={4} h={4} />
-              <Trans>
-                Drafts
-              </Trans>
-            </Flex>
-          </Tab>
-          <Tab _selected={{
-            color: 'purple.400',
-            bg: 'gray.800'
-          }}
-          >
-            <Flex align='center' direction='column'>
-              <Icon mb={1} icon={LoginKeys} fill='inherit' w={4} h={4} />
-              <Trans>
-                In Review
-              </Trans>
-            </Flex>
-          </Tab>
-          <Tab _selected={{
-            color: 'green.400',
-            bg: 'gray.800'
-          }}
-          >
-            <Flex align='center' direction='column'>
-              <Icon mb={1} icon={CheckCircle} fill='inherit' w={4} h={4} />
-              <Trans>
-                Published
-              </Trans>
-            </Flex>
-          </Tab>
-          <Tab _selected={{
-            color: 'orange.400',
-            bg: 'gray.800'
-          }}
-          >
-            <Flex align='center' direction='column'>
-              <Icon mb={1} icon={DeleteCircle} fill='inherit' w={4} h={4} />
-              <Trans>
-                Rejected
-              </Trans>
-            </Flex>
-          </Tab>
-        </SimpleGrid>
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <PostStateDraft query={queryData?.viewer as PostStateDraftFragment$key} />
-        </TabPanel>
-        <TabPanel>
-          <PostStateReview query={queryData?.viewer as PostStateReviewFragment$key} />
-        </TabPanel>
-        <TabPanel>
-          <PostStatePublished query={queryData?.club as PostStatePublishedFragment$key} />
-        </TabPanel>
-        <TabPanel>
-          <PostStateRejected query={queryData?.viewer as PostStateRejectedFragment$key} />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-  )
-
-   */
 }
