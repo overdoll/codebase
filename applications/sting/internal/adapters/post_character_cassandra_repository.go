@@ -197,28 +197,3 @@ func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characte
 		media,
 	), nil
 }
-
-func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Character) error) (*post.Character, error) {
-
-	char, err := r.getCharacterById(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	oldTotalLikes := char.TotalLikes()
-
-	if err = updateFn(char); err != nil {
-		return nil, err
-	}
-
-	newTotalLikes := char.TotalLikes()
-
-	builder := categoryTable.UpdateBuilder()
-
-	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", char.ID()); err != nil {
-		return nil, fmt.Errorf("failed to update character total likes: %v", err)
-	}
-
-	return char, nil
-}

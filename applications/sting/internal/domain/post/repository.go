@@ -13,7 +13,7 @@ type Repository interface {
 
 	CreatePostLike(ctx context.Context, requester *principal.Principal, like *Like) error
 	DeletePostLike(ctx context.Context, requester *principal.Principal, like *Like) error
-	GetPostLike(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
+	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
 
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -29,30 +29,22 @@ type Repository interface {
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
 
-	UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
-
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
-
-	UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
 
 	GetSeriesById(ctx context.Context, seriesIds []string) ([]*Series, error)
 	GetSingleSeriesById(ctx context.Context, requester *principal.Principal, serialId string) (*Series, error)
 	GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Series, error)
 
-	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
-
 	GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
 	GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Category, error)
-
-	UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 }
 
 type IndexRepository interface {
 	IndexPost(ctx context.Context, postId *Post) error
 	IndexAllPosts(ctx context.Context) error
-	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *PostFilters) ([]*Post, error)
+	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
 	DeletePostIndex(ctx context.Context) error
 	DeletePost(ctx context.Context, postId string) error
 

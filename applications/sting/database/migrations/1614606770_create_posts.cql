@@ -92,15 +92,5 @@ CREATE TABLE IF NOT EXISTS post_likes
     post_id          text,
     liked_account_id text,
     liked_at         timeuuid,
-    bucket           int,
     primary key ( (post_id, liked_account_id) )
 );
-
-CREATE TABLE IF NOT EXISTS account_post_likes
-(
-    post_id          text,
-    bucket           int,
-    liked_account_id text,
-    liked_at         timeuuid,
-    primary key ( (liked_account_id, bucket), liked_at, post_id )
-) WITH CLUSTERING ORDER BY (liked_at ASC);

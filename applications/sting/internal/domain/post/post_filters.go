@@ -1,18 +1,13 @@
 package post
 
 import (
-	"errors"
 	"strings"
 
 	"overdoll/libraries/principal"
 )
 
-var (
-	ErrInvalidOrderBy = errors.New("invalid order_by column")
-)
-
-type PostFilters struct {
-	orderBy       string
+type Filters struct {
+	sortBy        Sorting
 	moderatorId   *string
 	contributorId *string
 	clubId        *string
@@ -24,7 +19,7 @@ type PostFilters struct {
 	seriesSlugs    []string
 }
 
-func NewPostFilters(orderBy string, state, moderatorId, contributorId, clubId *string, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId, clubId *string, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*Filters, error) {
 
 	var newState *string
 
@@ -33,14 +28,19 @@ func NewPostFilters(orderBy string, state, moderatorId, contributorId, clubId *s
 		newState = &s
 	}
 
-	newOrderBy := strings.ToLower(orderBy)
+	sorting := UnknownSort
+	var err error
 
-	if newOrderBy != "created_at" {
-		return nil, ErrInvalidOrderBy
+	if sortBy != "" {
+		sorting, err = SortingFromString(sortBy)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return &PostFilters{
-		orderBy:        newOrderBy,
+	return &Filters{
+		sortBy:         sorting,
 		state:          newState,
 		moderatorId:    moderatorId,
 		contributorId:  contributorId,
@@ -52,44 +52,44 @@ func NewPostFilters(orderBy string, state, moderatorId, contributorId, clubId *s
 	}, nil
 }
 
-func (e *PostFilters) ModeratorId() *string {
+func (e *Filters) ModeratorId() *string {
 	return e.moderatorId
 }
 
-func (e *PostFilters) ContributorId() *string {
+func (e *Filters) ContributorId() *string {
 	return e.contributorId
 }
 
-func (e *PostFilters) ClubId() *string {
+func (e *Filters) ClubId() *string {
 	return e.clubId
 }
 
-func (e *PostFilters) State() *string {
+func (e *Filters) State() *string {
 	return e.state
 }
 
-func (e *PostFilters) OrderBy() string {
-	return e.orderBy
+func (e *Filters) OrderBy() Sorting {
+	return e.sortBy
 }
 
-func (e *PostFilters) AudienceSlugs() []string {
+func (e *Filters) AudienceSlugs() []string {
 	return e.audienceSlugs
 }
 
-func (e *PostFilters) SeriesSlugs() []string {
+func (e *Filters) SeriesSlugs() []string {
 	return e.seriesSlugs
 }
 
-func (e *PostFilters) CategorySlugs() []string {
+func (e *Filters) CategorySlugs() []string {
 	return e.categorySlugs
 }
 
-func (e *PostFilters) CharacterSlugs() []string {
+func (e *Filters) CharacterSlugs() []string {
 	return e.characterSlugs
 }
 
 // permission checks to gate what can actually be filtered
-func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) error {
+func CanViewWithFilters(requester *principal.Principal, filter *Filters) error {
 
 	// any state that isnt published needs permission checks
 	if (filter.state == nil) || (filter.state != nil && *filter.state != "published") {

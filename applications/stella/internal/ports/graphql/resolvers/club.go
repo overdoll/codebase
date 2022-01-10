@@ -35,8 +35,9 @@ func (r ClubResolver) Thumbnail(ctx context.Context, obj *types.Club, size *int)
 
 func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error) {
 
+	// non-authed users will just return nil
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
+		return nil, nil
 	}
 
 	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{

@@ -96,6 +96,16 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		CreatedAt:      result.CreatedAt(),
 		PostedAt:       result.PostedAt(),
 		ReassignmentAt: result.ReassignmentAt(),
+		Likes:          result.Likes(),
+	}
+}
+
+func MarshalPostLikeToGraphQL(ctx context.Context, result *post.Like) *PostLike {
+	return &PostLike{
+		ID:      relay.NewID(PostLike{}, result.PostId(), result.AccountId()),
+		LikedAt: result.LikedAt(),
+		Post:    &Post{ID: relay.NewID(Post{}, result.PostId())},
+		Account: &Account{ID: relay.NewID(Account{}, result.AccountId())},
 	}
 }
 
@@ -108,10 +118,11 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 	}
 
 	return &Audience{
-		ID:        relay.NewID(Audience{}, result.ID()),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
+		ID:         relay.NewID(Audience{}, result.ID()),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -124,10 +135,11 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 	}
 
 	return &Series{
-		ID:        relay.NewID(Series{}, result.ID()),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
+		ID:         relay.NewID(Series{}, result.ID()),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -140,10 +152,11 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 	}
 
 	return &Category{
-		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: res,
-		Slug:      result.Slug(),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		ID:         relay.NewID(Category{}, result.ID()),
+		Thumbnail:  res,
+		Slug:       result.Slug(),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -156,11 +169,12 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 	}
 
 	return &Character{
-		ID:        relay.NewID(Character{}, result.ID()),
-		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
-		Series:    MarshalSeriesToGraphQL(ctx, result.Series()),
+		ID:         relay.NewID(Character{}, result.ID()),
+		Name:       result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		Series:     MarshalSeriesToGraphQL(ctx, result.Series()),
+		TotalLikes: result.TotalLikes(),
 	}
 }
 

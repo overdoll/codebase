@@ -83,6 +83,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
 			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, loader),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
+
+			LikePost:     command.NewLikePostHandler(postRepo),
+			UndoLikePost: command.NewUndoLikePostHandler(postRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),

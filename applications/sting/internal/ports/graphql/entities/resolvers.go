@@ -13,6 +13,21 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+func (r EntityResolver) FindPostLikeByID(ctx context.Context, id relay.ID) (*types.PostLike, error) {
+
+	postLike, err := r.App.Queries.PostLikeById.Handle(ctx, query.PostLikeById{
+		Principal: principal.FromContext(ctx),
+		PostId:    id.GetCompositePartID(1),
+		AccountId: id.GetCompositePartID(0),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostLikeToGraphQL(ctx, postLike), nil
+}
+
 func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*types.Audience, error) {
 
 	media, err := r.App.Queries.AudienceById.Handle(ctx, query.AudienceById{

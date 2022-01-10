@@ -99,28 +99,3 @@ func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceI
 func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 	return r.getAudienceById(ctx, audienceId)
 }
-
-func (r PostsCassandraRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-
-	aud, err := r.getAudienceById(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	oldTotalLikes := aud.TotalLikes()
-
-	if err = updateFn(aud); err != nil {
-		return nil, err
-	}
-
-	newTotalLikes := aud.TotalLikes()
-
-	builder := audienceTable.UpdateBuilder()
-
-	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", aud.ID()); err != nil {
-		return nil, fmt.Errorf("failed to update audience total likes: %v", err)
-	}
-
-	return aud, nil
-}

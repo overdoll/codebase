@@ -22,16 +22,13 @@ type AudienceConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for audiences"""
-input AudiencesOrder {
-  """The field to order audiences by."""
-  field: AudiencesOrderField!
-}
+"""Properties by which audience connections can be sorted."""
+enum AudiencesSort {
+  """Audience by newest first"""
+  NEW
 
-"""Properties by which audience connections can be ordered."""
-enum AudiencesOrderField {
-  """Audience by created time"""
-  CREATED_AT
+  """Audience by popularity"""
+  POPULAR
 }
 
 extend type Query {
@@ -55,8 +52,8 @@ extend type Query {
     """Search by title of the audience."""
     title: String
 
-    """Ordering options for audiences."""
-    orderBy: AudiencesOrder! = { field: CREATED_AT }
+    """Sorting options for audiences."""
+    sortBy: AudiencesSort! = POPULAR
   ): AudienceConnection!
 
   """Get a single audience."""

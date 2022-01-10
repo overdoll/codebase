@@ -195,7 +195,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)

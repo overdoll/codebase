@@ -145,16 +145,14 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for posts"""
-input PostsOrder {
-  """The field to order security advisories by."""
-  field: PostsOrderField!
-}
 
-"""Properties by which posts connections can be ordered."""
-enum PostsOrderField {
-  """Posts by update time"""
-  CREATED_AT
+"""Properties by which posts connections can be sorted."""
+enum PostsSort {
+  """Posts by newest first"""
+  NEW
+
+  """Posts by popularity"""
+  POPULAR
 }
 
 extend type Account {
@@ -187,8 +185,8 @@ extend type Account {
     """Search by a post state."""
     state: PostState = REVIEW
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = NEW
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
@@ -220,8 +218,8 @@ extend type Account {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -293,8 +291,8 @@ extend type Query {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection!
 }
 
@@ -325,8 +323,8 @@ extend type Category {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -354,8 +352,8 @@ extend type Character {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -386,8 +384,8 @@ extend type Series {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -421,8 +419,8 @@ extend type Club {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -453,7 +451,7 @@ extend type Audience {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = POPULAR
   ): PostConnection! @goField(forceResolver: true)
 }

@@ -49,28 +49,22 @@ type CharacterConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for characters"""
-input CharactersOrder {
-  """The field to order characters by."""
-  field: CharactersOrderField!
+"""Properties by which character connections can be sorted."""
+enum CharactersSort {
+  """Characters by newest first"""
+  NEW
+
+  """Characters by popularity"""
+  POPULAR
 }
 
-"""Properties by which character connections can be ordered."""
-enum CharactersOrderField {
-  """Character by created time"""
-  CREATED_AT
-}
+"""Properties by which series connections can be sorted."""
+enum SeriesSort {
+  """Characters by newest first"""
+  NEW
 
-"""Ordering options for series"""
-input SeriesOrder {
-  """The field to order series by."""
-  field: SeriesOrderField!
-}
-
-"""Properties by which series connections can be ordered."""
-enum SeriesOrderField {
-  """Series by created time"""
-  CREATED_AT
+  """Characters by popularity"""
+  POPULAR
 }
 
 extend type Query {
@@ -94,8 +88,8 @@ extend type Query {
     """Filter by the title of the series."""
     title: String
 
-    """Ordering options for series."""
-    orderBy: SeriesOrder! = { field: CREATED_AT }
+    """Sorting options for series."""
+    sortBy: SeriesSort! = POPULAR
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -131,8 +125,8 @@ extend type Query {
     """Filter by the name of the character."""
     name: String
 
-    """Ordering options for characters."""
-    orderBy: CharactersOrder! = { field: CREATED_AT }
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
 
   """Get a single character."""

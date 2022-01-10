@@ -143,28 +143,3 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 
 	return medias, nil
 }
-
-func (r PostsCassandraRepository) UpdateSeriesLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Series) error) (*post.Series, error) {
-
-	ser, err := r.getSingleSeriesById(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	oldTotalLikes := ser.TotalLikes()
-
-	if err = updateFn(ser); err != nil {
-		return nil, err
-	}
-
-	newTotalLikes := ser.TotalLikes()
-
-	builder := seriesTable.UpdateBuilder()
-
-	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", ser.ID()); err != nil {
-		return nil, fmt.Errorf("failed to update series total likes: %v", err)
-	}
-
-	return ser, nil
-}

@@ -22,16 +22,13 @@ type CategoryConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for categories"""
-input CategoriesOrder {
-  """The field to order categories by."""
-  field: CategoriesOrderField!
-}
+"""Properties by which categories connections can be sorted."""
+enum CategoriesSort {
+  """Categories by newest first"""
+  NEW
 
-"""Properties by which category connections can be ordered."""
-enum CategoriesOrderField {
-  """Category by created time"""
-  CREATED_AT
+  """Categories by popularity"""
+  POPULAR
 }
 
 extend type Query {
@@ -55,8 +52,8 @@ extend type Query {
     """Filter by the title of the category."""
     title: String
 
-    """Ordering options for categories."""
-    orderBy: CategoriesOrder! = { field: CREATED_AT }
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = POPULAR
   ): CategoryConnection!
 
   """Get a single category."""

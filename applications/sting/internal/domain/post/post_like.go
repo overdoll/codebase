@@ -1,8 +1,13 @@
 package post
 
 import (
+	"errors"
 	"overdoll/libraries/principal"
 	"time"
+)
+
+var (
+	ErrLikeNotFound = errors.New("post like not found")
 )
 
 type Like struct {
@@ -37,4 +42,12 @@ func (m *Like) PostId() string {
 
 func (m *Like) LikedAt() time.Time {
 	return m.likedAt
+}
+
+func (m *Like) CanRemove(requester *principal.Principal) error {
+	return requester.BelongsToAccount(m.AccountId())
+}
+
+func (m *Like) CanView(requester *principal.Principal) error {
+	return requester.BelongsToAccount(m.AccountId())
 }

@@ -119,28 +119,3 @@ func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryI
 
 	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId, cat.TotalLikes), nil
 }
-
-func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Category) error) (*post.Category, error) {
-
-	cat, err := r.getCategoryById(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	oldTotalLikes := cat.TotalLikes()
-
-	if err = updateFn(cat); err != nil {
-		return nil, err
-	}
-
-	newTotalLikes := cat.TotalLikes()
-
-	builder := categoryTable.UpdateBuilder()
-
-	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", cat.ID()); err != nil {
-		return nil, fmt.Errorf("failed to update category total likes: %v", err)
-	}
-
-	return cat, nil
-}
