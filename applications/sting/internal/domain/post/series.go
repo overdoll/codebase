@@ -18,6 +18,8 @@ type Series struct {
 	slug                string
 	title               *localization.Translation
 	thumbnailResourceId string
+
+	totalLikes int
 }
 
 func (m *Series) ID() string {
@@ -36,11 +38,26 @@ func (m *Series) ThumbnailResourceId() string {
 	return m.thumbnailResourceId
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail string) *Series {
+func (m *Series) TotalLikes() int {
+	return m.totalLikes
+}
+
+func (m *Series) IncrementTotalLikes() error {
+	m.totalLikes += 1
+	return nil
+}
+
+func (m *Series) DecrementTotalLikes() error {
+	m.totalLikes -= 1
+	return nil
+}
+
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail string, totalLikes int) *Series {
 	return &Series{
 		id:                  id,
 		slug:                slug,
 		title:               localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResourceId: thumbnail,
+		totalLikes:          totalLikes,
 	}
 }

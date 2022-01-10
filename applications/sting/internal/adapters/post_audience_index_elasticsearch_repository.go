@@ -23,6 +23,7 @@ type audienceDocument struct {
 	Title               map[string]string `json:"title"`
 	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
 	Standard            int               `json:"standard"`
+	TotalLikes          int               `json:"total_likes"`
 	CreatedAt           string            `json:"created_at"`
 }
 
@@ -38,6 +39,9 @@ const audienceIndexProperties = `
 		"type": "keyword"
 	},
 	"standard": {
+		"type": "integer"
+	},
+	"total_likes": {
 		"type": "integer"
 	},
 	"title": ` + localization.ESIndex + `
@@ -78,6 +82,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:            stnd,
+		TotalLikes:          cat.TotalLikes(),
 	}, nil
 }
 
@@ -126,13 +131,35 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes)
 		newAudience.Node = paging.NewNode(bd.CreatedAt)
 
 		audiences = append(audiences, newAudience)
 	}
 
 	return audiences, nil
+}
+
+func (r PostsIndexElasticSearchRepository) IndexAudience(ctx context.Context, audience *post.Audience) error {
+
+	aud, err := marshalAudienceToDocument(audience)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Index().
+		Index(audienceIndexName).
+		Id(audience.ID()).
+		BodyJson(aud).
+		Do(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context) error {
@@ -164,6 +191,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 				Title:               m.Title,
 				Standard:            m.Standard,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				TotalLikes:          m.TotalLikes,
 			}
 
 			_, err = r.client.

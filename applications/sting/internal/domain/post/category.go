@@ -18,6 +18,7 @@ type Category struct {
 	slug                string
 	title               *localization.Translation
 	thumbnailResourceId string
+	totalLikes          int
 }
 
 func (c *Category) ID() string {
@@ -36,11 +37,26 @@ func (c *Category) ThumbnailResourceId() string {
 	return c.thumbnailResourceId
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail string) *Category {
+func (c *Category) TotalLikes() int {
+	return c.totalLikes
+}
+
+func (c *Category) IncrementTotalLikes() error {
+	c.totalLikes += 1
+	return nil
+}
+
+func (c *Category) DecrementTotalLikes() error {
+	c.totalLikes -= 1
+	return nil
+}
+
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail string, totalLikes int) *Category {
 	return &Category{
 		id:                  id,
 		slug:                slug,
 		title:               localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResourceId: thumbnail,
+		totalLikes:          totalLikes,
 	}
 }

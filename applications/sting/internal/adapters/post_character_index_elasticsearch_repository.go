@@ -25,6 +25,7 @@ type characterDocument struct {
 	Name                map[string]string `json:"name"`
 	Series              seriesDocument    `json:"series"`
 	CreatedAt           string            `json:"created_at"`
+	TotalLikes          int               `json:"total_likes"`
 }
 
 const characterIndexProperties = `
@@ -41,6 +42,9 @@ const characterIndexProperties = `
 	"name": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
+	},
+	"total_likes": {
+		"type": "integer"
 	},
 	"series": {
 		"type": "nested",
@@ -60,15 +64,13 @@ const characterIndex = `
 const characterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-	media := char.Series()
-
 	parse, err := ksuid.Parse(char.ID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	parse2, err := ksuid.Parse(char.ID())
+	seriesDoc, err := marshalSeriesToDocument(char.Series())
 
 	if err != nil {
 		return nil, err
@@ -80,35 +82,28 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Name:                localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:                char.Slug(),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
-		Series: seriesDocument{
-			Id:                  media.ID(),
-			ThumbnailResourceId: media.ThumbnailResourceId(),
-			Slug:                media.Slug(),
-			Title:               localization.MarshalTranslationToDatabase(media.Title()),
-			CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
-		},
+		TotalLikes:          char.TotalLikes(),
+		Series:              *seriesDoc,
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, characters []*post.Character) error {
+func (r PostsIndexElasticSearchRepository) IndexCharacter(ctx context.Context, character *post.Character) error {
 
-	for _, character := range characters {
-		char, err := marshalCharacterToDocument(character)
+	char, err := marshalCharacterToDocument(character)
 
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
+	}
 
-		_, err = r.client.
-			Index().
-			Index(characterIndexName).
-			Id(character.ID()).
-			BodyJson(char).
-			Do(ctx)
+	_, err = r.client.
+		Index().
+		Index(characterIndexName).
+		Id(character.ID()).
+		BodyJson(char).
+		Do(ctx)
 
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -161,7 +156,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.ThumbnailResourceId, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.ThumbnailResourceId))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.ThumbnailResourceId, chr.TotalLikes, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.ThumbnailResourceId, chr.Series.TotalLikes))
 		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
@@ -211,12 +206,14 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Name:                c.Name,
 				Slug:                c.Slug,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				TotalLikes:          c.TotalLikes,
 				Series: seriesDocument{
 					Id:                  m.Id,
 					ThumbnailResourceId: m.ThumbnailResourceId,
 					Title:               m.Title,
 					Slug:                m.Slug,
 					CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
+					TotalLikes:          m.TotalLikes,
 				},
 			}
 

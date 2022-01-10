@@ -19,6 +19,7 @@ import (
 type postDocument struct {
 	Id                 string               `json:"id"`
 	State              string               `json:"state"`
+	Likes              int                  `json:"likes"`
 	ModeratorId        string               `json:"moderator_id"`
 	ContributorId      string               `json:"contributor_id"`
 	ClubId             string               `json:"club_id"`
@@ -41,6 +42,9 @@ const postIndex = `
 				},
 				"state": {
 					"type": "keyword"
+				},
+				"likes": {
+					"type": "integer"
 				},
 				"moderator_id": {
 					"type": "keyword"
@@ -154,6 +158,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 
 	return &postDocument{
 		Id:                 pst.ID(),
+		Likes:              pst.Likes(),
 		State:              pst.State().String(),
 		Audience:           audDoc,
 		ClubId:             pst.ClubId(),
@@ -271,13 +276,32 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var characters []*post.Character
 
 		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Slug, char.Name, char.ThumbnailResourceId, post.UnmarshalSeriesFromDatabase(char.Series.Id, char.Series.Slug, char.Series.Title, char.Series.ThumbnailResourceId)))
+			characters = append(characters, post.UnmarshalCharacterFromDatabase(
+				char.Id,
+				char.Slug,
+				char.Name,
+				char.ThumbnailResourceId,
+				char.TotalLikes,
+				post.UnmarshalSeriesFromDatabase(
+					char.Series.Id,
+					char.Series.Slug,
+					char.Series.Title,
+					char.Series.ThumbnailResourceId,
+					char.Series.TotalLikes,
+				),
+			))
 		}
 
 		var categories []*post.Category
 
 		for _, cat := range pst.Categories {
-			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId))
+			categories = append(categories, post.UnmarshalCategoryFromDatabase(
+				cat.Id,
+				cat.Slug,
+				cat.Title,
+				cat.ThumbnailResourceId,
+				cat.TotalLikes,
+			))
 		}
 
 		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
@@ -316,12 +340,20 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var audience *post.Audience
 
 		if pst.Audience != nil {
-			audience = post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.ThumbnailResourceId, pst.Audience.Standard)
+			audience = post.UnmarshalAudienceFromDatabase(
+				pst.Audience.Id,
+				pst.Audience.Slug,
+				pst.Audience.Title,
+				pst.Audience.ThumbnailResourceId,
+				pst.Audience.Standard,
+				pst.Audience.TotalLikes,
+			)
 		}
 
 		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
 			pst.State,
+			pst.Likes,
 			&pst.ModeratorId,
 			pst.ContributorId,
 			pst.ContentResourceIds,
@@ -422,6 +454,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			doc := postDocument{
 				Id:                 p.Id,
 				State:              p.State,
+				Likes:              p.Likes,
 				ModeratorId:        moderatorId,
 				ContributorId:      p.ContributorId,
 				ContentResourceIds: p.ContentResourceIds,

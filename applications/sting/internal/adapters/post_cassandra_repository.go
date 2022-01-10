@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -17,6 +18,7 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
+		"likes",
 		"content_resource_ids",
 		"moderator_account_id",
 		"contributor_account_id",
@@ -35,6 +37,7 @@ var postTable = table.New(table.Metadata{
 type posts struct {
 	Id                 string     `db:"id"`
 	State              string     `db:"state"`
+	Likes              int        `db:"likes"`
 	ContentResourceIds []string   `db:"content_resource_ids"`
 	ModeratorId        *string    `db:"moderator_account_id"`
 	ContributorId      string     `db:"contributor_account_id"`
@@ -66,6 +69,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	return &posts{
 		Id:                 pending.ID(),
+		Likes:              pending.Likes(),
 		State:              pending.State().String(),
 		ModeratorId:        pending.ModeratorId(),
 		ClubId:             pending.ClubId(),
@@ -78,6 +82,33 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		PostedAt:           pending.PostedAt(),
 		ReassignmentAt:     pending.ReassignmentAt(),
 	}, nil
+}
+
+func (r PostsCassandraRepository) incrementOrDecrementCount(ctx context.Context, oldCount, newCount int, builder *qb.UpdateBuilder, column, id string) error {
+
+	increment := newCount > oldCount
+
+	if increment {
+		builder.Add(column)
+	} else {
+		builder.Remove(column)
+	}
+
+	mp := map[string]interface{}{
+		"id": id,
+	}
+
+	mp[column] = 1
+
+	if err := builder.
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		Bind(mp).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to update counter: %v", err)
+	}
+
+	return nil
 }
 
 func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
@@ -107,6 +138,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
+		postPending.Likes,
 		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
@@ -275,4 +307,29 @@ func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requ
 
 func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
+}
+
+func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+
+	pst, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	oldTotalLikes := pst.Likes()
+
+	if err = updateFn(pst); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := pst.Likes()
+
+	builder := postTable.UpdateBuilder()
+
+	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "likes", pst.ID()); err != nil {
+		return nil, fmt.Errorf("failed to update post likes: %v", err)
+	}
+
+	return pst, nil
 }

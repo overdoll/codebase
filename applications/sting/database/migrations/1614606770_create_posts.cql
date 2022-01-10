@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS categories
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           counter,
     primary key ( id )
 );
 
@@ -21,6 +22,7 @@ CREATE TABLE IF NOT EXISTS characters
     name                  map<text, text>,
     thumbnail_resource_id text,
     series_id             text,
+    total_likes           counter,
     primary key ( id )
 );
 
@@ -38,6 +40,7 @@ CREATE TABLE IF NOT EXISTS series
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           counter,
     primary key ( id )
 );
 
@@ -54,6 +57,7 @@ CREATE TABLE IF NOT EXISTS audience
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           counter,
     standard              int,
     primary key ( id )
 );
@@ -76,8 +80,27 @@ CREATE TABLE IF NOT EXISTS posts
     category_ids              list<text>,
     character_ids             list<text>,
     content_resource_ids      list<text>,
+    likes                     counter,
     created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
     primary key ( id )
 );
+
+CREATE TABLE IF NOT EXISTS post_likes
+(
+    post_id          text,
+    liked_account_id text,
+    liked_at         timeuuid,
+    bucket           int,
+    primary key ( (post_id, liked_account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS account_post_likes
+(
+    post_id          text,
+    bucket           int,
+    liked_account_id text,
+    liked_at         timeuuid,
+    primary key ( (liked_account_id, bucket), liked_at, post_id )
+) WITH CLUSTERING ORDER BY (liked_at ASC);

@@ -18,6 +18,7 @@ var categoryTable = table.New(table.Metadata{
 		"title",
 		"slug",
 		"thumbnail_resource_id",
+		"total_likes",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -28,6 +29,7 @@ type category struct {
 	Slug                string            `db:"slug"`
 	Title               map[string]string `db:"title"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	TotalLikes          int               `db:"total_likes"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -87,13 +89,17 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId))
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId, cat.TotalLikes))
 	}
 
 	return categories, nil
 }
 
 func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
+	return r.getCategoryById(ctx, categoryId)
+}
+
+func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 
 	queryCategories := r.session.
 		Query(categoryTable.Get()).
@@ -111,5 +117,30 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester
 		return nil, fmt.Errorf("failed to get category by id: %v", err)
 	}
 
-	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId), nil
+	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId, cat.TotalLikes), nil
+}
+
+func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Category) error) (*post.Category, error) {
+
+	cat, err := r.getCategoryById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	oldTotalLikes := cat.TotalLikes()
+
+	if err = updateFn(cat); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := cat.TotalLikes()
+
+	builder := categoryTable.UpdateBuilder()
+
+	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", cat.ID()); err != nil {
+		return nil, fmt.Errorf("failed to update category total likes: %v", err)
+	}
+
+	return cat, nil
 }

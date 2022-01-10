@@ -18,6 +18,7 @@ var seriesTable = table.New(table.Metadata{
 		"slug",
 		"title",
 		"thumbnail_resource_ids",
+		"total_likes",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -28,6 +29,7 @@ type series struct {
 	Slug                string            `db:"slug"`
 	Title               map[string]string `db:"title"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	TotalLikes          int               `db:"total_likes"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -78,6 +80,10 @@ func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester
 }
 
 func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
+	return r.getSingleSeriesById(ctx, seriesId)
+}
+
+func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(seriesTable.Get()).
@@ -100,6 +106,7 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 		med.Slug,
 		med.Title,
 		med.ThumbnailResourceId,
+		med.TotalLikes,
 	), nil
 }
 
@@ -130,8 +137,34 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 			med.Slug,
 			med.Title,
 			med.ThumbnailResourceId,
+			med.TotalLikes,
 		))
 	}
 
 	return medias, nil
+}
+
+func (r PostsCassandraRepository) UpdateSeriesLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Series) error) (*post.Series, error) {
+
+	ser, err := r.getSingleSeriesById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	oldTotalLikes := ser.TotalLikes()
+
+	if err = updateFn(ser); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := ser.TotalLikes()
+
+	builder := seriesTable.UpdateBuilder()
+
+	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", ser.ID()); err != nil {
+		return nil, fmt.Errorf("failed to update series total likes: %v", err)
+	}
+
+	return ser, nil
 }

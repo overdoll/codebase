@@ -20,6 +20,7 @@ var characterTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource_id",
 		"series_id",
+		"total_likes",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -31,6 +32,7 @@ type character struct {
 	Name                map[string]string `db:"name"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 	SeriesId            string            `db:"series_id"`
+	TotalLikes          int               `db:"total_likes"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -144,11 +146,13 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			char.Slug,
 			char.Name,
 			char.ThumbnailResourceId,
+			char.TotalLikes,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
 				serial.Title,
 				serial.ThumbnailResourceId,
+				serial.TotalLikes,
 			),
 		))
 	}
@@ -157,6 +161,10 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 }
 
 func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
+	return r.getCharacterById(ctx, characterId)
+}
+
+func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
@@ -185,6 +193,32 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 		char.Slug,
 		char.Name,
 		char.ThumbnailResourceId,
+		char.TotalLikes,
 		media,
 	), nil
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(cat *post.Character) error) (*post.Character, error) {
+
+	char, err := r.getCharacterById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	oldTotalLikes := char.TotalLikes()
+
+	if err = updateFn(char); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := char.TotalLikes()
+
+	builder := categoryTable.UpdateBuilder()
+
+	if err := r.incrementOrDecrementCount(ctx, oldTotalLikes, newTotalLikes, builder, "total_likes", char.ID()); err != nil {
+		return nil, fmt.Errorf("failed to update character total likes: %v", err)
+	}
+
+	return char, nil
 }

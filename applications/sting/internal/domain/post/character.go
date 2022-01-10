@@ -19,6 +19,8 @@ type Character struct {
 	name                *localization.Translation
 	thumbnailResourceId string
 	series              *Series
+
+	totalLikes int
 }
 
 func (c *Character) ID() string {
@@ -41,12 +43,27 @@ func (c *Character) ThumbnailResourceId() string {
 	return c.thumbnailResourceId
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, media *Series) *Character {
+func (c *Character) TotalLikes() int {
+	return c.totalLikes
+}
+
+func (c *Character) IncrementTotalLikes() error {
+	c.totalLikes += 1
+	return nil
+}
+
+func (c *Character) DecrementTotalLikes() error {
+	c.totalLikes -= 1
+	return nil
+}
+
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, totalLikes int, media *Series) *Character {
 	return &Character{
 		id:                  id,
 		slug:                slug,
 		name:                localization.UnmarshalTranslationFromDatabase(name),
 		thumbnailResourceId: thumbnail,
 		series:              media,
+		totalLikes:          totalLikes,
 	}
 }

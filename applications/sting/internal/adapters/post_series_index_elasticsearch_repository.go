@@ -23,6 +23,7 @@ type seriesDocument struct {
 	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
 	CreatedAt           string            `json:"created_at"`
+	TotalLikes          int               `json:"total_likes"`
 }
 
 const seriesIndexProperties = `
@@ -35,6 +36,9 @@ const seriesIndexProperties = `
 	},
 	"thumbnail_resource_id": {
 		"type": "keyword"
+	},
+	"total_likes": {
+		"type": "integer"
 	},
 	"title":  ` + localization.ESIndex + `
 	"created_at": {
@@ -52,6 +56,24 @@ const seriesIndex = `
 }`
 
 const seriesIndexName = "series"
+
+func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
+
+	parse, err := ksuid.Parse(s.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &seriesDocument{
+		Id:                  s.ID(),
+		Slug:                s.Slug(),
+		ThumbnailResourceId: s.ThumbnailResourceId(),
+		Title:               localization.MarshalTranslationToDatabase(s.Title()),
+		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		TotalLikes:          s.TotalLikes(),
+	}, nil
+}
 
 func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
@@ -98,13 +120,35 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.ThumbnailResourceId)
+		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.ThumbnailResourceId, md.TotalLikes)
 		newMedia.Node = paging.NewNode(md.CreatedAt)
 
 		meds = append(meds, newMedia)
 	}
 
 	return meds, nil
+}
+
+func (r PostsIndexElasticSearchRepository) IndexSeries(ctx context.Context, series *post.Series) error {
+
+	ss, err := marshalSeriesToDocument(series)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Index().
+		Index(seriesIndexName).
+		Id(series.ID()).
+		BodyJson(ss).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to index series: %v", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {
@@ -135,6 +179,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 				ThumbnailResourceId: m.ThumbnailResourceId,
 				Title:               m.Title,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				TotalLikes:          m.TotalLikes,
 			}
 
 			_, err = r.client.
