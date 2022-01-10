@@ -1,8 +1,12 @@
 import { ReactNode } from 'react'
 import Head from 'next/head'
-import PageBody from '../components/PageBody/PageBody'
+import TermsOfService from './TermsOfService/TermsOfService'
 
-export default function Home (): ReactNode {
+interface Props {
+  content: string
+}
+
+export default function Home ({ content }: Props): ReactNode {
   return (
     <div>
       <Head>
@@ -16,9 +20,19 @@ export default function Home (): ReactNode {
           type='text/css'
         />
         <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400' rel='stylesheet' type='text/css' />
-        <title>overdoll is under construction</title>
+        <title>Terms of Service / overdoll</title>
       </Head>
-      <PageBody />
+      <TermsOfService content={content} />
     </div>
   )
+}
+
+export async function getStaticProps (): Promise<{ props: Props }> {
+  const content = await require('./TermsOfService/content/terms-of-service.md')
+
+  return {
+    props: {
+      content: content.default
+    }
+  }
 }

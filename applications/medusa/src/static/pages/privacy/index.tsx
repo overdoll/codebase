@@ -1,8 +1,12 @@
 import { ReactNode } from 'react'
 import Head from 'next/head'
-import PageBody from '../components/PageBody/PageBody'
+import PrivacyPolicy from './PrivacyPolicy/PrivacyPolicy'
 
-export default function Home (): ReactNode {
+interface Props {
+  content: string
+}
+
+export default function Home ({ content }: Props): ReactNode {
   return (
     <div>
       <Head>
@@ -16,9 +20,19 @@ export default function Home (): ReactNode {
           type='text/css'
         />
         <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400' rel='stylesheet' type='text/css' />
-        <title>overdoll is under construction</title>
+        <title>Privacy Policy / overdoll</title>
       </Head>
-      <PageBody />
+      <PrivacyPolicy content={content} />
     </div>
   )
+}
+
+export async function getStaticProps (): Promise<{ props: Props }> {
+  const content = await require('./PrivacyPolicy/content/privacy-policy.md')
+
+  return {
+    props: {
+      content: content.default
+    }
+  }
 }
