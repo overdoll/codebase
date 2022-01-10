@@ -316,6 +316,8 @@ remaining provisions of Terms will continue in full force and effect.
 BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE
 TO BE BOUND BY THEM.
 
+These terms are an agreement with overdoll Inc., 152-4936 Yonge Street, Toronto, ON.
+
 ### Contact Us
 
 Please send your feedback or comments through hello /at/ overdoll /dot com/.
