@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
-/* @relayHash 014f9302f275696bce3a67eeb418df85 */
-=======
-/* @relayHash 295d8f39142d85d775d1c5ad0a5b97b0 */
->>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
+/* @relayHash 33d5fa07c563c3069e687c8ae754adbf */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -37,18 +33,8 @@ query SelectClubsQuery(
     ...ClubPreviewFragment
     id
   }
-<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
   viewer {
     ...ClubListSelectorFragment
-=======
-}
-
-fragment ClubPreviewFragment on Club {
-  name
-  slug
-  thumbnail {
-    ...ResourceIconFragment
->>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
     id
   }
 }
@@ -77,6 +63,7 @@ fragment ClubPreviewFragment on Club {
   slug
   thumbnail {
     ...ResourceIconFragment
+    id
   }
 }
 
@@ -137,6 +124,13 @@ v3 = {
 v4 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
@@ -173,15 +167,9 @@ v4 = {
         }
       ],
       "storageKey": null
-    }
+    },
+    (v4/*: any*/)
   ],
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
   "storageKey": null
 },
 v6 = [
@@ -251,8 +239,8 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/)
+          (v5/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       },
@@ -288,72 +276,10 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
                       (v2/*: any*/),
                       (v3/*: any*/),
-                      (v4/*: any*/),
                       (v5/*: any*/),
-=======
-                      (v1/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "name",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "slug",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Resource",
-                        "kind": "LinkedField",
-                        "name": "thumbnail",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "type",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "urls",
-                            "plural": true,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "url",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "mimeType",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          (v1/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
->>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -413,18 +339,14 @@ return {
             "kind": "LinkedHandle",
             "name": "clubs"
           },
-          (v5/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-<<<<<<< HEAD:applications/medusa/src/__generated__/SelectClubsQuery.graphql.ts
-    "id": "014f9302f275696bce3a67eeb418df85",
-=======
-    "id": "295d8f39142d85d775d1c5ad0a5b97b0",
->>>>>>> master:applications/medusa/src/__generated__/ClubSelectorQuery.graphql.ts
+    "id": "33d5fa07c563c3069e687c8ae754adbf",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

@@ -1,13 +1,15 @@
-import { Avatar, Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderContributorFragment$key } from '@//:artifacts/PostHeaderContributorFragment.graphql'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
 
 const Fragment = graphql`
   fragment PostHeaderContributorFragment on Post {
     contributor {
       username
-      avatar
+      avatar {
+        ...ResourceIconFragment
+      }
     }
   }
 `
@@ -22,7 +24,7 @@ export default function PostHeaderContributor ({ query }: Props): JSX.Element {
   return (
     <ClickableBox bg='transparent' p={0}>
       <Flex align='center'>
-        <Avatar borderRadius='25%' mr={3} src={data.contributor.avatar} />
+        <ResourceIcon mr={3} query={data.contributor.avatar} />
         <Heading color='gray.00' fontSize='xl'>
           {data?.contributor?.username}
         </Heading>

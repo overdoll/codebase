@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 93d19566f742e7e781f8cf3df0a6540f */
+/* @relayHash 0aefab520747be1f8be91e3cdf899b53 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -43,6 +43,7 @@ fragment LargeClubHeaderFragment on Club {
   name
   thumbnail {
     ...ResourceIconFragment
+    id
   }
 }
 
@@ -84,6 +85,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "membersCount",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -175,24 +183,19 @@ return {
                   }
                 ],
                 "storageKey": null
-              }
+              },
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "93d19566f742e7e781f8cf3df0a6540f",
+    "id": "0aefab520747be1f8be91e3cdf899b53",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

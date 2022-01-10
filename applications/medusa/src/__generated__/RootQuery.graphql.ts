@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b2687e1e8024eb12709eab1f6793677f */
+/* @relayHash 4b291102ab8e1493a8537ddb0ebb8221 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -51,10 +51,15 @@ fragment AlternativeMenuFragment on Account {
 fragment DropdownMenuButtonProfileFragment on Account {
   username
   avatar {
-    urls {
-      url
-    }
+    ...ResourceIconFragment
     id
+  }
+}
+
+fragment ImageSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 
@@ -84,8 +89,25 @@ fragment QuickAccessButtonProfileFragment on Account {
   }
 }
 
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
 fragment UniversalNavigatorFragment on Account {
   ...AlternativeMenuFragment
+}
+
+fragment VideoSnippetFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
 }
 */
 
@@ -231,6 +253,13 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "urls",
@@ -241,6 +270,13 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "url",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
                     "storageKey": null
                   }
                 ],
@@ -259,7 +295,7 @@ return {
     ]
   },
   "params": {
-    "id": "b2687e1e8024eb12709eab1f6793677f",
+    "id": "4b291102ab8e1493a8537ddb0ebb8221",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

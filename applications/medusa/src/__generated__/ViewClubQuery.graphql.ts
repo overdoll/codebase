@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
-/* @relayHash 90654f1dcf22efa49208a73bcf292896 */
-=======
-/* @relayHash a13f5ff988778087fcb6ceeb977ad244 */
->>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
+/* @relayHash d40f71352314f3c4f7e49c6e7d6165b2 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +19,9 @@ export type ViewClubQueryResponse = {
             readonly edges: ReadonlyArray<{
                 readonly node: {
                     readonly account: {
-                        readonly avatar: string;
+                        readonly avatar: {
+                            readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
+                        } | null;
                     };
                 };
             }>;
@@ -53,7 +51,10 @@ query ViewClubQuery(
       edges {
         node {
           account {
-            avatar
+            avatar {
+              ...ResourceIconFragment
+              id
+            }
             id
           }
           id
@@ -76,6 +77,7 @@ fragment LargeClubHeaderFragment on Club {
   name
   thumbnail {
     ...ResourceIconFragment
+    id
   }
 }
 
@@ -84,6 +86,7 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    id
   }
 }
 
@@ -106,19 +109,8 @@ fragment PublicClubPostsFragment on Club {
   id
 }
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
 fragment ResourceIconFragment on Resource {
   ...ResourceItemFragment
-=======
-fragment PostStateReviewPreviewFragment on Post {
-  id
-  reference
-  postedAt
-  content {
-    ...ResourceItemFragment
-    id
-  }
->>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
 }
 
 fragment ResourceItemFragment on Resource {
@@ -185,14 +177,7 @@ v5 = [
     }
   }
 ],
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "avatar",
-  "storageKey": null
-},
-v7 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -224,9 +209,10 @@ v7 = [
       }
     ],
     "storageKey": null
-  }
+  },
+  (v2/*: any*/)
 ],
-v8 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -294,7 +280,22 @@ return {
                         "name": "account",
                         "plural": false,
                         "selections": [
-                          (v6/*: any*/)
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "avatar",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "args": null,
+                                "kind": "FragmentSpread",
+                                "name": "ResourceIconFragment"
+                              }
+                            ],
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       }
@@ -385,71 +386,17 @@ return {
                         "name": "account",
                         "plural": false,
                         "selections": [
-<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
-                          (v6/*: any*/),
-                          (v2/*: any*/)
-=======
-                          (v5/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "reference",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "postedAt",
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
                             "concreteType": "Resource",
                             "kind": "LinkedField",
-                            "name": "content",
-                            "plural": true,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "url",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              },
-                              (v5/*: any*/)
-                            ],
+                            "name": "avatar",
+                            "plural": false,
+                            "selections": (v6/*: any*/),
                             "storageKey": null
                           },
-                          (v4/*: any*/)
->>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -477,12 +424,12 @@ return {
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -519,7 +466,7 @@ return {
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
-                        "selections": (v7/*: any*/),
+                        "selections": (v6/*: any*/),
                         "storageKey": null
                       },
                       (v4/*: any*/)
@@ -566,7 +513,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "PublicClubPosts_posts",
@@ -579,11 +526,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD:applications/medusa/src/__generated__/ViewClubQuery.graphql.ts
-    "id": "90654f1dcf22efa49208a73bcf292896",
-=======
-    "id": "a13f5ff988778087fcb6ceeb977ad244",
->>>>>>> master:applications/medusa/src/__generated__/ReviewPostsPaginationQuery.graphql.ts
+    "id": "d40f71352314f3c4f7e49c6e7d6165b2",
     "metadata": {},
     "name": "ViewClubQuery",
     "operationKind": "query",
@@ -591,5 +534,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'f4d233c07f94d6039e86be087b5df5e1';
+(node as any).hash = '4950e753b6e9dcdd4bd4ee51ca55d034';
 export default node;

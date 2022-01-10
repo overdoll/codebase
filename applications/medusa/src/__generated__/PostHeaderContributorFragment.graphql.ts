@@ -7,7 +7,9 @@ import { FragmentRefs } from "relay-runtime";
 export type PostHeaderContributorFragment = {
     readonly contributor: {
         readonly username: string;
-        readonly avatar: string;
+        readonly avatar: {
+            readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
+        } | null;
     };
     readonly " $refType": "PostHeaderContributorFragment";
 };
@@ -43,8 +45,17 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
+          "concreteType": "Resource",
+          "kind": "LinkedField",
           "name": "avatar",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ResourceIconFragment"
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -54,5 +65,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '77184d3a8885f96bc10e609f0a997b85';
+(node as any).hash = '6ce00e7b6bf0764fe0b8a7989c8e2631';
 export default node;

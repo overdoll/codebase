@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash 9bfe69fa401b70c6d9390890c5475532 */
-=======
-/* @relayHash edc1ba88332b3aad03bec64478542bac */
->>>>>>> master
+/* @relayHash ea37e041f636a7c2d743993b45704f8b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -112,18 +108,6 @@ fragment CharacterFragment on Post {
   }
 }
 
-<<<<<<< HEAD
-=======
-fragment ClubPreviewFragment on Club {
-  name
-  slug
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-}
-
->>>>>>> master
 fragment DraggableContentFragment on Resource {
   id
   type
@@ -576,14 +560,9 @@ return {
                 "name": "thumbnail",
                 "plural": false,
                 "selections": [
-<<<<<<< HEAD
                   (v9/*: any*/),
-                  (v8/*: any*/)
-=======
                   (v8/*: any*/),
-                  (v7/*: any*/),
                   (v4/*: any*/)
->>>>>>> master
                 ],
                 "storageKey": null
               },
@@ -598,11 +577,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "9bfe69fa401b70c6d9390890c5475532",
-=======
-    "id": "edc1ba88332b3aad03bec64478542bac",
->>>>>>> master
+    "id": "ea37e041f636a7c2d743993b45704f8b",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

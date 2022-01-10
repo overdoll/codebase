@@ -11,7 +11,7 @@ import { abbreviateNumber } from '@//:modules/support'
 import Button from '@//:modules/form/Button/Button'
 import becomeClubMember from '../../../MyClubs/queries/becomeClubMember/becomeClubMember'
 import withdrawClubMembership from '../../../MyClubs/queries/withdrawClubMembership/withdrawClubMembership'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
 import PublicClubPosts from '../../../MyClubs/components/PublicClubPosts/PublicClubPosts'
 
 interface Props {
@@ -30,7 +30,9 @@ const Query = graphql`
         edges {
           node {
             account {
-              avatar
+              avatar {
+                ...ResourceIconFragment
+              }
             }
           }
         }
@@ -70,7 +72,7 @@ export default function ViewClub (props: Props): JSX.Element {
     return (
       <AvatarGroup spacing={-8}>
         {queryData?.club?.members.edges.map((item, index) =>
-          <Avatar w={24} h={24} borderRadius='25%' key={index} src={item.node.account.avatar} />)}
+          <ResourceIcon key={index} w={24} h={24} query={item.node.account.avatar} />)}
         {[...Array(placeholderLength).keys()].map((item, index) =>
           <Avatar
             w={24}
