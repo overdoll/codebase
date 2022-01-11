@@ -45,8 +45,8 @@ type Club implements Node @key(fields: "id") {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
 }
 
@@ -66,18 +66,6 @@ type ClubConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for clubs"""
-input ClubsOrder {
-  """The field to order clubs by."""
-  field: ClubsOrderField!
-}
-
-"""Properties by which club connections can be ordered."""
-enum ClubsOrderField {
-  """Club by created time"""
-  CREATED_AT
-}
-
 type ClubMemberEdge {
   cursor: String!
   node: ClubMember!
@@ -88,16 +76,10 @@ type ClubMemberConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for club members"""
-input ClubMembersOrder {
-  """The field to order clubs by."""
-  field: ClubMembersOrderField!
-}
-
-"""Properties by which club member connections can be ordered."""
-enum ClubMembersOrderField {
-  """By joined at"""
-  JOINED_AT
+"""Properties by which club member connections can be sorted."""
+enum ClubMembersSort {
+  """By oldest members"""
+  NEWEST
 }
 
 type ClubMember implements Node @key(fields: "id") {
@@ -244,6 +226,12 @@ type UpdateClubThumbnailPayload {
   club: Club
 }
 
+"""Properties by which club connections can be sorted."""
+enum ClubsSort {
+  """Clubs by popularity"""
+  POPULAR
+}
+
 extend type Mutation {
   """
   Become a member of a club
@@ -307,8 +295,8 @@ extend type Query {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
 
   """Get a single club."""
@@ -350,8 +338,8 @@ extend type Account {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection! @goField(forceResolver: true)
 
   """
@@ -378,7 +366,7 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
 }

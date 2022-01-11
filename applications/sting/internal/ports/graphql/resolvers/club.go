@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"strings"
 
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -15,7 +16,7 @@ type ClubResolver struct {
 	App *app.Application
 }
 
-func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -41,7 +42,7 @@ func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string,
 		CharacterSlugs: characterSlugs,
 		SeriesSlugs:    seriesSlugs,
 		State:          stateModified,
-		OrderBy:        orderBy.Field.String(),
+		SortBy:         strings.ToLower(sortBy.String()),
 	})
 
 	if err != nil {

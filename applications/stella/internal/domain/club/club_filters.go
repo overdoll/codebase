@@ -1,15 +1,27 @@
 package club
 
 type Filters struct {
-	orderBy        string
+	sortBy         Sorting
 	slugs          []string
 	search         *string
 	ownerAccountId *string
 }
 
-func NewFilters(search *string, orderBy string, slugs []string, ownerAccountId *string) (*Filters, error) {
+func NewFilters(search *string, sortBy string, slugs []string, ownerAccountId *string) (*Filters, error) {
+
+	sorting := UnknownSort
+	var err error
+
+	if sortBy != "" {
+		sorting, err = SortingFromString(sortBy)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &Filters{
-		orderBy:        orderBy,
+		sortBy:         sorting,
 		search:         search,
 		slugs:          slugs,
 		ownerAccountId: ownerAccountId,
@@ -20,8 +32,8 @@ func (e *Filters) Search() *string {
 	return e.search
 }
 
-func (e *Filters) OrderBy() string {
-	return e.orderBy
+func (e *Filters) SortBy() Sorting {
+	return e.sortBy
 }
 
 func (e *Filters) Slugs() []string {

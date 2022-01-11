@@ -33,6 +33,10 @@ type Commands struct {
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
+
+	UpdatePersonalizationProfileAudience    command.UpdatePersonalizationProfileAudienceHandler
+	UpdatePersonalizationProfileCategory    command.UpdatePersonalizationProfileCategoryHandler
+	UpdatePersonalizationProfileDateOfBirth command.UpdatePersonalizationDateOfBirthHandler
 }
 
 type Queries struct {
@@ -59,4 +63,6 @@ type Queries struct {
 	AudienceById   query.AudienceByIdHandler
 
 	PostLikeById query.PostLikeByIdHandler
+
+	PersonalizationProfileByAccountId query.PersonalizationProfileByAccountIdHandler
 }

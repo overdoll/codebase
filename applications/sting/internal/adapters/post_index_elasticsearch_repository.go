@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -200,15 +199,37 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	builder := r.client.Search().
 		Index(PostIndexName)
 
-	if cursor == nil {
-		return nil, errors.New("cursor required")
-	}
-
 	if err := post.CanViewWithFilters(requester, filter); err != nil {
 		return nil, err
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+
+		sortingColumn = "created_at"
+
+		// if viewing by published, then do posted_at
+		if filter.State() != nil {
+			if *filter.State() == post.Published.String() {
+				sortingColumn = "posted_at"
+			}
+		}
+
+		sortingAscending = true
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "likes"
+		sortingAscending = false
+	}
+
+	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+
+	query := elastic.NewBoolQuery()
 
 	var filterQueries []elastic.Query
 
@@ -242,11 +263,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	if len(filter.SeriesSlugs()) > 0 {
 		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermsQueryFromStrings("characters.series.slug", filter.SeriesSlugs()...)))
-	}
-
-	// if orderby another column
-	if filter.OrderBy() != "created_at" {
-		builder.Sort(filter.OrderBy(), false)
 	}
 
 	if filterQueries != nil {
@@ -366,7 +382,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			reassignmentAtTime,
 		)
 
-		createdPost.Node = paging.NewNode(pst.CreatedAt)
+		createdPost.Node = paging.NewNode(hit.Sort)
 
 		posts = append(posts, createdPost)
 	}

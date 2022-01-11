@@ -27,8 +27,8 @@ enum CategoriesSort {
   """Categories by newest first"""
   NEW
 
-  """Categories by popularity"""
-  POPULAR
+  """Categories by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -53,7 +53,7 @@ extend type Query {
     title: String
 
     """Sorting options for categories."""
-    sortBy: CategoriesSort! = POPULAR
+    sortBy: CategoriesSort! = TOP
   ): CategoryConnection!
 
   """Get a single category."""

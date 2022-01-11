@@ -57,7 +57,7 @@ func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types
 	return types.MarshalClubMemberToGraphql(ctx, clb), nil
 }
 
-func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error) {
+func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 

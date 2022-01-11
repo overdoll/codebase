@@ -1,4 +1,4 @@
-package post
+package club
 
 import (
 	"errors"
@@ -10,8 +10,7 @@ type Sorting struct {
 
 var (
 	UnknownSort = Sorting{""}
-	NewSort     = Sorting{"new"}
-	TopSort     = Sorting{"top"}
+	PopularSort = Sorting{"popular"}
 )
 
 func (r Sorting) String() string {
@@ -21,10 +20,8 @@ func (r Sorting) String() string {
 func SortingFromString(s string) (Sorting, error) {
 
 	switch s {
-	case NewSort.slug:
-		return NewSort, nil
-	case TopSort.slug:
-		return TopSort, nil
+	case PopularSort.slug:
+		return PopularSort, nil
 	}
 
 	return UnknownSort, errors.New("unknown sorting type: " + s)

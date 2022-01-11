@@ -27,8 +27,8 @@ enum AudiencesSort {
   """Audience by newest first"""
   NEW
 
-  """Audience by popularity"""
-  POPULAR
+  """Audience by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -53,7 +53,7 @@ extend type Query {
     title: String
 
     """Sorting options for audiences."""
-    sortBy: AudiencesSort! = POPULAR
+    sortBy: AudiencesSort! = TOP
   ): AudienceConnection!
 
   """Get a single audience."""

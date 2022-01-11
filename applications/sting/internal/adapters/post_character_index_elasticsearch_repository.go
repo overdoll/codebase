@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -115,18 +114,23 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		Index(characterIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
+	var sortingAscending bool
 
-	if filter.Name() != nil {
-		query.Must(
-			elastic.
-				NewMultiMatchQuery(*filter.Name(), localization.GetESSearchFields("name")...).
-				Type("best_fields"),
-		)
+	if filter.SortBy() == post.NewSort {
+		sortingColumn = "created_at"
+		sortingAscending = true
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "total_likes"
+		sortingAscending = false
 	}
+
+	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+
+	query := elastic.NewBoolQuery()
 
 	if len(filter.Slugs()) > 0 {
 		for _, id := range filter.Slugs() {
@@ -157,7 +161,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		}
 
 		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.ThumbnailResourceId, chr.TotalLikes, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.ThumbnailResourceId, chr.Series.TotalLikes))
-		newCharacter.Node = paging.NewNode(chr.CreatedAt)
+		newCharacter.Node = paging.NewNode(hit.Sort)
 
 		characters = append(characters, newCharacter)
 	}

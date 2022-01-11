@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -92,10 +91,23 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		Index(audienceIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+		sortingColumn = "created_at"
+		sortingAscending = true
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "total_likes"
+		sortingAscending = false
+	}
+
+	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+
+	query := elastic.NewBoolQuery()
 
 	if filter.Search() != nil {
 		query.Must(
@@ -132,7 +144,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		}
 
 		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes)
-		newAudience.Node = paging.NewNode(bd.CreatedAt)
+		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)
 	}

@@ -13,7 +13,7 @@ type SearchCategories struct {
 	Cursor    *paging.Cursor
 	Title     *string
 	Slugs     []string
-	OrderBy   string
+	SortBy    string
 }
 
 type SearchCategoriesHandler struct {
@@ -28,7 +28,7 @@ func (h SearchCategoriesHandler) Handle(ctx context.Context, query SearchCategor
 
 	filters, err := post.NewObjectFilters(
 		query.Title,
-		query.OrderBy,
+		query.SortBy,
 		query.Slugs,
 	)
 

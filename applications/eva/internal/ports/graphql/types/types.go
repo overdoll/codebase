@@ -622,6 +622,47 @@ func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Properties by which accounts connections can be sorted.
+type AccountsSort string
+
+const (
+	// Accounts by newest first
+	AccountsSortNew AccountsSort = "NEW"
+)
+
+var AllAccountsSort = []AccountsSort{
+	AccountsSortNew,
+}
+
+func (e AccountsSort) IsValid() bool {
+	switch e {
+	case AccountsSortNew:
+		return true
+	}
+	return false
+}
+
+func (e AccountsSort) String() string {
+	return string(e)
+}
+
+func (e *AccountsSort) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountsSort(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountsSort", str)
+	}
+	return nil
+}
+
+func (e AccountsSort) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Validation message for adding account email
 type AddAccountEmailValidation string
 

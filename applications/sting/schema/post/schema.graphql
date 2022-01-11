@@ -151,8 +151,8 @@ enum PostsSort {
   """Posts by newest first"""
   NEW
 
-  """Posts by popularity"""
-  POPULAR
+  """Posts by top likes"""
+  TOP
 }
 
 extend type Account {
@@ -219,7 +219,7 @@ extend type Account {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -292,7 +292,7 @@ extend type Query {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -324,7 +324,7 @@ extend type Category {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -353,7 +353,7 @@ extend type Character {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -385,7 +385,7 @@ extend type Series {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -420,7 +420,7 @@ extend type Club {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -452,6 +452,6 @@ extend type Audience {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }

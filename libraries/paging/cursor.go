@@ -1,20 +1,28 @@
 package paging
 
 import (
+	"bytes"
 	"encoding/base64"
+	"encoding/gob"
 	"errors"
-	"sort"
-
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"sort"
 )
 
 type Node struct {
 	cursor string
 }
 
-func NewNode(cursor string) *Node {
-	return &Node{cursor: base64.StdEncoding.EncodeToString([]byte(cursor))}
+func NewNode(cursorValues ...interface{}) *Node {
+
+	buf := new(bytes.Buffer)
+	enc := gob.NewEncoder(buf)
+	if err := enc.Encode(cursorValues); err != nil {
+		panic(err)
+	}
+
+	return &Node{cursor: base64.StdEncoding.EncodeToString(buf.Bytes())}
 }
 
 func (n *Node) Cursor() string {
@@ -22,13 +30,15 @@ func (n *Node) Cursor() string {
 }
 
 type Cursor struct {
-	after  *string
-	before *string
+	after  interface{}
+	before interface{}
 	first  *int
 	last   *int
 }
 
 func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
+
+	var afterDst interface{}
 
 	if after != nil && *after != "" {
 		decoded, err := base64.StdEncoding.DecodeString(*after)
@@ -36,9 +46,13 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 			return nil, err
 		}
 
-		dec := string(decoded)
-		after = &dec
+		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
+		if err := dec.Decode(afterDst); err != nil {
+			return nil, err
+		}
 	}
+
+	var beforeDst interface{}
 
 	if before != nil && *before != "" {
 		decoded, err := base64.StdEncoding.DecodeString(*before)
@@ -46,8 +60,10 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 			return nil, err
 		}
 
-		dec := string(decoded)
-		before = &dec
+		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
+		if err := dec.Decode(beforeDst); err != nil {
+			return nil, err
+		}
 	}
 
 	if first != nil && *first < 0 {
@@ -64,18 +80,18 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	}
 
 	return &Cursor{
-		after:  after,
-		before: before,
+		after:  afterDst,
+		before: beforeDst,
 		first:  first,
 		last:   last,
 	}, nil
 }
 
-func (c *Cursor) After() *string {
+func (c *Cursor) After() interface{} {
 	return c.after
 }
 
-func (c *Cursor) Before() *string {
+func (c *Cursor) Before() interface{} {
 	return c.before
 }
 
@@ -103,31 +119,14 @@ func (c *Cursor) GetLimit() int {
 	return limit
 }
 
-func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
+func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string, ascending bool) {
+	// add search_after parameters
 	if c.After() != nil {
-		builder.Where(qb.LtLit(column, `'`+*c.After()+`'`))
+		builder.SearchAfter(c.After().([]interface{})...)
 	}
 
 	if c.Before() != nil {
-		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
-	}
-
-	limit := c.GetLimit()
-
-	if limit > 0 {
-		builder.Limit(uint(limit))
-	}
-}
-
-func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) *elastic.BoolQuery {
-	query := elastic.NewBoolQuery()
-
-	if c.After() != nil {
-		query.Filter(elastic.NewRangeQuery(column).Lt(*c.After()))
-	}
-
-	if c.Before() != nil {
-		query.Filter(elastic.NewRangeQuery(column).Gt(*c.Before()))
+		builder.SearchAfter(c.Before().([]interface{})...)
 	}
 
 	limit := c.GetLimit()
@@ -136,7 +135,31 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 		builder.Size(limit)
 	}
 
-	return query
+	isBackwardsPagination := c.After() == nil && c.Before() != nil
+
+	// if using "before" - we want to reverse the sort order to be able to grab the items correctly
+	if isBackwardsPagination {
+		builder.Sort(column, !ascending)
+	} else {
+		builder.Sort(column, ascending)
+	}
+}
+
+func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
+	if c.After() != nil {
+
+		builder.Where(qb.LtLit(column, `'`+c.After().(string)+`'`))
+	}
+
+	if c.Before() != nil {
+		builder.Where(qb.GtLit(column, `'`+c.Before().(string)+`'`))
+	}
+
+	limit := c.GetLimit()
+
+	if limit > 0 {
+		builder.Limit(uint(limit))
+	}
 }
 
 // take redis keys, and based on cursor, sort results
@@ -151,7 +174,7 @@ func (c *Cursor) BuildRedis(k []string) []string {
 		indexAt := -1
 
 		for i, v := range k {
-			if v == *c.After() {
+			if v == c.After().(string) {
 				indexAt = i
 			}
 		}
@@ -168,7 +191,7 @@ func (c *Cursor) BuildRedis(k []string) []string {
 		indexAt := -1
 
 		for i, v := range k {
-			if v == *c.Before() {
+			if v == c.Before().(string) {
 				indexAt = i
 			}
 		}

@@ -13,7 +13,7 @@ type SearchAudience struct {
 	Cursor    *paging.Cursor
 	Title     *string
 	Slugs     []string
-	OrderBy   string
+	SortBy    string
 }
 
 type SearchAudienceHandler struct {
@@ -28,7 +28,7 @@ func (h SearchAudienceHandler) Handle(ctx context.Context, query SearchAudience)
 
 	filters, err := post.NewObjectFilters(
 		query.Title,
-		query.OrderBy,
+		query.SortBy,
 		query.Slugs,
 	)
 

@@ -63,6 +63,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
+	personalizationRepo := adapters.NewPersonalizationProfileCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -86,6 +87,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 			LikePost:     command.NewLikePostHandler(postRepo),
 			UndoLikePost: command.NewUndoLikePostHandler(postRepo),
+
+			UpdatePersonalizationProfileAudience:    command.NewUpdatePersonalizationProfileAudience(personalizationRepo),
+			UpdatePersonalizationProfileCategory:    command.NewUpdatePersonalizationProfileCategoryHandler(personalizationRepo),
+			UpdatePersonalizationProfileDateOfBirth: command.NewUpdatePersonalizationDateOfBirthHandler(personalizationRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -109,6 +114,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
+
+			PersonalizationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}

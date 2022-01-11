@@ -68,7 +68,7 @@ func (e *Filters) State() *string {
 	return e.state
 }
 
-func (e *Filters) OrderBy() Sorting {
+func (e *Filters) SortBy() Sorting {
 	return e.sortBy
 }
 

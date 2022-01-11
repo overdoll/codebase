@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS audience_slugs
 CREATE TABLE IF NOT EXISTS posts
 (
     id                        text,
+    likes                     counter,
     state                     text,
     moderator_account_id      text,
     contributor_account_id    text,
@@ -80,7 +81,6 @@ CREATE TABLE IF NOT EXISTS posts
     category_ids              list<text>,
     character_ids             list<text>,
     content_resource_ids      list<text>,
-    likes                     counter,
     created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
@@ -91,6 +91,18 @@ CREATE TABLE IF NOT EXISTS post_likes
 (
     post_id          text,
     liked_account_id text,
-    liked_at         timeuuid,
+    liked_at         timestamp,
     primary key ( (post_id, liked_account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS personalization_profile
+(
+    account_id            text,
+    date_of_birth         date,
+    audience_ids          list<text>,
+    category_ids          list<text>,
+    date_of_birth_skipped boolean,
+    audience_ids_skipped  boolean,
+    category_ids_skipped  boolean,
+    primary key ( account_id )
 );

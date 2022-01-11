@@ -11,6 +11,8 @@ import (
 )
 
 type Account struct {
+	// The personalization profile linked to this account.
+	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
@@ -48,6 +50,15 @@ type AudienceEdge struct {
 	Node   *Audience `json:"node"`
 }
 
+type AudiencePersonalizationProfile struct {
+	// Whether or not the audience section was completed.
+	Completed bool `json:"completed"`
+	// Whether or not the audience section was skipped.
+	Skipped bool `json:"skipped"`
+	// Audiences selected for this section.
+	Audiences []*Audience `json:"audiences"`
+}
+
 type Category struct {
 	// An ID pointing to this category.
 	ID relay.ID `json:"id"`
@@ -74,6 +85,15 @@ type CategoryConnection struct {
 type CategoryEdge struct {
 	Cursor string    `json:"cursor"`
 	Node   *Category `json:"node"`
+}
+
+type CategoryPersonalizationProfile struct {
+	// Whether or not the category section was completed.
+	Completed bool `json:"completed"`
+	// Whether or not the category section was skipped.
+	Skipped bool `json:"skipped"`
+	// Categories selected for this section.
+	Categories []*Category `json:"categories"`
 }
 
 type Character struct {
@@ -126,6 +146,15 @@ type CreatePostPayload struct {
 	Post *Post `json:"post"`
 }
 
+type DateOfBirthPersonalizationProfile struct {
+	// Whether or not the date of birth section was skipped.
+	Skipped bool `json:"skipped"`
+	// Whether or not the date of birth section was completed.
+	Completed bool `json:"completed"`
+	// The date of birth set.
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+}
+
 // Like a post.
 type LikePostInput struct {
 	// The post ID that you want to like
@@ -136,6 +165,19 @@ type LikePostInput struct {
 type LikePostPayload struct {
 	// The new PostLike entry.
 	PostLike *PostLike `json:"postLike"`
+}
+
+type PersonalizationProfile struct {
+	// An ID uniquely identifying this profile.
+	ID relay.ID `json:"id"`
+	// If the whole profile was completed or not.
+	Completed bool `json:"completed"`
+	// The date of birth profile.
+	DateOfBirth *DateOfBirthPersonalizationProfile `json:"dateOfBirth"`
+	// The audience profile.
+	Audience *AudiencePersonalizationProfile `json:"audience"`
+	// The category profile.
+	Category *CategoryPersonalizationProfile `json:"category"`
 }
 
 type Post struct {
@@ -257,6 +299,48 @@ type UndoLikePostPayload struct {
 	PostLikeID *relay.ID `json:"postLikeId"`
 }
 
+// Update personalization profile audience.
+type UpdatePersonalizationProfileAudienceInput struct {
+	// The audiences that were selected
+	AudienceIds []relay.ID `json:"audienceIds"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile audience
+type UpdatePersonalizationProfileAudiencePayload struct {
+	// The updated profile.
+	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+}
+
+// Update personalization profile category.
+type UpdatePersonalizationProfileCategoryInput struct {
+	// The categories that were selected
+	CategoryIds []relay.ID `json:"categoryIds"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile category
+type UpdatePersonalizationProfileCategoryPayload struct {
+	// The updated profile.
+	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+}
+
+// Update personalization profile date of birth.
+type UpdatePersonalizationProfileDateOfBirthInput struct {
+	// The date of birth that was selected
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile date of birth
+type UpdatePersonalizationProfileDateOfBirthPayload struct {
+	// The updated profile.
+	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+}
+
 // Update post audience.
 type UpdatePostAudienceInput struct {
 	// The post to update
@@ -325,18 +409,18 @@ type AudiencesSort string
 const (
 	// Audience by newest first
 	AudiencesSortNew AudiencesSort = "NEW"
-	// Audience by popularity
-	AudiencesSortPopular AudiencesSort = "POPULAR"
+	// Audience by top likes
+	AudiencesSortTop AudiencesSort = "TOP"
 )
 
 var AllAudiencesSort = []AudiencesSort{
 	AudiencesSortNew,
-	AudiencesSortPopular,
+	AudiencesSortTop,
 }
 
 func (e AudiencesSort) IsValid() bool {
 	switch e {
-	case AudiencesSortNew, AudiencesSortPopular:
+	case AudiencesSortNew, AudiencesSortTop:
 		return true
 	}
 	return false
@@ -369,18 +453,18 @@ type CategoriesSort string
 const (
 	// Categories by newest first
 	CategoriesSortNew CategoriesSort = "NEW"
-	// Categories by popularity
-	CategoriesSortPopular CategoriesSort = "POPULAR"
+	// Categories by top likes
+	CategoriesSortTop CategoriesSort = "TOP"
 )
 
 var AllCategoriesSort = []CategoriesSort{
 	CategoriesSortNew,
-	CategoriesSortPopular,
+	CategoriesSortTop,
 }
 
 func (e CategoriesSort) IsValid() bool {
 	switch e {
-	case CategoriesSortNew, CategoriesSortPopular:
+	case CategoriesSortNew, CategoriesSortTop:
 		return true
 	}
 	return false
@@ -413,18 +497,18 @@ type CharactersSort string
 const (
 	// Characters by newest first
 	CharactersSortNew CharactersSort = "NEW"
-	// Characters by popularity
-	CharactersSortPopular CharactersSort = "POPULAR"
+	// Characters by top likes
+	CharactersSortTop CharactersSort = "TOP"
 )
 
 var AllCharactersSort = []CharactersSort{
 	CharactersSortNew,
-	CharactersSortPopular,
+	CharactersSortTop,
 }
 
 func (e CharactersSort) IsValid() bool {
 	switch e {
-	case CharactersSortNew, CharactersSortPopular:
+	case CharactersSortNew, CharactersSortTop:
 		return true
 	}
 	return false
@@ -514,18 +598,18 @@ type PostsSort string
 const (
 	// Posts by newest first
 	PostsSortNew PostsSort = "NEW"
-	// Posts by popularity
-	PostsSortPopular PostsSort = "POPULAR"
+	// Posts by top likes
+	PostsSortTop PostsSort = "TOP"
 )
 
 var AllPostsSort = []PostsSort{
 	PostsSortNew,
-	PostsSortPopular,
+	PostsSortTop,
 }
 
 func (e PostsSort) IsValid() bool {
 	switch e {
-	case PostsSortNew, PostsSortPopular:
+	case PostsSortNew, PostsSortTop:
 		return true
 	}
 	return false
@@ -558,18 +642,18 @@ type SeriesSort string
 const (
 	// Characters by newest first
 	SeriesSortNew SeriesSort = "NEW"
-	// Characters by popularity
-	SeriesSortPopular SeriesSort = "POPULAR"
+	// Characters by top likes
+	SeriesSortTop SeriesSort = "TOP"
 )
 
 var AllSeriesSort = []SeriesSort{
 	SeriesSortNew,
-	SeriesSortPopular,
+	SeriesSortTop,
 }
 
 func (e SeriesSort) IsValid() bool {
 	switch e {
-	case SeriesSortNew, SeriesSortPopular:
+	case SeriesSortNew, SeriesSortTop:
 		return true
 	}
 	return false

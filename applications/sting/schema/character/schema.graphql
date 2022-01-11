@@ -54,8 +54,8 @@ enum CharactersSort {
   """Characters by newest first"""
   NEW
 
-  """Characters by popularity"""
-  POPULAR
+  """Characters by top likes"""
+  TOP
 }
 
 """Properties by which series connections can be sorted."""
@@ -63,8 +63,8 @@ enum SeriesSort {
   """Characters by newest first"""
   NEW
 
-  """Characters by popularity"""
-  POPULAR
+  """Characters by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -89,7 +89,7 @@ extend type Query {
     title: String
 
     """Sorting options for series."""
-    sortBy: SeriesSort! = POPULAR
+    sortBy: SeriesSort! = TOP
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -126,7 +126,7 @@ extend type Query {
     name: String
 
     """Sorting options for characters."""
-    sortBy: CharactersSort! = POPULAR
+    sortBy: CharactersSort! = TOP
   ): CharacterConnection!
 
   """Get a single character."""

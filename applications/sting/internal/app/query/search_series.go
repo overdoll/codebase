@@ -12,7 +12,7 @@ type SearchSeries struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
 	Slugs     []string
-	OrderBy   string
+	SortBy    string
 	Title     *string
 }
 
@@ -28,7 +28,7 @@ func (h SearchSeriesHandler) Handle(ctx context.Context, query SearchSeries) ([]
 
 	filters, err := post.NewObjectFilters(
 		query.Title,
-		query.OrderBy,
+		query.SortBy,
 		query.Slugs,
 	)
 

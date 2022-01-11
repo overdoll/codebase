@@ -57,9 +57,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ID                  func(childComplexity int) int
-		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Posts               func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		ID                     func(childComplexity int) int
+		ModeratorPostsQueue    func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		PersonalizationProfile func(childComplexity int) int
+		Posts                  func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
 	}
 
 	Audience struct {
@@ -81,6 +82,12 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	AudiencePersonalizationProfile struct {
+		Audiences func(childComplexity int) int
+		Completed func(childComplexity int) int
+		Skipped   func(childComplexity int) int
+	}
+
 	Category struct {
 		ID         func(childComplexity int) int
 		Posts      func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
@@ -98,6 +105,12 @@ type ComplexityRoot struct {
 	CategoryEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	CategoryPersonalizationProfile struct {
+		Categories func(childComplexity int) int
+		Completed  func(childComplexity int) int
+		Skipped    func(childComplexity int) int
 	}
 
 	Character struct {
@@ -129,6 +142,12 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	DateOfBirthPersonalizationProfile struct {
+		Completed   func(childComplexity int) int
+		DateOfBirth func(childComplexity int) int
+		Skipped     func(childComplexity int) int
+	}
+
 	Entity struct {
 		FindAccountByID   func(childComplexity int, id relay.ID) int
 		FindAudienceByID  func(childComplexity int, id relay.ID) int
@@ -145,14 +164,17 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreatePost           func(childComplexity int, input types.CreatePostInput) int
-		LikePost             func(childComplexity int, input types.LikePostInput) int
-		SubmitPost           func(childComplexity int, input types.SubmitPostInput) int
-		UndoLikePost         func(childComplexity int, input types.UndoLikePostInput) int
-		UpdatePostAudience   func(childComplexity int, input types.UpdatePostAudienceInput) int
-		UpdatePostCategories func(childComplexity int, input types.UpdatePostCategoriesInput) int
-		UpdatePostCharacters func(childComplexity int, input types.UpdatePostCharactersInput) int
-		UpdatePostContent    func(childComplexity int, input types.UpdatePostContentInput) int
+		CreatePost                              func(childComplexity int, input types.CreatePostInput) int
+		LikePost                                func(childComplexity int, input types.LikePostInput) int
+		SubmitPost                              func(childComplexity int, input types.SubmitPostInput) int
+		UndoLikePost                            func(childComplexity int, input types.UndoLikePostInput) int
+		UpdatePersonalizationProfileAudience    func(childComplexity int, input types.UpdatePersonalizationProfileAudienceInput) int
+		UpdatePersonalizationProfileCategory    func(childComplexity int, input types.UpdatePersonalizationProfileCategoryInput) int
+		UpdatePersonalizationProfileDateOfBirth func(childComplexity int, input types.UpdatePersonalizationProfileDateOfBirthInput) int
+		UpdatePostAudience                      func(childComplexity int, input types.UpdatePostAudienceInput) int
+		UpdatePostCategories                    func(childComplexity int, input types.UpdatePostCategoriesInput) int
+		UpdatePostCharacters                    func(childComplexity int, input types.UpdatePostCharactersInput) int
+		UpdatePostContent                       func(childComplexity int, input types.UpdatePostContentInput) int
 	}
 
 	PageInfo struct {
@@ -160,6 +182,14 @@ type ComplexityRoot struct {
 		HasNextPage     func(childComplexity int) int
 		HasPreviousPage func(childComplexity int) int
 		StartCursor     func(childComplexity int) int
+	}
+
+	PersonalizationProfile struct {
+		Audience    func(childComplexity int) int
+		Category    func(childComplexity int) int
+		Completed   func(childComplexity int) int
+		DateOfBirth func(childComplexity int) int
+		ID          func(childComplexity int) int
 	}
 
 	Post struct {
@@ -244,6 +274,18 @@ type ComplexityRoot struct {
 		PostLikeID func(childComplexity int) int
 	}
 
+	UpdatePersonalizationProfileAudiencePayload struct {
+		PersonalizationProfile func(childComplexity int) int
+	}
+
+	UpdatePersonalizationProfileCategoryPayload struct {
+		PersonalizationProfile func(childComplexity int) int
+	}
+
+	UpdatePersonalizationProfileDateOfBirthPayload struct {
+		PersonalizationProfile func(childComplexity int) int
+	}
+
 	UpdatePostAudiencePayload struct {
 		Post func(childComplexity int) int
 	}
@@ -270,6 +312,7 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
+	PersonalizationProfile(ctx context.Context, obj *types.Account) (*types.PersonalizationProfile, error)
 	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
@@ -304,6 +347,9 @@ type EntityResolver interface {
 type MutationResolver interface {
 	LikePost(ctx context.Context, input types.LikePostInput) (*types.LikePostPayload, error)
 	UndoLikePost(ctx context.Context, input types.UndoLikePostInput) (*types.UndoLikePostPayload, error)
+	UpdatePersonalizationProfileAudience(ctx context.Context, input types.UpdatePersonalizationProfileAudienceInput) (*types.UpdatePersonalizationProfileAudiencePayload, error)
+	UpdatePersonalizationProfileCategory(ctx context.Context, input types.UpdatePersonalizationProfileCategoryInput) (*types.UpdatePersonalizationProfileCategoryPayload, error)
+	UpdatePersonalizationProfileDateOfBirth(ctx context.Context, input types.UpdatePersonalizationProfileDateOfBirthInput) (*types.UpdatePersonalizationProfileDateOfBirthPayload, error)
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
 	UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error)
 	UpdatePostContent(ctx context.Context, input types.UpdatePostContentInput) (*types.UpdatePostContentPayload, error)
@@ -367,6 +413,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+
+	case "Account.personalizationProfile":
+		if e.complexity.Account.PersonalizationProfile == nil {
+			break
+		}
+
+		return e.complexity.Account.PersonalizationProfile(childComplexity), true
 
 	case "Account.posts":
 		if e.complexity.Account.Posts == nil {
@@ -460,6 +513,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AudienceEdge.Node(childComplexity), true
 
+	case "AudiencePersonalizationProfile.audiences":
+		if e.complexity.AudiencePersonalizationProfile.Audiences == nil {
+			break
+		}
+
+		return e.complexity.AudiencePersonalizationProfile.Audiences(childComplexity), true
+
+	case "AudiencePersonalizationProfile.completed":
+		if e.complexity.AudiencePersonalizationProfile.Completed == nil {
+			break
+		}
+
+		return e.complexity.AudiencePersonalizationProfile.Completed(childComplexity), true
+
+	case "AudiencePersonalizationProfile.skipped":
+		if e.complexity.AudiencePersonalizationProfile.Skipped == nil {
+			break
+		}
+
+		return e.complexity.AudiencePersonalizationProfile.Skipped(childComplexity), true
+
 	case "Category.id":
 		if e.complexity.Category.ID == nil {
 			break
@@ -539,6 +613,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CategoryEdge.Node(childComplexity), true
+
+	case "CategoryPersonalizationProfile.categories":
+		if e.complexity.CategoryPersonalizationProfile.Categories == nil {
+			break
+		}
+
+		return e.complexity.CategoryPersonalizationProfile.Categories(childComplexity), true
+
+	case "CategoryPersonalizationProfile.completed":
+		if e.complexity.CategoryPersonalizationProfile.Completed == nil {
+			break
+		}
+
+		return e.complexity.CategoryPersonalizationProfile.Completed(childComplexity), true
+
+	case "CategoryPersonalizationProfile.skipped":
+		if e.complexity.CategoryPersonalizationProfile.Skipped == nil {
+			break
+		}
+
+		return e.complexity.CategoryPersonalizationProfile.Skipped(childComplexity), true
 
 	case "Character.id":
 		if e.complexity.Character.ID == nil {
@@ -652,6 +747,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreatePostPayload.Post(childComplexity), true
+
+	case "DateOfBirthPersonalizationProfile.completed":
+		if e.complexity.DateOfBirthPersonalizationProfile.Completed == nil {
+			break
+		}
+
+		return e.complexity.DateOfBirthPersonalizationProfile.Completed(childComplexity), true
+
+	case "DateOfBirthPersonalizationProfile.dateOfBirth":
+		if e.complexity.DateOfBirthPersonalizationProfile.DateOfBirth == nil {
+			break
+		}
+
+		return e.complexity.DateOfBirthPersonalizationProfile.DateOfBirth(childComplexity), true
+
+	case "DateOfBirthPersonalizationProfile.skipped":
+		if e.complexity.DateOfBirthPersonalizationProfile.Skipped == nil {
+			break
+		}
+
+		return e.complexity.DateOfBirthPersonalizationProfile.Skipped(childComplexity), true
 
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
@@ -804,6 +920,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UndoLikePost(childComplexity, args["input"].(types.UndoLikePostInput)), true
 
+	case "Mutation.updatePersonalizationProfileAudience":
+		if e.complexity.Mutation.UpdatePersonalizationProfileAudience == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePersonalizationProfileAudience_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePersonalizationProfileAudience(childComplexity, args["input"].(types.UpdatePersonalizationProfileAudienceInput)), true
+
+	case "Mutation.updatePersonalizationProfileCategory":
+		if e.complexity.Mutation.UpdatePersonalizationProfileCategory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePersonalizationProfileCategory_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePersonalizationProfileCategory(childComplexity, args["input"].(types.UpdatePersonalizationProfileCategoryInput)), true
+
+	case "Mutation.updatePersonalizationProfileDateOfBirth":
+		if e.complexity.Mutation.UpdatePersonalizationProfileDateOfBirth == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePersonalizationProfileDateOfBirth_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePersonalizationProfileDateOfBirth(childComplexity, args["input"].(types.UpdatePersonalizationProfileDateOfBirthInput)), true
+
 	case "Mutation.updatePostAudience":
 		if e.complexity.Mutation.UpdatePostAudience == nil {
 			break
@@ -879,6 +1031,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PageInfo.StartCursor(childComplexity), true
+
+	case "PersonalizationProfile.audience":
+		if e.complexity.PersonalizationProfile.Audience == nil {
+			break
+		}
+
+		return e.complexity.PersonalizationProfile.Audience(childComplexity), true
+
+	case "PersonalizationProfile.category":
+		if e.complexity.PersonalizationProfile.Category == nil {
+			break
+		}
+
+		return e.complexity.PersonalizationProfile.Category(childComplexity), true
+
+	case "PersonalizationProfile.completed":
+		if e.complexity.PersonalizationProfile.Completed == nil {
+			break
+		}
+
+		return e.complexity.PersonalizationProfile.Completed(childComplexity), true
+
+	case "PersonalizationProfile.dateOfBirth":
+		if e.complexity.PersonalizationProfile.DateOfBirth == nil {
+			break
+		}
+
+		return e.complexity.PersonalizationProfile.DateOfBirth(childComplexity), true
+
+	case "PersonalizationProfile.id":
+		if e.complexity.PersonalizationProfile.ID == nil {
+			break
+		}
+
+		return e.complexity.PersonalizationProfile.ID(childComplexity), true
 
 	case "Post.audience":
 		if e.complexity.Post.Audience == nil {
@@ -1288,6 +1475,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UndoLikePostPayload.PostLikeID(childComplexity), true
 
+	case "UpdatePersonalizationProfileAudiencePayload.personalizationProfile":
+		if e.complexity.UpdatePersonalizationProfileAudiencePayload.PersonalizationProfile == nil {
+			break
+		}
+
+		return e.complexity.UpdatePersonalizationProfileAudiencePayload.PersonalizationProfile(childComplexity), true
+
+	case "UpdatePersonalizationProfileCategoryPayload.personalizationProfile":
+		if e.complexity.UpdatePersonalizationProfileCategoryPayload.PersonalizationProfile == nil {
+			break
+		}
+
+		return e.complexity.UpdatePersonalizationProfileCategoryPayload.PersonalizationProfile(childComplexity), true
+
+	case "UpdatePersonalizationProfileDateOfBirthPayload.personalizationProfile":
+		if e.complexity.UpdatePersonalizationProfileDateOfBirthPayload.PersonalizationProfile == nil {
+			break
+		}
+
+		return e.complexity.UpdatePersonalizationProfileDateOfBirthPayload.PersonalizationProfile(childComplexity), true
+
 	case "UpdatePostAudiencePayload.post":
 		if e.complexity.UpdatePostAudiencePayload.Post == nil {
 			break
@@ -1423,8 +1631,8 @@ enum AudiencesSort {
   """Audience by newest first"""
   NEW
 
-  """Audience by popularity"""
-  POPULAR
+  """Audience by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -1449,7 +1657,7 @@ extend type Query {
     title: String
 
     """Sorting options for audiences."""
-    sortBy: AudiencesSort! = POPULAR
+    sortBy: AudiencesSort! = TOP
   ): AudienceConnection!
 
   """Get a single audience."""
@@ -1493,8 +1701,8 @@ enum CategoriesSort {
   """Categories by newest first"""
   NEW
 
-  """Categories by popularity"""
-  POPULAR
+  """Categories by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -1519,7 +1727,7 @@ extend type Query {
     title: String
 
     """Sorting options for categories."""
-    sortBy: CategoriesSort! = POPULAR
+    sortBy: CategoriesSort! = TOP
   ): CategoryConnection!
 
   """Get a single category."""
@@ -1590,8 +1798,8 @@ enum CharactersSort {
   """Characters by newest first"""
   NEW
 
-  """Characters by popularity"""
-  POPULAR
+  """Characters by top likes"""
+  TOP
 }
 
 """Properties by which series connections can be sorted."""
@@ -1599,8 +1807,8 @@ enum SeriesSort {
   """Characters by newest first"""
   NEW
 
-  """Characters by popularity"""
-  POPULAR
+  """Characters by top likes"""
+  TOP
 }
 
 extend type Query {
@@ -1625,7 +1833,7 @@ extend type Query {
     title: String
 
     """Sorting options for series."""
-    sortBy: SeriesSort! = POPULAR
+    sortBy: SeriesSort! = TOP
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -1662,7 +1870,7 @@ extend type Query {
     name: String
 
     """Sorting options for characters."""
-    sortBy: CharactersSort! = POPULAR
+    sortBy: CharactersSort! = TOP
   ): CharacterConnection!
 
   """Get a single character."""
@@ -1756,6 +1964,123 @@ extend type Mutation {
   Undo a like a post
   """
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
+}
+`, BuiltIn: false},
+	{Name: "schema/personalization/schema.graphql", Input: `type DateOfBirthPersonalizationProfile {
+  """Whether or not the date of birth section was skipped."""
+  skipped: Boolean!
+
+  """Whether or not the date of birth section was completed."""
+  completed: Boolean!
+
+  """The date of birth set."""
+  dateOfBirth: Time
+}
+
+type AudiencePersonalizationProfile {
+  """Whether or not the audience section was completed."""
+  completed: Boolean!
+
+  """Whether or not the audience section was skipped."""
+  skipped: Boolean!
+
+  """Audiences selected for this section."""
+  audiences: [Audience!]!
+}
+
+type CategoryPersonalizationProfile {
+  """Whether or not the category section was completed."""
+  completed: Boolean!
+
+  """Whether or not the category section was skipped."""
+  skipped: Boolean!
+
+  """Categories selected for this section."""
+  categories: [Category!]!
+}
+
+type PersonalizationProfile {
+  """An ID uniquely identifying this profile."""
+  id: ID!
+
+  """If the whole profile was completed or not."""
+  completed: Boolean!
+
+  """The date of birth profile."""
+  dateOfBirth: DateOfBirthPersonalizationProfile!
+
+  """The audience profile."""
+  audience: AudiencePersonalizationProfile!
+
+  """The category profile."""
+  category: CategoryPersonalizationProfile!
+}
+
+extend type Account {
+  """The personalization profile linked to this account."""
+  personalizationProfile: PersonalizationProfile! @goField(forceResolver: true)
+}
+
+"""Update personalization profile audience."""
+input UpdatePersonalizationProfileAudienceInput {
+  """The audiences that were selected"""
+  audienceIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update personalization profile category."""
+input UpdatePersonalizationProfileCategoryInput {
+  """The categories that were selected"""
+  categoryIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update personalization profile date of birth."""
+input UpdatePersonalizationProfileDateOfBirthInput {
+  """The date of birth that was selected"""
+  dateOfBirth: Time
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile audience"""
+type UpdatePersonalizationProfileAudiencePayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+"""Payload for updating profile category"""
+type UpdatePersonalizationProfileCategoryPayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+"""Payload for updating profile date of birth"""
+type UpdatePersonalizationProfileDateOfBirthPayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+extend type Mutation {
+  """
+  Update the audience for the personalization profile
+  """
+  updatePersonalizationProfileAudience(input: UpdatePersonalizationProfileAudienceInput!): UpdatePersonalizationProfileAudiencePayload
+
+  """
+  Update the category for the personalization profile
+  """
+  updatePersonalizationProfileCategory(input: UpdatePersonalizationProfileCategoryInput!): UpdatePersonalizationProfileCategoryPayload
+
+  """
+  Update the date of birth for the personalization profile
+  """
+  updatePersonalizationProfileDateOfBirth(input: UpdatePersonalizationProfileDateOfBirthInput!): UpdatePersonalizationProfileDateOfBirthPayload
 }
 `, BuiltIn: false},
 	{Name: "schema/post/schema.graphql", Input: `type Post implements Node @key(fields: "id") {
@@ -1911,8 +2236,8 @@ enum PostsSort {
   """Posts by newest first"""
   NEW
 
-  """Posts by popularity"""
-  POPULAR
+  """Posts by top likes"""
+  TOP
 }
 
 extend type Account {
@@ -1979,7 +2304,7 @@ extend type Account {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -2052,7 +2377,7 @@ extend type Query {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -2084,7 +2409,7 @@ extend type Category {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -2113,7 +2438,7 @@ extend type Character {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -2145,7 +2470,7 @@ extend type Series {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -2180,7 +2505,7 @@ extend type Club {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -2212,7 +2537,7 @@ extend type Audience {
     state: PostState = PUBLISHED
 
     """Sorting options for posts."""
-    sortBy: PostsSort! = POPULAR
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
@@ -3071,6 +3396,51 @@ func (ec *executionContext) field_Mutation_undoLikePost_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updatePersonalizationProfileAudience_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePersonalizationProfileAudienceInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePersonalizationProfileAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileAudienceInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePersonalizationProfileCategory_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePersonalizationProfileCategoryInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePersonalizationProfileCategoryInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileCategoryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePersonalizationProfileDateOfBirth_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePersonalizationProfileDateOfBirthInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePersonalizationProfileDateOfBirthInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileDateOfBirthInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updatePostAudience_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3766,6 +4136,41 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _Account_personalizationProfile(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().PersonalizationProfile(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PersonalizationProfile)
+	fc.Result = res
+	return ec.marshalNPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4246,6 +4651,111 @@ func (ec *executionContext) _AudienceEdge_node(ctx context.Context, field graphq
 	return ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AudiencePersonalizationProfile_completed(ctx context.Context, field graphql.CollectedField, obj *types.AudiencePersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AudiencePersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Completed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AudiencePersonalizationProfile_skipped(ctx context.Context, field graphql.CollectedField, obj *types.AudiencePersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AudiencePersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Skipped, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AudiencePersonalizationProfile_audiences(ctx context.Context, field graphql.CollectedField, obj *types.AudiencePersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AudiencePersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audiences, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Audience)
+	fc.Result = res
+	return ec.marshalNAudience2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4605,6 +5115,111 @@ func (ec *executionContext) _CategoryEdge_node(ctx context.Context, field graphq
 	res := resTmp.(*types.Category)
 	fc.Result = res
 	return ec.marshalNCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CategoryPersonalizationProfile_completed(ctx context.Context, field graphql.CollectedField, obj *types.CategoryPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CategoryPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Completed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CategoryPersonalizationProfile_skipped(ctx context.Context, field graphql.CollectedField, obj *types.CategoryPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CategoryPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Skipped, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CategoryPersonalizationProfile_categories(ctx context.Context, field graphql.CollectedField, obj *types.CategoryPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CategoryPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Categories, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Category)
+	fc.Result = res
+	return ec.marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_id(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -5112,6 +5727,108 @@ func (ec *executionContext) _CreatePostPayload_post(ctx context.Context, field g
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _DateOfBirthPersonalizationProfile_skipped(ctx context.Context, field graphql.CollectedField, obj *types.DateOfBirthPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DateOfBirthPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Skipped, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DateOfBirthPersonalizationProfile_completed(ctx context.Context, field graphql.CollectedField, obj *types.DateOfBirthPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DateOfBirthPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Completed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DateOfBirthPersonalizationProfile_dateOfBirth(ctx context.Context, field graphql.CollectedField, obj *types.DateOfBirthPersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DateOfBirthPersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateOfBirth, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5558,6 +6275,123 @@ func (ec *executionContext) _Mutation_undoLikePost(ctx context.Context, field gr
 	return ec.marshalOUndoLikePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updatePersonalizationProfileAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePersonalizationProfileAudience_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePersonalizationProfileAudience(rctx, args["input"].(types.UpdatePersonalizationProfileAudienceInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePersonalizationProfileAudiencePayload)
+	fc.Result = res
+	return ec.marshalOUpdatePersonalizationProfileAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileAudiencePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePersonalizationProfileCategory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePersonalizationProfileCategory_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePersonalizationProfileCategory(rctx, args["input"].(types.UpdatePersonalizationProfileCategoryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePersonalizationProfileCategoryPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePersonalizationProfileCategoryPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileCategoryPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePersonalizationProfileDateOfBirth(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePersonalizationProfileDateOfBirth_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePersonalizationProfileDateOfBirth(rctx, args["input"].(types.UpdatePersonalizationProfileDateOfBirthInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePersonalizationProfileDateOfBirthPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePersonalizationProfileDateOfBirthPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileDateOfBirthPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5924,6 +6758,181 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PersonalizationProfile_id(ctx context.Context, field graphql.CollectedField, obj *types.PersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PersonalizationProfile_completed(ctx context.Context, field graphql.CollectedField, obj *types.PersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Completed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PersonalizationProfile_dateOfBirth(ctx context.Context, field graphql.CollectedField, obj *types.PersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DateOfBirth, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.DateOfBirthPersonalizationProfile)
+	fc.Result = res
+	return ec.marshalNDateOfBirthPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDateOfBirthPersonalizationProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PersonalizationProfile_audience(ctx context.Context, field graphql.CollectedField, obj *types.PersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AudiencePersonalizationProfile)
+	fc.Result = res
+	return ec.marshalNAudiencePersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencePersonalizationProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PersonalizationProfile_category(ctx context.Context, field graphql.CollectedField, obj *types.PersonalizationProfile) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PersonalizationProfile",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CategoryPersonalizationProfile)
+	fc.Result = res
+	return ec.marshalNCategoryPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryPersonalizationProfile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_id(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -7761,6 +8770,102 @@ func (ec *executionContext) _UndoLikePostPayload_postLikeId(ctx context.Context,
 	return ec.marshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdatePersonalizationProfileAudiencePayload_personalizationProfile(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePersonalizationProfileAudiencePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePersonalizationProfileAudiencePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PersonalizationProfile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PersonalizationProfile)
+	fc.Result = res
+	return ec.marshalOPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePersonalizationProfileCategoryPayload_personalizationProfile(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePersonalizationProfileCategoryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePersonalizationProfileCategoryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PersonalizationProfile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PersonalizationProfile)
+	fc.Result = res
+	return ec.marshalOPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePersonalizationProfileDateOfBirthPayload_personalizationProfile(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePersonalizationProfileDateOfBirthPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePersonalizationProfileDateOfBirthPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PersonalizationProfile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PersonalizationProfile)
+	fc.Result = res
+	return ec.marshalOPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdatePostAudiencePayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostAudiencePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9167,6 +10272,99 @@ func (ec *executionContext) unmarshalInputUndoLikePostInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdatePersonalizationProfileAudienceInput(ctx context.Context, obj interface{}) (types.UpdatePersonalizationProfileAudienceInput, error) {
+	var it types.UpdatePersonalizationProfileAudienceInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "audienceIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceIds"))
+			it.AudienceIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "skipped":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skipped"))
+			it.Skipped, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePersonalizationProfileCategoryInput(ctx context.Context, obj interface{}) (types.UpdatePersonalizationProfileCategoryInput, error) {
+	var it types.UpdatePersonalizationProfileCategoryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "categoryIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryIds"))
+			it.CategoryIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "skipped":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skipped"))
+			it.Skipped, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePersonalizationProfileDateOfBirthInput(ctx context.Context, obj interface{}) (types.UpdatePersonalizationProfileDateOfBirthInput, error) {
+	var it types.UpdatePersonalizationProfileDateOfBirthInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "dateOfBirth":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateOfBirth"))
+			it.DateOfBirth, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "skipped":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skipped"))
+			it.Skipped, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdatePostAudienceInput(ctx context.Context, obj interface{}) (types.UpdatePostAudienceInput, error) {
 	var it types.UpdatePostAudienceInput
 	asMap := map[string]interface{}{}
@@ -9432,6 +10630,26 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
+		case "personalizationProfile":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_personalizationProfile(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "moderatorPostsQueue":
 			field := field
 
@@ -9673,6 +10891,57 @@ func (ec *executionContext) _AudienceEdge(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var audiencePersonalizationProfileImplementors = []string{"AudiencePersonalizationProfile"}
+
+func (ec *executionContext) _AudiencePersonalizationProfile(ctx context.Context, sel ast.SelectionSet, obj *types.AudiencePersonalizationProfile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, audiencePersonalizationProfileImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AudiencePersonalizationProfile")
+		case "completed":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AudiencePersonalizationProfile_completed(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "skipped":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AudiencePersonalizationProfile_skipped(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "audiences":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AudiencePersonalizationProfile_audiences(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var categoryImplementors = []string{"Category", "Node", "_Entity"}
 
 func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *types.Category) graphql.Marshaler {
@@ -9835,6 +11104,57 @@ func (ec *executionContext) _CategoryEdge(ctx context.Context, sel ast.Selection
 		case "node":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CategoryEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var categoryPersonalizationProfileImplementors = []string{"CategoryPersonalizationProfile"}
+
+func (ec *executionContext) _CategoryPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, obj *types.CategoryPersonalizationProfile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, categoryPersonalizationProfileImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CategoryPersonalizationProfile")
+		case "completed":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CategoryPersonalizationProfile_completed(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "skipped":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CategoryPersonalizationProfile_skipped(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "categories":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CategoryPersonalizationProfile_categories(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -10107,6 +11427,54 @@ func (ec *executionContext) _CreatePostPayload(ctx context.Context, sel ast.Sele
 		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CreatePostPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var dateOfBirthPersonalizationProfileImplementors = []string{"DateOfBirthPersonalizationProfile"}
+
+func (ec *executionContext) _DateOfBirthPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, obj *types.DateOfBirthPersonalizationProfile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, dateOfBirthPersonalizationProfileImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DateOfBirthPersonalizationProfile")
+		case "skipped":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DateOfBirthPersonalizationProfile_skipped(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "completed":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DateOfBirthPersonalizationProfile_completed(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "dateOfBirth":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DateOfBirthPersonalizationProfile_dateOfBirth(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -10397,6 +11765,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "updatePersonalizationProfileAudience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePersonalizationProfileAudience(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePersonalizationProfileCategory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePersonalizationProfileCategory(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePersonalizationProfileDateOfBirth":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePersonalizationProfileDateOfBirth(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "createPost":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createPost(ctx, field)
@@ -10494,6 +11883,77 @@ func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = innerFunc(ctx)
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var personalizationProfileImplementors = []string{"PersonalizationProfile"}
+
+func (ec *executionContext) _PersonalizationProfile(ctx context.Context, sel ast.SelectionSet, obj *types.PersonalizationProfile) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, personalizationProfileImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PersonalizationProfile")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PersonalizationProfile_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "completed":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PersonalizationProfile_completed(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "dateOfBirth":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PersonalizationProfile_dateOfBirth(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "audience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PersonalizationProfile_audience(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "category":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PersonalizationProfile_category(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11403,6 +12863,90 @@ func (ec *executionContext) _UndoLikePostPayload(ctx context.Context, sel ast.Se
 	return out
 }
 
+var updatePersonalizationProfileAudiencePayloadImplementors = []string{"UpdatePersonalizationProfileAudiencePayload"}
+
+func (ec *executionContext) _UpdatePersonalizationProfileAudiencePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePersonalizationProfileAudiencePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePersonalizationProfileAudiencePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePersonalizationProfileAudiencePayload")
+		case "personalizationProfile":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePersonalizationProfileAudiencePayload_personalizationProfile(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePersonalizationProfileCategoryPayloadImplementors = []string{"UpdatePersonalizationProfileCategoryPayload"}
+
+func (ec *executionContext) _UpdatePersonalizationProfileCategoryPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePersonalizationProfileCategoryPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePersonalizationProfileCategoryPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePersonalizationProfileCategoryPayload")
+		case "personalizationProfile":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePersonalizationProfileCategoryPayload_personalizationProfile(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePersonalizationProfileDateOfBirthPayloadImplementors = []string{"UpdatePersonalizationProfileDateOfBirthPayload"}
+
+func (ec *executionContext) _UpdatePersonalizationProfileDateOfBirthPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePersonalizationProfileDateOfBirthPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePersonalizationProfileDateOfBirthPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePersonalizationProfileDateOfBirthPayload")
+		case "personalizationProfile":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePersonalizationProfileDateOfBirthPayload_personalizationProfile(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updatePostAudiencePayloadImplementors = []string{"UpdatePostAudiencePayload"}
 
 func (ec *executionContext) _UpdatePostAudiencePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostAudiencePayload) graphql.Marshaler {
@@ -11998,6 +13542,50 @@ func (ec *executionContext) marshalNAudience2overdollᚋapplicationsᚋstingᚋi
 	return ec._Audience(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNAudience2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Audience) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx context.Context, sel ast.SelectionSet, v *types.Audience) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -12074,6 +13662,16 @@ func (ec *executionContext) marshalNAudienceEdge2ᚖoverdollᚋapplicationsᚋst
 		return graphql.Null
 	}
 	return ec._AudienceEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNAudiencePersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencePersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v *types.AudiencePersonalizationProfile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AudiencePersonalizationProfile(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNAudiencesSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesSort(ctx context.Context, v interface{}) (types.AudiencesSort, error) {
@@ -12237,6 +13835,16 @@ func (ec *executionContext) marshalNCategoryEdge2ᚖoverdollᚋapplicationsᚋst
 	return ec._CategoryEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCategoryPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v *types.CategoryPersonalizationProfile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CategoryPersonalizationProfile(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCharacter2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx context.Context, sel ast.SelectionSet, v types.Character) graphql.Marshaler {
 	return ec._Character(ctx, sel, &v)
 }
@@ -12392,6 +14000,16 @@ func (ec *executionContext) unmarshalNCreatePostInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNDateOfBirthPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDateOfBirthPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v *types.DateOfBirthPersonalizationProfile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._DateOfBirthPersonalizationProfile(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -12462,6 +14080,20 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPersonalizationProfile2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v types.PersonalizationProfile) graphql.Marshaler {
+	return ec._PersonalizationProfile(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v *types.PersonalizationProfile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PersonalizationProfile(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPost2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v types.Post) graphql.Marshaler {
@@ -12795,6 +14427,21 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 
 func (ec *executionContext) unmarshalNUndoLikePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostInput(ctx context.Context, v interface{}) (types.UndoLikePostInput, error) {
 	res, err := ec.unmarshalInputUndoLikePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePersonalizationProfileAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileAudienceInput(ctx context.Context, v interface{}) (types.UpdatePersonalizationProfileAudienceInput, error) {
+	res, err := ec.unmarshalInputUpdatePersonalizationProfileAudienceInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePersonalizationProfileCategoryInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileCategoryInput(ctx context.Context, v interface{}) (types.UpdatePersonalizationProfileCategoryInput, error) {
+	res, err := ec.unmarshalInputUpdatePersonalizationProfileCategoryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePersonalizationProfileDateOfBirthInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileDateOfBirthInput(ctx context.Context, v interface{}) (types.UpdatePersonalizationProfileDateOfBirthInput, error) {
+	res, err := ec.unmarshalInputUpdatePersonalizationProfileDateOfBirthInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -13281,6 +14928,13 @@ func (ec *executionContext) marshalOLikePostPayload2ᚖoverdollᚋapplications�
 	return ec._LikePostPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOPersonalizationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPersonalizationProfile(ctx context.Context, sel ast.SelectionSet, v *types.PersonalizationProfile) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._PersonalizationProfile(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v *types.Post) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -13417,6 +15071,27 @@ func (ec *executionContext) marshalOUndoLikePostPayload2ᚖoverdollᚋapplicatio
 		return graphql.Null
 	}
 	return ec._UndoLikePostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePersonalizationProfileAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePersonalizationProfileAudiencePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePersonalizationProfileAudiencePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePersonalizationProfileCategoryPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileCategoryPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePersonalizationProfileCategoryPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePersonalizationProfileCategoryPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePersonalizationProfileDateOfBirthPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePersonalizationProfileDateOfBirthPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePersonalizationProfileDateOfBirthPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePersonalizationProfileDateOfBirthPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdatePostAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostAudiencePayload) graphql.Marshaler {

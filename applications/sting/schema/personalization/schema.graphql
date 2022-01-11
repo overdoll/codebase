@@ -1,0 +1,116 @@
+type DateOfBirthPersonalizationProfile {
+  """Whether or not the date of birth section was skipped."""
+  skipped: Boolean!
+
+  """Whether or not the date of birth section was completed."""
+  completed: Boolean!
+
+  """The date of birth set."""
+  dateOfBirth: Time
+}
+
+type AudiencePersonalizationProfile {
+  """Whether or not the audience section was completed."""
+  completed: Boolean!
+
+  """Whether or not the audience section was skipped."""
+  skipped: Boolean!
+
+  """Audiences selected for this section."""
+  audiences: [Audience!]!
+}
+
+type CategoryPersonalizationProfile {
+  """Whether or not the category section was completed."""
+  completed: Boolean!
+
+  """Whether or not the category section was skipped."""
+  skipped: Boolean!
+
+  """Categories selected for this section."""
+  categories: [Category!]!
+}
+
+type PersonalizationProfile {
+  """An ID uniquely identifying this profile."""
+  id: ID!
+
+  """If the whole profile was completed or not."""
+  completed: Boolean!
+
+  """The date of birth profile."""
+  dateOfBirth: DateOfBirthPersonalizationProfile!
+
+  """The audience profile."""
+  audience: AudiencePersonalizationProfile!
+
+  """The category profile."""
+  category: CategoryPersonalizationProfile!
+}
+
+extend type Account {
+  """The personalization profile linked to this account."""
+  personalizationProfile: PersonalizationProfile! @goField(forceResolver: true)
+}
+
+"""Update personalization profile audience."""
+input UpdatePersonalizationProfileAudienceInput {
+  """The audiences that were selected"""
+  audienceIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update personalization profile category."""
+input UpdatePersonalizationProfileCategoryInput {
+  """The categories that were selected"""
+  categoryIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update personalization profile date of birth."""
+input UpdatePersonalizationProfileDateOfBirthInput {
+  """The date of birth that was selected"""
+  dateOfBirth: Time
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile audience"""
+type UpdatePersonalizationProfileAudiencePayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+"""Payload for updating profile category"""
+type UpdatePersonalizationProfileCategoryPayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+"""Payload for updating profile date of birth"""
+type UpdatePersonalizationProfileDateOfBirthPayload {
+  """The updated profile."""
+  personalizationProfile: PersonalizationProfile
+}
+
+extend type Mutation {
+  """
+  Update the audience for the personalization profile
+  """
+  updatePersonalizationProfileAudience(input: UpdatePersonalizationProfileAudienceInput!): UpdatePersonalizationProfileAudiencePayload
+
+  """
+  Update the category for the personalization profile
+  """
+  updatePersonalizationProfileCategory(input: UpdatePersonalizationProfileCategoryInput!): UpdatePersonalizationProfileCategoryPayload
+
+  """
+  Update the date of birth for the personalization profile
+  """
+  updatePersonalizationProfileDateOfBirth(input: UpdatePersonalizationProfileDateOfBirthInput!): UpdatePersonalizationProfileDateOfBirthPayload
+}

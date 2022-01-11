@@ -22,7 +22,7 @@ type SearchPosts struct {
 
 	State *string
 
-	OrderBy string
+	SortBy string
 }
 
 type SearchPostsHandler struct {
@@ -36,7 +36,7 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
 	filters, err := post.NewPostFilters(
-		query.OrderBy,
+		query.SortBy,
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,

@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -103,10 +102,23 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		Index(categoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+		sortingColumn = "created_at"
+		sortingAscending = true
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "total_likes"
+		sortingAscending = false
+	}
+
+	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+
+	query := elastic.NewBoolQuery()
 
 	if filter.Search() != nil {
 		query.Must(
@@ -143,7 +155,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.ThumbnailResourceId, pst.TotalLikes)
-		newCategory.Node = paging.NewNode(pst.CreatedAt)
+		newCategory.Node = paging.NewNode(hit.Sort)
 
 		cats = append(cats, newCategory)
 	}

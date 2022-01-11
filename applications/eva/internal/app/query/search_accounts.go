@@ -9,7 +9,8 @@ import (
 
 type SearchAccounts struct {
 	Cursor   *paging.Cursor
-	Username string
+	Username *string
+	SortBy   string
 }
 
 type SearchAccountsHandler struct {
@@ -22,7 +23,13 @@ func NewSearchAccountsHandler(ar account.IndexRepository) SearchAccountsHandler 
 
 func (h SearchAccountsHandler) Handle(ctx context.Context, query SearchAccounts) ([]*account.Account, error) {
 
-	results, err := h.ar.SearchAccounts(ctx, query.Cursor, query.Username)
+	filters, err := account.NewAccountFilters(query.SortBy, query.Username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := h.ar.SearchAccounts(ctx, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err
