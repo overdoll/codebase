@@ -1,5 +1,4 @@
-import { Box, Center, Flex, HStack, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap } from '../../PageLayout'
+import { Box, Center, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -28,16 +27,18 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           zIndex='sidebar'
           overflowX='hidden'
         >
-          {props.title != null &&
-            <Box p={2}>
-              <PageSectionTitle>
-                {props.title}
-              </PageSectionTitle>
-            </Box>}
-          {props.outsideElements != null &&
-            <Box m={2}>
-              {props.outsideElements}
-            </Box>}
+          <Stack spacing={1}>
+            {props.title != null &&
+              <Flex justify='center' align='center' px={2} pt={2}>
+                <Heading fontSize='xl' color='gray.00'>
+                  {props.title}
+                </Heading>
+              </Flex>}
+            {props.outsideElements != null &&
+              <Box px={2}>
+                {props.outsideElements}
+              </Box>}
+          </Stack>
           <HStack p={2} overflowX='auto' spacing={3}>
             {props.children}
           </HStack>
@@ -62,11 +63,12 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           md: 'initial'
         }}
       >
-        {props.title != null && <PageSectionWrap mb={4}>
-          <PageSectionTitle>
-            {props.title}
-          </PageSectionTitle>
-        </PageSectionWrap>}
+        {props.title != null &&
+          <Box mb={4}>
+            <Heading fontSize='xl' color='gray.00'>
+              {props.title}
+            </Heading>
+          </Box>}
         <Stack spacing={3}>
           {props.children}
         </Stack>
