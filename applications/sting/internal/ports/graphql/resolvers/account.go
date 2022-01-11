@@ -41,13 +41,13 @@ func (r AccountResolver) ClubMembersPostsFeed(ctx context.Context, obj *types.Ac
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r AccountResolver) PersonalizationProfile(ctx context.Context, obj *types.Account) (*types.PersonalizationProfile, error) {
+func (r AccountResolver) CurationProfile(ctx context.Context, obj *types.Account) (*types.CurationProfile, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	profile, err := r.App.Queries.PersonalizationProfileByAccountId.Handle(ctx, query.PersonalizationProfileByAccountId{
+	profile, err := r.App.Queries.CurationProfileByAccountId.Handle(ctx, query.PersonalizationProfileByAccountId{
 		Principal: principal.FromContext(ctx),
 		AccountId: principal.FromContext(ctx).AccountId(),
 	})
@@ -56,7 +56,7 @@ func (r AccountResolver) PersonalizationProfile(ctx context.Context, obj *types.
 		return nil, err
 	}
 
-	return types.MarshalPersonalizationProfileToGraphQL(ctx, profile), nil
+	return types.MarshalCurationProfileToGraphQL(ctx, profile), nil
 }
 
 func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {

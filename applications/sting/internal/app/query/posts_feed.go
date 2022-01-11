@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/personalization"
+	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/libraries/paging"
 
 	"overdoll/applications/sting/internal/domain/post"
@@ -15,12 +15,12 @@ type PostsFeed struct {
 }
 
 type PostsFeedHandler struct {
-	ppr personalization.Repository
+	ppr curation.Repository
 	pr  post.Repository
 	pi  post.IndexRepository
 }
 
-func NewPostsFeedHandler(ppr personalization.Repository, pr post.Repository, pi post.IndexRepository) PostsFeedHandler {
+func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository) PostsFeedHandler {
 	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr}
 }
 

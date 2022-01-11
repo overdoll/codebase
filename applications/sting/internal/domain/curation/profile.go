@@ -1,6 +1,7 @@
-package personalization
+package curation
 
 import (
+	"errors"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -46,6 +47,13 @@ func (m *Profile) AudienceProfileSkipped() bool {
 }
 
 func (m *Profile) UpdateDateOfBirth(dateOfBirth *time.Time, skipped bool) error {
+
+	if dateOfBirth != nil {
+		if time.Now().Sub(*dateOfBirth).Hours() <= 157680 {
+			return errors.New("date of birth must be at least 18 years")
+		}
+	}
+
 	m.dateOfBirth = dateOfBirth
 	m.dateOfBirthSkipped = skipped
 	return nil

@@ -1,4 +1,4 @@
-type DateOfBirthPersonalizationProfile {
+type DateOfBirthCurationProfile {
   """Whether or not the date of birth section was skipped."""
   skipped: Boolean!
 
@@ -9,7 +9,7 @@ type DateOfBirthPersonalizationProfile {
   dateOfBirth: Time
 }
 
-type AudiencePersonalizationProfile {
+type AudienceCurationProfile {
   """Whether or not the audience section was completed."""
   completed: Boolean!
 
@@ -20,7 +20,7 @@ type AudiencePersonalizationProfile {
   audiences: [Audience!]!
 }
 
-type CategoryPersonalizationProfile {
+type CategoryCurationProfile {
   """Whether or not the category section was completed."""
   completed: Boolean!
 
@@ -31,7 +31,7 @@ type CategoryPersonalizationProfile {
   categories: [Category!]!
 }
 
-type PersonalizationProfile {
+type CurationProfile {
   """An ID uniquely identifying this profile."""
   id: ID!
 
@@ -39,22 +39,22 @@ type PersonalizationProfile {
   completed: Boolean!
 
   """The date of birth profile."""
-  dateOfBirth: DateOfBirthPersonalizationProfile!
+  dateOfBirth: DateOfBirthCurationProfile!
 
   """The audience profile."""
-  audience: AudiencePersonalizationProfile!
+  audience: AudienceCurationProfile!
 
   """The category profile."""
-  category: CategoryPersonalizationProfile!
+  category: CategoryCurationProfile!
 }
 
 extend type Account {
-  """The personalization profile linked to this account."""
-  personalizationProfile: PersonalizationProfile! @goField(forceResolver: true)
+  """The curation profile linked to this account."""
+  curationProfile: CurationProfile! @goField(forceResolver: true)
 }
 
-"""Update personalization profile audience."""
-input UpdatePersonalizationProfileAudienceInput {
+"""Update curation profile audience."""
+input UpdateCurationProfileAudienceInput {
   """The audiences that were selected"""
   audienceIds: [ID!]!
 
@@ -62,8 +62,8 @@ input UpdatePersonalizationProfileAudienceInput {
   skipped: Boolean!
 }
 
-"""Update personalization profile category."""
-input UpdatePersonalizationProfileCategoryInput {
+"""Update curation profile category."""
+input UpdateCurationProfileCategoryInput {
   """The categories that were selected"""
   categoryIds: [ID!]!
 
@@ -71,8 +71,8 @@ input UpdatePersonalizationProfileCategoryInput {
   skipped: Boolean!
 }
 
-"""Update personalization profile date of birth."""
-input UpdatePersonalizationProfileDateOfBirthInput {
+"""Update curation profile date of birth."""
+input UpdateCurationProfileDateOfBirthInput {
   """The date of birth that was selected"""
   dateOfBirth: Time
 
@@ -81,36 +81,36 @@ input UpdatePersonalizationProfileDateOfBirthInput {
 }
 
 """Payload for updating profile audience"""
-type UpdatePersonalizationProfileAudiencePayload {
+type UpdateCurationProfileAudiencePayload {
   """The updated profile."""
-  personalizationProfile: PersonalizationProfile
+  curationProfile: CurationProfile
 }
 
 """Payload for updating profile category"""
-type UpdatePersonalizationProfileCategoryPayload {
+type UpdateCurationProfileCategoryPayload {
   """The updated profile."""
-  personalizationProfile: PersonalizationProfile
+  curationProfile: CurationProfile
 }
 
 """Payload for updating profile date of birth"""
-type UpdatePersonalizationProfileDateOfBirthPayload {
+type UpdateCurationProfileDateOfBirthPayload {
   """The updated profile."""
-  personalizationProfile: PersonalizationProfile
+  curationProfile: CurationProfile
 }
 
 extend type Mutation {
   """
-  Update the audience for the personalization profile
+  Update the audience for the curation profile
   """
-  updatePersonalizationProfileAudience(input: UpdatePersonalizationProfileAudienceInput!): UpdatePersonalizationProfileAudiencePayload
+  updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
 
   """
-  Update the category for the personalization profile
+  Update the category for the curation profile
   """
-  updatePersonalizationProfileCategory(input: UpdatePersonalizationProfileCategoryInput!): UpdatePersonalizationProfileCategoryPayload
+  updateCurationProfileCategory(input: UpdateCurationProfileCategoryInput!): UpdateCurationProfileCategoryPayload
 
   """
-  Update the date of birth for the personalization profile
+  Update the date of birth for the curation profile
   """
-  updatePersonalizationProfileDateOfBirth(input: UpdatePersonalizationProfileDateOfBirthInput!): UpdatePersonalizationProfileDateOfBirthPayload
+  updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
 }

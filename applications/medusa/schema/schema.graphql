@@ -101,6 +101,26 @@ type Account implements Node {
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
+  """The curation profile linked to this account."""
+  curationProfile: CurationProfile!
+
+  """Posts feed for the clubs that the account currently is a member of."""
+  clubMembersPostsFeed(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
@@ -132,8 +152,8 @@ type Account implements Node {
     """Search by a post state."""
     state: PostState = REVIEW
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = NEW
   ): PostConnection!
 
   """Contributions specific to this account"""
@@ -167,8 +187,8 @@ type Account implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 
   """
@@ -251,8 +271,8 @@ type Account implements Node {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = {field: CREATED_AT}
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
 
   """Maximum amount of clubs that you can join as an account."""
@@ -279,8 +299,8 @@ type Account implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = {field: JOINED_AT}
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection!
 }
 
@@ -408,6 +428,12 @@ type AccountSessionEdge {
   node: AccountSession!
 }
 
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
+}
+
 """Add an email to the account"""
 input AddAccountEmailInput {
   """The email that should be added to this account"""
@@ -512,6 +538,9 @@ type Audience implements Node {
   """A title for this audience."""
   title: String!
 
+  """The total amount of likes on this audience."""
+  totalLikes: Int!
+
   """Posts belonging to this audience"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -540,8 +569,8 @@ type Audience implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -550,21 +579,29 @@ type AudienceConnection {
   pageInfo: PageInfo!
 }
 
+type AudienceCurationProfile {
+  """Whether or not the audience section was completed."""
+  completed: Boolean!
+
+  """Whether or not the audience section was skipped."""
+  skipped: Boolean!
+
+  """Audiences selected for this section."""
+  audiences: [Audience!]!
+}
+
 type AudienceEdge {
   cursor: String!
   node: Audience!
 }
 
-"""Ordering options for audiences"""
-input AudiencesOrder {
-  """The field to order audiences by."""
-  field: AudiencesOrderField!
-}
+"""Properties by which audience connections can be sorted."""
+enum AudiencesSort {
+  """Audience by newest first"""
+  NEW
 
-"""Properties by which audience connections can be ordered."""
-enum AudiencesOrderField {
-  """Audience by created time"""
-  CREATED_AT
+  """Audience by top likes"""
+  TOP
 }
 
 """Authentication token. Used for logging in."""
@@ -629,16 +666,13 @@ type BecomeClubMemberPayload {
   clubMember: ClubMember
 }
 
-"""Ordering options for categories"""
-input CategoriesOrder {
-  """The field to order categories by."""
-  field: CategoriesOrderField!
-}
+"""Properties by which categories connections can be sorted."""
+enum CategoriesSort {
+  """Categories by newest first"""
+  NEW
 
-"""Properties by which category connections can be ordered."""
-enum CategoriesOrderField {
-  """Category by created time"""
-  CREATED_AT
+  """Categories by top likes"""
+  TOP
 }
 
 type Category implements Node {
@@ -653,6 +687,9 @@ type Category implements Node {
 
   """A title for this category."""
   title: String!
+
+  """The total amount of likes on this category."""
+  totalLikes: Int!
 
   """Posts belonging to this category"""
   posts(
@@ -682,14 +719,25 @@ type Category implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
 type CategoryConnection {
   edges: [CategoryEdge!]!
   pageInfo: PageInfo!
+}
+
+type CategoryCurationProfile {
+  """Whether or not the category section was completed."""
+  completed: Boolean!
+
+  """Whether or not the category section was skipped."""
+  skipped: Boolean!
+
+  """Categories selected for this section."""
+  categories: [Category!]!
 }
 
 type CategoryEdge {
@@ -712,6 +760,9 @@ type Character implements Node {
 
   """The series linked to this character."""
   series: Series!
+
+  """The total amount of likes on this character."""
+  totalLikes: Int!
 
   """Posts belonging to this character"""
   posts(
@@ -738,8 +789,8 @@ type Character implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -753,16 +804,13 @@ type CharacterEdge {
   node: Character!
 }
 
-"""Ordering options for characters"""
-input CharactersOrder {
-  """The field to order characters by."""
-  field: CharactersOrderField!
-}
+"""Properties by which character connections can be sorted."""
+enum CharactersSort {
+  """Characters by newest first"""
+  NEW
 
-"""Properties by which character connections can be ordered."""
-enum CharactersOrderField {
-  """Character by created time"""
-  CREATED_AT
+  """Characters by top likes"""
+  TOP
 }
 
 type Club implements Node {
@@ -815,8 +863,8 @@ type Club implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = {field: JOINED_AT}
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection!
 
   """Posts belonging to this club"""
@@ -850,8 +898,8 @@ type Club implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -889,16 +937,10 @@ type ClubMemberEdge {
   node: ClubMember!
 }
 
-"""Ordering options for club members"""
-input ClubMembersOrder {
-  """The field to order clubs by."""
-  field: ClubMembersOrderField!
-}
-
-"""Properties by which club member connections can be ordered."""
-enum ClubMembersOrderField {
-  """By joined at"""
-  JOINED_AT
+"""Properties by which club member connections can be sorted."""
+enum ClubMembersSort {
+  """By newest members"""
+  NEWEST
 }
 
 """The club slug alias"""
@@ -907,16 +949,10 @@ type ClubSlugAlias {
   slug: String!
 }
 
-"""Ordering options for clubs"""
-input ClubsOrder {
-  """The field to order clubs by."""
-  field: ClubsOrderField!
-}
-
-"""Properties by which club connections can be ordered."""
-enum ClubsOrderField {
-  """Club by created time"""
-  CREATED_AT
+"""Properties by which club connections can be sorted."""
+enum ClubsSort {
+  """Clubs by popularity"""
+  POPULAR
 }
 
 """Input for confirming the account email"""
@@ -1006,6 +1042,34 @@ type CreatePostPayload {
   post: Post
 }
 
+type CurationProfile {
+  """An ID uniquely identifying this profile."""
+  id: ID!
+
+  """If the whole profile was completed or not."""
+  completed: Boolean!
+
+  """The date of birth profile."""
+  dateOfBirth: DateOfBirthCurationProfile!
+
+  """The audience profile."""
+  audience: AudienceCurationProfile!
+
+  """The category profile."""
+  category: CategoryCurationProfile!
+}
+
+type DateOfBirthCurationProfile {
+  """Whether or not the date of birth section was skipped."""
+  skipped: Boolean!
+
+  """Whether or not the date of birth section was completed."""
+  completed: Boolean!
+
+  """The date of birth set."""
+  dateOfBirth: Time
+}
+
 """Input for removing an email from an account"""
 input DeleteAccountEmailInput {
   """The email that should be removed"""
@@ -1026,7 +1090,7 @@ type DisableAccountMultiFactorPayload {
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
-  """The TOTP ID, sent intially"""
+  """The TOTP ID, sent initially"""
   id: String!
 
   """The code that the TOTP expects"""
@@ -1176,6 +1240,18 @@ type Language {
 
   """Fully qualified name"""
   name: String!
+}
+
+"""Like a post."""
+input LikePostInput {
+  """The post ID that you want to like"""
+  postId: ID!
+}
+
+"""Payload for the liked post"""
+type LikePostPayload {
+  """The new PostLike entry."""
+  postLike: PostLike
 }
 
 """Represents a physical location."""
@@ -1361,6 +1437,21 @@ type Mutation {
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload
 
+  """Update the audience for the curation profile"""
+  updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
+
+  """Update the category for the curation profile"""
+  updateCurationProfileCategory(input: UpdateCurationProfileCategoryInput!): UpdateCurationProfileCategoryPayload
+
+  """Update the date of birth for the curation profile"""
+  updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
+
+  """Like a post"""
+  likePost(input: LikePostInput!): LikePostPayload
+
+  """Undo a like a post"""
+  undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
+
   """Create a new post"""
   createPost(input: CreatePostInput!): CreatePostPayload
 
@@ -1473,6 +1564,23 @@ type Post implements Node {
   """The date at which this pending post will be reassigned"""
   reassignmentAt: Time
 
+  """Suggested posts for this post."""
+  suggestedPosts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+
   """Represents the audience that this post belongs to"""
   audience: Audience
 
@@ -1481,6 +1589,12 @@ type Post implements Node {
 
   """Characters that belong to this post"""
   characters: [Character!]!
+
+  """The amount of likes on this post."""
+  likes: Int!
+
+  """Whether or not the viewer liked this post."""
+  viewerLiked: PostLike
 
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -1585,6 +1699,20 @@ type PostEdge {
   node: Post!
 }
 
+type PostLike implements Node {
+  """An ID uniquely identifying this like."""
+  id: ID!
+
+  """The time and date at which the post was liked."""
+  likedAt: Time!
+
+  """The post this like belongs to."""
+  post: Post!
+
+  """The account this like belongs to"""
+  account: Account!
+}
+
 """Infraction history belonging to an account"""
 type PostRejectionReason implements Node {
   """ID of the rejection reason"""
@@ -1665,16 +1793,13 @@ type PostReportReasonEdge {
   cursor: String!
 }
 
-"""Ordering options for posts"""
-input PostsOrder {
-  """The field to order security advisories by."""
-  field: PostsOrderField!
-}
+"""Properties by which posts connections can be sorted."""
+enum PostsSort {
+  """Posts by newest first"""
+  NEW
 
-"""Properties by which posts connections can be ordered."""
-enum PostsOrderField {
-  """Posts by update time"""
-  CREATED_AT
+  """Posts by top likes"""
+  TOP
 }
 
 enum PostState {
@@ -1733,6 +1858,9 @@ type Query {
 
     """Filter by the account username."""
     username: String
+
+    """Sorting options for accounts."""
+    sortBy: AccountsSort! = NEW
   ): AccountConnection!
 
   """List of all available languages"""
@@ -1777,8 +1905,8 @@ type Query {
     """Search by title of the audience."""
     title: String
 
-    """Ordering options for audiences."""
-    orderBy: AudiencesOrder! = {field: CREATED_AT}
+    """Sorting options for audiences."""
+    sortBy: AudiencesSort! = TOP
   ): AudienceConnection!
 
   """Get a single audience."""
@@ -1809,8 +1937,8 @@ type Query {
     """Filter by the title of the category."""
     title: String
 
-    """Ordering options for categories."""
-    orderBy: CategoriesOrder! = {field: CREATED_AT}
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = TOP
   ): CategoryConnection!
 
   """Get a single category."""
@@ -1841,8 +1969,8 @@ type Query {
     """Filter by the title of the series."""
     title: String
 
-    """Ordering options for series."""
-    orderBy: SeriesOrder! = {field: CREATED_AT}
+    """Sorting options for series."""
+    sortBy: SeriesSort! = TOP
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -1880,8 +2008,8 @@ type Query {
     """Filter by the name of the character."""
     name: String
 
-    """Ordering options for characters."""
-    orderBy: CharactersOrder! = {field: CREATED_AT}
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = TOP
   ): CharacterConnection!
 
   """Get a single character."""
@@ -1892,6 +2020,23 @@ type Query {
     """A series slug is required since character slugs are unique-per-series."""
     seriesSlug: String!
   ): Character
+
+  """Posts feed. The default."""
+  postsFeed(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
 
   """Look up a single post"""
   post(
@@ -1930,8 +2075,8 @@ type Query {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 
   """
@@ -1998,8 +2143,8 @@ type Query {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = {field: CREATED_AT}
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
 
   """Get a single club."""
@@ -2194,6 +2339,9 @@ type Series implements Node {
   """A title for this series."""
   title: String!
 
+  """The total amount of likes on this series."""
+  totalLikes: Int!
+
   """Posts belonging to this series"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2222,8 +2370,8 @@ type Series implements Node {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = {field: CREATED_AT}
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -2237,16 +2385,13 @@ type SeriesEdge {
   node: Series!
 }
 
-"""Ordering options for series"""
-input SeriesOrder {
-  """The field to order series by."""
-  field: SeriesOrderField!
-}
+"""Properties by which series connections can be sorted."""
+enum SeriesSort {
+  """Characters by newest first"""
+  NEW
 
-"""Properties by which series connections can be ordered."""
-enum SeriesOrderField {
-  """Series by created time"""
-  CREATED_AT
+  """Characters by top likes"""
+  TOP
 }
 
 """Publish post."""
@@ -2265,6 +2410,18 @@ type SubmitPostPayload {
 }
 
 scalar Time
+
+"""Undo like on a post."""
+input UndoLikePostInput {
+  """The post ID that you want to unlike"""
+  postId: ID!
+}
+
+"""Payload for undoing a post like"""
+type UndoLikePostPayload {
+  """The post like that was deleted."""
+  postLikeId: ID
+}
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
@@ -2355,6 +2512,51 @@ input UpdateClubThumbnailInput {
 type UpdateClubThumbnailPayload {
   """The club after update"""
   club: Club
+}
+
+"""Update curation profile audience."""
+input UpdateCurationProfileAudienceInput {
+  """The audiences that were selected"""
+  audienceIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile audience"""
+type UpdateCurationProfileAudiencePayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
+}
+
+"""Update curation profile category."""
+input UpdateCurationProfileCategoryInput {
+  """The categories that were selected"""
+  categoryIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile category"""
+type UpdateCurationProfileCategoryPayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
+}
+
+"""Update curation profile date of birth."""
+input UpdateCurationProfileDateOfBirthInput {
+  """The date of birth that was selected"""
+  dateOfBirth: Time
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile date of birth"""
+type UpdateCurationProfileDateOfBirthPayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
 }
 
 """Input for updating the current language"""

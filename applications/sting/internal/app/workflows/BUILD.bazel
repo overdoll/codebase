@@ -3,7 +3,9 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
+        "delete_post_like.go",
         "discard_post.go",
+        "new_post_like.go",
         "options.go",
         "publish_post.go",
         "remove_post.go",

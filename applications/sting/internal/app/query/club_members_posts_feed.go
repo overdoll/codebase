@@ -30,7 +30,7 @@ func (h ClubMembersPostsFeedHandler) Handle(ctx context.Context, query ClubMembe
 		return nil, err
 	}
 
-	// no club ids - return empty
+	// no club ids - return empty feed
 	if len(clubIds) == 0 {
 		return nil, nil
 	}

@@ -11,8 +11,8 @@ import (
 )
 
 type Account struct {
-	// The personalization profile linked to this account.
-	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+	// The curation profile linked to this account.
+	CurationProfile *CurationProfile `json:"curationProfile"`
 	// Posts feed for the clubs that the account currently is a member of.
 	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
 	// Posts queue specific to this account (when moderator)
@@ -47,18 +47,18 @@ type AudienceConnection struct {
 	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
-type AudienceEdge struct {
-	Cursor string    `json:"cursor"`
-	Node   *Audience `json:"node"`
-}
-
-type AudiencePersonalizationProfile struct {
+type AudienceCurationProfile struct {
 	// Whether or not the audience section was completed.
 	Completed bool `json:"completed"`
 	// Whether or not the audience section was skipped.
 	Skipped bool `json:"skipped"`
 	// Audiences selected for this section.
 	Audiences []*Audience `json:"audiences"`
+}
+
+type AudienceEdge struct {
+	Cursor string    `json:"cursor"`
+	Node   *Audience `json:"node"`
 }
 
 type Category struct {
@@ -84,18 +84,18 @@ type CategoryConnection struct {
 	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
-type CategoryEdge struct {
-	Cursor string    `json:"cursor"`
-	Node   *Category `json:"node"`
-}
-
-type CategoryPersonalizationProfile struct {
+type CategoryCurationProfile struct {
 	// Whether or not the category section was completed.
 	Completed bool `json:"completed"`
 	// Whether or not the category section was skipped.
 	Skipped bool `json:"skipped"`
 	// Categories selected for this section.
 	Categories []*Category `json:"categories"`
+}
+
+type CategoryEdge struct {
+	Cursor string    `json:"cursor"`
+	Node   *Category `json:"node"`
 }
 
 type Character struct {
@@ -148,7 +148,20 @@ type CreatePostPayload struct {
 	Post *Post `json:"post"`
 }
 
-type DateOfBirthPersonalizationProfile struct {
+type CurationProfile struct {
+	// An ID uniquely identifying this profile.
+	ID relay.ID `json:"id"`
+	// If the whole profile was completed or not.
+	Completed bool `json:"completed"`
+	// The date of birth profile.
+	DateOfBirth *DateOfBirthCurationProfile `json:"dateOfBirth"`
+	// The audience profile.
+	Audience *AudienceCurationProfile `json:"audience"`
+	// The category profile.
+	Category *CategoryCurationProfile `json:"category"`
+}
+
+type DateOfBirthCurationProfile struct {
 	// Whether or not the date of birth section was skipped.
 	Skipped bool `json:"skipped"`
 	// Whether or not the date of birth section was completed.
@@ -167,19 +180,6 @@ type LikePostInput struct {
 type LikePostPayload struct {
 	// The new PostLike entry.
 	PostLike *PostLike `json:"postLike"`
-}
-
-type PersonalizationProfile struct {
-	// An ID uniquely identifying this profile.
-	ID relay.ID `json:"id"`
-	// If the whole profile was completed or not.
-	Completed bool `json:"completed"`
-	// The date of birth profile.
-	DateOfBirth *DateOfBirthPersonalizationProfile `json:"dateOfBirth"`
-	// The audience profile.
-	Audience *AudiencePersonalizationProfile `json:"audience"`
-	// The category profile.
-	Category *CategoryPersonalizationProfile `json:"category"`
 }
 
 type Post struct {
@@ -303,8 +303,8 @@ type UndoLikePostPayload struct {
 	PostLikeID *relay.ID `json:"postLikeId"`
 }
 
-// Update personalization profile audience.
-type UpdatePersonalizationProfileAudienceInput struct {
+// Update curation profile audience.
+type UpdateCurationProfileAudienceInput struct {
 	// The audiences that were selected
 	AudienceIds []relay.ID `json:"audienceIds"`
 	// Whether or not this section was skipped
@@ -312,13 +312,13 @@ type UpdatePersonalizationProfileAudienceInput struct {
 }
 
 // Payload for updating profile audience
-type UpdatePersonalizationProfileAudiencePayload struct {
+type UpdateCurationProfileAudiencePayload struct {
 	// The updated profile.
-	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+	CurationProfile *CurationProfile `json:"curationProfile"`
 }
 
-// Update personalization profile category.
-type UpdatePersonalizationProfileCategoryInput struct {
+// Update curation profile category.
+type UpdateCurationProfileCategoryInput struct {
 	// The categories that were selected
 	CategoryIds []relay.ID `json:"categoryIds"`
 	// Whether or not this section was skipped
@@ -326,13 +326,13 @@ type UpdatePersonalizationProfileCategoryInput struct {
 }
 
 // Payload for updating profile category
-type UpdatePersonalizationProfileCategoryPayload struct {
+type UpdateCurationProfileCategoryPayload struct {
 	// The updated profile.
-	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+	CurationProfile *CurationProfile `json:"curationProfile"`
 }
 
-// Update personalization profile date of birth.
-type UpdatePersonalizationProfileDateOfBirthInput struct {
+// Update curation profile date of birth.
+type UpdateCurationProfileDateOfBirthInput struct {
 	// The date of birth that was selected
 	DateOfBirth *time.Time `json:"dateOfBirth"`
 	// Whether or not this section was skipped
@@ -340,9 +340,9 @@ type UpdatePersonalizationProfileDateOfBirthInput struct {
 }
 
 // Payload for updating profile date of birth
-type UpdatePersonalizationProfileDateOfBirthPayload struct {
+type UpdateCurationProfileDateOfBirthPayload struct {
 	// The updated profile.
-	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+	CurationProfile *CurationProfile `json:"curationProfile"`
 }
 
 // Update post audience.

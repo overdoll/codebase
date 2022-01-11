@@ -6,13 +6,13 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/sting/internal/domain/personalization"
+	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/libraries/principal"
 	"time"
 )
 
-var personalizationProfileTable = table.New(table.Metadata{
-	Name: "personalization_profile",
+var curationProfileTable = table.New(table.Metadata{
+	Name: "curation_profile",
 	Columns: []string{
 		"account_id",
 		"date_of_birth",
@@ -26,7 +26,7 @@ var personalizationProfileTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type personalizationProfile struct {
+type curationProfile struct {
 	AccountId          string     `db:"account_id"`
 	DateOfBirth        *time.Time `db:"date_of_birth"`
 	AudienceIds        []string   `db:"audience_ids"`
@@ -36,27 +36,27 @@ type personalizationProfile struct {
 	CategoryIdsSkipped bool       `db:"category_ids_skipped"`
 }
 
-type PersonalizationProfileCassandraRepository struct {
+type CurationProfileCassandraRepository struct {
 	session gocqlx.Session
 }
 
-func NewPersonalizationProfileCassandraRepository(session gocqlx.Session) PersonalizationProfileCassandraRepository {
-	return PersonalizationProfileCassandraRepository{session: session}
+func NewCurationProfileCassandraRepository(session gocqlx.Session) CurationProfileCassandraRepository {
+	return CurationProfileCassandraRepository{session: session}
 }
 
-func (r PersonalizationProfileCassandraRepository) getProfileByAccountId(ctx context.Context, accountId string) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Context, accountId string) (*curation.Profile, error) {
 
 	queryPersonalProfile := r.session.
-		Query(personalizationProfileTable.Get()).
+		Query(curationProfileTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(personalizationProfile{AccountId: accountId})
+		BindStruct(curationProfile{AccountId: accountId})
 
-	var personalProfile personalizationProfile
+	var personalProfile curationProfile
 
 	if err := queryPersonalProfile.Get(&personalProfile); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return personalization.UnmarshalProfileFromDatabase(
+			return curation.UnmarshalProfileFromDatabase(
 				accountId,
 				nil,
 				nil,
@@ -70,7 +70,7 @@ func (r PersonalizationProfileCassandraRepository) getProfileByAccountId(ctx con
 		return nil, fmt.Errorf("failed to get personalization profile by id: %v", err)
 	}
 
-	return personalization.UnmarshalProfileFromDatabase(
+	return curation.UnmarshalProfileFromDatabase(
 		personalProfile.AccountId,
 		personalProfile.DateOfBirth,
 		personalProfile.AudienceIds,
@@ -81,7 +81,7 @@ func (r PersonalizationProfileCassandraRepository) getProfileByAccountId(ctx con
 	), nil
 }
 
-func (r PersonalizationProfileCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*curation.Profile, error) {
 	profile, err := r.getProfileByAccountId(ctx, accountId)
 
 	if err != nil {
@@ -95,7 +95,7 @@ func (r PersonalizationProfileCassandraRepository) GetProfileByAccountId(ctx con
 	return profile, nil
 }
 
-func (r PersonalizationProfileCassandraRepository) updateProfile(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *personalization.Profile) error, columns []string) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error, columns []string) (*curation.Profile, error) {
 
 	profile, err := r.GetProfileByAccountId(ctx, requester, id)
 
@@ -112,7 +112,7 @@ func (r PersonalizationProfileCassandraRepository) updateProfile(ctx context.Con
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(personalizationProfile{
+		BindStruct(curationProfile{
 			AccountId:          profile.AccountId(),
 			DateOfBirth:        profile.DateOfBirth(),
 			AudienceIds:        profile.AudienceIds(),
@@ -128,15 +128,15 @@ func (r PersonalizationProfileCassandraRepository) updateProfile(ctx context.Con
 	return profile, nil
 }
 
-func (r PersonalizationProfileCassandraRepository) UpdateProfileDateOfBirth(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *personalization.Profile) error) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) UpdateProfileDateOfBirth(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"date_of_birth", "date_of_birth_skipped"})
 }
 
-func (r PersonalizationProfileCassandraRepository) UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *personalization.Profile) error) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"category_ids", "category_ids_skipped"})
 
 }
 
-func (r PersonalizationProfileCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *personalization.Profile) error) (*personalization.Profile, error) {
+func (r CurationProfileCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"audience_ids", "audience_ids_skipped"})
 }

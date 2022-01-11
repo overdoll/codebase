@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "adapters",
     srcs = [
+        "curation_profile_cassandra_repository.go",
         "eva_grpc.go",
         "loader_grpc.go",
         "parley_grpc.go",
@@ -14,6 +15,7 @@ go_library(
         "post_character_cassandra_repository.go",
         "post_character_index_elasticsearch_repository.go",
         "post_index_elasticsearch_repository.go",
+        "post_like_cassandra_repository.go",
         "post_series_cassandra_repository.go",
         "post_series_index_elasticsearch_repository.go",
         "stella_grpc.go",
@@ -25,6 +27,7 @@ go_library(
         "//applications/loader/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/stella/proto:v1_go_proto",
+        "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/post",
         "//libraries/localization",
         "//libraries/paging",

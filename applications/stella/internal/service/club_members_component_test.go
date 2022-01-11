@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	workflows "overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
+	stella "overdoll/applications/stella/proto"
 	"testing"
 	"time"
 )
@@ -15,6 +16,9 @@ type ClubMemberModifiedNoAccount struct {
 	JoinedAt time.Time
 	Account  struct {
 		ID string
+	}
+	Club struct {
+		Reference string
 	}
 }
 
@@ -127,6 +131,18 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	}
 
 	require.True(t, foundAccountClubMember, "should have found the club member in account's club membership list")
+
+	// grpc: check the results are the same
+	grpcClient := getGrpcClient(t)
+
+	// check permissions
+	res, err := grpcClient.GetAccountClubMembershipIds(context.Background(), &stella.GetAccountClubMembershipIdsRequest{
+		AccountId: testingAccountId,
+	})
+
+	require.NoError(t, err, "no error grabbing club memberships for account")
+	require.Len(t, res.ClubIds, 1, "should have 1 club id")
+	require.Equal(t, clubViewer.Club.ViewerMember.Account.ClubMemberships.Edges[0].Node.Club.Reference, res.ClubIds[0], "should have a matching club ID")
 
 	// withdraw club membership
 	var withdrawClubMembership WithdrawClubMembership

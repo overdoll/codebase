@@ -4,10 +4,12 @@ go_library(
     name = "activities",
     srcs = [
         "activities.go",
+        "add_like_to_post.go",
         "discard_post.go",
         "index_post.go",
         "publish_post.go",
         "reassign_moderator.go",
+        "remove_like_from_post.go",
         "remove_post.go",
         "services.go",
         "submit_post.go",

@@ -2,7 +2,7 @@ package types
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/personalization"
+	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
@@ -101,7 +101,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 	}
 }
 
-func MarshalPersonalizationProfileToGraphQL(ctx context.Context, result *personalization.Profile) *PersonalizationProfile {
+func MarshalCurationProfileToGraphQL(ctx context.Context, result *curation.Profile) *CurationProfile {
 
 	var categories []*Category
 	var audiences []*Audience
@@ -118,20 +118,20 @@ func MarshalPersonalizationProfileToGraphQL(ctx context.Context, result *persona
 		})
 	}
 
-	return &PersonalizationProfile{
-		ID:        relay.NewID(PersonalizationProfile{}, result.AccountId()),
+	return &CurationProfile{
+		ID:        relay.NewID(CurationProfile{}, result.AccountId()),
 		Completed: result.IsCompleted(),
-		DateOfBirth: &DateOfBirthPersonalizationProfile{
+		DateOfBirth: &DateOfBirthCurationProfile{
 			Skipped:     result.DateOfBirthSkipped(),
 			Completed:   result.DateOfBirthProfileCompleted(),
 			DateOfBirth: result.DateOfBirth(),
 		},
-		Audience: &AudiencePersonalizationProfile{
+		Audience: &AudienceCurationProfile{
 			Completed: result.AudienceProfileCompleted(),
 			Skipped:   result.AudienceProfileSkipped(),
 			Audiences: audiences,
 		},
-		Category: &CategoryPersonalizationProfile{
+		Category: &CategoryCurationProfile{
 			Completed:  result.CategoryProfileCompleted(),
 			Skipped:    result.CategoryProfileSkipped(),
 			Categories: categories,

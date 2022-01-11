@@ -34,9 +34,9 @@ type Commands struct {
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
 
-	UpdatePersonalizationProfileAudience    command.UpdatePersonalizationProfileAudienceHandler
-	UpdatePersonalizationProfileCategory    command.UpdatePersonalizationProfileCategoryHandler
-	UpdatePersonalizationProfileDateOfBirth command.UpdatePersonalizationDateOfBirthHandler
+	UpdateCurationProfileAudience    command.UpdateCurationProfileAudienceHandler
+	UpdateCurationProfileCategory    command.UpdateCurationProfileCategoryHandler
+	UpdateCurationProfileDateOfBirth command.UpdateCurationProfileDateOfBirthHandler
 }
 
 type Queries struct {
@@ -64,7 +64,7 @@ type Queries struct {
 
 	PostLikeById query.PostLikeByIdHandler
 
-	PersonalizationProfileByAccountId query.PersonalizationProfileByAccountIdHandler
+	CurationProfileByAccountId query.CurationProfileByAccountIdHandler
 
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler

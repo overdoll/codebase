@@ -31,11 +31,9 @@ func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string,
 		stateModified = &str
 	}
 
-	clubId := obj.ID.GetID()
-
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
-		ClubId:         &clubId,
+		ClubIds:        []string{obj.ID.GetID()},
 		Principal:      principal.FromContext(ctx),
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,

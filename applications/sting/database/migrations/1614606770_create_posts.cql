@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS post_likes
     primary key ( (post_id, liked_account_id) )
 );
 
-CREATE TABLE IF NOT EXISTS personalization_profile
+CREATE TABLE IF NOT EXISTS curation_profile
 (
     account_id            text,
     date_of_birth         date,

@@ -1,4 +1,4 @@
-package personalization
+package curation
 
 import (
 	"context"
