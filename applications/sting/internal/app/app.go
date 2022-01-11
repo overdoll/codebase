@@ -65,4 +65,8 @@ type Queries struct {
 	PostLikeById query.PostLikeByIdHandler
 
 	PersonalizationProfileByAccountId query.PersonalizationProfileByAccountIdHandler
+
+	PostsFeed             query.PostsFeedHandler
+	SuggestedPostsForPost query.SuggestedPostsForPostHandler
+	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
 }

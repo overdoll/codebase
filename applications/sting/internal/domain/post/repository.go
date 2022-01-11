@@ -29,6 +29,7 @@ type Repository interface {
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
 
+	GetAudiences(ctx context.Context, requester *principal.Principal) ([]*Audience, error)
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
 

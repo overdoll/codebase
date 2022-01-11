@@ -116,6 +116,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
 
 			PersonalizationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
+
+			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo),
+			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),
+			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(stella, postIndexRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}

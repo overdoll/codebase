@@ -42,4 +42,6 @@ type Queries struct {
 	PrincipalById     query.PrincipalByIdHandler
 	ClubMemberById    query.ClubMemberByIdHandler
 	ClubMembersByClub query.ClubMembersByClubHandler
+
+	AccountClubMembershipsOperator query.AccountClubMembershipsOperatorHandler
 }

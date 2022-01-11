@@ -35,6 +35,10 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
+func (e StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error) {
+	return []string{}, nil
+}
+
 func (e StellaServiceMock) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
 	return true, nil
 }

@@ -215,8 +215,8 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		sortingColumn = "created_at"
 
 		// if viewing by published, then do posted_at
-		if filter.State() != nil {
-			if *filter.State() == post.Published.String() {
+		if filter.State() != post.Unknown {
+			if filter.State() == post.Published {
 				sortingColumn = "posted_at"
 			}
 		}
@@ -233,16 +233,24 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	var filterQueries []elastic.Query
 
-	if filter.State() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("state", *filter.State()))
+	if filter.State() != post.Unknown {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
+	}
+
+	if len(filter.CategoryIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermsQueryFromStrings("categories.id", filter.CategoryIds()...)))
+	}
+
+	if len(filter.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...)))
 	}
 
 	if filter.ModeratorId() != nil {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
-	if filter.ClubId() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("club_id", *filter.ClubId()))
+	if len(filter.ClubIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...))
 	}
 
 	if filter.ContributorId() != nil {

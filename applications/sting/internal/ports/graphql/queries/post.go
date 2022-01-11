@@ -12,6 +12,26 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.PostsFeed.Handle(ctx, query.PostsFeed{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

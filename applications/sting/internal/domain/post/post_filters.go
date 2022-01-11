@@ -10,26 +10,34 @@ type Filters struct {
 	sortBy        Sorting
 	moderatorId   *string
 	contributorId *string
-	clubId        *string
+	clubIds       []string
 
-	state          *string
+	state          State
 	audienceSlugs  []string
 	categorySlugs  []string
 	characterSlugs []string
 	seriesSlugs    []string
+
+	audienceIds []string
+	categoryIds []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId, clubId *string, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*Filters, error) {
 
-	var newState *string
+	newState := Unknown
+	var err error
 
 	if state != nil {
 		s := strings.ToLower(*state)
-		newState = &s
+
+		newState, err = StateFromString(s)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	sorting := UnknownSort
-	var err error
 
 	if sortBy != "" {
 		sorting, err = SortingFromString(sortBy)
@@ -44,7 +52,7 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId, clubId *st
 		state:          newState,
 		moderatorId:    moderatorId,
 		contributorId:  contributorId,
-		clubId:         clubId,
+		clubIds:        clubIds,
 		audienceSlugs:  audienceSlugs,
 		categorySlugs:  categorySlugs,
 		characterSlugs: characterSlugs,
@@ -60,11 +68,11 @@ func (e *Filters) ContributorId() *string {
 	return e.contributorId
 }
 
-func (e *Filters) ClubId() *string {
-	return e.clubId
+func (e *Filters) ClubIds() []string {
+	return e.clubIds
 }
 
-func (e *Filters) State() *string {
+func (e *Filters) State() State {
 	return e.state
 }
 
@@ -88,11 +96,19 @@ func (e *Filters) CharacterSlugs() []string {
 	return e.characterSlugs
 }
 
+func (e *Filters) CategoryIds() []string {
+	return e.categoryIds
+}
+
+func (e *Filters) AudienceIds() []string {
+	return e.audienceIds
+}
+
 // permission checks to gate what can actually be filtered
 func CanViewWithFilters(requester *principal.Principal, filter *Filters) error {
 
 	// any state that isnt published needs permission checks
-	if (filter.state == nil) || (filter.state != nil && *filter.state != "published") {
+	if (filter.state == Unknown) || (filter.state != Unknown && filter.state != Published) {
 		if filter.ContributorId() != nil {
 			return requester.BelongsToAccount(*filter.ContributorId())
 		}

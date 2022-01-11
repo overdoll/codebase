@@ -99,3 +99,31 @@ func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceI
 func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 	return r.getAudienceById(ctx, audienceId)
 }
+
+func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *principal.Principal) ([]*post.Audience, error) {
+
+	queryAudiences := r.session.
+		Query(audienceTable.SelectAll()).
+		Consistency(gocql.One)
+
+	var res []audience
+
+	if err := queryAudiences.Select(&res); err != nil {
+		return nil, fmt.Errorf("failed to get audiences: %v", err)
+	}
+
+	var results []*post.Audience
+
+	for _, b := range res {
+		results = append(results, post.UnmarshalAudienceFromDatabase(
+			b.Id,
+			b.Slug,
+			b.Title,
+			b.ThumbnailResourceId,
+			b.Standard,
+			b.TotalLikes,
+		))
+	}
+
+	return results, nil
+}

@@ -398,6 +398,31 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 	return r.updateClubMemberCount(ctx, clubId, clubMembersPartitionSums.SumMembersCount)
 }
 
+func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*club.Member, error) {
+
+	queryClubMemberships := clubMembersByAccountTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubMembersByAccount{
+			MemberAccountId: accountId,
+		})
+
+	var accountClubs []*clubMembersByAccount
+
+	if err := queryClubMemberships.Select(&accountClubs); err != nil {
+		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	var members []*club.Member
+
+	for _, clb := range accountClubs {
+		members = append(members, club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time()))
+	}
+
+	return members, nil
+}
+
 func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club.Member, error) {
 
 	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
@@ -426,8 +451,8 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 
 	for _, clb := range accountClubs {
 		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time())
-		members = append(members, em)
 		em.Node = paging.NewNode(clb.JoinedAt.String())
+		members = append(members, em)
 	}
 
 	return members, nil
@@ -525,11 +550,11 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 
 	if cursor != nil {
 		if cursor.After() != nil {
-			builder.Where(qb.LtLit("joined_at", *cursor.After()))
+			builder.Where(qb.LtLit("joined_at", cursor.After().(string)))
 		}
 
 		if cursor.Before() != nil {
-			builder.Where(qb.GtLit("joined_at", *cursor.Before()))
+			builder.Where(qb.GtLit("joined_at", cursor.Before().(string)))
 		}
 
 		limit := cursor.GetLimit()

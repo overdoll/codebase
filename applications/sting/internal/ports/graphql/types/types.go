@@ -13,6 +13,8 @@ import (
 type Account struct {
 	// The personalization profile linked to this account.
 	PersonalizationProfile *PersonalizationProfile `json:"personalizationProfile"`
+	// Posts feed for the clubs that the account currently is a member of.
+	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
@@ -200,6 +202,8 @@ type Post struct {
 	PostedAt *time.Time `json:"postedAt"`
 	// The date at which this pending post will be reassigned
 	ReassignmentAt *time.Time `json:"reassignmentAt"`
+	// Suggested posts for this post.
+	SuggestedPosts *PostConnection `json:"suggestedPosts"`
 	// Represents the audience that this post belongs to
 	Audience *Audience `json:"audience"`
 	// Categories that belong to this post
