@@ -1,10 +1,11 @@
-import { Box, Center, Flex, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '../../PageLayout'
+import { Box, Center, Flex, HStack, Stack } from '@chakra-ui/react'
+import { PageSectionTitle, PageSectionWrap } from '../../PageLayout'
 import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
   title?: ReactNode | null
+  outsideElements?: ReactNode | null
 }
 
 export default function VerticalNavigationContent (props: Props): JSX.Element {
@@ -27,16 +28,19 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           zIndex='sidebar'
           overflowX='hidden'
         >
-          <SmallBackgroundBox>
-            {props.title != null && <PageSectionWrap mb={4}>
+          {props.title != null &&
+            <Box p={2}>
               <PageSectionTitle>
                 {props.title}
               </PageSectionTitle>
-            </PageSectionWrap>}
-            <Stack spacing={3}>
-              {props.children}
-            </Stack>
-          </SmallBackgroundBox>
+            </Box>}
+          {props.outsideElements != null &&
+            <Box m={2}>
+              {props.outsideElements}
+            </Box>}
+          <HStack p={2} overflowX='auto' spacing={3}>
+            {props.children}
+          </HStack>
         </Flex>
       </Center>
       <Box

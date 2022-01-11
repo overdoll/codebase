@@ -1,10 +1,10 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import { RenderOnDesktop, RenderOnMobile, ResourceIcon } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRef: DropdownMenuButtonProfileFragment$key | null
@@ -26,35 +26,56 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
     <HorizontalNavigationDropdownMenu.Button
       to='/profile'
     >
-      <Flex
-        my={1}
-        align='center'
-      >
-        <ResourceIcon
-          w='60px'
-          pointerEvents='none'
-          h='60px'
-          mr={4}
-          query={data?.avatar}
-        />
-        <Flex direction='column'>
-          <Text
-            color='gray.00'
-            fontFamily='mono'
-            fontSize='xl'
-          >
-            {data?.username}
-          </Text>
-          <Text
-            color='gray.300'
-            fontSize='md'
+      <RenderOnDesktop>
+        <Flex
+          my={1}
+          align='center'
+        >
+          <ResourceIcon
+            w='60px'
+            pointerEvents='none'
+            h='60px'
+            mr={4}
+            query={data?.avatar}
+          />
+          <Flex direction='column'>
+            <Text
+              color='gray.00'
+              fontFamily='mono'
+              fontSize='xl'
+            >
+              {data?.username}
+            </Text>
+            <Text
+              color='gray.300'
+              fontSize='md'
+            >
+              <Trans>
+                Go to my profile
+              </Trans>
+            </Text>
+          </Flex>
+        </Flex>
+      </RenderOnDesktop>
+      <RenderOnMobile>
+        <Flex direction='column' align='center'>
+          <ResourceIcon
+            w='34px'
+            h='34px'
+            query={data?.avatar}
+            mb={2}
+          />
+          <Heading
+            color='gray.100'
+            fontSize='lg'
+            textAlign='center'
           >
             <Trans>
-              Go to my profile
+              My Profile
             </Trans>
-          </Text>
+          </Heading>
         </Flex>
-      </Flex>
+      </RenderOnMobile>
     </HorizontalNavigationDropdownMenu.Button>
   )
 }

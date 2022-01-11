@@ -1,6 +1,6 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../Icon/Icon'
-import { ClickableBox } from '../../../../PageLayout'
+import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
 
 interface Props {
@@ -26,6 +26,51 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
 }: Props): JSX.Element {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 
+  const TextComponent = (): JSX.Element => {
+    if (label == null) return <></>
+    return (
+      <Heading
+        color={(color ?? (isActive ? colorPalette : 'gray.100'))}
+        fontSize='lg'
+        textAlign={{
+          md: 'left',
+          base: 'center'
+        }}
+      >
+        {label}
+      </Heading>
+    )
+  }
+
+  const IconComponent = (): JSX.Element => {
+    if (icon == null) return <></>
+
+    return (
+      <Flex
+        borderRadius='md'
+        align='center'
+        p={1}
+        mr={{
+          base: 0,
+          md: 3
+        }}
+        mb={{
+          base: 2,
+          md: 0
+        }}
+        bg={isActive ? colorPalette : 'gray.500'}
+      >
+        <Icon
+          icon={icon}
+          w='26px'
+          h='26px'
+          p={1}
+          fill={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
+        />
+      </Flex>
+    )
+  }
+
   return (
     <ClickableBox
       onClick={onClick}
@@ -33,36 +78,31 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
       borderRadius='md'
       bg={isActive ? 'gray.900' : 'gray.800'}
       p={2}
+      whiteSpace='break-spaces'
     >
-      <Flex align='center'>
-        {(icon != null) && (
-          <Flex
-            borderRadius='md'
-            align='center'
-            p={1}
-            mr={3}
-            bg={isActive ? colorPalette : 'gray.500'}
-          >
-            <Icon
-              icon={icon}
-              w='26px'
-              h='26px'
-              p={1}
-              fill={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
-            />
-          </Flex>
-        )}
-        {label != null && (
-          <Text
-            color={(color ?? (isActive ? colorPalette : 'gray.100'))}
-            fontSize='lg'
-            fontWeight='semibold'
-          >
-            {label}
-          </Text>
-        )}
-        {(icon == null) && children}
-      </Flex>
+      <RenderOnDesktop>
+        <Flex
+          align='center'
+        >
+          <IconComponent />
+          <TextComponent />
+          {(icon == null) && children}
+        </Flex>
+      </RenderOnDesktop>
+      <RenderOnMobile>
+        <Flex
+          m={1}
+          w={24}
+          h={24}
+          align='center'
+          justify='center'
+          direction='column'
+        >
+          <IconComponent />
+          <TextComponent />
+          {(icon == null) && children}
+        </Flex>
+      </RenderOnMobile>
     </ClickableBox>
   )
 }

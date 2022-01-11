@@ -25,7 +25,7 @@ const Query = graphql`
 export default function DropdownMenuButtonClub (): JSX.Element {
   const data = useLazyLoadQuery<DropdownMenuButtonClubQuery>(Query, {})
 
-  if (data.viewer?.clubs?.edges == null) {
+  if (data.viewer?.clubs?.edges == null || data?.viewer?.clubs?.edges.length < 1) {
     return (
       <HorizontalNavigationDropdownMenu.Button
         to='/configure/create-club'

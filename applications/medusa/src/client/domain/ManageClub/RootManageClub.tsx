@@ -19,7 +19,7 @@ interface Props {
   }
 }
 
-export default function RootMyClubs (props: Props): JSX.Element {
+export default function RootManageClub (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader(
     SelectClubsQuery,
     props.prepared.query
@@ -41,14 +41,18 @@ export default function RootMyClubs (props: Props): JSX.Element {
 
   return (
     <VerticalNavigation>
-      <VerticalNavigation.Content>
-        <Box h={16}>
+      <VerticalNavigation.Content
+        title={<Trans>
+          Manage Club
+        </Trans>}
+        outsideElements={<Box h={16}>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
             <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
               <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>
-        </Box>
+        </Box>}
+      >
         <VerticalNavigation.Button
           to={`${basePath}/create-post`}
           exact

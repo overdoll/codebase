@@ -14,11 +14,7 @@ export default function HorizontalNavigationRight ({ children }: Props): JSX.Ele
     >
       <Flex
         borderRadius='md'
-        bg={{
-          base: 'transparent',
-          md: 'gray.900'
-        }}
-        p={1}
+        bg='gray.900'
         align='center'
       >
         <HStack spacing={3}>

@@ -23,7 +23,7 @@ const Query = graphql`
 export default function MainMenuButtonCreatePost (): JSX.Element {
   const data = useLazyLoadQuery<MainMenuButtonCreatePostQuery>(Query, {})
 
-  if (data.viewer?.clubs?.edges == null) {
+  if (data.viewer?.clubs?.edges == null || data?.viewer?.clubs?.edges.length < 1) {
     return (
       <HorizontalNavigation.Button
         exact
@@ -39,7 +39,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
     )
   }
 
-  const selectedClub = data.viewer?.clubs.edges[0].node
+  const selectedClub = data.viewer?.clubs?.edges[0].node
 
   const newPath = generatePath('/club/:slug/:entity', {
     slug: selectedClub.slug,

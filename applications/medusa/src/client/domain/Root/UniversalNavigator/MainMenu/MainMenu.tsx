@@ -1,4 +1,4 @@
-import { BirdHouse } from '@//:assets/icons/navigation'
+import { BirdHouse, ContentBrushPen, SettingHammer } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
@@ -18,8 +18,32 @@ export default function MainMenu (): JSX.Element {
           </Trans>
         }
       />
+      <HorizontalNavigation.Button
+        exact
+        colorScheme='green'
+        to='/clubs'
+        icon={SettingHammer}
+        label={
+          <Trans>
+            My Clubs
+          </Trans>
+        }
+      />
       <Can I='create' a='Post'>
         <MainMenuButtonCreatePost />
+      </Can>
+      <Can not I='create' a='Post'>
+        <HorizontalNavigation.Button
+          exact
+          colorScheme='primary'
+          to='/join'
+          icon={ContentBrushPen}
+          label={
+            <Trans>
+              Create a Post
+            </Trans>
+          }
+        />
       </Can>
     </>
   )

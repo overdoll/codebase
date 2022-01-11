@@ -289,6 +289,15 @@ const routes: Route[] = [
         )
       },
       {
+        path: '/clubs',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/MyClubs/MyClubs'
+          )
+        )
+      },
+      {
         path: '/moderation',
         component: loadable(async () =>
           await import(
@@ -690,14 +699,14 @@ const routes: Route[] = [
         path: '/configure/create-club',
         component: loadable(async () =>
           await import(
-            './domain/MyClubs/pages/CreateClub/RootCreateClub'
+            './domain/ManageClub/pages/CreateClub/RootCreateClub'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/MyClubs/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ManageClub/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -722,7 +731,7 @@ const routes: Route[] = [
         path: '/club/:slug',
         component: loadable(async () =>
           await import(
-            './domain/MyClubs/RootMyClubs'
+            './domain/ManageClub/RootManageClub'
           )
         ),
         prepare: ({
@@ -747,7 +756,7 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(home)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/pages/ClubHome/RootClubHome'
+                './domain/ManageClub/pages/ClubHome/RootClubHome'
               )
             ),
             prepare: ({
@@ -772,7 +781,7 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(settings)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/pages/ClubSettings/RootClubSettings'
+                './domain/ManageClub/pages/ClubSettings/RootClubSettings'
               )
             ),
             prepare: ({
@@ -797,7 +806,7 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(posts)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/pages/ClubPosts/RootClubPosts'
+                './domain/ManageClub/pages/ClubPosts/RootClubPosts'
               )
             ),
             prepare: ({
@@ -823,14 +832,14 @@ const routes: Route[] = [
             path: '/club/:slug/:entity(create-post)',
             component: loadable(async () =>
               await import(
-                './domain/MyClubs/pages/CreatePost/CreatePost'
+                './domain/ManageClub/pages/CreatePost/CreatePost'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/MyClubs/pages/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/ManageClub/pages/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages

@@ -1,7 +1,7 @@
 import { CogDouble, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import { RenderOnDesktop } from '@//:modules/content/PageLayout'
+import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
@@ -10,7 +10,7 @@ import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuBut
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 import LanguageManager from './LanguageManager/LanguageManager'
-import { MenuDivider } from '@chakra-ui/react'
+import { Box, MenuDivider } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -41,7 +41,6 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         <Can not I='manage' a='Account'>
           <HorizontalNavigation.Button
             to='/join'
-            w='42px'
             icon={LoginKeys}
             label={
               <Trans>
@@ -55,7 +54,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
-        label={i18n._(t`Alternative Menu`)}
+        label={i18n._(t`Menu`)}
         icon={PageControllerSettings}
       >
         <Can not I='manage' a='Account'>
@@ -104,13 +103,25 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
           <DropdownMenuButtonLogout />
         </Can>
-        <MenuDivider mb={1} borderColor='gray.500' borderWidth={2} />
-        <Suspense fallback={
-          <SkeletonDropdownMenuButton />
-        }
-        >
-          <LanguageManager queryRef={data} />
-        </Suspense>
+        <RenderOnMobile>
+          <Suspense fallback={
+            <SkeletonDropdownMenuButton />
+          }
+          >
+            <Box>
+              <LanguageManager queryRef={data} />
+            </Box>
+          </Suspense>
+        </RenderOnMobile>
+        <RenderOnDesktop>
+          <MenuDivider mb={1} borderColor='gray.500' borderWidth={2} />
+          <Suspense fallback={
+            <SkeletonDropdownMenuButton />
+          }
+          >
+            <LanguageManager queryRef={data} />
+          </Suspense>
+        </RenderOnDesktop>
       </HorizontalNavigationDropdownMenu>
     </>
   )

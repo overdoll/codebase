@@ -46,6 +46,9 @@ export default function StyledInput ({
   }
 
   const determinePadding = (): number => {
+    if (['xl'].includes(size)) {
+      return 4
+    }
     if (['md', 'lg'].includes(size)) {
       return 3
     }

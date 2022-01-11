@@ -79,6 +79,7 @@ export default function VerticalNavigationButton ({
               fontSize='md'
               letterSpacing='wider'
               fontWeight='semibold'
+              mr={1}
             >
               {title}
             </Text>
@@ -98,6 +99,5 @@ export default function VerticalNavigationButton ({
         </Flex>
       </ClickableBox>}
     </NavLink>
-
   )
 }

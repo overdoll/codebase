@@ -22,9 +22,8 @@ const baseStyleDialogContainer: SystemStyleFunction = (props) => {
     display: 'flex',
     zIndex: 'modal',
     justifyContent: 'center',
-    alignItems: isCentered as boolean ? 'center' : 'flex-start',
+    alignItems: isCentered as boolean ? 'center' : 'flex-end',
     overflow: scrollBehavior === 'inside' ? 'hidden' : 'auto'
-
   }
 }
 

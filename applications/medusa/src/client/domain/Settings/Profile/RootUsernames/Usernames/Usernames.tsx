@@ -50,7 +50,6 @@ export default function Usernames (props: Props): JSX.Element | null {
   const remainingTime = formatDistanceStrict(usernameTimer, new Date(), { locale })
 
   const canEditUsername = isPast(usernameTimer)
-
   return (
     <>
       <ListSpacer>
@@ -74,14 +73,14 @@ export default function Usernames (props: Props): JSX.Element | null {
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Stack spacing={2}>
-            <Alert status='warning'>
+            {!canEditUsername && <Alert status='warning'>
               <AlertIcon />
               <AlertDescription>
                 <Trans>
                   You have recently made a username edit. You may edit your username again in {remainingTime}.
                 </Trans>
               </AlertDescription>
-            </Alert>
+            </Alert>}
             <ChangeUsernameForm isDisabled={!canEditUsername} />
           </Stack>
         </Collapse>
