@@ -8,6 +8,7 @@ import { useFragment } from 'react-relay'
 
 interface Props extends HTMLChakraProps<any> {
   query: ResourceIconFragment$key | null | undefined
+  showBorder?: boolean
 }
 
 const Fragment = graphql`
@@ -18,6 +19,7 @@ const Fragment = graphql`
 
 export default function ResourceIcon ({
   query,
+  showBorder = false,
   ...rest
 }: Props): JSX.Element {
   if (query === undefined) return <></>

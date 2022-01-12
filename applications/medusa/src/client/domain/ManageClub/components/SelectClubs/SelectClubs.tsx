@@ -25,6 +25,7 @@ const Query = graphql`
       ...ClubPreviewFragment
     }
     viewer {
+      clubsCount
       ...ClubListSelectorFragment
     }
   }

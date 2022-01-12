@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9eee3a2d90084bec3f00007ed562f405 */
+/* @relayHash 0b29a28237698dac8c0dbe932f7dbadc */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -68,11 +68,15 @@ fragment ImageSnippetFragment on Resource {
 
 fragment PostPreviewContentFragment on Post {
   content {
-    type
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ResourceItemFragment
     id
   }
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
 }
 
 fragment VideoSnippetFragment on Resource {
@@ -325,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "9eee3a2d90084bec3f00007ed562f405",
+    "id": "0b29a28237698dac8c0dbe932f7dbadc",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

@@ -11,7 +11,7 @@ export default function SmallGridItem ({
 }: Props): JSX.Element {
   return (
     <WrapItem
-      h='35%'
+      h={[200, 220, 240]}
       w='30%'
       {...rest}
     >

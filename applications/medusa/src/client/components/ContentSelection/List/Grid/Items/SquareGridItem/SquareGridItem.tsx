@@ -5,14 +5,14 @@ interface Props extends HTMLChakraProps<any> {
   children: ReactNode
 }
 
-export default function LargeGridItem ({
+export default function SquareGridItem ({
   children,
   ...rest
 }: Props): JSX.Element {
   return (
     <WrapItem
-      w='45%'
-      h={[230, 250, 270]}
+      h={130}
+      w={130}
       {...rest}
     >
       {children}

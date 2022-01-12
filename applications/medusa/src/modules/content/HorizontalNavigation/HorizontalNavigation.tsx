@@ -40,7 +40,7 @@ const HorizontalNavigation = ({
       <RenderOnMobile>
         <Flex
           zIndex='docked'
-          boxShadow='sm'
+          boxShadow='sm-top'
           align='center'
           right={0}
           left={0}

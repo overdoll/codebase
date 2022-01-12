@@ -5,9 +5,12 @@ interface Props extends HTMLChakraProps<any> {
   children: ReactNode
 }
 
-export default function GridWrap ({ children }: Props): JSX.Element {
+export default function GridWrap ({
+  children,
+  ...rest
+}: Props): JSX.Element {
   return (
-    <Wrap justify='center'>
+    <Wrap justify='center' {...rest}>
       {children}
     </Wrap>
   )

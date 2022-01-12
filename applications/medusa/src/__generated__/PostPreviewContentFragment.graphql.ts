@@ -4,11 +4,9 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type PostPreviewContentFragment = {
     readonly content: ReadonlyArray<{
-        readonly type: ResourceType;
-        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
     }>;
     readonly " $refType": "PostPreviewContentFragment";
 };
@@ -35,21 +33,9 @@ const node: ReaderFragment = {
       "plural": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ImageSnippetFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "VideoSnippetFragment"
+          "name": "ResourceItemFragment"
         }
       ],
       "storageKey": null
@@ -58,5 +44,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'c0ba1d4647e10ddf88712d27dd6c15eb';
+(node as any).hash = '8a8db689417c5a5b6013e3fd259ce4cf';
 export default node;

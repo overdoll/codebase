@@ -45,7 +45,7 @@ export default function PublicClubPosts ({ query }: Props): JSX.Element {
   return (
     <Stack spacing={4}>
       {data.posts.edges.map((item, index) =>
-        <Link key={index} to={`/post/${item.node.reference as string}`}>
+        <Link key={index} to={`/p/${item.node.reference as string}`}>
           <PostGalleryContent query={item.node} />
         </Link>
       )}

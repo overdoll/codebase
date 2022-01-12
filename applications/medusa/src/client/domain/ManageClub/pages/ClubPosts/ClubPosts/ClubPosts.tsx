@@ -76,7 +76,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
   }
 
   return (
-    <GridWrap spacing={0}>
+    <GridWrap>
       {data.posts.edges.map((item, index) => {
         const draftPostPath = (): string => {
           if (match?.slug == null) return ''
@@ -90,7 +90,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         switch (item.node.state) {
           case 'DRAFT':
             return (
-              <LargeGridItem h={230} key={index}>
+              <LargeGridItem key={index}>
                 <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
                   <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
                     <PostPreviewContent query={item.node} />
@@ -100,9 +100,9 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
             )
           case 'PUBLISHED':
             return (
-              <LargeGridItem h={230} key={index}>
+              <LargeGridItem key={index}>
                 <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
-                  <Link to={`/post/${item.node.reference as string}`}>
+                  <Link to={`/p/${item.node.reference as string}`}>
                     <PostPreviewContent query={item.node} />
                   </Link>
                 </ClickableBox>
@@ -110,7 +110,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
             )
           default:
             return (
-              <LargeGridItem h={230} key={index}>
+              <LargeGridItem key={index}>
                 <PostPreviewContent query={item.node} />
               </LargeGridItem>
             )
@@ -120,10 +120,10 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
       {hasNext &&
         <LargeGridItem>
           <ClickableBox
+            h='100%'
             borderRadius='md'
             isLoading={isLoadingNext}
             onClick={() => loadNext(4)}
-            h={230}
           >
             <Heading fontSize='lg' textAlign='center' color='gray.00'>
               <Trans>

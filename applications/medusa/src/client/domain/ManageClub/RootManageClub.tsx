@@ -1,7 +1,14 @@
 import { ReactNode, Suspense, useMemo } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
-import { BirdHouse, ContentBrushPen, FileMultiple, SettingCog, SettingHammer } from '@//:assets/icons/navigation'
+import {
+  BirdHouse,
+  ContentBrushPen,
+  FileMultiple,
+  SettingCog,
+  SettingHammer,
+  UserHuman
+} from '@//:assets/icons/navigation'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import SelectClubsQuery, { SelectClubsQuery as SelectClubsQueryType } from '@//:artifacts/SelectClubsQuery.graphql'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
@@ -78,6 +85,14 @@ export default function RootManageClub (props: Props): JSX.Element {
             <Trans>Posts</Trans>
           }
           icon={FileMultiple}
+        />
+        <VerticalNavigation.Button
+          to={`${basePath}/members`}
+          exact
+          title={
+            <Trans>Members</Trans>
+          }
+          icon={UserHuman}
         />
         <VerticalNavigation.Button
           to={`${basePath}/settings`}

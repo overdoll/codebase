@@ -660,7 +660,7 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/post/:reference',
+        path: '/p/:reference',
         dependencies: [
           {
             resource: loadable(async (environment) =>
@@ -694,6 +694,25 @@ const routes: Route[] = [
             }
           }
         }
+      },
+      {
+        path: '/u/:reference',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/Home/Home'
+          )
+        )
       },
       {
         path: '/configure/create-club',
@@ -764,6 +783,31 @@ const routes: Route[] = [
               query
             }) => {
               const Query = require('@//:artifacts/ClubHomeQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(members)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/ClubMembers/RootClubMembers'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubMembersQuery.graphql')
               return {
                 query: {
                   query: Query,
