@@ -2,7 +2,7 @@ type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
+  """A url-friendly ID. Should be used when searching."""
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
@@ -10,6 +10,12 @@ type Audience implements Node @key(fields: "id") {
 
   """A title for this audience."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type AudienceEdge {
@@ -29,6 +35,9 @@ enum AudiencesSort {
 
   """Audience by top likes"""
   TOP
+
+  """Audience by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -53,7 +62,7 @@ extend type Query {
     title: String
 
     """Sorting options for audiences."""
-    sortBy: AudiencesSort! = TOP
+    sortBy: AudiencesSort! = POPULAR
   ): AudienceConnection!
 
   """Get a single audience."""

@@ -23,6 +23,7 @@ type categoryDocument struct {
 	Title               map[string]string `json:"title"`
 	CreatedAt           string            `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 }
 
 const categoryIndexProperties = `
@@ -37,6 +38,9 @@ const categoryIndexProperties = `
 		"type": "keyword"
 	},
 	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
 		"type": "integer"
 	},
 	"title":  ` + localization.ESIndex + `
@@ -71,6 +75,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		TotalLikes:          cat.TotalLikes(),
+		TotalPosts:          cat.TotalPosts(),
 	}, nil
 }
 
@@ -114,6 +119,9 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
 		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
+		sortingAscending = false
 	}
 
 	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
@@ -154,7 +162,14 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
 		}
 
-		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.ThumbnailResourceId, pst.TotalLikes)
+		newCategory := post.UnmarshalCategoryFromDatabase(
+			pst.Id,
+			pst.Slug,
+			pst.Title,
+			pst.ThumbnailResourceId,
+			pst.TotalLikes,
+			pst.TotalPosts,
+		)
 		newCategory.Node = paging.NewNode(hit.Sort)
 
 		cats = append(cats, newCategory)

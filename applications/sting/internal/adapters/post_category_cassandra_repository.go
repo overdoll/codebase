@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"overdoll/libraries/localization"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -19,6 +20,7 @@ var categoryTable = table.New(table.Metadata{
 		"slug",
 		"thumbnail_resource_id",
 		"total_likes",
+		"total_posts",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -30,6 +32,7 @@ type category struct {
 	Title               map[string]string `db:"title"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 	TotalLikes          int               `db:"total_likes"`
+	TotalPosts          int               `db:"total_posts"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -45,6 +48,17 @@ var categorySlugTable = table.New(table.Metadata{
 type categorySlugs struct {
 	CategoryId string `db:"category_id"`
 	Slug       string `db:"slug"`
+}
+
+func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
+	return &category{
+		Id:                  pending.ID(),
+		Slug:                pending.Slug(),
+		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResourceId: pending.ThumbnailResourceId(),
+		TotalLikes:          pending.TotalLikes(),
+		TotalPosts:          pending.TotalPosts(),
+	}, nil
 }
 
 func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
@@ -89,7 +103,14 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId, cat.TotalLikes))
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(
+			cat.Id,
+			cat.Slug,
+			cat.Title,
+			cat.ThumbnailResourceId,
+			cat.TotalLikes,
+			cat.TotalPosts,
+		))
 	}
 
 	return categories, nil
@@ -97,6 +118,48 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
+}
+
+func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
+
+	category, err := r.getCategoryById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(category)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateCatQuery := r.session.
+		Query(categoryTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst)
+
+	if err := updateCatQuery.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update category: %v", err)
+	}
+
+	return category, nil
+}
+
+func (r PostsCassandraRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"total_likes"})
 }
 
 func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
@@ -117,5 +180,12 @@ func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryI
 		return nil, fmt.Errorf("failed to get category by id: %v", err)
 	}
 
-	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId, cat.TotalLikes), nil
+	return post.UnmarshalCategoryFromDatabase(
+		cat.Id,
+		cat.Slug,
+		cat.Title,
+		cat.ThumbnailResourceId,
+		cat.TotalLikes,
+		cat.TotalPosts,
+	), nil
 }

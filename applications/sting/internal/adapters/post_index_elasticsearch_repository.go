@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 	"time"
 
@@ -172,6 +173,20 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	}, nil
 }
 
+func (r PostsIndexElasticSearchRepository) RefreshPostIndex(ctx context.Context) error {
+
+	_, err := r.client.
+		Refresh().
+		Index(PostIndexName).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to refresh post index: %v", err)
+	}
+
+	return nil
+}
+
 func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
 
 	pst, err := marshalPostToDocument(post)
@@ -192,6 +207,170 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	}
 
 	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters",
+					elastic.NewTermQuery("character.id", character.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters",
+					elastic.NewTermQuery("character.id", character.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("audience",
+					elastic.NewTermQuery("audience.id", audience.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("audience",
+					elastic.NewTermQuery("audience.id", audience.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters.series",
+					elastic.NewTermQuery("characters.series.id", series.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters.series",
+					elastic.NewTermQuery("characters.series.id", series.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("categories",
+					elastic.NewTermQuery("categories.id", category.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("categories",
+					elastic.NewTermQuery("categories.id", category.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
 }
 
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
@@ -306,12 +485,14 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 				char.Name,
 				char.ThumbnailResourceId,
 				char.TotalLikes,
+				char.TotalPosts,
 				post.UnmarshalSeriesFromDatabase(
 					char.Series.Id,
 					char.Series.Slug,
 					char.Series.Title,
 					char.Series.ThumbnailResourceId,
 					char.Series.TotalLikes,
+					char.TotalLikes,
 				),
 			))
 		}
@@ -325,6 +506,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 				cat.Title,
 				cat.ThumbnailResourceId,
 				cat.TotalLikes,
+				cat.TotalPosts,
 			))
 		}
 
@@ -371,6 +553,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 				pst.Audience.ThumbnailResourceId,
 				pst.Audience.Standard,
 				pst.Audience.TotalLikes,
+				pst.Audience.TotalPosts,
 			)
 		}
 

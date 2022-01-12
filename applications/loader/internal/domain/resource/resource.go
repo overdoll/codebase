@@ -148,7 +148,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	}
 
 	fileName := uuid.New().String()
-	fileKey := fileName
+	fileKey := r.itemId + "/" + fileName
 
 	// the second file we need to move - a file that was existing already
 	moveTargets = append(moveTargets, &Move{

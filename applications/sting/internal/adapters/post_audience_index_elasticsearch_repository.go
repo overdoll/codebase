@@ -23,6 +23,7 @@ type audienceDocument struct {
 	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
 	Standard            int               `json:"standard"`
 	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 	CreatedAt           string            `json:"created_at"`
 }
 
@@ -41,6 +42,9 @@ const audienceIndexProperties = `
 		"type": "integer"
 	},
 	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
 		"type": "integer"
 	},
 	"title": ` + localization.ESIndex + `
@@ -82,6 +86,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:            stnd,
 		TotalLikes:          cat.TotalLikes(),
+		TotalPosts:          cat.TotalPosts(),
 	}, nil
 }
 
@@ -102,6 +107,9 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		sortingAscending = true
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
+		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
 		sortingAscending = false
 	}
 
@@ -143,7 +151,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts)
 		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)

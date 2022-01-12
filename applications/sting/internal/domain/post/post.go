@@ -181,7 +181,7 @@ func (p *Post) AddLike() error {
 	p.likes += 1
 
 	for _, c := range p.categories {
-		if err := c.IncrementTotalLikes(); err != nil {
+		if err := c.UpdateTotalLikes(c.totalLikes + 1); err != nil {
 			return err
 		}
 	}
@@ -189,12 +189,12 @@ func (p *Post) AddLike() error {
 	var alreadyAddedSeries map[string]*Series
 
 	for _, c := range p.characters {
-		if err := c.IncrementTotalLikes(); err != nil {
+		if err := c.UpdateTotalLikes(c.TotalLikes() + 1); err != nil {
 			return err
 		}
 
 		if _, ok := alreadyAddedSeries[c.Series().ID()]; !ok {
-			if err := c.Series().IncrementTotalLikes(); err != nil {
+			if err := c.Series().UpdateTotalLikes(c.Series().totalLikes + 1); err != nil {
 				return err
 			}
 
@@ -202,7 +202,7 @@ func (p *Post) AddLike() error {
 		}
 	}
 
-	if err := p.audience.IncrementTotalLikes(); err != nil {
+	if err := p.audience.UpdateTotalLikes(p.audience.totalLikes + 1); err != nil {
 		return err
 	}
 
@@ -214,7 +214,7 @@ func (p *Post) RemoveLike() error {
 	p.likes -= 1
 
 	for _, c := range p.categories {
-		if err := c.DecrementTotalLikes(); err != nil {
+		if err := c.UpdateTotalLikes(c.totalLikes - 1); err != nil {
 			return err
 		}
 	}
@@ -222,12 +222,12 @@ func (p *Post) RemoveLike() error {
 	var alreadyAddedSeries map[string]*Series
 
 	for _, c := range p.characters {
-		if err := c.DecrementTotalLikes(); err != nil {
+		if err := c.UpdateTotalLikes(c.totalLikes - 1); err != nil {
 			return err
 		}
 
 		if _, ok := alreadyAddedSeries[c.Series().ID()]; !ok {
-			if err := c.Series().DecrementTotalLikes(); err != nil {
+			if err := c.Series().UpdateTotalLikes(c.totalLikes + 1); err != nil {
 				return err
 			}
 
@@ -235,7 +235,7 @@ func (p *Post) RemoveLike() error {
 		}
 	}
 
-	if err := p.audience.DecrementTotalLikes(); err != nil {
+	if err := p.audience.UpdateTotalLikes(p.audience.totalLikes + 1); err != nil {
 		return err
 	}
 

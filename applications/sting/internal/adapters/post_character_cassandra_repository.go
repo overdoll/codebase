@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"overdoll/libraries/localization"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -21,6 +22,7 @@ var characterTable = table.New(table.Metadata{
 		"thumbnail_resource_id",
 		"series_id",
 		"total_likes",
+		"total_posts",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -33,6 +35,7 @@ type character struct {
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 	SeriesId            string            `db:"series_id"`
 	TotalLikes          int               `db:"total_likes"`
+	TotalPosts          int               `db:"total_posts"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -50,6 +53,18 @@ type characterSlug struct {
 	SeriesId    string `db:"series_id"`
 	CharacterId string `db:"character_id"`
 	Slug        string `db:"slug"`
+}
+
+func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
+	return &character{
+		Id:                  pending.ID(),
+		Slug:                pending.Slug(),
+		Name:                localization.MarshalTranslationToDatabase(pending.Name()),
+		ThumbnailResourceId: pending.ThumbnailResourceId(),
+		TotalLikes:          pending.TotalLikes(),
+		TotalPosts:          pending.TotalPosts(),
+		SeriesId:            pending.Series().ID(),
+	}, nil
 }
 
 func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
@@ -147,12 +162,14 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			char.Name,
 			char.ThumbnailResourceId,
 			char.TotalLikes,
+			char.TotalPosts,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
 				serial.Title,
 				serial.ThumbnailResourceId,
 				serial.TotalLikes,
+				serial.TotalPosts,
 			),
 		))
 	}
@@ -162,6 +179,48 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 
 func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
 	return r.getCharacterById(ctx, characterId)
+}
+
+func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string, updateFn func(char *post.Character) error, columns []string) (*post.Character, error) {
+
+	char, err := r.getCharacterById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(char)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalCharacterToDatabase(char)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateCharTable := r.session.
+		Query(characterTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst)
+
+	if err := updateCharTable.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update character: %v", err)
+	}
+
+	return char, nil
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
 }
 
 func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
@@ -194,6 +253,7 @@ func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characte
 		char.Name,
 		char.ThumbnailResourceId,
 		char.TotalLikes,
+		char.TotalPosts,
 		media,
 	), nil
 }

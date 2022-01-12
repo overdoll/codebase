@@ -23,6 +23,7 @@ type seriesDocument struct {
 	Title               map[string]string `json:"title"`
 	CreatedAt           string            `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 }
 
 const seriesIndexProperties = `
@@ -37,6 +38,9 @@ const seriesIndexProperties = `
 		"type": "keyword"
 	},
 	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
 		"type": "integer"
 	},
 	"title":  ` + localization.ESIndex + `
@@ -71,6 +75,7 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		Title:               localization.MarshalTranslationToDatabase(s.Title()),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		TotalLikes:          s.TotalLikes(),
+		TotalPosts:          s.TotalPosts(),
 	}, nil
 }
 
@@ -91,6 +96,9 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 		sortingAscending = true
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
+		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
 		sortingAscending = false
 	}
 
@@ -132,7 +140,14 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.ThumbnailResourceId, md.TotalLikes)
+		newMedia := post.UnmarshalSeriesFromDatabase(
+			md.Id,
+			md.Slug,
+			md.Title,
+			md.ThumbnailResourceId,
+			md.TotalLikes,
+			md.TotalPosts,
+		)
 		newMedia.Node = paging.NewNode(hit.Sort)
 
 		meds = append(meds, newMedia)

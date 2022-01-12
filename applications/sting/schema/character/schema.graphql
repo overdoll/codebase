@@ -10,6 +10,12 @@ type Series implements Node @key(fields: "id") {
 
   """A title for this series."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type SeriesEdge {
@@ -35,6 +41,12 @@ type Character implements Node @key(fields: "id") {
   """A name for this character."""
   name: String!
 
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
+
   """The series linked to this character."""
   series: Series!
 }
@@ -56,15 +68,21 @@ enum CharactersSort {
 
   """Characters by top likes"""
   TOP
+
+  """Characters by most posts"""
+  POPULAR
 }
 
 """Properties by which series connections can be sorted."""
 enum SeriesSort {
-  """Characters by newest first"""
+  """Series by newest first"""
   NEW
 
-  """Characters by top likes"""
+  """Series by top likes"""
   TOP
+
+  """Series by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -89,7 +107,7 @@ extend type Query {
     title: String
 
     """Sorting options for series."""
-    sortBy: SeriesSort! = TOP
+    sortBy: SeriesSort! = POPULAR
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -126,7 +144,7 @@ extend type Query {
     name: String
 
     """Sorting options for characters."""
-    sortBy: CharactersSort! = TOP
+    sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
 
   """Get a single character."""

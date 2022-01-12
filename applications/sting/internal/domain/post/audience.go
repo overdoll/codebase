@@ -20,6 +20,7 @@ type Audience struct {
 	thumbnailResourceId string
 
 	totalLikes int
+	totalPosts int
 
 	standard bool
 }
@@ -36,18 +37,21 @@ func (m *Audience) Title() *localization.Translation {
 	return m.title
 }
 
-// TotalLikes keeps track of total likes for this audience to be used for ranking
 func (m *Audience) TotalLikes() int {
 	return m.totalLikes
 }
 
-func (m *Audience) IncrementTotalLikes() error {
-	m.totalLikes += 1
+func (m *Audience) TotalPosts() int {
+	return m.totalPosts
+}
+
+func (m *Audience) UpdateTotalPosts(totalPosts int) error {
+	m.totalPosts = totalPosts
 	return nil
 }
 
-func (m *Audience) DecrementTotalLikes() error {
-	m.totalLikes -= 1
+func (m *Audience) UpdateTotalLikes(totalLikes int) error {
+	m.totalLikes = totalLikes
 	return nil
 }
 
@@ -55,16 +59,17 @@ func (m *Audience) ThumbnailResourceId() string {
 	return m.thumbnailResourceId
 }
 
-// a "standard" audience is an audience that the majority will consume
+// IsStandard a "standard" audience is an audience that the majority will consume
 func (m *Audience) IsStandard() bool {
 	return m.standard
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail string, standard int, totalLikes int) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail string, standard int, totalLikes, totalPosts int) *Audience {
 	return &Audience{
 		id:                  id,
 		slug:                slug,
 		totalLikes:          totalLikes,
+		totalPosts:          totalPosts,
 		title:               localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResourceId: thumbnail,
 		standard:            standard == 1,

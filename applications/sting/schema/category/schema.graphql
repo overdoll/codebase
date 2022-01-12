@@ -10,6 +10,12 @@ type Category implements Node @key(fields: "id") {
 
   """A title for this category."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type CategoryEdge {
@@ -29,6 +35,9 @@ enum CategoriesSort {
 
   """Categories by top likes"""
   TOP
+
+  """Categories by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -53,7 +62,7 @@ extend type Query {
     title: String
 
     """Sorting options for categories."""
-    sortBy: CategoriesSort! = TOP
+    sortBy: CategoriesSort! = POPULAR
   ): CategoryConnection!
 
   """Get a single category."""

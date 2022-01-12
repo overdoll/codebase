@@ -21,6 +21,7 @@ type Character struct {
 	series              *Series
 
 	totalLikes int
+	totalPosts int
 }
 
 func (c *Character) ID() string {
@@ -47,17 +48,21 @@ func (c *Character) TotalLikes() int {
 	return c.totalLikes
 }
 
-func (c *Character) IncrementTotalLikes() error {
-	c.totalLikes += 1
+func (c *Character) TotalPosts() int {
+	return c.totalPosts
+}
+
+func (c *Character) UpdateTotalPosts(totalPosts int) error {
+	c.totalPosts = totalPosts
 	return nil
 }
 
-func (c *Character) DecrementTotalLikes() error {
-	c.totalLikes -= 1
+func (c *Character) UpdateTotalLikes(totalLikes int) error {
+	c.totalLikes = totalLikes
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, totalLikes int, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, totalLikes, totalPosts int, media *Series) *Character {
 	return &Character{
 		id:                  id,
 		slug:                slug,
@@ -65,5 +70,6 @@ func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thu
 		thumbnailResourceId: thumbnail,
 		series:              media,
 		totalLikes:          totalLikes,
+		totalPosts:          totalPosts,
 	}
 }

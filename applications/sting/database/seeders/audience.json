@@ -6,7 +6,8 @@
       "en": "Standard Audience"
     },
     "standard": 1,
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
@@ -15,6 +16,7 @@
       "en": "Non-Standard Audience"
     },
     "standard": 0,
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   }
 ]

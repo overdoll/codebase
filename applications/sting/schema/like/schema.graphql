@@ -44,26 +44,6 @@ extend type Post {
   viewerLiked: PostLike @goField(forceResolver: true)
 }
 
-extend type Category {
-  """The total amount of likes on this category."""
-  totalLikes: Int!
-}
-
-extend type Character {
-  """The total amount of likes on this character."""
-  totalLikes: Int!
-}
-
-extend type Audience {
-  """The total amount of likes on this audience."""
-  totalLikes: Int!
-}
-
-extend type Series {
-  """The total amount of likes on this series."""
-  totalLikes: Int!
-}
-
 extend type Mutation {
   """
   Like a post
@@ -71,7 +51,7 @@ extend type Mutation {
   likePost(input: LikePostInput!): LikePostPayload
 
   """
-  Undo a like a post
+  Undo a like on a post
   """
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
 }

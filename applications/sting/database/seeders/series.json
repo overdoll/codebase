@@ -5,7 +5,8 @@
     "title": {
       "en": "Foreigner On Mars"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
@@ -13,7 +14,8 @@
     "title": {
       "en": "Veterans Of Our Future"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP",
@@ -21,7 +23,8 @@
     "title": {
       "en": "Animal Of The Ocean"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKic9sTP5KQpdGa1pTxgbDoKQ",
@@ -29,7 +32,8 @@
     "title": {
       "en": "Heroes And Companions"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
@@ -37,7 +41,8 @@
     "title": {
       "en": "Cat Can Dance"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKim45K1A3uvtZvPeYix5XO7T",
@@ -45,7 +50,8 @@
     "title": {
       "en": "Suspicious Of The Universe"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKinX7wXHlvVvrELgOKcwNAKw",
@@ -53,7 +59,8 @@
     "title": {
       "en": "Fish Of The Future"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
@@ -61,7 +68,8 @@
     "title": {
       "en": "Wonders Of Chemistry"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKitrRACXDRLpPoN3nVjo0p4j",
@@ -69,7 +77,8 @@
     "title": {
       "en": "Dawn Of The Swamps"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   },
   {
     "id": "1pcKj395CsMusRZlJviwIG4qRCh",
@@ -77,6 +86,7 @@
     "title": {
       "en": "Pilots Of A Star"
     },
-    "total_likes": 0
+    "total_likes": 0,
+    "total_posts": 0
   }
 ]

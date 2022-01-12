@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS categories
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
-    total_likes           counter,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -22,7 +23,8 @@ CREATE TABLE IF NOT EXISTS characters
     name                  map<text, text>,
     thumbnail_resource_id text,
     series_id             text,
-    total_likes           counter,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -40,7 +42,8 @@ CREATE TABLE IF NOT EXISTS series
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
-    total_likes           counter,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -57,7 +60,8 @@ CREATE TABLE IF NOT EXISTS audience
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
-    total_likes           counter,
+    total_likes           int,
+    total_posts           int,
     standard              int,
     primary key ( id )
 );
@@ -72,7 +76,7 @@ CREATE TABLE IF NOT EXISTS audience_slugs
 CREATE TABLE IF NOT EXISTS posts
 (
     id                        text,
-    likes                     counter,
+    likes                     int,
     state                     text,
     moderator_account_id      text,
     contributor_account_id    text,

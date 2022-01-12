@@ -281,10 +281,6 @@ func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requ
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
 }
 
-// UpdatePostLikesOperator
-// updates likes for a post
-// then updates the total likes for each individual category, character, etc...
-// all in a batch statement
 func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	pst, err := r.GetPostByIdOperator(ctx, id)
@@ -293,67 +289,8 @@ func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, i
 		return nil, err
 	}
 
-	oldTotalLikes := pst.Likes()
-
 	if err = updateFn(pst); err != nil {
 		return nil, err
-	}
-
-	newTotalLikes := pst.Likes()
-
-	builderPost := postTable.UpdateBuilder()
-	builderCategory := categoryTable.UpdateBuilder()
-	builderCharacter := characterTable.UpdateBuilder()
-	builderAudience := audienceTable.UpdateBuilder()
-	builderSeries := seriesTable.UpdateBuilder()
-
-	increment := newTotalLikes > oldTotalLikes
-
-	if increment {
-		builderPost.Add("likes")
-		builderCategory.Add("total_likes")
-		builderCharacter.Add("total_likes")
-		builderAudience.Add("total_likes")
-		builderSeries.Add("total_likes")
-	} else {
-		builderPost.Remove("likes")
-		builderCategory.Remove("total_likes")
-		builderCharacter.Remove("total_likes")
-		builderAudience.Remove("total_likes")
-		builderSeries.Remove("total_likes")
-	}
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// update post count
-	stmt, _ := builderPost.ToCql()
-	batch.Query(stmt, pst.ID(), 1)
-
-	// update audience count
-	stmt, _ = builderAudience.ToCql()
-	batch.Query(stmt, pst.Audience().ID(), 1)
-
-	// update each category
-	for _, id := range pst.CategoryIds() {
-		stmt, _ = builderCategory.ToCql()
-		batch.Query(stmt, id, 1)
-	}
-
-	var alreadyVisitedSeries map[string]bool
-
-	for _, id := range pst.Characters() {
-		stmt, _ = builderCharacter.ToCql()
-		batch.Query(stmt, id, 1)
-
-		if _, ok := alreadyVisitedSeries[id.Series().ID()]; !ok {
-			stmt, _ = builderSeries.ToCql()
-			batch.Query(stmt, id, 1)
-		}
-	}
-
-	// execute batch
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, fmt.Errorf("failed to update likes for posts and children: %v", err)
 	}
 
 	return pst, nil

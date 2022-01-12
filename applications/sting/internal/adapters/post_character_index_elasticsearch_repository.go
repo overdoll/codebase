@@ -25,6 +25,7 @@ type characterDocument struct {
 	Series              seriesDocument    `json:"series"`
 	CreatedAt           string            `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 }
 
 const characterIndexProperties = `
@@ -43,6 +44,9 @@ const characterIndexProperties = `
 		"type": "date"
 	},
 	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
 		"type": "integer"
 	},
 	"series": {
@@ -82,6 +86,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Slug:                char.Slug(),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		TotalLikes:          char.TotalLikes(),
+		TotalPosts:          char.TotalPosts(),
 		Series:              *seriesDoc,
 	}, nil
 }
@@ -126,6 +131,9 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
 		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
+		sortingAscending = false
 	}
 
 	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
@@ -160,7 +168,21 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.ThumbnailResourceId, chr.TotalLikes, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.ThumbnailResourceId, chr.Series.TotalLikes))
+		newCharacter := post.UnmarshalCharacterFromDatabase(
+			chr.Id,
+			chr.Slug,
+			chr.Name,
+			chr.ThumbnailResourceId,
+			chr.TotalLikes,
+			chr.TotalPosts,
+			post.UnmarshalSeriesFromDatabase(
+				chr.Series.Id,
+				chr.Series.Slug,
+				chr.Series.Title,
+				chr.Series.ThumbnailResourceId,
+				chr.Series.TotalLikes,
+				chr.Series.TotalPosts,
+			))
 		newCharacter.Node = paging.NewNode(hit.Sort)
 
 		characters = append(characters, newCharacter)
@@ -211,6 +233,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Slug:                c.Slug,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 				TotalLikes:          c.TotalLikes,
+				TotalPosts:          c.TotalPosts,
 				Series: seriesDocument{
 					Id:                  m.Id,
 					ThumbnailResourceId: m.ThumbnailResourceId,
@@ -218,6 +241,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 					Slug:                m.Slug,
 					CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
 					TotalLikes:          m.TotalLikes,
+					TotalPosts:          c.TotalPosts,
 				},
 			}
 
