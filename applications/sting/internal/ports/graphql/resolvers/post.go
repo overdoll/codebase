@@ -5,6 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -50,6 +51,11 @@ func (r PostResolver) ViewerLiked(ctx context.Context, obj *types.Post) (*types.
 	})
 
 	if err != nil {
+
+		if err == post.ErrLikeNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

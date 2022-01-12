@@ -20,14 +20,14 @@ type CurationProfileModified struct {
 	Audience struct {
 		Completed bool
 		Skipped   bool
-		Audiences struct {
+		Audiences []struct {
 			ID string
 		}
 	}
 	Category struct {
 		Completed  bool
 		Skipped    bool
-		Categories struct {
+		Categories []struct {
 			ID string
 		}
 	}
@@ -96,7 +96,7 @@ func TestCreateAndCompleteCurationProfile(t *testing.T) {
 
 	var updateDOB UpdateCurationProfileDateOfBirth
 
-	dob := time.Now()
+	dob := time.Now().Add(-time.Hour * 175200)
 
 	err := client.Mutate(context.Background(), &updateDOB, map[string]interface{}{
 		"input": types.UpdateCurationProfileDateOfBirthInput{
@@ -138,7 +138,7 @@ func TestCreateAndCompleteCurationProfile(t *testing.T) {
 
 	personalProfile = getAccountCuration(t, testingAccountId)
 	require.True(t, personalProfile.Category.Completed, "category profile should be now completed")
-	require.Len(t, personalProfile.Category.Categories, 1, "should have correct count of categories")
+	require.Len(t, personalProfile.Category.Categories, 2, "should have correct count of categories")
 
 	require.True(t, personalProfile.Completed, "profile should now be completed")
 }

@@ -30,7 +30,7 @@ type curationProfile struct {
 	AccountId          string     `db:"account_id"`
 	DateOfBirth        *time.Time `db:"date_of_birth"`
 	AudienceIds        []string   `db:"audience_ids"`
-	CategoryIds        []string   `db:"audience_ids"`
+	CategoryIds        []string   `db:"category_ids"`
 	DateOfBirthSkipped bool       `db:"date_of_birth_skipped"`
 	AudienceIdsSkipped bool       `db:"audience_ids_skipped"`
 	CategoryIdsSkipped bool       `db:"category_ids_skipped"`
@@ -108,11 +108,11 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 	}
 
 	if err := r.session.
-		Query(postTable.Update(
+		Query(curationProfileTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(curationProfile{
+		BindStruct(&curationProfile{
 			AccountId:          profile.AccountId(),
 			DateOfBirth:        profile.DateOfBirth(),
 			AudienceIds:        profile.AudienceIds(),
@@ -122,7 +122,7 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 			CategoryIdsSkipped: profile.CategoryProfileSkipped(),
 		}).
 		ExecRelease(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to update curation profile: %v", err)
 	}
 
 	return profile, nil

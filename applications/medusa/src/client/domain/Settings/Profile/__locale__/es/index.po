@@ -17,10 +17,6 @@ msgstr ""
 msgid "A confirmation email was sent to {0}. Check your inbox/spam!"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:107
-#~ msgid "Add"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Profile/RootEmails/Emails/Emails.tsx:136
 msgid "Add Email"
 msgstr ""
@@ -49,10 +45,6 @@ msgstr ""
 msgid "Confirm Username Change"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:85
-#~ msgid "Confirming Email"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Profile/RootEmails/RootEmails.tsx:26
 msgid "Emails"
 msgstr ""
@@ -65,10 +57,6 @@ msgstr ""
 #: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:148
 msgid "Enter a new username"
 msgstr ""
-
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:103
-#~ msgid "Enter an email address"
-#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:207
 msgid "Go back"
@@ -89,10 +77,6 @@ msgstr ""
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/EmailCard.tsx:54
 msgid "Needs to be confirmed through email link"
 msgstr ""
-
-#: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:93
-#~ msgid "Please wait while we confirm your email..."
-#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete.tsx:73
 msgid "Remove"
@@ -119,11 +103,6 @@ msgstr ""
 msgid "There was an error setting {0} to Primary"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:47
-#: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:56
-#~ msgid "This confirmation link is either invalid or has expired"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/EmailCard.tsx:42
 msgid "Used to log into your account"
 msgstr ""
@@ -147,22 +126,6 @@ msgstr ""
 #: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:80
 msgid "You have recently made a username edit. You may edit your username again in {remainingTime}."
 msgstr ""
-
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:83
-#~ msgid "Your old usernames are replaced"
-#~ msgstr ""
-
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:74
-#~ msgid "{0} alias"
-#~ msgstr ""
-
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:74
-#~ msgid "{0} aliases"
-#~ msgstr ""
-
-#: src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail.tsx:50
-#~ msgid "{0} was confirmed successfully"
-#~ msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/EmailCard/Delete/Delete.tsx:52
 msgid "{0} was removed"

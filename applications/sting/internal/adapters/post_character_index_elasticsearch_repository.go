@@ -127,7 +127,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 	if filter.SortBy() == post.NewSort {
 		sortingColumn = "created_at"
-		sortingAscending = true
+		sortingAscending = false
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
 		sortingAscending = false
@@ -136,9 +136,19 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		sortingAscending = false
 	}
 
-	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
 
 	query := elastic.NewBoolQuery()
+
+	if filter.Name() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(filter.Name(), localization.GetESSearchFields("name")...).
+				Type("best_fields"),
+		)
+	}
 
 	if len(filter.Slugs()) > 0 {
 		for _, id := range filter.Slugs() {

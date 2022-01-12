@@ -104,7 +104,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 
 	if filter.SortBy() == post.NewSort {
 		sortingColumn = "created_at"
-		sortingAscending = true
+		sortingAscending = false
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "total_likes"
 		sortingAscending = false
@@ -113,7 +113,9 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		sortingAscending = false
 	}
 
-	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
 
 	query := elastic.NewBoolQuery()
 

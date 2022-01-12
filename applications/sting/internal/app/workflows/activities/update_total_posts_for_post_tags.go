@@ -38,7 +38,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 		}
 	}
 
-	var updatedSeries map[string]bool
+	updatedSeries := make(map[string]bool)
 
 	for _, char := range pendingPost.Characters() {
 
@@ -82,7 +82,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 				return err
 			}
 
-			updatedSeries[char.Series().ID()] = true
+			updatedSeries[newSeries.ID()] = true
 		}
 	}
 

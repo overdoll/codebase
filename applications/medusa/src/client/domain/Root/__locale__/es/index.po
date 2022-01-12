@@ -17,17 +17,13 @@ msgstr ""
 msgid "Account Locked"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:87
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:92
 msgid "Account Settings"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:55
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:60
 msgid "Alternative Menu"
 msgstr ""
-
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:62
-#~ msgid "Banned for {0}"
-#~ msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:97
 msgid "Banned for {remainingTime}"
@@ -55,10 +51,6 @@ msgid "Create a Post"
 msgstr ""
 
 #: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
-#~ msgid "Error"
-#~ msgstr ""
-
-#: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
 msgid "Error {0}"
 msgstr ""
 
@@ -79,12 +71,12 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:44
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:64
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:49
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:69
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:64
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:102
 msgid "Log Out"
 msgstr ""
 
@@ -92,11 +84,7 @@ msgstr ""
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:76
-#~ msgid "Manage"
-#~ msgstr ""
-
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:77
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:82
 msgid "Manage Content"
 msgstr ""
 
@@ -125,17 +113,9 @@ msgstr ""
 msgid "Please enter a valid email"
 msgstr ""
 
-#: src/modules/constants/schemas/useEmailFormSchema/index.ts:14
-#~ msgid "Please enter a valid email address"
-#~ msgstr ""
-
 #: src/modules/validation/Email.ts:15
 msgid "Please enter an email"
 msgstr ""
-
-#: src/modules/constants/schemas/useEmailFormSchema/index.ts:13
-#~ msgid "Please enter an email address"
-#~ msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:121
 msgid "Please review the community guidelines to make sure this doesn't happen again."
@@ -149,10 +129,6 @@ msgstr ""
 msgid "Reveal Spoiler"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:86
-#~ msgid "Settings"
-#~ msgstr ""
-
 #: src/modules/validation/Totp.ts:15
 msgid "The code can only contain numbers"
 msgstr ""
@@ -163,10 +139,6 @@ msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:51
 msgid "The contents of a post you uploaded are not allowed on our platform."
-msgstr ""
-
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:48
-msgid "There was an error logging out"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:74
@@ -193,10 +165,6 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonLogout/DropdownMenuButtonLogout.tsx:30
-msgid "You have been logged out"
-msgstr ""
-
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:129
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
@@ -208,10 +176,6 @@ msgstr ""
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:132
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
-
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:93
-#~ msgid "Your account has been locked for {0}. You can unlock it after {1}."
-#~ msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:67
 msgid "Your account has been unlocked"

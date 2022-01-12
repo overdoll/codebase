@@ -71,6 +71,7 @@ type ComplexityRoot struct {
 		Thumbnail  func(childComplexity int, size *int) int
 		Title      func(childComplexity int) int
 		TotalLikes func(childComplexity int) int
+		TotalPosts func(childComplexity int) int
 	}
 
 	AudienceConnection struct {
@@ -96,6 +97,7 @@ type ComplexityRoot struct {
 		Thumbnail  func(childComplexity int, size *int) int
 		Title      func(childComplexity int) int
 		TotalLikes func(childComplexity int) int
+		TotalPosts func(childComplexity int) int
 	}
 
 	CategoryConnection struct {
@@ -122,6 +124,7 @@ type ComplexityRoot struct {
 		Slug       func(childComplexity int) int
 		Thumbnail  func(childComplexity int, size *int) int
 		TotalLikes func(childComplexity int) int
+		TotalPosts func(childComplexity int) int
 	}
 
 	CharacterConnection struct {
@@ -256,6 +259,7 @@ type ComplexityRoot struct {
 		Thumbnail  func(childComplexity int, size *int) int
 		Title      func(childComplexity int) int
 		TotalLikes func(childComplexity int) int
+		TotalPosts func(childComplexity int) int
 	}
 
 	SeriesConnection struct {
@@ -504,6 +508,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Audience.TotalLikes(childComplexity), true
 
+	case "Audience.totalPosts":
+		if e.complexity.Audience.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Audience.TotalPosts(childComplexity), true
+
 	case "AudienceConnection.edges":
 		if e.complexity.AudienceConnection.Edges == nil {
 			break
@@ -604,6 +615,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Category.TotalLikes(childComplexity), true
+
+	case "Category.totalPosts":
+		if e.complexity.Category.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Category.TotalPosts(childComplexity), true
 
 	case "CategoryConnection.edges":
 		if e.complexity.CategoryConnection.Edges == nil {
@@ -712,6 +730,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Character.TotalLikes(childComplexity), true
+
+	case "Character.totalPosts":
+		if e.complexity.Character.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Character.TotalPosts(childComplexity), true
 
 	case "CharacterConnection.edges":
 		if e.complexity.CharacterConnection.Edges == nil {
@@ -1469,6 +1494,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Series.TotalLikes(childComplexity), true
 
+	case "Series.totalPosts":
+		if e.complexity.Series.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Series.TotalPosts(childComplexity), true
+
 	case "SeriesConnection.edges":
 		if e.complexity.SeriesConnection.Edges == nil {
 			break
@@ -1649,7 +1681,7 @@ var sources = []*ast.Source{
   """An ID pointing to this audience."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
+  """A url-friendly ID. Should be used when searching."""
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
@@ -1657,6 +1689,12 @@ var sources = []*ast.Source{
 
   """A title for this audience."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type AudienceEdge {
@@ -1676,6 +1714,9 @@ enum AudiencesSort {
 
   """Audience by top likes"""
   TOP
+
+  """Audience by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -1700,7 +1741,7 @@ extend type Query {
     title: String
 
     """Sorting options for audiences."""
-    sortBy: AudiencesSort! = TOP
+    sortBy: AudiencesSort! = POPULAR
   ): AudienceConnection!
 
   """Get a single audience."""
@@ -1727,6 +1768,12 @@ extend type Post {
 
   """A title for this category."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type CategoryEdge {
@@ -1746,6 +1793,9 @@ enum CategoriesSort {
 
   """Categories by top likes"""
   TOP
+
+  """Categories by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -1770,7 +1820,7 @@ extend type Query {
     title: String
 
     """Sorting options for categories."""
-    sortBy: CategoriesSort! = TOP
+    sortBy: CategoriesSort! = POPULAR
   ): CategoryConnection!
 
   """Get a single category."""
@@ -1797,6 +1847,12 @@ extend type Post {
 
   """A title for this series."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type SeriesEdge {
@@ -1822,6 +1878,12 @@ type Character implements Node @key(fields: "id") {
   """A name for this character."""
   name: String!
 
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
+
   """The series linked to this character."""
   series: Series!
 }
@@ -1843,15 +1905,21 @@ enum CharactersSort {
 
   """Characters by top likes"""
   TOP
+
+  """Characters by most posts"""
+  POPULAR
 }
 
 """Properties by which series connections can be sorted."""
 enum SeriesSort {
-  """Characters by newest first"""
+  """Series by newest first"""
   NEW
 
-  """Characters by top likes"""
+  """Series by top likes"""
   TOP
+
+  """Series by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -1876,7 +1944,7 @@ extend type Query {
     title: String
 
     """Sorting options for series."""
-    sortBy: SeriesSort! = TOP
+    sortBy: SeriesSort! = POPULAR
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -1913,7 +1981,7 @@ extend type Query {
     name: String
 
     """Sorting options for characters."""
-    sortBy: CharactersSort! = TOP
+    sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
 
   """Get a single character."""
@@ -2094,26 +2162,6 @@ extend type Post {
   viewerLiked: PostLike @goField(forceResolver: true)
 }
 
-extend type Category {
-  """The total amount of likes on this category."""
-  totalLikes: Int!
-}
-
-extend type Character {
-  """The total amount of likes on this character."""
-  totalLikes: Int!
-}
-
-extend type Audience {
-  """The total amount of likes on this audience."""
-  totalLikes: Int!
-}
-
-extend type Series {
-  """The total amount of likes on this series."""
-  totalLikes: Int!
-}
-
 extend type Mutation {
   """
   Like a post
@@ -2121,7 +2169,7 @@ extend type Mutation {
   likePost(input: LikePostInput!): LikePostPayload
 
   """
-  Undo a like a post
+  Undo a like on a post
   """
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
 }
@@ -4725,6 +4773,41 @@ func (ec *executionContext) _Audience_totalLikes(ctx context.Context, field grap
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Audience_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Audience",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Audience_posts(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5191,6 +5274,41 @@ func (ec *executionContext) _Category_totalLikes(ctx context.Context, field grap
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Category_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Category_posts(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5622,41 +5740,6 @@ func (ec *executionContext) _Character_name(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Character_series(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Character",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Series, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Series)
-	fc.Result = res
-	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Character_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5690,6 +5773,76 @@ func (ec *executionContext) _Character_totalLikes(ctx context.Context, field gra
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_series(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Series, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_posts(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -8832,6 +8985,41 @@ func (ec *executionContext) _Series_totalLikes(ctx context.Context, field graphq
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Series_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Series",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Series_posts(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -11138,6 +11326,16 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "totalPosts":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Audience_totalPosts(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "posts":
 			field := field
 
@@ -11369,6 +11567,16 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "totalPosts":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Category_totalPosts(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "posts":
 			field := field
 
@@ -11590,9 +11798,9 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "series":
+		case "totalLikes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Character_series(ctx, field, obj)
+				return ec._Character_totalLikes(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11600,9 +11808,19 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "totalLikes":
+		case "totalPosts":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Character_totalLikes(ctx, field, obj)
+				return ec._Character_totalPosts(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "series":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Character_series(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13083,6 +13301,16 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 		case "totalLikes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Series_totalLikes(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalPosts":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Series_totalPosts(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

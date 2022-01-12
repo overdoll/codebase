@@ -14,11 +14,14 @@ type Node struct {
 	cursor string
 }
 
-func NewNode(cursorValues ...interface{}) *Node {
+func init() {
+}
+
+func NewNode(cursorValue interface{}) *Node {
 
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
-	if err := enc.Encode(cursorValues); err != nil {
+	if err := enc.Encode(cursorValue); err != nil {
 		panic(err)
 	}
 
@@ -30,15 +33,15 @@ func (n *Node) Cursor() string {
 }
 
 type Cursor struct {
-	after  interface{}
-	before interface{}
+	after  *gob.Decoder
+	before *gob.Decoder
 	first  *int
 	last   *int
 }
 
 func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 
-	var afterDst interface{}
+	var afterDst *gob.Decoder
 
 	if after != nil && *after != "" {
 		decoded, err := base64.StdEncoding.DecodeString(*after)
@@ -47,23 +50,19 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 		}
 
 		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
-		if err := dec.Decode(afterDst); err != nil {
-			return nil, err
-		}
+
+		afterDst = dec
 	}
 
-	var beforeDst interface{}
+	var beforeDst *gob.Decoder
 
 	if before != nil && *before != "" {
 		decoded, err := base64.StdEncoding.DecodeString(*before)
 		if err != nil {
 			return nil, err
 		}
-
 		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
-		if err := dec.Decode(beforeDst); err != nil {
-			return nil, err
-		}
+		beforeDst = dec
 	}
 
 	if first != nil && *first < 0 {
@@ -76,7 +75,10 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 
 	if first != nil && last != nil {
 		return nil, errors.New("passing both `first` and `last` to paginate a connection is not supported")
+	}
 
+	if afterDst != nil && beforeDst != nil {
+		return nil, errors.New("passing both `after` and `before` to paginate a connection is not supported")
 	}
 
 	return &Cursor{
@@ -87,11 +89,11 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	}, nil
 }
 
-func (c *Cursor) After() interface{} {
+func (c *Cursor) After() *gob.Decoder {
 	return c.after
 }
 
-func (c *Cursor) Before() interface{} {
+func (c *Cursor) Before() *gob.Decoder {
 	return c.before
 }
 
@@ -101,6 +103,19 @@ func (c *Cursor) First() *int {
 
 func (c *Cursor) Last() *int {
 	return c.last
+}
+
+func (c *Cursor) Primary() *gob.Decoder {
+
+	if c.after != nil {
+		return c.after
+	}
+
+	if c.before != nil {
+		return c.before
+	}
+
+	return nil
 }
 
 func (c *Cursor) IsEmpty() bool {
@@ -119,14 +134,29 @@ func (c *Cursor) GetLimit() int {
 	return limit
 }
 
-func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string, ascending bool) {
+func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column, tieBreakerColumn string, ascending bool) error {
+
 	// add search_after parameters
 	if c.After() != nil {
-		builder.SearchAfter(c.After().([]interface{})...)
+
+		var afterValue []interface{}
+
+		if err := c.After().Decode(&afterValue); err != nil {
+			return err
+		}
+
+		builder.SearchAfter(afterValue...)
 	}
 
 	if c.Before() != nil {
-		builder.SearchAfter(c.Before().([]interface{})...)
+
+		var beforeValue []interface{}
+
+		if err := c.Before().Decode(&beforeValue); err != nil {
+			return err
+		}
+
+		builder.SearchAfter(beforeValue...)
 	}
 
 	limit := c.GetLimit()
@@ -135,24 +165,40 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 		builder.Size(limit)
 	}
 
-	isBackwardsPagination := c.After() == nil && c.Before() != nil
+	isBackwardsPagination := c.Before() != nil || c.Last() != nil
 
 	// if using "before" - we want to reverse the sort order to be able to grab the items correctly
 	if isBackwardsPagination {
 		builder.Sort(column, !ascending)
+
+		// tie breaker
+		builder.Sort(tieBreakerColumn, false)
+
 	} else {
 		builder.Sort(column, ascending)
+
+		// tie breaker
+		builder.Sort(tieBreakerColumn, true)
 	}
+
+	return nil
 }
 
-func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
+func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascending bool) error {
 	if c.After() != nil {
-
-		builder.Where(qb.LtLit(column, `'`+c.After().(string)+`'`))
+		if ascending {
+			builder.Where(qb.Gt(column))
+		} else {
+			builder.Where(qb.Lt(column))
+		}
 	}
 
 	if c.Before() != nil {
-		builder.Where(qb.GtLit(column, `'`+c.Before().(string)+`'`))
+		if ascending {
+			builder.Where(qb.Gt(column))
+		} else {
+			builder.Where(qb.Lt(column))
+		}
 	}
 
 	limit := c.GetLimit()
@@ -160,10 +206,21 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 	if limit > 0 {
 		builder.Limit(uint(limit))
 	}
+
+	isBackwardsPagination := c.Before() != nil || c.Last() != nil
+
+	// if using "before" - we want to reverse the sort order to be able to grab the items correctly
+	if isBackwardsPagination {
+		builder.OrderBy(column, qb.Order(!ascending))
+	} else {
+		builder.OrderBy(column, qb.Order(ascending))
+	}
+
+	return nil
 }
 
 // take redis keys, and based on cursor, sort results
-func (c *Cursor) BuildRedis(k []string) []string {
+func (c *Cursor) BuildRedis(k []string) ([]string, error) {
 
 	sort.Strings(k)
 
@@ -174,13 +231,20 @@ func (c *Cursor) BuildRedis(k []string) []string {
 		indexAt := -1
 
 		for i, v := range k {
-			if v == c.After().(string) {
+
+			var afterValue string
+
+			if err := c.After().Decode(&afterValue); err != nil {
+				return nil, err
+			}
+
+			if v == afterValue {
 				indexAt = i
 			}
 		}
 
 		if indexAt == -1 {
-			return []string{}
+			return []string{}, nil
 		}
 
 		keys = keys[indexAt:]
@@ -191,17 +255,24 @@ func (c *Cursor) BuildRedis(k []string) []string {
 		indexAt := -1
 
 		for i, v := range k {
-			if v == c.Before().(string) {
+
+			var beforeValue string
+
+			if err := c.Before().Decode(&beforeValue); err != nil {
+				return nil, err
+			}
+
+			if v == beforeValue {
 				indexAt = i
 			}
 		}
 
 		if indexAt == -1 {
-			return []string{}
+			return []string{}, nil
 		}
 
 		keys = keys[:indexAt]
 	}
 
-	return keys
+	return keys, nil
 }

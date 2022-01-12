@@ -81,7 +81,9 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		sortingColumn = "created_at"
 	}
 
-	cursor.BuildElasticsearch(builder, sortingColumn, true)
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", true); err != nil {
+		return nil, err
+	}
 
 	query := elastic.NewBoolQuery()
 

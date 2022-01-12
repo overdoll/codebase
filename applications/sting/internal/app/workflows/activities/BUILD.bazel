@@ -13,6 +13,8 @@ go_library(
         "remove_post.go",
         "services.go",
         "submit_post.go",
+        "update_total_likes_for_post_tags.go",
+        "update_total_posts_for_post_tags.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],

@@ -10,8 +10,18 @@ import (
 	"time"
 )
 
+var postLikeCounterTable = table.New(table.Metadata{
+	Name: "post_likes_counter",
+	Columns: []string{
+		"post_id",
+		"likes",
+	},
+	PartKey: []string{"post_id"},
+	SortKey: []string{},
+})
+
 var postLikeTable = table.New(table.Metadata{
-	Name: "club_members",
+	Name: "post_likes",
 	Columns: []string{
 		"post_id",
 		"liked_account_id",
@@ -25,6 +35,11 @@ type postLike struct {
 	PostId         string    `db:"post_id"`
 	LikedAccountId string    `db:"liked_account_id"`
 	LikedAt        time.Time `db:"liked_at"`
+}
+
+type postLikeCounter struct {
+	PostId string `db:"post_id"`
+	Likes  int    `db:"likes"`
 }
 
 func (r PostsCassandraRepository) CreatePostLike(ctx context.Context, requester *principal.Principal, like *post.Like) error {
@@ -54,6 +69,49 @@ func (r PostsCassandraRepository) DeletePostLike(ctx context.Context, requester 
 		}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete post like: %v", err)
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) getLikesForPost(ctx context.Context, postId string) (int, error) {
+
+	queryPostLikeCounter := r.session.
+		Query(postLikeCounterTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(postLikeCounter{PostId: postId})
+
+	var pstLikeCounter postLikeCounter
+
+	if err := queryPostLikeCounter.Get(&pstLikeCounter); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return 0, nil
+		}
+
+		return 0, fmt.Errorf("failed to get post likes by id: %v", err)
+	}
+
+	return pstLikeCounter.Likes, nil
+}
+
+func (r PostsCassandraRepository) updatePostLikes(ctx context.Context, postId string, increment bool) error {
+
+	builder := postLikeCounterTable.
+		UpdateBuilder()
+
+	if increment {
+		builder.Add("likes")
+	} else {
+		builder.Remove("likes")
+	}
+
+	if err := builder.
+		Query(r.session).
+		Consistency(gocql.One).
+		BindStruct(postLikeCounter{PostId: postId, Likes: 1}).
+		ExecRelease(); err != nil {
+		return err
 	}
 
 	return nil

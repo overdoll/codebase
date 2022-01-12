@@ -1,30 +1,29 @@
 import { useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
-import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { useHistory } from '@//:modules/routing'
+import { useEffect } from 'react'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const LogoutButtonGQL = graphql`
-  mutation DropdownMenuButtonLogoutMutation {
+  mutation LogoutMutation {
     revokeAccountAccess {
       revokedAccountId
     }
   }
 `
 
-export default function DropdownMenuButtonLogout (): JSX.Element {
+export default function Logout (): JSX.Element {
   const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
 
   const history = useHistory()
 
-  const onLogout = (): void => {
+  const notify = useToast()
+
+  useEffect(() => {
     logout({
       variables: {},
       onCompleted () {
-        history.replace('/')
-
         notify({
           status: 'success',
           title: t`You have been logged out`,
@@ -32,6 +31,8 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
         })
       },
       updater: (store, payload) => {
+        history.replace('/')
+
         // listen to history until its at a certain path and then logout
         // to fix double refresh bug
         const viewer = store
@@ -50,21 +51,7 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
         })
       }
     })
-  }
+  }, [])
 
-  const notify = useToast()
-
-  return (
-    <HorizontalNavigationDropdownMenu.Button
-      onClick={() => onLogout()}
-      isDisabled={isLoggingOut}
-      color='orange.300'
-      icon={SafetyExitDoorLeft}
-      label={
-        <Trans>
-          Log Out
-        </Trans>
-      }
-    />
-  )
+  return <CenteredSpinner />
 }

@@ -179,66 +179,11 @@ func (p *Post) MakePublish() error {
 
 func (p *Post) AddLike() error {
 	p.likes += 1
-
-	for _, c := range p.categories {
-		if err := c.UpdateTotalLikes(c.totalLikes + 1); err != nil {
-			return err
-		}
-	}
-
-	var alreadyAddedSeries map[string]*Series
-
-	for _, c := range p.characters {
-		if err := c.UpdateTotalLikes(c.TotalLikes() + 1); err != nil {
-			return err
-		}
-
-		if _, ok := alreadyAddedSeries[c.Series().ID()]; !ok {
-			if err := c.Series().UpdateTotalLikes(c.Series().totalLikes + 1); err != nil {
-				return err
-			}
-
-			alreadyAddedSeries[c.Series().ID()] = c.Series()
-		}
-	}
-
-	if err := p.audience.UpdateTotalLikes(p.audience.totalLikes + 1); err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func (p *Post) RemoveLike() error {
-
 	p.likes -= 1
-
-	for _, c := range p.categories {
-		if err := c.UpdateTotalLikes(c.totalLikes - 1); err != nil {
-			return err
-		}
-	}
-
-	var alreadyAddedSeries map[string]*Series
-
-	for _, c := range p.characters {
-		if err := c.UpdateTotalLikes(c.totalLikes - 1); err != nil {
-			return err
-		}
-
-		if _, ok := alreadyAddedSeries[c.Series().ID()]; !ok {
-			if err := c.Series().UpdateTotalLikes(c.totalLikes + 1); err != nil {
-				return err
-			}
-
-			alreadyAddedSeries[c.Series().ID()] = c.Series()
-		}
-	}
-
-	if err := p.audience.UpdateTotalLikes(p.audience.totalLikes + 1); err != nil {
-		return err
-	}
-
 	return nil
 }
 

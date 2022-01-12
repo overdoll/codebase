@@ -89,10 +89,6 @@ msgstr ""
 msgid "Submit Code"
 msgstr ""
 
-#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:172
-#~ msgid "Submitting"
-#~ msgstr ""
-
 #: src/client/domain/Join/Join/Join.tsx:123
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""

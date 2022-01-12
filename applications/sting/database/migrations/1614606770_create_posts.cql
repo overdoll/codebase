@@ -76,7 +76,6 @@ CREATE TABLE IF NOT EXISTS audience_slugs
 CREATE TABLE IF NOT EXISTS posts
 (
     id                        text,
-    likes                     int,
     state                     text,
     moderator_account_id      text,
     contributor_account_id    text,
@@ -89,6 +88,13 @@ CREATE TABLE IF NOT EXISTS posts
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS post_likes_counter
+(
+    post_id text,
+    likes   counter,
+    primary key ( post_id )
 );
 
 CREATE TABLE IF NOT EXISTS post_likes

@@ -159,7 +159,6 @@ Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
 
   cy.session(email, function () {
     joinAndVerify(email)
-
     cy.get('@token').then((token) => {
       cy
         .request(
@@ -170,7 +169,10 @@ Cypress.Commands.add('joinWithExistingAccount', (name: string) => {
               variables: {
                 input: { token }
               }
-            }
+            },
+            retryOnNetworkFailure: false,
+            retryOnStatusCodeFailure: false,
+            followRedirect: false
           }
         )
         .then(({ body }) => {
@@ -209,7 +211,8 @@ Cypress.Commands.add('joinWithNewAccount', (username: string) => {
                   username
                 }
               }
-            }
+            },
+            retryOnNetworkFailure: false
           }
         ).then(({ body }) => {
           expect(body.data.createAccountWithAuthenticationToken.account).to.not.equal(null)

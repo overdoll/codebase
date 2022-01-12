@@ -58,7 +58,6 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella command.StellaService, loader command.LoaderService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
-
 	client := bootstrap.InitializeElasticSearchSession()
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
@@ -120,6 +119,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(stella, postIndexRepo),
+
+			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}

@@ -140,10 +140,6 @@ msgstr ""
 msgid "Last Login"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:70
-#~ msgid "Last login on {formattedDate}"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionsSettings.tsx:83
 msgid "Load More"
 msgstr ""
@@ -164,10 +160,6 @@ msgstr ""
 msgid "Open the authenticator app and scan the image. You must scan the code through the app or it won't work."
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:44
-#~ msgid "Please enter a 6-digit authentication code"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/MultiFactorTotpSettings.tsx:33
 msgid "Reconfigure authenticator app"
 msgstr ""
@@ -184,10 +176,6 @@ msgstr ""
 msgid "Recovery codes successfully generated"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/RevokeSession/RevokeSession.tsx:73
-#~ msgid "Revoke"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:71
 msgid "Revoke Session"
 msgstr ""
@@ -199,10 +187,6 @@ msgstr ""
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:199
 msgid "Scan the QR Code"
 msgstr ""
-
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/RevokeSession/RevokeSession.tsx:51
-#~ msgid "Session revoked successfully"
-#~ msgstr ""
 
 #: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:49
 msgid "Session successfully revoked"
@@ -223,14 +207,6 @@ msgstr ""
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/RootMultiFactorSettings.tsx:33
 msgid "Setting up two-factor authentication adds an extra layer of security in case your account is compromised."
 msgstr ""
-
-#: src/client/domain/Settings/Security/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:46
-#~ msgid "The code can only contain numbers"
-#~ msgstr ""
-
-#: src/client/domain/Settings/Security/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:45
-#~ msgid "The code must be 6 digits long"
-#~ msgstr ""
 
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:84
 msgid "The next time you login, you'll be asked to enter another 6-digit code using the same device you used to set this up."
@@ -279,10 +255,6 @@ msgstr ""
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:62
 msgid "You're about to reconfigure your two-factor authentication device. This will invalidate your current two-factor device configuration."
 msgstr ""
-
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:70
-#~ msgid "Your Current Session"
-#~ msgstr ""
 
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:109
 msgid "Your account role prevents you from disabling two-factor authentication"

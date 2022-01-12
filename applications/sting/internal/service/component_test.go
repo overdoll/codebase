@@ -54,6 +54,12 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	pst, err := post.NewPost(principal.NewPrincipal(accountId, nil, false, false), clubId)
 	require.NoError(t, err)
 
+	err = pst.UpdateAudienceRequest(principal.NewPrincipal(accountId, nil, false, false), post.UnmarshalAudienceFromDatabase(
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "standard_audience", map[string]string{"en": "Standard Audience"}, "", 1, 0, 0,
+	))
+
+	require.NoError(t, err)
+
 	err = pst.SubmitPostRequest(principal.NewPrincipal(accountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
 
 	require.NoError(t, err)
@@ -64,6 +70,8 @@ func newPublishedPost(t *testing.T, accountId string) *post.Post {
 
 	publishingPost := newPublishingPost(t, accountId, ksuid.New().String())
 
+	publishingPost.MakePublishing()
+
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
 
@@ -73,6 +81,7 @@ func newPublishedPost(t *testing.T, accountId string) *post.Post {
 func newPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
 
 	publishingPost := newPublishingPost(t, accountId, accountId)
+	publishingPost.MakePublishing()
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)

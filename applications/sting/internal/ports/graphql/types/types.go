@@ -27,14 +27,16 @@ func (Account) IsEntity() {}
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
-	// A url-friendly ID. Should be used when searching
+	// A url-friendly ID. Should be used when searching.
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
-	// The total amount of likes on this audience.
+	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this audience
 	Posts *PostConnection `json:"posts"`
 }
@@ -70,8 +72,10 @@ type Category struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
-	// The total amount of likes on this category.
+	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this category
 	Posts *PostConnection `json:"posts"`
 }
@@ -107,10 +111,12 @@ type Character struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
+	// Total amount of likes.
+	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// The series linked to this character.
 	Series *Series `json:"series"`
-	// The total amount of likes on this character.
-	TotalLikes int `json:"totalLikes"`
 	// Posts belonging to this character
 	Posts *PostConnection `json:"posts"`
 }
@@ -258,8 +264,10 @@ type Series struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this series.
 	Title string `json:"title"`
-	// The total amount of likes on this series.
+	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this series
 	Posts *PostConnection `json:"posts"`
 }
@@ -415,16 +423,19 @@ const (
 	AudiencesSortNew AudiencesSort = "NEW"
 	// Audience by top likes
 	AudiencesSortTop AudiencesSort = "TOP"
+	// Audience by most posts
+	AudiencesSortPopular AudiencesSort = "POPULAR"
 )
 
 var AllAudiencesSort = []AudiencesSort{
 	AudiencesSortNew,
 	AudiencesSortTop,
+	AudiencesSortPopular,
 }
 
 func (e AudiencesSort) IsValid() bool {
 	switch e {
-	case AudiencesSortNew, AudiencesSortTop:
+	case AudiencesSortNew, AudiencesSortTop, AudiencesSortPopular:
 		return true
 	}
 	return false
@@ -459,16 +470,19 @@ const (
 	CategoriesSortNew CategoriesSort = "NEW"
 	// Categories by top likes
 	CategoriesSortTop CategoriesSort = "TOP"
+	// Categories by most posts
+	CategoriesSortPopular CategoriesSort = "POPULAR"
 )
 
 var AllCategoriesSort = []CategoriesSort{
 	CategoriesSortNew,
 	CategoriesSortTop,
+	CategoriesSortPopular,
 }
 
 func (e CategoriesSort) IsValid() bool {
 	switch e {
-	case CategoriesSortNew, CategoriesSortTop:
+	case CategoriesSortNew, CategoriesSortTop, CategoriesSortPopular:
 		return true
 	}
 	return false
@@ -503,16 +517,19 @@ const (
 	CharactersSortNew CharactersSort = "NEW"
 	// Characters by top likes
 	CharactersSortTop CharactersSort = "TOP"
+	// Characters by most posts
+	CharactersSortPopular CharactersSort = "POPULAR"
 )
 
 var AllCharactersSort = []CharactersSort{
 	CharactersSortNew,
 	CharactersSortTop,
+	CharactersSortPopular,
 }
 
 func (e CharactersSort) IsValid() bool {
 	switch e {
-	case CharactersSortNew, CharactersSortTop:
+	case CharactersSortNew, CharactersSortTop, CharactersSortPopular:
 		return true
 	}
 	return false
@@ -644,20 +661,23 @@ func (e PostsSort) MarshalGQL(w io.Writer) {
 type SeriesSort string
 
 const (
-	// Characters by newest first
+	// Series by newest first
 	SeriesSortNew SeriesSort = "NEW"
-	// Characters by top likes
+	// Series by top likes
 	SeriesSortTop SeriesSort = "TOP"
+	// Series by most posts
+	SeriesSortPopular SeriesSort = "POPULAR"
 )
 
 var AllSeriesSort = []SeriesSort{
 	SeriesSortNew,
 	SeriesSortTop,
+	SeriesSortPopular,
 }
 
 func (e SeriesSort) IsValid() bool {
 	switch e {
-	case SeriesSortNew, SeriesSortTop:
+	case SeriesSortNew, SeriesSortTop, SeriesSortPopular:
 		return true
 	}
 	return false

@@ -50,9 +50,9 @@ type PostWithViewer struct {
 	Post *PostWithViewerLike `graphql:"post(reference: $reference)"`
 }
 
-func getPostWithViewerLike(t *testing.T, id string) PostWithViewer {
+func getPostWithViewerLike(t *testing.T, accountId, id string) PostWithViewer {
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	var post PostWithViewer
 
@@ -88,6 +88,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 	env.ExecuteWorkflow(workflows.AddPostLike, postId)
 
 	require.True(t, env.IsWorkflowCompleted())
@@ -96,23 +97,11 @@ func TestLikePost_and_undo(t *testing.T) {
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
 
-	postAfterLiked := getPostWithViewerLike(t, postId)
+	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
 
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should exist")
 
 	require.Equal(t, 1, postAfterLiked.Post.Likes, "post has 1 like")
-
-	// check post attributes and make sure they have at least 1 like
-	for _, c := range postAfterLiked.Post.Categories {
-		require.GreaterOrEqual(t, c.TotalLikes, 1, "category has at least 1 like")
-	}
-
-	for _, c := range postAfterLiked.Post.Characters {
-		require.GreaterOrEqual(t, c.TotalLikes, 1, "character has at least 1 like")
-		require.GreaterOrEqual(t, c.Series.TotalLikes, 1, "series has at least 1 like")
-	}
-
-	require.GreaterOrEqual(t, postAfterLiked.Post.Audience.TotalLikes, 1, "audience has at least 1 like")
 
 	var undoLikePost UndoLikePost
 
@@ -126,13 +115,14 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	env = getWorkflowEnvironment(t)
 
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 	env.ExecuteWorkflow(workflows.RemovePostLike, postId)
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	postAfterLikeRemoved := getPostWithViewerLike(t, postId)
+	postAfterLikeRemoved := getPostWithViewerLike(t, testingAccountId, postId)
 
-	require.Equal(t, 1, postAfterLikeRemoved.Post.Likes, "post has 0 likes")
-	require.Nil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should no longer exist")
+	require.Equal(t, 0, postAfterLikeRemoved.Post.Likes, "post has 0 likes")
+	require.Nil(t, postAfterLikeRemoved.Post.ViewerLiked, "viewer like object should no longer exist")
 }

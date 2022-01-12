@@ -137,7 +137,9 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 		sortingAscending = false
 	}
 
-	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
 
 	query := elastic.NewBoolQuery()
 

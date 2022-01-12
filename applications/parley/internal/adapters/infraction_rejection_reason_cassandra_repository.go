@@ -68,7 +68,9 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 	data := &postRejectionReason{Bucket: 0}
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "id")
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
 	}
 
 	rejectionReasonsQuery := builder.

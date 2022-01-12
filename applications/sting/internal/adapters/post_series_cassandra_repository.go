@@ -181,7 +181,7 @@ func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, u
 	}
 
 	updateSeriesTable := r.session.
-		Query(characterTable.Update(
+		Query(seriesTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).

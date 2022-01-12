@@ -394,19 +394,19 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		sortingColumn = "created_at"
 
 		// if viewing by published, then do posted_at
-		if filter.State() != post.Unknown {
-			if filter.State() == post.Published {
-				sortingColumn = "posted_at"
-			}
+		if filter.State() == post.Published {
+			sortingColumn = "posted_at"
 		}
 
-		sortingAscending = true
+		sortingAscending = false
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "likes"
 		sortingAscending = false
 	}
 
-	cursor.BuildElasticsearch(builder, sortingColumn, sortingAscending)
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
 
 	query := elastic.NewBoolQuery()
 
@@ -658,10 +658,16 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				moderatorId = *p.ModeratorId
 			}
 
+			likes, err := rep.getLikesForPost(ctx, p.Id)
+
+			if err != nil {
+				return err
+			}
+
 			doc := postDocument{
 				Id:                 p.Id,
 				State:              p.State,
-				Likes:              p.Likes,
+				Likes:              likes,
 				ModeratorId:        moderatorId,
 				ContributorId:      p.ContributorId,
 				ContentResourceIds: p.ContentResourceIds,

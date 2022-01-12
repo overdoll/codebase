@@ -17,7 +17,6 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
-		"likes",
 		"content_resource_ids",
 		"moderator_account_id",
 		"contributor_account_id",
@@ -36,7 +35,6 @@ var postTable = table.New(table.Metadata{
 type posts struct {
 	Id                 string     `db:"id"`
 	State              string     `db:"state"`
-	Likes              int        `db:"likes"`
 	ContentResourceIds []string   `db:"content_resource_ids"`
 	ModeratorId        *string    `db:"moderator_account_id"`
 	ContributorId      string     `db:"contributor_account_id"`
@@ -68,7 +66,6 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	return &posts{
 		Id:                 pending.ID(),
-		Likes:              pending.Likes(),
 		State:              pending.State().String(),
 		ModeratorId:        pending.ModeratorId(),
 		ClubId:             pending.ClubId(),
@@ -107,10 +104,16 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		}
 	}
 
+	likes, err := r.getLikesForPost(ctx, postPending.Id)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
-		postPending.Likes,
+		likes,
 		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
@@ -289,7 +292,15 @@ func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, i
 		return nil, err
 	}
 
+	oldTotalLikes := pst.Likes()
+
 	if err = updateFn(pst); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := pst.Likes()
+
+	if err := r.updatePostLikes(ctx, id, newTotalLikes > oldTotalLikes); err != nil {
 		return nil, err
 	}
 

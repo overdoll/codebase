@@ -68,11 +68,13 @@ func TestGetClubMembershipPostsFeed(t *testing.T) {
 }
 
 type SuggestedPostsForPost struct {
-	SuggestedPosts *struct {
-		Edges []*struct {
-			Node PostModified
+	Post struct {
+		SuggestedPosts *struct {
+			Edges []*struct {
+				Node PostModified
+			}
 		}
-	} `graphql:"post($reference: $reference)"`
+	} `graphql:"post(reference: $reference)"`
 }
 
 func TestGetSuggestedPostsForPost(t *testing.T) {

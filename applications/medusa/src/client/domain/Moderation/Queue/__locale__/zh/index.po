@@ -61,10 +61,6 @@ msgstr ""
 msgid "Please add a note"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:98
-#~ msgid "Please select a rejection option"
-#~ msgstr ""
-
 #: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:64
 msgid "Please select a rejection reason"
 msgstr ""
@@ -104,10 +100,6 @@ msgstr ""
 #: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:40
 msgid "Since you've paused your moderator status, you won't get anymore new cases."
 msgstr ""
-
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:114
-#~ msgid "The note cannot be empty"
-#~ msgstr ""
 
 #: src/client/domain/Moderation/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:74
 msgid "The note cannot exceed 255 characters"

@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/principal"
@@ -22,6 +23,11 @@ func (r EntityResolver) FindPostLikeByID(ctx context.Context, id relay.ID) (*typ
 	})
 
 	if err != nil {
+
+		if err == post.ErrLikeNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
