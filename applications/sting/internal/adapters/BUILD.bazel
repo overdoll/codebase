@@ -57,6 +57,7 @@ go_test(
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/uuid",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_stretchr_testify//require",
     ],
 )
