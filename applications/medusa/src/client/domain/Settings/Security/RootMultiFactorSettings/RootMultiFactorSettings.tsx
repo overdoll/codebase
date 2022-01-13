@@ -4,7 +4,7 @@ import type {
   MultiFactorSettingsQuery as MultiFactorSettingsQueryType
 } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
@@ -24,7 +24,7 @@ export default function RootMultiFactorSettings (props: Props): JSX.Element | nu
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='green'>
           <Trans>
             Two-factor Authentication
           </Trans>

@@ -3,7 +3,7 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
 import QueueSettings from './QueueSettings/QueueSettings'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
@@ -22,7 +22,7 @@ export default function RootQueueSettings (props: Props): JSX.Element | null {
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='purple'>
           <Trans>
             Queue
           </Trans>

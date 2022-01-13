@@ -7,6 +7,7 @@ import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
 import { t, Trans } from '@lingui/macro'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -58,7 +59,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           notify({
             status: 'error',
-            title: data.grantAccountAccessWithAuthenticationToken.validation,
+            title: translateValidation(data.grantAccountAccessWithAuthenticationToken.validation),
             isClosable: true
           })
           return

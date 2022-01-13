@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import type { PostsQuery as PostsQueryType } from '@//:artifacts/PostsQuery.graphql'
 import PostsQuery from '@//:artifacts/PostsQuery.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import Posts from './Posts/Posts'
@@ -28,7 +28,7 @@ export default function Queue (props: Props): JSX.Element | null {
       <Helmet title='queue' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle>
+          <PageSectionTitle colorScheme='purple'>
             <Trans>
               Moderation Queue
             </Trans>

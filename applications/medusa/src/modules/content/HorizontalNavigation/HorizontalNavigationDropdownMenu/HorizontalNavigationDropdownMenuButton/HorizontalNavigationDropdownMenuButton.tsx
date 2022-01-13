@@ -13,6 +13,7 @@ interface Props {
   color?: string
   children?: ReactNode
   colorScheme?: string
+  isActive?: boolean
 }
 
 export default function HorizontalNavigationDropdownMenuButton ({
@@ -23,7 +24,8 @@ export default function HorizontalNavigationDropdownMenuButton ({
   color,
   children,
   to,
-  colorScheme
+  colorScheme,
+  isActive = false
 }: Props): JSX.Element {
   const ctx = useContext(HorizontalNavigationDropdownMenuContext)
 
@@ -43,7 +45,7 @@ export default function HorizontalNavigationDropdownMenuButton ({
         label={label}
         onClick={onClickMenu}
         isDisabled={isDisabled}
-        isActive={false}
+        isActive={isActive}
         colorScheme={colorScheme}
       >
         {children}

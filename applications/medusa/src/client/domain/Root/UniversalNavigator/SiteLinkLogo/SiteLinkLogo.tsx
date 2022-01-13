@@ -18,9 +18,9 @@ export default function SiteLinkLogo ({ invisible = false }: Props): JSX.Element
             fontFamily='heading'
             variant='link'
             colorScheme='primary'
-            width='100%'
+
           >
-            <Trans>od</Trans>
+            <Trans>overdoll</Trans>
           </Button>)}
     </Link>
   )

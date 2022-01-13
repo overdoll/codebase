@@ -1,19 +1,23 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash edc1ba88332b3aad03bec64478542bac */
+/* @relayHash ea37e041f636a7c2d743993b45704f8b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 export type PostCreatorQueryVariables = {
     reference: string;
+    slug: string;
 };
 export type PostCreatorQueryResponse = {
     readonly post: {
         readonly __typename: string;
         readonly state: PostState;
         readonly " $fragmentRefs": FragmentRefs<"UpdatePostFlowFragment">;
+    } | null;
+    readonly club: {
+        readonly id: string;
     } | null;
 };
 export type PostCreatorQuery = {
@@ -26,11 +30,15 @@ export type PostCreatorQuery = {
 /*
 query PostCreatorQuery(
   $reference: String!
+  $slug: String!
 ) {
   post(reference: $reference) {
     __typename
     state
     ...UpdatePostFlowFragment
+    id
+  }
+  club(slug: $slug) {
     id
   }
 }
@@ -100,15 +108,6 @@ fragment CharacterFragment on Post {
   }
 }
 
-fragment ClubPreviewFragment on Club {
-  name
-  slug
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-}
-
 fragment DraggableContentFragment on Resource {
   id
   type
@@ -133,10 +132,6 @@ fragment FlowForwardButtonFragment on Post {
 
 fragment FlowHeaderFragment on Post {
   ...checkPostRequirementsFragment
-  club {
-    ...ClubPreviewFragment
-    id
-  }
 }
 
 fragment FlowStepsFragment on Post {
@@ -286,6 +281,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "reference"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "slug"
   }
 ],
 v1 = [
@@ -318,19 +318,37 @@ v4 = {
 },
 v5 = {
   "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
+  "args": [
+    {
+      "kind": "Variable",
+      "name": "slug",
+      "variableName": "slug"
+    }
+  ],
+  "concreteType": "Club",
+  "kind": "LinkedField",
+  "name": "club",
+  "plural": false,
+  "selections": [
+    (v4/*: any*/)
+  ],
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "mimeType",
+  "name": "url",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "mimeType",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -338,33 +356,33 @@ v7 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
-    (v6/*: any*/)
+    (v6/*: any*/),
+    (v7/*: any*/)
   ],
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "type",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "title",
   "storageKey": null
 },
 v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -372,7 +390,7 @@ v11 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v8/*: any*/),
+    (v9/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -381,8 +399,8 @@ v11 = {
       "name": "urls",
       "plural": true,
       "selections": [
-        (v6/*: any*/),
-        (v5/*: any*/)
+        (v7/*: any*/),
+        (v6/*: any*/)
       ],
       "storageKey": null
     },
@@ -390,7 +408,7 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -421,7 +439,8 @@ return {
           }
         ],
         "storageKey": null
-      }
+      },
+      (v5/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
@@ -451,8 +470,8 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v7/*: any*/),
               (v8/*: any*/),
+              (v9/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -474,7 +493,7 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v9/*: any*/),
+              (v10/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -488,9 +507,9 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v9/*: any*/),
               (v10/*: any*/),
               (v11/*: any*/),
+              (v12/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -504,7 +523,7 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v12/*: any*/),
+              (v13/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -513,13 +532,13 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v10/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v10/*: any*/),
               (v11/*: any*/),
+              (v12/*: any*/),
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -532,7 +551,7 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
-              (v12/*: any*/),
+              (v13/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -541,24 +560,24 @@ return {
                 "name": "thumbnail",
                 "plural": false,
                 "selections": [
+                  (v9/*: any*/),
                   (v8/*: any*/),
-                  (v7/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/),
-              (v10/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           }
         ],
         "storageKey": null
-      }
+      },
+      (v5/*: any*/)
     ]
   },
   "params": {
-    "id": "edc1ba88332b3aad03bec64478542bac",
+    "id": "ea37e041f636a7c2d743993b45704f8b",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",
@@ -566,5 +585,5 @@ return {
   }
 };
 })();
-(node as any).hash = '14f11d6a2a1ecd50e8f3d2c6a29fddb6';
+(node as any).hash = '78e74a2b9feb0530dc8af91b86005ae6';
 export default node;

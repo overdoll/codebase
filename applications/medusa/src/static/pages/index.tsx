@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import Head from 'next/head'
+import PageBody from '../components/PageBody/PageBody'
 
 export default function Home (): ReactNode {
   return (
@@ -15,9 +16,9 @@ export default function Home (): ReactNode {
           type='text/css'
         />
         <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400' rel='stylesheet' type='text/css' />
-        <title>overdoll</title>
+        <title>overdoll is under construction</title>
       </Head>
-      hello
+      <PageBody />
     </div>
   )
 }

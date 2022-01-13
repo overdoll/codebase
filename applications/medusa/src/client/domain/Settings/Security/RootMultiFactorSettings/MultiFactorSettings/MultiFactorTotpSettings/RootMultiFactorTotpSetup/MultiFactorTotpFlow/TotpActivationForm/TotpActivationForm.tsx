@@ -8,6 +8,7 @@ import Joi from 'joi'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import Totp from '@//:modules/validation/Totp'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface CodeValues {
   code: string
@@ -65,7 +66,7 @@ export default function TotpActivationForm (props: Props): JSX.Element {
         if (data?.enrollAccountMultiFactorTotp?.validation != null) {
           setError('code', {
             type: 'mutation',
-            message: data.enrollAccountMultiFactorTotp.validation
+            message: translateValidation(data.enrollAccountMultiFactorTotp.validation)
           })
           return
         }

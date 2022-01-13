@@ -9,7 +9,6 @@ import (
 	"mime"
 	"os"
 
-	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
 	"overdoll/libraries/uuid"
 )

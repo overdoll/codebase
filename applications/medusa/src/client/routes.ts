@@ -324,6 +324,15 @@ const routes: Route[] = [
         )
       },
       {
+        path: '/clubs',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/MyClubs/MyClubs'
+          )
+        )
+      },
+      {
         path: '/moderation',
         component: loadable(async () =>
           await import(
@@ -412,102 +421,6 @@ const routes: Route[] = [
                     from: new Date(new Date().setDate(new Date().getDate() - 7)),
                     to: new Date()
                   },
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      {
-        path: '/manage',
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/Manage'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ],
-        routes: [
-          {
-            path: '/manage/posts',
-            dependencies: [
-              {
-                resource: loadable(async (environment) =>
-                  await import(
-                    `./domain/Manage/ManagePosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-                  )
-                ),
-                then: loadMessages
-              }
-            ],
-            component: loadable(async () =>
-              await import(
-                './domain/Manage/ManagePosts/ManagePosts'
-              )
-            ),
-            prepare: params => {
-              const Query = require('@//:artifacts/MyPostsQuery.graphql')
-
-              return {
-                postsQuery: {
-                  query: Query,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
-          },
-          {
-            path: '/manage/clubs',
-            dependencies: [
-              {
-                resource: loadable(async (environment) =>
-                  await import(
-                    `./domain/Manage/ManageClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-                  )
-                ),
-                then: loadMessages
-              }
-            ],
-            component: loadable(async () =>
-              await import(
-                './domain/Manage/ManageClubs/ManageClubs'
-              )
-            ),
-            prepare: params => {
-              const Query = require('@//:artifacts/MyClubsQuery.graphql')
-
-              return {
-                clubsQuery: {
-                  query: Query,
-                  variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
@@ -759,70 +672,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/configure/create-post',
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/ManagePosts/CreatePost/CreatePost'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/ManagePosts/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ]
-      },
-      {
-        path: '/configure/create-club',
-        component: loadable(async () =>
-          await import(
-            './domain/Manage/ManageClubs/CreateClub/RootCreateClub'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Manage/ManageClubs/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('create', 'Post')) {
-              return true
-            }
-            history.push('/')
-            return false
-          }
-        ]
-      },
-      {
         path: '/profile',
         exact: true,
         component: loadable(async () =>
@@ -846,12 +695,12 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/post',
+        path: '/p/:reference',
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Manage/ManagePosts/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -860,7 +709,7 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Manage/ManagePosts/ViewPost/ViewPostRoot'
+            './domain/Public/ViewPost/ViewPostRoot'
           )
         ),
         prepare: ({
@@ -872,7 +721,262 @@ const routes: Route[] = [
             query: {
               query: ViewPostQuery,
               variables: {
-                reference: query.get('r') ?? ''
+                reference: params.reference ?? ''
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
+        path: '/u/:reference',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/Home/Home'
+          )
+        )
+      },
+      {
+        path: '/configure/create-club',
+        component: loadable(async () =>
+          await import(
+            './domain/ManageClub/pages/CreateClub/RootCreateClub'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/CreateClubQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ManageClub/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('create', 'Post')) {
+              return true
+            }
+            history.push('/')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/club/:slug',
+        component: loadable(async () =>
+          await import(
+            './domain/ManageClub/RootManageClub'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/SelectClubsQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                slug: params.slug
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        routes: [
+          {
+            path: '/club/:slug/:entity(home)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/ClubHome/RootClubHome'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubHomeQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(members)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/ClubMembers/RootClubMembers'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubMembersQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(settings)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/ClubSettings/RootClubSettings'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubSettingsQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(posts)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/ClubPosts/RootClubPosts'
+              )
+            ),
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/ClubPostsQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug,
+                    state: query.get('state')
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/club/:slug/:entity(create-post)',
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/CreatePost/CreatePost'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/ManageClub/pages/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            prepare: ({
+              params,
+              query
+            }) => {
+              const Query = require('@//:artifacts/PostCreatorQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: query.get('post') ?? '',
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        path: '/:slug',
+        component: loadable(async () =>
+          await import(
+            './domain/Public/ViewClub/RootViewClub'
+          )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/ViewClubQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                slug: params.slug
               },
               options: {
                 fetchPolicy: 'store-or-network'

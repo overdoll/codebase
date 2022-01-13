@@ -10,7 +10,7 @@ import {
   FormLabel,
   Select,
   Stack,
-  Textarea
+  Textarea,
 } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import { Controller, useForm } from 'react-hook-form'
