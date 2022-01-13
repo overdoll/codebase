@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:122
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:123
 msgid "Activate"
 msgstr ""
 
@@ -224,7 +224,7 @@ msgstr ""
 msgid "There was an error revoking the session"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:89
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:90
 msgid "There was an error setting up two-factor authentication"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Two-factor authentication has been disabled for your account"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:74
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivationForm/TotpActivationForm.tsx:75
 msgid "Two-factor authentication was successfully set up"
 msgstr ""
 

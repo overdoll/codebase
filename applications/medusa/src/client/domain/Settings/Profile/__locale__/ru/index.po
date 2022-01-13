@@ -25,7 +25,7 @@ msgstr ""
 msgid "Add an email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:195
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:196
 msgid "Are you sure you'd like to change your username to"
 msgstr ""
 
@@ -33,15 +33,15 @@ msgstr ""
 msgid "Can be set as a Primary email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:71
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:70
 msgid "Change Username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:184
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:185
 msgid "Changing your to a different one username will break any links that include your current username."
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:176
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:177
 msgid "Confirm Username Change"
 msgstr ""
 
@@ -53,16 +53,16 @@ msgstr ""
 msgid "Enter a new email address"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:138
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:148
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:139
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:149
 msgid "Enter a new username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:207
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:208
 msgid "Go back"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:189
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:190
 msgid "In addition, you won't be able to change your username for 30 days after confirming."
 msgstr ""
 
@@ -83,7 +83,7 @@ msgid "Remove"
 msgstr ""
 
 #: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:127
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:159
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:160
 msgid "Submit"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "There was an error adding the email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:121
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:122
 msgid "There was an error changing your username"
 msgstr ""
 
@@ -111,11 +111,11 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:114
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:115
 msgid "Username changed successfully"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:218
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:219
 msgid "Yes, change"
 msgstr ""
 
@@ -123,7 +123,7 @@ msgstr ""
 msgid "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another."
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:80
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:79
 msgid "You have recently made a username edit. You may edit your username again in {remainingTime}."
 msgstr ""
 
