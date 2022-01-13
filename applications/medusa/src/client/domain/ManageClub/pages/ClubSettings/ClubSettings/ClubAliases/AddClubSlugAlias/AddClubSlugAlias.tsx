@@ -49,6 +49,7 @@ const Mutation = graphql`
           slug
         }
       }
+      validation
     }
   }
 `
@@ -65,6 +66,7 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
   const {
     register,
     handleSubmit,
+    setError,
     formState: {
       errors,
       isDirty,
@@ -91,7 +93,14 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
         id: data.id,
         slug: formData.slug
       },
-      onCompleted () {
+      onCompleted (data) {
+        if (data?.addClubSlugAlias?.validation != null) {
+          setError('slug', {
+            type: 'mutation',
+            message: data.addClubSlugAlias?.validation
+          })
+          return
+        }
         notify({
           status: 'success',
           title: t`Successfully added the link alias ${formData.slug}`,

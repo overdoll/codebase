@@ -83,8 +83,8 @@ export default function ViewPost (props: Props): JSX.Element {
       >
         <Stack spacing={4}>
           <Flex align='center' justify='space-between'>
-            <LargeClubHeader query={queryData?.post?.club} />
-            <JoinClubButton clubQuery={queryData?.post?.club} viewerQuery={queryData?.viewer} />
+            <LargeClubHeader query={queryData?.post?.club ?? null} />
+            <JoinClubButton clubQuery={queryData?.post?.club ?? null} viewerQuery={queryData?.viewer} />
           </Flex>
           <HStack spacing={2} justify='center' align='center' w='100%'>
             <Flex h='100%' align='center' justify='flex-start'>

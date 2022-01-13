@@ -1,9 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b2f849988f18c645ab6b3b87942fb803 */
+/* @relayHash 2691930cf470e487a3900088c53d85d8 */
 
 import { ConcreteRequest } from "relay-runtime";
+export type AddClubSlugAliasValidation = "SLUG_TAKEN" | "%future added value";
 export type AddClubSlugAliasMutationVariables = {
     id: string;
     slug: string;
@@ -17,6 +18,7 @@ export type AddClubSlugAliasMutationResponse = {
                 readonly slug: string;
             }>;
         } | null;
+        readonly validation: AddClubSlugAliasValidation | null;
     } | null;
 };
 export type AddClubSlugAliasMutation = {
@@ -39,6 +41,7 @@ mutation AddClubSlugAliasMutation(
         slug
       }
     }
+    validation
   }
 }
 */
@@ -119,6 +122,13 @@ v2 = [
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "validation",
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -142,7 +152,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "b2f849988f18c645ab6b3b87942fb803",
+    "id": "2691930cf470e487a3900088c53d85d8",
     "metadata": {},
     "name": "AddClubSlugAliasMutation",
     "operationKind": "mutation",
@@ -150,5 +160,5 @@ return {
   }
 };
 })();
-(node as any).hash = '6468e8612a435e73391ff3055452e250';
+(node as any).hash = 'b1cf49c95d432ed8840ae76a91c66b4f';
 export default node;
