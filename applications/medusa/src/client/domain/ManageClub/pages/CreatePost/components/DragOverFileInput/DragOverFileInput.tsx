@@ -10,12 +10,14 @@ interface Props {
   uppy: Uppy
   onSelect?: () => void
   children: ReactNode
+  hasText?: boolean
 }
 
 export default function DragOverFileInput ({
   uppy,
   onSelect,
   children,
+  hasText = true,
   ...rest
 }: Props): JSX.Element {
   const notify = useToast()
@@ -103,11 +105,14 @@ export default function DragOverFileInput ({
         pointerEvents='none'
         display={isOpen ? 'flex' : 'none'}
       >
-        <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
-        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'><Trans>Drop your files to upload
-          them
-        </Trans>
-        </Heading>
+        {hasText &&
+          <>
+            <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
+            <Heading ml={16} mr={16} color='green.500' fontSize='sm' align='center'><Trans>Drop your files to upload
+              them
+            </Trans>
+            </Heading>
+          </>}
       </Flex>
     </Flex>
   )

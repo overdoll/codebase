@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 99e17e77a717ede45ad9b966c2eae9b3 */
+/* @relayHash e1ea829a799e377aa54cc8f769264456 */
 
 import { ConcreteRequest } from "relay-runtime";
-export type becomeClubMemberMutationVariables = {
+export type JoinClubButtonBecomeMemberMutationVariables = {
     clubId: string;
 };
-export type becomeClubMemberMutationResponse = {
+export type JoinClubButtonBecomeMemberMutationResponse = {
     readonly becomeClubMember: {
         readonly clubMember: {
             readonly id: string;
@@ -23,15 +23,15 @@ export type becomeClubMemberMutationResponse = {
         } | null;
     } | null;
 };
-export type becomeClubMemberMutation = {
-    readonly response: becomeClubMemberMutationResponse;
-    readonly variables: becomeClubMemberMutationVariables;
+export type JoinClubButtonBecomeMemberMutation = {
+    readonly response: JoinClubButtonBecomeMemberMutationResponse;
+    readonly variables: JoinClubButtonBecomeMemberMutationVariables;
 };
 
 
 
 /*
-mutation becomeClubMemberMutation(
+mutation JoinClubButtonBecomeMemberMutation(
   $clubId: ID!
 ) {
   becomeClubMember(input: {clubId: $clubId}) {
@@ -143,7 +143,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "becomeClubMemberMutation",
+    "name": "JoinClubButtonBecomeMemberMutation",
     "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -152,17 +152,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "becomeClubMemberMutation",
+    "name": "JoinClubButtonBecomeMemberMutation",
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "99e17e77a717ede45ad9b966c2eae9b3",
+    "id": "e1ea829a799e377aa54cc8f769264456",
     "metadata": {},
-    "name": "becomeClubMemberMutation",
+    "name": "JoinClubButtonBecomeMemberMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = '44f8b827fa00616c8a21d384eb026a03';
+(node as any).hash = '03c0e73247a4e31f4ac05278aead190a';
 export default node;

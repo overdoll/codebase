@@ -71,6 +71,7 @@ const variantLeftAccent: PartsStyleFunction<typeof parts> = (props) => {
       borderStartWidth: '4px',
       borderStartColor: mode(`${c}.500`, `${c}.200`)(props),
       bg: getBg(props)
+
     },
     icon: {
       color: mode(`${c}.500`, `${c}.200`)(props)
@@ -86,6 +87,7 @@ const variantTopAccent: PartsStyleFunction<typeof parts> = (props) => {
       borderTopWidth: '4px',
       borderTopColor: mode(`${c}.500`, `${c}.200`)(props),
       bg: getBg(props)
+
     },
     icon: {
       color: mode(`${c}.500`, `${c}.200`)(props)

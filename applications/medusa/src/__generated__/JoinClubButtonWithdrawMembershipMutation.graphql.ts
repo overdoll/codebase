@@ -1,26 +1,26 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 006cfab27593627035c407d42fbe8d72 */
+/* @relayHash 0ff8f14ca8c48fbb992962f7a8216c3a */
 
 import { ConcreteRequest } from "relay-runtime";
-export type withdrawClubMembershipMutationVariables = {
+export type JoinClubButtonWithdrawMembershipMutationVariables = {
     clubId: string;
 };
-export type withdrawClubMembershipMutationResponse = {
+export type JoinClubButtonWithdrawMembershipMutationResponse = {
     readonly withdrawClubMembership: {
         readonly clubMemberId: string;
     } | null;
 };
-export type withdrawClubMembershipMutation = {
-    readonly response: withdrawClubMembershipMutationResponse;
-    readonly variables: withdrawClubMembershipMutationVariables;
+export type JoinClubButtonWithdrawMembershipMutation = {
+    readonly response: JoinClubButtonWithdrawMembershipMutationResponse;
+    readonly variables: JoinClubButtonWithdrawMembershipMutationVariables;
 };
 
 
 
 /*
-mutation withdrawClubMembershipMutation(
+mutation JoinClubButtonWithdrawMembershipMutation(
   $clubId: ID!
 ) {
   withdrawClubMembership(input: {clubId: $clubId}) {
@@ -74,7 +74,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "withdrawClubMembershipMutation",
+    "name": "JoinClubButtonWithdrawMembershipMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -83,17 +83,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "withdrawClubMembershipMutation",
+    "name": "JoinClubButtonWithdrawMembershipMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "006cfab27593627035c407d42fbe8d72",
+    "id": "0ff8f14ca8c48fbb992962f7a8216c3a",
     "metadata": {},
-    "name": "withdrawClubMembershipMutation",
+    "name": "JoinClubButtonWithdrawMembershipMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = '00fd6928689e1691959cd1481c0b025d';
+(node as any).hash = 'ea374c122586c3c08804939f498a6d4b';
 export default node;

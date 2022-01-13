@@ -1,181 +1,41 @@
-import { FormControl, FormLabel, InputLeftAddon, Stack, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
-import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
-import Joi from 'joi'
-import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi'
-import { graphql, useMutation } from 'react-relay/hooks'
-import { CreateClubMutation } from '@//:artifacts/CreateClubMutation.graphql'
-import { useHistory } from '@//:modules/routing'
-import { useEffect } from 'react'
-import urlSlug from 'url-slug'
-import generatePath from '@//:modules/routing/generatePath'
-import ClubName from '@//:modules/validation/ClubName'
-import ClubSlug from '@//:modules/validation/ClubSlug'
+import { Alert, AlertDescription, AlertIcon, Stack } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
+import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
+import { CreateClubQuery } from '@//:artifacts/CreateClubQuery.graphql'
+import CreateClubForm from './CreateClubForm/CreateClubForm'
 
-interface ClubValues {
-  name: string
-  slug: string
+interface Props {
+  query: PreloadedQuery<CreateClubQuery>
 }
 
-const Mutation = graphql`
-  mutation CreateClubMutation($name: String!, $slug: String!) {
-    createClub(input: {name: $name, slug: $slug}) {
-      club {
-        id
-        reference
-        slug
-        name
-        owner {
-          id
-        }
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
-          }
-        }
-      }
+const Query = graphql`
+  query CreateClubQuery {
+    viewer {
+      clubsLimit
+      clubsCount
     }
   }
 `
 
-export default function CreateClub (): JSX.Element {
-  const { i18n } = useLingui()
-
-  const [createClub, isCreatingClub] = useMutation<CreateClubMutation>(
-    Mutation
+export default function CreateClub (props: Props): JSX.Element {
+  const queryData = usePreloadedQuery<CreateClubQuery>(
+    Query,
+    props.query
   )
 
-  const notify = useToast()
-
-  const history = useHistory()
-
-  const schema = Joi.object({
-    name: ClubName(),
-    slug: ClubSlug()
-  })
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<ClubValues>({
-    resolver: joiResolver(
-      schema
-    )
-  })
-
-  const onSubmit = (formValues): void => {
-    createClub({
-      variables: {
-        slug: formValues.slug,
-        name: formValues.name
-      },
-      onCompleted (data) {
-        notify({
-          status: 'success',
-          title: t`Club ${formValues.name} was created successfully`,
-          isClosable: true
-        })
-
-        const redirectPath = generatePath('/club/:slug/:entity', {
-          slug: data.createClub?.club?.slug,
-          entity: 'home'
-        })
-
-        history.push(redirectPath)
-      },
-      onError (data) {
-        notify({
-          status: 'error',
-          title: t`Error creating club ${data.message}`,
-          isClosable: true
-        })
-      }
-    })
-  }
-
-  const successName = isDirty && (errors.name == null) && isSubmitted
-
-  const successSlug = isDirty && (errors.slug == null) && isSubmitted
-
-  // We watch the name of the club and set that as the slug
-  useEffect(() => {
-    const subscription = watch((value, {
-      name
-    }) => {
-      if (name === 'name') {
-        setValue('slug', urlSlug(value.name))
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+  const canCreateClub = queryData.viewer != null ? queryData.viewer.clubsCount < queryData.viewer.clubsLimit : false
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={4}>
-        <FormControl isInvalid={errors.name != null}>
-          <FormLabel>
-            <Trans>
-              Your Club Name
-            </Trans>
-          </FormLabel>
-          <StyledInput
-            size='lg'
-            register={register('name')}
-            success={successName}
-            error={errors.name != null}
-            errorMessage={errors?.name?.message}
-            placeholder={i18n._(t`The best name you can come up with`)}
-            helperText={i18n._(t`This is the name everyone will see`)}
-          />
-        </FormControl>
-        <FormControl isInvalid={errors.slug != null}>
-          <FormLabel>
-            <Trans>
-              Your Unique Club Link
-            </Trans>
-          </FormLabel>
-          <StyledInput
-            inputLeftAddon={
-              <InputLeftAddon>
-                <Trans>
-                  overdoll.com/
-                </Trans>
-              </InputLeftAddon>
-            }
-            size='md'
-            register={register('slug')}
-            success={successSlug}
-            error={errors.slug != null}
-            errorMessage={errors?.slug?.message}
-            placeholder={i18n._(t`A unique link`)}
-            helperText={i18n._(t`This is the unique link everyone will use to see your club`)}
-          />
-        </FormControl>
-        <Button
-          isDisabled={errors.name != null || errors.slug != null}
-          isLoading={isCreatingClub}
-          type='submit'
-          w='100%'
-          size='lg'
-          colorScheme={errors.name != null || errors.slug != null ? 'gray' : 'teal'}
-        >
+    <Stack spacing={4}>
+      {!canCreateClub && <Alert status='warning'>
+        <AlertIcon />
+        <AlertDescription>
           <Trans>
-            Create Club
+            You can only create a maximum of {queryData?.viewer?.clubsLimit} clubs
           </Trans>
-        </Button>
-      </Stack>
-    </form>
+        </AlertDescription>
+      </Alert>}
+      <CreateClubForm isDisabled={!canCreateClub} />
+    </Stack>
   )
 }

@@ -721,6 +721,21 @@ const routes: Route[] = [
             './domain/ManageClub/pages/CreateClub/RootCreateClub'
           )
         ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/CreateClubQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
         dependencies: [
           {
             resource: loadable(async (environment) =>

@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubMembersQuery } from '@//:artifacts/ClubMembersQuery.graphql'
 import { GridWrap } from '../../../../../components/ContentSelection'
-import SquareGridItem from '../../../../../components/ContentSelection/List/Grid/Items/SquareGridItem/SquareGridItem'
+import SquareGridItem from '../../../../../components/ContentSelection/components/List/Grid/Items/SquareGridItem/SquareGridItem'
 import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'

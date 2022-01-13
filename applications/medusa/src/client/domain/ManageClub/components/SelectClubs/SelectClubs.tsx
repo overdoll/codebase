@@ -61,6 +61,14 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
     history.push('/')
   }
 
+  if (queryData?.viewer !== null && queryData?.viewer?.clubsCount <= 1) {
+    return (
+      <Flex h='100%' p={2} borderRadius='md' bg='gray.900' px={2} align='center' w='100%' justify='space-between'>
+        <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
+      </Flex>
+    )
+  }
+
   return (
     <>
       <ClickableBox
@@ -69,11 +77,10 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
         _active={{ bg: 'gray.900' }}
         borderRadius='md'
         h='100%'
-        bg='gray.900'
         onClick={onOpen}
-        p={2}
+        p={0}
       >
-        <Flex px={2} align='center' w='100%' justify='space-between'>
+        <Flex h='100%' p={2} borderRadius='md' bg='gray.900' px={2} align='center' w='100%' justify='space-between'>
           <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
           <Icon ml={3} icon={SwapCircle} h={5} w={5} fill='gray.300' />
         </Flex>

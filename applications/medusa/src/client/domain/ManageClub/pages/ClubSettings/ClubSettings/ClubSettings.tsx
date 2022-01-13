@@ -3,6 +3,7 @@ import { ClubSettingsQuery } from '@//:artifacts/ClubSettingsQuery.graphql'
 import { Box, Stack } from '@chakra-ui/react'
 import ChangeClubName from './ChangeClubName/ChangeClubName'
 import ClubAliases from './ClubAliases/ClubAliases'
+import ChangeClubThumbnail from './ChangeClubThumbnail/ChangeClubThumbnail'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -11,9 +12,9 @@ interface Props {
 const Query = graphql`
   query ClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
-      slug
       ...ChangeClubNameFragment
       ...ClubAliasesFragment
+      ...ChangeClubThumbnailFragment
     }
   }
 `
@@ -31,6 +32,9 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
       </Box>
       <Box>
         <ClubAliases query={queryData.club} />
+      </Box>
+      <Box>
+        <ChangeClubThumbnail query={queryData.club} />
       </Box>
     </Stack>
   )
