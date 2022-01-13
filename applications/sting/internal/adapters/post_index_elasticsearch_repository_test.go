@@ -32,7 +32,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	// create x new posts
 	for i := 1; i <= createNewPosts; i++ {
 
-		postTime := time.Now().Add(-time.Hour * time.Duration(i))
+		postTime := time.Now()
 
 		id, _ := ksuid.NewRandomWithTime(postTime)
 
