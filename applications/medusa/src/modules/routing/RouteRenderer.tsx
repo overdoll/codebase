@@ -40,7 +40,9 @@ export default function RouterRenderer (): JSX.Element {
       // startTransition() delays the effect of the setRouteEntry (setState) call
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.
-      setRouteEntry(nextEntry)
+      startTransition(() => {
+        setRouteEntry(nextEntry)
+      })
     })
     return () => dispose()
 
