@@ -1,9 +1,9 @@
-import { ButtonProps, Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 
-interface Props extends ButtonProps {
+interface Props extends HTMLChakraProps<any> {
   children: string
 }
 
@@ -15,7 +15,7 @@ export default function CopyLinkToClipboard ({
 
   return (
     <InputGroup>
-      <Input color='gray.200' size='md' isDisabled value={children} />
+      <Input color='gray.200' size='md' isDisabled value={children} {...rest} />
       <InputRightElement w='100%'>
         <Flex w='100%' justify='flex-end'>
           <Button mr={2} px={2} onClick={onCopy} h={6} size='sm'>

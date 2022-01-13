@@ -1,7 +1,6 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ViewPostQuery } from '@//:artifacts/ViewPostQuery.graphql'
 import { graphql } from 'react-relay'
-import PostHeaderClub from '../../../../components/Posts/PostHeaderClub/PostHeaderClub'
 import PostGalleryContent from '../../../../components/Posts/PostGalleryContent/PostGalleryContent'
 import { Box, Flex, Grid, HStack, Stack } from '@chakra-ui/react'
 import PostIndexer from '../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
@@ -17,6 +16,8 @@ import { CheckCircle } from '@//:assets/icons/interface'
 import { Icon } from '@//:modules/content'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import CopyLinkToClipboard from '../../../../components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard'
+import LargeClubHeader from '../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
+import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
 
 interface Props {
   query: PreloadedQuery<ViewPostQuery>
@@ -25,10 +26,16 @@ interface Props {
 const Query = graphql`
   query ViewPostQuery($reference: String!) {
     post(reference: $reference) {
-      ...PostHeaderClubFragment
       ...PostGalleryContentFragment
       ...PostClickableCategoriesFragment
       ...PostClickableCharactersFragment
+      club {
+        ...LargeClubHeaderFragment
+        ...JoinClubButtonClubFragment
+      }
+    }
+    viewer {
+      ...JoinClubButtonViewerFragment
     }
   }
 `
@@ -39,18 +46,25 @@ export default function ViewPost (props: Props): JSX.Element {
     props.query
   )
 
-  const post = queryData?.post
-
   const history = useHistory()
 
-  if (post == null) {
+  if (queryData?.post == null) {
     history.push('/')
   }
 
   return (
     <>
-      <Flex bg='gray.800' align='center' justify='center' w='100%' h='100%'>
-        <PostGalleryContent query={post}>
+      <Flex
+        bg='gray.800'
+        align='center'
+        justify='center'
+        w='100%'
+        h={{
+          md: 'calc(100vh - 54px)',
+          base: '100%'
+        }}
+      >
+        <PostGalleryContent query={queryData.post}>
           {({
             slidesCount,
             currentSlide
@@ -63,15 +77,16 @@ export default function ViewPost (props: Props): JSX.Element {
       <Box
         m={3}
         w={{
-          sm: 400,
-          base: '100%'
+          md: 600,
+          base: 'auto'
         }}
       >
-        <Stack spacing={2}>
-          <PostHeaderClub query={post} />
-          <PostClickableCharacters query={post} />
-          <PostClickableCategories query={post} />
-          <HStack>
+        <Stack spacing={4}>
+          <Flex align='center' justify='space-between'>
+            <LargeClubHeader query={queryData?.post?.club} />
+            <JoinClubButton clubQuery={queryData?.post?.club} viewerQuery={queryData?.viewer} />
+          </Flex>
+          <HStack spacing={2} justify='center' align='center' w='100%'>
             <Flex h='100%' align='center' justify='flex-start'>
               <IconButton
                 bg='transparent'
@@ -80,20 +95,22 @@ export default function ViewPost (props: Props): JSX.Element {
                 icon={
                   <Icon
                     icon={CheckCircle}
-                    w={8}
-                    fill='gray.500'
+                    fill='gray.200'
                     h={8}
+                    w={8}
                   />
                 }
               />
             </Flex>
-            <CopyLinkToClipboard>
+            <CopyLinkToClipboard w='100%'>
               {`https://overdoll.com${history.location.pathname}`}
             </CopyLinkToClipboard>
             <LargeMenuButton>
               <LargeMenuItem color='purple.400' icon={LoginKeys} text={t`Moderate`} />
             </LargeMenuButton>
           </HStack>
+          <PostClickableCharacters query={queryData?.post} />
+          <PostClickableCategories query={queryData?.post} />
         </Stack>
       </Box>
     </>

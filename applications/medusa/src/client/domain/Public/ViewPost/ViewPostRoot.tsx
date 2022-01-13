@@ -1,13 +1,13 @@
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import { Helmet } from 'react-helmet-async'
-import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'
 import ViewPost from './ViewPost/ViewPost'
 import type { ViewPostQuery as ViewPostQueryType } from '@//:artifacts/ViewPostQuery.graphql'
 import ViewPostQuery from '@//:artifacts/ViewPostQuery.graphql'
-import { Center, Flex, Skeleton, Stack } from '@chakra-ui/react'
+import { Center, Flex } from '@chakra-ui/react'
 import { useParams } from '@//:modules/routing/useParams'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 
 interface Props {
   prepared: {
@@ -22,16 +22,6 @@ export default function ViewPostRoot (props: Props): JSX.Element {
   )
 
   const params = useParams()
-
-  const LoadingPlaceholder = (): JSX.Element => {
-    return (
-      <Stack spacing={1}>
-        <PostPlaceholder p={0}>
-          <Skeleton />
-        </PostPlaceholder>
-      </Stack>
-    )
-  }
 
   return (
     <>
@@ -49,7 +39,7 @@ export default function ViewPostRoot (props: Props): JSX.Element {
           pr={[1, 0]}
         >
           <QueryErrorBoundary loadQuery={() => loadQuery({ reference: params?.reference ?? '' })}>
-            <Suspense fallback={<LoadingPlaceholder />}>
+            <Suspense fallback={<SkeletonStack />}>
               <ViewPost query={queryRef as PreloadedQuery<ViewPostQueryType>} />
             </Suspense>
           </QueryErrorBoundary>

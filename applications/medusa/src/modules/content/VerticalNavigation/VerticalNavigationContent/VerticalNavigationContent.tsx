@@ -70,6 +70,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
             </Heading>
           </Box>}
         <Stack spacing={3}>
+          {props.outsideElements}
           {props.children}
         </Stack>
       </Box>

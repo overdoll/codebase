@@ -1,7 +1,7 @@
 import { HTMLChakraProps, IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import { Icon } from '../../../../index'
 import { ReactNode } from 'react'
-import { NavigationMenuHorizontal } from '@//:assets/icons/navigation'
+import { SettingCog } from '@//:assets/icons/navigation'
 import { t } from '@lingui/macro'
 
 interface Props extends HTMLChakraProps<any> {
@@ -19,9 +19,9 @@ export default function LargeMenuButton ({ children }: Props): JSX.Element {
         as={IconButton}
         icon={
           <Icon
-            icon={NavigationMenuHorizontal}
+            icon={SettingCog}
             w={8}
-            currentColor='gray.500'
+            fill='gray.200'
             h={8}
           />
         }

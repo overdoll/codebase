@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 51a9e8eeac33f5fef0888688583d5487 */
+/* @relayHash c4fccef49b827d1d4b98b3b612440774 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,7 +10,13 @@ export type ViewPostQueryVariables = {
 };
 export type ViewPostQueryResponse = {
     readonly post: {
-        readonly " $fragmentRefs": FragmentRefs<"PostHeaderClubFragment" | "PostGalleryContentFragment" | "PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
+        readonly club: {
+            readonly " $fragmentRefs": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment">;
+        };
+        readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
+    } | null;
+    readonly viewer: {
+        readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonViewerFragment">;
     } | null;
 };
 export type ViewPostQuery = {
@@ -25,10 +31,18 @@ query ViewPostQuery(
   $reference: String!
 ) {
   post(reference: $reference) {
-    ...PostHeaderClubFragment
     ...PostGalleryContentFragment
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
+    club {
+      ...LargeClubHeaderFragment
+      ...JoinClubButtonClubFragment
+      id
+    }
+    id
+  }
+  viewer {
+    ...JoinClubButtonViewerFragment
     id
   }
 }
@@ -37,6 +51,28 @@ fragment ImageSnippetFragment on Resource {
   urls {
     url
     mimeType
+  }
+}
+
+fragment JoinClubButtonClubFragment on Club {
+  id
+  name
+  viewerMember {
+    __typename
+    id
+  }
+}
+
+fragment JoinClubButtonViewerFragment on Account {
+  clubMembershipsLimit
+  clubMembershipsCount
+}
+
+fragment LargeClubHeaderFragment on Club {
+  name
+  thumbnail {
+    ...ResourceIconFragment
+    id
   }
 }
 
@@ -71,17 +107,6 @@ fragment PostGalleryContentFragment on Post {
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
     id
   }
 }
@@ -123,17 +148,10 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -166,8 +184,15 @@ v4 = [
     ],
     "storageKey": null
   },
-  (v3/*: any*/)
+  (v2/*: any*/)
 ],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
 v5 = {
   "alias": null,
   "args": null,
@@ -175,14 +200,14 @@ v5 = {
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v4/*: any*/),
+  "selections": (v3/*: any*/),
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -201,9 +226,25 @@ return {
         "plural": false,
         "selections": [
           {
+            "alias": null,
             "args": null,
-            "kind": "FragmentSpread",
-            "name": "PostHeaderClubFragment"
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "LargeClubHeaderFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "JoinClubButtonClubFragment"
+              }
+            ],
+            "storageKey": null
           },
           {
             "args": null,
@@ -219,6 +260,22 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PostClickableCharactersFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinClubButtonViewerFragment"
           }
         ],
         "storageKey": null
@@ -244,25 +301,11 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Club",
-            "kind": "LinkedField",
-            "name": "club",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v5/*: any*/),
-              (v3/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Resource",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -273,9 +316,9 @@ return {
             "name": "categories",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
+              (v4/*: any*/),
               (v5/*: any*/),
-              (v3/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -287,7 +330,7 @@ return {
             "name": "characters",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -296,24 +339,83 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v3/*: any*/)
+                  (v4/*: any*/),
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               },
               (v5/*: any*/),
-              (v3/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v6/*: any*/),
+              (v5/*: any*/),
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubMember",
+                "kind": "LinkedField",
+                "name": "viewerMember",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v2/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsLimit",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsCount",
+            "storageKey": null
+          },
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "51a9e8eeac33f5fef0888688583d5487",
+    "id": "c4fccef49b827d1d4b98b3b612440774",
     "metadata": {},
     "name": "ViewPostQuery",
     "operationKind": "query",
@@ -321,5 +423,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'f33a5154dc078053c129b3a9e9a6a6db';
+(node as any).hash = '3c5e45b86b28dbd8d2cc7c6495d553f3';
 export default node;

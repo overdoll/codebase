@@ -66,7 +66,7 @@ export default function PostGalleryContent ({
   }
 
   return (
-    <Box>
+    <Box h='100%'>
       <Swiper
         observer
         observeParents

@@ -151,7 +151,7 @@ export default function JoinClubButton ({
           }
         >
           <Trans>
-            Join Club
+            Join
           </Trans>
         </Button>
       </Link>
@@ -175,7 +175,7 @@ export default function JoinClubButton ({
         colorScheme='gray'
       >
         <Trans>
-          Leave Club
+          Leave
         </Trans>
       </Button>
     )
@@ -196,7 +196,7 @@ export default function JoinClubButton ({
                   />}
       >
         <Trans>
-          Join Club
+          Join
         </Trans>
       </Button>
     )
@@ -217,7 +217,7 @@ export default function JoinClubButton ({
       onClick={onJoinWhenLimited}
     >
       <Trans>
-        Join Club
+        Join
       </Trans>
     </Button>
   )
