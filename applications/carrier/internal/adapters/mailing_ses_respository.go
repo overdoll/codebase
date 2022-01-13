@@ -23,7 +23,9 @@ func (r MailingSESRepository) SendEmail(ctx context.Context, recipient *mailing.
 
 	// empty API key, just dump the console outputs
 	if os.Getenv("AWS_ACCESS_KEY") == "" {
-		zap.S().Info("SES api keys not configured, dumping output: ", zap.String("text", email.BodyText()))
+		zap.L().Info(
+			"SES api keys not configured, dumping output",
+			zap.String("html", email.BodyHtml()))
 		return nil
 	}
 

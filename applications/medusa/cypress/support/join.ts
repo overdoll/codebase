@@ -1,6 +1,6 @@
 import { generateEmailFromExistingUsername } from './generate'
 import URL from 'url-parse'
-import { getEmail } from './email'
+import { getEmail, tailLogs } from './email'
 import { parse } from 'node-html-parser'
 
 const Tokens = require('csrf')
@@ -90,27 +90,23 @@ const joinAndVerify = (email: string): void => {
 
   if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
     // read email logs directly from carrier service if no testmail API key is set
-    cy
-      .exec('kubectl logs --tail 1 -l app.kubernetes.io/instance=carrier')
-      .then(result => {
-        const urlRegex = /(https?:\/\/[^ ]*)/
-        const matches = result.stdout.match(urlRegex)
+    tailLogs((result) => {
+      const obj = JSON.parse(result.stdout)
 
-        expect(matches).to.not.equal(null)
+      expect(obj.html).to.not.equal(null)
 
-        if (matches == null) {
-          throw new Error('misconfigured carrier')
-        }
+      const root = parse(obj.html)
 
-        const url = new URL(matches[1])
+      const link = root?.querySelector('a')?.getAttribute('href')
 
-        const query = new URLSearchParams(url.query)
+      const url = new URL(link as string)
+      const query = new URLSearchParams(url.query)
 
-        const token = query.get('token') as string
-        const secret = query.get('secret') as string
+      const token = query.get('token') as string
+      const secret = query.get('secret') as string
 
-        verifyToken(token, secret)
-      })
+      verifyToken(token, secret)
+    })
 
     return
   }

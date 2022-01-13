@@ -45,16 +45,39 @@ export const getEmail = async (startTimestamp: number, email: string): Promise<I
   )
 }
 
+export const tailLogs = (cb: any): void => {
+  cy
+    .exec('kubectl logs --tail 1 -l app.kubernetes.io/instance=carrier')
+    .as('Tailing local email logs')
+    .then(result => {
+      cb(result)
+    })
+}
+
 Cypress.Commands.add('displayLastEmail', (startTimestamp: number, alias: string, email: string) => {
-  // grab "tag" from email
+  // if we aren't using testmail, read from logs
+  let useInboxVoid = true
   if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
-    throw new Error('testmail api key is not configured')
+    useInboxVoid = false
   }
 
   cy
     .wrap(null)
     .as(`Awaiting ${alias} - ${email}`)
     .then({ timeout: 1000 * 60 * 5 }, async () => {
+      // read from CLI logs
+      if (!useInboxVoid) {
+        tailLogs((result) => {
+          const obj = JSON.parse(result.stdout)
+
+          expect(obj.html).to.not.equal(null)
+
+          cy.document().invoke('write', obj.html)
+        })
+
+        return
+      }
+
       try {
         const res = await getEmail(startTimestamp, email)
         const inbox = res.inbox
@@ -68,15 +91,4 @@ Cypress.Commands.add('displayLastEmail', (startTimestamp: number, alias: string,
         throw new Error(message)
       }
     })
-})
-
-Cypress.Commands.add('validateEmailServerIsConfigured', () => {
-  // grab "tag" from email
-  if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
-    throw new Error('testmail api key is not configured - please configure this before running the suite')
-  }
-
-  if (Cypress.env('TESTMAIL_NAMESPACE') as string === '') {
-    throw new Error('testmail namespace is not configured please configure this before running the suite')
-  }
 })
