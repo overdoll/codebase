@@ -2,6 +2,7 @@ package queries
 
 import (
 	"context"
+	"strings"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
@@ -11,7 +12,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug, name *string, orderBy types.CharactersOrder) (*types.CharacterConnection, error) {
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -23,7 +24,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		Principal:  principal.FromContext(ctx),
 		Cursor:     cursor,
 		Slugs:      slugs,
-		OrderBy:    orderBy.Field.String(),
+		SortBy:     strings.ToLower(sortBy.String()),
 		Name:       name,
 		SeriesSlug: seriesSlug,
 	})

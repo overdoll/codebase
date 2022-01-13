@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"math"
 	"strconv"
 	"time"
 
@@ -19,6 +19,7 @@ import (
 type postDocument struct {
 	Id                 string               `json:"id"`
 	State              string               `json:"state"`
+	Likes              int                  `json:"likes"`
 	ModeratorId        string               `json:"moderator_id"`
 	ContributorId      string               `json:"contributor_id"`
 	ClubId             string               `json:"club_id"`
@@ -41,6 +42,9 @@ const postIndex = `
 				},
 				"state": {
 					"type": "keyword"
+				},
+				"likes": {
+					"type": "integer"
 				},
 				"moderator_id": {
 					"type": "keyword"
@@ -89,6 +93,118 @@ type PostsIndexElasticSearchRepository struct {
 
 func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PostsIndexElasticSearchRepository {
 	return PostsIndexElasticSearchRepository{client: client, session: session}
+}
+
+func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+
+	var pst postDocument
+
+	err := json.Unmarshal(hit.Source, &pst)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal post: %v", err)
+	}
+
+	var characters []*post.Character
+
+	for _, char := range pst.Characters {
+		characters = append(characters, post.UnmarshalCharacterFromDatabase(
+			char.Id,
+			char.Slug,
+			char.Name,
+			char.ThumbnailResourceId,
+			char.TotalLikes,
+			char.TotalPosts,
+			post.UnmarshalSeriesFromDatabase(
+				char.Series.Id,
+				char.Series.Slug,
+				char.Series.Title,
+				char.Series.ThumbnailResourceId,
+				char.Series.TotalLikes,
+				char.TotalLikes,
+			),
+		))
+	}
+
+	var categories []*post.Category
+
+	for _, cat := range pst.Categories {
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(
+			cat.Id,
+			cat.Slug,
+			cat.Title,
+			cat.ThumbnailResourceId,
+			cat.TotalLikes,
+			cat.TotalPosts,
+		))
+	}
+
+	createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var postedAtTime *time.Time
+	var reassignmentAtTime *time.Time
+
+	if pst.ReassignmentAt != "" {
+		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newTime := time.Unix(reassignmentAt, 0)
+
+		reassignmentAtTime = &newTime
+	}
+
+	if pst.PostedAt != "" {
+		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newTime := time.Unix(postedAt, 0)
+
+		postedAtTime = &newTime
+	}
+
+	var audience *post.Audience
+
+	if pst.Audience != nil {
+		audience = post.UnmarshalAudienceFromDatabase(
+			pst.Audience.Id,
+			pst.Audience.Slug,
+			pst.Audience.Title,
+			pst.Audience.ThumbnailResourceId,
+			pst.Audience.Standard,
+			pst.Audience.TotalLikes,
+			pst.Audience.TotalPosts,
+		)
+	}
+
+	createdPost := post.UnmarshalPostFromDatabase(
+		pst.Id,
+		pst.State,
+		pst.Likes,
+		&pst.ModeratorId,
+		pst.ContributorId,
+		pst.ContentResourceIds,
+		pst.ClubId,
+		audience,
+		characters,
+		categories,
+		time.Unix(createdAt, 0),
+		postedAtTime,
+		reassignmentAtTime,
+	)
+
+	createdPost.Node = paging.NewNode(hit.Sort)
+
+	return createdPost, nil
 }
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
@@ -154,6 +270,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 
 	return &postDocument{
 		Id:                 pst.ID(),
+		Likes:              pst.Likes(),
 		State:              pst.State().String(),
 		Audience:           audDoc,
 		ClubId:             pst.ClubId(),
@@ -166,6 +283,20 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		PostedAt:           postedAt,
 		ReassignmentAt:     reassignmentAt,
 	}, nil
+}
+
+func (r PostsIndexElasticSearchRepository) RefreshPostIndex(ctx context.Context) error {
+
+	_, err := r.client.
+		Refresh().
+		Index(PostIndexName).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to refresh post index: %v", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
@@ -190,33 +321,299 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters",
+					elastic.NewTermQuery("character.id", character.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters",
+					elastic.NewTermQuery("character.id", character.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("audience",
+					elastic.NewTermQuery("audience.id", audience.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("audience",
+					elastic.NewTermQuery("audience.id", audience.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters.series",
+					elastic.NewTermQuery("characters.series.id", series.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("characters.series",
+					elastic.NewTermQuery("characters.series.id", series.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("categories",
+					elastic.NewTermQuery("categories.id", category.ID()),
+				),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostIndexName).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewNestedQuery("categories",
+					elastic.NewTermQuery("categories.id", category.ID()),
+				),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, nil
+	}
+
+	return int(count), nil
+}
+
+func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
+
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewFunctionScoreQuery()
+
+	// decay from initial post time
+	postedTimeFunc := elastic.
+		NewGaussDecayFunction().
+		FieldName("posted_at").
+		Scale("1d").
+		Decay(0.5)
+
+	// multiply by likes for this post
+	likesFunc := elastic.
+		NewFieldValueFactorFunction().
+		Field("likes").
+		Factor(1).
+		Modifier("none")
+
+	var filterQueries []elastic.Query
+
+	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
+
+	filterQueries = append(filterQueries)
+
+	if len(filter.AudienceIds()) > 0 {
+		query.Add(
+			elastic.NewNestedQuery("audience",
+				elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...),
+			), likesFunc,
+		)
+	} else {
+		query.AddScoreFunc(likesFunc)
+	}
+
+	// multiply results
+	query.ScoreMode("multiply")
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to search posts: %v", err)
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := unmarshalPostDocument(hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts, nil
+}
+
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
 
 	if err := post.CanViewWithFilters(requester, filter); err != nil {
 		return nil, err
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+
+		sortingColumn = "created_at"
+
+		// if viewing by published, then do posted_at
+		if filter.State() == post.Published {
+			sortingColumn = "posted_at"
+		}
+
+		sortingAscending = false
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "likes"
+		sortingAscending = false
+	}
+
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
 
 	var filterQueries []elastic.Query
 
-	if filter.State() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("state", *filter.State()))
+	if filter.State() != post.Unknown {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
+	}
+
+	if len(filter.CategoryIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermsQueryFromStrings("categories.id", filter.CategoryIds()...)))
+	}
+
+	if len(filter.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...)))
 	}
 
 	if filter.ModeratorId() != nil {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
-	if filter.ClubId() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("club_id", *filter.ClubId()))
+	if len(filter.ClubIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...))
 	}
 
 	if filter.ContributorId() != nil {
@@ -239,11 +636,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermsQueryFromStrings("characters.series.slug", filter.SeriesSlugs()...)))
 	}
 
-	// if orderby another column
-	if filter.OrderBy() != "created_at" {
-		builder.Sort(filter.OrderBy(), false)
-	}
-
 	if filterQueries != nil {
 		query.Filter(filterQueries...)
 	}
@@ -260,81 +652,11 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	for _, hit := range response.Hits.Hits {
 
-		var pst postDocument
-
-		err := json.Unmarshal(hit.Source, &pst)
-
-		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal post: %v", err)
-		}
-
-		var characters []*post.Character
-
-		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Slug, char.Name, char.ThumbnailResourceId, post.UnmarshalSeriesFromDatabase(char.Series.Id, char.Series.Slug, char.Series.Title, char.Series.ThumbnailResourceId)))
-		}
-
-		var categories []*post.Category
-
-		for _, cat := range pst.Categories {
-			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.ThumbnailResourceId))
-		}
-
-		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
+		createdPost, err := unmarshalPostDocument(hit)
 
 		if err != nil {
 			return nil, err
 		}
-
-		var postedAtTime *time.Time
-		var reassignmentAtTime *time.Time
-
-		if pst.ReassignmentAt != "" {
-			reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
-
-			if err != nil {
-				return nil, err
-			}
-
-			newTime := time.Unix(reassignmentAt, 0)
-
-			reassignmentAtTime = &newTime
-		}
-
-		if pst.PostedAt != "" {
-			postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
-
-			if err != nil {
-				return nil, err
-			}
-
-			newTime := time.Unix(postedAt, 0)
-
-			postedAtTime = &newTime
-		}
-
-		var audience *post.Audience
-
-		if pst.Audience != nil {
-			audience = post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.ThumbnailResourceId, pst.Audience.Standard)
-		}
-
-		createdPost := post.UnmarshalPostFromDatabase(
-			pst.Id,
-			pst.State,
-			&pst.ModeratorId,
-			pst.ContributorId,
-			pst.ContentResourceIds,
-			pst.ClubId,
-			audience,
-			characters,
-			categories,
-			time.Unix(createdAt, 0),
-			postedAtTime,
-			reassignmentAtTime,
-		)
-
-		createdPost.Node = paging.NewNode(pst.CreatedAt)
 
 		posts = append(posts, createdPost)
 	}
@@ -419,9 +741,16 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				moderatorId = *p.ModeratorId
 			}
 
+			likes, err := rep.getLikesForPost(ctx, p.Id)
+
+			if err != nil {
+				return err
+			}
+
 			doc := postDocument{
 				Id:                 p.Id,
 				State:              p.State,
+				Likes:              likes,
 				ModeratorId:        moderatorId,
 				ContributorId:      p.ContributorId,
 				ContentResourceIds: p.ContentResourceIds,

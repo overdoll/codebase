@@ -13,7 +13,7 @@ type SearchPosts struct {
 	Cursor        *paging.Cursor
 	ModeratorId   *string
 	ContributorId *string
-	ClubId        *string
+	ClubIds       []string
 
 	AudienceSlugs  []string
 	CategorySlugs  []string
@@ -22,7 +22,7 @@ type SearchPosts struct {
 
 	State *string
 
-	OrderBy string
+	SortBy string
 }
 
 type SearchPostsHandler struct {
@@ -36,11 +36,11 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
 	filters, err := post.NewPostFilters(
-		query.OrderBy,
+		query.SortBy,
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,
-		query.ClubId,
+		query.ClubIds,
 		query.AudienceSlugs,
 		query.CategorySlugs,
 		query.CharacterSlugs,

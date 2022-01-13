@@ -40,6 +40,8 @@ type Post struct {
 	createdAt          time.Time
 	postedAt           *time.Time
 	reassignmentAt     *time.Time
+
+	likes int
 }
 
 func NewPost(contributor *principal.Principal, clubId string) (*Post, error) {
@@ -54,7 +56,7 @@ func NewPost(contributor *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, contentIds []string, clubId string, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string, contributorId string, contentIds []string, clubId string, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 
@@ -63,6 +65,7 @@ func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributo
 		moderatorId:        moderatorId,
 		state:              ps,
 		clubId:             clubId,
+		likes:              likes,
 		audience:           audience,
 		contributorId:      contributorId,
 		contentResourceIds: contentIds,
@@ -92,6 +95,10 @@ func (p *Post) Audience() *Audience {
 
 func (p *Post) ClubId() string {
 	return p.clubId
+}
+
+func (p *Post) Likes() int {
+	return p.likes
 }
 
 func (p *Post) State() State {
@@ -167,6 +174,16 @@ func (p *Post) MakePublish() error {
 
 	p.state = Published
 
+	return nil
+}
+
+func (p *Post) AddLike() error {
+	p.likes += 1
+	return nil
+}
+
+func (p *Post) RemoveLike() error {
+	p.likes -= 1
 	return nil
 }
 

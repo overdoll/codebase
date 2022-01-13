@@ -9,3 +9,7 @@ import (
 type EvaService interface {
 	GetAccount(context.Context, string) (*principal.Principal, error)
 }
+
+type StellaService interface {
+	GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error)
+}

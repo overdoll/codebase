@@ -143,9 +143,15 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		}
 	}
 
+	var err error
+
 	// sort keys - based on cursor
 	if cursor != nil {
-		keys = cursor.BuildRedis(keys)
+		keys, err = cursor.BuildRedis(keys)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var sessions []*session.Session

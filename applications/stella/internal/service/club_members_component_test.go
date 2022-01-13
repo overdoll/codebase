@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	workflows "overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
+	stella "overdoll/applications/stella/proto"
 	"testing"
 	"time"
 )
@@ -15,6 +16,10 @@ type ClubMemberModifiedNoAccount struct {
 	JoinedAt time.Time
 	Account  struct {
 		ID string
+	}
+	Club struct {
+		ID        string
+		Reference string
 	}
 }
 
@@ -79,6 +84,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	relayId := convertClubIdToRelayId(clb.ID())
 
 	// become a club member
@@ -106,27 +112,22 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// grab account ID so we can look through club members
 	accountId := clubViewer.Club.ViewerMember.Account.ID
 
-	foundClubMember := false
+	require.Equal(t, accountId, clubViewer.Club.Members.Edges[0].Node.Account.ID, "should have found the account in the club member list")
 
-	for _, member := range clubViewer.Club.Members.Edges {
-		if member.Node.Account.ID == accountId {
-			foundClubMember = true
-			break
-		}
-	}
+	require.Equal(t, accountId, clubViewer.Club.ViewerMember.Account.ClubMemberships.Edges[0].Node.Account.ID, "should have found the club member in account's club membership list")
 
-	require.True(t, foundClubMember, "should have found the account in the club member list")
+	// grpc: check the results are the same
+	grpcClient := getGrpcClient(t)
 
-	foundAccountClubMember := false
+	// check permissions
+	res, err := grpcClient.GetAccountClubMembershipIds(context.Background(), &stella.GetAccountClubMembershipIdsRequest{
+		AccountId: testingAccountId,
+	})
 
-	for _, member := range clubViewer.Club.ViewerMember.Account.ClubMemberships.Edges {
-		if member.Node.Account.ID == accountId {
-			foundAccountClubMember = true
-			break
-		}
-	}
+	require.NoError(t, err, "no error grabbing club memberships for account")
+	require.Len(t, res.ClubIds, 1, "should have 1 club id")
 
-	require.True(t, foundAccountClubMember, "should have found the club member in account's club membership list")
+	require.Equal(t, clubId, res.ClubIds[0], "should have a matching club ID")
 
 	// withdraw club membership
 	var withdrawClubMembership WithdrawClubMembership

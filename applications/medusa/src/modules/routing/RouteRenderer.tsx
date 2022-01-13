@@ -40,7 +40,6 @@ export default function RouterRenderer (): JSX.Element {
       // startTransition() delays the effect of the setRouteEntry (setState) call
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.
-      // TODO: transitions are buggy - getting rid of them for now
       startTransition(() => {
         setRouteEntry(nextEntry)
       })
@@ -84,6 +83,7 @@ export default function RouterRenderer (): JSX.Element {
       dependencies={firstItem.dependencies}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
+      middleware={firstItem.middleware}
     />
   )
   for (let ii = 1; ii < reversedItems.length; ii++) {
@@ -95,6 +95,7 @@ export default function RouterRenderer (): JSX.Element {
         prepared={nextItem.prepared}
         dependencies={nextItem.dependencies}
         routeData={nextItem.routeData}
+        middleware={nextItem.middleware}
       >
         {routeComponent}
       </RouteComponent>
@@ -146,7 +147,8 @@ function RouteComponent ({
   routeData,
   component,
   dependencies,
-  prepared
+  prepared,
+  middleware
 }: PreparedEntry): JSX.Element {
   const environment = useRelayEnvironment()
 

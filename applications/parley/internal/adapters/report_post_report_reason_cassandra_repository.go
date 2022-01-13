@@ -66,7 +66,9 @@ func (r ReportCassandraRepository) GetPostReportReasons(ctx context.Context, req
 	data := &postReportReason{Bucket: 0}
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "id")
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
 	}
 
 	reportReasonQuery := builder.

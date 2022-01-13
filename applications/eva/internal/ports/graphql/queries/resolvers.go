@@ -10,13 +10,14 @@ import (
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
+	"strings"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error) {
+func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, sortBy types.AccountsSort) (*types.AccountConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -24,15 +25,10 @@ func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *str
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	usrname := ""
-
-	if username != nil {
-		usrname = *username
-	}
-
 	results, err := r.App.Queries.SearchAccounts.Handle(ctx, query.SearchAccounts{
 		Cursor:   cursor,
-		Username: usrname,
+		Username: username,
+		SortBy:   strings.ToLower(sortBy.String()),
 	})
 
 	if err != nil {

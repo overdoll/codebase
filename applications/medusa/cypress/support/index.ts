@@ -47,11 +47,6 @@ declare global {
        * @example cy.displayLastEmail(Date.now(), 'register email', 'test.123@testmail.app')
        */
       displayLastEmail: (startTimestamp: number, name: string, email: string) => Chainable<Element>
-
-      /**
-       * Ensures that before this suite runs, testmail API keys are configured since you need this in order to run the suite
-       */
-      validateEmailServerIsConfigured: () => Chainable<Element>
     }
   }
 }

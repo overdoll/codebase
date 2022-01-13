@@ -104,9 +104,16 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		}
 	}
 
+	likes, err := r.getLikesForPost(ctx, postPending.Id)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
+		likes,
 		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
@@ -275,4 +282,27 @@ func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requ
 
 func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
+}
+
+func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+
+	pst, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	oldTotalLikes := pst.Likes()
+
+	if err = updateFn(pst); err != nil {
+		return nil, err
+	}
+
+	newTotalLikes := pst.Likes()
+
+	if err := r.updatePostLikes(ctx, id, newTotalLikes > oldTotalLikes); err != nil {
+		return nil, err
+	}
+
+	return pst, nil
 }

@@ -38,3 +38,22 @@ func (s Server) CanAccountPostUnderClub(ctx context.Context, request *stella.Can
 
 	return &stella.CanAccountPostUnderClubResponse{Allowed: res}, nil
 }
+
+func (s Server) GetAccountClubMembershipIds(ctx context.Context, request *stella.GetAccountClubMembershipIdsRequest) (*stella.GetAccountClubMembershipIdsResponse, error) {
+
+	res, err := s.app.Queries.AccountClubMembershipsOperator.Handle(ctx, query.AccountClubMembershipsOperator{
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var clubIds []string
+
+	for _, c := range res {
+		clubIds = append(clubIds, c.ClubId())
+	}
+
+	return &stella.GetAccountClubMembershipIdsResponse{ClubIds: clubIds}, nil
+}

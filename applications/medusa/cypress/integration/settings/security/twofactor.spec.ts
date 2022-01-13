@@ -11,8 +11,6 @@ describe('Settings - Configure Two-Factor', () => {
   }
 
   before(() => {
-    cy.validateEmailServerIsConfigured()
-
     cy.joinWithNewAccount(username, email)
     gotoSettingsPage()
 

@@ -118,22 +118,10 @@ type ClubMemberEdge struct {
 	Node   *ClubMember `json:"node"`
 }
 
-// Ordering options for club members
-type ClubMembersOrder struct {
-	// The field to order clubs by.
-	Field ClubMembersOrderField `json:"field"`
-}
-
 // The club slug alias
 type ClubSlugAlias struct {
 	// The slug alias
 	Slug string `json:"slug"`
-}
-
-// Ordering options for clubs
-type ClubsOrder struct {
-	// The field to order clubs by.
-	Field ClubsOrderField `json:"field"`
 }
 
 // Create club.
@@ -266,85 +254,85 @@ func (e AddClubSlugAliasValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which club member connections can be ordered.
-type ClubMembersOrderField string
+// Properties by which club member connections can be sorted.
+type ClubMembersSort string
 
 const (
-	// By joined at
-	ClubMembersOrderFieldJoinedAt ClubMembersOrderField = "JOINED_AT"
+	// By newest members
+	ClubMembersSortNewest ClubMembersSort = "NEWEST"
 )
 
-var AllClubMembersOrderField = []ClubMembersOrderField{
-	ClubMembersOrderFieldJoinedAt,
+var AllClubMembersSort = []ClubMembersSort{
+	ClubMembersSortNewest,
 }
 
-func (e ClubMembersOrderField) IsValid() bool {
+func (e ClubMembersSort) IsValid() bool {
 	switch e {
-	case ClubMembersOrderFieldJoinedAt:
+	case ClubMembersSortNewest:
 		return true
 	}
 	return false
 }
 
-func (e ClubMembersOrderField) String() string {
+func (e ClubMembersSort) String() string {
 	return string(e)
 }
 
-func (e *ClubMembersOrderField) UnmarshalGQL(v interface{}) error {
+func (e *ClubMembersSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = ClubMembersOrderField(str)
+	*e = ClubMembersSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ClubMembersOrderField", str)
+		return fmt.Errorf("%s is not a valid ClubMembersSort", str)
 	}
 	return nil
 }
 
-func (e ClubMembersOrderField) MarshalGQL(w io.Writer) {
+func (e ClubMembersSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which club connections can be ordered.
-type ClubsOrderField string
+// Properties by which club connections can be sorted.
+type ClubsSort string
 
 const (
-	// Club by created time
-	ClubsOrderFieldCreatedAt ClubsOrderField = "CREATED_AT"
+	// Clubs by popularity
+	ClubsSortPopular ClubsSort = "POPULAR"
 )
 
-var AllClubsOrderField = []ClubsOrderField{
-	ClubsOrderFieldCreatedAt,
+var AllClubsSort = []ClubsSort{
+	ClubsSortPopular,
 }
 
-func (e ClubsOrderField) IsValid() bool {
+func (e ClubsSort) IsValid() bool {
 	switch e {
-	case ClubsOrderFieldCreatedAt:
+	case ClubsSortPopular:
 		return true
 	}
 	return false
 }
 
-func (e ClubsOrderField) String() string {
+func (e ClubsSort) String() string {
 	return string(e)
 }
 
-func (e *ClubsOrderField) UnmarshalGQL(v interface{}) error {
+func (e *ClubsSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = ClubsOrderField(str)
+	*e = ClubsSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ClubsOrderField", str)
+		return fmt.Errorf("%s is not a valid ClubsSort", str)
 	}
 	return nil
 }
 
-func (e ClubsOrderField) MarshalGQL(w io.Writer) {
+func (e ClubsSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

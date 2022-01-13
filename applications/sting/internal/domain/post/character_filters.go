@@ -9,20 +9,31 @@ var (
 )
 
 type CharacterFilters struct {
-	orderBy    string
+	sortBy     Sorting
 	slugs      []string
 	seriesSlug *string
 	name       *string
 }
 
-func NewCharacterFilters(name *string, orderBy string, slugs []string, seriesSlug *string) (*CharacterFilters, error) {
+func NewCharacterFilters(name *string, sortBy string, slugs []string, seriesSlug *string) (*CharacterFilters, error) {
 
 	if len(slugs) > 0 && seriesSlug == nil {
 		return nil, ErrSeriesRequired
 	}
 
+	sorting := UnknownSort
+	var err error
+
+	if sortBy != "" {
+		sorting, err = SortingFromString(sortBy)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &CharacterFilters{
-		orderBy:    orderBy,
+		sortBy:     sorting,
 		name:       name,
 		slugs:      slugs,
 		seriesSlug: seriesSlug,
@@ -33,8 +44,8 @@ func (e *CharacterFilters) Name() *string {
 	return e.name
 }
 
-func (e *CharacterFilters) OrderBy() string {
-	return e.orderBy
+func (e *CharacterFilters) SortBy() Sorting {
+	return e.sortBy
 }
 
 func (e *CharacterFilters) Slugs() []string {

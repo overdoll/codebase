@@ -583,7 +583,9 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, requester *prin
 	}
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "email")
+		if err := cursor.BuildCassandra(builder, "email", true); err != nil {
+			return nil, err
+		}
 	}
 
 	queryEmails := builder.Query(r.session).

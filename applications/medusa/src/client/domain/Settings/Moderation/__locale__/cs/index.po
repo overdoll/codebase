@@ -21,10 +21,6 @@ msgstr ""
 msgid "Queue"
 msgstr ""
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:71
-#~ msgid "There was an error changing your Queue status"
-#~ msgstr ""
-
 #: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:98
 msgid "There was an error changing your Queue status to Off"
 msgstr ""

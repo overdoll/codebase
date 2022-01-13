@@ -1,10 +1,6 @@
 import { generateEmail, generateUsernameAndEmail } from '../../../support/generate'
 
 describe('Settings - Add Email', () => {
-  before(() => {
-    cy.validateEmailServerIsConfigured()
-  })
-
   const startTimestamp = Date.now()
 
   const [username, currentEmail] = generateUsernameAndEmail()
@@ -29,7 +25,7 @@ describe('Settings - Add Email', () => {
     // confirm email
     cy.displayLastEmail(startTimestamp, 'Verify Email', newEmail)
 
-    cy.findByText('verify new email').then(ln => {
+    cy.findByText('confirm email').then(ln => {
       const url = ln.prop('href')
       cy.visit(url)
     })

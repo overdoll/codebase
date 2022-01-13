@@ -32,6 +32,8 @@ type Repository interface {
 	GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)
 	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)
+
+	GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*Member, error)
 }
 
 type IndexRepository interface {

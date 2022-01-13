@@ -2,7 +2,7 @@ type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
+  """A url-friendly ID. Should be used when searching."""
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
@@ -10,6 +10,12 @@ type Audience implements Node @key(fields: "id") {
 
   """A title for this audience."""
   title: String!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type AudienceEdge {
@@ -22,16 +28,16 @@ type AudienceConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for audiences"""
-input AudiencesOrder {
-  """The field to order audiences by."""
-  field: AudiencesOrderField!
-}
+"""Properties by which audience connections can be sorted."""
+enum AudiencesSort {
+  """Audience by newest first"""
+  NEW
 
-"""Properties by which audience connections can be ordered."""
-enum AudiencesOrderField {
-  """Audience by created time"""
-  CREATED_AT
+  """Audience by top likes"""
+  TOP
+
+  """Audience by most posts"""
+  POPULAR
 }
 
 extend type Query {
@@ -55,8 +61,8 @@ extend type Query {
     """Search by title of the audience."""
     title: String
 
-    """Ordering options for audiences."""
-    orderBy: AudiencesOrder! = { field: CREATED_AT }
+    """Sorting options for audiences."""
+    sortBy: AudiencesSort! = POPULAR
   ): AudienceConnection!
 
   """Get a single audience."""

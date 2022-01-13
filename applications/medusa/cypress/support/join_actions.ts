@@ -7,7 +7,7 @@ export const logout = (): void => {
   cy.findByRole('button', { name: /Log Out/iu })
     .click()
 
-  cy.url().should('include', '/')
+  cy.waitUntil(() => cy.findAllByText(/home/iu).should('exist'))
 }
 
 export const join = (email: string): void => {

@@ -20,6 +20,9 @@ export default {
     {
       path: 'src/client/domain/Join/__locale__/{locale}/index',
       include: ['src/client/domain/Join/']
+    }, {
+      path: 'src/client/domain/Logout/__locale__/{locale}/index',
+      include: ['src/client/domain/Logout/']
     },
     {
       path: 'src/client/domain/CatchAll/__locale__/{locale}/index',

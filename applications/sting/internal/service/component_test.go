@@ -49,9 +49,15 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
-func newPublishingPost(t *testing.T, accountId string) *post.Post {
+func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
-	pst, err := post.NewPost(principal.NewPrincipal(accountId, nil, false, false), ksuid.New().String())
+	pst, err := post.NewPost(principal.NewPrincipal(accountId, nil, false, false), clubId)
+	require.NoError(t, err)
+
+	err = pst.UpdateAudienceRequest(principal.NewPrincipal(accountId, nil, false, false), post.UnmarshalAudienceFromDatabase(
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "standard_audience", map[string]string{"en": "Standard Audience"}, "", 1, 0, 0,
+	))
+
 	require.NoError(t, err)
 
 	err = pst.SubmitPostRequest(principal.NewPrincipal(accountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
@@ -60,13 +66,34 @@ func newPublishingPost(t *testing.T, accountId string) *post.Post {
 	return pst
 }
 
+func newPublishedPost(t *testing.T, accountId string) *post.Post {
+
+	publishingPost := newPublishingPost(t, accountId, ksuid.New().String())
+
+	publishingPost.MakePublishing()
+
+	err := publishingPost.MakePublish()
+	require.NoError(t, err)
+
+	return publishingPost
+}
+
+func newPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
+
+	publishingPost := newPublishingPost(t, accountId, accountId)
+	publishingPost.MakePublishing()
+
+	err := publishingPost.MakePublish()
+	require.NoError(t, err)
+
+	return publishingPost
+}
+
 func newFakeAccount(t *testing.T) string {
 	return uuid.New().String()
 }
 
-func seedPublishingPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId)
-
+func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
 
 	adapter := adapters.NewPostsCassandraRepository(session)
@@ -80,6 +107,24 @@ func seedPublishingPost(t *testing.T, accountId string) *post.Post {
 
 	refreshPostESIndex(t)
 
+	return pst
+}
+
+func seedPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
+	pst := newPublishedPostWithClub(t, accountId)
+	seedPost(t, pst)
+	return pst
+}
+
+func seedPublishedPost(t *testing.T, accountId string) *post.Post {
+	pst := newPublishedPost(t, accountId)
+	seedPost(t, pst)
+	return pst
+}
+
+func seedPublishingPost(t *testing.T, accountId string) *post.Post {
+	pst := newPublishingPost(t, accountId, ksuid.New().String())
+	seedPost(t, pst)
 	return pst
 }
 

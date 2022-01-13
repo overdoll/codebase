@@ -302,6 +302,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 		require.NoError(t, e)
 
+		newEnv.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
+
 		// execute workflow manually since it wont be executed right here
 		newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
 		require.True(t, newEnv.IsWorkflowCompleted())

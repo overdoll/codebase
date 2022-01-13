@@ -52,10 +52,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ClubMemberships      func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
+		ClubMemberships      func(childComplexity int, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) int
 		ClubMembershipsCount func(childComplexity int) int
 		ClubMembershipsLimit func(childComplexity int) int
-		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
+		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
 		ClubsCount           func(childComplexity int) int
 		ClubsLimit           func(childComplexity int) int
 		ID                   func(childComplexity int) int
@@ -72,7 +72,7 @@ type ComplexityRoot struct {
 
 	Club struct {
 		ID               func(childComplexity int) int
-		Members          func(childComplexity int, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) int
+		Members          func(childComplexity int, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) int
 		MembersCount     func(childComplexity int) int
 		Name             func(childComplexity int) int
 		Owner            func(childComplexity int) int
@@ -150,7 +150,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) int
+		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -183,10 +183,10 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	ClubsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubsCount(ctx context.Context, obj *types.Account) (int, error)
-	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubMembershipsCount(ctx context.Context, obj *types.Account) (int, error)
-	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
+	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
 }
 type ClubResolver interface {
 	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
@@ -195,7 +195,7 @@ type ClubResolver interface {
 
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
 
-	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error)
+	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -213,7 +213,7 @@ type MutationResolver interface {
 	UpdateClubThumbnail(ctx context.Context, input types.UpdateClubThumbnailInput) (*types.UpdateClubThumbnailPayload, error)
 }
 type QueryResolver interface {
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 }
 
@@ -242,7 +242,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.ClubMemberships(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder)), true
+		return e.complexity.Account.ClubMemberships(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["sortBy"].(types.ClubMembersSort)), true
 
 	case "Account.clubMembershipsCount":
 		if e.complexity.Account.ClubMembershipsCount == nil {
@@ -268,7 +268,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder)), true
+		return e.complexity.Account.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort)), true
 
 	case "Account.clubsCount":
 		if e.complexity.Account.ClubsCount == nil {
@@ -329,7 +329,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Club.Members(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder)), true
+		return e.complexity.Club.Members(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["sortBy"].(types.ClubMembersSort)), true
 
 	case "Club.membersCount":
 		if e.complexity.Club.MembersCount == nil {
@@ -693,7 +693,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder)), true
+		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -867,8 +867,8 @@ var sources = []*ast.Source{
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
 }
 
@@ -888,18 +888,6 @@ type ClubConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for clubs"""
-input ClubsOrder {
-  """The field to order clubs by."""
-  field: ClubsOrderField!
-}
-
-"""Properties by which club connections can be ordered."""
-enum ClubsOrderField {
-  """Club by created time"""
-  CREATED_AT
-}
-
 type ClubMemberEdge {
   cursor: String!
   node: ClubMember!
@@ -910,16 +898,10 @@ type ClubMemberConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for club members"""
-input ClubMembersOrder {
-  """The field to order clubs by."""
-  field: ClubMembersOrderField!
-}
-
-"""Properties by which club member connections can be ordered."""
-enum ClubMembersOrderField {
-  """By joined at"""
-  JOINED_AT
+"""Properties by which club member connections can be sorted."""
+enum ClubMembersSort {
+  """By newest members"""
+  NEWEST
 }
 
 type ClubMember implements Node @key(fields: "id") {
@@ -1066,6 +1048,12 @@ type UpdateClubThumbnailPayload {
   club: Club
 }
 
+"""Properties by which club connections can be sorted."""
+enum ClubsSort {
+  """Clubs by popularity"""
+  POPULAR
+}
+
 extend type Mutation {
   """
   Become a member of a club
@@ -1129,8 +1117,8 @@ extend type Query {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
 
   """Get a single club."""
@@ -1139,6 +1127,8 @@ extend type Query {
     slug: String!
   ): Club
 }
+
+
 
 extend type Account {
 
@@ -1172,8 +1162,8 @@ extend type Account {
     """Filter by the name of the club."""
     name: String
 
-    """Ordering options for clubs."""
-    orderBy: ClubsOrder! = { field: CREATED_AT }
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
   ): ClubConnection! @goField(forceResolver: true)
 
   """
@@ -1200,8 +1190,8 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Ordering options for club members."""
-    orderBy: ClubMembersOrder! = { field: JOINED_AT }
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
@@ -1325,15 +1315,15 @@ func (ec *executionContext) field_Account_clubMemberships_args(ctx context.Conte
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.ClubMembersOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx, tmp)
+	var arg4 types.ClubMembersSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg4, err = ec.unmarshalNClubMembersSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg4
+	args["sortBy"] = arg4
 	return args, nil
 }
 
@@ -1394,15 +1384,15 @@ func (ec *executionContext) field_Account_clubs_args(ctx context.Context, rawArg
 		}
 	}
 	args["name"] = arg5
-	var arg6 types.ClubsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg6, err = ec.unmarshalNClubsOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx, tmp)
+	var arg6 types.ClubsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg6, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg6
+	args["sortBy"] = arg6
 	return args, nil
 }
 
@@ -1445,15 +1435,15 @@ func (ec *executionContext) field_Club_members_args(ctx context.Context, rawArgs
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.ClubMembersOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx, tmp)
+	var arg4 types.ClubMembersSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg4, err = ec.unmarshalNClubMembersSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg4
+	args["sortBy"] = arg4
 	return args, nil
 }
 
@@ -1739,15 +1729,15 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["name"] = arg5
-	var arg6 types.ClubsOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg6, err = ec.unmarshalNClubsOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx, tmp)
+	var arg6 types.ClubsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg6, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg6
+	args["sortBy"] = arg6
 	return args, nil
 }
 
@@ -1884,7 +1874,7 @@ func (ec *executionContext) _Account_clubs(ctx context.Context, field graphql.Co
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Clubs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder))
+		return ec.resolvers.Account().Clubs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1996,7 +1986,7 @@ func (ec *executionContext) _Account_clubMemberships(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ClubMemberships(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder))
+		return ec.resolvers.Account().ClubMemberships(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["sortBy"].(types.ClubMembersSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2520,7 +2510,7 @@ func (ec *executionContext) _Club_members(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Members(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["orderBy"].(types.ClubMembersOrder))
+		return ec.resolvers.Club().Members(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["sortBy"].(types.ClubMembersSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3685,7 +3675,7 @@ func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.ClubsOrder))
+		return ec.resolvers.Query().Clubs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5254,52 +5244,6 @@ func (ec *executionContext) unmarshalInputBecomeClubMemberInput(ctx context.Cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
 			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputClubMembersOrder(ctx context.Context, obj interface{}) (types.ClubMembersOrder, error) {
-	var it types.ClubMembersOrder
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "field":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNClubMembersOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputClubsOrder(ctx context.Context, obj interface{}) (types.ClubsOrder, error) {
-	var it types.ClubsOrder
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "field":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNClubsOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7412,18 +7356,13 @@ func (ec *executionContext) marshalNClubMemberEdge2ᚖoverdollᚋapplicationsᚋ
 	return ec._ClubMemberEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNClubMembersOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrder(ctx context.Context, v interface{}) (types.ClubMembersOrder, error) {
-	res, err := ec.unmarshalInputClubMembersOrder(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNClubMembersOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx context.Context, v interface{}) (types.ClubMembersOrderField, error) {
-	var res types.ClubMembersOrderField
+func (ec *executionContext) unmarshalNClubMembersSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersSort(ctx context.Context, v interface{}) (types.ClubMembersSort, error) {
+	var res types.ClubMembersSort
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNClubMembersOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersOrderField(ctx context.Context, sel ast.SelectionSet, v types.ClubMembersOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNClubMembersSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMembersSort(ctx context.Context, sel ast.SelectionSet, v types.ClubMembersSort) graphql.Marshaler {
 	return v
 }
 
@@ -7481,18 +7420,13 @@ func (ec *executionContext) marshalNClubSlugAlias2ᚖoverdollᚋapplicationsᚋs
 	return ec._ClubSlugAlias(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNClubsOrder2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrder(ctx context.Context, v interface{}) (types.ClubsOrder, error) {
-	res, err := ec.unmarshalInputClubsOrder(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNClubsOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx context.Context, v interface{}) (types.ClubsOrderField, error) {
-	var res types.ClubsOrderField
+func (ec *executionContext) unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx context.Context, v interface{}) (types.ClubsSort, error) {
+	var res types.ClubsSort
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNClubsOrderField2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsOrderField(ctx context.Context, sel ast.SelectionSet, v types.ClubsOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx context.Context, sel ast.SelectionSet, v types.ClubsSort) graphql.Marshaler {
 	return v
 }
 

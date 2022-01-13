@@ -278,7 +278,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Account                 func(childComplexity int, username string) int
-		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string) int
+		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string, sortBy types.AccountsSort) int
 		Language                func(childComplexity int) int
 		Languages               func(childComplexity int) int
 		ViewAuthenticationToken func(childComplexity int, token string, secret *string) int
@@ -396,7 +396,7 @@ type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context, token string, secret *string) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
 	Account(ctx context.Context, username string) (*types.Account, error)
-	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error)
+	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, sortBy types.AccountsSort) (*types.AccountConnection, error)
 	Languages(ctx context.Context) ([]*types.Language, error)
 	Language(ctx context.Context) (*types.Language, error)
 }
@@ -1429,7 +1429,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Accounts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string)), true
+		return e.complexity.Query.Accounts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string), args["sortBy"].(types.AccountsSort)), true
 
 	case "Query.language":
 		if e.complexity.Query.Language == nil {
@@ -1721,6 +1721,12 @@ type UnlockAccountPayload {
   account: Account
 }
 
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
+}
+
 extend type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
@@ -1757,6 +1763,9 @@ extend type Query {
 
     """Filter by the account username."""
     username: String
+
+    """Sorting options for accounts."""
+    sortBy: AccountsSort! = NEW
   ): AccountConnection!
 }
 `, BuiltIn: false},
@@ -3236,6 +3245,15 @@ func (ec *executionContext) field_Query_accounts_args(ctx context.Context, rawAr
 		}
 	}
 	args["username"] = arg4
+	var arg5 types.AccountsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg5, err = ec.unmarshalNAccountsSort2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg5
 	return args, nil
 }
 
@@ -7767,7 +7785,7 @@ func (ec *executionContext) _Query_accounts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Accounts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string))
+		return ec.resolvers.Query().Accounts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string), args["sortBy"].(types.AccountsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13599,6 +13617,16 @@ func (ec *executionContext) marshalNAccountSessionEdge2ᚖoverdollᚋapplication
 		return graphql.Null
 	}
 	return ec._AccountSessionEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAccountsSort2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountsSort(ctx context.Context, v interface{}) (types.AccountsSort, error) {
+	var res types.AccountsSort
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccountsSort2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountsSort(ctx context.Context, sel ast.SelectionSet, v types.AccountsSort) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailInput(ctx context.Context, v interface{}) (types.AddAccountEmailInput, error) {

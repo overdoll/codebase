@@ -35,8 +35,9 @@ func (r ClubResolver) Thumbnail(ctx context.Context, obj *types.Club, size *int)
 
 func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error) {
 
+	// non-authed users will just return nil
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
+		return nil, nil
 	}
 
 	clb, err := r.App.Queries.ClubMemberById.Handle(ctx, query.ClubMemberById{
@@ -56,7 +57,7 @@ func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types
 	return types.MarshalClubMemberToGraphql(ctx, clb), nil
 }
 
-func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error) {
+func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 

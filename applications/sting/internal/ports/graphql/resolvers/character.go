@@ -10,6 +10,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"strconv"
+	"strings"
 )
 
 type CharacterResolver struct {
@@ -29,7 +30,7 @@ func (r CharacterResolver) Thumbnail(ctx context.Context, obj *types.Character, 
 	return &types.Resource{ID: relay.NewID(types.Resource{}, obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 }
 
-func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -51,7 +52,7 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 		State:          stateModified,
 		AudienceSlugs:  audienceSlugs,
 		CategorySlugs:  categorySlugs,
-		OrderBy:        orderBy.Field.String(),
+		SortBy:         strings.ToLower(sortBy.String()),
 	})
 
 	if err != nil {

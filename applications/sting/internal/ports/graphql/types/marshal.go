@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
@@ -96,6 +97,54 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		CreatedAt:      result.CreatedAt(),
 		PostedAt:       result.PostedAt(),
 		ReassignmentAt: result.ReassignmentAt(),
+		Likes:          result.Likes(),
+	}
+}
+
+func MarshalCurationProfileToGraphQL(ctx context.Context, result *curation.Profile) *CurationProfile {
+
+	var categories []*Category
+	var audiences []*Audience
+
+	for _, id := range result.AudienceIds() {
+		audiences = append(audiences, &Audience{
+			ID: relay.NewID(Audience{}, id),
+		})
+	}
+
+	for _, id := range result.CategoryIds() {
+		categories = append(categories, &Category{
+			ID: relay.NewID(Category{}, id),
+		})
+	}
+
+	return &CurationProfile{
+		ID:        relay.NewID(CurationProfile{}, result.AccountId()),
+		Completed: result.IsCompleted(),
+		DateOfBirth: &DateOfBirthCurationProfile{
+			Skipped:     result.DateOfBirthSkipped(),
+			Completed:   result.DateOfBirthProfileCompleted(),
+			DateOfBirth: result.DateOfBirth(),
+		},
+		Audience: &AudienceCurationProfile{
+			Completed: result.AudienceProfileCompleted(),
+			Skipped:   result.AudienceProfileSkipped(),
+			Audiences: audiences,
+		},
+		Category: &CategoryCurationProfile{
+			Completed:  result.CategoryProfileCompleted(),
+			Skipped:    result.CategoryProfileSkipped(),
+			Categories: categories,
+		},
+	}
+}
+
+func MarshalPostLikeToGraphQL(ctx context.Context, result *post.Like) *PostLike {
+	return &PostLike{
+		ID:      relay.NewID(PostLike{}, result.PostId(), result.AccountId()),
+		LikedAt: result.LikedAt(),
+		Post:    &Post{ID: relay.NewID(Post{}, result.PostId())},
+		Account: &Account{ID: relay.NewID(Account{}, result.AccountId())},
 	}
 }
 
@@ -108,10 +157,11 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 	}
 
 	return &Audience{
-		ID:        relay.NewID(Audience{}, result.ID()),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
+		ID:         relay.NewID(Audience{}, result.ID()),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -124,10 +174,11 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 	}
 
 	return &Series{
-		ID:        relay.NewID(Series{}, result.ID()),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
+		ID:         relay.NewID(Series{}, result.ID()),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -140,10 +191,11 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 	}
 
 	return &Category{
-		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: res,
-		Slug:      result.Slug(),
-		Title:     result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		ID:         relay.NewID(Category{}, result.ID()),
+		Thumbnail:  res,
+		Slug:       result.Slug(),
+		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		TotalLikes: result.TotalLikes(),
 	}
 }
 
@@ -156,11 +208,12 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 	}
 
 	return &Character{
-		ID:        relay.NewID(Character{}, result.ID()),
-		Name:      result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:      result.Slug(),
-		Thumbnail: res,
-		Series:    MarshalSeriesToGraphQL(ctx, result.Series()),
+		ID:         relay.NewID(Character{}, result.ID()),
+		Name:       result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:       result.Slug(),
+		Thumbnail:  res,
+		Series:     MarshalSeriesToGraphQL(ctx, result.Series()),
+		TotalLikes: result.TotalLikes(),
 	}
 }
 

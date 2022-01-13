@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS categories
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -21,6 +23,8 @@ CREATE TABLE IF NOT EXISTS characters
     name                  map<text, text>,
     thumbnail_resource_id text,
     series_id             text,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -38,6 +42,8 @@ CREATE TABLE IF NOT EXISTS series
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           int,
+    total_posts           int,
     primary key ( id )
 );
 
@@ -54,6 +60,8 @@ CREATE TABLE IF NOT EXISTS audience
     slug                  text,
     title                 map<text, text>,
     thumbnail_resource_id text,
+    total_likes           int,
+    total_posts           int,
     standard              int,
     primary key ( id )
 );
@@ -80,4 +88,31 @@ CREATE TABLE IF NOT EXISTS posts
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS post_likes_counter
+(
+    post_id text,
+    likes   counter,
+    primary key ( post_id )
+);
+
+CREATE TABLE IF NOT EXISTS post_likes
+(
+    post_id          text,
+    liked_account_id text,
+    liked_at         timestamp,
+    primary key ( (post_id, liked_account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS curation_profile
+(
+    account_id            text,
+    date_of_birth         date,
+    audience_ids          list<text>,
+    category_ids          list<text>,
+    date_of_birth_skipped boolean,
+    audience_ids_skipped  boolean,
+    category_ids_skipped  boolean,
+    primary key ( account_id )
 );

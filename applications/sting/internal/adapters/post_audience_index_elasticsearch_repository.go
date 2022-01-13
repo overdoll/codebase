@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -23,6 +22,8 @@ type audienceDocument struct {
 	Title               map[string]string `json:"title"`
 	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
 	Standard            int               `json:"standard"`
+	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 	CreatedAt           string            `json:"created_at"`
 }
 
@@ -38,6 +39,12 @@ const audienceIndexProperties = `
 		"type": "keyword"
 	},
 	"standard": {
+		"type": "integer"
+	},
+	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
 		"type": "integer"
 	},
 	"title": ` + localization.ESIndex + `
@@ -78,6 +85,8 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:            stnd,
+		TotalLikes:          cat.TotalLikes(),
+		TotalPosts:          cat.TotalPosts(),
 	}, nil
 }
 
@@ -87,10 +96,28 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		Index(audienceIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+		sortingColumn = "created_at"
+		sortingAscending = false
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "total_likes"
+		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
+		sortingAscending = false
+	}
+
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
 
 	if filter.Search() != nil {
 		query.Must(
@@ -126,13 +153,35 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard)
-		newAudience.Node = paging.NewNode(bd.CreatedAt)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts)
+		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)
 	}
 
 	return audiences, nil
+}
+
+func (r PostsIndexElasticSearchRepository) IndexAudience(ctx context.Context, audience *post.Audience) error {
+
+	aud, err := marshalAudienceToDocument(audience)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Index().
+		Index(audienceIndexName).
+		Id(audience.ID()).
+		BodyJson(aud).
+		Do(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context) error {
@@ -164,6 +213,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 				Title:               m.Title,
 				Standard:            m.Standard,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				TotalLikes:          m.TotalLikes,
 			}
 
 			_, err = r.client.
