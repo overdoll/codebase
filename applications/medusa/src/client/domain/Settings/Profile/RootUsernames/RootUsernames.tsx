@@ -3,7 +3,7 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { UsernamesQuery as UsernamesQueryType } from '@//:artifacts/UsernamesQuery.graphql'
 import UsernamesQuery from '@//:artifacts/UsernamesQuery.graphql'
 import Usernames from './Usernames/Usernames'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
@@ -22,7 +22,7 @@ export default function RootUsernames (props: Props): JSX.Element | null {
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='green'>
           <Trans>
             Username
           </Trans>

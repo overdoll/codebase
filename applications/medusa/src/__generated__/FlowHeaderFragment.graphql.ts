@@ -5,9 +5,6 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FlowHeaderFragment = {
-    readonly club: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubPreviewFragment">;
-    };
     readonly " $fragmentRefs": FragmentRefs<"checkPostRequirementsFragment">;
     readonly " $refType": "FlowHeaderFragment";
 };
@@ -26,22 +23,6 @@ const node: ReaderFragment = {
   "name": "FlowHeaderFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "Club",
-      "kind": "LinkedField",
-      "name": "club",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ClubPreviewFragment"
-        }
-      ],
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "checkPostRequirementsFragment"
@@ -50,5 +31,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'e0d61b0246b5e828ee0be154417054a9';
+(node as any).hash = 'b71aeae73c3b1e83f4151e6de8991dc2';
 export default node;

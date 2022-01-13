@@ -1,4 +1,4 @@
-import { useToast } from '@chakra-ui/react'
+import { Box, useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
@@ -55,16 +55,18 @@ export default function DropdownMenuButtonLogout (): JSX.Element {
   const notify = useToast()
 
   return (
-    <HorizontalNavigationDropdownMenu.Button
-      onClick={() => onLogout()}
-      isDisabled={isLoggingOut}
-      color='orange.300'
-      icon={SafetyExitDoorLeft}
-      label={
-        <Trans>
-          Log Out
-        </Trans>
-      }
-    />
+    <Box>
+      <HorizontalNavigationDropdownMenu.Button
+        onClick={() => onLogout()}
+        isDisabled={isLoggingOut}
+        color='orange.300'
+        icon={SafetyExitDoorLeft}
+        label={
+          <Trans>
+            Log Out
+          </Trans>
+        }
+      />
+    </Box>
   )
 }

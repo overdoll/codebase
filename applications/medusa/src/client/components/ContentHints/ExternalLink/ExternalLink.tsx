@@ -7,11 +7,13 @@ import { ReactNode } from 'react'
 interface Props extends HTMLChakraProps<any> {
   path: string
   children: ReactNode
+  colorScheme?: string
 }
 
 export default function ExternalLink ({
   path,
   children,
+  colorScheme = 'primary',
   ...rest
 }: Props): JSX.Element {
   return (
@@ -21,7 +23,7 @@ export default function ExternalLink ({
     >
       <Button
         size='sm'
-        colorScheme='primary'
+        colorScheme={colorScheme}
         variant='link'
         {...rest}
       >
@@ -31,7 +33,7 @@ export default function ExternalLink ({
           ml={1}
           icon={ShareExternalLink}
           h={2}
-          fill='primary.400'
+          fill={`${colorScheme}.400`}
         />
       </Button>
     </Link>

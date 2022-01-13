@@ -26,7 +26,7 @@ export default function ErrorFallback ({
   }
 
   return (
-    <Alert m={2} status='warning'>
+    <Alert m={0} my={2} status='warning'>
       <Flex w='100%' align='center' justify='space-between'>
         <Flex align='center'>
           <AlertIcon />

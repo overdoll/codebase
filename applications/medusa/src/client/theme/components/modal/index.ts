@@ -22,9 +22,8 @@ const baseStyleDialogContainer: SystemStyleFunction = (props) => {
     display: 'flex',
     zIndex: 'modal',
     justifyContent: 'center',
-    alignItems: isCentered as boolean ? 'center' : 'flex-start',
+    alignItems: isCentered as boolean ? 'center' : 'flex-end',
     overflow: scrollBehavior === 'inside' ? 'hidden' : 'auto'
-
   }
 }
 
@@ -46,7 +45,8 @@ const baseStyleHeader: SystemStyleObject = {
   px: 6,
   py: 4,
   fontSize: 'xl',
-  fontWeight: 'semibold'
+  fontWeight: 'semibold',
+  color: 'gray.00'
 }
 
 const baseStyleCloseButton: SystemStyleObject = {

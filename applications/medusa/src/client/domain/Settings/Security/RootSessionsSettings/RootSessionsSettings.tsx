@@ -2,7 +2,7 @@ import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { SessionsSettingsQuery as SessionsSettingsQueryType } from '@//:artifacts/SessionsSettingsQuery.graphql'
 import SessionsSettingsQuery from '@//:artifacts/SessionsSettingsQuery.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import SessionsSettings from './SessionsSettings/SessionsSettings'
@@ -22,7 +22,7 @@ export default function RootSessionsSettings (props: Props): JSX.Element | null 
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle>
+        <PageSectionTitle colorScheme='green'>
           <Trans>
             Sessions
           </Trans>

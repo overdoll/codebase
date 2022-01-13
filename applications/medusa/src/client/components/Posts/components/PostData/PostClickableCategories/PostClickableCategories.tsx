@@ -5,7 +5,7 @@ import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
 
 interface Props {
-  query: PostClickableCategoriesFragment$key
+  query: PostClickableCategoriesFragment$key | null
 }
 
 const Fragment = graphql`
@@ -24,7 +24,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
 
   return (
     <Wrap>
-      {data.categories.map((item, index) =>
+      {data?.categories.map((item, index) =>
         <WrapItem key={index}>
           <ClickableBox variant='ghost' bg='transparent' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={2} py={2}>

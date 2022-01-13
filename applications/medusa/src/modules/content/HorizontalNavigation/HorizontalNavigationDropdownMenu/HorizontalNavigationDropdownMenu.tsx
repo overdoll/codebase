@@ -1,9 +1,14 @@
 import { FunctionComponent, ReactNode } from 'react'
 import HorizontalNavigationDropdownMenuButton
   from './HorizontalNavigationDropdownMenuButton/HorizontalNavigationDropdownMenuButton'
+import { useHistoryDisclosure } from '../../../hooks'
+import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
+import Icon from '../../Icon/Icon'
+import { HorizontalNavigationDropdownMenuContext } from './context'
 import {
   Box,
   Flex,
+  HStack,
   Menu,
   MenuButton,
   MenuList,
@@ -12,14 +17,9 @@ import {
   ModalContent,
   ModalOverlay,
   SimpleGrid,
-  Stack,
   useDisclosure
 } from '@chakra-ui/react'
-import { useHistoryDisclosure } from '../../../hooks'
-import SiteLinkLogo from '../../../../client/domain/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
-import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
-import Icon from '../../Icon/Icon'
-import { HorizontalNavigationDropdownMenuContext } from './context'
+import HorizontalNavigation from '../HorizontalNavigation'
 
 interface Props {
   children: ReactNode
@@ -56,48 +56,31 @@ const HorizontalNavigationDropdownMenu = ({
         }}
         >
           <Box h='100%'>
-            <ClickableBox
-              p={0}
+            <HorizontalNavigation.Button
+              exact
+              colorScheme='gray'
+              icon={icon}
+              isActive={isOpen}
+              label={label}
               onClick={onToggle}
-              borderRadius={{
-                base: 2,
-                md: 10
-              }}
-              aria-label={label}
-              bg={isOpen ? 'gray.500' : 'transparent'}
-              h='46px'
-              w='42px'
-            >
-              <Flex w='100%' align='center' justify='center'>
-                <Icon
-                  icon={icon}
-                  w='42px'
-                  h='38px'
-                  p={2}
-                  fill={isOpen ? 'gray.100' : 'gray.300'}
-                />
-              </Flex>
-            </ClickableBox>
+            />
           </Box>
           <Modal
-            isCentered
-            preserveScrollBarGap
             isOpen={isOpen}
             onClose={onClose}
+            motionPreset='slideInBottom'
+            preserveScrollBarGap
+            scrollBehavior='inside'
+            blockScrollOnMount={false}
           >
             <ModalOverlay />
-            <ModalContent
-              bg='gray.800'
-            >
-              <ModalBody my={4}>
-                <Stack
-                  spacing={4}
-                >
-                  <SiteLinkLogo />
-                  <SimpleGrid spacing={3}>
-                    {children}
-                  </SimpleGrid>
-                </Stack>
+            <ModalContent>
+              <ModalBody
+                px={3}
+              >
+                <HStack isInline spacing={3}>
+                  {children}
+                </HStack>
               </ModalBody>
             </ModalContent>
           </Modal>
@@ -112,6 +95,7 @@ const HorizontalNavigationDropdownMenu = ({
             flip
             preventOverflow
             isOpen={isOpenMenu}
+            isLazy
             onClose={onCloseMenu}
             offset={[-10, 20]}
           >
@@ -132,10 +116,6 @@ const HorizontalNavigationDropdownMenu = ({
                 <Flex w='100%' align='center' justify='center'>
                   <Icon
                     icon={icon}
-                    w={{
-                      base: '58px',
-                      md: '42px'
-                    }}
                     h='38px'
                     p={2}
                     fill={isOpenMenu ? 'gray.100' : 'gray.300'}

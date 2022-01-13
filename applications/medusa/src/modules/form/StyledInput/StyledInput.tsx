@@ -5,11 +5,12 @@ import {
   HTMLChakraProps,
   Input,
   InputGroup,
-  InputRightElement
+  InputRightElement,
+  Spinner
 } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 import { Icon } from '../../content'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
-import { ReactNode } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   register: any
@@ -21,6 +22,7 @@ interface Props extends HTMLChakraProps<any> {
   size?: string
   variant?: string
   inputLeftAddon?: ReactNode
+  isLoading?: boolean
 }
 
 export default function StyledInput ({
@@ -33,6 +35,7 @@ export default function StyledInput ({
   size = 'md',
   variant = 'filled',
   inputLeftAddon,
+  isLoading = false,
   ...rest
 }: Props): JSX.Element {
   const determineMargin = (): number => {
@@ -43,6 +46,9 @@ export default function StyledInput ({
   }
 
   const determinePadding = (): number => {
+    if (['xl'].includes(size)) {
+      return 4
+    }
     if (['md', 'lg'].includes(size)) {
       return 3
     }
@@ -86,18 +92,20 @@ export default function StyledInput ({
           placeholder={placeholder}
           {...rest}
         />
-        {(error || success) && (
+        {(error || success || isLoading) && (
           <InputRightElement
             p={determinePadding()}
             mr={determineMargin()}
             h='100%'
             pointerEvents='none'
           >
-            <Icon
-              h='100%'
-              icon={success ? CheckMark : WarningTriangle}
-              fill={success ? 'green.500' : 'orange.500'}
-            />
+            {isLoading
+              ? <Spinner h={15} w={15} color='gray.200' />
+              : <Icon
+                  h='100%'
+                  icon={success ? CheckMark : WarningTriangle}
+                  fill={success ? 'green.500' : 'orange.500'}
+                />}
           </InputRightElement>
         )}
       </InputGroup>

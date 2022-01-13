@@ -16,7 +16,7 @@ const baseStyleContent: SystemStyleFunction = (props) => {
     borderColor: 'inherit',
     borderRadius: 'md',
     boxShadow: 'sm',
-    zIndex: 'inherit',
+    zIndex: 'popover',
     _focus: {
       outline: 0,
       boxShadow: 'outline'

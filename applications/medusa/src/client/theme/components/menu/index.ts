@@ -8,7 +8,7 @@ const baseStyleList: SystemStyleFunction = (props) => {
     color: 'inherit',
     minW: '4xs',
     py: '2',
-    zIndex: 1,
+    zIndex: 'popover',
     borderRadius: 'md',
     borderWidth: '0px'
   }

@@ -1,8 +1,9 @@
 import ClickableBox from '../../PageLayout/Interactables/ClickableBox/ClickableBox'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import Icon from '../../Icon/Icon'
 import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
+import { ShareExternalLink } from '@//:assets/icons/interface'
 
 interface Props {
   title: ReactNode
@@ -10,59 +11,93 @@ interface Props {
   exact?: boolean
   icon: FunctionComponent<any>
   colorScheme?: string
+  strict?: boolean
+  buttonType?: 'primary' | 'secondary'
+  isExternal?: boolean
 }
 
 export default function VerticalNavigationButton ({
   title,
   icon,
   exact = false,
+  strict = false,
   to,
-  colorScheme = 'gray'
+  colorScheme = 'gray',
+  buttonType = 'secondary',
+  isExternal = false
 }: Props): JSX.Element {
-  const colorPalette = colorScheme === 'gray' ? `${colorScheme}.100` : `${colorScheme}.400`
-
   return (
     <NavLink
       exact={exact}
       to={to}
+      strict={strict}
     >
-      {({ isActive }) => (
-        <ClickableBox
-          h={10}
-          display='inline'
-          color={isActive ? colorPalette : 'gray.300'}
-          bg={isActive ? 'gray.600' : 'transparent'}
+      {({ isActive }) => <ClickableBox
+        h={buttonType === 'primary' ? 12 : 10}
+        display='inline'
+        borderRadius='md'
+        _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'initial' }}
+        _active={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'transparent' }}
+        bg={isActive
+          ? 'gray.900'
+          : buttonType === 'primary'
+            ? `${colorScheme}.400`
+            : 'transparent'}
+                         >
+        <Flex
+          h='100%'
+          align='center'
+          justify='space-between'
         >
-          <Flex
-            h='100%'
-            align='center'
-          >
+          <Flex align='center'>
             {(icon != null) && (
               <Flex
                 borderRadius='base'
                 align='center'
                 p={1}
                 mr={3}
-                bg={isActive ? colorPalette : 'gray.600'}
+                ml={1}
               >
                 <Icon
                   icon={icon}
                   w={4}
                   h={4}
-                  fill={isActive ? 'gray.00' : 'gray.300'}
+                  fill={isActive
+                    ? 'gray.00'
+                    : buttonType === 'primary'
+                      ? `${colorScheme}.900`
+                      : 'gray.200'}
                 />
               </Flex>
             )}
-            <Heading
-              lineHeight='0.5px'
+            <Text
+              color={isActive
+                ? 'gray.00'
+                : buttonType === 'primary'
+                  ? `${colorScheme}.900`
+                  : 'gray.200'}
               fontSize='md'
+              letterSpacing='wider'
+              fontWeight='semibold'
+              mr={1}
             >
               {title}
-            </Heading>
+            </Text>
           </Flex>
-        </ClickableBox>
-      )}
+          {isExternal && <Flex
+            align='center'
+            p={1}
+            mr={1}
+                         >
+            <Icon
+              icon={ShareExternalLink}
+              w={4}
+              h={4}
+              fill={isActive ? 'gray.00' : 'gray.200'}
+            />
+          </Flex>}
+        </Flex>
+      </ClickableBox>}
     </NavLink>
-
   )
 }
