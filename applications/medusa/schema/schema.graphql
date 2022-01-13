@@ -529,7 +529,7 @@ type Audience implements Node {
   """An ID pointing to this audience."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
+  """A url-friendly ID. Should be used when searching."""
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
@@ -538,8 +538,11 @@ type Audience implements Node {
   """A title for this audience."""
   title: String!
 
-  """The total amount of likes on this audience."""
+  """Total amount of likes."""
   totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 
   """Posts belonging to this audience"""
   posts(
@@ -602,6 +605,9 @@ enum AudiencesSort {
 
   """Audience by top likes"""
   TOP
+
+  """Audience by most posts"""
+  POPULAR
 }
 
 """Authentication token. Used for logging in."""
@@ -673,6 +679,9 @@ enum CategoriesSort {
 
   """Categories by top likes"""
   TOP
+
+  """Categories by most posts"""
+  POPULAR
 }
 
 type Category implements Node {
@@ -688,8 +697,11 @@ type Category implements Node {
   """A title for this category."""
   title: String!
 
-  """The total amount of likes on this category."""
+  """Total amount of likes."""
   totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 
   """Posts belonging to this category"""
   posts(
@@ -758,11 +770,14 @@ type Character implements Node {
   """A name for this character."""
   name: String!
 
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
+
   """The series linked to this character."""
   series: Series!
-
-  """The total amount of likes on this character."""
-  totalLikes: Int!
 
   """Posts belonging to this character"""
   posts(
@@ -811,6 +826,9 @@ enum CharactersSort {
 
   """Characters by top likes"""
   TOP
+
+  """Characters by most posts"""
+  POPULAR
 }
 
 type Club implements Node {
@@ -1449,7 +1467,7 @@ type Mutation {
   """Like a post"""
   likePost(input: LikePostInput!): LikePostPayload
 
-  """Undo a like a post"""
+  """Undo a like on a post"""
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
 
   """Create a new post"""
@@ -1906,7 +1924,7 @@ type Query {
     title: String
 
     """Sorting options for audiences."""
-    sortBy: AudiencesSort! = TOP
+    sortBy: AudiencesSort! = POPULAR
   ): AudienceConnection!
 
   """Get a single audience."""
@@ -1938,7 +1956,7 @@ type Query {
     title: String
 
     """Sorting options for categories."""
-    sortBy: CategoriesSort! = TOP
+    sortBy: CategoriesSort! = POPULAR
   ): CategoryConnection!
 
   """Get a single category."""
@@ -1970,7 +1988,7 @@ type Query {
     title: String
 
     """Sorting options for series."""
-    sortBy: SeriesSort! = TOP
+    sortBy: SeriesSort! = POPULAR
   ): SeriesConnection!
 
   """Get a single serial."""
@@ -2009,7 +2027,7 @@ type Query {
     name: String
 
     """Sorting options for characters."""
-    sortBy: CharactersSort! = TOP
+    sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
 
   """Get a single character."""
@@ -2339,8 +2357,11 @@ type Series implements Node {
   """A title for this series."""
   title: String!
 
-  """The total amount of likes on this series."""
+  """Total amount of likes."""
   totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 
   """Posts belonging to this series"""
   posts(
@@ -2387,11 +2408,14 @@ type SeriesEdge {
 
 """Properties by which series connections can be sorted."""
 enum SeriesSort {
-  """Characters by newest first"""
+  """Series by newest first"""
   NEW
 
-  """Characters by top likes"""
+  """Series by top likes"""
   TOP
+
+  """Series by most posts"""
+  POPULAR
 }
 
 """Publish post."""
