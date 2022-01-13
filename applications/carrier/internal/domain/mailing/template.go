@@ -1,21 +1,28 @@
 package mailing
 
 type Template struct {
-	templateId string
-	variables  map[string]interface{}
+	bodyText string
+	bodyHtml string
+
+	subject string
 }
 
-func NewTemplate(templateId string, variables map[string]interface{}) (*Template, error) {
+func NewTemplate(subject, bodyHtml, bodyText string) (*Template, error) {
 	return &Template{
-		templateId: templateId,
-		variables:  variables,
+		bodyText: bodyText,
+		bodyHtml: bodyHtml,
+		subject:  subject,
 	}, nil
 }
 
-func (r *Template) TemplateId() string {
-	return r.templateId
+func (r *Template) BodyText() string {
+	return r.bodyText
 }
 
-func (r *Template) Variables() map[string]interface{} {
-	return r.variables
+func (r *Template) BodyHtml() string {
+	return r.bodyHtml
+}
+
+func (r *Template) Subject() string {
+	return r.subject
 }

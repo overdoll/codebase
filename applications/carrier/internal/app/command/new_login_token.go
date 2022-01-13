@@ -36,9 +36,9 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 
 	u.RawQuery = "token=" + cmd.Token + "&secret=" + cmd.Secret
 
-	template, err := mailing.NewTemplate("d-900a6f535312497d837ceee347799859", map[string]interface{}{
-		"link": u.String(),
-	})
+	link := u.String()
+
+	template, err := mailing.NewTemplate("verify token", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n     <a \n        href=\""+link+"\"\n        target=\"_blank\" \n     >\n            authenticate\n          </a>\n    </body>\n  </html>\n", link)
 
 	if err != nil {
 		return err

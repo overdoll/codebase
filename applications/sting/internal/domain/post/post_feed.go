@@ -1,10 +1,21 @@
 package post
 
-func NewPostFeed(audienceIds, categoryIds []string) (*Filters, error) {
-	return &Filters{
+type Feed struct {
+	audienceIds []string
+	categoryIds []string
+}
+
+func NewPostFeed(audienceIds, categoryIds []string) (*Feed, error) {
+	return &Feed{
 		audienceIds: audienceIds,
 		categoryIds: categoryIds,
-		sortBy:      TopSort,
-		state:       Published,
 	}, nil
+}
+
+func (e *Feed) CategoryIds() []string {
+	return e.categoryIds
+}
+
+func (e *Feed) AudienceIds() []string {
+	return e.audienceIds
 }

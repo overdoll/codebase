@@ -95,6 +95,118 @@ func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx
 	return PostsIndexElasticSearchRepository{client: client, session: session}
 }
 
+func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+
+	var pst postDocument
+
+	err := json.Unmarshal(hit.Source, &pst)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal post: %v", err)
+	}
+
+	var characters []*post.Character
+
+	for _, char := range pst.Characters {
+		characters = append(characters, post.UnmarshalCharacterFromDatabase(
+			char.Id,
+			char.Slug,
+			char.Name,
+			char.ThumbnailResourceId,
+			char.TotalLikes,
+			char.TotalPosts,
+			post.UnmarshalSeriesFromDatabase(
+				char.Series.Id,
+				char.Series.Slug,
+				char.Series.Title,
+				char.Series.ThumbnailResourceId,
+				char.Series.TotalLikes,
+				char.TotalLikes,
+			),
+		))
+	}
+
+	var categories []*post.Category
+
+	for _, cat := range pst.Categories {
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(
+			cat.Id,
+			cat.Slug,
+			cat.Title,
+			cat.ThumbnailResourceId,
+			cat.TotalLikes,
+			cat.TotalPosts,
+		))
+	}
+
+	createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var postedAtTime *time.Time
+	var reassignmentAtTime *time.Time
+
+	if pst.ReassignmentAt != "" {
+		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newTime := time.Unix(reassignmentAt, 0)
+
+		reassignmentAtTime = &newTime
+	}
+
+	if pst.PostedAt != "" {
+		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newTime := time.Unix(postedAt, 0)
+
+		postedAtTime = &newTime
+	}
+
+	var audience *post.Audience
+
+	if pst.Audience != nil {
+		audience = post.UnmarshalAudienceFromDatabase(
+			pst.Audience.Id,
+			pst.Audience.Slug,
+			pst.Audience.Title,
+			pst.Audience.ThumbnailResourceId,
+			pst.Audience.Standard,
+			pst.Audience.TotalLikes,
+			pst.Audience.TotalPosts,
+		)
+	}
+
+	createdPost := post.UnmarshalPostFromDatabase(
+		pst.Id,
+		pst.State,
+		pst.Likes,
+		&pst.ModeratorId,
+		pst.ContributorId,
+		pst.ContentResourceIds,
+		pst.ClubId,
+		audience,
+		characters,
+		categories,
+		time.Unix(createdAt, 0),
+		postedAtTime,
+		reassignmentAtTime,
+	)
+
+	createdPost.Node = paging.NewNode(hit.Sort)
+
+	return createdPost, nil
+}
+
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 
 	var characterDocuments []*characterDocument
@@ -373,6 +485,78 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx 
 	return int(count), nil
 }
 
+func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
+
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewFunctionScoreQuery()
+
+	// decay from initial post time
+	postedTimeFunc := elastic.
+		NewGaussDecayFunction().
+		FieldName("posted_at").
+		Scale("1d").
+		Decay(0.5)
+
+	// multiply by likes for this post
+	likesFunc := elastic.
+		NewFieldValueFactorFunction().
+		Field("likes").
+		Factor(1).
+		Modifier("none")
+
+	var filterQueries []elastic.Query
+
+	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
+
+	filterQueries = append(filterQueries)
+
+	if len(filter.AudienceIds()) > 0 {
+		query.Add(
+			elastic.NewNestedQuery("audience",
+				elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...),
+			), likesFunc,
+		)
+	} else {
+		query.AddScoreFunc(likesFunc)
+	}
+
+	// multiply results
+	query.ScoreMode("multiply")
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to search posts: %v", err)
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := unmarshalPostDocument(hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts, nil
+}
+
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
 
 	builder := r.client.Search().
@@ -468,112 +652,11 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	for _, hit := range response.Hits.Hits {
 
-		var pst postDocument
-
-		err := json.Unmarshal(hit.Source, &pst)
-
-		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal post: %v", err)
-		}
-
-		var characters []*post.Character
-
-		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(
-				char.Id,
-				char.Slug,
-				char.Name,
-				char.ThumbnailResourceId,
-				char.TotalLikes,
-				char.TotalPosts,
-				post.UnmarshalSeriesFromDatabase(
-					char.Series.Id,
-					char.Series.Slug,
-					char.Series.Title,
-					char.Series.ThumbnailResourceId,
-					char.Series.TotalLikes,
-					char.TotalLikes,
-				),
-			))
-		}
-
-		var categories []*post.Category
-
-		for _, cat := range pst.Categories {
-			categories = append(categories, post.UnmarshalCategoryFromDatabase(
-				cat.Id,
-				cat.Slug,
-				cat.Title,
-				cat.ThumbnailResourceId,
-				cat.TotalLikes,
-				cat.TotalPosts,
-			))
-		}
-
-		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
+		createdPost, err := unmarshalPostDocument(hit)
 
 		if err != nil {
 			return nil, err
 		}
-
-		var postedAtTime *time.Time
-		var reassignmentAtTime *time.Time
-
-		if pst.ReassignmentAt != "" {
-			reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
-
-			if err != nil {
-				return nil, err
-			}
-
-			newTime := time.Unix(reassignmentAt, 0)
-
-			reassignmentAtTime = &newTime
-		}
-
-		if pst.PostedAt != "" {
-			postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
-
-			if err != nil {
-				return nil, err
-			}
-
-			newTime := time.Unix(postedAt, 0)
-
-			postedAtTime = &newTime
-		}
-
-		var audience *post.Audience
-
-		if pst.Audience != nil {
-			audience = post.UnmarshalAudienceFromDatabase(
-				pst.Audience.Id,
-				pst.Audience.Slug,
-				pst.Audience.Title,
-				pst.Audience.ThumbnailResourceId,
-				pst.Audience.Standard,
-				pst.Audience.TotalLikes,
-				pst.Audience.TotalPosts,
-			)
-		}
-
-		createdPost := post.UnmarshalPostFromDatabase(
-			pst.Id,
-			pst.State,
-			pst.Likes,
-			&pst.ModeratorId,
-			pst.ContributorId,
-			pst.ContentResourceIds,
-			pst.ClubId,
-			audience,
-			characters,
-			categories,
-			time.Unix(createdAt, 0),
-			postedAtTime,
-			reassignmentAtTime,
-		)
-
-		createdPost.Node = paging.NewNode(hit.Sort)
 
 		posts = append(posts, createdPost)
 	}

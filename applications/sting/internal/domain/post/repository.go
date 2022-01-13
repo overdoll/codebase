@@ -57,6 +57,9 @@ type Repository interface {
 type IndexRepository interface {
 	IndexPost(ctx context.Context, postId *Post) error
 	IndexAllPosts(ctx context.Context) error
+
+	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
+
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
 	DeletePostIndex(ctx context.Context) error
 	DeletePost(ctx context.Context, postId string) error

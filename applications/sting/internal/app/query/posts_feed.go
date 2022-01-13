@@ -63,7 +63,7 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		return nil, err
 	}
 
-	posts, err := h.pi.SearchPosts(ctx, query.Principal, query.Cursor, filters)
+	posts, err := h.pi.PostsFeed(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err
