@@ -15,7 +15,7 @@ interface ChildType {
 }
 
 interface Props {
-  query: PostGalleryContentFragment$key
+  query: PostGalleryContentFragment$key | null
   children?: (ChildType: ChildType) => void
 }
 
@@ -77,9 +77,9 @@ export default function PostGalleryContent ({
           onChangeSlides(swiper)}
 
       >
-        {data.content.map((item, index) =>
+        {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex bg='gray.800' justify='center' align='center' h={500}>
+            <Flex bg='gray.800' justify='center' align='center' h='100%'>
               <Flex h='100%'>
                 {item.type === 'IMAGE' &&
                   <ImageSnippet h='100%' query={item} />}

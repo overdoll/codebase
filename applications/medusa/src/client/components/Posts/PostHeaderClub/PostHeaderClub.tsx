@@ -16,7 +16,7 @@ const Fragment = graphql`
 `
 
 interface Props {
-  query: PostHeaderClubFragment$key
+  query: PostHeaderClubFragment$key | null
 }
 
 export default function PostHeaderClub ({ query }: Props): JSX.Element {
