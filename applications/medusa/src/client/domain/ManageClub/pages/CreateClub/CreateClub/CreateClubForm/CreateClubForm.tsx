@@ -14,6 +14,7 @@ import urlSlug from 'url-slug'
 import generatePath from '@//:modules/routing/generatePath'
 import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface Props {
   isDisabled: boolean
@@ -92,7 +93,7 @@ export default function CreateClubForm ({ isDisabled }: Props): JSX.Element {
         if (data?.createClub?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: data.createClub.validation
+            message: translateValidation(data.createClub.validation)
           })
           return
         }

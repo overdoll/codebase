@@ -11,6 +11,7 @@ import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface CodeValues {
   code: string
@@ -90,7 +91,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         if (data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.validation != null) {
           setError('code', {
             type: 'mutation',
-            message: data.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.validation
+            message: translateValidation(data.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.validation)
           })
           return
         }

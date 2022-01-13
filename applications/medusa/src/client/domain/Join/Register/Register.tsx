@@ -10,6 +10,7 @@ import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { t } from '@lingui/macro'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -58,7 +59,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
-            title: payload.createAccountWithAuthenticationToken.validation,
+            title: translateValidation(payload.createAccountWithAuthenticationToken.validation),
             isClosable: true
           })
           return

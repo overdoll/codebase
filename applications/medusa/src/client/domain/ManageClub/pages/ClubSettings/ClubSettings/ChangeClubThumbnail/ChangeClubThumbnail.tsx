@@ -88,7 +88,7 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
       <PageSectionWrap>
         <PageSectionTitle colorScheme='teal'>
           <Trans>
-            Club Name
+            Club Thumbnail
           </Trans>
         </PageSectionTitle>
         <PageSectionDescription>

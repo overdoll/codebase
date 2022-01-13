@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import Button from '@//:modules/form/Button/Button'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface CodeValues {
   code: string
@@ -79,7 +80,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         if (data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.validation != null) {
           setError('code', {
             type: 'mutation',
-            message: data.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp.validation
+            message: translateValidation(data.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp.validation)
           })
           return
         }

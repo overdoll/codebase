@@ -26,6 +26,7 @@ import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface UsernameValues {
   username: string
@@ -105,7 +106,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
         if (data?.updateAccountUsername?.validation != null) {
           setError('username', {
             type: 'mutation',
-            message: data.updateAccountUsername.validation
+            message: translateValidation(data.updateAccountUsername.validation)
           })
           return
         }

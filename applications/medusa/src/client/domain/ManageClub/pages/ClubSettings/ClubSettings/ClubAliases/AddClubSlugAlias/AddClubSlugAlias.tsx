@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import ClubSlug from '@//:modules/validation/ClubSlug'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 interface Props {
   query: AddClubSlugAliasFragment$key | null
@@ -97,7 +98,7 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
         if (data?.addClubSlugAlias?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: data.addClubSlugAlias?.validation
+            message: translateValidation(data.addClubSlugAlias?.validation)
           })
           return
         }
