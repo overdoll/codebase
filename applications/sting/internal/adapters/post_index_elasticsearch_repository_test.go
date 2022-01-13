@@ -2,6 +2,7 @@ package adapters_test
 
 import (
 	"context"
+	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
@@ -25,15 +26,19 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	createNewPosts := 6
 	testClubId := uuid.New().String()
 	testAccountId := uuid.New().String()
-	postTime := time.Now()
 
 	ctx := context.Background()
 
 	// create x new posts
 	for i := 1; i <= createNewPosts; i++ {
+
+		postTime := time.Now().Add(time.Hour * time.Duration(i))
+
+		id, _ := ksuid.NewRandomWithTime(postTime)
+
 		newPost :=
 			post.UnmarshalPostFromDatabase(
-				uuid.New().String(),
+				id.String(),
 				"published",
 				0,
 				&testClubId,
