@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "curation",
+    srcs = [
+        "profile.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/sting/internal/domain/curation",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = ["//libraries/principal"],
+)

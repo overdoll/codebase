@@ -43,9 +43,9 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 
 	u.RawQuery = "id=" + cmd.EmailId + "&secret=" + cmd.EmailSecret
 
-	template, err := mailing.NewTemplate("d-5c81a4ac00d44a9dba2dd58ebed8bcf6", map[string]interface{}{
-		"link": u.String(),
-	})
+	link := u.String()
+
+	template, err := mailing.NewTemplate("confirm email", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n     <a \n        href=\""+link+"\"\n        target=\"_blank\" \n     >\n            confirm email\n          </a>\n    </body>\n  </html>\n", link)
 
 	if err != nil {
 		return err

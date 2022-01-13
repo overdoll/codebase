@@ -1,16 +1,28 @@
 package post
 
 type ObjectFilters struct {
-	orderBy string
-	slugs   []string
-	search  *string
+	sortBy Sorting
+	slugs  []string
+	search *string
 }
 
-func NewObjectFilters(search *string, orderBy string, slugs []string) (*ObjectFilters, error) {
+func NewObjectFilters(search *string, sortBy string, slugs []string) (*ObjectFilters, error) {
+
+	sorting := UnknownSort
+	var err error
+
+	if sortBy != "" {
+		sorting, err = SortingFromString(sortBy)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &ObjectFilters{
-		orderBy: orderBy,
-		search:  search,
-		slugs:   slugs,
+		sortBy: sorting,
+		search: search,
+		slugs:  slugs,
 	}, nil
 }
 
@@ -18,8 +30,8 @@ func (e *ObjectFilters) Search() *string {
 	return e.search
 }
 
-func (e *ObjectFilters) OrderBy() string {
-	return e.orderBy
+func (e *ObjectFilters) SortBy() Sorting {
+	return e.sortBy
 }
 
 func (e *ObjectFilters) Slugs() []string {

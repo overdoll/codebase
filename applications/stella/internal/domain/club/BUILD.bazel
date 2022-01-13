@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "club.go",
         "club_filters.go",
+        "club_filters_sorting.go",
         "club_member.go",
         "repository.go",
     ],

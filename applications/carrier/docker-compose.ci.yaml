@@ -9,7 +9,10 @@ services:
       - temporal
       - redis
     environment:
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}
+      - AWS_ENDPOINT=${AWS_ENDPOINT}
+      - AWS_REGION=${AWS_REGION}
     ports:
       - 5030:8080
     deploy:

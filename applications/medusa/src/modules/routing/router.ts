@@ -63,6 +63,7 @@ export interface PreparedEntry {
   routeData: Match
   id: string
   children?: JSX.Element
+  middleware?: Middleware[] | undefined
 }
 
 export interface RouterInit {
@@ -98,7 +99,7 @@ export interface RouterInstance {
 // The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
 // call will be made. If true, an API call will be made, and any other resolutions should be done within
 // the component where the API call is made
-const isRouteValid = (data, route: Route): boolean => {
+export const isRouteValid = (data, route: Route): boolean => {
   if (route.middleware != null) {
     for (let i = 0; i < route.middleware.length; i++) {
       // Middleware check failed
@@ -349,6 +350,7 @@ function prepareMatches (matches, prepareOptions, relayEnvironment): PreparedEnt
       dependencies: route.dependencies,
       prepared,
       routeData: matchData,
+      middleware: route.middleware,
       id: route.component.getModuleId()
     }
   })

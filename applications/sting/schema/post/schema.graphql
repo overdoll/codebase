@@ -27,6 +27,21 @@ type Post implements Node @key(fields: "id") {
 
   """The date at which this pending post will be reassigned"""
   reassignmentAt: Time
+
+  """Suggested posts for this post."""
+  suggestedPosts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
 }
 
 enum PostState {
@@ -145,19 +160,32 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-"""Ordering options for posts"""
-input PostsOrder {
-  """The field to order security advisories by."""
-  field: PostsOrderField!
-}
 
-"""Properties by which posts connections can be ordered."""
-enum PostsOrderField {
-  """Posts by update time"""
-  CREATED_AT
+"""Properties by which posts connections can be sorted."""
+enum PostsSort {
+  """Posts by newest first"""
+  NEW
+
+  """Posts by top likes"""
+  TOP
 }
 
 extend type Account {
+  """Posts feed for the clubs that the account currently is a member of."""
+  clubMembersPostsFeed(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
@@ -187,8 +215,8 @@ extend type Account {
     """Search by a post state."""
     state: PostState = REVIEW
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = NEW
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
@@ -220,8 +248,8 @@ extend type Account {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -258,6 +286,21 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Posts feed. The default."""
+  postsFeed(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+
   """Look up a single post"""
   post(
     """Look up a post by a reference #"""
@@ -293,8 +336,8 @@ extend type Query {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection!
 }
 
@@ -325,8 +368,8 @@ extend type Category {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -354,8 +397,8 @@ extend type Character {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -386,8 +429,8 @@ extend type Series {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -421,8 +464,8 @@ extend type Club {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -453,7 +496,7 @@ extend type Audience {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
-    """Ordering options for posts."""
-    orderBy: PostsOrder! = { field: CREATED_AT }
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
 }

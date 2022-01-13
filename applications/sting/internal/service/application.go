@@ -58,11 +58,11 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella command.StellaService, loader command.LoaderService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
-
 	client := bootstrap.InitializeElasticSearchSession()
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
+	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -83,6 +83,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
 			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, postIndexRepo, loader),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
+
+			LikePost:     command.NewLikePostHandler(postRepo),
+			UndoLikePost: command.NewUndoLikePostHandler(postRepo),
+
+			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
+			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
+			UpdateCurationProfileDateOfBirth: command.NewUpdateCurationProfileDateOfBirthHandler(personalizationRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
@@ -106,6 +113,14 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
+
+			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
+
+			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo),
+			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),
+			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(stella, postIndexRepo),
+
+			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
 	}

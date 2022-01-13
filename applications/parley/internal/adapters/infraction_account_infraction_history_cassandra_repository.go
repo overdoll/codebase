@@ -117,7 +117,9 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 	data := &accountInfractionHistory{AccountId: accountId}
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "id")
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
 	}
 
 	infractionHistoryQuery := builder.

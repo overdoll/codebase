@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go/service/ses"
 	"os"
 
-	"github.com/sendgrid/sendgrid-go"
 	"overdoll/applications/carrier/internal/adapters"
 	"overdoll/applications/carrier/internal/app"
 	"overdoll/applications/carrier/internal/app/command"
@@ -26,9 +26,10 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 func createApplication(ctx context.Context, eva command.EvaService) app.Application {
 
-	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
+	awsSession := bootstrap.InitializeAWSSession()
+	client := ses.New(awsSession)
 
-	mailingRepo := adapters.NewMailingSendgridRepository(client)
+	mailingRepo := adapters.NewMailingSESRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{

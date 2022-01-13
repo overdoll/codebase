@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -23,6 +22,8 @@ type categoryDocument struct {
 	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
 	CreatedAt           string            `json:"created_at"`
+	TotalLikes          int               `json:"total_likes"`
+	TotalPosts          int               `json:"total_posts"`
 }
 
 const categoryIndexProperties = `
@@ -35,6 +36,12 @@ const categoryIndexProperties = `
 	},
 	"thumbnail_resource_id": {
 		"type": "keyword"
+	},
+	"total_likes": {
+		"type": "integer"
+	},
+	"total_posts": {
+		"type": "integer"
 	},
 	"title":  ` + localization.ESIndex + `
 	"created_at": {
@@ -67,29 +74,28 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		ThumbnailResourceId: cat.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		TotalLikes:          cat.TotalLikes(),
+		TotalPosts:          cat.TotalPosts(),
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
+func (r PostsIndexElasticSearchRepository) IndexCategory(ctx context.Context, category *post.Category) error {
 
-	for _, category := range categories {
+	cat, err := marshalCategoryToDocument(category)
 
-		cat, err := marshalCategoryToDocument(category)
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			return err
-		}
+	_, err = r.client.
+		Index().
+		Index(categoryIndexName).
+		Id(category.ID()).
+		BodyJson(cat).
+		Do(ctx)
 
-		_, err = r.client.
-			Index().
-			Index(categoryIndexName).
-			Id(category.ID()).
-			BodyJson(cat).
-			Do(ctx)
-
-		if err != nil {
-			return fmt.Errorf("failed to index categories: %v", err)
-		}
+	if err != nil {
+		return fmt.Errorf("failed to index category: %v", err)
 	}
 
 	return nil
@@ -101,10 +107,28 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		Index(categoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == post.NewSort {
+		sortingColumn = "created_at"
+		sortingAscending = false
+	} else if filter.SortBy() == post.TopSort {
+		sortingColumn = "total_likes"
+		sortingAscending = false
+	} else if filter.SortBy() == post.PopularSort {
+		sortingColumn = "total_posts"
+		sortingAscending = false
+	}
+
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
 
 	if filter.Search() != nil {
 		query.Must(
@@ -140,8 +164,15 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
 		}
 
-		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.ThumbnailResourceId)
-		newCategory.Node = paging.NewNode(pst.CreatedAt)
+		newCategory := post.UnmarshalCategoryFromDatabase(
+			pst.Id,
+			pst.Slug,
+			pst.Title,
+			pst.ThumbnailResourceId,
+			pst.TotalLikes,
+			pst.TotalPosts,
+		)
+		newCategory.Node = paging.NewNode(hit.Sort)
 
 		cats = append(cats, newCategory)
 	}
@@ -177,6 +208,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 				ThumbnailResourceId: c.ThumbnailResourceId,
 				Title:               c.Title,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				TotalLikes:          c.TotalLikes,
 			}
 
 			_, err = r.client.

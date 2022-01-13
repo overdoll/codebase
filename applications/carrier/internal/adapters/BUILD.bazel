@@ -4,7 +4,7 @@ go_library(
     name = "adapters",
     srcs = [
         "eva_grpc.go",
-        "mailing_sendgrid_repository.go",
+        "mailing_ses_respository.go",
     ],
     importpath = "overdoll/applications/carrier/internal/adapters",
     visibility = ["//applications/carrier:__subpackages__"],
@@ -12,8 +12,8 @@ go_library(
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
         "//applications/eva/proto:v1_go_proto",
-        "@com_github_sendgrid_sendgrid_go//:sendgrid-go",
-        "@com_github_sendgrid_sendgrid_go//helpers/mail",
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//service/ses",
         "@org_uber_go_zap//:zap",
     ],
 )

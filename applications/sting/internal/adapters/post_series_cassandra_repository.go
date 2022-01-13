@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"overdoll/libraries/localization"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -18,6 +19,8 @@ var seriesTable = table.New(table.Metadata{
 		"slug",
 		"title",
 		"thumbnail_resource_ids",
+		"total_likes",
+		"total_posts",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -28,6 +31,8 @@ type series struct {
 	Slug                string            `db:"slug"`
 	Title               map[string]string `db:"title"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	TotalLikes          int               `db:"total_likes"`
+	TotalPosts          int               `db:"total_posts"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -43,6 +48,17 @@ var seriesSlugTable = table.New(table.Metadata{
 type seriesSlug struct {
 	SeriesId string `db:"series_id"`
 	Slug     string `db:"slug"`
+}
+
+func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
+	return &series{
+		Id:                  pending.ID(),
+		Slug:                pending.Slug(),
+		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResourceId: pending.ThumbnailResourceId(),
+		TotalLikes:          pending.TotalLikes(),
+		TotalPosts:          pending.TotalPosts(),
+	}, nil
 }
 
 func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
@@ -78,6 +94,10 @@ func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester
 }
 
 func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
+	return r.getSingleSeriesById(ctx, seriesId)
+}
+
+func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(seriesTable.Get()).
@@ -100,6 +120,8 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 		med.Slug,
 		med.Title,
 		med.ThumbnailResourceId,
+		med.TotalLikes,
+		med.TotalPosts,
 	), nil
 }
 
@@ -130,8 +152,52 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 			med.Slug,
 			med.Title,
 			med.ThumbnailResourceId,
+			med.TotalLikes,
+			med.TotalPosts,
 		))
 	}
 
 	return medias, nil
+}
+
+func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, updateFn func(series *post.Series) error, columns []string) (*post.Series, error) {
+
+	series, err := r.getSingleSeriesById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(series)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalSeriesToDatabase(series)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateSeriesTable := r.session.
+		Query(seriesTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst)
+
+	if err := updateSeriesTable.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update series: %v", err)
+	}
+
+	return series, nil
+}
+
+func (r PostsCassandraRepository) UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"total_likes"})
 }

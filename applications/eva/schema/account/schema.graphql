@@ -53,6 +53,12 @@ type UnlockAccountPayload {
   account: Account
 }
 
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
+}
+
 extend type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
@@ -89,5 +95,8 @@ extend type Query {
 
     """Filter by the account username."""
     username: String
+
+    """Sorting options for accounts."""
+    sortBy: AccountsSort! = NEW
   ): AccountConnection!
 }

@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -67,19 +66,29 @@ func NewAccountIndexElasticSearchRepository(client *elastic.Client, session gocq
 	return AccountIndexElasticSearchRepository{session: session, client: client}
 }
 
-func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string) ([]*account.Account, error) {
+func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, filter *account.Filters) ([]*account.Account, error) {
 
 	builder := r.client.Search().
 		Index(accountIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
+		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	var sortingColumn string
 
-	if username != "" {
-		query.Must(elastic.NewMatchQuery("username", username))
+	if filter.SortBy() == account.NewSort {
+		sortingColumn = "created_at"
+	}
+
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", true); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	if filter.Username() != nil {
+		query.Must(elastic.NewMatchQuery("username", *filter.Username()))
 	}
 
 	builder.Query(query)
@@ -104,7 +113,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
 		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.AvatarResourceId, "", false, 0, "", false, time.Now())
-		acc.Node = paging.NewNode(ac.CreatedAt)
+		acc.Node = paging.NewNode(hit.Sort)
 
 		accounts = append(accounts, acc)
 

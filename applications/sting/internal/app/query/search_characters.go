@@ -12,7 +12,7 @@ type SearchCharacters struct {
 	Principal  *principal.Principal
 	Cursor     *paging.Cursor
 	Slugs      []string
-	OrderBy    string
+	SortBy     string
 	Name       *string
 	SeriesSlug *string
 }
@@ -29,7 +29,7 @@ func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharact
 
 	filters, err := post.NewCharacterFilters(
 		query.Name,
-		query.OrderBy,
+		query.SortBy,
 		query.Slugs,
 		query.SeriesSlug,
 	)

@@ -183,7 +183,9 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 	builder := qb.Select(postReportByPostTable.Name()).
 		Where(qb.In("bucket"), qb.Eq("post_id"))
 
-	cursor.BuildCassandra(builder, "id")
+	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+		return nil, err
+	}
 
 	var results []*postReport
 

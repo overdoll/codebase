@@ -2,10 +2,6 @@ import { generateEmailFromExistingUsername, generateUsernameAndEmail } from '../
 import { join } from '../../support/join_actions'
 
 describe('Join', () => {
-  before(() => {
-    cy.validateEmailServerIsConfigured()
-  })
-
   it('check join on existing account', () => {
     const email = generateEmailFromExistingUsername('artist_verified')
 

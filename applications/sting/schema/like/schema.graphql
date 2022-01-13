@@ -1,0 +1,57 @@
+type PostLike implements Node @key(fields: "id") {
+  """An ID uniquely identifying this like."""
+  id: ID!
+
+  """The time and date at which the post was liked."""
+  likedAt: Time!
+
+  """The post this like belongs to."""
+  post: Post!
+
+  """The account this like belongs to"""
+  account: Account!
+}
+
+"""Undo like on a post."""
+input UndoLikePostInput {
+  """The post ID that you want to unlike"""
+  postId: ID!
+}
+
+"""Like a post."""
+input LikePostInput {
+  """The post ID that you want to like"""
+  postId: ID!
+}
+
+"""Payload for the liked post"""
+type LikePostPayload {
+  """The new PostLike entry."""
+  postLike: PostLike
+}
+
+"""Payload for undoing a post like"""
+type UndoLikePostPayload {
+  """The post like that was deleted."""
+  postLikeId: ID
+}
+
+extend type Post {
+  """The amount of likes on this post."""
+  likes: Int!
+
+  """Whether or not the viewer liked this post."""
+  viewerLiked: PostLike @goField(forceResolver: true)
+}
+
+extend type Mutation {
+  """
+  Like a post
+  """
+  likePost(input: LikePostInput!): LikePostPayload
+
+  """
+  Undo a like on a post
+  """
+  undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
+}

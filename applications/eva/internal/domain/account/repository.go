@@ -24,7 +24,7 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string) ([]*Account, error)
+	SearchAccounts(ctx context.Context, cursor *paging.Cursor, filter *Filters) ([]*Account, error)
 	IndexAllAccounts(ctx context.Context) error
 	DeleteAccountIndex(ctx context.Context) error
 }

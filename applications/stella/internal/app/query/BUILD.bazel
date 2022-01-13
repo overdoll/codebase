@@ -6,6 +6,7 @@ go_library(
         "account_club_memberships.go",
         "account_club_memberships_count.go",
         "account_club_memberships_limit.go",
+        "account_club_memberships_operator.go",
         "account_clubs_count.go",
         "account_clubs_limit.go",
         "can_account_post_under_club.go",

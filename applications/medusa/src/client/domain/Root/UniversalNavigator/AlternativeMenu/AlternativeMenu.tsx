@@ -1,4 +1,4 @@
-import { CogDouble, LoginKeys, PageControllerSettings } from '@//:assets/icons/navigation'
+import { CogDouble, LoginKeys, PageControllerSettings, SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
@@ -6,7 +6,6 @@ import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/Horiz
 import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
-import DropdownMenuButtonLogout from './DropdownMenuButtonLogout/DropdownMenuButtonLogout'
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 import LanguageManager from './LanguageManager/LanguageManager'
@@ -101,7 +100,16 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
               </Trans>
             }
           />
-          <DropdownMenuButtonLogout />
+          <HorizontalNavigationDropdownMenu.Button
+            to='/logout'
+            color='orange.300'
+            icon={SafetyExitDoorLeft}
+            label={
+              <Trans>
+                Log Out
+              </Trans>
+            }
+          />
         </Can>
         <RenderOnMobile>
           <Suspense fallback={

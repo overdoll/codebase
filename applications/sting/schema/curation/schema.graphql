@@ -1,0 +1,116 @@
+type DateOfBirthCurationProfile {
+  """Whether or not the date of birth section was skipped."""
+  skipped: Boolean!
+
+  """Whether or not the date of birth section was completed."""
+  completed: Boolean!
+
+  """The date of birth set."""
+  dateOfBirth: Time
+}
+
+type AudienceCurationProfile {
+  """Whether or not the audience section was completed."""
+  completed: Boolean!
+
+  """Whether or not the audience section was skipped."""
+  skipped: Boolean!
+
+  """Audiences selected for this section."""
+  audiences: [Audience!]!
+}
+
+type CategoryCurationProfile {
+  """Whether or not the category section was completed."""
+  completed: Boolean!
+
+  """Whether or not the category section was skipped."""
+  skipped: Boolean!
+
+  """Categories selected for this section."""
+  categories: [Category!]!
+}
+
+type CurationProfile {
+  """An ID uniquely identifying this profile."""
+  id: ID!
+
+  """If the whole profile was completed or not."""
+  completed: Boolean!
+
+  """The date of birth profile."""
+  dateOfBirth: DateOfBirthCurationProfile!
+
+  """The audience profile."""
+  audience: AudienceCurationProfile!
+
+  """The category profile."""
+  category: CategoryCurationProfile!
+}
+
+extend type Account {
+  """The curation profile linked to this account."""
+  curationProfile: CurationProfile! @goField(forceResolver: true)
+}
+
+"""Update curation profile audience."""
+input UpdateCurationProfileAudienceInput {
+  """The audiences that were selected"""
+  audienceIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update curation profile category."""
+input UpdateCurationProfileCategoryInput {
+  """The categories that were selected"""
+  categoryIds: [ID!]!
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Update curation profile date of birth."""
+input UpdateCurationProfileDateOfBirthInput {
+  """The date of birth that was selected"""
+  dateOfBirth: Time
+
+  """Whether or not this section was skipped"""
+  skipped: Boolean!
+}
+
+"""Payload for updating profile audience"""
+type UpdateCurationProfileAudiencePayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
+}
+
+"""Payload for updating profile category"""
+type UpdateCurationProfileCategoryPayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
+}
+
+"""Payload for updating profile date of birth"""
+type UpdateCurationProfileDateOfBirthPayload {
+  """The updated profile."""
+  curationProfile: CurationProfile
+}
+
+extend type Mutation {
+  """
+  Update the audience for the curation profile
+  """
+  updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
+
+  """
+  Update the category for the curation profile
+  """
+  updateCurationProfileCategory(input: UpdateCurationProfileCategoryInput!): UpdateCurationProfileCategoryPayload
+
+  """
+  Update the date of birth for the curation profile
+  """
+  updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
+}

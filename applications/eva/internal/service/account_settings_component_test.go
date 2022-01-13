@@ -183,16 +183,9 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	settings = viewerAccountEmailSettings(t, client)
 
-	foundNewEmail := false
+	require.Len(t, settings.Viewer.Emails.Edges, 1, "only 1 email should be present")
 
-	// go through account settings and make sure email is not found
-	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail {
-			foundNewEmail = true
-		}
-	}
-
-	require.False(t, foundNewEmail, "should not have found an email as part of the viewer's emails")
+	require.NotEqualf(t, targetEmail, settings.Viewer.Emails.Edges[0].Node.Email, "should not have found an email as part of the viewer's emails")
 }
 
 func TestAccountEmailAndUsernameLimit(t *testing.T) {
@@ -270,7 +263,8 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	ip := "127.0.0.1"
 
-	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+	newAcc := seedNormalAccount(t)
+	testAccountId := newAcc.ID()
 
 	grpcClient, ctx := getGrpcClientWithAuthenticatedAccount(t, testAccountId)
 
@@ -290,18 +284,8 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	// query account settings once more
 	settings := viewerAccountEmailSettings(t, client)
 
-	foundSession := false
-	var sessionId relay.ID
-
-	// go through sessions and find by IP
-	for _, sess := range settings.Viewer.Sessions.Edges {
-		if sess.Node.IP == ip {
-			foundSession = true
-			sessionId = sess.Node.ID
-		}
-	}
-
-	require.True(t, foundSession, "should have found a matching session")
+	require.Equal(t, ip, settings.Viewer.Sessions.Edges[0].Node.IP, "should have found a matching session")
+	sessionId := settings.Viewer.Sessions.Edges[0].Node.ID
 
 	var revokeAccountSession RevokeAccountSession
 
@@ -315,17 +299,8 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	// now test to make sure the session does not exist
 	settings = viewerAccountEmailSettings(t, client)
-	foundSession = false
 
-	for _, sess := range settings.Viewer.Sessions.Edges {
-		if sess.Node.ID == sessionId {
-			foundSession = true
-		}
-	}
-
-	// make sure its false
-	require.False(t, foundSession, "session should not have been found")
-
+	require.Len(t, settings.Viewer.Sessions.Edges, 0, "should have no sessions in list")
 }
 
 func TestAccountSessions_view_and_revoke_remote(t *testing.T) {

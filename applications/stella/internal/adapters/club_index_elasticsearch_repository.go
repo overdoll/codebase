@@ -125,7 +125,23 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	var sortingColumn string
+	var sortingAscending bool
+
+	if filter.SortBy() == club.PopularSort {
+		sortingColumn = "members_count"
+		sortingAscending = false
+	}
+
+	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
 
 	if filter.OwnerAccountId() != nil {
 		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))

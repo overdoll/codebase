@@ -9,6 +9,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"strings"
 )
 
 type AccountResolver struct {
@@ -75,7 +76,7 @@ func (r AccountResolver) ClubMembershipsCount(ctx context.Context, obj *types.Ac
 	return results, nil
 }
 
-func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.ClubsOrder) (*types.ClubConnection, error) {
+func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -94,7 +95,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 		Cursor:         cursor,
 		OwnerAccountId: &accountId,
 		Name:           name,
-		OrderBy:        orderBy.Field.String(),
+		SortBy:         strings.ToLower(sortBy.String()),
 		Slugs:          slugs,
 	})
 
@@ -105,7 +106,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 	return types.MarshalClubsToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, orderBy types.ClubMembersOrder) (*types.ClubMemberConnection, error) {
+func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err

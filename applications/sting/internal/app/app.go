@@ -30,6 +30,13 @@ type Commands struct {
 	IndexAllSeries     command.IndexAllSeriesHandler
 	IndexAllAudience   command.IndexAllAudienceHandler
 	IndexAllPosts      command.IndexAllPostsHandler
+
+	LikePost     command.LikePostHandler
+	UndoLikePost command.UndoLikePostHandler
+
+	UpdateCurationProfileAudience    command.UpdateCurationProfileAudienceHandler
+	UpdateCurationProfileCategory    command.UpdateCurationProfileCategoryHandler
+	UpdateCurationProfileDateOfBirth command.UpdateCurationProfileDateOfBirthHandler
 }
 
 type Queries struct {
@@ -54,4 +61,12 @@ type Queries struct {
 	SearchAudience query.SearchAudienceHandler
 	AudienceBySlug query.AudienceBySlugHandler
 	AudienceById   query.AudienceByIdHandler
+
+	PostLikeById query.PostLikeByIdHandler
+
+	CurationProfileByAccountId query.CurationProfileByAccountIdHandler
+
+	PostsFeed             query.PostsFeedHandler
+	SuggestedPostsForPost query.SuggestedPostsForPostHandler
+	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
 }

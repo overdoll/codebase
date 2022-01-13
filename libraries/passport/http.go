@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -141,8 +142,10 @@ func fromResponse(res *http.Response) (*Passport, error) {
 			return nil, err
 		}
 
-		//newBody, _ := sjson.Delete(string(bd), bodyKey)
-		//res.Body = ioutil.NopCloser(bytes.NewBufferString(newBody))
+		newBody, _ := sjson.Delete(string(bd), bodyKey)
+		buff := bytes.NewBufferString(newBody)
+		res.Body = ioutil.NopCloser(buff)
+		res.Header.Set("Content-Length", strconv.Itoa(buff.Len()))
 
 		return pass, nil
 	}

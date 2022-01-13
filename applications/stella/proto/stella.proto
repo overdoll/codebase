@@ -11,6 +11,15 @@ message CanAccountPostUnderClubResponse {
   bool allowed = 1;
 }
 
+message GetAccountClubMembershipIdsRequest {
+  string accountId = 1;
+}
+
+message GetAccountClubMembershipIdsResponse {
+  repeated string clubIds = 1;
+}
+
 service Stella {
   rpc CanAccountPostUnderClub(CanAccountPostUnderClubRequest) returns (CanAccountPostUnderClubResponse);
+  rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }

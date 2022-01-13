@@ -299,7 +299,9 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		info["post_id"] = *filter.PostId()
 	}
 
-	cursor.BuildCassandra(builder, "id")
+	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+		return nil, err
+	}
 
 	var results []*postAuditLogByModerator
 

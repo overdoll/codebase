@@ -3,6 +3,7 @@ package resource
 import (
 	"errors"
 	"fmt"
+	"github.com/CapsLock-Studio/go-webpbin"
 	"image"
 	_ "image/png"
 	"io"

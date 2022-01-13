@@ -20,7 +20,7 @@ const Query = graphql`
   query ViewClubQuery($slug: String!) {
     club(slug: $slug) {
       membersCount
-      members(first: 4, orderBy: {field: JOINED_AT}) {
+      members(first: 4, sortBy: NEWEST) {
         edges {
           node {
             account {

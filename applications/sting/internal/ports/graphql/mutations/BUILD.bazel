@@ -3,7 +3,9 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mutations",
     srcs = [
+        "curation_profile.go",
         "post.go",
+        "post_like.go",
         "resolvers.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/mutations",
@@ -13,6 +15,7 @@ go_library(
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/principal",
         "@com_github_spf13_viper//:viper",

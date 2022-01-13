@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Brand/Brand.tsx:63
-#~ msgid "A brand is the artist or group of artists that created the content that belongs to the post."
-#~ msgstr ""
-
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:86
 msgid "Add categories"
 msgstr ""
@@ -56,10 +52,6 @@ msgstr ""
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:85
 msgid "Before you can upload, you need to select a club from the list above."
 msgstr ""
-
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Brand/Brand.tsx:70
-#~ msgid "Brands are an easy way to manage your content and allow you to have a unique link that can be shared anywhere."
-#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:145
 msgid "Change"
@@ -109,10 +101,6 @@ msgstr ""
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:46
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
-
-#: src/client/domain/CreatePost/FileUploader/content/PostCreator/UpdatePostFlow/FlowSteps/Brand/Brand.tsx:70
-#~ msgid "ManageClubs are an easy way to manage your content and allow you to have a unique link that can be shared anywhere."
-#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:141
 msgid "My Content"
@@ -188,10 +176,6 @@ msgstr ""
 msgid "Select A Club"
 msgstr ""
 
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:82
-#~ msgid "Select a brand"
-#~ msgstr ""
-
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:84
 msgid "Select an audience"
 msgstr ""
@@ -228,10 +212,6 @@ msgstr ""
 msgid "Step 5"
 msgstr ""
 
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:88
-#~ msgid "Step 6"
-#~ msgstr ""
-
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:90
 msgid "Submit"
 msgstr ""
@@ -255,10 +235,6 @@ msgstr ""
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:78
 msgid "There was an error saving the audience"
 msgstr ""
-
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateBrandButton/UpdateBrandButton.tsx:77
-#~ msgid "There was an error saving the brand"
-#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:93
 msgid "There was an error saving the categories"
@@ -285,10 +261,6 @@ msgstr ""
 msgid "Upload Files"
 msgstr ""
 
-#: src/client/domain/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:110
-#~ msgid "Upload one or more files by dragging and dropping them"
-#~ msgstr ""
-
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:120
 msgid "Upload one or more files by dragging and dropping them or by clicking here"
 msgstr ""
@@ -296,10 +268,6 @@ msgstr ""
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/PostCreator.tsx:72
 msgid "Upstanding netizens shall read all the rules before posting"
 msgstr ""
-
-#: src/client/domain/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Brand/Brand.tsx:58
-#~ msgid "What is the brand?"
-#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:89
 msgid "Who is in your post?"

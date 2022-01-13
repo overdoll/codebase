@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	maxClubMembersPerPartition   = 25000
-	initialClubMembersPartitions = 10
+	maxClubMembersPerPartition   = 10000
+	initialClubMembersPartitions = 2
 )
 
 var (
@@ -398,6 +398,31 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 	return r.updateClubMemberCount(ctx, clubId, clubMembersPartitionSums.SumMembersCount)
 }
 
+func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*club.Member, error) {
+
+	queryClubMemberships := clubMembersByAccountTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubMembersByAccount{
+			MemberAccountId: accountId,
+		})
+
+	var accountClubs []*clubMembersByAccount
+
+	if err := queryClubMemberships.Select(&accountClubs); err != nil {
+		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	var members []*club.Member
+
+	for _, clb := range accountClubs {
+		members = append(members, club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time()))
+	}
+
+	return members, nil
+}
+
 func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club.Member, error) {
 
 	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
@@ -407,7 +432,9 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 	builder := clubMembersByAccountTable.SelectBuilder()
 
 	if cursor != nil {
-		cursor.BuildCassandra(builder, "joined_at")
+		if err := cursor.BuildCassandra(builder, "joined_at", true); err != nil {
+			return nil, err
+		}
 	}
 
 	queryClubMemberships := builder.Query(r.session).
@@ -426,8 +453,8 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 
 	for _, clb := range accountClubs {
 		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time())
-		members = append(members, em)
 		em.Node = paging.NewNode(clb.JoinedAt.String())
+		members = append(members, em)
 	}
 
 	return members, nil
@@ -498,10 +525,14 @@ func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, c
 }
 
 func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
+
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
 	// get first partition
-	getFirstPartition := clubMembersPartitionsTable.
+	getAllPartitions := clubMembersPartitionsTable.
 		SelectBuilder().
-		Limit(1).
 		Query(r.session).
 		BindStruct(clubMembersPartition{
 			ClubId: clubId,
@@ -509,56 +540,72 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 
 	var partitions []clubMembersPartition
 
-	if err := getFirstPartition.Select(&partitions); err != nil {
-		return nil, fmt.Errorf("failed to get first partition: %v", err)
+	if err := getAllPartitions.Select(&partitions); err != nil {
+		return nil, fmt.Errorf("failed to get partitions: %v", err)
 	}
 
-	if len(partitions) != 1 {
+	if len(partitions) == 0 {
 		return nil, errors.New("no partitions found for grabbing members")
 	}
 
-	// get first partition
-	partition := partitions[0]
-
-	builder := clubMembersByClubTable.
-		SelectBuilder()
-
-	if cursor != nil {
-		if cursor.After() != nil {
-			builder.Where(qb.LtLit("joined_at", *cursor.After()))
-		}
-
-		if cursor.Before() != nil {
-			builder.Where(qb.GtLit("joined_at", *cursor.Before()))
-		}
-
-		limit := cursor.GetLimit()
-
-		if limit > 0 {
-			builder.Limit(uint(limit))
+	var afterValue gocql.UUID
+	if cursor.After() != nil {
+		if err := cursor.After().Decode(&afterValue); err != nil {
+			return nil, err
 		}
 	}
 
-	var clubMembers []clubMemberByClub
-
-	// then, using the last timestamp, count the number of new rows since then
-	getMembers := builder.
-		Query(r.session).
-		BindStruct(clubMemberByClub{
-			ClubId: partition.ClubId,
-			Bucket: partition.Bucket,
-		})
-
-	if err := getMembers.Select(&clubMembers); err != nil {
-		return nil, fmt.Errorf("failed to get club members: %v", err)
+	var beforeValue gocql.UUID
+	if cursor.Before() != nil {
+		if err := cursor.Before().Decode(&beforeValue); err != nil {
+			return nil, err
+		}
 	}
 
 	var members []*club.Member
 
-	for _, member := range clubMembers {
-		em := club.UnmarshalMemberFromDatabase(member.MemberAccountId, member.ClubId, member.JoinedAt.Time())
-		members = append(members, em)
-		em.Node = paging.NewNode(member.JoinedAt.String())
+	for _, partition := range partitions {
+
+		builder := clubMembersByClubTable.
+			SelectBuilder()
+
+		if err := cursor.BuildCassandra(builder, "joined_at", true); err != nil {
+			return nil, err
+		}
+
+		memberClubLookup := clubMemberByClub{
+			ClubId: partition.ClubId,
+			Bucket: partition.Bucket,
+		}
+
+		if cursor.Before() != nil {
+			memberClubLookup.JoinedAt = beforeValue
+		}
+
+		if cursor.After() != nil {
+			memberClubLookup.JoinedAt = afterValue
+		}
+
+		var clubMembers []clubMemberByClub
+
+		// then, using the last timestamp, count the number of new rows since then
+		getMembers := builder.
+			Query(r.session).
+			BindStruct(memberClubLookup)
+
+		if err := getMembers.Select(&clubMembers); err != nil {
+			return nil, fmt.Errorf("failed to get club members: %v", err)
+		}
+
+		for _, member := range clubMembers {
+			em := club.UnmarshalMemberFromDatabase(member.MemberAccountId, member.ClubId, member.JoinedAt.Time())
+			members = append(members, em)
+			em.Node = paging.NewNode(member.JoinedAt)
+		}
+
+		if cursor.GetLimit() == len(members) {
+			break
+		}
 	}
 
 	return members, nil

@@ -132,6 +132,41 @@ const routes: Route[] = [
     },
     routes: [
       {
+        path: '/logout',
+        exact: true,
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Logout/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        component: loadable(async () =>
+          await import(
+            './domain/Logout/Logout'
+          )
+        ),
+        // When user is logged in, we just want to redirect them since they're already "logged in"
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'Account')) {
+              return true
+            }
+
+            history.push('/')
+            return false
+          }
+        ]
+      },
+      {
         path: '/join',
         exact: true,
         dependencies: [

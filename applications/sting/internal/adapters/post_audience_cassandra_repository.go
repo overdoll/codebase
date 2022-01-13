@@ -3,10 +3,10 @@ package adapters
 import (
 	"context"
 	"fmt"
-
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
 )
 
@@ -18,6 +18,8 @@ var audienceTable = table.New(table.Metadata{
 		"title",
 		"thumbnail_resource_id",
 		"standard",
+		"total_likes",
+		"total_posts",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -29,6 +31,8 @@ type audience struct {
 	Title               map[string]string `db:"title"`
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 	Standard            int               `db:"standard"`
+	TotalLikes          int               `db:"total_likes"`
+	TotalPosts          int               `db:"total_posts"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{
@@ -44,6 +48,25 @@ var audienceSlugTable = table.New(table.Metadata{
 type audienceSlug struct {
 	AudienceId string `db:"audience_id"`
 	Slug       string `db:"slug"`
+}
+
+func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
+
+	standard := 0
+
+	if pending.IsStandard() {
+		standard = 1
+	}
+
+	return &audience{
+		Id:                  pending.ID(),
+		Slug:                pending.Slug(),
+		Standard:            standard,
+		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResourceId: pending.ThumbnailResourceId(),
+		TotalLikes:          pending.TotalLikes(),
+		TotalPosts:          pending.TotalPosts(),
+	}, nil
 }
 
 func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
@@ -67,7 +90,7 @@ func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, request
 	return r.GetAudienceById(ctx, requester, b.AudienceId)
 }
 
-func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
 
 	queryAudience := r.session.
 		Query(audienceTable.Get()).
@@ -91,5 +114,82 @@ func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester
 		b.Title,
 		b.ThumbnailResourceId,
 		b.Standard,
+		b.TotalLikes,
+		b.TotalPosts,
 	), nil
+}
+
+func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
+	return r.getAudienceById(ctx, audienceId)
+}
+
+func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *principal.Principal) ([]*post.Audience, error) {
+
+	queryAudiences := r.session.
+		Query(audienceTable.SelectAll()).
+		Consistency(gocql.One)
+
+	var res []audience
+
+	if err := queryAudiences.Select(&res); err != nil {
+		return nil, fmt.Errorf("failed to get audiences: %v", err)
+	}
+
+	var results []*post.Audience
+
+	for _, b := range res {
+		results = append(results, post.UnmarshalAudienceFromDatabase(
+			b.Id,
+			b.Slug,
+			b.Title,
+			b.ThumbnailResourceId,
+			b.Standard,
+			b.TotalLikes,
+			b.TotalPosts,
+		))
+	}
+
+	return results, nil
+}
+
+func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string, updateFn func(audience *post.Audience) error, columns []string) (*post.Audience, error) {
+
+	aud, err := r.getAudienceById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(aud)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalAudienceToDatabase(aud)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateAudTable := r.session.
+		Query(audienceTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst)
+
+	if err := updateAudTable.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update audience: %v", err)
+	}
+
+	return aud, nil
+}
+
+func (r PostsCassandraRepository) UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"total_likes"})
 }

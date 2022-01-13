@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b416b06c1ba5050af53f6a1bb2b495e8 */
+/* @relayHash 38494491e0c05286a05f74fbceeca54a */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -41,7 +41,7 @@ query ViewClubQuery(
 ) {
   club(slug: $slug) {
     membersCount
-    members(first: 4, orderBy: {field: JOINED_AT}) {
+    members(first: 4, sortBy: NEWEST) {
       edges {
         node {
           account {
@@ -171,10 +171,8 @@ v3 = [
   },
   {
     "kind": "Literal",
-    "name": "orderBy",
-    "value": {
-      "field": "JOINED_AT"
-    }
+    "name": "sortBy",
+    "value": "NEWEST"
   }
 ],
 v4 = {
@@ -307,7 +305,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "members(first:4,orderBy:{\"field\":\"JOINED_AT\"})"
+            "storageKey": "members(first:4,sortBy:\"NEWEST\")"
           },
           {
             "args": null,
@@ -416,7 +414,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "members(first:4,orderBy:{\"field\":\"JOINED_AT\"})"
+            "storageKey": "members(first:4,sortBy:\"NEWEST\")"
           },
           {
             "alias": null,
@@ -574,7 +572,7 @@ return {
     ]
   },
   "params": {
-    "id": "b416b06c1ba5050af53f6a1bb2b495e8",
+    "id": "38494491e0c05286a05f74fbceeca54a",
     "metadata": {},
     "name": "ViewClubQuery",
     "operationKind": "query",
@@ -582,5 +580,5 @@ return {
   }
 };
 })();
-(node as any).hash = '8c711c064aab3acf1a47c4b0b7c4a0e9';
+(node as any).hash = '393d1553de75d0786b30c4e4aa716e9b';
 export default node;

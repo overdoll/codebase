@@ -11,6 +11,10 @@ import (
 )
 
 type Account struct {
+	// The curation profile linked to this account.
+	CurationProfile *CurationProfile `json:"curationProfile"`
+	// Posts feed for the clubs that the account currently is a member of.
+	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
@@ -23,12 +27,16 @@ func (Account) IsEntity() {}
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
-	// A url-friendly ID. Should be used when searching
+	// A url-friendly ID. Should be used when searching.
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
+	// Total amount of likes.
+	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this audience
 	Posts *PostConnection `json:"posts"`
 }
@@ -41,21 +49,18 @@ type AudienceConnection struct {
 	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
+type AudienceCurationProfile struct {
+	// Whether or not the audience section was completed.
+	Completed bool `json:"completed"`
+	// Whether or not the audience section was skipped.
+	Skipped bool `json:"skipped"`
+	// Audiences selected for this section.
+	Audiences []*Audience `json:"audiences"`
+}
+
 type AudienceEdge struct {
 	Cursor string    `json:"cursor"`
 	Node   *Audience `json:"node"`
-}
-
-// Ordering options for audiences
-type AudiencesOrder struct {
-	// The field to order audiences by.
-	Field AudiencesOrderField `json:"field"`
-}
-
-// Ordering options for categories
-type CategoriesOrder struct {
-	// The field to order categories by.
-	Field CategoriesOrderField `json:"field"`
 }
 
 type Category struct {
@@ -67,6 +72,10 @@ type Category struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
+	// Total amount of likes.
+	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this category
 	Posts *PostConnection `json:"posts"`
 }
@@ -77,6 +86,15 @@ func (Category) IsEntity() {}
 type CategoryConnection struct {
 	Edges    []*CategoryEdge `json:"edges"`
 	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type CategoryCurationProfile struct {
+	// Whether or not the category section was completed.
+	Completed bool `json:"completed"`
+	// Whether or not the category section was skipped.
+	Skipped bool `json:"skipped"`
+	// Categories selected for this section.
+	Categories []*Category `json:"categories"`
 }
 
 type CategoryEdge struct {
@@ -93,6 +111,10 @@ type Character struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
+	// Total amount of likes.
+	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// The series linked to this character.
 	Series *Series `json:"series"`
 	// Posts belonging to this character
@@ -110,12 +132,6 @@ type CharacterConnection struct {
 type CharacterEdge struct {
 	Cursor string     `json:"cursor"`
 	Node   *Character `json:"node"`
-}
-
-// Ordering options for characters
-type CharactersOrder struct {
-	// The field to order characters by.
-	Field CharactersOrderField `json:"field"`
 }
 
 type Club struct {
@@ -138,6 +154,40 @@ type CreatePostPayload struct {
 	Post *Post `json:"post"`
 }
 
+type CurationProfile struct {
+	// An ID uniquely identifying this profile.
+	ID relay.ID `json:"id"`
+	// If the whole profile was completed or not.
+	Completed bool `json:"completed"`
+	// The date of birth profile.
+	DateOfBirth *DateOfBirthCurationProfile `json:"dateOfBirth"`
+	// The audience profile.
+	Audience *AudienceCurationProfile `json:"audience"`
+	// The category profile.
+	Category *CategoryCurationProfile `json:"category"`
+}
+
+type DateOfBirthCurationProfile struct {
+	// Whether or not the date of birth section was skipped.
+	Skipped bool `json:"skipped"`
+	// Whether or not the date of birth section was completed.
+	Completed bool `json:"completed"`
+	// The date of birth set.
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+}
+
+// Like a post.
+type LikePostInput struct {
+	// The post ID that you want to like
+	PostID relay.ID `json:"postId"`
+}
+
+// Payload for the liked post
+type LikePostPayload struct {
+	// The new PostLike entry.
+	PostLike *PostLike `json:"postLike"`
+}
+
 type Post struct {
 	ID relay.ID `json:"id"`
 	// The reference of this post. Should always be used to reference this post.
@@ -158,12 +208,18 @@ type Post struct {
 	PostedAt *time.Time `json:"postedAt"`
 	// The date at which this pending post will be reassigned
 	ReassignmentAt *time.Time `json:"reassignmentAt"`
+	// Suggested posts for this post.
+	SuggestedPosts *PostConnection `json:"suggestedPosts"`
 	// Represents the audience that this post belongs to
 	Audience *Audience `json:"audience"`
 	// Categories that belong to this post
 	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
 	Characters []*Character `json:"characters"`
+	// The amount of likes on this post.
+	Likes int `json:"likes"`
+	// Whether or not the viewer liked this post.
+	ViewerLiked *PostLike `json:"viewerLiked"`
 }
 
 func (Post) IsNode()   {}
@@ -179,11 +235,19 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
-// Ordering options for posts
-type PostsOrder struct {
-	// The field to order security advisories by.
-	Field PostsOrderField `json:"field"`
+type PostLike struct {
+	// An ID uniquely identifying this like.
+	ID relay.ID `json:"id"`
+	// The time and date at which the post was liked.
+	LikedAt time.Time `json:"likedAt"`
+	// The post this like belongs to.
+	Post *Post `json:"post"`
+	// The account this like belongs to
+	Account *Account `json:"account"`
 }
+
+func (PostLike) IsNode()   {}
+func (PostLike) IsEntity() {}
 
 type Resource struct {
 	ID relay.ID `json:"id"`
@@ -200,6 +264,10 @@ type Series struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this series.
 	Title string `json:"title"`
+	// Total amount of likes.
+	TotalLikes int `json:"totalLikes"`
+	// Total amount of posts.
+	TotalPosts int `json:"totalPosts"`
 	// Posts belonging to this series
 	Posts *PostConnection `json:"posts"`
 }
@@ -217,12 +285,6 @@ type SeriesEdge struct {
 	Node   *Series `json:"node"`
 }
 
-// Ordering options for series
-type SeriesOrder struct {
-	// The field to order series by.
-	Field SeriesOrderField `json:"field"`
-}
-
 // Publish post.
 type SubmitPostInput struct {
 	// The post to publish
@@ -235,6 +297,60 @@ type SubmitPostPayload struct {
 	Post *Post `json:"post"`
 	// Whether or not the submitted post is going in review
 	InReview *bool `json:"inReview"`
+}
+
+// Undo like on a post.
+type UndoLikePostInput struct {
+	// The post ID that you want to unlike
+	PostID relay.ID `json:"postId"`
+}
+
+// Payload for undoing a post like
+type UndoLikePostPayload struct {
+	// The post like that was deleted.
+	PostLikeID *relay.ID `json:"postLikeId"`
+}
+
+// Update curation profile audience.
+type UpdateCurationProfileAudienceInput struct {
+	// The audiences that were selected
+	AudienceIds []relay.ID `json:"audienceIds"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile audience
+type UpdateCurationProfileAudiencePayload struct {
+	// The updated profile.
+	CurationProfile *CurationProfile `json:"curationProfile"`
+}
+
+// Update curation profile category.
+type UpdateCurationProfileCategoryInput struct {
+	// The categories that were selected
+	CategoryIds []relay.ID `json:"categoryIds"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile category
+type UpdateCurationProfileCategoryPayload struct {
+	// The updated profile.
+	CurationProfile *CurationProfile `json:"curationProfile"`
+}
+
+// Update curation profile date of birth.
+type UpdateCurationProfileDateOfBirthInput struct {
+	// The date of birth that was selected
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+	// Whether or not this section was skipped
+	Skipped bool `json:"skipped"`
+}
+
+// Payload for updating profile date of birth
+type UpdateCurationProfileDateOfBirthPayload struct {
+	// The updated profile.
+	CurationProfile *CurationProfile `json:"curationProfile"`
 }
 
 // Update post audience.
@@ -299,126 +415,144 @@ type UpdatePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
-// Properties by which audience connections can be ordered.
-type AudiencesOrderField string
+// Properties by which audience connections can be sorted.
+type AudiencesSort string
 
 const (
-	// Audience by created time
-	AudiencesOrderFieldCreatedAt AudiencesOrderField = "CREATED_AT"
+	// Audience by newest first
+	AudiencesSortNew AudiencesSort = "NEW"
+	// Audience by top likes
+	AudiencesSortTop AudiencesSort = "TOP"
+	// Audience by most posts
+	AudiencesSortPopular AudiencesSort = "POPULAR"
 )
 
-var AllAudiencesOrderField = []AudiencesOrderField{
-	AudiencesOrderFieldCreatedAt,
+var AllAudiencesSort = []AudiencesSort{
+	AudiencesSortNew,
+	AudiencesSortTop,
+	AudiencesSortPopular,
 }
 
-func (e AudiencesOrderField) IsValid() bool {
+func (e AudiencesSort) IsValid() bool {
 	switch e {
-	case AudiencesOrderFieldCreatedAt:
+	case AudiencesSortNew, AudiencesSortTop, AudiencesSortPopular:
 		return true
 	}
 	return false
 }
 
-func (e AudiencesOrderField) String() string {
+func (e AudiencesSort) String() string {
 	return string(e)
 }
 
-func (e *AudiencesOrderField) UnmarshalGQL(v interface{}) error {
+func (e *AudiencesSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AudiencesOrderField(str)
+	*e = AudiencesSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AudiencesOrderField", str)
+		return fmt.Errorf("%s is not a valid AudiencesSort", str)
 	}
 	return nil
 }
 
-func (e AudiencesOrderField) MarshalGQL(w io.Writer) {
+func (e AudiencesSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which category connections can be ordered.
-type CategoriesOrderField string
+// Properties by which categories connections can be sorted.
+type CategoriesSort string
 
 const (
-	// Category by created time
-	CategoriesOrderFieldCreatedAt CategoriesOrderField = "CREATED_AT"
+	// Categories by newest first
+	CategoriesSortNew CategoriesSort = "NEW"
+	// Categories by top likes
+	CategoriesSortTop CategoriesSort = "TOP"
+	// Categories by most posts
+	CategoriesSortPopular CategoriesSort = "POPULAR"
 )
 
-var AllCategoriesOrderField = []CategoriesOrderField{
-	CategoriesOrderFieldCreatedAt,
+var AllCategoriesSort = []CategoriesSort{
+	CategoriesSortNew,
+	CategoriesSortTop,
+	CategoriesSortPopular,
 }
 
-func (e CategoriesOrderField) IsValid() bool {
+func (e CategoriesSort) IsValid() bool {
 	switch e {
-	case CategoriesOrderFieldCreatedAt:
+	case CategoriesSortNew, CategoriesSortTop, CategoriesSortPopular:
 		return true
 	}
 	return false
 }
 
-func (e CategoriesOrderField) String() string {
+func (e CategoriesSort) String() string {
 	return string(e)
 }
 
-func (e *CategoriesOrderField) UnmarshalGQL(v interface{}) error {
+func (e *CategoriesSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = CategoriesOrderField(str)
+	*e = CategoriesSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid CategoriesOrderField", str)
+		return fmt.Errorf("%s is not a valid CategoriesSort", str)
 	}
 	return nil
 }
 
-func (e CategoriesOrderField) MarshalGQL(w io.Writer) {
+func (e CategoriesSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which character connections can be ordered.
-type CharactersOrderField string
+// Properties by which character connections can be sorted.
+type CharactersSort string
 
 const (
-	// Character by created time
-	CharactersOrderFieldCreatedAt CharactersOrderField = "CREATED_AT"
+	// Characters by newest first
+	CharactersSortNew CharactersSort = "NEW"
+	// Characters by top likes
+	CharactersSortTop CharactersSort = "TOP"
+	// Characters by most posts
+	CharactersSortPopular CharactersSort = "POPULAR"
 )
 
-var AllCharactersOrderField = []CharactersOrderField{
-	CharactersOrderFieldCreatedAt,
+var AllCharactersSort = []CharactersSort{
+	CharactersSortNew,
+	CharactersSortTop,
+	CharactersSortPopular,
 }
 
-func (e CharactersOrderField) IsValid() bool {
+func (e CharactersSort) IsValid() bool {
 	switch e {
-	case CharactersOrderFieldCreatedAt:
+	case CharactersSortNew, CharactersSortTop, CharactersSortPopular:
 		return true
 	}
 	return false
 }
 
-func (e CharactersOrderField) String() string {
+func (e CharactersSort) String() string {
 	return string(e)
 }
 
-func (e *CharactersOrderField) UnmarshalGQL(v interface{}) error {
+func (e *CharactersSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = CharactersOrderField(str)
+	*e = CharactersSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid CharactersOrderField", str)
+		return fmt.Errorf("%s is not a valid CharactersSort", str)
 	}
 	return nil
 }
 
-func (e CharactersOrderField) MarshalGQL(w io.Writer) {
+func (e CharactersSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -479,84 +613,93 @@ func (e PostState) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which posts connections can be ordered.
-type PostsOrderField string
+// Properties by which posts connections can be sorted.
+type PostsSort string
 
 const (
-	// Posts by update time
-	PostsOrderFieldCreatedAt PostsOrderField = "CREATED_AT"
+	// Posts by newest first
+	PostsSortNew PostsSort = "NEW"
+	// Posts by top likes
+	PostsSortTop PostsSort = "TOP"
 )
 
-var AllPostsOrderField = []PostsOrderField{
-	PostsOrderFieldCreatedAt,
+var AllPostsSort = []PostsSort{
+	PostsSortNew,
+	PostsSortTop,
 }
 
-func (e PostsOrderField) IsValid() bool {
+func (e PostsSort) IsValid() bool {
 	switch e {
-	case PostsOrderFieldCreatedAt:
+	case PostsSortNew, PostsSortTop:
 		return true
 	}
 	return false
 }
 
-func (e PostsOrderField) String() string {
+func (e PostsSort) String() string {
 	return string(e)
 }
 
-func (e *PostsOrderField) UnmarshalGQL(v interface{}) error {
+func (e *PostsSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = PostsOrderField(str)
+	*e = PostsSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid PostsOrderField", str)
+		return fmt.Errorf("%s is not a valid PostsSort", str)
 	}
 	return nil
 }
 
-func (e PostsOrderField) MarshalGQL(w io.Writer) {
+func (e PostsSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Properties by which series connections can be ordered.
-type SeriesOrderField string
+// Properties by which series connections can be sorted.
+type SeriesSort string
 
 const (
-	// Series by created time
-	SeriesOrderFieldCreatedAt SeriesOrderField = "CREATED_AT"
+	// Series by newest first
+	SeriesSortNew SeriesSort = "NEW"
+	// Series by top likes
+	SeriesSortTop SeriesSort = "TOP"
+	// Series by most posts
+	SeriesSortPopular SeriesSort = "POPULAR"
 )
 
-var AllSeriesOrderField = []SeriesOrderField{
-	SeriesOrderFieldCreatedAt,
+var AllSeriesSort = []SeriesSort{
+	SeriesSortNew,
+	SeriesSortTop,
+	SeriesSortPopular,
 }
 
-func (e SeriesOrderField) IsValid() bool {
+func (e SeriesSort) IsValid() bool {
 	switch e {
-	case SeriesOrderFieldCreatedAt:
+	case SeriesSortNew, SeriesSortTop, SeriesSortPopular:
 		return true
 	}
 	return false
 }
 
-func (e SeriesOrderField) String() string {
+func (e SeriesSort) String() string {
 	return string(e)
 }
 
-func (e *SeriesOrderField) UnmarshalGQL(v interface{}) error {
+func (e *SeriesSort) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = SeriesOrderField(str)
+	*e = SeriesSort(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SeriesOrderField", str)
+		return fmt.Errorf("%s is not a valid SeriesSort", str)
 	}
 	return nil
 }
 
-func (e SeriesOrderField) MarshalGQL(w io.Writer) {
+func (e SeriesSort) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
