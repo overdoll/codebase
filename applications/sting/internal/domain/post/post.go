@@ -330,13 +330,41 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	return nil
 }
 
-func (p *Post) UpdateContentRequest(requester *principal.Principal, contentIds []string) error {
+func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
-	p.contentResourceIds = contentIds
+	p.contentResourceIds = append(p.contentResourceIds, contentIds...)
+	return nil
+}
+
+func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds []string) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	var actualContent []string
+
+	for _, content := range p.contentResourceIds {
+
+		foundContent := false
+
+		for _, removedContent := range contentIds {
+			if removedContent == content {
+				foundContent = true
+				continue
+			}
+		}
+
+		if !foundContent {
+			actualContent = append(actualContent, content)
+		}
+	}
+
+	p.contentResourceIds = actualContent
 	return nil
 }
 

@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "add_post_content.go",
         "create_post.go",
         "discard_post.go",
         "index_all_audience.go",
@@ -14,6 +15,7 @@ go_library(
         "publish_post.go",
         "reject_post.go",
         "remove_post.go",
+        "remove_post_content.go",
         "services.go",
         "submit_post.go",
         "undo_like_post.go",
@@ -23,7 +25,6 @@ go_library(
         "update_post_audience.go",
         "update_post_categories.go",
         "update_post_characters.go",
-        "update_post_content.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/command",
     visibility = ["//visibility:public"],

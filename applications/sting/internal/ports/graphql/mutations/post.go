@@ -98,16 +98,16 @@ func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.U
 	}, err
 }
 
-func (r *MutationResolver) UpdatePostContent(ctx context.Context, input types.UpdatePostContentInput) (*types.UpdatePostContentPayload, error) {
+func (r *MutationResolver) AddPostContent(ctx context.Context, input types.AddPostContentInput) (*types.AddPostContentPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	pst, err := r.App.Commands.UpdatePostContent.
+	pst, err := r.App.Commands.AddPostContent.
 		Handle(
 			ctx,
-			command.UpdatePostContent{
+			command.AddPostContent{
 				Principal: principal.FromContext(ctx),
 				PostId:    input.ID.GetID(),
 				Content:   input.Content,
@@ -118,7 +118,38 @@ func (r *MutationResolver) UpdatePostContent(ctx context.Context, input types.Up
 		return nil, err
 	}
 
-	return &types.UpdatePostContentPayload{
+	return &types.AddPostContentPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, err
+}
+
+func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.RemovePostContentInput) (*types.RemovePostContentPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	var removedContentIds []string
+
+	for _, cnt := range input.ContentIds {
+		removedContentIds = append(removedContentIds, cnt.GetID())
+	}
+
+	pst, err := r.App.Commands.RemovePostContent.
+		Handle(
+			ctx,
+			command.RemovePostContent{
+				Principal:  principal.FromContext(ctx),
+				PostId:     input.ID.GetID(),
+				ContentIds: removedContentIds,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.RemovePostContentPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
