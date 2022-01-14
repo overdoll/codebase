@@ -7,7 +7,7 @@ import type { ProcessUploadsMutation } from '@//:artifacts/ProcessUploadsMutatio
 import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import FilePicker from '../../../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
@@ -98,7 +98,7 @@ export default function ProcessUploads ({
             dispatch({
               type: EVENTS.CONTENT,
               clear: true,
-              value: true
+              value: null
             })
           })
         },

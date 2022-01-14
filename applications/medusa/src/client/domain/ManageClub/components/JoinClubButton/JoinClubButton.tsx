@@ -11,13 +11,14 @@ import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
 import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
-import Icon from '../../../../../modules/content/Icon/Icon'
+import Icon from '../../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import { AddPlus, WarningTriangle } from '@//:assets/icons/interface'
 import { useToast } from '@chakra-ui/react'
 
 interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null
   viewerQuery: JoinClubButtonViewerFragment$key | null
+  size?: string
 }
 
 const ClubFragment = graphql`
@@ -66,7 +67,8 @@ const LeaveClubMutation = graphql`
 
 export default function JoinClubButton ({
   clubQuery,
-  viewerQuery
+  viewerQuery,
+  size = 'lg'
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
 
@@ -139,7 +141,7 @@ export default function JoinClubButton ({
     return (
       <Link to='/join'>
         <Button
-          size='lg'
+          size={size}
           colorScheme='primary'
           leftIcon={
             <Icon
@@ -171,7 +173,7 @@ export default function JoinClubButton ({
         }
         onClick={onWithdrawMembership}
         isLoading={isWithdrawingMembership}
-        size='lg'
+        size={size}
         colorScheme='gray'
       >
         <Trans>
@@ -186,7 +188,7 @@ export default function JoinClubButton ({
       <Button
         onClick={onBecomeMember}
         isLoading={isBecomingMember}
-        size='lg'
+        size={size}
         colorScheme='primary'
         leftIcon={<Icon
           icon={AddPlus}
@@ -212,7 +214,7 @@ export default function JoinClubButton ({
           fill='primary.900'
         />
       }
-      size='lg'
+      size={size}
       colorScheme='primary'
       onClick={onJoinWhenLimited}
     >

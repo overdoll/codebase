@@ -1,8 +1,8 @@
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
 import SearchCategories from './SearchCategories/SearchCategories'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 
 interface Props {
   search?: string

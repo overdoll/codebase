@@ -5,6 +5,7 @@ interface steps {
   AUDIENCE: Step
   CATEGORY: Step
   CHARACTER: Step
+  PROCESS: Step
   REVIEW: Step
   SUBMIT: Step
 }
@@ -14,6 +15,7 @@ const STEPS: steps = {
   AUDIENCE: 'AUDIENCE',
   CATEGORY: 'CATEGORY',
   CHARACTER: 'CHARACTER',
+  PROCESS: 'PROCESS',
   REVIEW: 'REVIEW',
   SUBMIT: 'SUBMIT'
 }

@@ -1,5 +1,5 @@
 import { HTMLChakraProps, Link } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import Button from '@//:modules/form/Button/Button'
 import { ShareExternalLink } from '@//:assets/icons/interface'
 import { ReactNode } from 'react'

@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { useEffect, useMemo } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'

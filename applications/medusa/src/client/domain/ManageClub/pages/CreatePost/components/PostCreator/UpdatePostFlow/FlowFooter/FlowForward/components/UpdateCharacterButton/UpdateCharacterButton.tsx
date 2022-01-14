@@ -71,7 +71,7 @@ export default function UpdateCharacterButton ({
   const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
-      value: STEPS.REVIEW
+      value: STEPS.PROCESS
     })
   }
 

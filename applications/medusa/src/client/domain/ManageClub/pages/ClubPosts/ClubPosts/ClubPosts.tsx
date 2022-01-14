@@ -5,8 +5,8 @@ import { GridWrap, LargeGridItem } from '../../../../../components/ContentSelect
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Heading, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import PostPreviewContent from '../../../../../components/Posts/PostPreviewContent/PostPreviewContent'
-import { Link } from '@//:modules/routing'
+import PostPreviewContent from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
+import { useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
 
@@ -45,8 +45,6 @@ const Fragment = graphql`
   }
 `
 
-// TODO club posts need to be filterable by each category
-
 export default function ClubPosts ({ query }: Props): JSX.Element {
   const queryData = usePreloadedQuery<ClubPostsQuery>(
     Query,
@@ -64,6 +62,8 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
   )
 
   const match = useParams()
+
+  const history = useHistory()
 
   if (data.posts.edges.length < 1) {
     return (
@@ -87,24 +87,30 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           })
         }
 
+        const onClick = (): void => {
+          switch (item.node.state) {
+            case 'DRAFT':
+              history.push(`${draftPostPath()}?post=${item.node.reference as string}`)
+              return
+            case 'PUBLISHED':
+              history.push(`/p/${item.node.reference as string}`)
+          }
+        }
+
         switch (item.node.state) {
           case 'DRAFT':
             return (
               <LargeGridItem key={index}>
-                <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
-                  <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
-                    <PostPreviewContent query={item.node} />
-                  </Link>
+                <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
+                  <PostPreviewContent query={item.node} />
                 </ClickableBox>
               </LargeGridItem>
             )
           case 'PUBLISHED':
             return (
               <LargeGridItem key={index}>
-                <ClickableBox borderRadius='md' overflow='hidden' h='100%' p={0}>
-                  <Link to={`/p/${item.node.reference as string}`}>
-                    <PostPreviewContent query={item.node} />
-                  </Link>
+                <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
+                  <PostPreviewContent query={item.node} />
                 </ClickableBox>
               </LargeGridItem>
             )

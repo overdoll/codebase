@@ -7,6 +7,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PostHeaderClubFragment = {
     readonly club: {
         readonly name: string;
+        readonly slug: string;
         readonly thumbnail: {
             readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
         } | null;
@@ -45,6 +46,13 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Resource",
           "kind": "LinkedField",
           "name": "thumbnail",
@@ -65,5 +73,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '2935d5aecdf4cb3afdcaa81f2a150c7c';
+(node as any).hash = 'aa0634ed2badb54cd8e3063538ccc6b2';
 export default node;

@@ -4,7 +4,7 @@ import ImageSnippet from '../Snippets/ImageSnippet/ImageSnippet'
 import VideoSnippet from '../Snippets/VideoSnippet/VideoSnippet'
 import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
-import Icon from '../../Icon/Icon'
+import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 

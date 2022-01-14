@@ -1,4 +1,4 @@
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'

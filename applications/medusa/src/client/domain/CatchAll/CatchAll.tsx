@@ -1,4 +1,4 @@
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'

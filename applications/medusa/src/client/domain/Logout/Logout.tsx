@@ -3,7 +3,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
 import { useHistory } from '@//:modules/routing'
 import { useEffect } from 'react'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {

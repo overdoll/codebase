@@ -1,5 +1,5 @@
 import { AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
 import AuditInspect from './AuditInspect/AuditInspect'

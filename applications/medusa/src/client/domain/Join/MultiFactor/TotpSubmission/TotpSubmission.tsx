@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, FormControl, Heading, Stack, Text, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../support'

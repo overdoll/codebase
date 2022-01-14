@@ -1,6 +1,6 @@
-import ClickableBox from '../../PageLayout/Interactables/ClickableBox/ClickableBox'
+import ClickableBox from '../../Interactables/ClickableBox/ClickableBox'
 import { Flex, Text } from '@chakra-ui/react'
-import Icon from '../../Icon/Icon'
+import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
 import { ShareExternalLink } from '@//:assets/icons/interface'

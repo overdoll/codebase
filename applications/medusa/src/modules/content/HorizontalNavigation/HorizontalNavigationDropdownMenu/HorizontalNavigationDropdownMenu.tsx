@@ -3,7 +3,7 @@ import HorizontalNavigationDropdownMenuButton
   from './HorizontalNavigationDropdownMenuButton/HorizontalNavigationDropdownMenuButton'
 import { useHistoryDisclosure } from '../../../hooks'
 import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
-import Icon from '../../Icon/Icon'
+import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { HorizontalNavigationDropdownMenuContext } from './context'
 import {
   Box,

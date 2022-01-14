@@ -94,10 +94,11 @@ export interface QueryArgs {
   variables: {
     title?: string | null
     name?: string | null
+    reference?: string | null
   }
 }
 
-export type Step = 'ARRANGE' | 'AUDIENCE' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT'
+export type Step = 'ARRANGE' | 'AUDIENCE' | 'CATEGORY' | 'CHARACTER' | 'PROCESS' | 'REVIEW' | 'SUBMIT'
 
 export type Event =
   | 'urls'

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ea37e041f636a7c2d743993b45704f8b */
+/* @relayHash 53dd49d00a97085695975415d0b8c286 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -128,6 +128,7 @@ fragment FlowForwardButtonFragment on Post {
   ...UpdateCategoryButtonFragment
   ...UpdateCharacterButtonFragment
   ...UpdateContentButtonFragment
+  ...ProcessButtonFragment
 }
 
 fragment FlowHeaderFragment on Post {
@@ -140,6 +141,7 @@ fragment FlowStepsFragment on Post {
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
+  ...ProcessFragment
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -161,12 +163,25 @@ fragment PostGalleryContentFragment on Post {
 fragment PostHeaderClubFragment on Post {
   club {
     name
+    slug
     thumbnail {
       ...ResourceIconFragment
       id
     }
     id
   }
+}
+
+fragment ProcessButtonFragment on Post {
+  id
+  content {
+    id
+    processed
+  }
+}
+
+fragment ProcessFragment on Post {
+  ...RootProcessContentFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -203,6 +218,14 @@ fragment ReviewFragment on Post {
   ...PostHeaderClubFragment
   club {
     name
+    id
+  }
+}
+
+fragment RootProcessContentFragment on Post {
+  reference
+  content {
+    processed
     id
   }
 }
@@ -472,6 +495,13 @@ return {
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "processed",
+                "storageKey": null
+              },
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -552,6 +582,7 @@ return {
             "plural": false,
             "selections": [
               (v13/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -577,7 +608,7 @@ return {
     ]
   },
   "params": {
-    "id": "ea37e041f636a7c2d743993b45704f8b",
+    "id": "53dd49d00a97085695975415d0b8c286",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

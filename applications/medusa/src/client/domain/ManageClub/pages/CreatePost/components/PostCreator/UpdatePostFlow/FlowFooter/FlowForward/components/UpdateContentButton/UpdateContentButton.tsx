@@ -80,6 +80,8 @@ export default function UpdateContentButton ({
   }
 
   const onUpdateContent = (): void => {
+    console.log(state.content)
+
     updateContent({
       variables: {
         input: {
