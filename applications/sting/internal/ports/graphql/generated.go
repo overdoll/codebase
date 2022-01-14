@@ -192,6 +192,7 @@ type ComplexityRoot struct {
 		UpdatePostAudience               func(childComplexity int, input types.UpdatePostAudienceInput) int
 		UpdatePostCategories             func(childComplexity int, input types.UpdatePostCategoriesInput) int
 		UpdatePostCharacters             func(childComplexity int, input types.UpdatePostCharactersInput) int
+		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
 	}
 
 	PageInfo struct {
@@ -318,6 +319,10 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	UpdatePostContentOrderPayload struct {
+		Post func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -367,6 +372,7 @@ type MutationResolver interface {
 	UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error)
 	AddPostContent(ctx context.Context, input types.AddPostContentInput) (*types.AddPostContentPayload, error)
 	RemovePostContent(ctx context.Context, input types.RemovePostContentInput) (*types.RemovePostContentPayload, error)
+	UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error)
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
@@ -1108,6 +1114,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdatePostCharacters(childComplexity, args["input"].(types.UpdatePostCharactersInput)), true
 
+	case "Mutation.updatePostContentOrder":
+		if e.complexity.Mutation.UpdatePostContentOrder == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostContentOrder_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostContentOrder(childComplexity, args["input"].(types.UpdatePostContentOrderInput)), true
+
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
 			break
@@ -1630,6 +1648,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostClubPayload.Post(childComplexity), true
+
+	case "UpdatePostContentOrderPayload.post":
+		if e.complexity.UpdatePostContentOrderPayload.Post == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostContentOrderPayload.Post(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -2291,6 +2316,15 @@ input RemovePostContentInput {
   contentIds: [ID!]!
 }
 
+"""Update post content order."""
+input UpdatePostContentOrderInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs for the content"""
+  contentIds: [ID!]!
+}
+
 """Update post audience."""
 input UpdatePostCategoriesInput {
   """The post to update"""
@@ -2341,6 +2375,12 @@ type AddPostContentPayload {
 
 """Payload for updating a post"""
 type RemovePostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentOrderPayload {
   """The post after the update"""
   post: Post
 }
@@ -2489,6 +2529,11 @@ extend type Mutation {
   Update a post in draft status - remove content
   """
   removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
+
+  """
+  Update a post in draft status - update post content order - need to send exact same IDs
+  """
+  updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
 
   """
   Update a post in draft status - characters
@@ -3731,6 +3776,21 @@ func (ec *executionContext) field_Mutation_updatePostCharacters_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostContentOrder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostContentOrderInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostContentOrderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7224,6 +7284,45 @@ func (ec *executionContext) _Mutation_removePostContent(ctx context.Context, fie
 	return ec.marshalORemovePostContentPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemovePostContentPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updatePostContentOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostContentOrder_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostContentOrder(rctx, args["input"].(types.UpdatePostContentOrderInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostContentOrderPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updatePostCharacters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9685,6 +9784,38 @@ func (ec *executionContext) _UpdatePostClubPayload_post(ctx context.Context, fie
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdatePostContentOrderPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostContentOrderPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostContentOrderPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -11179,6 +11310,37 @@ func (ec *executionContext) unmarshalInputUpdatePostCharactersInput(ctx context.
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdatePostContentOrderInput(ctx context.Context, obj interface{}) (types.UpdatePostContentOrderInput, error) {
+	var it types.UpdatePostContentOrderInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentIds"))
+			it.ContentIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -12653,6 +12815,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "updatePostContentOrder":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostContentOrder(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updatePostCharacters":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updatePostCharacters(ctx, field)
@@ -13900,6 +14069,34 @@ func (ec *executionContext) _UpdatePostClubPayload(ctx context.Context, sel ast.
 		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._UpdatePostClubPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostContentOrderPayloadImplementors = []string{"UpdatePostContentOrderPayload"}
+
+func (ec *executionContext) _UpdatePostContentOrderPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostContentOrderPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostContentOrderPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostContentOrderPayload")
+		case "post":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostContentOrderPayload_post(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -15298,6 +15495,11 @@ func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋappli
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdatePostContentOrderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderInput(ctx context.Context, v interface{}) (types.UpdatePostContentOrderInput, error) {
+	res, err := ec.unmarshalInputUpdatePostContentOrderInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	res, err := graphql.UnmarshalMap(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -15960,6 +16162,13 @@ func (ec *executionContext) marshalOUpdatePostCharactersPayload2ᚖoverdollᚋap
 		return graphql.Null
 	}
 	return ec._UpdatePostCharactersPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostContentOrderPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostContentOrderPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

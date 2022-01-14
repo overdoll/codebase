@@ -429,6 +429,20 @@ type UpdatePostClubPayload struct {
 	Post *Post `json:"post"`
 }
 
+// Update post content order.
+type UpdatePostContentOrderInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Content IDs for the content
+	ContentIds []relay.ID `json:"contentIds"`
+}
+
+// Payload for updating a post
+type UpdatePostContentOrderPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
 // Properties by which audience connections can be sorted.
 type AudiencesSort string
 

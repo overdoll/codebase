@@ -25,6 +25,7 @@ go_library(
         "update_post_audience.go",
         "update_post_categories.go",
         "update_post_characters.go",
+        "update_post_content_order.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/command",
     visibility = ["//visibility:public"],

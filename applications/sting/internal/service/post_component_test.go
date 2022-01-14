@@ -77,6 +77,12 @@ type AddPostContent struct {
 	} `graphql:"addPostContent(input: $input)"`
 }
 
+type UpdatePostContentOrder struct {
+	UpdatePostContentOrder *struct {
+		Post *PostModified
+	} `graphql:"updatePostContentOrder(input: $input)"`
+}
+
 type RemovePostContent struct {
 	RemovePostContent *struct {
 		Post *PostModified
@@ -176,6 +182,33 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Len(t, addPostContent.AddPostContent.Post.Content, 2, "should have 2 content")
+
+	// quickly reverse the list
+	var reversedContentIds []relay.ID
+
+	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[1].ID)
+	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[0].ID)
+
+	var updatePostContentOrder UpdatePostContentOrder
+
+	// update order
+	err = client.Mutate(context.Background(), &updatePostContentOrder, map[string]interface{}{
+		"input": types.UpdatePostContentOrderInput{
+			ID:         relay.ID(newPostId),
+			ContentIds: reversedContentIds,
+		},
+	})
+
+	require.NoError(t, err, "no error updating the order")
+
+	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 2, "should have 2 content")
+
+	var newContentIds []relay.ID
+
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[0].ID)
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[1].ID)
+
+	require.Equal(t, reversedContentIds, newContentIds, "list should still be reversed")
 
 	var removePostContent RemovePostContent
 

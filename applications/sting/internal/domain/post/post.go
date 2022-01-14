@@ -340,6 +340,36 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 	return nil
 }
 
+func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, contentIds []string) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	if len(contentIds) != len(p.contentResourceIds) {
+		return errors.New("missing resources")
+	}
+
+	for _, currentContent := range p.contentResourceIds {
+
+		foundContent := false
+
+		for _, newContent := range contentIds {
+			if currentContent == newContent {
+				foundContent = true
+				break
+			}
+		}
+
+		if !foundContent {
+			return errors.New("content was not found as part of post. must send IDs already part of post")
+		}
+	}
+
+	p.contentResourceIds = contentIds
+	return nil
+}
+
 func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {

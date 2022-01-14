@@ -79,8 +79,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
-			AddPostContent:       command.NewAddPostContentHandler(postRepo, postIndexRepo, loader),
-			RemovePostContent:    command.NewRemovePostContentHandler(postRepo, postIndexRepo, loader),
+			AddPostContent:         command.NewAddPostContentHandler(postRepo, postIndexRepo, loader),
+			RemovePostContent:      command.NewRemovePostContentHandler(postRepo, postIndexRepo, loader),
+			UpdatePostContentOrder: command.NewUpdatePostContentOrderHandler(postRepo, postIndexRepo, loader),
+
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),

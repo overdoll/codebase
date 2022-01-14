@@ -154,6 +154,36 @@ func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.Re
 	}, err
 }
 
+func (r *MutationResolver) UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error) {
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	var updatedContentIds []string
+
+	for _, cnt := range input.ContentIds {
+		updatedContentIds = append(updatedContentIds, cnt.GetID())
+	}
+
+	pst, err := r.App.Commands.UpdatePostContentOrder.
+		Handle(
+			ctx,
+			command.UpdatePostContentOrder{
+				Principal:  principal.FromContext(ctx),
+				PostId:     input.ID.GetID(),
+				ContentIds: updatedContentIds,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdatePostContentOrderPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, err
+}
+
 func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
