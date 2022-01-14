@@ -7,7 +7,6 @@ import (
 	"image"
 	_ "image/png"
 	"io"
-	"mime"
 	"os"
 
 	"github.com/h2non/filetype"
@@ -24,6 +23,16 @@ var (
 	imageAcceptedTypes = []string{"image/png"}
 	videoAcceptedTypes = []string{"video/mp4"}
 )
+
+var extensionsMap = map[string]string{
+	"video/mp4":  ".mp4",
+	"image/png":  ".png",
+	"image/webp": ".webp",
+}
+
+func extensionByType(tp string) (string, error) {
+	return extensionsMap[tp], nil
+}
 
 // Resource represents a media resource that can either be an image or a video
 // it will contain an ID to identify the resource, as well as the available mimeTypes for the specific resource
@@ -228,12 +237,12 @@ func (r *Resource) FullUrls() []*Url {
 
 	for _, m := range r.mimeTypes {
 
-		formats, _ := mime.ExtensionsByType(m)
-
 		extension := ""
 
-		if formats != nil {
-			extension = formats[len(formats)-1]
+		format, err := extensionByType(m)
+
+		if err == nil {
+			extension = format
 		}
 
 		domain := os.Getenv("APP_URL") + "/api/upload/"
