@@ -48,7 +48,7 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <VideoManagerProvider>
-      <Stack spacing={2}>
+      <Stack spacing={8}>
         {data.posts.edges.map((item, index) =>
           (<PostManagerProvider key={index}>
             <HomePost query={item.node} viewerQuery={queryData?.viewer} />

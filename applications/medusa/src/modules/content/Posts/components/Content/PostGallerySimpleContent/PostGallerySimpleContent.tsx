@@ -37,12 +37,14 @@ export default function PostGallerySimpleContent ({
 
   const { changeVideoVolume } = useContext(VideoManagerContext)
 
+  // TODO if there is a video show a non-interactable transparent scrobble
+  // TODO at the very bottom
+
   return (
     <Box h='100%'>
       <Swiper
         observer
         observeParents
-        autoHeight
         onSwiper={(swiper) =>
           onInitialize(swiper)}
         onSlideChange={(swiper) =>
@@ -50,20 +52,18 @@ export default function PostGallerySimpleContent ({
       >
         {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex bg='gray.800' justify='center' align='center' minH={400} maxH={700}>
-              <Flex h='100%'>
-                {item.type === 'IMAGE' &&
-                  <ImageSnippet h='100%' query={item} />}
-                {item.type === 'VIDEO' &&
-                  <VideoSnippet
-                    h='100%'
-                    autoPlay={index === currentSlide}
-                    onVolumeChange={(e) =>
-                      changeVideoVolume(e)}
-                    controls
-                    query={item}
-                  />}
-              </Flex>
+            <Flex justify='center' minH={400} maxH={700} align='center' bg='gray.800' h='100%'>
+              {item.type === 'IMAGE' &&
+                <ImageSnippet h='100%' query={item} />}
+              {item.type === 'VIDEO' &&
+                <VideoSnippet
+                  h='100%'
+                  autoPlay={index === currentSlide}
+                  onVolumeChange={(e) =>
+                    changeVideoVolume(e)}
+                  controls
+                  query={item}
+                />}
             </Flex>
           </SwiperSlide>)}
       </Swiper>

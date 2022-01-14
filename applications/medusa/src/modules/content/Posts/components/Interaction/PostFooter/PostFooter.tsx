@@ -13,6 +13,10 @@ export default function PostFooter ({
   centerItem,
   rightItem
 }: Props): JSX.Element {
+  // TODO make bullet sizing dynamic if there is more than 4
+  // TODO like swiper does
+  // TODO bullets should also be bigger
+
   return (
     <Box position='relative'>
       <Flex justify='space-between' align='center'>

@@ -12,6 +12,7 @@ import FilePicker from '../../../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import { DispatchContext, StateContext, UppyContext } from '../../../../../../context'
+import getIdFromResourceUrl from '../../../../../../hooks/getIdFromResourceUrl/getIdFromResourceUrl'
 
 interface Props {
   query: ProcessUploadsFragment$key
@@ -22,6 +23,7 @@ const ProcessUploadsFragmentGQL = graphql`
     id
     reference
     content {
+      id
       urls {
         url
       }
@@ -38,6 +40,7 @@ const ProcessUploadsMutationGQL = graphql`
         content {
           id
           type
+          processed
           urls {
             url
             mimeType
@@ -67,9 +70,12 @@ export default function ProcessUploads ({
       const uploadedIDs = Object.keys(state.urls)
       const uploadedURLs = Object.values(state.urls)
       const currentURLs = data?.content.map((item) =>
-        item.urls[0].url)
+        getIdFromResourceUrl(item.urls[0].url))
 
       const combinedUpload = [...currentURLs, ...uploadedURLs] as string[]
+
+      console.log(combinedUpload)
+      console.log(data.content)
 
       updateContent({
         variables: {

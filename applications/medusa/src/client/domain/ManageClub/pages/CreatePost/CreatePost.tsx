@@ -14,6 +14,7 @@ import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:
 import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
+import getIdFromUppyUrl from './hooks/getIdFromUppyUrl/getIdFromUppyUrl'
 
 interface Props {
   prepared: {
@@ -48,10 +49,9 @@ export default function CreatePost (props: Props): JSX.Element {
       // only want the ID from URL
       if (file.source !== 'already-uploaded') {
         const url = response.uploadURL as string
-        const fileId = url.substring(url.lastIndexOf('/') + 1)
         dispatch({
           type: EVENTS.URLS,
-          value: { [file.id]: fileId }
+          value: { [file.id]: getIdFromUppyUrl(url) }
         })
       }
     })

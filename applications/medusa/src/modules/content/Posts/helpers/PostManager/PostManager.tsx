@@ -33,6 +33,11 @@ export function PostManagerProvider ({ children }: Props): JSX.Element {
     videoMuted
   } = useContext(VideoManagerContext)
 
+  // TODO store the video refs in an array instead
+  // TODO and on volume change in a useEffect function, set volume of refs
+
+  // TODO use the swiper event listener after init to listen for slide changes
+
   const onSlideChange = (swiper): void => {
     setCurrentSlide(swiper.activeIndex)
     swiper.slides.forEach((item, index) => {
