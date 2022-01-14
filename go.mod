@@ -34,8 +34,6 @@ require (
 	github.com/pquerna/otp v1.3.0
 	github.com/scylladb/gocqlx/v2 v2.4.0
 	github.com/segmentio/ksuid v1.0.3
-	github.com/sendgrid/rest v2.6.4+incompatible // indirect
-	github.com/sendgrid/sendgrid-go v3.10.0+incompatible
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cobra v1.1.3

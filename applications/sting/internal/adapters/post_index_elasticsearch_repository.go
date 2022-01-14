@@ -562,10 +562,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	builder := r.client.Search().
 		Index(PostIndexName)
 
-	if err := post.CanViewWithFilters(requester, filter); err != nil {
-		return nil, err
-	}
-
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")
 	}

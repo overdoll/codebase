@@ -1,19 +1,19 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1d4c3a7ee91ad2802b57f7379b43b027 */
+/* @relayHash 6ffc832f9a7829efdf8bcc79de6d31c7 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type UpdatePostContentInput = {
+export type AddPostContentInput = {
     id: string;
     content: Array<string>;
 };
 export type ProcessUploadsMutationVariables = {
-    input: UpdatePostContentInput;
+    input: AddPostContentInput;
 };
 export type ProcessUploadsMutationResponse = {
-    readonly updatePostContent: {
+    readonly addPostContent: {
         readonly post: {
             readonly id: string;
             readonly reference: string;
@@ -37,9 +37,9 @@ export type ProcessUploadsMutation = {
 
 /*
 mutation ProcessUploadsMutation(
-  $input: UpdatePostContentInput!
+  $input: AddPostContentInput!
 ) {
-  updatePostContent(input: $input) {
+  addPostContent(input: $input) {
     post {
       id
       reference
@@ -81,9 +81,9 @@ v2 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdatePostContentPayload",
+    "concreteType": "AddPostContentPayload",
     "kind": "LinkedField",
-    "name": "updatePostContent",
+    "name": "addPostContent",
     "plural": false,
     "selections": [
       {
@@ -171,7 +171,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "1d4c3a7ee91ad2802b57f7379b43b027",
+    "id": "6ffc832f9a7829efdf8bcc79de6d31c7",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -179,5 +179,5 @@ return {
   }
 };
 })();
-(node as any).hash = '65032db9d0edf296f5624d7cead51e8b';
+(node as any).hash = 'a08f5d95a6b55f90ac46d13b1b8ed29c';
 export default node;

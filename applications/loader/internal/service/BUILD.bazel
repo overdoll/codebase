@@ -12,6 +12,9 @@ go_library(
         "//applications/loader/internal/app/query",
         "//applications/loader/internal/app/workflows/activities",
         "//libraries/bootstrap",
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//aws/credentials",
+        "@com_github_aws_aws_sdk_go//aws/session",
     ],
 )
 

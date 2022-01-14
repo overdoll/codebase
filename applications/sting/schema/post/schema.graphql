@@ -72,13 +72,31 @@ input UpdatePostAudienceInput {
   audienceId: ID!
 }
 
-"""Update post audience."""
-input UpdatePostContentInput {
+"""Add post content."""
+input AddPostContentInput {
   """The post to update"""
   id: ID!
 
   """Image IDs for the content"""
   content: [String!]!
+}
+
+"""Remove post content."""
+input RemovePostContentInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs for the content"""
+  contentIds: [ID!]!
+}
+
+"""Update post content order."""
+input UpdatePostContentOrderInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs for the content"""
+  contentIds: [ID!]!
 }
 
 """Update post audience."""
@@ -124,7 +142,19 @@ type UpdatePostAudiencePayload {
 }
 
 """Payload for updating a post"""
-type UpdatePostContentPayload {
+type AddPostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type RemovePostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentOrderPayload {
   """The post after the update"""
   post: Post
 }
@@ -265,9 +295,19 @@ extend type Mutation {
   updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
 
   """
-  Update a post in draft status - content
+  Update a post in draft status - add content
   """
-  updatePostContent(input: UpdatePostContentInput!): UpdatePostContentPayload
+  addPostContent(input: AddPostContentInput!): AddPostContentPayload
+
+  """
+  Update a post in draft status - remove content
+  """
+  removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
+
+  """
+  Update a post in draft status - update post content order - need to send exact same IDs
+  """
+  updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
 
   """
   Update a post in draft status - characters

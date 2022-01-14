@@ -2,6 +2,10 @@ package service
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
@@ -18,10 +22,21 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 func createApplication(ctx context.Context) app.Application {
 
-	session := bootstrap.InitializeDatabaseSession()
-	awsSession := bootstrap.InitializeAWSSession()
+	s := bootstrap.InitializeDatabaseSession()
 
-	resourceRepo := adapters.NewResourceCassandraRepository(session)
+	awsSession, err := session.NewSession(&aws.Config{
+		Credentials:      credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_LOADER"), os.Getenv("AWS_ACCESS_SECRET_LOADER"), ""),
+		Endpoint:         aws.String(os.Getenv("AWS_ENDPOINT_LOADER")),
+		Region:           aws.String(os.Getenv("AWS_REGION_LOADER")),
+		DisableSSL:       aws.Bool(false),
+		S3ForcePathStyle: aws.Bool(true),
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	resourceRepo := adapters.NewResourceCassandraRepository(s)
 	resourceFileRepo := adapters.NewResourceS3FileRepository(awsSession)
 
 	return app.Application{

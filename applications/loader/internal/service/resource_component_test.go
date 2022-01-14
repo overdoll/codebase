@@ -166,7 +166,15 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	// check results
 	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
 
+	// save the new IDs for later
+	var newResourceIds []string
+
 	for _, res := range newResources.Entities {
+
+		// weird bug, we have to base64 decode first
+		sDec, _ := base64.StdEncoding.DecodeString(res.Resource.ID.GetID())
+		newResourceIds = append(newResourceIds, relay.ID(sDec).GetID())
+
 		if res.Resource.Type == types.ResourceTypeVideo {
 			newVideoResource = res.Resource
 		}
@@ -187,6 +195,14 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	require.Len(t, newVideoResource.Urls, 1)
 	// expected video resource
 	require.Equal(t, os.Getenv("STATIC_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
+
+	// should not have gotten an error for trying to upload the same resources
+	_, err = grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
+		ItemId:      itemId,
+		ResourceIds: newResourceIds,
+	})
+
+	require.NoError(t, err, "no error trying to upload the exact same resources")
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
