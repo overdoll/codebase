@@ -40,11 +40,14 @@ export default function PostGallerySimpleContent ({
   // TODO if there is a video show a non-interactable transparent scrobble
   // TODO at the very bottom
 
+  // TODO if content overflows show a shadow
+
   return (
-    <Box h='100%'>
+    <Box>
       <Swiper
         observer
         observeParents
+        autoHeight
         onSwiper={(swiper) =>
           onInitialize(swiper)}
         onSlideChange={(swiper) =>
@@ -52,16 +55,14 @@ export default function PostGallerySimpleContent ({
       >
         {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex justify='center' minH={400} maxH={700} align='center' bg='gray.800' h='100%'>
+            <Flex minH={200} maxH={700} bg='gray.800'>
               {item.type === 'IMAGE' &&
-                <ImageSnippet h='100%' query={item} />}
+                <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
                 <VideoSnippet
-                  h='100%'
                   autoPlay={index === currentSlide}
                   onVolumeChange={(e) =>
                     changeVideoVolume(e)}
-                  controls
                   query={item}
                 />}
             </Flex>

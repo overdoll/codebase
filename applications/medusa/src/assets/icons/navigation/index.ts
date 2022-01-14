@@ -22,3 +22,4 @@ export { default as ArrowButtonUndo } from './normal-bold/arrows/arrows-button-u
 export { default as ArrowButtonRefresh } from './normal-bold/arrows/arrows-button-refresh.svg'
 export { default as ArrowButtonUp } from './normal-bold/arrows/arrows-button-up.svg'
 export { default as NavigationMenuHorizontal } from './normal-bold/navigation-menu-horizontal.svg'
+export { default as ClubPeopleGroup } from './normal-bold/club-people-group.svg'

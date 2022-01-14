@@ -1,4 +1,4 @@
-import { BirdHouse, ContentBrushPen, SettingHammer } from '@//:assets/icons/navigation'
+import { BirdHouse, ClubPeopleGroup, ContentBrushPen } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
@@ -20,9 +20,9 @@ export default function MainMenu (): JSX.Element {
       />
       <HorizontalNavigation.Button
         exact
-        colorScheme='green'
+        colorScheme='primary'
         to='/clubs'
-        icon={SettingHammer}
+        icon={ClubPeopleGroup}
         label={
           <Trans>
             My Clubs
