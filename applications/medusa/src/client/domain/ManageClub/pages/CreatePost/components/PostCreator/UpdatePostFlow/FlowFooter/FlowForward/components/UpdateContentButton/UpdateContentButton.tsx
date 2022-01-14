@@ -26,8 +26,8 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation UpdateContentButtonMutation ($input: UpdatePostContentInput!) {
-    updatePostContent(input: $input) {
+  mutation UpdateContentButtonMutation ($input: AddPostContentInput!) {
+    addPostContent(input: $input) {
       post {
         id
         content {

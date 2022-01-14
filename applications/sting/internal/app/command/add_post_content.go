@@ -6,24 +6,24 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type UpdatePostContent struct {
+type AddPostContent struct {
 	Principal *principal.Principal
 
 	PostId  string
 	Content []string
 }
 
-type UpdatePostContentHandler struct {
+type AddPostContentHandler struct {
 	pr     post.Repository
 	pi     post.IndexRepository
 	loader LoaderService
 }
 
-func NewUpdatePostContentHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) UpdatePostContentHandler {
-	return UpdatePostContentHandler{pr: pr, pi: pi, loader: loader}
+func NewAddPostContentHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) AddPostContentHandler {
+	return AddPostContentHandler{pr: pr, pi: pi, loader: loader}
 }
 
-func (h UpdatePostContentHandler) Handle(ctx context.Context, cmd UpdatePostContent) (*post.Post, error) {
+func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (*post.Post, error) {
 
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
@@ -34,7 +34,7 @@ func (h UpdatePostContentHandler) Handle(ctx context.Context, cmd UpdatePostCont
 			return err
 		}
 
-		return post.UpdateContentRequest(cmd.Principal, resourceIds)
+		return post.AddContentRequest(cmd.Principal, resourceIds)
 	})
 
 	if err != nil {

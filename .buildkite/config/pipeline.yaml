@@ -3,10 +3,10 @@ steps:
   integration_test:
     setup:
       env:
-        AWS_ACCESS_KEY: overdoll123
-        AWS_ACCESS_SECRET: overdoll123
-        AWS_ENDPOINT: http://minio:9000
-        AWS_REGION: us-east-1
+        AWS_ACCESS_KEY_LOADER: overdoll123
+        AWS_ACCESS_SECRET_LOADER: overdoll123
+        AWS_ENDPOINT_LOADER: http://minio:9000
+        AWS_REGION_LOADER: us-east-1
         DB_HOST: scylla
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233

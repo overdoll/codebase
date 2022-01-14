@@ -20,7 +20,10 @@ type Commands struct {
 	SubmitPost  command.SubmitPostHandler
 	RemovePost  command.RemovePostHandler
 
-	UpdatePostContent    command.UpdatePostContentHandler
+	RemovePostContent      command.RemovePostContentHandler
+	AddPostContent         command.AddPostContentHandler
+	UpdatePostContentOrder command.UpdatePostContentOrderHandler
+
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler

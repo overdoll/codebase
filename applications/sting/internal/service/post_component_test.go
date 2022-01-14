@@ -71,10 +71,22 @@ type Posts struct {
 	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
 }
 
-type UpdatePostContent struct {
-	UpdatePostContent *struct {
+type AddPostContent struct {
+	AddPostContent *struct {
 		Post *PostModified
-	} `graphql:"updatePostContent(input: $input)"`
+	} `graphql:"addPostContent(input: $input)"`
+}
+
+type UpdatePostContentOrder struct {
+	UpdatePostContentOrder *struct {
+		Post *PostModified
+	} `graphql:"updatePostContentOrder(input: $input)"`
+}
+
+type RemovePostContent struct {
+	RemovePostContent *struct {
+		Post *PostModified
+	} `graphql:"removePostContent(input: $input)"`
 }
 
 type UpdatePostCategories struct {
@@ -158,16 +170,59 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
 
 	// update with new content (1 file)
-	var updatePostContent UpdatePostContent
+	var addPostContent AddPostContent
 
-	err = client.Mutate(context.Background(), &updatePostContent, map[string]interface{}{
-		"input": types.UpdatePostContentInput{
+	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
+		"input": types.AddPostContentInput{
 			ID:      relay.ID(newPostId),
-			Content: []string{uuid.New().String()},
+			Content: []string{uuid.New().String(), uuid.New().String()},
 		},
 	})
 
 	require.NoError(t, err)
+
+	require.Len(t, addPostContent.AddPostContent.Post.Content, 2, "should have 2 content")
+
+	// quickly reverse the list
+	var reversedContentIds []relay.ID
+
+	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[1].ID)
+	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[0].ID)
+
+	var updatePostContentOrder UpdatePostContentOrder
+
+	// update order
+	err = client.Mutate(context.Background(), &updatePostContentOrder, map[string]interface{}{
+		"input": types.UpdatePostContentOrderInput{
+			ID:         relay.ID(newPostId),
+			ContentIds: reversedContentIds,
+		},
+	})
+
+	require.NoError(t, err, "no error updating the order")
+
+	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 2, "should have 2 content")
+
+	var newContentIds []relay.ID
+
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[0].ID)
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[1].ID)
+
+	require.Equal(t, reversedContentIds, newContentIds, "list should still be reversed")
+
+	var removePostContent RemovePostContent
+
+	// remove 1 post content
+	err = client.Mutate(context.Background(), &removePostContent, map[string]interface{}{
+		"input": types.RemovePostContentInput{
+			ID:         relay.ID(newPostId),
+			ContentIds: []relay.ID{addPostContent.AddPostContent.Post.Content[0].ID},
+		},
+	})
+
+	require.NoError(t, err)
+
+	require.Len(t, removePostContent.RemovePostContent.Post.Content, 1, "should have 1 content")
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories
@@ -322,6 +377,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
+	require.Equal(t, 1, len(post.Post.Content), "should have only 1 content at the end")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
 

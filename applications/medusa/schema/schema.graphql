@@ -489,6 +489,21 @@ type AddModeratorToPostQueuePayload {
   account: Account
 }
 
+"""Add post content."""
+input AddPostContentInput {
+  """The post to update"""
+  id: ID!
+
+  """Image IDs for the content"""
+  content: [String!]!
+}
+
+"""Payload for updating a post"""
+type AddPostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
 """Approve the pending post input"""
 input ApprovePostInput {
   """Pending post to take action against"""
@@ -1476,8 +1491,11 @@ type Mutation {
   """Update a post in draft status - audience"""
   updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
 
-  """Update a post in draft status - content"""
-  updatePostContent(input: UpdatePostContentInput!): UpdatePostContentPayload
+  """Update a post in draft status - add content"""
+  addPostContent(input: AddPostContentInput!): AddPostContentPayload
+
+  """Update a post in draft status - remove content"""
+  removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
 
   """Update a post in draft status - characters"""
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
@@ -2218,6 +2236,21 @@ type RemoveModeratorFromPostQueuePayload {
   account: Account
 }
 
+"""Remove post content."""
+input RemovePostContentInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs for the content"""
+  contentIds: [ID!]!
+}
+
+"""Payload for updating a post"""
+type RemovePostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
 """Moderate the pending post input"""
 input RemovePostInput {
   """Pending post to take action against"""
@@ -2642,21 +2675,6 @@ type UpdatePostCharactersPayload {
 
 """Payload for updating a post"""
 type UpdatePostClubPayload {
-  """The post after the update"""
-  post: Post
-}
-
-"""Update post audience."""
-input UpdatePostContentInput {
-  """The post to update"""
-  id: ID!
-
-  """Image IDs for the content"""
-  content: [String!]!
-}
-
-"""Payload for updating a post"""
-type UpdatePostContentPayload {
   """The post after the update"""
   post: Post
 }

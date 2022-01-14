@@ -106,31 +106,5 @@ func (e *Filters) AudienceIds() []string {
 
 // permission checks to gate what can actually be filtered
 func CanViewWithFilters(requester *principal.Principal, filter *Filters) error {
-
-	// any state that isnt published needs permission checks
-	if (filter.state == Unknown) || (filter.state != Unknown && filter.state != Published) {
-		if filter.ContributorId() != nil {
-			return requester.BelongsToAccount(*filter.ContributorId())
-		}
-
-		if filter.ModeratorId() != nil {
-			return requester.BelongsToAccount(*filter.ModeratorId())
-		}
-
-		if !requester.IsStaff() {
-			return principal.ErrNotAuthorized
-		}
-	}
-
-	// filtering by moderator
-	if filter.ModeratorId() != nil {
-
-		if requester.IsStaff() {
-			return nil
-		}
-
-		return requester.BelongsToAccount(*filter.ModeratorId())
-	}
-
 	return nil
 }

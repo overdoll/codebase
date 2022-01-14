@@ -26,7 +26,7 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 
 func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *loader.CreateOrGetResourcesFromUploadsRequest) (*loader.CreateOrGetResourcesFromUploadsResponse, error) {
 
-	_, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
+	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
 		ItemId:    request.ItemId,
 		UploadIds: request.ResourceIds,
 	})
@@ -46,7 +46,13 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		return nil, err
 	}
 
-	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: request.ResourceIds}, nil
+	var newResourceIds []string
+
+	for _, r := range resources {
+		newResourceIds = append(newResourceIds, r.ID())
+	}
+
+	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: newResourceIds}, nil
 }
 
 func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResourcesRequest) (*loader.DeleteResourcesResponse, error) {

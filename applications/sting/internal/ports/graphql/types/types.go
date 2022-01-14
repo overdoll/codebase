@@ -24,6 +24,20 @@ type Account struct {
 
 func (Account) IsEntity() {}
 
+// Add post content.
+type AddPostContentInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Image IDs for the content
+	Content []string `json:"content"`
+}
+
+// Payload for updating a post
+type AddPostContentPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
@@ -249,6 +263,20 @@ type PostLike struct {
 func (PostLike) IsNode()   {}
 func (PostLike) IsEntity() {}
 
+// Remove post content.
+type RemovePostContentInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Content IDs for the content
+	ContentIds []relay.ID `json:"contentIds"`
+}
+
+// Payload for updating a post
+type RemovePostContentPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
 type Resource struct {
 	ID relay.ID `json:"id"`
 }
@@ -401,16 +429,16 @@ type UpdatePostClubPayload struct {
 	Post *Post `json:"post"`
 }
 
-// Update post audience.
-type UpdatePostContentInput struct {
+// Update post content order.
+type UpdatePostContentOrderInput struct {
 	// The post to update
 	ID relay.ID `json:"id"`
-	// Image IDs for the content
-	Content []string `json:"content"`
+	// Content IDs for the content
+	ContentIds []relay.ID `json:"contentIds"`
 }
 
 // Payload for updating a post
-type UpdatePostContentPayload struct {
+type UpdatePostContentOrderPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }

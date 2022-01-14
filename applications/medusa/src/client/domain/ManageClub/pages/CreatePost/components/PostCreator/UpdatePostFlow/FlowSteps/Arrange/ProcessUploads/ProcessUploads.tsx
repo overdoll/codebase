@@ -32,8 +32,8 @@ const ProcessUploadsFragmentGQL = graphql`
 `
 
 const ProcessUploadsMutationGQL = graphql`
-  mutation ProcessUploadsMutation($input: UpdatePostContentInput!) {
-    updatePostContent(input: $input) {
+  mutation ProcessUploadsMutation($input: AddPostContentInput!) {
+    addPostContent(input: $input) {
       post {
         id
         reference
