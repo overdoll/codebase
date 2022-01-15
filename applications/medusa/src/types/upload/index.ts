@@ -1,10 +1,7 @@
 import { UppyFile } from '@uppy/core'
 
 export interface Urls {
-  [item: string]: {
-    url: string
-    mimeType: string
-  }
+  [item: string]: string
 }
 
 export interface ResourceUrl {

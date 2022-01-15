@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 63ff5a6efd0ffd29e0ecd4e1a067889e */
+/* @relayHash 1cd042a7bec1c079c59390df0b8e4a82 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,13 @@ query HomeQuery {
   viewer {
     ...HomePostViewerFragment
     id
+  }
+}
+
+fragment ControlledVideoFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 
@@ -113,7 +120,7 @@ fragment PostGallerySimpleContentFragment on Post {
   content {
     type
     ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ControlledVideoFragment
     id
   }
 }
@@ -488,7 +495,7 @@ return {
     ]
   },
   "params": {
-    "id": "63ff5a6efd0ffd29e0ecd4e1a067889e",
+    "id": "1cd042a7bec1c079c59390df0b8e4a82",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

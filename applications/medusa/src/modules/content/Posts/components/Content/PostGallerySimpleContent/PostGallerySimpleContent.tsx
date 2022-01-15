@@ -1,7 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex } from '@chakra-ui/react'
 import ImageSnippet from '../../../../DataDisplay/Snippets/ImageSnippet/ImageSnippet'
-import VideoSnippet from '../../../../DataDisplay/Snippets/VideoSnippet/VideoSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
@@ -9,6 +8,7 @@ import { useContext } from 'react'
 import { PostManagerContext } from '../../../helpers/PostManager/PostManager'
 import { VideoManagerContext } from '../../../helpers/VideoManager/VideoManager'
 import { PostGallerySimpleContentFragment$key } from '@//:artifacts/PostGallerySimpleContentFragment.graphql'
+import ControlledVideo from '../../../../DataDisplay/ControlledVideo/ControlledVideo'
 
 interface Props {
   query: PostGallerySimpleContentFragment$key | null
@@ -19,7 +19,7 @@ const Fragment = graphql`
     content {
       type
       ...ImageSnippetFragment
-      ...VideoSnippetFragment
+      ...ControlledVideoFragment
     }
   }
 `
@@ -30,17 +30,24 @@ export default function PostGallerySimpleContent ({
   const data = useFragment(Fragment, query)
 
   const {
-    currentSlide,
-    onSlideChange,
     onInitialize
   } = useContext(PostManagerContext)
 
-  const { changeVideoVolume } = useContext(VideoManagerContext)
+  const {
+    changeVideoVolume,
+    changeVideoMuted,
+    onVideoRun
+  } = useContext(VideoManagerContext)
 
   // TODO if there is a video show a non-interactable transparent scrobble
   // TODO at the very bottom
 
   // TODO if content overflows show a shadow
+
+  const onVolumeChange = (e): void => {
+    changeVideoMuted(e.target.muted)
+    changeVideoVolume(e.target.volume)
+  }
 
   return (
     <Box>
@@ -50,19 +57,18 @@ export default function PostGallerySimpleContent ({
         autoHeight
         onSwiper={(swiper) =>
           onInitialize(swiper)}
-        onSlideChange={(swiper) =>
-          onSlideChange(swiper)}
       >
         {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex minH={200} maxH={700} bg='gray.800'>
+            <Flex align='center' minH={300} maxH={700} bg='gray.800'>
               {item.type === 'IMAGE' &&
                 <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
-                <VideoSnippet
-                  autoPlay={index === currentSlide}
+                <ControlledVideo
+                  onPlay={(e) => onVideoRun(e)}
+                  onPause={(e) => onVideoRun(e)}
                   onVolumeChange={(e) =>
-                    changeVideoVolume(e)}
+                    onVolumeChange(e)}
                   query={item}
                 />}
             </Flex>

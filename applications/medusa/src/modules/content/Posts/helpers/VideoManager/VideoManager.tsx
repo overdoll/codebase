@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useCallback, useState } from 'react'
 import { useHistory } from '../../../../routing'
 
 interface Props {
@@ -14,12 +14,18 @@ interface Context {
   videoVolume: number
   videoMuted: boolean
   changeVideoVolume: (e) => void
+  changeVideoMuted: (e) => void
+  onVideoRun: (e) => void
 }
 
 const defaultValue = {
   videoVolume: 1,
   videoMuted: false,
   changeVideoVolume: (e) => {
+  },
+  changeVideoMuted: (e) => {
+  },
+  onVideoRun: (e) => {
   }
 }
 
@@ -34,17 +40,36 @@ export function VideoManagerProvider ({ children }: Props): JSX.Element {
 
   const [muted, setMuted] = useState(state?.videoMuted ?? true)
 
-  const onChangeVolume = (e): void => {
-    setVolume(e.target.volume)
-    if (e.target.muted !== muted) {
-      setMuted(e.target.muted)
+  const [activeVideo, setActiveVideo] = useState<HTMLVideoElement[]>([])
+
+  const onChangeMuted = useCallback((isMuted) => {
+    setMuted(isMuted)
+  }, [])
+
+  const onChangeVolume = useCallback((volume) => {
+    setVolume(volume)
+  }, [])
+
+  const handleVideo = (e): void => {
+    if (e.type === 'play') {
+      activeVideo.forEach((item) => {
+        !item.paused && item.pause()
+      })
+      setActiveVideo(x => [e.target, ...x])
+    }
+    if (e.type === 'pause') {
+      setActiveVideo(x => {
+        return x.filter((item) => item !== e.target)
+      })
     }
   }
 
   const contextValue = {
     videoVolume: volume,
     videoMuted: muted,
-    changeVideoVolume: (volume) => onChangeVolume(volume)
+    changeVideoVolume: (volume) => onChangeVolume(volume),
+    changeVideoMuted: (volume) => onChangeMuted(volume),
+    onVideoRun: (e) => handleVideo(e)
   }
 
   return (

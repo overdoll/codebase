@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { Action, State } from '@//:types/upload'
 import { useToast } from '@chakra-ui/react'
-import { Reducer, Suspense, useEffect, useReducer } from 'react'
+import { Reducer, Suspense, useEffect, useMemo, useReducer } from 'react'
 import PostCreator from './components/PostCreator/PostCreator'
 import { EVENTS, INITIAL_STATE } from './constants/constants'
 import useUpload from './hooks'
@@ -31,6 +31,10 @@ export default function CreatePost (props: Props): JSX.Element {
 
   const [postReference] = useQueryParam<string | null | undefined>('post')
 
+  const memoReference = useMemo(() => {
+    return postReference
+  }, [postReference])
+
   const [queryRef, loadQuery] = useQueryLoader(
     PostCreatorQuery,
     props.prepared.query
@@ -42,6 +46,10 @@ export default function CreatePost (props: Props): JSX.Element {
   const notify = useToast()
 
   const params = useParams()
+
+  const memoSlug = useMemo(() => {
+    return params.slug
+  }, [params.slug])
 
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
@@ -108,11 +116,12 @@ export default function CreatePost (props: Props): JSX.Element {
   }, [uppy])
 
   useEffect(() => {
+    if (memoSlug == null) return
     loadQuery({
       reference: postReference ?? '',
-      slug: params.slug as string
+      slug: memoSlug
     })
-  }, [postReference, params.slug])
+  }, [postReference, memoSlug])
 
   return (
     <>

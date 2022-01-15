@@ -4,7 +4,7 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Icon } from '@//:modules/content'
 import { CheckMark } from '@//:assets/icons/interface'
 import { HStack, Spinner, Text } from '@chakra-ui/react'
-import { Trans } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import { QueryArgs as QueryArgsType } from '@//:types/upload'
 
 interface Props {

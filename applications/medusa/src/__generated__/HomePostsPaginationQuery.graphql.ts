@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e97f179d7ba93200c913602c856372f6 */
+/* @relayHash ab94e3dade4c4f8634e0b4ca7d36839e */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,13 @@ query HomePostsPaginationQuery(
   $first: Int = 5
 ) {
   ...HomeFragment_2HEEH6
+}
+
+fragment ControlledVideoFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
 }
 
 fragment HomeFragment_2HEEH6 on Query {
@@ -103,7 +110,7 @@ fragment PostGallerySimpleContentFragment on Post {
   content {
     type
     ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ControlledVideoFragment
     id
   }
 }
@@ -453,7 +460,7 @@ return {
     ]
   },
   "params": {
-    "id": "e97f179d7ba93200c913602c856372f6",
+    "id": "ab94e3dade4c4f8634e0b4ca7d36839e",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

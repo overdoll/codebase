@@ -8,7 +8,7 @@ export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type PostGallerySimpleContentFragment = {
     readonly content: ReadonlyArray<{
         readonly type: ResourceType;
-        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
     }>;
     readonly " $refType": "PostGallerySimpleContentFragment";
 };
@@ -49,7 +49,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "VideoSnippetFragment"
+          "name": "ControlledVideoFragment"
         }
       ],
       "storageKey": null
@@ -58,5 +58,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '8375a165283f8838f6063954ebf63856';
+(node as any).hash = '86ba1d09d3c8b7176e61b186c045d105';
 export default node;

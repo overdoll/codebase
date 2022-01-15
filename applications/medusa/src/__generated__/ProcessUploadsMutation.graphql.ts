@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash 9af5b94be1a6c342b48a7b04c985e382 */
-=======
-/* @relayHash 6ffc832f9a7829efdf8bcc79de6d31c7 */
->>>>>>> master
+/* @relayHash 9ea7c23d5abd5d3f17baf09a2087db58 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -184,11 +180,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-<<<<<<< HEAD
-    "id": "9af5b94be1a6c342b48a7b04c985e382",
-=======
-    "id": "6ffc832f9a7829efdf8bcc79de6d31c7",
->>>>>>> master
+    "id": "9ea7c23d5abd5d3f17baf09a2087db58",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -196,9 +188,5 @@ return {
   }
 };
 })();
-<<<<<<< HEAD
-(node as any).hash = '7dbde3498b42d2d419679b82f7efa771';
-=======
-(node as any).hash = 'a08f5d95a6b55f90ac46d13b1b8ed29c';
->>>>>>> master
+(node as any).hash = '619ecedb8295f38f93bcb20c88a6530c';
 export default node;

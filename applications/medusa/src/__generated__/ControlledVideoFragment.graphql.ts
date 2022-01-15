@@ -5,7 +5,10 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ControlledVideoFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"VideoSnippetFragment">;
+    readonly urls: ReadonlyArray<{
+        readonly url: string;
+        readonly mimeType: string;
+    }>;
     readonly " $refType": "ControlledVideoFragment";
 };
 export type ControlledVideoFragment$data = ControlledVideoFragment;
@@ -23,13 +26,33 @@ const node: ReaderFragment = {
   "name": "ControlledVideoFragment",
   "selections": [
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "VideoSnippetFragment"
+      "concreteType": "ResourceUrl",
+      "kind": "LinkedField",
+      "name": "urls",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "url",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "mimeType",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
-(node as any).hash = '11c70b10cfd8ef5a21559239403081b7';
+(node as any).hash = '2a87ba90e0eade9371fc9f407d792820';
 export default node;

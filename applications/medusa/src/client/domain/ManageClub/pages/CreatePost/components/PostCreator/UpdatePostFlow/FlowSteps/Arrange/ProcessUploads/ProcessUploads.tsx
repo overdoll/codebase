@@ -12,7 +12,6 @@ import FilePicker from '../../../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import { DispatchContext, StateContext, UppyContext } from '../../../../../../context'
-import getIdFromResourceUrl from '../../../../../../hooks/getIdFromResourceUrl/getIdFromResourceUrl'
 
 interface Props {
   query: ProcessUploadsFragment$key
@@ -69,19 +68,12 @@ export default function ProcessUploads ({
       setProcessingError(false)
       const uploadedIDs = Object.keys(state.urls)
       const uploadedURLs = Object.values(state.urls)
-      const currentURLs = data?.content.map((item) =>
-        getIdFromResourceUrl(item.urls[0].url))
-
-      const combinedUpload = [...currentURLs, ...uploadedURLs] as string[]
-
-      console.log(combinedUpload)
-      console.log(data.content)
 
       updateContent({
         variables: {
           input: {
             id: data.id,
-            content: combinedUpload
+            content: uploadedURLs
           }
         },
         onCompleted () {
