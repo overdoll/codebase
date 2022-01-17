@@ -34,19 +34,20 @@ export default function PostGallerySimpleContent ({
   } = useContext(PostManagerContext)
 
   const {
+    videoMuted,
     changeVideoVolume,
     changeVideoMuted,
     onVideoRun
   } = useContext(VideoManagerContext)
 
-  // TODO if there is a video show a non-interactable transparent scrobble
-  // TODO at the very bottom
-
   // TODO if content overflows show a shadow
 
-  const onVolumeChange = (e): void => {
-    changeVideoMuted(e.target.muted)
-    changeVideoVolume(e.target.volume)
+  const onVolumeChange = ({
+    muted,
+    volume
+  }): void => {
+    changeVideoMuted(muted)
+    changeVideoVolume(volume)
   }
 
   return (
@@ -60,15 +61,21 @@ export default function PostGallerySimpleContent ({
       >
         {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex align='center' minH={300} maxH={700} bg='gray.800'>
+            <Flex align='center' minH={200} maxH={700} bg='gray.800'>
               {item.type === 'IMAGE' &&
                 <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
                 <ControlledVideo
+                  isMuted={videoMuted}
                   onPlay={(e) => onVideoRun(e)}
-                  onPause={(e) => onVideoRun(e)}
-                  onVolumeChange={(e) =>
-                    onVolumeChange(e)}
+                  onVolumeChange={({
+                    muted,
+                    volume
+                  }) =>
+                    onVolumeChange({
+                      muted,
+                      volume
+                    })}
                   query={item}
                 />}
             </Flex>

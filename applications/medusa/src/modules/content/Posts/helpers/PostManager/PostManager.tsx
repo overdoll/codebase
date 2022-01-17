@@ -96,14 +96,12 @@ export function PostManagerProvider ({ children }: Props): JSX.Element {
       setCurrentSlide(swiper.activeIndex)
       const activeSlide = swiper.slides[swiper.activeIndex]
       const activeVideo = findVideo(activeSlide)
-      if (activeVideo == null) {
-        const previousVideo = findVideo(swiper.slides[swiper.previousIndex])
-        if (previousVideo != null) {
-          previousVideo.pause()
-        }
+      const previousVideo = findVideo(swiper.slides[swiper.previousIndex])
+      if (previousVideo != null) {
+        previousVideo.pause()
         return
       }
-      void activeVideo.play()
+      void activeVideo?.play()
     })
 
     return () => {

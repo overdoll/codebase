@@ -7,6 +7,7 @@ import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragmen
 interface Props extends HTMLChakraProps<any> {
   query: ImageSnippetFragment$key
   h?: string | undefined
+  w?: string | undefined
 }
 
 const Fragment = graphql`
@@ -21,6 +22,7 @@ const Fragment = graphql`
 export default function ImageSnippet ({
   query,
   h,
+  w,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -28,7 +30,7 @@ export default function ImageSnippet ({
   // TODO add a placeholder in case the URL fails to load due to some error
 
   return (
-    <Box h={h} as='picture'>
+    <Box h={h} w={w} as='picture'>
       {data.urls.map((item, index) =>
         (
           <source

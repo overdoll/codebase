@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useState } from 'react'
+import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useHistory } from '../../../../routing'
 
 interface Props {
@@ -25,7 +25,7 @@ const defaultValue = {
   },
   changeVideoMuted: (e) => {
   },
-  onVideoRun: (e) => {
+  onVideoRun: (paused) => {
   }
 }
 
@@ -52,17 +52,25 @@ export function VideoManagerProvider ({ children }: Props): JSX.Element {
 
   const handleVideo = (e): void => {
     if (e.type === 'play') {
-      activeVideo.forEach((item) => {
-        !item.paused && item.pause()
-      })
-      setActiveVideo(x => [e.target, ...x])
+      setActiveVideo(x => {
+        return [e.target, ...x]
+      }
+      )
     }
     if (e.type === 'pause') {
       setActiveVideo(x => {
-        return x.filter((item) => item !== e.target)
+        return x.filter((item) => item.currentSrc !== e.target.currentSrc)
       })
     }
   }
+
+  useEffect(() => {
+    if (activeVideo.length > 1) {
+      activeVideo.slice(1).forEach((item) => {
+        item.pause()
+      })
+    }
+  }, [activeVideo])
 
   const contextValue = {
     videoVolume: volume,

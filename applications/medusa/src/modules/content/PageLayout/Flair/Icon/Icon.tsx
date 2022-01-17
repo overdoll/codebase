@@ -32,6 +32,10 @@ export default function Icon ({
           stroke: color ?? 'none',
           fill: fill ?? 'none'
         },
+        rect: {
+          stroke: color ?? 'none',
+          fill: fill ?? 'none'
+        },
         ...sx
       }}
       {...rest}
