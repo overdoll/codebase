@@ -322,6 +322,16 @@ const routes: Route[] = [
             './domain/Home/RootHome'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Home/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: () => {
           const Query = require('@//:artifacts/HomeQuery.graphql')
           return {
