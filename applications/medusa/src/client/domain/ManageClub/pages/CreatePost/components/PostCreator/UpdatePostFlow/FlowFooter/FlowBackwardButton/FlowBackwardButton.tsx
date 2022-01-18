@@ -28,10 +28,16 @@ export default function FlowBackwardButton (): JSX.Element {
           value: STEPS.CATEGORY
         })
         break
-      case STEPS.REVIEW:
+      case STEPS.PROCESS:
         dispatch({
           type: EVENTS.STEP,
           value: STEPS.CHARACTER
+        })
+        break
+      case STEPS.REVIEW:
+        dispatch({
+          type: EVENTS.STEP,
+          value: STEPS.PROCESS
         })
         break
       default:

@@ -8,6 +8,7 @@ import ViewClubQuery from '@//:artifacts/ViewClubQuery.graphql'
 import { useParams } from '@//:modules/routing/useParams'
 import ViewClub from './ViewClub/ViewClub'
 import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
+import PageContents from '../../Root/PageContents/PageContents'
 
 interface Props {
   prepared: {

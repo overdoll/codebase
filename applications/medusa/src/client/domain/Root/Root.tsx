@@ -4,9 +4,9 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import LockedAccountBanner from './LockedAccountBanner/LockedAccountBanner'
-import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
+import PageContents from './PageContents/PageContents'
 
 interface Props {
   prepared: {

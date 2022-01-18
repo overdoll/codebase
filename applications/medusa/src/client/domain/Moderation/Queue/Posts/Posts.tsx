@@ -1,5 +1,5 @@
 import { Flex, Skeleton, Stack, Text } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Fragment, useEffect, useState } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { format } from 'date-fns'

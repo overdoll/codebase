@@ -2,7 +2,7 @@ import type { PublicClubPostsFragment$key } from '@//:artifacts/PublicClubPostsF
 import { graphql, usePaginationFragment } from 'react-relay'
 import { Heading, Stack } from '@chakra-ui/react'
 import type { ViewClubQuery } from '@//:artifacts/ViewClubQuery.graphql'
-import PostGalleryContent from '../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostGalleryContent from '../../../../../modules/content/Posts/components/PostGalleryContent/PostGalleryContent'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'

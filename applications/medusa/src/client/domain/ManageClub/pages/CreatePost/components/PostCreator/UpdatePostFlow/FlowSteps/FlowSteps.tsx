@@ -10,6 +10,7 @@ import type { FlowStepsFragment$key } from '@//:artifacts/FlowStepsFragment.grap
 import { useFragment } from 'react-relay'
 import { useContext } from 'react'
 import { StateContext } from '../../../../context'
+import Process from './Process/Process'
 
 interface Props {
   query: FlowStepsFragment$key
@@ -22,6 +23,7 @@ const FlowStepsFragmentGQL = graphql`
     ...CategoryFragment
     ...CharacterFragment
     ...ReviewFragment
+    ...ProcessFragment
   }
 `
 
@@ -44,6 +46,10 @@ export default function FlowSteps ({
     case STEPS.CHARACTER:
 
       return <Character query={data} />
+
+    case STEPS.PROCESS:
+
+      return <Process query={data} />
 
     case STEPS.REVIEW:
 

@@ -1,17 +1,15 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ViewPostQuery } from '@//:artifacts/ViewPostQuery.graphql'
 import { graphql } from 'react-relay'
-import PostGalleryContent from '../../../../components/Posts/PostGalleryContent/PostGalleryContent'
+import PostGalleryContent from '../../../../../modules/content/Posts/components/PostGalleryContent/PostGalleryContent'
 import { Box, Flex, Grid, HStack, Stack } from '@chakra-ui/react'
-import PostIndexer from '../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
-import { LargeMenuButton, LargeMenuItem } from '@//:modules/content/PageLayout'
-import { LoginKeys } from '@//:assets/icons/navigation'
+import PostIndexer from '../../../../../modules/content/Posts/components/Interaction/PostIndexer/PostIndexer'
 import { t } from '@lingui/macro'
 import { useHistory } from '@//:modules/routing'
 import PostClickableCategories
-  from '../../../../components/Posts/components/PostData/PostClickableCategories/PostClickableCategories'
+  from '../../../../../modules/content/Posts/components/Interaction/PostClickableCategories/PostClickableCategories'
 import PostClickableCharacters
-  from '../../../../components/Posts/components/PostData/PostClickableCharacters/PostClickableCharacters'
+  from '../../../../../modules/content/Posts/components/Interaction/PostClickableCharacters/PostClickableCharacters'
 import { CheckCircle } from '@//:assets/icons/interface'
 import { Icon } from '@//:modules/content'
 import IconButton from '@//:modules/form/IconButton/IconButton'
@@ -105,9 +103,6 @@ export default function ViewPost (props: Props): JSX.Element {
             <CopyLinkToClipboard w='100%'>
               {`https://overdoll.com${history.location.pathname}`}
             </CopyLinkToClipboard>
-            <LargeMenuButton>
-              <LargeMenuItem color='purple.400' icon={LoginKeys} text={t`Moderate`} />
-            </LargeMenuButton>
           </HStack>
           <PostClickableCharacters query={queryData?.post} />
           <PostClickableCategories query={queryData?.post} />

@@ -5,7 +5,7 @@ import ProcessUploads from './ProcessUploads/ProcessUploads'
 import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { DispatchContext, StateContext, UppyContext } from '../../../../../context'
+import { StateContext, UppyContext } from '../../../../../context'
 
 interface Props {
   query: ArrangeFragment$key
@@ -32,8 +32,6 @@ export default function Arrange ({
 
   const uppy = useContext(UppyContext)
   const state = useContext(StateContext)
-  const dispatch = useContext(DispatchContext)
-
   const contentData = state.content ?? data?.content
 
   // We clear all uploads and re-add them when post content changes

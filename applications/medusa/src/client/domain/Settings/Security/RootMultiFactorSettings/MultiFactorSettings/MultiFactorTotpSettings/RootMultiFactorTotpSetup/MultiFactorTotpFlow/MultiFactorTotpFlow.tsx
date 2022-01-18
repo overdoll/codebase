@@ -16,14 +16,14 @@ import {
   Text
 } from '@chakra-ui/react'
 import ExternalLink from '../../../../../../../../components/ContentHints/ExternalLink/ExternalLink'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import SuspenseImage from '@//:modules/operations/SuspenseImage'
 import CopyCodeToClipboard from '../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 
 import TotpActivationForm from './TotpActivationForm/TotpActivationForm'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
+import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
 import { Trans } from '@lingui/macro'
 
 const MultiFactorTotpFlowMutationGQL = graphql`

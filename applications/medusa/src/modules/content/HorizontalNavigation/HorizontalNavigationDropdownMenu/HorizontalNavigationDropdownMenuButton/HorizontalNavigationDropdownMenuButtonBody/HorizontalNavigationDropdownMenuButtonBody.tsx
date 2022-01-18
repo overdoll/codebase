@@ -1,5 +1,5 @@
 import { Flex, Heading } from '@chakra-ui/react'
-import Icon from '../../../../Icon/Icon'
+import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
 

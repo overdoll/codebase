@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash aa3ed157d6ec96944a1bbae50495e75c */
+/* @relayHash f64164cfbae53166e09e347e38472c5d */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -61,6 +61,7 @@ fragment PostGalleryContentFragment on Post {
 fragment PostHeaderClubFragment on Post {
   club {
     name
+    slug
     thumbnail {
       ...ResourceIconFragment
       id
@@ -333,6 +334,13 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "slug",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "Resource",
                             "kind": "LinkedField",
                             "name": "thumbnail",
@@ -528,7 +536,7 @@ return {
     ]
   },
   "params": {
-    "id": "aa3ed157d6ec96944a1bbae50495e75c",
+    "id": "f64164cfbae53166e09e347e38472c5d",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

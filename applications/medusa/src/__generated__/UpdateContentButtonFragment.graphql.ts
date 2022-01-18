@@ -7,6 +7,7 @@ import { FragmentRefs } from "relay-runtime";
 export type UpdateContentButtonFragment = {
     readonly id: string;
     readonly content: ReadonlyArray<{
+        readonly id: string;
         readonly urls: ReadonlyArray<{
             readonly url: string;
         }>;
@@ -21,19 +22,21 @@ export type UpdateContentButtonFragment$key = {
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "UpdateContentButtonFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -42,6 +45,7 @@ const node: ReaderFragment = {
       "name": "content",
       "plural": true,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -67,5 +71,6 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'a97bbd6667189ae73fedfced3a359806';
+})();
+(node as any).hash = '202c11cf1f81e94e02bd2fe477bbeed6';
 export default node;

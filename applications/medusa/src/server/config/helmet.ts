@@ -28,7 +28,7 @@ const options: HelmetOptions = {
       'font-src': ['data:', '*'],
       'base-uri': ['\'self\''],
       'object-src': ['\'none\''],
-      'connect-src': ['\'self\'', 'blob:'],
+      'connect-src': ['\'self\'', 'blob:', 'https://static.dollycdn.test'],
       'frame-src': [],
       'frame-ancestors': ['\'none\''],
       'report-uri': [],

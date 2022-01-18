@@ -1,7 +1,7 @@
 import { Button, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Link } from '@//:modules/routing'
 import { CheckCircle, PauseCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'

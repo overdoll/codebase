@@ -65,11 +65,11 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
-#: src/client/components/SingleFileImageUpload/SingleFileImageUpload.tsx:105
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:105
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
-#: src/modules/content/ErrorFallback/ErrorFallback.tsx:34
+#: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:34
 msgid "Error {0}"
 msgstr ""
 
@@ -131,8 +131,8 @@ msgstr ""
 msgid "No reason was found"
 msgstr ""
 
-#: src/modules/content/PageLayout/Interactables/Menus/LargeMenuButton/LargeMenuButton.tsx:18
-#: src/modules/content/PageLayout/Interactables/Menus/SmallMenuButton/SmallMenuButton.tsx:18
+#: src/modules/content/Interactables/Menus/SmallMenuButton/SmallMenuButton.tsx:18
+#: src/modules/content/Posts/components/Interaction/PostMenu/PostMenu.tsx:31
 msgid "Open Menu"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
-#: src/modules/content/ErrorFallback/ErrorFallback.tsx:53
+#: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:53
 msgid "Retry"
 msgstr ""
 

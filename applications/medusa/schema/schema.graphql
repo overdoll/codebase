@@ -1497,6 +1497,11 @@ type Mutation {
   """Update a post in draft status - remove content"""
   removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
 
+  """
+  Update a post in draft status - update post content order - need to send exact same IDs
+  """
+  updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+
   """Update a post in draft status - characters"""
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
 
@@ -2675,6 +2680,21 @@ type UpdatePostCharactersPayload {
 
 """Payload for updating a post"""
 type UpdatePostClubPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post content order."""
+input UpdatePostContentOrderInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs for the content"""
+  contentIds: [ID!]!
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentOrderPayload {
   """The post after the update"""
   post: Post
 }

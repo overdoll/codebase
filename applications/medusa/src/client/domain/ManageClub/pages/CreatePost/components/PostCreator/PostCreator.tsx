@@ -8,7 +8,7 @@ import CommunityGuidelines from '../../../../../../components/ContentHints/Commu
 import Button from '@//:modules/form/Button/Button'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { PauseCircle } from '@//:assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'

@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import SearchCharacters from './SearchCharacters/SearchCharacters'
 
 interface Props {

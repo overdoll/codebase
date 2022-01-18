@@ -1,5 +1,5 @@
 import { ButtonProps, Code, Flex } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CopyCheck, CopyText } from '@//:assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { ClickableBox } from '@//:modules/content/PageLayout'

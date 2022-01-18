@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ea37e041f636a7c2d743993b45704f8b */
+/* @relayHash 7e7ddb74d9e2b8d671217b4bc1a14d72 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -56,6 +56,7 @@ fragment ArrangeFragment on Post {
 }
 
 fragment ArrangeUploadsFragment on Post {
+  id
   content {
     id
     urls {
@@ -128,6 +129,7 @@ fragment FlowForwardButtonFragment on Post {
   ...UpdateCategoryButtonFragment
   ...UpdateCharacterButtonFragment
   ...UpdateContentButtonFragment
+  ...ProcessButtonFragment
 }
 
 fragment FlowHeaderFragment on Post {
@@ -140,6 +142,7 @@ fragment FlowStepsFragment on Post {
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
+  ...ProcessFragment
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -161,6 +164,7 @@ fragment PostGalleryContentFragment on Post {
 fragment PostHeaderClubFragment on Post {
   club {
     name
+    slug
     thumbnail {
       ...ResourceIconFragment
       id
@@ -169,14 +173,26 @@ fragment PostHeaderClubFragment on Post {
   }
 }
 
+fragment ProcessButtonFragment on Post {
+  id
+  content {
+    id
+    processed
+  }
+}
+
+fragment ProcessFragment on Post {
+  ...RootProcessContentFragment
+}
+
 fragment ProcessUploadsFragment on Post {
   id
   reference
   content {
+    id
     urls {
       url
     }
-    id
   }
 }
 
@@ -203,6 +219,14 @@ fragment ReviewFragment on Post {
   ...PostHeaderClubFragment
   club {
     name
+    id
+  }
+}
+
+fragment RootProcessContentFragment on Post {
+  reference
+  content {
+    processed
     id
   }
 }
@@ -235,10 +259,10 @@ fragment UpdateCharacterButtonFragment on Post {
 fragment UpdateContentButtonFragment on Post {
   id
   content {
+    id
     urls {
       url
     }
-    id
   }
 }
 
@@ -472,6 +496,13 @@ return {
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "processed",
+                "storageKey": null
+              },
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -552,6 +583,7 @@ return {
             "plural": false,
             "selections": [
               (v13/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -577,7 +609,7 @@ return {
     ]
   },
   "params": {
-    "id": "ea37e041f636a7c2d743993b45704f8b",
+    "id": "7e7ddb74d9e2b8d671217b4bc1a14d72",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

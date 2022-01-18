@@ -6,6 +6,8 @@ import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragmen
 
 interface Props extends HTMLChakraProps<any> {
   query: ImageSnippetFragment$key
+  h?: string | undefined
+  w?: string | undefined
 }
 
 const Fragment = graphql`
@@ -19,6 +21,8 @@ const Fragment = graphql`
 
 export default function ImageSnippet ({
   query,
+  h,
+  w,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -26,28 +30,26 @@ export default function ImageSnippet ({
   // TODO add a placeholder in case the URL fails to load due to some error
 
   return (
-    <Box>
-      <picture>
-        {data.urls.map((item, index) =>
-          (
-            <source
-              key={index}
-              srcSet={item.url}
-              type={item.mimeType}
-            />
-          )
-        )}
-        <SuspenseImage
-          alt='thumbnail'
-          w='inherit'
-          h='inherit'
-          objectFit='cover'
-          userSelect='none'
-          src={data.urls[data.urls.length - 1].url}
-          fallback={<Skeleton w='100%' h='100%' />}
-          {...rest}
-        />
-      </picture>
+    <Box h={h} w={w} as='picture'>
+      {data.urls.map((item, index) =>
+        (
+          <source
+            key={index}
+            srcSet={item.url}
+            type={item.mimeType}
+          />
+        )
+      )}
+      <SuspenseImage
+        alt='thumbnail'
+        w='inherit'
+        h='inherit'
+        objectFit='cover'
+        userSelect='none'
+        src={data.urls[data.urls.length - 1].url}
+        fallback={<Skeleton w='100%' h='100%' />}
+        {...rest}
+      />
     </Box>
   )
 }

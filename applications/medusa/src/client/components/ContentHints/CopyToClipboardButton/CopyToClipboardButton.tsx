@@ -1,5 +1,5 @@
 import Button from '@//:modules/form/Button/Button'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CopyCheck, CopyText } from '@//:assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'

@@ -18,6 +18,7 @@ const Fragment = graphql`
   fragment UpdateContentButtonFragment on Post {
     id
     content {
+      id
       urls {
         url
       }
@@ -26,13 +27,14 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation UpdateContentButtonMutation ($input: AddPostContentInput!) {
-    addPostContent(input: $input) {
+  mutation UpdateContentButtonMutation ($input: UpdatePostContentOrderInput!) {
+    updatePostContentOrder(input: $input) {
       post {
         id
         content {
           id
           type
+          processed
           urls {
             url
             mimeType
@@ -66,7 +68,7 @@ export default function UpdateContentButton ({
   }
 
   const hasUpdate = (): boolean => {
-    const currentContent = data.content.map((item) => item.urls[0].url)
+    const currentContent = data.content.map((item) => item.id)
     // We only check the order because newly added files are committed automatically
     if (state.content == null) return false
     return !compareTwoArrayOrders(currentContent, state.content)
@@ -84,7 +86,7 @@ export default function UpdateContentButton ({
       variables: {
         input: {
           id: data.id,
-          content: state.content as string[]
+          contentIds: state.content as string[]
         }
       },
       onCompleted () {

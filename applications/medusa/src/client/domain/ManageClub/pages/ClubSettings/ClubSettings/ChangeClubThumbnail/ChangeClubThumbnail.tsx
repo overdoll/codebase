@@ -11,7 +11,7 @@ import {
 } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import SingleFileImageUpload from '../../../../../../components/SingleFileImageUpload/SingleFileImageUpload'
+import SingleFileImageUpload from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
 
 interface Props {
   query: ChangeClubThumbnailFragment$key | null

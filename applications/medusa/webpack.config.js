@@ -8,5 +8,13 @@ module.exports = {
       '@//:types': path.resolve(__dirname, 'src/types'),
       '@//:assets': path.resolve(__dirname, 'src/assets')
     }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.md$/,
+        use: 'raw-loader'
+      }
+    ]
   }
 }

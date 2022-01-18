@@ -1,24 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0d0c595adc294f1ff0e9093743976588 */
+/* @relayHash df51bbbed92255556ab2c5e699f05295 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type AddPostContentInput = {
+export type UpdatePostContentOrderInput = {
     id: string;
-    content: Array<string>;
+    contentIds: Array<string>;
 };
 export type UpdateContentButtonMutationVariables = {
-    input: AddPostContentInput;
+    input: UpdatePostContentOrderInput;
 };
 export type UpdateContentButtonMutationResponse = {
-    readonly addPostContent: {
+    readonly updatePostContentOrder: {
         readonly post: {
             readonly id: string;
             readonly content: ReadonlyArray<{
                 readonly id: string;
                 readonly type: ResourceType;
+                readonly processed: boolean;
                 readonly urls: ReadonlyArray<{
                     readonly url: string;
                     readonly mimeType: string;
@@ -36,14 +37,15 @@ export type UpdateContentButtonMutation = {
 
 /*
 mutation UpdateContentButtonMutation(
-  $input: AddPostContentInput!
+  $input: UpdatePostContentOrderInput!
 ) {
-  addPostContent(input: $input) {
+  updatePostContentOrder(input: $input) {
     post {
       id
       content {
         id
         type
+        processed
         urls {
           url
           mimeType
@@ -79,9 +81,9 @@ v2 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "AddPostContentPayload",
+    "concreteType": "UpdatePostContentOrderPayload",
     "kind": "LinkedField",
-    "name": "addPostContent",
+    "name": "updatePostContentOrder",
     "plural": false,
     "selections": [
       {
@@ -107,6 +109,13 @@ v2 = [
                 "args": null,
                 "kind": "ScalarField",
                 "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "processed",
                 "storageKey": null
               },
               {
@@ -162,7 +171,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "0d0c595adc294f1ff0e9093743976588",
+    "id": "df51bbbed92255556ab2c5e699f05295",
     "metadata": {},
     "name": "UpdateContentButtonMutation",
     "operationKind": "mutation",
@@ -170,5 +179,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'a3b310a46e811372dca41b050d6b541f';
+(node as any).hash = '306bc32c87a2f82fcfa83513852288ad';
 export default node;

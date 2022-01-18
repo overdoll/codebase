@@ -319,18 +319,62 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Home/Home'
+            './domain/Home/RootHome'
           )
-        )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Home/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        prepare: () => {
+          const Query = require('@//:artifacts/HomeQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/clubs',
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/MyClubs/MyClubs'
+            './domain/MyClubs/RootMyClubs'
           )
-        )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/MyClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        prepare: () => {
+          const Query = require('@//:artifacts/MyClubsQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/moderation',
@@ -745,12 +789,22 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Home/Home'
+            './domain/Home/RootHome'
           )
         )
       },
       {
         path: '/configure/create-club',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ManageClub/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         component: loadable(async () =>
           await import(
             './domain/ManageClub/pages/CreateClub/RootCreateClub'
@@ -771,16 +825,6 @@ const routes: Route[] = [
             }
           }
         },
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/ManageClub/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
         middleware: [
           ({
             environment,
@@ -798,6 +842,16 @@ const routes: Route[] = [
       },
       {
         path: '/club/:slug',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ManageClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         component: loadable(async () =>
           await import(
             './domain/ManageClub/RootManageClub'
@@ -823,6 +877,16 @@ const routes: Route[] = [
         routes: [
           {
             path: '/club/:slug/:entity(home)',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/ManageClub/pages/ClubHome/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/ManageClub/pages/ClubHome/RootClubHome'
@@ -848,6 +912,16 @@ const routes: Route[] = [
           },
           {
             path: '/club/:slug/:entity(members)',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/ManageClub/pages/ClubMembers/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/ManageClub/pages/ClubMembers/RootClubMembers'
@@ -873,6 +947,16 @@ const routes: Route[] = [
           },
           {
             path: '/club/:slug/:entity(settings)',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/ManageClub/pages/ClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/ManageClub/pages/ClubSettings/RootClubSettings'
@@ -898,6 +982,16 @@ const routes: Route[] = [
           },
           {
             path: '/club/:slug/:entity(posts)',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/ManageClub/pages/ClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/ManageClub/pages/ClubPosts/RootClubPosts'
@@ -924,11 +1018,6 @@ const routes: Route[] = [
           },
           {
             path: '/club/:slug/:entity(create-post)',
-            component: loadable(async () =>
-              await import(
-                './domain/ManageClub/pages/CreatePost/CreatePost'
-              )
-            ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
@@ -939,6 +1028,11 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            component: loadable(async () =>
+              await import(
+                './domain/ManageClub/pages/CreatePost/CreatePost'
+              )
+            ),
             prepare: ({
               params,
               query
@@ -961,12 +1055,41 @@ const routes: Route[] = [
         ]
       },
       {
+        path: '/help',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/Help/Help'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Help/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ]
+      },
+      {
         path: '/:slug',
         component: loadable(async () =>
           await import(
             './domain/Public/ViewClub/RootViewClub'
           )
         ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Public/ViewClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         prepare: ({
           params,
           query
