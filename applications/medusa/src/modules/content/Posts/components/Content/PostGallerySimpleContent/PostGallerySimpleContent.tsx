@@ -3,7 +3,6 @@ import { Box, Flex } from '@chakra-ui/react'
 import ImageSnippet from '../../../../DataDisplay/Snippets/ImageSnippet/ImageSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
-import 'swiper/components/navigation/navigation.min.css'
 import { useContext } from 'react'
 import { PostManagerContext } from '../../../helpers/PostManager/PostManager'
 import { VideoManagerContext } from '../../../helpers/VideoManager/VideoManager'
@@ -34,10 +33,11 @@ export default function PostGallerySimpleContent ({
   } = useContext(PostManagerContext)
 
   const {
-    videoMuted,
     changeVideoVolume,
     changeVideoMuted,
-    onVideoRun
+    onVideoRun,
+    videoMuted,
+    videoVolume
   } = useContext(VideoManagerContext)
 
   // TODO if content overflows show a shadow
@@ -51,22 +51,23 @@ export default function PostGallerySimpleContent ({
   }
 
   return (
-    <Box>
+    <Box bg='gray.800'>
       <Swiper
+        style={{ alignItems: 'center' }}
         observer
-        observeParents
         onSwiper={(swiper) =>
           onInitialize(swiper)}
       >
         {data?.content.map((item, index) =>
           <SwiperSlide key={index}>
-            <Flex align='center' minH={200} maxH={700} bg='gray.800'>
+            <Flex minH={200} maxH={700} bg='gray.800'>
               {item.type === 'IMAGE' &&
                 <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
                 <ControlledVideo
-                  isMuted={videoMuted}
                   onPlay={(e) => onVideoRun(e)}
+                  defaultVolume={videoVolume}
+                  isMuted={videoMuted}
                   onVolumeChange={({
                     muted,
                     volume

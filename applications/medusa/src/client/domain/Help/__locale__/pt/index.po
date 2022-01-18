@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-01-18 12:02-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+
+#: src/client/domain/Help/Help.tsx:19
+msgid "Help"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:40
+msgid "Privacy Policy"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:29
+msgid "Terms of Service"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:43
+msgid "View our Privacy Policy"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:32
+msgid "View our Terms of Service"
+msgstr ""

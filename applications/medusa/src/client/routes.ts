@@ -340,9 +340,31 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/MyClubs/MyClubs'
+            './domain/MyClubs/RootMyClubs'
           )
-        )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/MyClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        prepare: () => {
+          const Query = require('@//:artifacts/MyClubsQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/moderation',
@@ -1019,6 +1041,25 @@ const routes: Route[] = [
                 }
               }
             }
+          }
+        ]
+      },
+      {
+        path: '/help',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/Help/Help'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Help/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
           }
         ]
       },

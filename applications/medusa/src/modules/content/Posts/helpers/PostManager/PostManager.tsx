@@ -73,6 +73,8 @@ export function PostManagerProvider ({ children }: Props): JSX.Element {
   }
 
   const findVideo = (ref): HTMLVideoElement | null => {
+    if (ref == null) return null
+
     return ref.getElementsByTagName('video')[0] ?? null
   }
 

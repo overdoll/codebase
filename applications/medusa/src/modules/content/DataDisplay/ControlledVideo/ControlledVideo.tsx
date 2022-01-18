@@ -33,7 +33,7 @@ export default function ControlledVideo ({
   query,
   onPlay,
   onVolumeChange,
-  defaultVolume = 0.5,
+  defaultVolume = 0.1,
   isMuted = true,
   ...rest
 }: Props): JSX.Element {

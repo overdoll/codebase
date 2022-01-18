@@ -17,7 +17,6 @@ export default function TermsOfService ({ content }: Props): JSX.Element {
           {content}
         </ReactMarkdown>
       </Stack>
-
     </PageContents>
   )
 }

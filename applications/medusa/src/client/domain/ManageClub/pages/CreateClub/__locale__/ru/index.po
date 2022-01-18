@@ -25,7 +25,7 @@ msgstr ""
 msgid "Create Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:29
+#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:30
 msgid "Create a Club"
 msgstr ""
 

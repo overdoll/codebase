@@ -36,7 +36,7 @@ export function VideoManagerProvider ({ children }: Props): JSX.Element {
   const currentHistory = history.location
   const state = currentHistory.state as VideoManagerState
 
-  const [volume, setVolume] = useState(state?.videoVolume ?? 1)
+  const [volume, setVolume] = useState(state?.videoVolume ?? 0.5)
 
   const [muted, setMuted] = useState(state?.videoMuted ?? true)
 

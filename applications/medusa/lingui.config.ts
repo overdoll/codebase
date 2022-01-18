@@ -111,6 +111,10 @@ export default {
     {
       path: 'src/client/domain/ManageClub/pages/CreatePost/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/CreatePost']
+    },
+    {
+      path: 'src/client/domain/Help/__locale__/{locale}/index',
+      include: ['src/client/domain/Help']
     }
   ],
   format: 'po',

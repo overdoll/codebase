@@ -1,4 +1,10 @@
-import { CogDouble, LoginKeys, PageControllerSettings, SafetyExitDoorLeft } from '@//:assets/icons/navigation'
+import {
+  CogDouble,
+  LoginKeys,
+  PageControllerSettings,
+  SafetyExitDoorLeft,
+  SafetyFloat
+} from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
@@ -100,6 +106,18 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
               </Trans>
             }
           />
+        </Can>
+        <HorizontalNavigationDropdownMenu.Button
+          to='/help'
+          colorScheme='primary'
+          icon={SafetyFloat}
+          label={
+            <Trans>
+              Help
+            </Trans>
+          }
+        />
+        <Can I='manage' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
             to='/logout'
             color='orange.300'

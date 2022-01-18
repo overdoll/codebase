@@ -100,7 +100,7 @@ msgid "Generating two-factor flow..."
 msgstr ""
 
 #: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup.tsx:53
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:54
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:55
 msgid "Go back to settings"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Improve the security of your account in three easy steps by enabling two-factor authentication."
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:40
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:41
 msgid "In the event that you lose access to your device and cannot use the two-factor authentication codes, you can use a recovery code to gain access to your account."
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Set up two-factor authentication"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:35
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup.tsx:36
 msgid "Set up two-factor recovery codes"
 msgstr ""
 

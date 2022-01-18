@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5fd643692a6508f12eef6a7ed212f57d */
+/* @relayHash 5e8d599ef2150c7fe127629cb98ec68a */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -36,12 +36,11 @@ fragment ControlledVideoFragment on Resource {
 }
 
 fragment HomeFragment on Query {
-  posts(first: 5) {
+  posts(first: 10) {
     edges {
       node {
-        id
         ...HomePostFragment
-        ...PostGalleryContentFragment
+        id
         __typename
       }
       cursor
@@ -117,15 +116,6 @@ fragment PostClickableCharactersFragment on Post {
   }
 }
 
-fragment PostGalleryContentFragment on Post {
-  content {
-    type
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
-    id
-  }
-}
-
 fragment PostGallerySimpleContentFragment on Post {
   content {
     type
@@ -183,7 +173,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 5
+    "value": 10
   }
 ],
 v1 = {
@@ -325,7 +315,6 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -336,6 +325,7 @@ return {
                     "selections": (v2/*: any*/),
                     "storageKey": null
                   },
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -465,7 +455,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "posts(first:5)"
+        "storageKey": "posts(first:10)"
       },
       {
         "alias": null,
@@ -505,7 +495,7 @@ return {
     ]
   },
   "params": {
-    "id": "5fd643692a6508f12eef6a7ed212f57d",
+    "id": "5e8d599ef2150c7fe127629cb98ec68a",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

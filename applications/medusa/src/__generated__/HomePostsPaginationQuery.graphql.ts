@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4dc2df7a2dcb3a1bdfb393188e22a234 */
+/* @relayHash 3878f884164aac38368eb2d4f1cf9b8c */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type HomePostsPaginationQuery = {
 /*
 query HomePostsPaginationQuery(
   $after: String
-  $first: Int = 5
+  $first: Int = 10
 ) {
   ...HomeFragment_2HEEH6
 }
@@ -38,9 +38,8 @@ fragment HomeFragment_2HEEH6 on Query {
   posts(first: $first, after: $after) {
     edges {
       node {
-        id
         ...HomePostFragment
-        ...PostGalleryContentFragment
+        id
         __typename
       }
       cursor
@@ -107,15 +106,6 @@ fragment PostClickableCharactersFragment on Post {
   }
 }
 
-fragment PostGalleryContentFragment on Post {
-  content {
-    type
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
-    id
-  }
-}
-
 fragment PostGallerySimpleContentFragment on Post {
   content {
     type
@@ -176,7 +166,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 5,
+    "defaultValue": 10,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -316,7 +306,6 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -327,6 +316,7 @@ return {
                     "selections": (v3/*: any*/),
                     "storageKey": null
                   },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -470,7 +460,7 @@ return {
     ]
   },
   "params": {
-    "id": "4dc2df7a2dcb3a1bdfb393188e22a234",
+    "id": "3878f884164aac38368eb2d4f1cf9b8c",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",
@@ -478,5 +468,5 @@ return {
   }
 };
 })();
-(node as any).hash = '0236a2b4da92f070a771feb5c88ccb6a';
+(node as any).hash = 'dcdf712dcaf7525cea162b1635f9a3e0';
 export default node;
