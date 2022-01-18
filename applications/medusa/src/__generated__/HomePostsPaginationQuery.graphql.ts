@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ab94e3dade4c4f8634e0b4ca7d36839e */
+/* @relayHash 4dc2df7a2dcb3a1bdfb393188e22a234 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -38,8 +38,9 @@ fragment HomeFragment_2HEEH6 on Query {
   posts(first: $first, after: $after) {
     edges {
       node {
-        ...HomePostFragment
         id
+        ...HomePostFragment
+        ...PostGalleryContentFragment
         __typename
       }
       cursor
@@ -102,6 +103,15 @@ fragment PostClickableCharactersFragment on Post {
       ...ResourceIconFragment
       id
     }
+    id
+  }
+}
+
+fragment PostGalleryContentFragment on Post {
+  content {
+    type
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
     id
   }
 }
@@ -306,6 +316,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -316,7 +327,6 @@ return {
                     "selections": (v3/*: any*/),
                     "storageKey": null
                   },
-                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -460,7 +470,7 @@ return {
     ]
   },
   "params": {
-    "id": "ab94e3dade4c4f8634e0b4ca7d36839e",
+    "id": "4dc2df7a2dcb3a1bdfb393188e22a234",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",
@@ -468,5 +478,5 @@ return {
   }
 };
 })();
-(node as any).hash = '090d458273f5148b8380d46f1e646066';
+(node as any).hash = '0236a2b4da92f070a771feb5c88ccb6a';
 export default node;

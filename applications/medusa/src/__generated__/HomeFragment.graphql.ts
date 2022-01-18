@@ -8,7 +8,8 @@ export type HomeFragment = {
     readonly posts: {
         readonly edges: ReadonlyArray<{
             readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"HomePostFragment">;
+                readonly id: string;
+                readonly " $fragmentRefs": FragmentRefs<"HomePostFragment" | "PostGalleryContentFragment">;
             };
         }>;
     };
@@ -92,6 +93,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 },
@@ -99,6 +107,11 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "HomePostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PostGalleryContentFragment"
                 }
               ],
               "storageKey": null
@@ -146,5 +159,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '090d458273f5148b8380d46f1e646066';
+(node as any).hash = '0236a2b4da92f070a771feb5c88ccb6a';
 export default node;

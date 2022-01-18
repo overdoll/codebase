@@ -85,6 +85,8 @@ export default function Home (props: Props): JSX.Element {
     parentRef: listRef
   })
 
+  console.log('re-render')
+
   return (
     <div
       ref={listRef}

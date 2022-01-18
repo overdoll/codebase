@@ -33,7 +33,7 @@ export default function ControlledVideo ({
   query,
   onPlay,
   onVolumeChange,
-  defaultVolume = 0.8,
+  defaultVolume = 0.5,
   isMuted = true,
   ...rest
 }: Props): JSX.Element {
@@ -167,7 +167,7 @@ export default function ControlledVideo ({
         )}
       </Box>
       <Flex align='center' top={0} p={4} position='absolute' w='100%' justify='flex-end'>
-        <SimpleProgressCircle isLoading={!loaded} isPaused={paused} time={time} />
+        <SimpleProgressCircle isLoading={!loaded} time={time} />
       </Flex>
       <Fade unmountOnExit in={isOpen || paused}>
         <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='space-between'>

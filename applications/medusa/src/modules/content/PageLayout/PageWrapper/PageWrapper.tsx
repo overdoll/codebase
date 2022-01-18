@@ -17,6 +17,7 @@ export default function PageWrapper ({
         pl={[1, 0]}
         pr={[1, 0]}
         mb={6}
+        h='100%'
       >
         {children}
       </Box>

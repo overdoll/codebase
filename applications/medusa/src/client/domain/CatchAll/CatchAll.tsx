@@ -7,6 +7,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import Link from '@//:modules/routing/Link'
 import { Trans } from '@lingui/macro'
 import NotFound from '@//:modules/routing/NotFound'
+import PageContents from '../Root/PageContents/PageContents'
 
 export default function CatchAll (): JSX.Element {
   return (

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1cd042a7bec1c079c59390df0b8e4a82 */
+/* @relayHash 5fd643692a6508f12eef6a7ed212f57d */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -39,8 +39,9 @@ fragment HomeFragment on Query {
   posts(first: 5) {
     edges {
       node {
-        ...HomePostFragment
         id
+        ...HomePostFragment
+        ...PostGalleryContentFragment
         __typename
       }
       cursor
@@ -112,6 +113,15 @@ fragment PostClickableCharactersFragment on Post {
       ...ResourceIconFragment
       id
     }
+    id
+  }
+}
+
+fragment PostGalleryContentFragment on Post {
+  content {
+    type
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
     id
   }
 }
@@ -315,6 +325,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -325,7 +336,6 @@ return {
                     "selections": (v2/*: any*/),
                     "storageKey": null
                   },
-                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -495,7 +505,7 @@ return {
     ]
   },
   "params": {
-    "id": "1cd042a7bec1c079c59390df0b8e4a82",
+    "id": "5fd643692a6508f12eef6a7ed212f57d",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

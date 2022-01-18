@@ -124,6 +124,8 @@ _RUNTIME_DEPS = [
     "@npm//@lingui/react",
     "@npm//@apollographql/graphql-playground-html",
     "@npm//url-slug",
+    "@npm//react-window",
+    "@npm//react-window-infinite-loader"
 ]
 
 TEST_DEPS = [

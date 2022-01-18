@@ -55,7 +55,6 @@ export default function PostGallerySimpleContent ({
       <Swiper
         observer
         observeParents
-        autoHeight
         onSwiper={(swiper) =>
           onInitialize(swiper)}
       >

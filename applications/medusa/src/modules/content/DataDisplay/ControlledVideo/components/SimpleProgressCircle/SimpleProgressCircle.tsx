@@ -1,22 +1,14 @@
 import { CircularProgress, HTMLChakraProps } from '@chakra-ui/react'
-import { ControlPauseButton } from '@//:assets/icons/interface'
-import { Icon } from '../../../../index'
 
 interface Props extends HTMLChakraProps<any> {
   time: number
   isLoading: boolean
-  isPaused: boolean
 }
 
 export default function SimpleProgressCircle ({
   time,
-  isLoading,
-  isPaused
+  isLoading
 }: Props): JSX.Element {
-  if (isPaused && !isLoading) {
-    return <Icon h={4} w={4} icon={ControlPauseButton} fill='whiteAlpha.800' />
-  }
-
   return (
     <CircularProgress
       capIsRound

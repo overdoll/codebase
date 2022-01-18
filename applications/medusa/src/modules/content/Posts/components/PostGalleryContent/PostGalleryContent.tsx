@@ -31,7 +31,7 @@ const PostGalleryContentFragmentGQL = graphql`
 
 export default function PostGalleryContent ({
   query,
-  children
+  children,
 }: Props): JSX.Element {
   const data = useFragment(PostGalleryContentFragmentGQL, query)
 
@@ -97,7 +97,7 @@ export default function PostGalleryContent ({
       </Swiper>
       {children?.({
         slidesCount,
-        currentSlide
+        currentSlide,
       })}
     </Box>
   )
