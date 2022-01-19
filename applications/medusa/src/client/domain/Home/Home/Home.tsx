@@ -6,7 +6,8 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useVirtual } from 'react-virtual'
 import HomePost from './HomePost/HomePost'
 import { Box, Center, Flex, Spinner } from '@chakra-ui/react'
-import { PostManagerProvider, VideoManagerProvider } from '@//:modules/content/Posts'
+import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -94,7 +95,7 @@ export default function Home (props: Props): JSX.Element {
   ])
 
   return (
-    <VideoManagerProvider>
+    <GlobalVideoManagerProvider>
       <Box
         ref={listRef}
         height={height - 54}
@@ -126,15 +127,17 @@ export default function Home (props: Props): JSX.Element {
                     w={['full', 'lg']}
                     my={4}
                   >
-                    <PostManagerProvider>
-                      {isVirtualRow
-                        ? hasNext
-                          ? <Flex w='100%' align='center' justify='center'>
-                            <Spinner />
-                            </Flex>
-                          : <></>
-                        : <HomePost query={posts[virtualRow.index].node} viewerQuery={queryData.viewer} />}
-                    </PostManagerProvider>
+                    <ObserverManagerProvider>
+                      <PostVideoManagerProvider>
+                        {isVirtualRow
+                          ? hasNext
+                            ? <Flex w='100%' align='center' justify='center'>
+                              <Spinner />
+                              </Flex>
+                            : <></>
+                          : <HomePost query={posts[virtualRow.index].node} viewerQuery={queryData.viewer} />}
+                      </PostVideoManagerProvider>
+                    </ObserverManagerProvider>
                   </Box>
                 </Center>
               </Box>
@@ -143,6 +146,6 @@ export default function Home (props: Props): JSX.Element {
           )}
         </Box>
       </Box>
-    </VideoManagerProvider>
+    </GlobalVideoManagerProvider>
   )
 }

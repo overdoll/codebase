@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5e8d599ef2150c7fe127629cb98ec68a */
+/* @relayHash 0da832a76b1833d76cf5724a08d52684 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -29,10 +29,7 @@ query HomeQuery {
 }
 
 fragment ControlledVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
+  ...RenderVideoFragment
 }
 
 fragment HomeFragment on Query {
@@ -117,6 +114,7 @@ fragment PostClickableCharactersFragment on Post {
 }
 
 fragment PostGallerySimpleContentFragment on Post {
+  id
   content {
     type
     ...ImageSnippetFragment
@@ -148,6 +146,13 @@ fragment PostLikeButtonFragment on Post {
 
 fragment PostMenuFragment on Post {
   id
+}
+
+fragment RenderVideoFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
 }
 
 fragment ResourceIconFragment on Resource {
@@ -315,6 +320,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -325,7 +331,6 @@ return {
                     "selections": (v2/*: any*/),
                     "storageKey": null
                   },
-                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -495,7 +500,7 @@ return {
     ]
   },
   "params": {
-    "id": "5e8d599ef2150c7fe127629cb98ec68a",
+    "id": "0da832a76b1833d76cf5724a08d52684",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

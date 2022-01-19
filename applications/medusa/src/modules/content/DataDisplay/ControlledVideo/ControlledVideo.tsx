@@ -1,40 +1,38 @@
-import { Box, Fade, Flex, HStack, HTMLChakraProps } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ControlledVideoFragment$key } from '@//:artifacts/ControlledVideoFragment.graphql'
-import { MutableRefObject, useEffect, useRef, useState } from 'react'
-import PlayPauseButton from './components/PlayPauseButton/PlayPauseButton'
-import SimpleProgressCircle from './components/SimpleProgressCircle/SimpleProgressCircle'
-import VolumeButton from './components/VolumeButton/VolumeButton'
-import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
+import { useRef, useState } from 'react'
 import useTimedDisclosure from './hooks/useTimedDisclosure/useTimedDisclosure'
+import RenderVideo from './components/RenderVideo/RenderVideo'
+import ControlVideo from './components/ControlVideo/ControlVideo'
 
 interface Props extends HTMLChakraProps<any> {
-  onPlay?: (paused: boolean) => void
-  onVolumeChange?: ({
-    muted: boolean,
-    volume: number
-  }) => void
-  defaultVolume?: number
   query: ControlledVideoFragment$key
+  onPlay?: (paused: boolean, target?) => void
+  onPause?: (paused: boolean, target?) => void
+  onVolumeChange?: (volume) => void
+  onMute?: (muted) => void
+  onInitialize?: (target) => void
+  volume?: number
   isMuted?: boolean
 }
 
 const Fragment = graphql`
   fragment ControlledVideoFragment on Resource {
-    urls {
-      url
-      mimeType
-    }
+    ...RenderVideoFragment
   }
 `
 
 export default function ControlledVideo ({
   query,
-  onPlay,
-  onVolumeChange,
-  defaultVolume = 0.1,
-  isMuted = true,
+  onPlay: onDefaultPlay,
+  onPause: onDefaultPause,
+  onVolumeChange: onDefaultVolumeChange,
+  onInitialize: onDefaultInitialize,
+  onMute: onDefaultVolumeMute,
+  volume: defaultVolume = 0.1,
+  isMuted: isDefaultMuted = true,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -43,21 +41,10 @@ export default function ControlledVideo ({
 
   const [time, setTime] = useState(0)
   const [volume, setVolume] = useState(defaultVolume)
-  const [muted, setMuted] = useState(isMuted)
-  const [paused, setPaused] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-
+  const [isMuted, setMuted] = useState(isDefaultMuted)
+  const [isPaused, setPaused] = useState(false)
+  const [isLoaded, setLoaded] = useState(false)
   const [hasAudio, setHasAudio] = useState(true)
-
-  const onChangeVideo = (): void => {
-    const video = ref.current
-    if (video == null) return
-    if (video.paused) {
-      void video.play()
-      return
-    }
-    video.pause()
-  }
 
   const {
     isOpen,
@@ -70,125 +57,74 @@ export default function ControlledVideo ({
     hoverTimeout: 3000
   })
 
-  const onChangeMuted = (): void => {
-    const video = ref.current
-    if (video == null) return
-    if (video.muted) {
-      video.muted = false
-      return
+  const onInitialize = (e): void => {
+    if (e.target.volume !== volume) {
+      e.target.volume = volume
     }
-    video.muted = true
-  }
-
-  const onInitialize = (): void => {
-    if (ref?.current == null) return
-
-    ref.current.volume = volume
-    // @ts-expect-error
-    if (ref?.current?.webkitAudioDecodedByteCount === 0) {
+    if (e.target.muted !== isMuted) {
+      e.target.muted = isMuted
+    }
+    if (e.target.webkitAudioDecodedByteCount === 0) {
       setHasAudio(false)
     }
     setLoaded(true)
+    onDefaultInitialize?.(e.target)
   }
 
-  const updateTime = (time): void => {
-    if (ref?.current?.duration == null) return
-    setTime(time / ref?.current?.duration)
+  const onTimeUpdate = (e): void => {
+    setTime(e.target.currentTime / e.target.duration)
   }
 
-  useEffect(() => {
-    if (ref?.current == null) return
-
-    const changePlaying = (e): void => {
-      setPaused(e.target.paused)
-      onPlay?.(e)
-    }
-
-    ref?.current.addEventListener('play', changePlaying)
-    return () => {
-      ref?.current?.removeEventListener('play', changePlaying)
-    }
-  }, [ref?.current])
-
-  useEffect(() => {
-    if (ref?.current == null) return
-
-    const changePlaying = (e): void => {
-      setPaused(e.target.paused)
-      onPlay?.(e)
-    }
-    ref?.current.addEventListener('pause', changePlaying)
-    return () => {
-      ref?.current?.removeEventListener('pause', changePlaying)
-    }
-  }, [ref?.current])
-
-  useEffect(() => {
-    if (ref?.current == null) return
-
-    const changeVolume = (e): void => {
-      setMuted(e.target.muted)
+  const onVolumeChange = (e): void => {
+    if (e.target.volume !== volume) {
       setVolume(e.target.volume)
-      onVolumeChange?.({
-        muted: e.target.muted,
-        volume: e.target.volume
-      })
+      onDefaultVolumeChange?.(e.target.volume)
     }
-    ref?.current.addEventListener('volumechange', changeVolume)
-    return () => {
-      ref?.current?.removeEventListener('volumechange', changeVolume)
+    if (e.target.muted !== isMuted) {
+      setMuted(e.target.muted)
+      onDefaultVolumeMute?.(e.target.muted)
     }
-  }, [ref?.current])
+  }
+
+  const onPlay = (e): void => {
+    setPaused(e.target.paused)
+    onDefaultPlay?.(e.target.paused, e.target)
+  }
+
+  const onPause = (e): void => {
+    setPaused(e.target.paused)
+    onDefaultPause?.(e.target.paused, e.target)
+  }
 
   return (
     <Box
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       position='relative'
+      cursor={isOpen ? undefined : 'none'}
+      w='100%'
+      {...rest}
     >
-      <Box
-        as='video'
-        h='100%'
-        ref={ref as MutableRefObject<any>}
-        muted={muted}
-        onTimeUpdate={(e: any) => updateTime(e.target.currentTime)}
-        onLoadedData={onInitialize}
+      <RenderVideo
+        query={data}
+        sendRef={ref}
         onClick={onTap}
-        loop
-        preload='auto'
-        {...rest}
-      >
-        {data.urls.map((item, index) => (
-          <source
-            key={index}
-            src={item.url}
-            type={item.mimeType}
-          />)
-        )}
-      </Box>
-      <Flex align='center' top={0} p={4} position='absolute' w='100%' justify='flex-end'>
-        <SimpleProgressCircle isLoading={!loaded} time={time} />
-      </Flex>
-      <Fade unmountOnExit in={isOpen || paused}>
-        <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='space-between'>
-          <PlayPauseButton
-            onMouseEnter={onMouseHold}
-            onClick={onChangeVideo}
-            isPaused={paused}
-          />
-          <HStack spacing={2}>
-            <VolumeButton
-              onMouseEnter={onMouseHold}
-              isMuted={muted}
-              onChangeMuted={onChangeMuted}
-              hasAudio={hasAudio}
-            />
-          </HStack>
-        </Flex>
-      </Fade>
-      <Flex pointerEvents='none' top={0} position='absolute' w='100%' h='100%' align='center' justify='center'>
-        <LoadingSpinner isLoading={!loaded} />
-      </Flex>
+        onLoadedData={onInitialize}
+        onTimeUpdate={onTimeUpdate}
+        onVolumeChange={onVolumeChange}
+        onPlay={onPlay}
+        onPause={onPause}
+      />
+      <ControlVideo
+        videoRef={ref}
+        onMouseHold={onMouseHold}
+        isOpen={isOpen}
+        isLoaded={isLoaded}
+        isPaused={isPaused}
+        isMuted={isDefaultMuted}
+        hasAudio={hasAudio}
+        time={time}
+      />
     </Box>
   )
 }

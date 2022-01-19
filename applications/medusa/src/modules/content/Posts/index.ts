@@ -18,5 +18,5 @@ export { default as PostIndexer } from './components/Interaction/PostIndexer/Pos
 export { default as PostLikeButton } from './components/Interaction/PostLikeButton/PostLikeButton'
 export { default as PostMenu } from './components/Interaction/PostMenu/PostMenu'
 
-export * from './helpers/PostManager/PostManager'
-export * from './helpers/VideoManager/VideoManager'
+export * from './helpers/PostVideoManager/PostVideoManager'
+export * from './helpers/GlobalVideoManager/GlobalVideoManager'

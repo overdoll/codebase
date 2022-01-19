@@ -3,9 +3,9 @@ import { Box, Flex } from '@chakra-ui/react'
 import ImageSnippet from '../../../../DataDisplay/Snippets/ImageSnippet/ImageSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
-import { useContext } from 'react'
-import { PostManagerContext } from '../../../helpers/PostManager/PostManager'
-import { VideoManagerContext } from '../../../helpers/VideoManager/VideoManager'
+import { useContext, useEffect } from 'react'
+import { PostVideoManagerContext } from '../../../helpers/PostVideoManager/PostVideoManager'
+import { GlobalVideoManagerContext } from '../../../helpers/GlobalVideoManager/GlobalVideoManager'
 import { PostGallerySimpleContentFragment$key } from '@//:artifacts/PostGallerySimpleContentFragment.graphql'
 import ControlledVideo from '../../../../DataDisplay/ControlledVideo/ControlledVideo'
 
@@ -15,6 +15,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostGallerySimpleContentFragment on Post {
+    id
     content {
       type
       ...ImageSnippetFragment
@@ -29,31 +30,27 @@ export default function PostGallerySimpleContent ({
   const data = useFragment(Fragment, query)
 
   const {
-    onInitialize
-  } = useContext(PostManagerContext)
-
-  const {
     changeVideoVolume,
     changeVideoMuted,
-    onVideoRun,
+    onVideoPlay,
     videoMuted,
     videoVolume
-  } = useContext(VideoManagerContext)
+  } = useContext(GlobalVideoManagerContext)
 
-  // TODO if content overflows show a shadow
+  const {
+    onInitialize,
+    onVideoInitialize,
+    setIdentifier
+  } = useContext(PostVideoManagerContext)
 
-  const onVolumeChange = ({
-    muted,
-    volume
-  }): void => {
-    changeVideoMuted(muted)
-    changeVideoVolume(volume)
-  }
+  useEffect(() => {
+    if (data?.id == null) return
+    setIdentifier(data.id)
+  }, [data?.id])
 
   return (
     <Box bg='gray.800'>
       <Swiper
-        style={{ alignItems: 'center' }}
         observer
         onSwiper={(swiper) =>
           onInitialize(swiper)}
@@ -65,17 +62,12 @@ export default function PostGallerySimpleContent ({
                 <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
                 <ControlledVideo
-                  onPlay={(e) => onVideoRun(e)}
-                  defaultVolume={videoVolume}
+                  onPlay={(paused, target) => onVideoPlay(data?.id, paused, target)}
+                  onInitialize={(target) => onVideoInitialize(target, index)}
+                  volume={videoVolume}
                   isMuted={videoMuted}
-                  onVolumeChange={({
-                    muted,
-                    volume
-                  }) =>
-                    onVolumeChange({
-                      muted,
-                      volume
-                    })}
+                  onMute={changeVideoMuted}
+                  onVolumeChange={changeVideoVolume}
                   query={item}
                 />}
             </Flex>

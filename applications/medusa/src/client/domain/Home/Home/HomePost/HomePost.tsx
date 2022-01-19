@@ -10,8 +10,8 @@ import {
   PostHeaderClub,
   PostIndexer,
   PostLikeButton,
-  PostManagerContext,
-  PostMenu
+  PostMenu,
+  PostVideoManagerContext
 } from '../../../../../modules/content/Posts'
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
 
@@ -50,7 +50,7 @@ export default function HomePost ({
   const {
     slidesCount,
     currentSlide
-  } = useContext(PostManagerContext)
+  } = useContext(PostVideoManagerContext)
 
   return (
     <Stack spacing={1}>
