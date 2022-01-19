@@ -18,6 +18,7 @@ import { Box, Skeleton } from '@chakra-ui/react'
 import Redirect from '@//:modules/routing/Redirect'
 import { useParams } from '@//:modules/routing/useParams'
 import generatePath from '@//:modules/routing/generatePath'
+import PageContents from '../Root/PageContents/PageContents'
 
 interface Props {
   children: ReactNode
@@ -58,7 +59,7 @@ export default function RootManageClub (props: Props): JSX.Element {
               <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>
-        </Box>}
+                         </Box>}
       >
         <VerticalNavigation.Button
           to={`${basePath}/create-post`}
@@ -67,7 +68,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           colorScheme='teal'
           title={
             <Trans>Create a Post</Trans>
-          }
+            }
           icon={ContentBrushPen}
         />
         <VerticalNavigation.Button
@@ -75,7 +76,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           exact
           title={
             <Trans>Home</Trans>
-          }
+            }
           icon={BirdHouse}
         />
         <VerticalNavigation.Button
@@ -83,7 +84,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           exact
           title={
             <Trans>Posts</Trans>
-          }
+            }
           icon={FileMultiple}
         />
         <VerticalNavigation.Button
@@ -91,7 +92,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           exact
           title={
             <Trans>Members</Trans>
-          }
+            }
           icon={UserHuman}
         />
         <VerticalNavigation.Button
@@ -99,7 +100,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           exact
           title={
             <Trans>Settings</Trans>
-          }
+            }
           icon={SettingCog}
         />
         <VerticalNavigation.Button
@@ -108,7 +109,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           exact
           title={
             <Trans>Club Page</Trans>
-          }
+            }
           icon={SettingHammer}
         />
       </VerticalNavigation.Content>

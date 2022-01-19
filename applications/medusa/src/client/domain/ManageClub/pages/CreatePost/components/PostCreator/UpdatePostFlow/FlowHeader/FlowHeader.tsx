@@ -81,8 +81,10 @@ export default function FlowHeader ({
         return [i18n._(t`Step 3`), i18n._(t`Add categories`)]
       case STEPS.CHARACTER:
         return [i18n._(t`Step 4`), i18n._(t`Add characters`)]
+      case STEPS.PROCESS:
+        return [i18n._(t`Step 5`), i18n._(t`Process post`)]
       case STEPS.REVIEW:
-        return [i18n._(t`Step 5`), i18n._(t`Review your post`)]
+        return [i18n._(t`Step 6`), i18n._(t`Wait for processing`)]
       default:
         return [i18n._(t`Step 1`), i18n._(t`Arrange your uploads`)]
     }

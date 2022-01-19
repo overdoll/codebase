@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import Audiences from './Audiences/Audiences'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 

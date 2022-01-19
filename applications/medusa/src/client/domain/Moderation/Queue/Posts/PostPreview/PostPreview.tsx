@@ -1,11 +1,11 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
-import PostStaticAudience from '../../../../../components/Posts/components/PostData/PostStaticAudience/PostStaticAudience'
-import PostStaticCharacters from '../../../../../components/Posts/components/PostData/PostStaticCharacters/PostStaticCharacters'
-import PostStaticCategories from '../../../../../components/Posts/components/PostData/PostStaticCategories/PostStaticCategories'
+import PostStaticAudience from '../../../../../../modules/content/Posts/components/Content/PostStaticAudience/PostStaticAudience'
+import PostStaticCharacters from '../../../../../../modules/content/Posts/components/Content/PostStaticCharacters/PostStaticCharacters'
+import PostStaticCategories from '../../../../../../modules/content/Posts/components/Content/PostStaticCategories/PostStaticCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
-import PostGalleryContent from '../../../../../components/Posts/PostGalleryContent/PostGalleryContent'
-import PostIndexer from '../../../../../components/Posts/PostGalleryContent/PostIndexer/PostIndexer'
+import PostGalleryContent from '../../../../../../modules/content/Posts/components/PostGalleryContent/PostGalleryContent'
+import PostIndexer from '../../../../../../modules/content/Posts/components/Interaction/PostIndexer/PostIndexer'
 import { Trans } from '@lingui/macro'
 
 interface Props {

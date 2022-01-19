@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button/Button'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { DownloadArrow } from '@//:assets/icons/interface'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'

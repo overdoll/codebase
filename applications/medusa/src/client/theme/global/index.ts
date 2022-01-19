@@ -42,6 +42,9 @@ export default function global (props): any {
       color: 'gray.700',
       opacity: 0.3
     },
+    '.swiper-wrapper': {
+      alignItems: 'center'
+    },
     'input:-webkit-autofill': {
       color: 'gray.800'
     },

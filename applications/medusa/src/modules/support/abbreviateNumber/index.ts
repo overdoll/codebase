@@ -1,7 +1,7 @@
 export default function abbreviateNumber (value: number, decimalSize = 3): string {
   let newValue = value
   let suffixNum = 0
-  const suffixes = ['', 'K', 'M', 'B', 'T']
+  const suffixes = ['', 'k', 'm', 'b', 't']
 
   const factor = 1000
 

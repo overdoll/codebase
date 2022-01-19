@@ -5,6 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ArrangeUploadsFragment = {
+    readonly id: string;
     readonly content: ReadonlyArray<{
         readonly id: string;
         readonly urls: ReadonlyArray<{
@@ -22,12 +23,21 @@ export type ArrangeUploadsFragment$key = {
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ArrangeUploadsFragment",
   "selections": [
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -36,13 +46,7 @@ const node: ReaderFragment = {
       "name": "content",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -73,5 +77,6 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '9334955c3fb20b7162e3706517169d1b';
+})();
+(node as any).hash = '7e3330519ad1d875dc1b559deb8b1fa8';
 export default node;

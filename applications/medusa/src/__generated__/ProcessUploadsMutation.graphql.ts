@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6ffc832f9a7829efdf8bcc79de6d31c7 */
+/* @relayHash 9ea7c23d5abd5d3f17baf09a2087db58 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -20,6 +20,7 @@ export type ProcessUploadsMutationResponse = {
             readonly content: ReadonlyArray<{
                 readonly id: string;
                 readonly type: ResourceType;
+                readonly processed: boolean;
                 readonly urls: ReadonlyArray<{
                     readonly url: string;
                     readonly mimeType: string;
@@ -46,6 +47,7 @@ mutation ProcessUploadsMutation(
       content {
         id
         type
+        processed
         urls {
           url
           mimeType
@@ -121,6 +123,13 @@ v2 = [
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "processed",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "urls",
@@ -171,7 +180,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "6ffc832f9a7829efdf8bcc79de6d31c7",
+    "id": "9ea7c23d5abd5d3f17baf09a2087db58",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -179,5 +188,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'a08f5d95a6b55f90ac46d13b1b8ed29c';
+(node as any).hash = '619ecedb8295f38f93bcb20c88a6530c';
 export default node;

@@ -7,7 +7,7 @@ import type { ProcessUploadsMutation } from '@//:artifacts/ProcessUploadsMutatio
 import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../../constants/constants'
 import Button from '@//:modules/form/Button/Button'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import FilePicker from '../../../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
@@ -22,6 +22,7 @@ const ProcessUploadsFragmentGQL = graphql`
     id
     reference
     content {
+      id
       urls {
         url
       }
@@ -38,6 +39,7 @@ const ProcessUploadsMutationGQL = graphql`
         content {
           id
           type
+          processed
           urls {
             url
             mimeType
@@ -66,16 +68,12 @@ export default function ProcessUploads ({
       setProcessingError(false)
       const uploadedIDs = Object.keys(state.urls)
       const uploadedURLs = Object.values(state.urls)
-      const currentURLs = data?.content.map((item) =>
-        item.urls[0].url)
-
-      const combinedUpload = [...currentURLs, ...uploadedURLs] as string[]
 
       updateContent({
         variables: {
           input: {
             id: data.id,
-            content: combinedUpload
+            content: uploadedURLs
           }
         },
         onCompleted () {
@@ -98,7 +96,7 @@ export default function ProcessUploads ({
             dispatch({
               type: EVENTS.CONTENT,
               clear: true,
-              value: true
+              value: null
             })
           })
         },

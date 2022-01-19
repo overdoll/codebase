@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
 import { FileMultiple, TimeHourGlass } from '@//:assets/icons/navigation'
 import { Trans } from '@lingui/macro'
+import PageContents from '../Root/PageContents/PageContents'
 
 interface Props {
   children: ReactNode
@@ -18,7 +19,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
         <Trans>
           Moderation
         </Trans>
-      }
+        }
       >
         <VerticalNavigation.Button
           to='/moderation/queue'
@@ -27,7 +28,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
             <Trans>
               Queue
             </Trans>
-          }
+            }
           icon={FileMultiple}
         />
         <VerticalNavigation.Button
@@ -37,7 +38,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
             <Trans>
               History
             </Trans>
-          }
+            }
           icon={TimeHourGlass}
         />
       </VerticalNavigation.Content>

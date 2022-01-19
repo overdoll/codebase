@@ -8,6 +8,7 @@ export type ProcessUploadsFragment = {
     readonly id: string;
     readonly reference: string;
     readonly content: ReadonlyArray<{
+        readonly id: string;
         readonly urls: ReadonlyArray<{
             readonly url: string;
         }>;
@@ -22,19 +23,21 @@ export type ProcessUploadsFragment$key = {
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ProcessUploadsFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -50,6 +53,7 @@ const node: ReaderFragment = {
       "name": "content",
       "plural": true,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -75,5 +79,6 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '46ecef5940540b1d1811f2c5c8a32fc7';
+})();
+(node as any).hash = 'aaf8633a0364568e9b846505fa42732b';
 export default node;

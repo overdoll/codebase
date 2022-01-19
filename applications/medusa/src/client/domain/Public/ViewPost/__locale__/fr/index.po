@@ -14,21 +14,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:59
-msgid "Home"
-msgstr ""
+#~ msgid "Home"
+#~ msgstr ""
 
-#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:83
+#: src/client/domain/Public/ViewPost/ViewPost/ViewPost.tsx:92
 msgid "Like"
 msgstr ""
 
-#: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:103
-msgid "Moderate"
-msgstr ""
+#: src/client/domain/Public/ViewPost/ViewPost/ViewPost.tsx:109
+#~ msgid "Moderate"
+#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:47
-msgid "Post Not Found"
-msgstr ""
+#~ msgid "Post Not Found"
+#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/ViewPost/ViewPost/ViewPost.tsx:50
-msgid "This post could not be found"
-msgstr ""
+#~ msgid "This post could not be found"
+#~ msgstr ""

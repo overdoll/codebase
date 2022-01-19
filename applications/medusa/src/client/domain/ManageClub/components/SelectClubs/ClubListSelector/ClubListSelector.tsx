@@ -3,7 +3,7 @@ import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFrag
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { Flex, Text } from '@chakra-ui/react'
-import ClubPreview from '../../../../../components/Posts/components/PostFlair/ClubPreview/ClubPreview'
+import ClubPreview from '../../ClubPreview/ClubPreview'
 import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../../components/ContentSelection'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
 

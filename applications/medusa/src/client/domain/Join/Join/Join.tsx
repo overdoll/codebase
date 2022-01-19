@@ -1,7 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
-import Icon from '@//:modules/content/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'

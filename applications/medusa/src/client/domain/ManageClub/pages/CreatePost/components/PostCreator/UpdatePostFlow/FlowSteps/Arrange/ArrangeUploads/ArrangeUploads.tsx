@@ -1,5 +1,5 @@
 import { Flex, Stack, Text } from '@chakra-ui/react'
-import { graphql, useFragment } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import { EVENTS } from '../../../../../../constants/constants'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
@@ -15,12 +15,33 @@ interface Props {
 
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
+    id
     content {
       id
       urls {
         url
       }
       ...DraggableContentFragment
+    }
+  }
+`
+
+const ArrangeUploadsMutationGQL = graphql`
+  mutation ArrangeUploadsMutation($input: RemovePostContentInput!) {
+    removePostContent(input: $input) {
+      post {
+        id
+        reference
+        content {
+          id
+          type
+          processed
+          urls {
+            url
+            mimeType
+          }
+        }
+      }
     }
   }
 `
@@ -42,6 +63,8 @@ export default function ArrangeUploads ({
 }: Props): JSX.Element {
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
 
+  const [removeContent, isRemovingContent] = useMutation(ArrangeUploadsMutationGQL)
+
   const uppy = useContext(UppyContext)
   const state = useContext(StateContext)
   const dispatch = useContext(DispatchContext)
@@ -51,11 +74,20 @@ export default function ArrangeUploads ({
   const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
   const onRemoveFile = (id: string): void => {
-    uppy.removeFile(id)
-
-    const filteredData = displayData.filter((item) => item.id !== id)
-
-    setDisplayData(filteredData)
+    removeContent({
+      variables: {
+        input: {
+          id: data.id,
+          contentIds: [id]
+        }
+      },
+      onCompleted () {
+        uppy.removeFile(id)
+      },
+      onError (data) {
+        console.log(data)
+      }
+    })
   }
 
   const onDragEnd = (result): void => {
@@ -84,11 +116,11 @@ export default function ArrangeUploads ({
   }
 
   useEffect(() => {
-    const urls = displayData.map((item) => item.urls[0].url)
+    const ids = displayData.map((item) => item.id)
 
     dispatch({
       type: EVENTS.CONTENT,
-      value: urls
+      value: ids
     })
   }, [displayData])
 
@@ -121,7 +153,7 @@ export default function ArrangeUploads ({
           >
             {displayData.map((item, index) => (
               <DraggableContent
-                dragDisabled={dragDisabled || displayData.length < 2}
+                dragDisabled={dragDisabled || displayData.length < 2 || isRemovingContent}
                 removeDisabled={displayData.length < 2}
                 key={index}
                 index={index}

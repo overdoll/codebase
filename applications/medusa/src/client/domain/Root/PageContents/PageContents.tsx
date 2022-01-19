@@ -1,5 +1,5 @@
 import { ReactNode, Suspense } from 'react'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import { Box } from '@chakra-ui/react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 

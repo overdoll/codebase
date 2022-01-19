@@ -23,7 +23,6 @@ interface Props {
 interface ClubValues {
   name: string
   slug: string
-  logo: string
 }
 
 const Mutation = graphql`
@@ -31,17 +30,24 @@ const Mutation = graphql`
     createClub(input: {name: $name, slug: $slug}) {
       club {
         id
-        reference
         slug
-        name
         owner {
           id
-        }
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
+          clubs (first: 1) {
+            edges {
+              node {
+                id
+                slug
+                name
+                thumbnail {
+                  type
+                  urls {
+                    url
+                    mimeType
+                  }
+                }
+              }
+            }
           }
         }
       }

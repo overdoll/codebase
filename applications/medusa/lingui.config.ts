@@ -33,6 +33,18 @@ export default {
       include: ['src/client/domain/VerifyToken/']
     },
     {
+      path: 'src/client/domain/Home/__locale__/{locale}/index',
+      include: ['src/client/domain/Home']
+    },
+    {
+      path: 'src/client/domain/MyClubs/__locale__/{locale}/index',
+      include: ['src/client/domain/MyClubs']
+    },
+    {
+      path: 'src/client/domain/Profile/__locale__/{locale}/index',
+      include: ['src/client/domain/Profile']
+    },
+    {
       path: 'src/client/domain/Settings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Settings.tsx']
     },
@@ -65,12 +77,44 @@ export default {
       include: ['src/client/domain/Moderation/Queue']
     },
     {
+      path: 'src/client/domain/Public/ViewClub/__locale__/{locale}/index',
+      include: ['src/client/domain/Public/ViewClub']
+    },
+    {
+      path: 'src/client/domain/Public/ViewPost/__locale__/{locale}/index',
+      include: ['src/client/domain/Public/ViewPost']
+    },
+    {
       path: 'src/client/domain/ManageClub/__locale__/{locale}/index',
-      include: ['src/client/domain/ManageClub/RootManageClub']
+      include: ['src/client/domain/ManageClub']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubHome/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubHome']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubMembers/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubMembers']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubPosts']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/CreateClub/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/CreateClub']
     },
     {
       path: 'src/client/domain/ManageClub/pages/CreatePost/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/CreatePost']
+    },
+    {
+      path: 'src/client/domain/Help/__locale__/{locale}/index',
+      include: ['src/client/domain/Help']
     }
   ],
   format: 'po',
