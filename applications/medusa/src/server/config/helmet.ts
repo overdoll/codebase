@@ -1,4 +1,3 @@
-import { Request, Response } from 'express'
 import helmet from 'helmet'
 
 type HelmetOptions = Parameters<typeof helmet>[0]
@@ -11,9 +10,8 @@ const options: HelmetOptions = {
       'script-src': [
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
-        process.env.NODE_ENV === 'production'
-          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`
-          : '\'unsafe-inline\'',
+        //     (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`,
+        '\'unsafe-inline\'',
         '\'unsafe-eval\'',
         process.env.PUBLIC_PATH,
         process.env.URL
@@ -22,9 +20,8 @@ const options: HelmetOptions = {
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         'https://fonts.googleapis.com',
-        process.env.NODE_ENV === 'production'
-          ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`
-          : '\'unsafe-inline\''
+        //      (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`,
+        '\'unsafe-inline\''
       ],
       'font-src': ['data:', '*'],
       'base-uri': ['\'self\''],

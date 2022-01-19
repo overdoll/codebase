@@ -81,5 +81,5 @@ func getUploadIdWithoutExtension(uploadId string) string {
 	splitPath := strings.Split(uploadId, "/")
 	idWithOrWithoutExtension := splitPath[len(strings.Split(uploadId, "/"))-1]
 
-	return strings.Split(idWithOrWithoutExtension, ".")[0]
+	return strings.Split(idWithOrWithoutExtension, "+")[0]
 }

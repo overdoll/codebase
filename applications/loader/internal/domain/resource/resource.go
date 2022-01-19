@@ -198,7 +198,7 @@ func (r *Resource) Url() string {
 		return "/" + r.itemId + "/" + r.processedId
 	}
 
-	return r.id
+	return r.id + "+0"
 }
 
 func (r *Resource) MimeTypes() []string {

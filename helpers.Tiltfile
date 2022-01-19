@@ -1,12 +1,12 @@
-settings = read_json("../tilt_options.json", default = {})
+settings = read_json("../tilt_options.json", default={})
 
-allow_k8s_contexts(settings.get("context", "overdoll"))
+allow_k8s_contexts("autobot")
 
 user = settings.get("namespace", "")
 
-default_registry(settings.get("registry", "localhost:5000"), single_name = "%s/dev" % user)
+# default_registry(settings.get("registry", "localhost:5000"), single_name = "%s/dev" % user)
 
-#ns = "user-%s" % user
+# ns = "user-%s" % user
 ns = "default"
 
 load("ext://restart_process", "custom_build_with_restart")
@@ -24,6 +24,7 @@ BAZEL_BUILDFILES_CMD = """
 # directly instead of the ./bazel-bin symlinks.
 bazel_bin = str(local("bazel info bazel-bin")).strip()
 
+
 def bazel_labels_to_files(labels):
     files = {}
     for l in labels:
@@ -40,11 +41,14 @@ def bazel_labels_to_files(labels):
 
     return files.keys()
 
+
 def bazel_sourcefile_deps(target):
     return bazel_labels_to_files(str(local(BAZEL_SOURCES_CMD_TEMPLATE % target)).splitlines())
 
+
 def bazel_buildfile_deps(target):
     return bazel_labels_to_files(str(local(BAZEL_BUILDFILES_CMD % target)).splitlines())
+
 
 def build_applications(applications, dependencies):
     for item in applications.keys():
@@ -57,11 +61,11 @@ def build_applications(applications, dependencies):
             k8s_yaml(
                 helm(
                     "development/service",
-                    name = item,
-                    values = ["development/services/" + item + ".yaml"],
-                    namespace = ns,
+                    name=item,
+                    values=["development/services/" + item + ".yaml"],
+                    namespace=ns,
                 ),
-                allow_duplicates = True,
+                allow_duplicates=True,
             )
 
         image_target = application["image_target"]
@@ -81,42 +85,43 @@ def build_applications(applications, dependencies):
             binary_target_local = os.path.join(bazel_bin, application["binary_output"])
 
             local_resource(
-                name = item + "-compile",
-                cmd = "bazel build {binary_target}".format(binary_target = binary_target),
-                deps = bazel_sourcefile_deps(binary_target),
+                name=item + "-compile",
+                cmd="bazel build {binary_target}".format(binary_target=binary_target),
+                deps=bazel_sourcefile_deps(binary_target),
             )
 
             custom_build_with_restart(
-                ref = application["image_reference"],
-                command = (
-                    "bazel run {image_target} -- --norun && " +
-                    "docker tag {bazel_image} $EXPECTED_REF"
-                ).format(image_target = image_target, bazel_image = bazel_image),
-                deps = [binary_target_local] + application["dependencies"],
-                entrypoint = binary_target_container,
-                live_update = application["live_update"] + [
+                ref=application["image_reference"],
+                command=(
+                        "bazel run {image_target} -- --norun && " +
+                        "docker tag {bazel_image} $EXPECTED_REF"
+                ).format(image_target=image_target, bazel_image=bazel_image),
+                deps=[binary_target_local] + application["dependencies"],
+                entrypoint=binary_target_container,
+                live_update=application["live_update"] + [
                     sync(binary_target_local, binary_target_container),
                 ],
             )
 
-            k8s_resource(item, resource_deps = [item + "-compile"])
+            k8s_resource(item, resource_deps=[item + "-compile"])
 
         elif (application["type"] == "node"):
             custom_build(
-                ref = application["image_reference"],
-                command = (
-                    "bazel run {image_target} -- --norun && " +
-                    "docker tag {bazel_image} $EXPECTED_REF"
-                ).format(image_target = image_target, bazel_image = bazel_image),
-                deps = application["dependencies"],
-                entrypoint = application["entrypoint"],
-                live_update = application["live_update"],
+                ref=application["image_reference"],
+                command=(
+                        "bazel run {image_target} -- --norun && " +
+                        "docker tag {bazel_image} $EXPECTED_REF"
+                ).format(image_target=image_target, bazel_image=bazel_image),
+                deps=application["dependencies"],
+                entrypoint=application["entrypoint"],
+                live_update=application["live_update"],
             )
 
             if "manual" in application and application["manual"]:
-                k8s_resource(item, resource_deps = [], trigger_mode = TRIGGER_MODE_MANUAL, auto_init = False)
+                k8s_resource(item, resource_deps=[], trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False)
             else:
-                k8s_resource(item, resource_deps = [])
+                k8s_resource(item, resource_deps=[])
+
 
 def get_namespace():
     return ns

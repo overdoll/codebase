@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
+	"strings"
 	"testing"
 )
 
@@ -37,26 +38,29 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
 	grpcClient := getGrpcClient(t)
-	resourceIds := []string{imageFileId, videoFileId}
 
 	// start processing of files by calling grpc endpoint
-	_, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
+	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
-		ResourceIds: resourceIds,
+		ResourceIds: []string{imageFileId, videoFileId},
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
+	resourceIds := res.AllResourceIds
+	videoFileId = strings.Split(videoFileId, "+")[0]
+	imageFileId = strings.Split(imageFileId, "+")[0]
+
 	// get resources and see that they are not processed yet (we did not run the workflow)
 	resources, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId},
+		ResourceIds: resourceIds,
 	})
 
 	require.NoError(t, err, "no error getting resources")
 
 	// should have 2 elements
-	require.Len(t, resources.Resources, 2, "should have 2 elements")
+	require.Len(t, resources.Resources, 2, "should have 2 elements in res")
 
 	var imageResource *loader.Resource
 	var videoResource *loader.Resource
