@@ -63,6 +63,7 @@ export default function PostGallerySimpleContent ({
               {item.type === 'VIDEO' &&
                 <ControlledVideo
                   onPlay={(paused, target) => onVideoPlay(data?.id, paused, target)}
+                  onPause={(paused, target) => onVideoPlay(data?.id, paused, target)}
                   onInitialize={(target) => onVideoInitialize(target, index)}
                   volume={videoVolume}
                   isMuted={videoMuted}
