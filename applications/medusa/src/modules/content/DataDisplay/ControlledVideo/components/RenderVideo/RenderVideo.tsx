@@ -42,8 +42,6 @@ export default function RenderVideo ({
   return (
     <Box
       as='video'
-      h='100%'
-      w='100%'
       ref={sendRef}
       muted={muted}
       onLoadedData={onLoadedData}

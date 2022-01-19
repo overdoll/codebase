@@ -12,7 +12,7 @@ import { t, Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
 import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import Icon from '../../../../../modules/content/PageLayout/Flair/Icon/Icon'
-import { AddPlus, WarningTriangle } from '@//:assets/icons/interface'
+import { WarningTriangle } from '@//:assets/icons/interface'
 import { useToast } from '@chakra-ui/react'
 
 interface Props {
@@ -143,14 +143,6 @@ export default function JoinClubButton ({
         <Button
           size={size}
           colorScheme='primary'
-          leftIcon={
-            <Icon
-              icon={AddPlus}
-              w={4}
-              h={4}
-              fill='primary.900'
-            />
-          }
         >
           <Trans>
             Join
@@ -190,12 +182,6 @@ export default function JoinClubButton ({
         isLoading={isBecomingMember}
         size={size}
         colorScheme='primary'
-        leftIcon={<Icon
-          icon={AddPlus}
-          w={4}
-          h={4}
-          fill='primary.900'
-                  />}
       >
         <Trans>
           Join

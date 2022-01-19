@@ -40,6 +40,7 @@ export default function ControlledVideo ({
   const ref = useRef<HTMLVideoElement | null>(null)
 
   const [time, setTime] = useState(0)
+  const [totalTime, setTotalTime] = useState(1)
   const [volume, setVolume] = useState(defaultVolume)
   const [isMuted, setMuted] = useState(isDefaultMuted)
   const [isPaused, setPaused] = useState(false)
@@ -67,12 +68,13 @@ export default function ControlledVideo ({
     if (e.target.webkitAudioDecodedByteCount === 0) {
       setHasAudio(false)
     }
+    setTotalTime(e.target.duration)
     setLoaded(true)
     onDefaultInitialize?.(e.target)
   }
 
   const onTimeUpdate = (e): void => {
-    setTime(e.target.currentTime / e.target.duration)
+    setTime(e.target.currentTime)
   }
 
   const onVolumeChange = (e): void => {
@@ -102,7 +104,6 @@ export default function ControlledVideo ({
       onMouseOut={onMouseOut}
       position='relative'
       cursor={isOpen ? undefined : 'none'}
-      w='100%'
       {...rest}
     >
       <RenderVideo
@@ -124,6 +125,7 @@ export default function ControlledVideo ({
         isMuted={isDefaultMuted}
         hasAudio={hasAudio}
         time={time}
+        totalTime={totalTime}
       />
     </Box>
   )

@@ -17,7 +17,6 @@ interface Context {
   currentSlide: number
   onInitialize: (swiper) => void
   onVideoInitialize: (target, index) => void
-  setIdentifier: (id) => void
 }
 
 const defaultValue = {
@@ -26,8 +25,6 @@ const defaultValue = {
   onInitialize: (swiper) => {
   },
   onVideoInitialize: (target, index) => {
-  },
-  setIdentifier: (id) => {
   }
 }
 
@@ -35,8 +32,6 @@ export const PostVideoManagerContext = createContext<Context>(defaultValue)
 
 export function PostVideoManagerProvider ({ children }: Props): JSX.Element {
   const [slidesCount, setSlidesCount] = useState(1)
-
-  const [identifier, setIdentifier] = useState<string | null>(null)
 
   const [currentSlide, setCurrentSlide] = useState(0)
 
@@ -46,9 +41,7 @@ export function PostVideoManagerProvider ({ children }: Props): JSX.Element {
 
   const {
     videoVolume,
-    videoMuted,
-    handleOnscreenVideos,
-    handleOffscreenVideos
+    videoMuted
   } = useContext(GlobalVideoManagerContext)
 
   const {
@@ -116,25 +109,11 @@ export function PostVideoManagerProvider ({ children }: Props): JSX.Element {
     }
   }, [swiper, setCurrentSlide])
 
-  // Add non-observed videos to the video manager, so we can change their values
-  useEffect(() => {
-    if (identifier == null || videos.length < 1) return
-
-    const targets = videos.map((item) => item.target)
-
-    if (!isObserving) {
-      handleOnscreenVideos?.(identifier, targets)
-      return
-    }
-    handleOffscreenVideos?.(identifier, targets)
-  }, [isObserving, videos, identifier])
-
   const contextValue = {
     slidesCount: slidesCount,
     currentSlide: currentSlide,
     onInitialize: (swiper) => onInitialize(swiper),
-    onVideoInitialize: (target, index) => onVideoInitialize(target, index),
-    setIdentifier: (id) => setIdentifier(id)
+    onVideoInitialize: (target, index) => onVideoInitialize(target, index)
   }
 
   return (

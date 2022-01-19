@@ -1,9 +1,8 @@
-import { Fade, Flex, HStack } from '@chakra-ui/react'
+import { Box, Fade, Flex, HStack, Slider, SliderFilledTrack, SliderTrack } from '@chakra-ui/react'
 import { MutableRefObject } from 'react'
 import PlayPauseButton from './PlayPauseButton/PlayPauseButton'
 import VolumeButton from './VolumeButton/VolumeButton'
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner'
-import SimpleProgressCircle from './SimpleProgressCircle/SimpleProgressCircle'
 
 interface Props {
   videoRef: MutableRefObject<HTMLVideoElement | null>
@@ -14,6 +13,7 @@ interface Props {
   isMuted: boolean
   hasAudio: boolean
   time: number
+  totalTime: number
 }
 
 export default function ControlVideo ({
@@ -24,7 +24,8 @@ export default function ControlVideo ({
   isPaused,
   isMuted,
   hasAudio,
-  time
+  time,
+  totalTime
 }: Props): JSX.Element {
   const onChangeVideo = (): void => {
     const video = videoRef.current
@@ -47,17 +48,15 @@ export default function ControlVideo ({
   }
 
   return (
-    <><Flex align='center' top={0} p={4} position='absolute' w='100%' justify='flex-end'>
-      <SimpleProgressCircle isLoading={!isLoaded} time={time} />
-    </Flex>
-      <Fade unmountOnExit in={isOpen || isPaused}>
-        <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='space-between'>
-          <PlayPauseButton
-            onMouseEnter={onMouseHold}
-            onClick={onChangeVideo}
-            isPaused={isPaused}
-          />
-          <HStack spacing={2}>
+    <>
+      <Fade unmountOnExit in={isOpen}>
+        <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='center'>
+          <HStack spacing={8}>
+            <PlayPauseButton
+              onMouseEnter={onMouseHold}
+              onClick={onChangeVideo}
+              isPaused={isPaused}
+            />
             <VolumeButton
               onMouseEnter={onMouseHold}
               isMuted={isMuted}
@@ -68,11 +67,24 @@ export default function ControlVideo ({
         </Flex>
       </Fade>
       <Flex
+        bottom={-1}
+        position='absolute'
+        w='100%'
+        align='center'
+        justify='center'
+      >
+        <Slider value={time} min={0} max={totalTime} step={0.1}>
+          <SliderTrack bg='whiteAlpha.100'>
+            <Box position='relative' right={10} />
+            <SliderFilledTrack bg='whiteAlpha.700' />
+          </SliderTrack>
+        </Slider>
+      </Flex>
+      <Flex
         pointerEvents='none'
         top={0}
         position='absolute'
         w='100%'
-        h='100%'
         align='center'
         justify='center'
       >

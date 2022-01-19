@@ -53,7 +53,7 @@ export default function HomePost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={2}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
         <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />

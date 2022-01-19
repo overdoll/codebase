@@ -29,7 +29,7 @@ export default function PostClickableCharacters ({ query }: Props): JSX.Element 
     <Wrap>
       {data?.characters.map((item, index) =>
         <WrapItem key={index}>
-          <ClickableBox variant='ghost' bg='transparent' borderRadius='xl' p={0}>
+          <ClickableBox variant='ghost' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={3} py={3}>
               <ResourceIcon
                 w={10}

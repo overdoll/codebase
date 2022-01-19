@@ -11,6 +11,7 @@ export type PostGallerySimpleContentFragment = {
         readonly type: ResourceType;
         readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
     }>;
+    readonly " $fragmentRefs": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
     readonly " $refType": "PostGallerySimpleContentFragment";
 };
 export type PostGallerySimpleContentFragment$data = PostGallerySimpleContentFragment;
@@ -61,10 +62,20 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostClickableCategoriesFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostClickableCharactersFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '696338a9d5e3e8707ce90fa813c03ee8';
+(node as any).hash = '436e730b6e6181818f85288f0344ba2c';
 export default node;
