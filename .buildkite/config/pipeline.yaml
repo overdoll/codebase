@@ -10,6 +10,8 @@ steps:
         GIN_MODE: debug
         APP_DEBUG: "true"
         EVA_SERVICE: eva:8080
+        RESOURCES_BUCKET: sandbox-overdoll-resources
+        UPLOADS_BUCKET: sandbox-overdoll-uploads
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
         CARRIER_SERVICE: carrier:8080
