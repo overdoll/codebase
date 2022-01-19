@@ -1,8 +1,0 @@
-image:
-  repository: sting-image
-
-nameOverride: "sting"
-
-service: true
-http: true
-grpc: true

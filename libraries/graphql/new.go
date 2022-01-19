@@ -43,9 +43,8 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 
-		if helpers.IsDebug() {
-			graphAPIHandler.Use(extension.Introspection{})
-		}
+		// introspection is always allowed because these individual services are never actually exposed
+		graphAPIHandler.Use(extension.Introspection{})
 
 		graphAPIHandler.AddTransport(transport.POST{})
 

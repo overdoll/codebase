@@ -1,7 +1,5 @@
 version: '3.9'
 services:
-
-
   run:
     working_dir: /workdir
     image: "cypress/included:9.2.0"
@@ -14,7 +12,3 @@ services:
       - /var/lib/buildkite-agent:/var/lib/buildkite-agent
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
-
-volumes:
-  minio-data:
-    driver: local

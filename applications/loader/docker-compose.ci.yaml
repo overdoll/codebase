@@ -10,11 +10,15 @@ services:
       - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
       - "traefik.http.routers.buffer.entrypoints=websecure"
       - "traefik.http.routers.buffer.tls=true"
+    environment:
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}
+      - AWS_ENDPOINT=${AWS_ENDPOINT}
+      - AWS_REGION=${AWS_REGION}
     depends_on:
       - traefik
       - temporal
       - elasticsearch
-      - minio
     ports:
       - 3340:8000
       - 3350:8080

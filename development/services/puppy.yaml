@@ -1,8 +1,0 @@
-image:
-  repository: puppy-image
-
-nameOverride: "puppy"
-
-service: true
-http: true
-grpc: false

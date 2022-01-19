@@ -248,7 +248,7 @@ func (r *Resource) FullUrls() []*Url {
 		domain := os.Getenv("APP_URL") + "/api/upload/"
 
 		if r.processed {
-			domain = os.Getenv("STATIC_URL")
+			domain = os.Getenv("RESOURCES_URL")
 		}
 
 		// generate the proper content url

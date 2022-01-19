@@ -10,10 +10,10 @@ const unlikelyToChangeChunk = ['react', 'react-dom', 'react-relay', 'relay-runti
 
 module.exports = {
   options: {
-    cssPrefix: 'css',
-    jsPrefix: 'js',
+    cssPrefix: 'assets',
+    jsPrefix: 'assets',
+    mediaPrefix: 'assets',
     enableReactRefresh: true
-
   },
   modifyPaths ({
     webpackObject, // the imported webpack node module
@@ -97,14 +97,16 @@ module.exports = {
       const filename = path.resolve(__dirname, 'build')
 
       if (opts.env.dev) {
-        config.devServer.proxy = {
-          context: () => true,
-          target: 'http://127.0.0.1:8080'
-        }
-
+        // config.devServer.proxy = {
+        //   context: () => true,
+        //   target: 'http://127.0.0.1:7999'
+        // }
+        config.devServer.host = 'localhost'
         config.devServer.index = ''
-        config.devServer.public = process.env.URL
+        config.devServer.publicPath = process.env.URL
         config.devServer.hot = true
+        config.devServer.https = true
+        config.devServer.port = 3001
         config.optimization = {
           moduleIds: 'size',
           runtimeChunk: 'single',

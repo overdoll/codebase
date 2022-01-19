@@ -187,14 +187,14 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	// expect 2 urls for image
 	require.Len(t, newImageResource.Urls, 2)
 	// expected first image to be webp
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
 	// expected second image to be a png
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
 
 	// expect 1 url for video
 	require.Len(t, newVideoResource.Urls, 1)
 	// expected video resource
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
 
 	// should not have gotten an error for trying to upload the same resources
 	_, err = grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{

@@ -15,7 +15,8 @@ const options: HelmetOptions = {
           ? (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`
           : '\'unsafe-inline\'',
         '\'unsafe-eval\'',
-        process.env.PUBLIC_PATH
+        process.env.PUBLIC_PATH,
+        process.env.URL
       ],
       'style-src': [
         '\'self\'',
@@ -28,7 +29,8 @@ const options: HelmetOptions = {
       'font-src': ['data:', '*'],
       'base-uri': ['\'self\''],
       'object-src': ['\'none\''],
-      'connect-src': ['\'self\'', 'blob:'],
+      // @ts-expect-error
+      'connect-src': ['\'self\'', 'blob:', process.env.URL, 'https://localhost:3001', 'wss://localhost:3001'],
       'frame-src': [],
       'frame-ancestors': ['\'none\''],
       'report-uri': [],

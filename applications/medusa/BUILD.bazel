@@ -203,8 +203,7 @@ nodejs_binary(
         "chdir.js",
         ":bundle",
     ] + glob([
-        "src/server/templates/**",
-        "src/server/locales/**/*",
+        "src/server/views/**",
         "public/**/*",
     ]) + _SERVER_DEPS,
     entry_point = "build/server.js",

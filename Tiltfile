@@ -1,8 +1,6 @@
-load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
+load("./helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 load("ext://helm_remote", "helm_remote")
 load("ext://restart_process", "custom_build_with_restart")
-
-k8s_yaml("./development/traefik/ingress.yaml")
 
 applications = {
     "eva": {

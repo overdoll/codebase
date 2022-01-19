@@ -1,8 +1,0 @@
-image:
-  repository: parley-image
-
-nameOverride: "parley"
-
-service: true
-http: true
-grpc: true

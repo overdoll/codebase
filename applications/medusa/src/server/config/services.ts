@@ -1,22 +1,22 @@
 export default [
   {
     name: 'eva',
-    url: 'http://eva:8000/api/graphql'
+    url: process.env.EVA_GRAPHQL_URL
   },
   {
     name: 'sting',
-    url: 'http://sting:8000/api/graphql'
+    url: process.env.STING_GRAPHQL_URL
   },
   {
     name: 'parley',
-    url: 'http://parley:8000/api/graphql'
+    url: process.env.PARLEY_GRAPHQL_URL
   },
   {
     name: 'stella',
-    url: 'http://stella:8000/api/graphql'
+    url: process.env.STELLA_GRAPHQL_URL
   },
   {
     name: 'loader',
-    url: 'http://loader:8000/api/graphql'
+    url: process.env.LOADER_GRAPHQL_URL
   }
 ]
