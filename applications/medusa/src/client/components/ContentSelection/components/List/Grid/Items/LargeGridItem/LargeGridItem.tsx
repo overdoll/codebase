@@ -12,7 +12,7 @@ export default function LargeGridItem ({
   return (
     <WrapItem
       w='45%'
-      h={[230, 250, 270]}
+      h={[230, 250, 270, 330]}
       {...rest}
     >
       {children}

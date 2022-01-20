@@ -12,8 +12,8 @@ import {
   PostLikeButton,
   PostMenu,
   PostVideoManagerContext
-} from '../../../../../modules/content/Posts'
-import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
+} from '@//:modules/content/Posts'
+import JoinClubButton from '../../../domain/ManageClub/components/JoinClubButton/JoinClubButton'
 
 interface Props {
   query: FullSimplePostFragment$key | null

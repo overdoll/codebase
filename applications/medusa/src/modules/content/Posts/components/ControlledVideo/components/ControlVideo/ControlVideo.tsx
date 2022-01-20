@@ -12,6 +12,7 @@ interface Props {
   isPaused: boolean
   isMuted: boolean
   hasAudio: boolean
+  hasError: boolean
   time: number
   totalTime: number
 }
@@ -24,6 +25,7 @@ export default function ControlVideo ({
   isPaused,
   isMuted,
   hasAudio,
+  hasError,
   time,
   totalTime
 }: Props): JSX.Element {
@@ -47,41 +49,50 @@ export default function ControlVideo ({
     video.muted = true
   }
 
+  const onRetry = (): void => {
+    const video = videoRef.current
+    if (video == null) return
+    video.load()
+  }
+
   return (
     <>
-      <Fade unmountOnExit in={isOpen}>
-        <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='center'>
-          <HStack spacing={8}>
-            <PlayPauseButton
-              onMouseEnter={onMouseHold}
-              onClick={onChangeVideo}
-              isPaused={isPaused}
-            />
-            <VolumeButton
-              onMouseEnter={onMouseHold}
-              isMuted={isMuted}
-              onChangeMuted={onChangeMuted}
-              hasAudio={hasAudio}
-            />
-          </HStack>
-        </Flex>
-      </Fade>
+      {!hasError &&
+        <>
+          <Fade unmountOnExit in={isOpen}>
+            <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='center'>
+              <HStack spacing={8}>
+                <PlayPauseButton
+                  onMouseEnter={onMouseHold}
+                  onClick={onChangeVideo}
+                  isPaused={isPaused}
+                />
+                <VolumeButton
+                  onMouseEnter={onMouseHold}
+                  isMuted={isMuted}
+                  onChangeMuted={onChangeMuted}
+                  hasAudio={hasAudio}
+                />
+              </HStack>
+            </Flex>
+          </Fade>
+          <Flex
+            bottom={-1}
+            position='absolute'
+            w='100%'
+            align='center'
+            justify='center'
+          >
+            <Slider value={time} min={0} max={totalTime} step={0.1}>
+              <SliderTrack bg='whiteAlpha.100'>
+                <Box position='relative' right={10} />
+                <SliderFilledTrack bg='whiteAlpha.700' />
+              </SliderTrack>
+            </Slider>
+          </Flex>
+        </>}
       <Flex
-        bottom={-1}
-        position='absolute'
-        w='100%'
-        align='center'
-        justify='center'
-      >
-        <Slider value={time} min={0} max={totalTime} step={0.1}>
-          <SliderTrack bg='whiteAlpha.100'>
-            <Box position='relative' right={10} />
-            <SliderFilledTrack bg='whiteAlpha.700' />
-          </SliderTrack>
-        </Slider>
-      </Flex>
-      <Flex
-        pointerEvents='none'
+        pointerEvents={hasError ? undefined : 'none'}
         top={0}
         position='absolute'
         w='100%'
@@ -89,7 +100,7 @@ export default function ControlVideo ({
         align='center'
         justify='center'
       >
-        <LoadingSpinner isLoading={!isLoaded} />
+        <LoadingSpinner onRetry={onRetry} isLoading={!isLoaded} hasError={hasError} />
       </Flex>
     </>
   )

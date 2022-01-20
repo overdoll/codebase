@@ -1,30 +1,30 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3489bf0e14cce38de1fa23a67a2d51e2 */
+/* @relayHash 8ae4af59008cb61236fc17297abe32e3 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type MyClubsPaginationQueryVariables = {
+export type SuggestedClubsPaginationQueryVariables = {
     after?: string | null | undefined;
     first?: number | null | undefined;
 };
-export type MyClubsPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"MyClubsFragment">;
+export type SuggestedClubsPaginationQueryResponse = {
+    readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsFragment">;
 };
-export type MyClubsPaginationQuery = {
-    readonly response: MyClubsPaginationQueryResponse;
-    readonly variables: MyClubsPaginationQueryVariables;
+export type SuggestedClubsPaginationQuery = {
+    readonly response: SuggestedClubsPaginationQueryResponse;
+    readonly variables: SuggestedClubsPaginationQueryVariables;
 };
 
 
 
 /*
-query MyClubsPaginationQuery(
+query SuggestedClubsPaginationQuery(
   $after: String
-  $first: Int = 10
+  $first: Int = 7
 ) {
-  ...MyClubsFragment_2HEEH6
+  ...SuggestedClubsFragment_2HEEH6
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -43,7 +43,17 @@ fragment JoinClubButtonClubFragment on Club {
   }
 }
 
-fragment MyClubsFragment_2HEEH6 on Query {
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
+}
+
+fragment SuggestedClubsFragment_2HEEH6 on Query {
   clubs(first: $first, after: $after) {
     edges {
       node {
@@ -52,8 +62,8 @@ fragment MyClubsFragment_2HEEH6 on Query {
           ...ResourceIconFragment
           id
         }
-        id
         name
+        id
         __typename
       }
       cursor
@@ -63,16 +73,6 @@ fragment MyClubsFragment_2HEEH6 on Query {
       hasNextPage
     }
   }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
 }
 
 fragment VideoSnippetFragment on Resource {
@@ -91,7 +91,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 10,
+    "defaultValue": 7,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -127,12 +127,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "MyClubsPaginationQuery",
+    "name": "SuggestedClubsPaginationQuery",
     "selections": [
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "MyClubsFragment"
+        "name": "SuggestedClubsFragment"
       }
     ],
     "type": "Query",
@@ -142,7 +142,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "MyClubsPaginationQuery",
+    "name": "SuggestedClubsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -280,20 +280,20 @@ return {
         "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "MyClubs_clubs",
+        "key": "SuggestedClubs_clubs",
         "kind": "LinkedHandle",
         "name": "clubs"
       }
     ]
   },
   "params": {
-    "id": "3489bf0e14cce38de1fa23a67a2d51e2",
+    "id": "8ae4af59008cb61236fc17297abe32e3",
     "metadata": {},
-    "name": "MyClubsPaginationQuery",
+    "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '74154cbeecc1f5b85e6e0d83ea15d3a8';
+(node as any).hash = '25329969f78081d84085198ec59e5f5e';
 export default node;

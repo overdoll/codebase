@@ -24,8 +24,8 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "HomePostsPaginationQuery" ) {
-    posts (first: $first, after: $after)
-    @connection (key: "HomePosts_posts") {
+    postsFeed (first: $first, after: $after)
+    @connection (key: "HomePosts_postsFeed") {
       edges {
         __typename
       }
@@ -55,7 +55,7 @@ export default function Home (props: Props): JSX.Element {
         hasNext={hasNext}
         isLoadingNext={isLoadingNext}
         loadNext={loadNext}
-        query={data.posts}
+        query={data.postsFeed}
         viewerQuery={queryData.viewer}
       />
     </GlobalVideoManagerProvider>

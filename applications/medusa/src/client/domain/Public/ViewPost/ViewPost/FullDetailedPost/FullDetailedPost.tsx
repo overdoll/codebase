@@ -60,7 +60,7 @@ export default function FullDetailedPost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
         <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />

@@ -7,7 +7,7 @@ import { Box, Spinner } from '@chakra-ui/react'
 import SwiperCore, { Mousewheel, Scrollbar } from 'swiper'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
-import FullSimplePost from '../../domain/Home/Home/FullSimplePost/FullSimplePost'
+import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
@@ -65,6 +65,8 @@ export default function PostsInfiniteScroll ({
     if (swiper == null) return
     swiper.updateSlides()
   }, [swiper, data])
+
+  if (((data?.edges) != null) && data?.edges.length < 1) return <></>
 
   return (
     <Box>

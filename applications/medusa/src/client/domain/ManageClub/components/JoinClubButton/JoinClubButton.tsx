@@ -19,6 +19,7 @@ interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null
   viewerQuery: JoinClubButtonViewerFragment$key | null
   size?: string
+  w?: string | number | undefined
 }
 
 const ClubFragment = graphql`
@@ -68,6 +69,7 @@ const LeaveClubMutation = graphql`
 export default function JoinClubButton ({
   clubQuery,
   viewerQuery,
+  w = 'auto',
   size = 'lg'
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
@@ -141,6 +143,7 @@ export default function JoinClubButton ({
     return (
       <Link to='/join'>
         <Button
+          w={w}
           size={size}
           colorScheme='primary'
         >
@@ -155,6 +158,7 @@ export default function JoinClubButton ({
   if (isClubMember) {
     return (
       <Button
+        w={w}
         leftIcon={
           <Icon
             icon={SafetyExitDoorLeft}
@@ -178,6 +182,7 @@ export default function JoinClubButton ({
   if (canJoinClub) {
     return (
       <Button
+        w={w}
         onClick={onBecomeMember}
         isLoading={isBecomingMember}
         size={size}
@@ -192,6 +197,7 @@ export default function JoinClubButton ({
 
   return (
     <Button
+      w={w}
       leftIcon={
         <Icon
           icon={WarningTriangle}

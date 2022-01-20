@@ -43,9 +43,10 @@ export default function ControlledVideo ({
   const [totalTime, setTotalTime] = useState(1)
   const [volume, setVolume] = useState(defaultVolume)
   const [isMuted, setMuted] = useState(isDefaultMuted)
-  const [isPaused, setPaused] = useState(false)
+  const [isPaused, setPaused] = useState(true)
   const [isLoaded, setLoaded] = useState(false)
   const [hasAudio, setHasAudio] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
   const {
     isOpen,
@@ -58,6 +59,21 @@ export default function ControlledVideo ({
     hoverTimeout: 3000
   })
 
+  const onCanPlay = (): void => {
+    setLoaded(true)
+    if (hasError) setHasError(false)
+  }
+
+  const onAbort = (e): void => {
+    // TODO does this need to show loading indicator?
+    setPaused(e.target.paused)
+  }
+
+  const onWaiting = (e): void => {
+    // TODO does this need to show loading indicator?
+    setPaused(e.target.paused)
+  }
+
   const onInitialize = (e): void => {
     if (e.target.volume !== volume) {
       e.target.volume = volume
@@ -69,7 +85,6 @@ export default function ControlledVideo ({
       setHasAudio(false)
     }
     setTotalTime(e.target.duration)
-    setLoaded(true)
     onDefaultInitialize?.(e.target)
   }
 
@@ -100,6 +115,8 @@ export default function ControlledVideo ({
 
   return (
     <Box
+      minW={60}
+      minH={130}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       position='relative'
@@ -110,11 +127,15 @@ export default function ControlledVideo ({
         query={data}
         sendRef={ref}
         onClick={onTap}
+        onCanPlay={onCanPlay}
         onLoadedData={onInitialize}
         onTimeUpdate={onTimeUpdate}
+        onAbort={onAbort}
+        onError={() => setHasError(true)}
         onVolumeChange={onVolumeChange}
         onPlay={onPlay}
         onPause={onPause}
+        onWaiting={onWaiting}
       />
       <ControlVideo
         videoRef={ref}
@@ -122,6 +143,7 @@ export default function ControlledVideo ({
         isOpen={isOpen}
         isLoaded={isLoaded}
         isPaused={isPaused}
+        hasError={hasError}
         isMuted={isDefaultMuted}
         hasAudio={hasAudio}
         time={time}

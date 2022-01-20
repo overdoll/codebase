@@ -23,7 +23,7 @@ export default function RootHome (props: Props): JSX.Element {
   return (
     <>
       <Helmet title='my clubs' />
-      <PageWrapper>
+      <PageWrapper fillPage>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
             <MyClubs query={queryRef as PreloadedQuery<MyClubsQueryType>} />

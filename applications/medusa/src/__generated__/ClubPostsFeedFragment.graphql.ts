@@ -4,26 +4,27 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type HomeFragment = {
-    readonly postsFeed: {
+export type ClubPostsFeedFragment = {
+    readonly clubMembersPostsFeed: {
         readonly edges: ReadonlyArray<{
             readonly __typename: string;
         }>;
         readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
     };
-    readonly " $refType": "HomeFragment";
+    readonly id: string;
+    readonly " $refType": "ClubPostsFeedFragment";
 };
-export type HomeFragment$data = HomeFragment;
-export type HomeFragment$key = {
-    readonly " $data"?: HomeFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
+export type ClubPostsFeedFragment$data = ClubPostsFeedFragment;
+export type ClubPostsFeedFragment$key = {
+    readonly " $data"?: ClubPostsFeedFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"ClubPostsFeedFragment">;
 };
 
 
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "postsFeed"
+  "clubMembersPostsFeed"
 ],
 v1 = {
   "alias": null,
@@ -64,18 +65,21 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./HomePostsPaginationQuery.graphql.ts')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./ClubPostsFeedPaginationQuery.graphql.ts'),
+      "identifierField": "id"
     }
   },
-  "name": "HomeFragment",
+  "name": "ClubPostsFeedFragment",
   "selections": [
     {
-      "alias": "postsFeed",
+      "alias": "clubMembersPostsFeed",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__HomePosts_postsFeed_connection",
+      "name": "__ClubPostsFeed_clubMembersPostsFeed_connection",
       "plural": false,
       "selections": [
         {
@@ -141,11 +145,18 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Account",
   "abstractKey": null
 };
 })();
-(node as any).hash = '970c299ae45a737dec240a21b4489338';
+(node as any).hash = '9c1c247799d47361c3b6aca9566bbf18';
 export default node;

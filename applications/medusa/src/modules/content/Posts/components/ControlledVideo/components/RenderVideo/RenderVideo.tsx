@@ -2,18 +2,13 @@ import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { RenderVideoFragment$key } from '@//:artifacts/RenderVideoFragment.graphql'
-import { MutableRefObject, ReactEventHandler } from 'react'
+import { MutableRefObject } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   onClick?: () => void
   muted?: boolean
   sendRef?: MutableRefObject<any>
   query: RenderVideoFragment$key
-  onLoadedData?: ReactEventHandler<HTMLDivElement>
-  onPlay?: ReactEventHandler<HTMLDivElement>
-  onPause?: ReactEventHandler<HTMLDivElement>
-  onTimeUpdate?: ReactEventHandler<HTMLDivElement>
-  onVolumeChange?: ReactEventHandler<HTMLDivElement>
 }
 
 const Fragment = graphql`
@@ -29,12 +24,6 @@ export default function RenderVideo ({
   query,
   sendRef,
   muted = true,
-  onClick,
-  onPlay,
-  onPause,
-  onLoadedData,
-  onTimeUpdate,
-  onVolumeChange,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -44,12 +33,6 @@ export default function RenderVideo ({
       as='video'
       ref={sendRef}
       muted={muted}
-      onLoadedData={onLoadedData}
-      onPlay={onPlay}
-      onPause={onPause}
-      onTimeUpdate={onTimeUpdate}
-      onVolumeChange={onVolumeChange}
-      onClick={onClick}
       loop
       preload='auto'
       {...rest}

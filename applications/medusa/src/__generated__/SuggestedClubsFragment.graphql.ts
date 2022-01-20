@@ -4,25 +4,24 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type MyClubsFragment = {
+export type SuggestedClubsFragment = {
     readonly clubs: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly thumbnail: {
                     readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
                 } | null;
-                readonly id: string;
                 readonly name: string;
                 readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment">;
             };
         }>;
     };
-    readonly " $refType": "MyClubsFragment";
+    readonly " $refType": "SuggestedClubsFragment";
 };
-export type MyClubsFragment$data = MyClubsFragment;
-export type MyClubsFragment$key = {
-    readonly " $data"?: MyClubsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"MyClubsFragment">;
+export type SuggestedClubsFragment$data = SuggestedClubsFragment;
+export type SuggestedClubsFragment$key = {
+    readonly " $data"?: SuggestedClubsFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsFragment">;
 };
 
 
@@ -39,7 +38,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 10,
+      "defaultValue": 7,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -64,17 +63,17 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./MyClubsPaginationQuery.graphql.ts')
+      "operation": require('./SuggestedClubsPaginationQuery.graphql.ts')
     }
   },
-  "name": "MyClubsFragment",
+  "name": "SuggestedClubsFragment",
   "selections": [
     {
       "alias": "clubs",
       "args": null,
       "concreteType": "ClubConnection",
       "kind": "LinkedField",
-      "name": "__MyClubs_clubs_connection",
+      "name": "__SuggestedClubs_clubs_connection",
       "plural": false,
       "selections": [
         {
@@ -107,13 +106,6 @@ return {
                       "name": "ResourceIconFragment"
                     }
                   ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
                   "storageKey": null
                 },
                 {
@@ -181,5 +173,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '74154cbeecc1f5b85e6e0d83ea15d3a8';
+(node as any).hash = '25329969f78081d84085198ec59e5f5e';
 export default node;

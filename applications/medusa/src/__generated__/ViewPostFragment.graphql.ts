@@ -4,26 +4,27 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type HomeFragment = {
-    readonly postsFeed: {
+export type ViewPostFragment = {
+    readonly suggestedPosts: {
         readonly edges: ReadonlyArray<{
             readonly __typename: string;
         }>;
         readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
     };
-    readonly " $refType": "HomeFragment";
+    readonly id: string;
+    readonly " $refType": "ViewPostFragment";
 };
-export type HomeFragment$data = HomeFragment;
-export type HomeFragment$key = {
-    readonly " $data"?: HomeFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
+export type ViewPostFragment$data = ViewPostFragment;
+export type ViewPostFragment$key = {
+    readonly " $data"?: ViewPostFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"ViewPostFragment">;
 };
 
 
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "postsFeed"
+  "suggestedPosts"
 ],
 v1 = {
   "alias": null,
@@ -64,18 +65,21 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./HomePostsPaginationQuery.graphql.ts')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./ViewPostPaginationQuery.graphql.ts'),
+      "identifierField": "id"
     }
   },
-  "name": "HomeFragment",
+  "name": "ViewPostFragment",
   "selections": [
     {
-      "alias": "postsFeed",
+      "alias": "suggestedPosts",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__HomePosts_postsFeed_connection",
+      "name": "__ViewPost_suggestedPosts_connection",
       "plural": false,
       "selections": [
         {
@@ -141,11 +145,18 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Post",
   "abstractKey": null
 };
 })();
-(node as any).hash = '970c299ae45a737dec240a21b4489338';
+(node as any).hash = '72ae092d4c31358daa965e1452ca4c19';
 export default node;

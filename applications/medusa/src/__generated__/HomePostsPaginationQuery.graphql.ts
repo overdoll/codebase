@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 90975ca6a16e2dc275d78b20af66a5bb */
+/* @relayHash 1b47e0fedde1ad0760d2010aeabb34f5 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -45,7 +45,7 @@ fragment FullSimplePostFragment on Post {
 }
 
 fragment HomeFragment_2HEEH6 on Query {
-  posts(first: $first, after: $after) {
+  postsFeed(first: $first, after: $after) {
     edges {
       __typename
       cursor
@@ -305,7 +305,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "posts",
+        "name": "postsFeed",
         "plural": false,
         "selections": [
           {
@@ -479,14 +479,14 @@ return {
         "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "HomePosts_posts",
+        "key": "HomePosts_postsFeed",
         "kind": "LinkedHandle",
-        "name": "posts"
+        "name": "postsFeed"
       }
     ]
   },
   "params": {
-    "id": "90975ca6a16e2dc275d78b20af66a5bb",
+    "id": "1b47e0fedde1ad0760d2010aeabb34f5",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",
@@ -494,5 +494,5 @@ return {
   }
 };
 })();
-(node as any).hash = '1f99c7a82a438833f35a9ccb1c580265';
+(node as any).hash = '970c299ae45a737dec240a21b4489338';
 export default node;
