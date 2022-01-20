@@ -28,14 +28,34 @@ services:
       - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
-    image: "scylladb/scylla:4.3.1"
+    image: scylladb/scylla:4.5.0
     restart: always
-    command: --smp 1 --memory 1G
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     volumes:
       - scylla-data:/var/lib/scylla
     ports:
       - 9042:9042
       - 9160:9160
+    networks:
+      scylla-web:
+
+  scylla-node2:
+    image: scylladb/scylla:4.5.0
+    restart: always
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    volumes:
+      - scylla-data:/var/lib/scylla
+    networks:
+      scylla-web:
+
+  scylla-node3:
+    image: scylladb/scylla:4.5.0
+    restart: always
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    volumes:
+      - scylla-data:/var/lib/scylla
+    networks:
+      scylla-web:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
@@ -69,3 +89,7 @@ volumes:
     driver: local
   scylla-data:
     driver: local
+
+networks:
+  scylla-web:
+    driver: bridge
