@@ -49,7 +49,7 @@ export function ObserverManagerProvider ({ children }: Props): JSX.Element {
 
   return (
     <ObserverManagerContext.Provider value={contextValue}>
-      <Box ref={ref}>
+      <Box h='100%' ref={ref}>
         {children}
       </Box>
     </ObserverManagerContext.Provider>

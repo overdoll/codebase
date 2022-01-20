@@ -1,14 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 89654f372efcb200985f43f19e9ceebf */
+/* @relayHash 603032c03d218680a0c6ab5aeb36b2b6 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type HomeQueryVariables = {};
 export type HomeQueryResponse = {
     readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"HomePostViewerFragment">;
+        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
     } | null;
     readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
 };
@@ -23,7 +23,7 @@ export type HomeQuery = {
 query HomeQuery {
   ...HomeFragment
   viewer {
-    ...HomePostViewerFragment
+    ...PostsInfiniteScrollViewerFragment
     id
   }
 }
@@ -32,25 +32,8 @@ fragment ControlledVideoFragment on Resource {
   ...RenderVideoFragment
 }
 
-fragment HomeFragment on Query {
-  posts(first: 10) {
-    edges {
-      node {
-        ...HomePostFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment HomePostFragment on Post {
-  ...PostGallerySimpleContentFragment
+fragment FullSimplePostFragment on Post {
+  ...PostGalleryPublicSimpleFragment
   ...PostMenuFragment
   ...PostLikeButtonFragment
   ...PostHeaderClubFragment
@@ -62,8 +45,26 @@ fragment HomePostFragment on Post {
   }
 }
 
-fragment HomePostViewerFragment on Account {
+fragment FullSimplePostViewerFragment on Account {
   ...JoinClubButtonViewerFragment
+}
+
+fragment HomeFragment on Query {
+  posts(first: 10) {
+    edges {
+      __typename
+      cursor
+      node {
+        __typename
+        id
+      }
+    }
+    ...PostsInfiniteScrollFragment
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -113,8 +114,9 @@ fragment PostClickableCharactersFragment on Post {
   }
 }
 
-fragment PostGallerySimpleContentFragment on Post {
+fragment PostGalleryPublicSimpleFragment on Post {
   id
+  reference
   content {
     type
     ...ImageSnippetFragment
@@ -148,6 +150,19 @@ fragment PostLikeButtonFragment on Post {
 
 fragment PostMenuFragment on Post {
   id
+}
+
+fragment PostsInfiniteScrollFragment on PostConnection {
+  edges {
+    node {
+      ...FullSimplePostFragment
+      id
+    }
+  }
+}
+
+fragment PostsInfiniteScrollViewerFragment on Account {
+  ...FullSimplePostViewerFragment
 }
 
 fragment RenderVideoFragment on Resource {
@@ -187,10 +202,17 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -223,42 +245,35 @@ v2 = [
     ],
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v2/*: any*/)
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v2/*: any*/),
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
+  "selections": (v3/*: any*/),
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "name",
   "storageKey": null
 },
 v7 = [
-  (v6/*: any*/),
-  (v1/*: any*/)
+  (v1/*: any*/),
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
@@ -278,7 +293,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "HomePostViewerFragment"
+            "name": "PostsInfiniteScrollViewerFragment"
           }
         ],
         "storageKey": null
@@ -314,6 +329,14 @@ return {
             "name": "edges",
             "plural": true,
             "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -323,6 +346,14 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "reference",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -330,7 +361,7 @@ return {
                     "kind": "LinkedField",
                     "name": "content",
                     "plural": true,
-                    "selections": (v2/*: any*/),
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -341,9 +372,9 @@ return {
                     "name": "categories",
                     "plural": true,
                     "selections": [
-                      (v3/*: any*/),
                       (v4/*: any*/),
-                      (v1/*: any*/)
+                      (v5/*: any*/),
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -355,7 +386,7 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -364,13 +395,13 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
-                          (v1/*: any*/)
+                          (v4/*: any*/),
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v4/*: any*/),
-                      (v1/*: any*/)
+                      (v5/*: any*/),
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -399,7 +430,7 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -407,8 +438,8 @@ return {
                         "name": "slug",
                         "storageKey": null
                       },
-                      (v4/*: any*/),
-                      (v1/*: any*/),
+                      (v5/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -421,16 +452,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  (v6/*: any*/)
+                  }
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
                 "storageKey": null
               }
             ],
@@ -495,14 +518,14 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v1/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "89654f372efcb200985f43f19e9ceebf",
+    "id": "603032c03d218680a0c6ab5aeb36b2b6",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",
@@ -510,5 +533,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'b305b0b0ef0b2eccf3f9aeb13f318a4e';
+(node as any).hash = 'bc0d7306b143fee34adb570120c166ec';
 export default node;

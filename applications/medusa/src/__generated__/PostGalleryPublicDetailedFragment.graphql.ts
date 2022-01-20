@@ -5,19 +5,19 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type PostGallerySimpleContentFragment = {
+export type PostGalleryPublicDetailedFragment = {
     readonly id: string;
+    readonly reference: string;
     readonly content: ReadonlyArray<{
         readonly type: ResourceType;
         readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
-    readonly " $refType": "PostGallerySimpleContentFragment";
+    readonly " $refType": "PostGalleryPublicDetailedFragment";
 };
-export type PostGallerySimpleContentFragment$data = PostGallerySimpleContentFragment;
-export type PostGallerySimpleContentFragment$key = {
-    readonly " $data"?: PostGallerySimpleContentFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostGallerySimpleContentFragment">;
+export type PostGalleryPublicDetailedFragment$data = PostGalleryPublicDetailedFragment;
+export type PostGalleryPublicDetailedFragment$key = {
+    readonly " $data"?: PostGalleryPublicDetailedFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"PostGalleryPublicDetailedFragment">;
 };
 
 
@@ -26,13 +26,20 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostGallerySimpleContentFragment",
+  "name": "PostGalleryPublicDetailedFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
       "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
       "storageKey": null
     },
     {
@@ -62,20 +69,10 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostClickableCategoriesFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostClickableCharactersFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '436e730b6e6181818f85288f0344ba2c';
+(node as any).hash = '9f83a11c72f72e429cfce0fc9b4c8d2d';
 export default node;

@@ -1,12 +1,12 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
-import { HomePostFragment$key } from '@//:artifacts/HomePostFragment.graphql'
-import { HomePostViewerFragment$key } from '@//:artifacts/HomePostViewerFragment.graphql'
+import { FullSimplePostFragment$key } from '@//:artifacts/FullSimplePostFragment.graphql'
+import { FullSimplePostViewerFragment$key } from '@//:artifacts/FullSimplePostViewerFragment.graphql'
 import { HStack, Stack } from '@chakra-ui/react'
 import { useContext } from 'react'
 import {
   PostFooter,
-  PostGallerySimpleContent,
+  PostGalleryPublicSimple,
   PostHeaderClub,
   PostIndexer,
   PostLikeButton,
@@ -16,13 +16,13 @@ import {
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
 
 interface Props {
-  query: HomePostFragment$key | null
-  viewerQuery: HomePostViewerFragment$key | null
+  query: FullSimplePostFragment$key | null
+  viewerQuery: FullSimplePostViewerFragment$key | null
 }
 
 const PostFragment = graphql`
-  fragment HomePostFragment on Post {
-    ...PostGallerySimpleContentFragment
+  fragment FullSimplePostFragment on Post {
+    ...PostGalleryPublicSimpleFragment
     ...PostMenuFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
@@ -35,17 +35,17 @@ const PostFragment = graphql`
 `
 
 const ViewerFragment = graphql`
-  fragment HomePostViewerFragment on Account {
+  fragment FullSimplePostViewerFragment on Account {
     ...JoinClubButtonViewerFragment
   }
 `
 
-export default function HomePost ({
+export default function FullSimplePost ({
   query,
   viewerQuery
 }: Props): JSX.Element {
-  const data = useFragment<HomePostFragment$key>(PostFragment, query)
-  const viewerData = useFragment<HomePostViewerFragment$key>(ViewerFragment, viewerQuery)
+  const data = useFragment<FullSimplePostFragment$key>(PostFragment, query)
+  const viewerData = useFragment<FullSimplePostViewerFragment$key>(ViewerFragment, viewerQuery)
 
   const {
     slidesCount,
@@ -58,7 +58,7 @@ export default function HomePost ({
         <PostHeaderClub query={data} />
         <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
       </HStack>
-      <PostGallerySimpleContent query={data} />
+      <PostGalleryPublicSimple query={data} />
       <PostFooter
         leftItem={<PostLikeButton query={data} />}
         centerItem={<PostIndexer

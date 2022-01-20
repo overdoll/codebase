@@ -4,17 +4,18 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type HomePostFragment = {
+export type FullDetailedPostFragment = {
+    readonly reference: string;
     readonly club: {
         readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment">;
     };
-    readonly " $fragmentRefs": FragmentRefs<"PostGallerySimpleContentFragment" | "PostMenuFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
-    readonly " $refType": "HomePostFragment";
+    readonly " $fragmentRefs": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostMenuFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+    readonly " $refType": "FullDetailedPostFragment";
 };
-export type HomePostFragment$data = HomePostFragment;
-export type HomePostFragment$key = {
-    readonly " $data"?: HomePostFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"HomePostFragment">;
+export type FullDetailedPostFragment$data = FullDetailedPostFragment;
+export type FullDetailedPostFragment$key = {
+    readonly " $data"?: FullDetailedPostFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"FullDetailedPostFragment">;
 };
 
 
@@ -23,8 +24,15 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "HomePostFragment",
+  "name": "FullDetailedPostFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -44,7 +52,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostGallerySimpleContentFragment"
+      "name": "PostGalleryPublicDetailedFragment"
     },
     {
       "args": null,
@@ -75,5 +83,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '2cf588cd9044f28b62898477585be0aa';
+(node as any).hash = '4dedbfc99b285fce0ddafc3fc165554e';
 export default node;

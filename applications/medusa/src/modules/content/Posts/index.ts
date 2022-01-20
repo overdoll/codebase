@@ -1,6 +1,6 @@
 export {
-  default as PostGallerySimpleContent
-} from './components/Content/PostGallerySimpleContent/PostGallerySimpleContent'
+  default as PostGalleryPublicSimple
+} from './components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple'
 export { default as PostHeaderClub } from './components/Content/PostHeaderClub/PostHeaderClub'
 export { default as PostHeaderContributor } from './components/Content/PostHeaderContributor/PostHeaderContributor'
 export { default as PostPreviewContent } from './components/Content/PostPreviewContent/PostPreviewContent'

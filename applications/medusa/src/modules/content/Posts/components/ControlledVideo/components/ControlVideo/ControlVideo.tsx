@@ -85,6 +85,7 @@ export default function ControlVideo ({
         top={0}
         position='absolute'
         w='100%'
+        h='100%'
         align='center'
         justify='center'
       >

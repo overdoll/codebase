@@ -1,5 +1,5 @@
 import { Box, HTMLChakraProps } from '@chakra-ui/react'
-import { Icon } from '../../../../../index'
+import { Icon } from '../../../../../../index'
 import { ControlPauseButton, ControlPlayButton } from '@//:assets/icons/interface'
 
 interface Props extends HTMLChakraProps<any> {

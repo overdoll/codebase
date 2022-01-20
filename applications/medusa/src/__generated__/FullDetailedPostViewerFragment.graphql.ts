@@ -4,14 +4,14 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type HomePostViewerFragment = {
+export type FullDetailedPostViewerFragment = {
     readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonViewerFragment">;
-    readonly " $refType": "HomePostViewerFragment";
+    readonly " $refType": "FullDetailedPostViewerFragment";
 };
-export type HomePostViewerFragment$data = HomePostViewerFragment;
-export type HomePostViewerFragment$key = {
-    readonly " $data"?: HomePostViewerFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"HomePostViewerFragment">;
+export type FullDetailedPostViewerFragment$data = FullDetailedPostViewerFragment;
+export type FullDetailedPostViewerFragment$key = {
+    readonly " $data"?: FullDetailedPostViewerFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"FullDetailedPostViewerFragment">;
 };
 
 
@@ -20,7 +20,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "HomePostViewerFragment",
+  "name": "FullDetailedPostViewerFragment",
   "selections": [
     {
       "args": null,
@@ -31,5 +31,5 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '2f5b7c8f50e41ebc1032bab18c98996c';
+(node as any).hash = '7150b0b00115b3f296fc3763b42ff910';
 export default node;

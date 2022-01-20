@@ -124,7 +124,6 @@ _RUNTIME_DEPS = [
     "@npm//@lingui/react",
     "@npm//@apollographql/graphql-playground-html",
     "@npm//url-slug",
-    "@npm//react-virtual",
     "@npm//usehooks-ts",
 ]
 
