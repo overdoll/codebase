@@ -3,6 +3,7 @@ const LoadableWebpackPlugin = require('@loadable/webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const path = require('path')
+const fs = require('fs')
 const webpack = require('webpack')
 
 const supportedLocales = require('./locales.config')
@@ -105,7 +106,11 @@ module.exports = {
         config.devServer.index = ''
         config.devServer.publicPath = process.env.URL
         config.devServer.hot = true
-        config.devServer.https = true
+        config.devServer.https = {
+          key: fs.readFileSync('../../development/localhost-certs/localhost.decrypted.key'),
+          cert: fs.readFileSync('../../development/localhost-certs/localhost.crt'),
+          ca: fs.readFileSync('../../development/localhost-certs/CA.pem')
+        }
         config.devServer.port = 3001
         config.optimization = {
           moduleIds: 'size',

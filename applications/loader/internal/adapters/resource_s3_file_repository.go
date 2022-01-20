@@ -17,16 +17,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-var (
-	ResourcesBucket = ""
-	UploadsBucket   = ""
-)
-
-func init() {
-	ResourcesBucket = os.Getenv("RESOURCES_BUCKET")
-	UploadsBucket = os.Getenv("UPLOADS_BUCKET")
-}
-
 type ResourceS3FileRepository struct {
 	session *session.Session
 }
@@ -46,7 +36,7 @@ func (r ResourceS3FileRepository) DeleteResources(ctx context.Context, resources
 		}
 
 		// delete object
-		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(ResourcesBucket), Key: aws.String(res.Url())})
+		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(os.Getenv("RESOURCES_BUCKET")), Key: aws.String(res.Url())})
 
 		if err != nil {
 			return fmt.Errorf("unable to delete file %v", err)
@@ -61,6 +51,8 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 
 	var resources []*resource.Resource
 
+	fmt.Println("test")
+
 	s3Client := s3.New(r.session)
 
 	for _, uploadId := range uploads {
@@ -68,7 +60,7 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 		fileId := strings.Split(uploadId, "+")[0]
 
 		resp, err := s3Client.HeadObject(&s3.HeadObjectInput{
-			Bucket: aws.String(UploadsBucket),
+			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
 			Key:    aws.String(fileId),
 		})
 
@@ -117,7 +109,7 @@ func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, 
 		// Download our file from the private bucket
 		_, err = downloader.Download(file,
 			&s3.GetObjectInput{
-				Bucket: aws.String(UploadsBucket),
+				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
 				Key:    aws.String(fileId),
 			},
 		)
@@ -149,7 +141,7 @@ func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, 
 
 			// new file that was created
 			_, err = s3Client.PutObject(&s3.PutObjectInput{
-				Bucket:        aws.String(ResourcesBucket),
+				Bucket:        aws.String(os.Getenv("RESOURCES_BUCKET")),
 				Key:           aws.String(target.RemoteUrlTarget()),
 				Body:          bytes.NewReader(buffer),
 				ContentLength: aws.Int64(size),
@@ -163,7 +155,7 @@ func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, 
 			// wait until file is available in private bucket
 
 			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
-				Bucket: aws.String(ResourcesBucket),
+				Bucket: aws.String(os.Getenv("RESOURCES_BUCKET")),
 				Key:    aws.String(target.RemoteUrlTarget()),
 			}); err != nil {
 				return fmt.Errorf("failed to wait for file: %v", err)
@@ -182,7 +174,7 @@ func (r ResourceS3FileRepository) UploadProcessedResources(ctx context.Context, 
 func (r ResourceS3FileRepository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
 	s3Client := s3.New(r.session)
 
-	store := s3store.New(UploadsBucket, s3Client)
+	store := s3store.New(os.Getenv("UPLOADS_BUCKET"), s3Client)
 
 	composer := tusd.NewStoreComposer()
 	store.UseIn(composer)

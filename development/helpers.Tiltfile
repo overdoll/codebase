@@ -1,10 +1,11 @@
 settings = read_json("../tilt_options.json", default={})
 
 allow_k8s_contexts("autobot")
+#allow_k8s_contexts("overdoll")
 
-user = settings.get("namespace", "")
-
-# default_registry(settings.get("registry", "localhost:5000"), single_name = "%s/dev" % user)
+#default_registry(settings.get("registry", "localhost:5000"), single_name = "t/dev")
+#default_registry('ttl.sh/overdoll-adg4tasdfasd')
+default_registry('771779017151.dkr.ecr.us-east-1.amazonaws.com',single_name='autobot/dev')
 
 # ns = "user-%s" % user
 ns = "default"
@@ -54,19 +55,14 @@ def build_applications(applications, dependencies):
     for item in applications.keys():
         application = applications[item]
 
-        disable_k8s_resource = application["disable_resource"]
-
-        # Deploy helm chart for application
-        if disable_k8s_resource != True:
-            k8s_yaml(
-                helm(
-                    "development/service",
-                    name=item,
-                    values=["development/services/" + item + ".yaml"],
-                    namespace=ns,
-                ),
-                allow_duplicates=True,
-            )
+        k8s_yaml(
+            helm(
+                "development/service",
+                name=item,
+                values=["development/services/" + item + ".yaml"],
+            ),
+            allow_duplicates=True,
+        )
 
         image_target = application["image_target"]
         bazel_image = application["bazel_image"]
@@ -121,7 +117,3 @@ def build_applications(applications, dependencies):
                 k8s_resource(item, resource_deps=[], trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False)
             else:
                 k8s_resource(item, resource_deps=[])
-
-
-def get_namespace():
-    return ns

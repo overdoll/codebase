@@ -6,28 +6,26 @@ const options: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
       'default-src': ['\'self\''],
-      // @ts-expect-error
       'script-src': [
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         //     (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`,
         '\'unsafe-inline\'',
         '\'unsafe-eval\'',
-        process.env.PUBLIC_PATH,
-        process.env.URL
+        'https://localhost:3001'
       ],
       'style-src': [
         '\'self\'',
         'https://cdn.jsdelivr.net/npm/@apollographql/',
         'https://fonts.googleapis.com',
         //      (req: Request, res: Response) => `'nonce-${res.locals.cspNonce as string}'`,
-        '\'unsafe-inline\''
+        '\'unsafe-inline\'',
+        'https://localhost:3001'
       ],
       'font-src': ['data:', '*'],
       'base-uri': ['\'self\''],
       'object-src': ['\'none\''],
-      // @ts-expect-error
-      'connect-src': ['\'self\'', 'blob:', process.env.URL, 'https://localhost:3001', 'wss://localhost:3001'],
+      'connect-src': ['\'self\'', 'blob:', 'https://localhost:3001', 'wss://localhost:3001'],
       'frame-src': [],
       'frame-ancestors': ['\'none\''],
       'report-uri': [],

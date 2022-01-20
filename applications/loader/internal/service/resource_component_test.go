@@ -122,10 +122,10 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	}
 
 	// expected image resource
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+imageFileId+".png", string(newImageResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+imageFileId, string(newImageResource.Urls[0].URL))
 
 	// expected video resource
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+videoFileId+".mp4", string(newVideoResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+videoFileId, string(newVideoResource.Urls[0].URL))
 
 	// finally, run the processing workflow. we will query our resources one more time to check that the proper formats and URLs are now available
 	env := getWorkflowEnvironment(t)

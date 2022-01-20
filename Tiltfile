@@ -1,4 +1,4 @@
-load("./helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
+load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 load("ext://restart_process", "custom_build_with_restart")
 
 applications = {
