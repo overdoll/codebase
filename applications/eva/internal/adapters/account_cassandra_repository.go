@@ -267,15 +267,16 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	accountUsernames := accountUsernameTable.
+		DeleteBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(AccountUsername{
+			Username: strings.ToLower(username),
+		})
 
-	// delete from other table
-	stmt, _ := accountUsernameTable.Delete()
-
-	batch.Query(stmt, strings.ToLower(username))
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account username: %v", err)
+	if err := accountUsernames.ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete unique username: %v", err)
 	}
 
 	return nil
@@ -470,20 +471,25 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		}
 
 		if strings.ToLower(oldUsername) != strings.ToLower(instance.Username()) {
-			// only a casings change - don't create unqiue username
+			// only a casings change - don't create unique username
 			if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
+				return nil, err
+			}
+
+			if err := r.deleteAccountUsername(ctx, instance.ID(), strings.ToLower(oldUsername)); err != nil {
+
+				if err := r.createUniqueAccountUsername(ctx, instance, strings.ToLower(oldUsername)); err != nil {
+					return nil, err
+				}
+
 				return nil, err
 			}
 		}
 
 		batch := r.session.NewBatch(gocql.LoggedBatch)
 
-		// delete old username
-		stmt, _ := accountUsernameTable.Delete()
-		batch.Query(stmt, strings.ToLower(oldUsername))
-
 		// finally, update account
-		stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
+		stmt, _ := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
 		batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 		if err := r.session.ExecuteBatch(batch); err != nil {

@@ -11,9 +11,9 @@ const unlikelyToChangeChunk = ['react', 'react-dom', 'react-relay', 'relay-runti
 
 module.exports = {
   options: {
-    cssPrefix: 'assets',
-    jsPrefix: 'assets',
-    mediaPrefix: 'assets',
+    cssPrefix: '',
+    jsPrefix: '',
+    mediaPrefix: '',
     enableReactRefresh: true
   },
   modifyPaths ({
@@ -36,14 +36,25 @@ module.exports = {
     config.stats = 'verbose'
 
     if (!env.dev && env.target === 'web') {
-      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
-      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[name].[contenthash].[ext]`
+      config.fileLoaderOutputName = '[name].[contenthash].[ext]'
+      config.urlLoaderOutputName = '[name].[contenthash].[ext]'
 
-      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
-      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[name].[contenthash].css`
+      config.cssOutputFilename = '[name].[contenthash].css'
+      config.cssOutputChunkFilename = '[name].[contenthash].css'
 
-      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
-      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[name].[contenthash].js`
+      config.jsOutputFilename = '[name].[contenthash].js'
+      config.jsOutputChunkFilename = '[name].[contenthash].js'
+    }
+
+    if (env.dev && env.target === 'web') {
+      config.fileLoaderOutputName = '[name].[ext]'
+      config.urlLoaderOutputName = '[name].[ext]'
+
+      config.cssOutputFilename = '[name].css'
+      config.cssOutputChunkFilename = '[name].css'
+
+      config.jsOutputFilename = '[name].js'
+      config.jsOutputChunkFilename = '[name].js'
     }
 
     return config
@@ -98,20 +109,38 @@ module.exports = {
       const filename = path.resolve(__dirname, 'build')
 
       if (opts.env.dev) {
-        // config.devServer.proxy = {
-        //   context: () => true,
-        //   target: 'http://127.0.0.1:7999'
-        // }
-        config.devServer.host = 'localhost'
+        const isRemote = process.env.REMOTE_DEV === 'true'
+
+        if (isRemote) {
+          config.devServer.proxy = {
+            context: () => true,
+            target: 'http://127.0.0.1:7999'
+          }
+        }
+
+        if (isRemote) {
+          config.devServer.host = process.env.URL.replace('https://', '') + '/'
+        } else {
+          config.devServer.host = 'localhost'
+        }
+
         config.devServer.index = ''
         config.devServer.publicPath = process.env.URL
         config.devServer.hot = true
-        config.devServer.https = {
-          key: fs.readFileSync('../../development/localhost-certs/localhost.decrypted.key'),
-          cert: fs.readFileSync('../../development/localhost-certs/localhost.crt'),
-          ca: fs.readFileSync('../../development/localhost-certs/CA.pem')
+        config.devServer.https = false
+
+        if (!isRemote) {
+          config.devServer.https = {
+            key: fs.readFileSync('../../development/localhost-certs/localhost.decrypted.key'),
+            cert: fs.readFileSync('../../development/localhost-certs/localhost.crt'),
+            ca: fs.readFileSync('../../development/localhost-certs/CA.pem')
+          }
         }
-        config.devServer.port = 3001
+
+        if (isRemote) {
+          config.devServer.port = 8000
+        }
+
         config.optimization = {
           moduleIds: 'size',
           runtimeChunk: 'single',

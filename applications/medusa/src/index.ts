@@ -1,6 +1,6 @@
 import express from 'express'
 
-const port = 8000
+const port = process.env.REMOTE_DEV === 'true' ? 7999 : 8000
 
 // Unhandled errors && exceptions should crash the process (if some graph services are unavailable, we sometimes get into an undefined state)
 process.on('uncaughtException', err => {
