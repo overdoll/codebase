@@ -456,7 +456,7 @@ func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubI
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	if err := r.session.
-		Query(clubSlugTable.Delete()).
+		Query(clubSlugTable.DeleteBuilder().Existing().ToCql()).
 		BindStruct(clubSlugs{
 			Slug:   strings.ToLower(slug),
 			ClubId: clubId,

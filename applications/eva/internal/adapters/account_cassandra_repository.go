@@ -243,7 +243,6 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.LocalSerial).
-		WithTimestamp(time.Now().UnixMilli()).
 		BindStruct(AccountUsername{
 			AccountId: instance.ID(),
 			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
@@ -270,15 +269,21 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 
 	accountUsernames := accountUsernameTable.
 		DeleteBuilder().
+		Existing().
 		Query(r.session).
-		Consistency(gocql.Quorum).
-		WithTimestamp(time.Now().UnixMilli()).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(AccountUsername{
 			Username: strings.TrimSpace(strings.ToLower(username)),
 		})
 
-	if err := accountUsernames.ExecRelease(); err != nil {
+	applied, err := accountUsernames.ExecCAS()
+
+	if err != nil {
 		return fmt.Errorf("failed to delete unique username: %v", err)
+	}
+
+	if !applied {
+		return fmt.Errorf("could not delete unique username: %v", err)
 	}
 
 	return nil
@@ -318,12 +323,26 @@ func (r AccountRepository) deleteAccountEmail(ctx context.Context, accountId, em
 
 	batch.Query(stmt, accountId, email)
 
-	// delete from other table
-	stmt, _ = accountEmailTable.Delete()
-
-	batch.Query(stmt, strings.ToLower(email))
-
 	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete account email: %v", err)
+	}
+
+	accountEmails := accountEmailTable.
+		DeleteBuilder().
+		Existing().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountEmail{
+			Email: strings.ToLower(email),
+		})
+
+	applied, err := accountEmails.ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to delete account email: %v", err)
+	}
+
+	if !applied {
 		return fmt.Errorf("failed to delete account email: %v", err)
 	}
 
