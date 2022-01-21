@@ -19,8 +19,6 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 20
-    networks:
-      web:
 
   run:
     depends_on:

@@ -15,5 +15,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
-    networks:
-      web:
