@@ -61,7 +61,3 @@ func (r PostResolver) ViewerLiked(ctx context.Context, obj *types.Post) (*types.
 
 	return types.MarshalPostLikeToGraphQL(ctx, postLike), nil
 }
-
-func (r PostResolver) Content(ctx context.Context, obj *types.Post) ([]*types.Resource, error) {
-	return obj.Content, nil
-}

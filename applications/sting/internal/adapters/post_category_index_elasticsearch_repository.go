@@ -58,7 +58,7 @@ const categoryIndex = `
 	}
 }`
 
-const categoryIndexName = "categories"
+const CategoryIndexName = "categories"
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
@@ -89,7 +89,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategory(ctx context.Context, ca
 
 	_, err = r.client.
 		Index().
-		Index(categoryIndexName).
+		Index(CategoryIndexName).
 		Id(category.ID()).
 		BodyJson(cat).
 		Do(ctx)
@@ -104,7 +104,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategory(ctx context.Context, ca
 func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
-		Index(categoryIndexName).ErrorTrace(true)
+		Index(CategoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")
@@ -213,7 +213,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 			_, err = r.client.
 				Index().
-				Index(categoryIndexName).
+				Index(CategoryIndexName).
 				Id(c.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -235,20 +235,20 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(categoryIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(CategoryIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(categoryIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(CategoryIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(categoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(CategoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {
 		return err
 	}
 

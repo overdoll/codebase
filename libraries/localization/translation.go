@@ -2,11 +2,16 @@ package localization
 
 import (
 	"go.uber.org/zap"
+	"golang.org/x/text/language"
 )
 
 // support carries all translations for a specific thing
 type Translation struct {
 	translations []*TranslatedSupport
+}
+
+func (t *Translation) Translations() []*TranslatedSupport {
+	return t.translations
 }
 
 func (t *Translation) TranslateDefault(fallback string) string {
@@ -46,6 +51,31 @@ func (t *Translation) Translate(lang *Language, fallback string) string {
 
 	// fallback if for some reason we dont have english?
 	return fallback
+}
+
+func (t *Translation) UpdateTranslation(data, locale string) error {
+
+	tag, err := language.Parse(locale)
+
+	if err != nil {
+		return err
+	}
+
+	for v, item := range t.translations {
+		if item.tag == tag {
+			// remove translation
+			t.translations = append(t.translations[:v], t.translations[v+1:]...)
+
+			// change translation
+			t.translations = append(t.translations, &TranslatedSupport{
+				tag:  defaultLanguage,
+				data: data,
+			})
+			break
+		}
+	}
+
+	return nil
 }
 
 func (t *Translation) UpdateDefaultTranslation(data string) error {

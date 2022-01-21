@@ -40,6 +40,23 @@ type Commands struct {
 	UpdateCurationProfileAudience    command.UpdateCurationProfileAudienceHandler
 	UpdateCurationProfileCategory    command.UpdateCurationProfileCategoryHandler
 	UpdateCurationProfileDateOfBirth command.UpdateCurationProfileDateOfBirthHandler
+
+	CreateAudience           command.CreateAudienceHandler
+	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
+	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
+	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
+
+	CreateCategory          command.CreateCategoryHandler
+	UpdateCategoryTitle     command.UpdateCategoryTitleHandler
+	UpdateCategoryThumbnail command.UpdateCategoryThumbnailHandler
+
+	CreateCharacter          command.CreateCharacterHandler
+	UpdateCharacterName      command.UpdateCharacterNameHandler
+	UpdateCharacterThumbnail command.UpdateCharacterThumbnailHandler
+
+	CreateSeries          command.CreateSeriesHandler
+	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
+	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
 }
 
 type Queries struct {

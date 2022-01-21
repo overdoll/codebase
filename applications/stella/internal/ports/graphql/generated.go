@@ -900,7 +900,7 @@ type ClubMemberConnection {
 
 """Properties by which club member connections can be sorted."""
 enum ClubMembersSort {
-  """By newest members"""
+  """By oldest members"""
   NEWEST
 }
 
@@ -1128,8 +1128,6 @@ extend type Query {
   ): Club
 }
 
-
-
 extend type Account {
 
   """
@@ -1212,6 +1210,9 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!

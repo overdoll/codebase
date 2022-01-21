@@ -258,7 +258,7 @@ func (e AddClubSlugAliasValidation) MarshalGQL(w io.Writer) {
 type ClubMembersSort string
 
 const (
-	// By newest members
+	// By oldest members
 	ClubMembersSortNewest ClubMembersSort = "NEWEST"
 )
 

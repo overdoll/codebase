@@ -2,6 +2,12 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
+	"github.com/bxcodec/faker/v3"
+	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/graphql/relay"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -10,6 +16,7 @@ import (
 
 type CharacterModified struct {
 	Name   string
+	Slug   string
 	Series SeriesModified
 }
 
@@ -25,37 +32,66 @@ type Character struct {
 	Character *CharacterModified `graphql:"character(slug: $slug, seriesSlug: $seriesSlug)"`
 }
 
-// TestSearchCharacters - search some characters
-func TestSearchCharacters(t *testing.T) {
-	t.Parallel()
+type CreateCharacter struct {
+	CreateCharacter *struct {
+		Character *CharacterModified
+	} `graphql:"createCharacter(input: $input)"`
+}
 
-	client := getGraphqlClient(t)
+type TestCharacter struct {
+	Name string `faker:"username"`
+	Slug string `faker:"username"`
+}
 
-	var searchCharacters SearchCharacters
-
-	err := client.Query(context.Background(), &searchCharacters, map[string]interface{}{
-		"name": graphql.String("Aarush Hills"),
-	})
-
+func refreshCharacterIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.CharacterIndexName).Do(context.Background())
 	require.NoError(t, err)
-	require.Len(t, searchCharacters.Characters.Edges, 1)
-	require.Equal(t, "Aarush Hills", searchCharacters.Characters.Edges[0].Node.Name)
 }
 
 // Get a single character by slug
-func TestGetCharacter(t *testing.T) {
+func TestCreateCharacter_update_and_search(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClient(t)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	fake := TestCharacter{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err, "no error creating fake category")
+
+	var createCharacter CreateCharacter
+
+	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
+		"input": types.CreateCharacterInput{
+			SeriesID: relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, "1pcKiQL7dgUW8CIN7uO1wqFaMql")))),
+			Slug:     fake.Slug,
+			Name:     fake.Name,
+		},
+	})
+
+	require.NoError(t, err, "no error creating character")
+
+	refreshCharacterIndex(t)
 
 	var getCharacter Character
 
-	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
-		"slug":       graphql.String("margaret_lee"),
+	err = client.Query(context.Background(), &getCharacter, map[string]interface{}{
+		"slug":       graphql.String(fake.Slug),
 		"seriesSlug": graphql.String("foreigner_on_mars"),
 	})
 
 	require.NoError(t, err)
-	require.NotNil(t, getCharacter.Character)
-	require.Equal(t, "Margaret Lee", getCharacter.Character.Name)
+	require.NotNil(t, getCharacter.Character, "found character")
+	require.Equal(t, fake.Name, getCharacter.Character.Name, "correct name")
+
+	var searchCharacters SearchCharacters
+
+	err = client.Query(context.Background(), &searchCharacters, map[string]interface{}{
+		"name": graphql.String(fake.Name),
+	})
+
+	require.NoError(t, err)
+	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, fake.Name, searchCharacters.Characters.Edges[0].Node.Name, "correct name")
+
 }

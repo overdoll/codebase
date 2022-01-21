@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/libraries/localization"
+	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -181,6 +182,58 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 	return r.getCharacterById(ctx, characterId)
 }
 
+func (r PostsCassandraRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
+
+	char, err := marshalCharacterToDatabase(character)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := charactersSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesId: char.SeriesId}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique character slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrCharacterSlugNotUnique
+	}
+
+	if err := r.session.
+		Query(characterTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(char).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"name"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
+}
+
 func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string, updateFn func(char *post.Character) error, columns []string) (*post.Character, error) {
 
 	char, err := r.getCharacterById(ctx, id)
@@ -213,14 +266,6 @@ func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string
 	}
 
 	return char, nil
-}
-
-func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
-}
-
-func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
 }
 
 func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {

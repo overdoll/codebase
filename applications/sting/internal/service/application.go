@@ -93,6 +93,23 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
 			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
 			UpdateCurationProfileDateOfBirth: command.NewUpdateCurationProfileDateOfBirthHandler(personalizationRepo),
+
+			CreateAudience:           command.NewCreateAudienceHandler(postRepo, postIndexRepo),
+			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo, postIndexRepo),
+			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, postIndexRepo, loader),
+			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo, postIndexRepo),
+
+			CreateCategory:          command.NewCreateCategoryHandler(postRepo, postIndexRepo),
+			UpdateCategoryThumbnail: command.NewUpdateCategoryThumbnailHandler(postRepo, postIndexRepo, loader),
+			UpdateCategoryTitle:     command.NewUpdateCategoryTitleHandler(postRepo, postIndexRepo),
+
+			CreateCharacter:          command.NewCreateCharacterHandler(postRepo, postIndexRepo),
+			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo, postIndexRepo),
+			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, postIndexRepo, loader),
+
+			CreateSeries:          command.NewCreateSeriesHandler(postRepo, postIndexRepo),
+			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo, postIndexRepo),
+			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, postIndexRepo, loader),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),

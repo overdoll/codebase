@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"overdoll/libraries/localization"
+	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -120,6 +121,42 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester
 	return r.getCategoryById(ctx, categoryId)
 }
 
+func (r PostsCassandraRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
+
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := categorySlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(categorySlugs{Slug: strings.ToLower(pst.Slug), CategoryId: pst.Id}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique category slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrCategorySlugNotUnique
+	}
+
+	if err := r.session.
+		Query(categoryTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
 
 	category, err := r.getCategoryById(ctx, id)
@@ -152,6 +189,14 @@ func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string,
 	}
 
 	return category, nil
+}
+
+func (r PostsCassandraRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"title"})
 }
 
 func (r PostsCassandraRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {

@@ -62,7 +62,7 @@ const audienceIndex = `
 	}
 }`
 
-const audienceIndexName = "audience"
+const AudienceIndexName = "audience"
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
@@ -93,7 +93,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
-		Index(audienceIndexName)
+		Index(AudienceIndexName)
 
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")
@@ -172,7 +172,7 @@ func (r PostsIndexElasticSearchRepository) IndexAudience(ctx context.Context, au
 
 	_, err = r.client.
 		Index().
-		Index(audienceIndexName).
+		Index(AudienceIndexName).
 		Id(audience.ID()).
 		BodyJson(aud).
 		Do(ctx)
@@ -218,7 +218,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 
 			_, err = r.client.
 				Index().
-				Index(audienceIndexName).
+				Index(AudienceIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -240,20 +240,20 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 
 func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(audienceIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(AudienceIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(audienceIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(AudienceIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(audienceIndexName).BodyString(audienceIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(AudienceIndexName).BodyString(audienceIndex).Do(ctx); err != nil {
 		return err
 	}
 

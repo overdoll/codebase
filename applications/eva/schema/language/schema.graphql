@@ -1,6 +1,3 @@
-# Localization formatted in BCP47
-scalar BCP47
-
 type Language {
   """
   BCP47 locale

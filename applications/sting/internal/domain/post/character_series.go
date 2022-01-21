@@ -2,13 +2,16 @@ package post
 
 import (
 	"errors"
+	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrSeriesNotFound = errors.New("series not found")
+	ErrSeriesNotFound      = errors.New("series not found")
+	ErrSeriesSlugNotUnique = errors.New("series slug is not unique")
 )
 
 type Series struct {
@@ -21,6 +24,28 @@ type Series struct {
 
 	totalLikes int
 	totalPosts int
+}
+
+func NewSeries(requester *principal.Principal, slug, title string) (*Series, error) {
+
+	if !requester.IsStaff() {
+		return nil, principal.ErrNotAuthorized
+	}
+
+	lc, err := localization.NewDefaultTranslation(title)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Series{
+		id:                  uuid.New().String(),
+		slug:                slug,
+		title:               lc,
+		thumbnailResourceId: "",
+		totalLikes:          0,
+		totalPosts:          0,
+	}, nil
 }
 
 func (m *Series) ID() string {
@@ -54,6 +79,39 @@ func (m *Series) UpdateTotalPosts(totalPosts int) error {
 
 func (m *Series) UpdateTotalLikes(totalLikes int) error {
 	m.totalLikes = totalLikes
+	return nil
+}
+
+func (m *Series) UpdateTitle(requester *principal.Principal, title, locale string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := m.title.UpdateTranslation(title, locale); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Series) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	m.thumbnailResourceId = thumbnail
+
+	return nil
+}
+
+func (m *Series) canUpdate(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
 	return nil
 }
 

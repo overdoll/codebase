@@ -2,13 +2,16 @@ package post
 
 import (
 	"errors"
+	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrCategoryNotFound = errors.New("category not found")
+	ErrCategoryNotFound      = errors.New("category not found")
+	ErrCategorySlugNotUnique = errors.New("category slug is not unique")
 )
 
 type Category struct {
@@ -20,6 +23,28 @@ type Category struct {
 	thumbnailResourceId string
 	totalLikes          int
 	totalPosts          int
+}
+
+func NewCategory(requester *principal.Principal, slug, title string) (*Category, error) {
+
+	if !requester.IsStaff() {
+		return nil, principal.ErrNotAuthorized
+	}
+
+	lc, err := localization.NewDefaultTranslation(title)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Category{
+		id:                  uuid.New().String(),
+		slug:                slug,
+		title:               lc,
+		thumbnailResourceId: "",
+		totalLikes:          0,
+		totalPosts:          0,
+	}, nil
 }
 
 func (c *Category) ID() string {
@@ -53,6 +78,39 @@ func (c *Category) UpdateTotalPosts(totalPosts int) error {
 
 func (c *Category) UpdateTotalLikes(totalLikes int) error {
 	c.totalLikes = totalLikes
+	return nil
+}
+
+func (c *Category) UpdateTitle(requester *principal.Principal, title, locale string) error {
+
+	if err := c.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := c.title.UpdateTranslation(title, locale); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+
+	if err := c.canUpdate(requester); err != nil {
+		return err
+	}
+
+	c.thumbnailResourceId = thumbnail
+
+	return nil
+}
+
+func (c *Category) canUpdate(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
 	return nil
 }
 

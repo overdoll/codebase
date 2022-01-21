@@ -382,8 +382,6 @@ github.com/scylladb/go-reflectx v1.0.1 h1:b917wZM7189pZdlND9PbIJ6NQxfDPfBvUaQ7cj
 github.com/scylladb/go-reflectx v1.0.1/go.mod h1:rWnOfDIRWBGN0miMLIcoPt/Dhi2doCMZqwMCJ3KupFc=
 github.com/scylladb/gocql v0.0.0-20201029162719-81a4afe636ae h1:BLQMVhKY1c1dUCwYGj1EdubK8qfFyCtJi8XIQu/5IU0=
 github.com/scylladb/gocql v0.0.0-20201029162719-81a4afe636ae/go.mod h1:S154F0u6zQlF3JjuHAidQIExQf9H45yT8z68h0FQYdU=
-github.com/scylladb/gocqlx/v2 v2.4.0 h1:XkmIf3F++iP8jWCqZuabcF5Vw2bqD7VRpyTVmPFQnks=
-github.com/scylladb/gocqlx/v2 v2.4.0/go.mod h1:rb1rAYGkQjkUrpBgsEovkULiX8ik0QQSwdIs+YrgKbs=
 github.com/scylladb/gocqlx/v2 v2.6.0 h1:qEuomw8ymIp+ocHqcFPgTssByJx8UJIRTc5MAXlLYQk=
 github.com/scylladb/gocqlx/v2 v2.6.0/go.mod h1:jKhM0/LkEAhEOSwd10TCMQdlC5x8aEzK7cXjQcPyMJ0=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=

@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
+	"strings"
 )
 
 var audienceTable = table.New(table.Metadata{
@@ -152,6 +153,62 @@ func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *p
 	return results, nil
 }
 
+func (r PostsCassandraRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
+
+	aud, err := marshalAudienceToDatabase(audience)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := audienceSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(audienceSlug{Slug: strings.ToLower(aud.Slug), AudienceId: aud.Id}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique audience slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrAudienceSlugNotUnique
+	}
+
+	if err := r.session.
+		Query(audienceTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(aud).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"title"})
+}
+
+func (r PostsCassandraRepository) UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"standard"})
+}
+
+func (r PostsCassandraRepository) UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"total_likes"})
+}
+
 func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string, updateFn func(audience *post.Audience) error, columns []string) (*post.Audience, error) {
 
 	aud, err := r.getAudienceById(ctx, id)
@@ -184,12 +241,4 @@ func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string,
 	}
 
 	return aud, nil
-}
-
-func (r PostsCassandraRepository) UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"total_posts"})
-}
-
-func (r PostsCassandraRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"total_likes"})
 }

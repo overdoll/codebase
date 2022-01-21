@@ -156,12 +156,22 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
+	var titleTranslations []*AudienceTitleTranslation
+
+	for _, val := range result.Title().Translations() {
+		titleTranslations = append(titleTranslations, &AudienceTitleTranslation{
+			Locale: val.Locale(),
+			Title:  val.Data(),
+		})
+	}
+
 	return &Audience{
-		ID:         relay.NewID(Audience{}, result.ID()),
-		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:       result.Slug(),
-		Thumbnail:  res,
-		TotalLikes: result.TotalLikes(),
+		ID:                relay.NewID(Audience{}, result.ID()),
+		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		TitleTranslations: titleTranslations,
+		Slug:              result.Slug(),
+		Thumbnail:         res,
+		TotalLikes:        result.TotalLikes(),
 	}
 }
 
@@ -173,12 +183,21 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
+	var titleTranslations []*SeriesTitleTranslation
+
+	for _, val := range result.Title().Translations() {
+		titleTranslations = append(titleTranslations, &SeriesTitleTranslation{
+			Locale: val.Locale(),
+			Title:  val.Data(),
+		})
+	}
+
 	return &Series{
-		ID:         relay.NewID(Series{}, result.ID()),
-		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:       result.Slug(),
-		Thumbnail:  res,
-		TotalLikes: result.TotalLikes(),
+		ID:                relay.NewID(Series{}, result.ID()),
+		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		TitleTranslations: titleTranslations,
+		Thumbnail:         res,
+		TotalLikes:        result.TotalLikes(),
 	}
 }
 
@@ -190,12 +209,22 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
+	var titleTranslations []*CategoryTitleTranslation
+
+	for _, val := range result.Title().Translations() {
+		titleTranslations = append(titleTranslations, &CategoryTitleTranslation{
+			Locale: val.Locale(),
+			Title:  val.Data(),
+		})
+	}
+
 	return &Category{
-		ID:         relay.NewID(Category{}, result.ID()),
-		Thumbnail:  res,
-		Slug:       result.Slug(),
-		Title:      result.Title().Translate(passport.FromContext(ctx).Language(), ""),
-		TotalLikes: result.TotalLikes(),
+		ID:                relay.NewID(Category{}, result.ID()),
+		Thumbnail:         res,
+		Slug:              result.Slug(),
+		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
+		TitleTranslations: titleTranslations,
+		TotalLikes:        result.TotalLikes(),
 	}
 }
 
@@ -207,13 +236,23 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
+	var nameTranslations []*CharacterNameTranslation
+
+	for _, val := range result.Name().Translations() {
+		nameTranslations = append(nameTranslations, &CharacterNameTranslation{
+			Locale: val.Locale(),
+			Name:   val.Data(),
+		})
+	}
+
 	return &Character{
-		ID:         relay.NewID(Character{}, result.ID()),
-		Name:       result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:       result.Slug(),
-		Thumbnail:  res,
-		Series:     MarshalSeriesToGraphQL(ctx, result.Series()),
-		TotalLikes: result.TotalLikes(),
+		ID:               relay.NewID(Character{}, result.ID()),
+		Name:             result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:             result.Slug(),
+		Thumbnail:        res,
+		NameTranslations: nameTranslations,
+		Series:           MarshalSeriesToGraphQL(ctx, result.Series()),
+		TotalLikes:       result.TotalLikes(),
 	}
 }
 
