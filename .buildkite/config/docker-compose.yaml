@@ -8,7 +8,7 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
     ports:
-      - 8000:80
+      - 8005:80
       - 4343:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
