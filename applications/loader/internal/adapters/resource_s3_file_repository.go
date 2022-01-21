@@ -51,8 +51,6 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 
 	var resources []*resource.Resource
 
-	fmt.Println("test")
-
 	s3Client := s3.New(r.session)
 
 	for _, uploadId := range uploads {

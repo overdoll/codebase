@@ -97,7 +97,7 @@
     "service:medusa:production": "cd ./applications/medusa && node build/server.js",
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",
     "test:unit": "bazel coverage --test_output=all //applications/medusa:unit",
-    "e2e:open": "cd ./applications/medusa && cypress open --config cypress.json",
+    "e2e:open": "cd ./applications/medusa && cypress open --config-file cypress.json",
     "jest": "cd ./applications/medusa && jest src/ --coverage",
     "medusa:static:dev": "next dev ./applications/medusa/src/static ",
     "medusa:static:build": "next build ./applications/medusa/src/static",
