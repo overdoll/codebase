@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/puppy/internal/ports"
 	"overdoll/applications/puppy/internal/service"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 	"time"
 )
@@ -20,8 +19,6 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	config.Read("applications/puppy")
-
-	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,

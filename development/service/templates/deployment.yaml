@@ -18,16 +18,9 @@ spec:
     {{- include "default-service.selectorLabels" . | nindent 8 }}
     spec:
       # mount data from host
-      volumes:
-        - name: data-mount
-          hostPath:
-            path: /var/data
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
-          volumeMounts:
-            - mountPath: /var/data
-              name: data-mount
           ports:
             {{- if .Values.grpc }}
             - name: grpc

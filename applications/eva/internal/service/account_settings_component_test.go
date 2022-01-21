@@ -244,7 +244,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// make sure we can't find the account using the old username now
 	accountUsername := getAccountByUsername(t, client, oldUsername)
-	require.Nil(t, accountUsername)
+	require.Nil(t, accountUsername, "should not find account by old username")
 
 	// make sure that we get an error if we try to change the name again
 	var modifyAccountUsername2 UpdateAccountUsername

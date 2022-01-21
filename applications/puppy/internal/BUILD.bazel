@@ -13,7 +13,6 @@ go_library(
         "//applications/puppy/internal/ports",
         "//applications/puppy/internal/service",
         "//libraries/bootstrap",
-        "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",
     ],

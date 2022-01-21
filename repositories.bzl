@@ -1402,8 +1402,8 @@ def go_repositories():
         name = "com_github_scylladb_gocqlx_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/scylladb/gocqlx/v2",
-        sum = "h1:XkmIf3F++iP8jWCqZuabcF5Vw2bqD7VRpyTVmPFQnks=",
-        version = "v2.4.0",
+        sum = "h1:qEuomw8ymIp+ocHqcFPgTssByJx8UJIRTc5MAXlLYQk=",
+        version = "v2.6.0",
     )
 
     go_repository(
@@ -1421,20 +1421,7 @@ def go_repositories():
         sum = "h1:FoResxvleQwYiPAVKe1tMUlEirodZqlqglIuFsdDntY=",
         version = "v1.0.3",
     )
-    go_repository(
-        name = "com_github_sendgrid_rest",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/sendgrid/rest",
-        sum = "h1:lq6gAQxLwVBf3mVyCCSHI6mgF+NfaJFJHjT0kl6SSo8=",
-        version = "v2.6.4+incompatible",
-    )
-    go_repository(
-        name = "com_github_sendgrid_sendgrid_go",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/sendgrid/sendgrid-go",
-        sum = "h1:aSYyurHxEZSDy7kxhvZ4fH0inNkEEmRssZNbAmETR2c=",
-        version = "v3.10.0+incompatible",
-    )
+
     go_repository(
         name = "com_github_sergi_go_diff",
         build_file_proto_mode = "disable",

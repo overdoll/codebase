@@ -9,7 +9,6 @@ services:
       - traefik
       - temporal
       - elasticsearch
-      - minio
     ports:
       - 3040:8000
       - 3050:8080

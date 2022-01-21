@@ -29,6 +29,7 @@ dist
 artifacts
 .next
 out
+cypress.json
 
 # IDEA
 .ijwb

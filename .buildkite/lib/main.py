@@ -35,7 +35,7 @@ def wait_for_network_dependencies(targets):
         port = connection["port"]
 
         terminal_print.print_collapsed_group(":suspect: Waiting for {}:{} to be available".format(host, port))
-        network.wait_for_port(host, port, 120)
+        network.wait_for_port(host, port, 180)
 
 
 # execute commands to run integration tests
@@ -189,6 +189,15 @@ def execute_custom_e2e_commands_custom(configs):
         exec.execute_command(i.split())
 
 
+def execute_custom_publish_commands_custom(configs):
+    commands = configs.get("publish_image", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":lua: Executing custom commands")
+
+    for i in commands:
+        exec.execute_command(i.split())
+
+
 def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
@@ -325,7 +334,7 @@ def print_project_pipeline():
                 commands=[".buildkite/pipeline.sh publish"],
                 # Does not require a cache because we already
                 # built our dependencies once - we just publishing to a diff repo
-                cache=False,
+                cache=True,
                 platform="docker",
             )
         )
@@ -388,6 +397,7 @@ def main(argv=None):
         elif args.subparsers_name == "project_pipeline":
             print_project_pipeline()
         elif args.subparsers_name == "publish":
+            execute_custom_publish_commands_custom(configs)
             execute_publish_commands(configs)
 
     except exception.BuildkiteException as e:

@@ -29,6 +29,7 @@ if (process.env.BUILDKITE_BUILD_ID != null) {
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
   require('@cypress/code-coverage/task')(on, config)
+  require('cypress-terminal-report/src/installLogsPrinter')(on)
   on('task', {
     generateOTP: require('cypress-otp')
   })
