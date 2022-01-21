@@ -84,7 +84,7 @@
     "docs": "docsify serve docs",
     "locale:extract": " cd ./applications/medusa && lingui extract",
     "locale:compile": "cd ./applications/medusa && lingui compile",
-    "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && wait-port --wait-for-dns parley:8000 && wait-port --wait-for-dns puppy:8000 && cd ./applications/medusa && razzle start",
+    "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && wait-port --wait-for-dns parley:8000 && wait-port --wait-for-dns puppy:8000 && cd ./applications/medusa && URL=https://traefik CLIENT_PUBLIC_PATH=https://traefik REMOTE_DEV=true razzle start",
     "relay": "cd ./applications/medusa && relay-compiler",
     "graphql": "cd ./applications/medusa && node get-graphql-schema.js -r dotenv/config",
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build --noninteractive",
