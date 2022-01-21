@@ -272,7 +272,7 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(AccountUsername{
-			Username: strings.ToLower(username),
+			Username: strings.TrimSpace(strings.ToLower(username)),
 		})
 
 	if err := accountUsernames.ExecRelease(); err != nil {
