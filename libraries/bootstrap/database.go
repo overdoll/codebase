@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -13,7 +14,7 @@ import (
 func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 
 	// Create gocql cluster
-	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
+	cluster := gocql.NewCluster(strings.Split(os.Getenv("DB_HOST"), ",")...)
 
 	if keyspace != "" {
 		cluster.Keyspace = keyspace
