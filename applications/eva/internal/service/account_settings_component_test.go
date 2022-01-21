@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
@@ -241,6 +242,8 @@ func TestAccountUsername_modify(t *testing.T) {
 	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
 
 	require.True(t, settings.Viewer.UsernameEditAvailableAt.After(time.Now()))
+
+	fmt.Println(oldUsername)
 
 	// make sure we can't find the account using the old username now
 	accountUsername := getAccountByUsername(t, client, oldUsername)
