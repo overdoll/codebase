@@ -45,14 +45,14 @@ services:
     restart: always
     command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
     volumes:
-      - scylla-data:/var/lib/scylla
+      - scylla-data-2:/var/lib/scylla
 
   scylla-node3:
     image: scylladb/scylla:4.5.0
     restart: always
     command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
     volumes:
-      - scylla-data:/var/lib/scylla
+      - scylla-data-3:/var/lib/scylla
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
@@ -85,4 +85,8 @@ volumes:
   elasticsearch-data:
     driver: local
   scylla-data:
+    driver: local
+  scylla-data-2:
+    driver: local
+  scylla-data-3:
     driver: local
