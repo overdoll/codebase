@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
-import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import Audiences from './Audiences/Audiences'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 
 interface Props {
   selected: string | null
@@ -16,7 +16,7 @@ export default function RootAudiences ({
     <QueryErrorBoundary loadQuery={() => {
     }}
     >
-      <Suspense fallback={<CenteredSpinner />}>
+      <Suspense fallback={<SkeletonStack />}>
         <Audiences selected={selected} onSelect={onSelect} />
       </Suspense>
     </QueryErrorBoundary>

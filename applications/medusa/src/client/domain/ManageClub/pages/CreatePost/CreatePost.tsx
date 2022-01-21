@@ -11,10 +11,10 @@ import { DispatchContext, StateContext, UppyContext } from './context'
 import { useQueryParam } from 'use-query-params'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:artifacts/PostCreatorQuery.graphql'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
 import getIdFromUppyUrl from './hooks/getIdFromUppyUrl/getIdFromUppyUrl'
+import SkeletonPost from '@//:modules/content/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {
@@ -30,10 +30,6 @@ export default function CreatePost (props: Props): JSX.Element {
   )
 
   const [postReference] = useQueryParam<string | null | undefined>('post')
-
-  const memoReference = useMemo(() => {
-    return postReference
-  }, [postReference])
 
   const [queryRef, loadQuery] = useQueryLoader(
     PostCreatorQuery,
@@ -135,7 +131,7 @@ export default function CreatePost (props: Props): JSX.Element {
                 slug: params.slug as string
               })}
               >
-                <Suspense fallback={<SkeletonStack />}>
+                <Suspense fallback={<SkeletonPost />}>
                   <PostCreator query={queryRef as PreloadedQuery<PostCreatorQueryType>} />
                 </Suspense>
               </QueryErrorBoundary>

@@ -58,9 +58,9 @@ export default function PostGalleryPublicSimple ({
           <SwiperSlide
             key={index}
           >
-            <Flex minH={200} maxH={700} align='center' justify='center'>
+            <Flex minH={300} maxH={600} align='center' justify='center'>
               {item.type === 'IMAGE' &&
-                <ImageSnippet query={item} />}
+                <ImageSnippet h='100%' query={item} />}
               {item.type === 'VIDEO' &&
                 <ControlledVideo
                   onPlay={(paused, target) => onVideoPlay(data?.reference, paused, target)}

@@ -1,8 +1,8 @@
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
-import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
 import SearchCharacters from './SearchCharacters/SearchCharacters'
+import SkeletonRectangleGrid from '@//:modules/content/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
 
 interface Props {
   search?: string
@@ -38,7 +38,7 @@ export default function RootSearchCategories ({
   }, [search])
 
   return (
-    <Suspense fallback={<CenteredSpinner />}>
+    <Suspense fallback={<SkeletonRectangleGrid />}>
       <ErrorBoundary
         fallback={({
           error,

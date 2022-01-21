@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 50efa49c0ccba83b56060bb5c28da7ce */
+/* @relayHash 3ebe615beada554563d10cce70faf40e */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -50,7 +50,7 @@ fragment FullSimplePostViewerFragment on Account {
 }
 
 fragment HomeFragment on Query {
-  postsFeed(first: 10) {
+  posts(first: 5, sortBy: TOP) {
     edges {
       __typename
       cursor
@@ -195,7 +195,12 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 5
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "TOP"
   }
 ],
 v1 = {
@@ -318,7 +323,7 @@ return {
         "args": (v0/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "postsFeed",
+        "name": "posts",
         "plural": false,
         "selections": [
           {
@@ -485,16 +490,18 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "postsFeed(first:10)"
+        "storageKey": "posts(first:5,sortBy:\"TOP\")"
       },
       {
         "alias": null,
         "args": (v0/*: any*/),
-        "filters": null,
+        "filters": [
+          "sortBy"
+        ],
         "handle": "connection",
-        "key": "HomePosts_postsFeed",
+        "key": "HomePosts_posts",
         "kind": "LinkedHandle",
-        "name": "postsFeed"
+        "name": "posts"
       },
       {
         "alias": null,
@@ -525,7 +532,7 @@ return {
     ]
   },
   "params": {
-    "id": "50efa49c0ccba83b56060bb5c28da7ce",
+    "id": "3ebe615beada554563d10cce70faf40e",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

@@ -101,6 +101,7 @@ export default function UpdateCharacterButton ({
   if (hasUpdate() && Object.keys(state.characters).length > 0) {
     return (
       <Button
+        w='100%'
         colorScheme='green'
         size='lg'
         isDisabled={buttonDisabled}
@@ -115,6 +116,7 @@ export default function UpdateCharacterButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled}

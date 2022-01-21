@@ -1,4 +1,4 @@
-import { Flex, Spacer } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import { STEPS } from '../../../../constants/constants'
 import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
 import FlowForward from './FlowForward/FlowForward'
@@ -27,12 +27,13 @@ export default function FlowFooter ({
 
   if (state.step !== STEPS.SUBMIT) {
     return (
-      <Flex w='100%' bottom={0} position='sticky'>
-        <FlowBackwardButton />
-        <Spacer />
-        <FlowForward
-          query={data}
-        />
+      <Flex w='100%' bottom={0}>
+        <HStack w='100%' spacing={4}>
+          <FlowBackwardButton />
+          <FlowForward
+            query={data}
+          />
+        </HStack>
       </Flex>
     )
   }

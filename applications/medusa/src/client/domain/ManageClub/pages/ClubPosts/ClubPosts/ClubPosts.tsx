@@ -1,11 +1,12 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
-import { GridWrap, LargeGridItem } from '../../../../../components/ContentSelection'
+import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Heading, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import PostPreviewContent from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent
+  from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
 import { useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
@@ -100,31 +101,31 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         switch (item.node.state) {
           case 'DRAFT':
             return (
-              <LargeGridItem key={index}>
+              <RectangleGridItem key={index}>
                 <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
                   <PostPreviewContent query={item.node} />
                 </ClickableBox>
-              </LargeGridItem>
+              </RectangleGridItem>
             )
           case 'PUBLISHED':
             return (
-              <LargeGridItem key={index}>
+              <RectangleGridItem key={index}>
                 <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
                   <PostPreviewContent query={item.node} />
                 </ClickableBox>
-              </LargeGridItem>
+              </RectangleGridItem>
             )
           default:
             return (
-              <LargeGridItem key={index}>
+              <RectangleGridItem key={index}>
                 <PostPreviewContent query={item.node} />
-              </LargeGridItem>
+              </RectangleGridItem>
             )
         }
       }
       )}
       {hasNext &&
-        <LargeGridItem>
+        <RectangleGridItem>
           <ClickableBox
             h='100%'
             borderRadius='md'
@@ -137,7 +138,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
               </Trans>
             </Heading>
           </ClickableBox>
-        </LargeGridItem>}
+        </RectangleGridItem>}
     </GridWrap>
   )
 }

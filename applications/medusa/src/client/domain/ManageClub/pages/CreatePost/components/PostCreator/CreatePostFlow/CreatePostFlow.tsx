@@ -10,7 +10,6 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../context'
-import { useParams } from '@//:modules/routing/useParams'
 
 interface Props {
   clubId: string | undefined
@@ -27,7 +26,7 @@ const Mutation = graphql`
 `
 
 export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
-  const [, setPostReference] = useQueryParam<string | null | undefined>('post')
+  const [postReference, setPostReference] = useQueryParam<string | null | undefined>('post')
 
   const uppy = useContext(UppyContext)
 
@@ -53,9 +52,16 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
     })
   }
 
+  // TODO write this better. seems super hacky.
+
+  // TODO there are still bugs where it will automatically generate a post
+  // TODO even though no file was added
+
   // add a state to uppy to keep track of the club that's selected
   useEffect(() => {
-    uppy.setMeta({ club: clubId })
+    uppy.setMeta({
+      club: clubId
+    })
   }, [clubId])
 
   useEffect(() => {

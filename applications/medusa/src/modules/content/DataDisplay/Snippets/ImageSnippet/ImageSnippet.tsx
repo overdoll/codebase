@@ -5,7 +5,7 @@ import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 
 interface Props extends HTMLChakraProps<any> {
-  query: ImageSnippetFragment$key
+  query: ImageSnippetFragment$key | null
   h?: string | undefined
   w?: string | undefined
 }
@@ -31,7 +31,7 @@ export default function ImageSnippet ({
 
   return (
     <Box h={h} w={w} as='picture'>
-      {data.urls.map((item, index) =>
+      {data?.urls.map((item, index) =>
         (
           <source
             key={index}
@@ -46,7 +46,7 @@ export default function ImageSnippet ({
         h='inherit'
         objectFit='cover'
         userSelect='none'
-        src={data.urls[data.urls.length - 1].url}
+        src={data?.urls[data?.urls.length - 1].url}
         fallback={<Skeleton w='100%' h='100%' />}
         {...rest}
       />

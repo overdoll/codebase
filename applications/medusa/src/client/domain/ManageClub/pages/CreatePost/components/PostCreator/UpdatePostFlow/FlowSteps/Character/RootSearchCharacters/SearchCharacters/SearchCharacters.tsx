@@ -5,7 +5,7 @@ import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
-  LargeGridItem,
+  RectangleGridItem,
   Selector,
   SelectorTextOverlay
 } from '../../../../../../../../../../../components/ContentSelection'
@@ -103,7 +103,7 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {characters.map((item, index) => (
-          <LargeGridItem key={index}>
+          <RectangleGridItem key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
@@ -115,11 +115,11 @@ export default function SearchCategories ({
                 />
               </SelectorTextOverlay>
             </Selector>
-          </LargeGridItem>
+          </RectangleGridItem>
         )
         )}
         {hasNext &&
-          <LargeGridItem height='inherit'>
+          <RectangleGridItem height='inherit'>
             <ClickableBox
               w='100%'
               h='100%'
@@ -135,7 +135,7 @@ export default function SearchCategories ({
                 </Trans>
               </Text>
             </ClickableBox>
-          </LargeGridItem>}
+          </RectangleGridItem>}
       </GridWrap>
     </>
   )

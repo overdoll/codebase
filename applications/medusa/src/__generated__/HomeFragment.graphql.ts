@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type HomeFragment = {
-    readonly postsFeed: {
+    readonly posts: {
         readonly edges: ReadonlyArray<{
             readonly __typename: string;
         }>;
@@ -23,7 +23,7 @@ export type HomeFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "postsFeed"
+  "posts"
 ],
 v1 = {
   "alias": null,
@@ -40,7 +40,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 10,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -71,11 +71,17 @@ return {
   "name": "HomeFragment",
   "selections": [
     {
-      "alias": "postsFeed",
-      "args": null,
+      "alias": "posts",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "TOP"
+        }
+      ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__HomePosts_postsFeed_connection",
+      "name": "__HomePosts_posts_connection",
       "plural": false,
       "selections": [
         {
@@ -140,12 +146,12 @@ return {
           "name": "PostsInfiniteScrollFragment"
         }
       ],
-      "storageKey": null
+      "storageKey": "__HomePosts_posts_connection(sortBy:\"TOP\")"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 })();
-(node as any).hash = '970c299ae45a737dec240a21b4489338';
+(node as any).hash = '63c4df90fd370bffb939bd5b6c4ee01d';
 export default node;

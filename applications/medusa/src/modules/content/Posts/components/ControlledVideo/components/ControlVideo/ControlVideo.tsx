@@ -1,12 +1,15 @@
-import { Box, Fade, Flex, HStack, Slider, SliderFilledTrack, SliderTrack } from '@chakra-ui/react'
+import { Fade, Flex, HStack, Slider, SliderFilledTrack, SliderTrack, Stack } from '@chakra-ui/react'
 import { MutableRefObject } from 'react'
 import PlayPauseButton from './PlayPauseButton/PlayPauseButton'
 import VolumeButton from './VolumeButton/VolumeButton'
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner'
+import SeekVideoButton from './SeekVideoButton/SeekVideoButton'
+import FullscreenButton from './FullscreenButton/FullscreenButton'
 
 interface Props {
   videoRef: MutableRefObject<HTMLVideoElement | null>
   onMouseHold: () => void
+  setTime: (time) => void
   isOpen: boolean
   isLoaded: boolean
   isPaused: boolean
@@ -15,6 +18,8 @@ interface Props {
   hasError: boolean
   time: number
   totalTime: number
+  canSeek?: boolean | undefined
+  canFullscreen?: boolean | undefined
 }
 
 export default function ControlVideo ({
@@ -26,8 +31,11 @@ export default function ControlVideo ({
   isMuted,
   hasAudio,
   hasError,
+  setTime,
   time,
-  totalTime
+  totalTime,
+  canSeek,
+  canFullscreen
 }: Props): JSX.Element {
   const onChangeVideo = (): void => {
     const video = videoRef.current
@@ -49,10 +57,22 @@ export default function ControlVideo ({
     video.muted = true
   }
 
+  const onSeekVideo = (number): void => {
+    const video = videoRef.current
+    if (video == null) return
+    video.currentTime = number
+  }
+
   const onRetry = (): void => {
     const video = videoRef.current
     if (video == null) return
     video.load()
+  }
+
+  const onFullscreen = (): void => {
+    const video = videoRef.current
+    if (video == null) return
+    void video.requestFullscreen()
   }
 
   return (
@@ -60,36 +80,60 @@ export default function ControlVideo ({
       {!hasError &&
         <>
           <Fade unmountOnExit in={isOpen}>
-            <Flex align='center' bottom={0} p={4} position='absolute' w='100%' justify='center'>
-              <HStack spacing={8}>
+            <Stack
+              align='center'
+              bottom={0}
+              pb={2}
+              pl={6}
+              pr={6}
+              position='absolute'
+              w='100%'
+              justify='center'
+              spacing={2}
+            >
+              <HStack spacing={6}>
                 <PlayPauseButton
                   onMouseEnter={onMouseHold}
                   onClick={onChangeVideo}
                   isPaused={isPaused}
                 />
-                <VolumeButton
-                  onMouseEnter={onMouseHold}
-                  isMuted={isMuted}
-                  onChangeMuted={onChangeMuted}
-                  hasAudio={hasAudio}
-                />
+                {hasAudio &&
+                  <VolumeButton
+                    onMouseEnter={onMouseHold}
+                    isMuted={isMuted}
+                    onChangeMuted={onChangeMuted}
+                    hasAudio={hasAudio}
+                  />}
+                {canFullscreen === true &&
+                  <FullscreenButton
+                    onMouseEnter={onMouseHold}
+                    onClick={onFullscreen}
+                  />}
               </HStack>
+              {canSeek === true &&
+                <SeekVideoButton
+                  setTime={setTime}
+                  time={time}
+                  totalTime={totalTime}
+                  onComplete={onSeekVideo}
+                />}
+            </Stack>
+          </Fade>
+          <Fade unmountOnExit in={!isOpen}>
+            <Flex
+              bottom={0}
+              position='absolute'
+              w='100%'
+              align='center'
+              justify='center'
+            >
+              <Slider isDisabled value={time} min={0} max={totalTime} step={0.1}>
+                <SliderTrack h='2px' bg='whiteAlpha.100'>
+                  <SliderFilledTrack bg='whiteAlpha.700' />
+                </SliderTrack>
+              </Slider>
             </Flex>
           </Fade>
-          <Flex
-            bottom={-1}
-            position='absolute'
-            w='100%'
-            align='center'
-            justify='center'
-          >
-            <Slider value={time} min={0} max={totalTime} step={0.1}>
-              <SliderTrack bg='whiteAlpha.100'>
-                <Box position='relative' right={10} />
-                <SliderFilledTrack bg='whiteAlpha.700' />
-              </SliderTrack>
-            </Slider>
-          </Flex>
         </>}
       <Flex
         pointerEvents={hasError ? undefined : 'none'}

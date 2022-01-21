@@ -6,8 +6,8 @@ import ViewPost from './ViewPost/ViewPost'
 import type { ViewPostQuery as ViewPostQueryType } from '@//:artifacts/ViewPostQuery.graphql'
 import ViewPostQuery from '@//:artifacts/ViewPostQuery.graphql'
 import { useParams } from '@//:modules/routing/useParams'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import SkeletonPost from '@//:modules/content/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {
@@ -28,7 +28,7 @@ export default function ViewPostRoot (props: Props): JSX.Element {
       <Helmet title='view post' />
       <PageWrapper fillPage>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: params?.reference ?? '' })}>
-          <Suspense fallback={<SkeletonStack />}>
+          <Suspense fallback={<SkeletonPost />}>
             <ViewPost query={queryRef as PreloadedQuery<ViewPostQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

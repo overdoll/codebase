@@ -30,9 +30,12 @@ export default function RenderVideo ({
 
   return (
     <Box
+      disablePictureInPicture
+      controlsList='nodownload noremoteplayback noplaybackrate'
       as='video'
       ref={sendRef}
       muted={muted}
+      bg='gray.800'
       loop
       preload='auto'
       {...rest}

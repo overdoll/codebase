@@ -59,6 +59,10 @@ export default function PostGalleryPublicDetailed ({
                 <ImageSnippet query={item} />}
               {item.type === 'VIDEO' &&
                 <ControlledVideo
+                  controls={{
+                    canSeek: true,
+                    canFullscreen: true
+                  }}
                   onPlay={(paused, target) => onVideoPlay(data?.reference, paused, target)}
                   onPause={(paused, target) => onVideoPlay(data?.reference, paused, target)}
                   onInitialize={(target) => onVideoInitialize(target, index)}

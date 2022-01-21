@@ -18,13 +18,13 @@ export default function LoadingSpinner ({
   if (hasError) {
     return (
       <Stack borderRadius='md' p={4} bg='dimmers.500' direction='column' justify='center' align='center' spacing={2}>
-        <Icon icon={WarningTriangle} w={6} h={6} mb={2} fill='orange.300' />
+        <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />
         <Heading fontSize='md' color='orange.300'>
           <Trans>
             Error Loading Video
           </Trans>
         </Heading>
-        <Button onClick={onRetry} size='md' colorScheme='orange'>
+        <Button w='100%' onClick={onRetry} size='md' colorScheme='orange'>
           <Trans>
             Retry
           </Trans>

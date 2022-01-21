@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 70d4e8be76d0557b3389a20c6dcf53b9 */
+/* @relayHash b55431f6d68288647d467b239967f7d5 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type CreateClubValidation = "SLUG_TAKEN" | "%future added value";
@@ -33,6 +33,7 @@ export type CreateClubFormMutationResponse = {
                         };
                     }>;
                 };
+                readonly clubsCount: number;
             };
         } | null;
         readonly validation: CreateClubValidation | null;
@@ -73,6 +74,7 @@ mutation CreateClubFormMutation(
             }
           }
         }
+        clubsCount
       }
     }
     validation
@@ -175,6 +177,13 @@ v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "clubsCount",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "validation",
   "storageKey": null
 };
@@ -260,14 +269,15 @@ return {
                       }
                     ],
                     "storageKey": "clubs(first:1)"
-                  }
+                  },
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       }
@@ -357,21 +367,22 @@ return {
                       }
                     ],
                     "storageKey": "clubs(first:1)"
-                  }
+                  },
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "70d4e8be76d0557b3389a20c6dcf53b9",
+    "id": "b55431f6d68288647d467b239967f7d5",
     "metadata": {},
     "name": "CreateClubFormMutation",
     "operationKind": "mutation",
@@ -379,5 +390,5 @@ return {
   }
 };
 })();
-(node as any).hash = '5bb0d97a2a93334129c129f4c00430dd';
+(node as any).hash = '0cac304fec041e9ab4ae8527c89bf23c';
 export default node;

@@ -49,6 +49,7 @@ const Mutation = graphql`
               }
             }
           }
+          clubsCount
         }
       }
       validation

@@ -7,8 +7,7 @@ import type { ViewClubQuery as ViewClubQueryType } from '@//:artifacts/ViewClubQ
 import ViewClubQuery from '@//:artifacts/ViewClubQuery.graphql'
 import { useParams } from '@//:modules/routing/useParams'
 import ViewClub from './ViewClub/ViewClub'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
-import PageContents from '../../Root/PageContents/PageContents'
+import SkeletonPost from '@//:modules/content/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {
@@ -29,7 +28,7 @@ export default function RootViewClub (props: Props): JSX.Element {
       <Helmet title='club' />
       <PageWrapper fillPage>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
-          <Suspense fallback={<SkeletonStack />}>
+          <Suspense fallback={<SkeletonPost />}>
             <ViewClub query={queryRef as PreloadedQuery<ViewClubQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

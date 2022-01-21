@@ -28,8 +28,8 @@ export default function PostHeaderClub ({ query }: Props): JSX.Element {
     <Link to={`/${data?.club?.slug as string}`}>
       <ClickableBox bg='transparent' p={0}>
         <Flex align='center'>
-          <ResourceIcon h={10} w={10} mr={3} query={data?.club?.thumbnail as ResourceIconFragment$key} />
-          <Heading color='gray.00' fontSize='xl'>
+          <ResourceIcon h={8} w={8} mr={3} query={data?.club?.thumbnail as ResourceIconFragment$key} />
+          <Heading color='gray.00' fontSize='lg'>
             {data?.club?.name}
           </Heading>
         </Flex>

@@ -4,9 +4,9 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Flex, Text } from '@chakra-ui/react'
 import {
   GridWrap,
+  RectangleGridItem,
   Selector,
-  SelectorTextOverlay,
-  SmallGridItem
+  SelectorTextOverlay
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { removeNode } from '@//:modules/support'
@@ -104,7 +104,7 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {categories.map((item, index) => (
-          <SmallGridItem key={index}>
+          <RectangleGridItem key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
@@ -116,11 +116,11 @@ export default function SearchCategories ({
                 />
               </SelectorTextOverlay>
             </Selector>
-          </SmallGridItem>
+          </RectangleGridItem>
         )
         )}
         {hasNext &&
-          <SmallGridItem h='inherit'>
+          <RectangleGridItem h='inherit'>
             <ClickableBox
               h='100%'
               w='100%'
@@ -136,7 +136,7 @@ export default function SearchCategories ({
                 </Trans>
               </Text>
             </ClickableBox>
-          </SmallGridItem>}
+          </RectangleGridItem>}
       </GridWrap>
     </>
   )

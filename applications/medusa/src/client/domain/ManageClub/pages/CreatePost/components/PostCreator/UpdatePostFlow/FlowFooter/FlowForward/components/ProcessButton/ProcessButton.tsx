@@ -28,7 +28,7 @@ export default function ProcessButton ({
   const data = useFragment(Fragment, query)
 
   const buttonDisabled = (): boolean => {
-    const processed = data.content.map((item) => item.processed) as boolean[]
+    const processed = data.content.map((item) => item.processed)
     return processed.every(x => x)
   }
 
@@ -41,6 +41,7 @@ export default function ProcessButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={!buttonDisabled()}

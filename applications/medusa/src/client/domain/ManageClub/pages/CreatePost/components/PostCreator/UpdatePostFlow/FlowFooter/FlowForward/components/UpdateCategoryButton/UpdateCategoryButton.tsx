@@ -100,6 +100,7 @@ export default function UpdateBrandButton ({
   if (hasUpdate() && Object.keys(state.categories).length > 2) {
     return (
       <Button
+        w='100%'
         colorScheme='green'
         size='lg'
         isDisabled={buttonDisabled}
@@ -115,6 +116,7 @@ export default function UpdateBrandButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled}

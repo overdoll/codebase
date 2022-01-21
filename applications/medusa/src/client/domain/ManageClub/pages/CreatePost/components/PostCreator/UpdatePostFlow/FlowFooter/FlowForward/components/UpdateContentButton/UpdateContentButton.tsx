@@ -113,6 +113,7 @@ export default function UpdateContentButton ({
   if (hasUpdate()) {
     return (
       <Button
+        w='100%'
         colorScheme='green'
         size='lg'
         isDisabled={buttonDisabled()}
@@ -128,6 +129,7 @@ export default function UpdateContentButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled()}

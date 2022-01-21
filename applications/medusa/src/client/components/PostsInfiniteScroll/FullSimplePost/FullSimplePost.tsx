@@ -53,19 +53,23 @@ export default function FullSimplePost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={1}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
-        <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
+        <JoinClubButton
+          size='sm'
+          clubQuery={data?.club ?? null}
+          viewerQuery={viewerData}
+        />
       </HStack>
       <PostGalleryPublicSimple query={data} />
       <PostFooter
-        leftItem={<PostLikeButton query={data} />}
+        leftItem={<PostLikeButton size='sm' query={data} />}
         centerItem={<PostIndexer
           length={slidesCount}
           currentIndex={currentSlide}
                     />}
-        rightItem={<PostMenu query={data} />}
+        rightItem={<PostMenu size='sm' query={data} />}
       />
     </Stack>
   )

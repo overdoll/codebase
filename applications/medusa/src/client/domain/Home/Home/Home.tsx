@@ -20,12 +20,12 @@ const Query = graphql`
 const Fragment = graphql`
   fragment HomeFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 10}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "HomePostsPaginationQuery" ) {
-    postsFeed (first: $first, after: $after)
-    @connection (key: "HomePosts_postsFeed") {
+    posts (first: $first, after: $after, sortBy: TOP)
+    @connection (key: "HomePosts_posts") {
       edges {
         __typename
       }
@@ -39,6 +39,7 @@ export default function Home (props: Props): JSX.Element {
     Query,
     props.query
   )
+
   const {
     data,
     loadNext,
@@ -55,7 +56,7 @@ export default function Home (props: Props): JSX.Element {
         hasNext={hasNext}
         isLoadingNext={isLoadingNext}
         loadNext={loadNext}
-        query={data.postsFeed}
+        query={data.posts}
         viewerQuery={queryData.viewer}
       />
     </GlobalVideoManagerProvider>

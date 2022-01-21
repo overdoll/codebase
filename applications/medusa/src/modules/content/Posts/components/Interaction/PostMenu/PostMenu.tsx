@@ -8,6 +8,7 @@ import { useFragment } from 'react-relay/hooks'
 
 interface Props {
   query: PostMenuFragment$key | null
+  size?: string
 }
 
 const Fragment = graphql`
@@ -17,27 +18,48 @@ const Fragment = graphql`
 `
 
 export default function PostMenu ({
-  query
+  query,
+  size = 'md'
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const getIconSize = (): number => {
+    switch (size) {
+      case 'sm':
+        return 6
+      default:
+        return 8
+    }
+  }
+
+  const getButtonSize = (): string => {
+    switch (size) {
+      case 'sm':
+        return '32px'
+      default:
+        return '40px'
+    }
+  }
+
+  const iconSize = getIconSize()
+  const buttonSize = getButtonSize()
 
   return (
     <Menu autoSelect={false}>
       <MenuButton
         bg='transparent'
         borderRadius='xl'
-        h='40px'
-        w='40px'
+        h={buttonSize}
+        w={buttonSize}
         aria-label={t`Open Menu`}
-        p={1}
         as={IconButton}
         icon={
           <Icon
             p={1}
             icon={NavigationMenuHorizontal}
-            w={8}
+            w={iconSize}
             fill='gray.200'
-            h={8}
+            h={iconSize}
           />
         }
       />

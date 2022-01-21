@@ -2,10 +2,15 @@ import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ControlledVideoFragment$key } from '@//:artifacts/ControlledVideoFragment.graphql'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useTimedDisclosure from './hooks/useTimedDisclosure/useTimedDisclosure'
 import RenderVideo from './components/RenderVideo/RenderVideo'
 import ControlVideo from './components/ControlVideo/ControlVideo'
+
+interface Controls {
+  canSeek?: boolean
+  canFullscreen?: boolean
+}
 
 interface Props extends HTMLChakraProps<any> {
   query: ControlledVideoFragment$key
@@ -16,6 +21,7 @@ interface Props extends HTMLChakraProps<any> {
   onInitialize?: (target) => void
   volume?: number
   isMuted?: boolean
+  controls?: Controls
 }
 
 const Fragment = graphql`
@@ -33,6 +39,7 @@ export default function ControlledVideo ({
   onMute: onDefaultVolumeMute,
   volume: defaultVolume = 0.1,
   isMuted: isDefaultMuted = true,
+  controls,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -44,7 +51,7 @@ export default function ControlledVideo ({
   const [volume, setVolume] = useState(defaultVolume)
   const [isMuted, setMuted] = useState(isDefaultMuted)
   const [isPaused, setPaused] = useState(true)
-  const [isLoaded, setLoaded] = useState(false)
+  const [isLoaded, setLoaded] = useState(true)
   const [hasAudio, setHasAudio] = useState(true)
   const [hasError, setHasError] = useState(false)
 
@@ -65,31 +72,51 @@ export default function ControlledVideo ({
   }
 
   const onAbort = (e): void => {
-    // TODO does this need to show loading indicator?
     setPaused(e.target.paused)
+    setHasError(true)
   }
 
   const onWaiting = (e): void => {
-    // TODO does this need to show loading indicator?
     setPaused(e.target.paused)
+    setLoaded(false)
   }
 
-  const onInitialize = (e): void => {
+  const onSetTime = (value): void => {
+    setTime(value)
+  }
+
+  const onTimeUpdate = (e): void => {
+    onSetTime(e.target.currentTime)
+  }
+
+  const onSeeking = (e): void => {
+    setPaused(e.target.paused)
+    setLoaded(false)
+  }
+
+  const onSeeked = (e): void => {
+    setPaused(e.target.paused)
+    setLoaded(true)
+  }
+
+  const onLoadedData = (e): void => {
+    setLoaded(true)
+    // This is a guess - it's not always going to be right
+    if (e.target.webkitAudioDecodedByteCount === 0) {
+      setHasAudio(false)
+    }
+  }
+
+  const onLoadedMetadata = (e): void => {
     if (e.target.volume !== volume) {
       e.target.volume = volume
     }
     if (e.target.muted !== isMuted) {
       e.target.muted = isMuted
     }
-    if (e.target.webkitAudioDecodedByteCount === 0) {
-      setHasAudio(false)
+    if (!isNaN(e.target.duration)) {
+      setTotalTime(e.target.duration)
     }
-    setTotalTime(e.target.duration)
-    onDefaultInitialize?.(e.target)
-  }
-
-  const onTimeUpdate = (e): void => {
-    setTime(e.target.currentTime)
   }
 
   const onVolumeChange = (e): void => {
@@ -113,6 +140,14 @@ export default function ControlledVideo ({
     onDefaultPause?.(e.target.paused, e.target)
   }
 
+  useEffect(() => {
+    if (ref.current == null) return
+    if (!isNaN(ref.current.duration)) {
+      setTotalTime(ref.current.duration)
+    }
+    onDefaultInitialize?.(ref.current)
+  }, [ref.current])
+
   return (
     <Box
       minW={60}
@@ -120,7 +155,6 @@ export default function ControlledVideo ({
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       position='relative'
-      cursor={isOpen ? undefined : 'none'}
       {...rest}
     >
       <RenderVideo
@@ -128,11 +162,16 @@ export default function ControlledVideo ({
         sendRef={ref}
         onClick={onTap}
         onCanPlay={onCanPlay}
-        onLoadedData={onInitialize}
+        onCanPlayThrough={onCanPlay}
+        onLoadedData={onLoadedData}
+        onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
         onAbort={onAbort}
+        onLoadStart={() => setLoaded(false)}
         onError={() => setHasError(true)}
         onVolumeChange={onVolumeChange}
+        onSeeking={onSeeking}
+        onSeeked={onSeeked}
         onPlay={onPlay}
         onPause={onPause}
         onWaiting={onWaiting}
@@ -147,7 +186,10 @@ export default function ControlledVideo ({
         isMuted={isDefaultMuted}
         hasAudio={hasAudio}
         time={time}
+        setTime={onSetTime}
         totalTime={totalTime}
+        canSeek={controls?.canSeek}
+        canFullscreen={controls?.canFullscreen}
       />
     </Box>
   )

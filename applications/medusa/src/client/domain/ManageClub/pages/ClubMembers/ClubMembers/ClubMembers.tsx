@@ -1,8 +1,6 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubMembersQuery } from '@//:artifacts/ClubMembersQuery.graphql'
-import { GridWrap } from '../../../../../components/ContentSelection'
-import SquareGridItem
-  from '../../../../../components/ContentSelection/components/List/Grid/Items/SquareGridItem/SquareGridItem'
+import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
 import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
@@ -76,7 +74,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
   return (
     <GridWrap justify='flex-start'>
       {data.members.edges.map((item, index) =>
-        <SquareGridItem key={index}>
+        <RectangleGridItem key={index}>
           <Box w='100%' h='100%'>
             <Link to={`/u/${item.node.id}`}>
               <ClickableBox overflow='hidden' whiteSpace='normal' w='100%' h='100%'>
@@ -89,10 +87,10 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
               </ClickableBox>
             </Link>
           </Box>
-        </SquareGridItem>
+        </RectangleGridItem>
       )}
       {hasNext &&
-        <SquareGridItem>
+        <RectangleGridItem>
           <ClickableBox
             h='100%'
             w='100%'
@@ -105,7 +103,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
               </Trans>
             </Heading>
           </ClickableBox>
-        </SquareGridItem>}
+        </RectangleGridItem>}
     </GridWrap>
   )
 }

@@ -4,7 +4,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { Heading, Stack } from '@chakra-ui/react'
 import { ResourceIcon, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
-import { GridWrap, LargeGridItem } from '../../../../components/ContentSelection'
+import { GridWrap, RectangleGridItem } from '../../../../components/ContentSelection'
 import { useFragment } from 'react-relay/hooks'
 import { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -90,9 +90,9 @@ export default function SuggestedClubs ({
       >
         {data.clubs.edges.map((item, index) =>
           <SwiperSlide key={index}>
-            <LargeGridItem w={200}>
+            <RectangleGridItem w={200}>
               <ClubItem node={item.node} />
-            </LargeGridItem>
+            </RectangleGridItem>
           </SwiperSlide>)}
       </Swiper>
     )
@@ -101,9 +101,9 @@ export default function SuggestedClubs ({
   return (
     <GridWrap>
       {data.clubs.edges.map((item, index) =>
-        <LargeGridItem key={index}>
+        <RectangleGridItem key={index}>
           <ClubItem node={item.node} />
-        </LargeGridItem>)}
+        </RectangleGridItem>)}
     </GridWrap>
   )
 }

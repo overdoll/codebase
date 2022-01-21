@@ -10,7 +10,6 @@ import {
 } from '@//:modules/content/PageLayout'
 import { Barcode } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-
 export default function Help (): JSX.Element {
   return (
     <>

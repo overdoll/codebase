@@ -10,9 +10,6 @@ import {
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
-import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
-import Icon from '../../../../../modules/content/PageLayout/Flair/Icon/Icon'
-import { WarningTriangle } from '@//:assets/icons/interface'
 import { useToast } from '@chakra-ui/react'
 
 interface Props {
@@ -159,14 +156,6 @@ export default function JoinClubButton ({
     return (
       <Button
         w={w}
-        leftIcon={
-          <Icon
-            icon={SafetyExitDoorLeft}
-            w={4}
-            h={4}
-            fill='gray.100'
-          />
-        }
         onClick={onWithdrawMembership}
         isLoading={isWithdrawingMembership}
         size={size}
@@ -198,14 +187,6 @@ export default function JoinClubButton ({
   return (
     <Button
       w={w}
-      leftIcon={
-        <Icon
-          icon={WarningTriangle}
-          w={4}
-          h={4}
-          fill='primary.900'
-        />
-      }
       size={size}
       colorScheme='primary'
       onClick={onJoinWhenLimited}
