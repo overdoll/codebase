@@ -28,7 +28,7 @@ services:
       - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
-    image: scylladb/scylla:4.5.0
+    image: scylladb/scylla:4.3.1
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:
@@ -41,14 +41,14 @@ services:
       - scylla-node3
 
   scylla-node2:
-    image: scylladb/scylla:4.5.0
+    image: scylladb/scylla:4.3.1
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:
       - scylla-data-2:/var/lib/scylla
 
   scylla-node3:
-    image: scylladb/scylla:4.5.0
+    image: scylladb/scylla:4.3.1
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:

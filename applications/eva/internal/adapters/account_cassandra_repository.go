@@ -238,9 +238,6 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
 
-	fmt.Println("insert")
-	fmt.Println(username)
-
 	accountUsernames := accountUsernameTable.
 		InsertBuilder().
 		Unique().
@@ -271,18 +268,13 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
-	fmt.Println("delete")
-	fmt.Println(username)
-
 	accountUsernames := accountUsernameTable.
-		UpdateBuilder().
-		Set("account_id").
+		DeleteBuilder().
 		Query(r.session).
 		Consistency(gocql.Quorum).
 		WithTimestamp(time.Now().UnixMilli()).
 		BindStruct(AccountUsername{
-			Username:  strings.TrimSpace(strings.ToLower(username)),
-			AccountId: "test",
+			Username: strings.TrimSpace(strings.ToLower(username)),
 		})
 
 	if err := accountUsernames.ExecRelease(); err != nil {
