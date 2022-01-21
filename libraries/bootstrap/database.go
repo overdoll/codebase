@@ -19,6 +19,7 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 		cluster.Keyspace = keyspace
 	}
 
+	cluster.CQLVersion = "5.0.1"
 	cluster.ReconnectInterval = 60 * time.Second
 	cluster.Timeout = 20 * time.Second
 	cluster.ConnectTimeout = 20 * time.Second
