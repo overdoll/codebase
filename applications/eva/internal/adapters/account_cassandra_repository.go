@@ -243,6 +243,7 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
+		WithTimestamp(time.Now().UnixMilli()).
 		BindStruct(AccountUsername{
 			AccountId: instance.ID(),
 			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
@@ -270,7 +271,8 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 	accountUsernames := accountUsernameTable.
 		DeleteBuilder().
 		Query(r.session).
-		Consistency(gocql.LocalQuorum).
+		Consistency(gocql.Quorum).
+		WithTimestamp(time.Now().UnixMilli()).
 		BindStruct(AccountUsername{
 			Username: strings.TrimSpace(strings.ToLower(username)),
 		})
