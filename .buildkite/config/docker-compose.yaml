@@ -30,7 +30,7 @@ services:
   scylla:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --smp 1 --memory 750M --overprovisioned 1
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
     volumes:
       - scylla-data:/var/lib/scylla
     ports:
@@ -40,14 +40,14 @@ services:
   scylla-node2:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M --overprovisioned 1
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
     volumes:
       - scylla-data:/var/lib/scylla
 
   scylla-node3:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M --overprovisioned 1
+    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
     volumes:
       - scylla-data:/var/lib/scylla
 
