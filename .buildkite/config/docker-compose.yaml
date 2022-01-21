@@ -20,7 +20,7 @@ services:
       - scylla
     environment:
       - DB=cassandra
-      - CASSANDRA_SEEDS=scylla
+      - CASSANDRA_SEEDS=scylla,scylla-node2
       - CASSANDRA_HOST=scylla
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
     image: temporalio/auto-setup:1.9.2
@@ -99,5 +99,5 @@ volumes:
     driver: local
 
 networks:
-  scylla-web:
+  web:
     driver: bridge
