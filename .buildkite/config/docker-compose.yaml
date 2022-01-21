@@ -18,7 +18,7 @@ services:
       - scylla
     environment:
       - DB=cassandra
-      - CASSANDRA_SEEDS=scylla,scylla-node2
+      - CASSANDRA_SEEDS=scylla
       - CASSANDRA_HOST=scylla
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
     image: temporalio/auto-setup:1.9.2
@@ -30,7 +30,7 @@ services:
   scylla:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
+    command: --seeds=scylla --smp 1 --memory 750M
     volumes:
       - scylla-data:/var/lib/scylla
     ports:
@@ -43,14 +43,14 @@ services:
   scylla-node2:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
+    command: --seeds=scylla --smp 1 --memory 750M
     volumes:
       - scylla-data-2:/var/lib/scylla
 
   scylla-node3:
     image: scylladb/scylla:4.5.0
     restart: always
-    command: --seeds=scylla,scylla-node2 --smp 1 --memory 750M
+    command: --seeds=scylla --smp 1 --memory 750M
     volumes:
       - scylla-data-3:/var/lib/scylla
 
