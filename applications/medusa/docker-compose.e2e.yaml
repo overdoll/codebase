@@ -6,6 +6,8 @@ services:
     working_dir: /workdir
     user: 2000:2000
     env_file: ../../applications/medusa/.env.ci
+    environment:
+      NO_UPDATE_NOTIFIER: "true"
     command: npm run service:medusa:e2e
     depends_on:
       - redis
@@ -20,7 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
-    expose: [ 8000, 7999 ]
+    expose: [ 8000 ]
     deploy:
       restart_policy:
         condition: on-failure

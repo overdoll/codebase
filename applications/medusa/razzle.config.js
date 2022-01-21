@@ -148,8 +148,6 @@ module.exports = {
             chunks: 'all'
           }
         }
-
-        console.log(config)
       } else {
         config.optimization = {
           // TODO: when switching to webpack 5, change to deterministic
