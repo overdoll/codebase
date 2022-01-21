@@ -242,7 +242,7 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 		InsertBuilder().
 		Unique().
 		Query(r.session).
-		SerialConsistency(gocql.Serial).
+		SerialConsistency(gocql.LocalSerial).
 		WithTimestamp(time.Now().UnixMilli()).
 		BindStruct(AccountUsername{
 			AccountId: instance.ID(),

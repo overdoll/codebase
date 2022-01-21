@@ -35,7 +35,7 @@ def wait_for_network_dependencies(targets):
         port = connection["port"]
 
         terminal_print.print_collapsed_group(":suspect: Waiting for {}:{} to be available".format(host, port))
-        network.wait_for_port(host, port, 120)
+        network.wait_for_port(host, port, 180)
 
 
 # execute commands to run integration tests
