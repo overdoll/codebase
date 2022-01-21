@@ -195,6 +195,8 @@ async function request (req, res): Promise<void> {
     renderToString(extractor.collectChunks(App))
   )
 
+  console.log(extractor.getLinkTags())
+
   res.render('index', {
     title: helmetContext?.helmet?.title.toString(),
     meta: helmetContext?.helmet?.meta.toString(),
