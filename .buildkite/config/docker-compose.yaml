@@ -16,6 +16,8 @@ services:
   temporal:
     depends_on:
       - scylla
+      - scylla-node2
+      - scylla-node3
     environment:
       - DB=cassandra
       - CASSANDRA_SEEDS=scylla
@@ -28,7 +30,7 @@ services:
       - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
-    image: scylladb/scylla:4.3.1
+    image: scylladb/scylla:4.5.0
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:
@@ -36,19 +38,16 @@ services:
     ports:
       - 9042:9042
       - 9160:9160
-    depends_on:
-      - scylla-node2
-      - scylla-node3
 
   scylla-node2:
-    image: scylladb/scylla:4.3.1
+    image: scylladb/scylla:4.5.0
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:
       - scylla-data-2:/var/lib/scylla
 
   scylla-node3:
-    image: scylladb/scylla:4.3.1
+    image: scylladb/scylla:4.5.0
     restart: always
     command: --seeds=scylla --smp 1 --memory 750M
     volumes:

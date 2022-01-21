@@ -32,7 +32,7 @@ steps:
         - ./applications/medusa/docker-compose.e2e.yaml
     network_dependencies:
       - host: medusa
-        port: 8080
+        port: 8000
         priority: 1
     artifacts:
       - cypress/**/*
