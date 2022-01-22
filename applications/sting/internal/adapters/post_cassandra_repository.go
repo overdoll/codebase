@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -136,8 +137,35 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 }
 
 func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
-	//TODO implement me
-	panic("implement me")
+
+	var postResults []*post.Post
+
+	// if none then we get out or else the query will fail
+	if len(postIds) == 0 {
+		return postResults, nil
+	}
+
+	queryPosts := qb.Select(postTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		Bind(postIds)
+
+	var postsModels []*posts
+
+	if err := queryPosts.Select(&postsModels); err != nil {
+		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
+	}
+
+	for _, b := range postsModels {
+		p, err := r.unmarshalPost(ctx, *b)
+		if err != nil {
+			return nil, err
+		}
+		postResults = append(postResults, p)
+	}
+
+	return postResults, nil
 }
 
 func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {

@@ -6,7 +6,7 @@ type Account implements Node @key(fields: "id") {
   reference: String!
 
   """A URL pointing to the account's public avatar."""
-  avatar(size: Int): Resource
+  avatar: Resource
 
   """The username of the account."""
   username: String!
