@@ -15,9 +15,13 @@ import (
 )
 
 type CharacterModified struct {
-	Name   string
-	Slug   string
-	Series SeriesModified
+	Id        relay.ID
+	Name      string
+	Slug      string
+	Series    SeriesModified
+	Thumbnail *struct {
+		Id string
+	}
 }
 
 type SearchCharacters struct {
@@ -38,6 +42,18 @@ type CreateCharacter struct {
 	} `graphql:"createCharacter(input: $input)"`
 }
 
+type UpdateCharacterName struct {
+	UpdateCharacterName *struct {
+		Character *CharacterModified
+	} `graphql:"updateCharacterName(input: $input)"`
+}
+
+type UpdateCharacterThumbnail struct {
+	UpdateCharacterThumbnail *struct {
+		Character *CharacterModified
+	} `graphql:"updateCharacterThumbnail(input: $input)"`
+}
+
 type TestCharacter struct {
 	Name string `faker:"username"`
 	Slug string `faker:"username"`
@@ -47,6 +63,19 @@ func refreshCharacterIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
 	_, err := es.Refresh(adapters.CharacterIndexName).Do(context.Background())
 	require.NoError(t, err)
+}
+
+func getCharacterBySlug(t *testing.T, client *graphql.Client, slug string) *CharacterModified {
+	var getCharacter Character
+
+	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
+		"slug":       graphql.String(slug),
+		"seriesSlug": graphql.String("foreigner_on_mars"),
+	})
+
+	require.NoError(t, err)
+
+	return getCharacter.Character
 }
 
 // Get a single character by slug
@@ -73,16 +102,10 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 
 	refreshCharacterIndex(t)
 
-	var getCharacter Character
+	character := getCharacterBySlug(t, client, fake.Slug)
 
-	err = client.Query(context.Background(), &getCharacter, map[string]interface{}{
-		"slug":       graphql.String(fake.Slug),
-		"seriesSlug": graphql.String("foreigner_on_mars"),
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, getCharacter.Character, "found character")
-	require.Equal(t, fake.Name, getCharacter.Character.Name, "correct name")
+	require.NotNil(t, character, "found character")
+	require.Equal(t, fake.Name, character.Name, "correct name")
 
 	var searchCharacters SearchCharacters
 
@@ -94,4 +117,34 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
 	require.Equal(t, fake.Name, searchCharacters.Characters.Edges[0].Node.Name, "correct name")
 
+	fake = TestCharacter{}
+	err = faker.FakeData(&fake)
+	require.NoError(t, err, "no error generating category")
+
+	var updateCharacterName UpdateCharacterName
+
+	err = client.Mutate(context.Background(), &updateCharacterName, map[string]interface{}{
+		"input": types.UpdateCharacterNameInput{
+			ID:     character.Id,
+			Name:   fake.Name,
+			Locale: "en",
+		},
+	})
+
+	require.NoError(t, err, "no error updating character name")
+
+	var updateCharacterThumbnail UpdateCharacterThumbnail
+
+	err = client.Mutate(context.Background(), &updateCharacterThumbnail, map[string]interface{}{
+		"input": types.UpdateCharacterThumbnailInput{
+			ID:        character.Id,
+			Thumbnail: "test",
+		},
+	})
+
+	require.NoError(t, err, "no error updating character thumbnail")
+
+	character = getCharacterBySlug(t, client, fake.Slug)
+	require.Equal(t, fake.Name, character.Name, "title has been updated")
+	require.NotNil(t, character.Thumbnail, "has a thumbnail")
 }

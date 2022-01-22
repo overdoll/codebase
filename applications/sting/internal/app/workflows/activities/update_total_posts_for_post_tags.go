@@ -17,7 +17,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 		return err
 	}
 
-	for _, cat := range pendingPost.Categories() {
+	for _, cat := range pendingPost.CategoryIds() {
 
 		newCat, err := h.pr.UpdateCategoryTotalPostsOperator(ctx, cat.ID(), func(category *post.Category) error {
 			totalPosts, err := h.pi.GetTotalPostsForCategoryOperator(ctx, category)
@@ -40,7 +40,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 
 	updatedSeries := make(map[string]bool)
 
-	for _, char := range pendingPost.Characters() {
+	for _, char := range pendingPost.CharacterIds() {
 
 		newChar, err := h.pr.UpdateCharacterTotalPostsOperator(ctx, char.ID(), func(character *post.Character) error {
 
@@ -86,7 +86,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalPostsOperator(ctx, pendingPost.Audience().ID(), func(audience *post.Audience) error {
+	newAud, err := h.pr.UpdateAudienceTotalPostsOperator(ctx, pendingPost.AudienceId().ID(), func(audience *post.Audience) error {
 
 		totalPosts, err := h.pi.GetTotalPostsForAudienceOperator(ctx, audience)
 

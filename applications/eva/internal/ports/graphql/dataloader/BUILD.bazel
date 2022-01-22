@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "dataloader",
-    srcs = ["loaders.go"],
+    srcs = [
+        "account.go",
+        "loaders.go",
+    ],
     importpath = "overdoll/applications/eva/internal/ports/graphql/dataloader",
     visibility = ["//applications/eva:__subpackages__"],
     deps = [

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
@@ -70,6 +71,30 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 	}, nil
 }
 
+func (r PostsCassandraRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
+
+	var audienceSlugResults []audienceSlug
+
+	if err := qb.Select(audienceSlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(map[string]interface{}{
+			"slug": audienceSlugs,
+		}).
+		Select(&audienceSlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get audience slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range audienceSlugResults {
+		ids = append(ids, i.AudienceId)
+	}
+
+	return ids, nil
+}
+
 func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
 
 	queryAudienceSlug := r.session.
@@ -89,6 +114,42 @@ func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, request
 	}
 
 	return r.GetAudienceById(ctx, requester, b.AudienceId)
+}
+
+func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*post.Audience, error) {
+
+	var audiences []*post.Audience
+
+	// if none then we get out or else the query will fail
+	if len(audienceIds) == 0 {
+		return audiences, nil
+	}
+
+	queryAudiences := qb.Select(audienceTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(audiences)
+
+	var audienceModels []*audience
+
+	if err := queryAudiences.Select(&audienceModels); err != nil {
+		return nil, fmt.Errorf("failed to get audiences by id: %v", err)
+	}
+
+	for _, b := range audienceModels {
+		audiences = append(audiences, post.UnmarshalAudienceFromDatabase(
+			b.Id,
+			b.Slug,
+			b.Title,
+			b.ThumbnailResourceId,
+			b.Standard,
+			b.TotalLikes,
+			b.TotalPosts,
+		))
+	}
+
+	return audiences, nil
 }
 
 func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {

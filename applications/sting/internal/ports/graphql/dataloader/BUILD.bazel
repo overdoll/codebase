@@ -1,26 +1,23 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "resolvers",
+    name = "dataloader",
     srcs = [
-        "account.go",
         "audience.go",
         "category.go",
         "character.go",
-        "club.go",
+        "dataloader.go",
         "post.go",
         "series.go",
     ],
-    importpath = "overdoll/applications/sting/internal/ports/graphql/resolvers",
-    visibility = ["//visibility:public"],
+    importpath = "overdoll/applications/sting/internal/ports/graphql/dataloader",
+    visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
-        "//libraries/paging",
-        "//libraries/passport",
-        "//libraries/principal",
-        "@com_github_vektah_gqlparser_v2//gqlerror",
+        "//libraries/graphql",
+        "@com_github_graph_gophers_dataloader//:dataloader",
     ],
 )

@@ -13,14 +13,18 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	var categories []*Category
 
-	for _, cat := range result.Categories() {
-		categories = append(categories, MarshalCategoryToGraphQL(ctx, cat))
+	for _, cat := range result.CategoryIds() {
+		categories = append(categories, &Category{
+			ID: relay.NewID(Category{}, cat),
+		})
 	}
 
 	var characters []*Character
 
-	for _, char := range result.Characters() {
-		characters = append(characters, MarshalCharacterToGraphQL(ctx, char))
+	for _, char := range result.CharacterIds() {
+		characters = append(characters, &Character{
+			ID: relay.NewID(Character{}, char),
+		})
 	}
 
 	var state PostState
@@ -73,8 +77,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	var audience *Audience
 
-	if result.Audience() != nil {
-		audience = MarshalAudienceToGraphQL(ctx, result.Audience())
+	if result.AudienceId() != nil {
+		audience = &Audience{
+			ID: relay.NewID(Audience{}, result.ID()),
+		}
 	}
 
 	var moderator *Account

@@ -17,19 +17,20 @@ import (
 )
 
 type postDocument struct {
-	Id                 string               `json:"id"`
-	State              string               `json:"state"`
-	Likes              int                  `json:"likes"`
-	ModeratorId        string               `json:"moderator_id"`
-	ContributorId      string               `json:"contributor_id"`
-	ClubId             string               `json:"club_id"`
-	ContentResourceIds []string             `json:"content_resource_ids"`
-	Audience           *audienceDocument    `json:"audience"`
-	Categories         []*categoryDocument  `json:"categories"`
-	Characters         []*characterDocument `json:"characters"`
-	CreatedAt          string               `json:"created_at"`
-	PostedAt           string               `json:"posted_at"`
-	ReassignmentAt     string               `json:"reassignment_at"`
+	Id                 string   `json:"id"`
+	State              string   `json:"state"`
+	Likes              int      `json:"likes"`
+	ModeratorId        string   `json:"moderator_id"`
+	ContributorId      string   `json:"contributor_id"`
+	ClubId             string   `json:"club_id"`
+	ContentResourceIds []string `json:"content_resource_ids"`
+	AudienceId         string   `json:"audience_id"`
+	CategoryIds        []string `json:"category_ids"`
+	CharacterIds       []string `json:"character_ids"`
+	SeriesIds          []string `json:"series_ids"`
+	CreatedAt          string   `json:"created_at"`
+	PostedAt           string   `json:"posted_at"`
+	ReassignmentAt     string   `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -52,20 +53,20 @@ const postIndex = `
 				"contributor_id": {
 					"type": "keyword"
 				},
-				"audience": {
-					"type": "nested",
-					"properties": ` + audienceIndexProperties + ` 
+				"audience_id": {
+					"type": "keyword"
 				},
                 "club_id": {
 					"type": "keyword"
 				},
-				"categories": {
-					"type": "nested",
-					"properties": ` + categoryIndexProperties + ` 
+				"category_ids": {
+					"type": "keyword"
 				},
-				"characters": {
-					"type": "nested",
-					"properties": ` + characterIndexProperties + ` 
+				"character_ids": {
+					"type": "keyword"
+				},
+				"series_ids": {
+					"type": "keyword"
 				},
 				"content_resource_ids": {
                      "type": "keyword"
@@ -105,40 +106,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		return nil, fmt.Errorf("failed to unmarshal post: %v", err)
 	}
 
-	var characters []*post.Character
-
-	for _, char := range pst.Characters {
-		characters = append(characters, post.UnmarshalCharacterFromDatabase(
-			char.Id,
-			char.Slug,
-			char.Name,
-			char.ThumbnailResourceId,
-			char.TotalLikes,
-			char.TotalPosts,
-			post.UnmarshalSeriesFromDatabase(
-				char.Series.Id,
-				char.Series.Slug,
-				char.Series.Title,
-				char.Series.ThumbnailResourceId,
-				char.Series.TotalLikes,
-				char.TotalLikes,
-			),
-		))
-	}
-
-	var categories []*post.Category
-
-	for _, cat := range pst.Categories {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(
-			cat.Id,
-			cat.Slug,
-			cat.Title,
-			cat.ThumbnailResourceId,
-			cat.TotalLikes,
-			cat.TotalPosts,
-		))
-	}
-
 	createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
 
 	if err != nil {
@@ -172,18 +139,10 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		postedAtTime = &newTime
 	}
 
-	var audience *post.Audience
+	var audience *string
 
-	if pst.Audience != nil {
-		audience = post.UnmarshalAudienceFromDatabase(
-			pst.Audience.Id,
-			pst.Audience.Slug,
-			pst.Audience.Title,
-			pst.Audience.ThumbnailResourceId,
-			pst.Audience.Standard,
-			pst.Audience.TotalLikes,
-			pst.Audience.TotalPosts,
-		)
+	if pst.AudienceId != "" {
+		audience = &pst.AudienceId
 	}
 
 	createdPost := post.UnmarshalPostFromDatabase(
@@ -195,8 +154,9 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		pst.ContentResourceIds,
 		pst.ClubId,
 		audience,
-		characters,
-		categories,
+		pst.CharacterIds,
+		pst.SeriesIds,
+		pst.CategoryIds,
 		time.Unix(createdAt, 0),
 		postedAtTime,
 		reassignmentAtTime,
@@ -208,43 +168,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 }
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
-
-	var characterDocuments []*characterDocument
-	var err error
-
-	for _, char := range pst.Characters() {
-
-		c, err := marshalCharacterToDocument(char)
-
-		if err != nil {
-			return nil, err
-		}
-
-		characterDocuments = append(characterDocuments, c)
-	}
-
-	var categoryDocuments []*categoryDocument
-
-	for _, cat := range pst.Categories() {
-
-		cat, err := marshalCategoryToDocument(cat)
-
-		if err != nil {
-			return nil, err
-		}
-
-		categoryDocuments = append(categoryDocuments, cat)
-	}
-
-	var audDoc *audienceDocument
-
-	if pst.Audience() != nil {
-		audDoc, err = marshalAudienceToDocument(pst.Audience())
-
-		if err != nil {
-			return nil, err
-		}
-	}
 
 	var moderatorId string
 
@@ -268,17 +191,24 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		reassignmentAt = strconv.FormatInt(0, 10)
 	}
 
+	var audience string
+
+	if pst.AudienceId() != nil {
+		audience = *pst.AudienceId()
+	}
+
 	return &postDocument{
 		Id:                 pst.ID(),
 		Likes:              pst.Likes(),
 		State:              pst.State().String(),
-		Audience:           audDoc,
+		AudienceId:         audience,
 		ClubId:             pst.ClubId(),
 		ModeratorId:        moderatorId,
 		ContributorId:      pst.ContributorId(),
 		ContentResourceIds: pst.ContentResourceIds(),
-		Categories:         categoryDocuments,
-		Characters:         characterDocuments,
+		CategoryIds:        pst.CategoryIds(),
+		CharacterIds:       pst.CharacterIds(),
+		SeriesIds:          pst.SeriesIds(),
 		CreatedAt:          strconv.FormatInt(pst.CreatedAt().Unix(), 10),
 		PostedAt:           postedAt,
 		ReassignmentAt:     reassignmentAt,
@@ -616,20 +546,20 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
 	}
 
-	if len(filter.CategorySlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermsQueryFromStrings("categories.slug", filter.CategorySlugs()...)))
+	if len(filter.CategoryIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("category_ids", filter.CategoryIds()...))
 	}
 
-	if len(filter.CharacterSlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermsQueryFromStrings("characters.slug", filter.CharacterSlugs()...)))
+	if len(filter.CharacterIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("character_ids", filter.CharacterIds()...))
 	}
 
-	if len(filter.AudienceSlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermsQueryFromStrings("audience.slug", filter.AudienceSlugs()...)))
+	if len(filter.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", filter.AudienceIds()...))
 	}
 
-	if len(filter.SeriesSlugs()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermsQueryFromStrings("characters.series.slug", filter.SeriesSlugs()...)))
+	if len(filter.SeriesIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("series_ids", filter.SeriesIds()...))
 	}
 
 	if filterQueries != nil {
@@ -678,59 +608,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 		for iter.StructScan(&p) {
 
-			var characterDocuments []*characterDocument
-
-			chars, err := rep.GetCharactersById(ctx, p.CharacterIds)
-
-			if err != nil {
-				return err
-			}
-
-			for _, char := range chars {
-
-				charDoc, err := marshalCharacterToDocument(char)
-
-				if err != nil {
-					return err
-				}
-
-				characterDocuments = append(characterDocuments, charDoc)
-			}
-
-			var categoryDocuments []*categoryDocument
-
-			cats, err := rep.GetCategoriesById(ctx, p.CategoryIds)
-
-			if err != nil {
-				return err
-			}
-
-			for _, cat := range cats {
-				catDoc, err := marshalCategoryToDocument(cat)
-
-				if err != nil {
-					return err
-				}
-
-				categoryDocuments = append(categoryDocuments, catDoc)
-			}
-
-			var audDoc *audienceDocument
-
-			if p.AudienceId != nil {
-				aud, err := rep.GetAudienceById(ctx, nil, *p.AudienceId)
-
-				if err != nil {
-					return err
-				}
-
-				audDoc, err = marshalAudienceToDocument(aud)
-
-				if err != nil {
-					return err
-				}
-			}
-
 			var moderatorId string
 
 			if p.ModeratorId != nil {
@@ -743,6 +620,12 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				return err
 			}
 
+			var audienceId string
+
+			if p.AudienceId != nil {
+				audienceId = *p.AudienceId
+			}
+
 			doc := postDocument{
 				Id:                 p.Id,
 				State:              p.State,
@@ -751,9 +634,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				ContributorId:      p.ContributorId,
 				ContentResourceIds: p.ContentResourceIds,
 				ClubId:             p.ClubId,
-				Audience:           audDoc,
-				Categories:         categoryDocuments,
-				Characters:         characterDocuments,
+				AudienceId:         audienceId,
+				CategoryIds:        p.CategoryIds,
+				CharacterIds:       p.CharacterIds,
+				SeriesIds:          p.SeriesIds,
 				CreatedAt:          strconv.FormatInt(p.CreatedAt.Unix(), 10),
 				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
 				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),

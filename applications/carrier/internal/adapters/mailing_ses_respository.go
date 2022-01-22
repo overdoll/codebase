@@ -2,10 +2,10 @@ package adapters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"go.uber.org/zap"
 	"os"
 
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -21,12 +21,9 @@ func NewMailingSESRepository(client *ses.SES) MailingSESRepository {
 
 func (r MailingSESRepository) SendEmail(ctx context.Context, recipient *mailing.Recipient, email *mailing.Template) error {
 
-	// empty API key, just dump the console outputs
+	// empty API key, throw an error
 	if os.Getenv("AWS_ACCESS_KEY") == "" {
-		zap.L().Info(
-			"SES api keys not configured, dumping output",
-			zap.String("html", email.BodyHtml()))
-		return nil
+		return errors.New("please configure SES api keys to send emails")
 	}
 
 	sesEmailInput := &ses.SendEmailInput{

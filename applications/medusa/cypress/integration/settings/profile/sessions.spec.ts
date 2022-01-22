@@ -1,5 +1,4 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
-import { logout } from '../../../support/join_actions'
 
 describe('Settings - Add Email', () => {
   const [username, email] = generateUsernameAndEmail()

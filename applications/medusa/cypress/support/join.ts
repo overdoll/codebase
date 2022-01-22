@@ -1,6 +1,6 @@
 import { generateEmailFromExistingUsername } from './generate'
 import URL from 'url-parse'
-import { getEmail, tailLogs } from './email'
+import { getEmail } from './email'
 import { parse } from 'node-html-parser'
 
 const Tokens = require('csrf')
@@ -87,29 +87,6 @@ const joinAndVerify = (email: string): void => {
     })
     .its('body.data.grantAuthenticationToken.authenticationToken.token')
     .as('token')
-
-  if (Cypress.env('TESTMAIL_API_KEY') as string === '') {
-    // read email logs directly from carrier service if no testmail API key is set
-    tailLogs((result) => {
-      const obj = JSON.parse(result.stdout)
-
-      expect(obj.html).to.not.equal(null)
-
-      const root = parse(obj.html)
-
-      const link = root?.querySelector('a')?.getAttribute('href')
-
-      const url = new URL(link as string)
-      const query = new URLSearchParams(url.query)
-
-      const token = query.get('token') as string
-      const secret = query.get('secret') as string
-
-      verifyToken(token, secret)
-    })
-
-    return
-  }
 
   cy
     .wrap(null)

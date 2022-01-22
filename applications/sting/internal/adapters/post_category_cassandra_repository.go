@@ -62,6 +62,30 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 	}, nil
 }
 
+func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
+
+	var categorySlugResults []categorySlugs
+
+	if err := qb.Select(categorySlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(map[string]interface{}{
+			"slug": categorySlug,
+		}).
+		Select(&categorySlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get category slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range categorySlugResults {
+		ids = append(ids, i.CategoryId)
+	}
+
+	return ids, nil
+}
+
 func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
 
 	queryCategorySlug := r.session.
@@ -83,7 +107,7 @@ func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, request
 	return r.GetCategoryById(ctx, requester, b.CategoryId)
 }
 
-func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 

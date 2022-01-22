@@ -68,6 +68,31 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 	}, nil
 }
 
+func (r PostsCassandraRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
+
+	var characterSlugResults []seriesSlug
+
+	if err := qb.Select(charactersSlugTable.Name()).
+		Where(qb.In("slug"), qb.In("series_id")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(map[string]interface{}{
+			"slug":      characterSlugs,
+			"series_id": seriesIds,
+		}).
+		Select(&characterSlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get character slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range characterSlugResults {
+		ids = append(ids, i.Slug)
+	}
+
+	return ids, nil
+}
+
 func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
 
 	// get series first
@@ -99,7 +124,7 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 	return r.GetCharacterById(ctx, requester, b.CharacterId)
 }
 
-func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
+func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, requester *principal.Principal, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 

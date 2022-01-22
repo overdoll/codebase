@@ -83,6 +83,30 @@ func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester
 	return &b, nil
 }
 
+func (r PostsCassandraRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
+
+	var seriesSlugResults []seriesSlug
+
+	if err := qb.Select(seriesSlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(map[string]interface{}{
+			"slug": seriesIds,
+		}).
+		Select(&seriesSlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get series slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range seriesSlugResults {
+		ids = append(ids, i.SeriesId)
+	}
+
+	return ids, nil
+}
+
 func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
 
 	seriesSlug, err := r.getSeriesBySlug(ctx, requester, slug)
@@ -126,7 +150,7 @@ func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, serie
 	), nil
 }
 
-func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []string) ([]*post.Series, error) {
+func (r PostsCassandraRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
 
 	var medias []*post.Series
 

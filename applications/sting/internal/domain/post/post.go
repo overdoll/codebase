@@ -31,10 +31,11 @@ type Post struct {
 
 	clubId string
 
-	audience *Audience
+	audienceId *string
 
-	characters []*Character
-	categories []*Category
+	characterIds []string
+	seriesIds    []string
+	categoryIds  []string
 
 	contentResourceIds []string
 	createdAt          time.Time
@@ -56,7 +57,7 @@ func NewPost(contributor *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string, contributorId string, contentIds []string, clubId string, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string, contributorId string, contentIds []string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 
@@ -66,11 +67,12 @@ func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string,
 		state:              ps,
 		clubId:             clubId,
 		likes:              likes,
-		audience:           audience,
+		audienceId:         audienceId,
 		contributorId:      contributorId,
 		contentResourceIds: contentIds,
-		characters:         characters,
-		categories:         categories,
+		characterIds:       characterIds,
+		seriesIds:          seriesIds,
+		categoryIds:        categoryIds,
 		createdAt:          createdAt,
 		postedAt:           postedAt,
 		reassignmentAt:     reassignmentAt,
@@ -89,8 +91,8 @@ func (p *Post) ContributorId() string {
 	return p.contributorId
 }
 
-func (p *Post) Audience() *Audience {
-	return p.audience
+func (p *Post) AudienceId() *string {
+	return p.audienceId
 }
 
 func (p *Post) ClubId() string {
@@ -123,34 +125,16 @@ func (p *Post) UpdateModerator(moderatorId string) error {
 	return nil
 }
 
-func (p *Post) Categories() []*Category {
-	return p.categories
-}
-
 func (p *Post) CategoryIds() []string {
-
-	var ids []string
-
-	for _, cats := range p.categories {
-		ids = append(ids, cats.ID())
-	}
-
-	return ids
+	return p.categoryIds
 }
 
 func (p *Post) CharacterIds() []string {
-
-	var ids []string
-
-	for _, chars := range p.characters {
-		ids = append(ids, chars.ID())
-	}
-
-	return ids
+	return p.characterIds
 }
 
-func (p *Post) Characters() []*Character {
-	return p.characters
+func (p *Post) SeriesIds() []string {
+	return p.seriesIds
 }
 
 func (p *Post) CreatedAt() time.Time {
@@ -325,8 +309,8 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
-
-	p.audience = audience
+	id := audience.ID()
+	p.audienceId = &id
 	return nil
 }
 
@@ -404,7 +388,20 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 		return err
 	}
 
-	p.characters = characters
+	var characterIds []string
+	var seriesIds []string
+	var visitedSeries map[string]bool
+
+	for _, c := range characters {
+		characterIds = append(characterIds, c.id)
+
+		if _, ok := visitedSeries[c.series.id]; !ok {
+			seriesIds = append(seriesIds, c.series.id)
+			visitedSeries[c.series.id] = true
+		}
+	}
+
+	p.characterIds = characterIds
 	return nil
 }
 
@@ -414,7 +411,13 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 		return err
 	}
 
-	p.categories = categories
+	var categoryIds []string
+
+	for _, c := range categories {
+		categoryIds = append(categoryIds, c.id)
+	}
+
+	p.categoryIds = categoryIds
 	return nil
 }
 

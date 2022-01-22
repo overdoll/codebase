@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/graphql/relay"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -13,8 +14,12 @@ import (
 )
 
 type SeriesModified struct {
-	Title string
-	Slug  string
+	Id        relay.ID
+	Title     string
+	Slug      string
+	Thumbnail *struct {
+		Id string
+	}
 }
 
 type SearchSeries struct {
@@ -35,6 +40,18 @@ type CreateSeries struct {
 	} `graphql:"createSeries(input: $input)"`
 }
 
+type UpdateSeriesTitle struct {
+	UpdateSeriesTitle *struct {
+		Series *SeriesModified
+	} `graphql:"updateSeriesTitle(input: $input)"`
+}
+
+type UpdateSeriesThumbnail struct {
+	UpdateSeriesThumbnail *struct {
+		Series *SeriesModified
+	} `graphql:"updateSeriesThumbnail(input: $input)"`
+}
+
 type TestSeries struct {
 	Title string `faker:"username"`
 	Slug  string `faker:"username"`
@@ -44,6 +61,18 @@ func refreshSeriesIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
 	_, err := es.Refresh(adapters.SeriesIndexName).Do(context.Background())
 	require.NoError(t, err)
+}
+
+func getSeriesBySlug(t *testing.T, client *graphql.Client, slug string) *SeriesModified {
+	var getSerial Serial
+
+	err := client.Query(context.Background(), &getSerial, map[string]interface{}{
+		"slug": graphql.String(slug),
+	})
+
+	require.NoError(t, err)
+
+	return getSerial.Serial
 }
 
 func TestCreateSeries_update_and_search(t *testing.T) {
@@ -68,15 +97,10 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	refreshSeriesIndex(t)
 
-	var getSerial Serial
+	series := getSeriesBySlug(t, client, fake.Slug)
 
-	err = client.Query(context.Background(), &getSerial, map[string]interface{}{
-		"slug": graphql.String(fake.Slug),
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, getSerial.Serial)
-	require.Equal(t, fake.Title, getSerial.Serial.Title, "correct title")
+	require.NotNil(t, series)
+	require.Equal(t, fake.Title, series.Title, "correct title")
 
 	var searchSeries SearchSeries
 
@@ -87,4 +111,35 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searchSeries.Series.Edges, 1, "found 1 result")
 	require.Equal(t, fake.Title, searchSeries.Series.Edges[0].Node.Title, "found the correct result")
+
+	fake = TestSeries{}
+	err = faker.FakeData(&fake)
+	require.NoError(t, err, "no error generating series")
+
+	var updateSeriesTitle UpdateSeriesTitle
+
+	err = client.Mutate(context.Background(), &updateSeriesTitle, map[string]interface{}{
+		"input": types.UpdateSeriesTitleInput{
+			ID:     series.Id,
+			Title:  fake.Title,
+			Locale: "en",
+		},
+	})
+
+	require.NoError(t, err, "no error updating series title")
+
+	var updateSeriesThumbnail UpdateCategoryThumbnail
+
+	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
+		"input": types.UpdateSeriesThumbnailInput{
+			ID:        series.Id,
+			Thumbnail: "test",
+		},
+	})
+
+	require.NoError(t, err, "no error updating series thumbnail")
+
+	series = getSeriesBySlug(t, client, fake.Slug)
+	require.Equal(t, fake.Title, series.Title, "title has been updated")
+	require.NotNil(t, series.Thumbnail, "has a thumbnail")
 }

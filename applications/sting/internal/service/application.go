@@ -116,23 +116,24 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 			SearchCharacters: query.NewSearchCharactersHandler(postIndexRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
-			CharacterById:    query.NewCharacterByIdHandler(postRepo),
+			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
 
 			SearchCategories: query.NewSearchCategoriesHandler(postIndexRepo),
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
-			CategoryById:     query.NewCategoryByIdHandler(postRepo),
+			CategoriesByIds:  query.NewCategoriesByIdsHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(postIndexRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postRepo, postIndexRepo),
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
+			PostsByIds:       query.NewPostsByIdsHandler(postRepo),
 
 			SearchAudience: query.NewSearchAudienceHandler(postIndexRepo),
 			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),
-			AudienceById:   query.NewAudienceByIdHandler(postRepo),
+			AudiencesByIds: query.NewAudiencesByIdsHandler(postRepo),
 
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
-			SeriesById:   query.NewSeriesByIdHandler(postRepo),
+			SeriesByIds:  query.NewSeriesByIdsHandler(postRepo),
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 

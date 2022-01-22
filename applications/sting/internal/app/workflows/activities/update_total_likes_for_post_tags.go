@@ -19,7 +19,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 	// the UpdatePostLikes operator will also update likes for each character, category, etc...
 	// so we re-index them as well
-	for _, cat := range pendingPost.Categories() {
+	for _, cat := range pendingPost.CategoryIds() {
 
 		newCat, err := h.pr.UpdateCategoryTotalLikesOperator(ctx, cat.ID(), func(category *post.Category) error {
 			totalLikes, err := h.pi.GetTotalLikesForCategoryOperator(ctx, category)
@@ -42,7 +42,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 	var updatedSeries map[string]bool
 
-	for _, char := range pendingPost.Characters() {
+	for _, char := range pendingPost.CharacterIds() {
 
 		newChar, err := h.pr.UpdateCharacterTotalLikesOperator(ctx, char.ID(), func(character *post.Character) error {
 
@@ -88,7 +88,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalLikesOperator(ctx, pendingPost.Audience().ID(), func(audience *post.Audience) error {
+	newAud, err := h.pr.UpdateAudienceTotalLikesOperator(ctx, pendingPost.AudienceId().ID(), func(audience *post.Audience) error {
 
 		totalLikes, err := h.pi.GetTotalLikesForAudienceOperator(ctx, audience)
 
