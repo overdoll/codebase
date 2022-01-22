@@ -4,7 +4,6 @@ import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragmen
 import ResourceItem from '../ResourceItem/ResourceItem'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { Icon } from '../../index'
 import RandomIcon from '../RandomIcon/RandomIcon'
 
 interface Props extends HTMLChakraProps<any> {

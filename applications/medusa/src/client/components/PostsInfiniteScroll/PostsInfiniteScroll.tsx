@@ -71,21 +71,21 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) return <></>
 
-  // TODO custom function that removes slides at a particular index (current index - 10)
-  // TODO and adds them back if you go back to that index
-
   return (
     <Box>
       <Swiper
-        observer
         onSwiper={(swiper) => setSwiper(swiper)}
         onSlideChange={(swiper) => onSlideChange(swiper)}
         scrollbar={{ hide: true }}
-        style={{ height: 'calc(100vh - 100px)' }}
+        style={{ height: 'calc(100vh - 54px)' }}
         mousewheel
-        autoHeight
+        virtual={{
+          cache: true,
+          addSlidesBefore: 7,
+          addSlidesAfter: 7
+        }}
         spaceBetween={20}
-        slidesPerView='auto'
+        slidesPerView={1.1}
         freeMode
         direction='vertical'
       >

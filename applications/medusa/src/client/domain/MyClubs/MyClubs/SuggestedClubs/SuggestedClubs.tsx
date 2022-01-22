@@ -7,7 +7,7 @@ import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinCl
 import { GridWrap, RectangleGridItem } from '../../../../components/ContentSelection'
 import { useFragment } from 'react-relay/hooks'
 import { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: SuggestedClubsFragment$key | null
@@ -80,22 +80,7 @@ export default function SuggestedClubs ({
   }
 
   if (data.clubs.edges.length < 1) {
-    return <></>
-  }
-
-  if (((viewerData?.clubMembershipsCount) != null) && viewerData?.clubMembershipsCount > 0) {
-    return (
-      <Swiper
-        slidesPerView={2.3}
-      >
-        {data.clubs.edges.map((item, index) =>
-          <SwiperSlide key={index}>
-            <RectangleGridItem w={200}>
-              <ClubItem node={item.node} />
-            </RectangleGridItem>
-          </SwiperSlide>)}
-      </Swiper>
-    )
+    return <Trans>No clubs found</Trans>
   }
 
   return (

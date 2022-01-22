@@ -21,6 +21,9 @@ export default function RandomIcon (): JSX.Element {
     'primary.400'
   ]
 
+  // take mod of a number (from id) (3 mod id) and then use that as the number
+  // for selecting the random icon
+
   const randomIcon = icons[Math.floor(Math.random() * 3)]
   const randomColor = colors[Math.floor(Math.random() * 6)]
 

@@ -30,16 +30,16 @@ export default function PostClickableCharacters ({ query }: Props): JSX.Element 
       {data?.characters.map((item, index) =>
         <WrapItem key={index}>
           <ClickableBox variant='ghost' borderRadius='xl' p={0}>
-            <Flex align='center' borderRadius='inherit' bg='gray.800' px={3} py={3}>
+            <Flex align='center' borderRadius='inherit' bg='gray.800' px={4} py={3}>
               <ResourceIcon
                 w={10}
-                h='100%'
+                h={10}
                 mr={3}
                 query={item.thumbnail as ResourceIconFragment$key}
               />
               <Flex w='100%' direction='column' align='space-between'>
-                <Heading lineHeight={1} color='gray.00' fontSize='4xl'>{item.name}</Heading>
-                <Text fontSize='sm' color='gray.200'>{item.series.title}</Text>
+                <Heading lineHeight={1} color='gray.00' fontSize='3xl'>{item.name}</Heading>
+                <Text fontSize='md' color='gray.200'>{item.series.title}</Text>
               </Flex>
             </Flex>
           </ClickableBox>

@@ -5,10 +5,9 @@ import { useHistory } from '@//:modules/routing'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
 import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
-import { Box, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import { Trans } from '@lingui/macro'
 import PostsInfiniteScroll from '../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import PageSectionScroller from '../../../../components/PageSectionScroller/PageSectionScroller'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<ViewPostQuery>
@@ -68,29 +67,23 @@ export default function ViewPost (props: Props): JSX.Element {
 
   return (
     <GlobalVideoManagerProvider>
-      <Stack spacing={16}>
+      <PageSectionScroller
+        childrenTitle={<Trans>View Post</Trans>}
+        infiniteScrollTitle={<Trans>Suggested Posts</Trans>}
+        pageInfiniteScroll={<PostsInfiniteScroll
+          query={data.suggestedPosts}
+          viewerQuery={queryData.viewer}
+          hasNext={hasNext}
+          loadNext={loadNext}
+          isLoadingNext={isLoadingNext}
+                            />}
+      >
         <ObserverManagerProvider>
           <PostVideoManagerProvider>
             <FullDetailedPost query={queryData?.post} viewerQuery={queryData?.viewer} />
           </PostVideoManagerProvider>
         </ObserverManagerProvider>
-        <Box>
-          <PageSectionWrap>
-            <PageSectionTitle colorScheme='primary'>
-              <Trans>
-                Suggested Posts
-              </Trans>
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <PostsInfiniteScroll
-            query={data.suggestedPosts}
-            viewerQuery={queryData.viewer}
-            hasNext={hasNext}
-            loadNext={loadNext}
-            isLoadingNext={isLoadingNext}
-          />
-        </Box>
-      </Stack>
+      </PageSectionScroller>
     </GlobalVideoManagerProvider>
   )
 }

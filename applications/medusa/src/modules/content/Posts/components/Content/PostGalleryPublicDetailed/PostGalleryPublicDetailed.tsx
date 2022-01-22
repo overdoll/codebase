@@ -46,7 +46,6 @@ export default function PostGalleryPublicDetailed ({
   return (
     <Box>
       <Swiper
-        autoHeight
         onSwiper={(swiper) =>
           onInitialize(swiper)}
       >

@@ -1,12 +1,10 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
 import { graphql } from 'react-relay'
-import { Box } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import SuggestedClubs from './SuggestedClubs/SuggestedClubs'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>
@@ -19,6 +17,7 @@ const Query = graphql`
       ...SuggestedClubsViewerFragment
       ...ClubPostsFeedFragment
       ...ClubPostsFeedViewerFragment
+      clubMembershipsCount
     }
   }
 `
@@ -29,28 +28,23 @@ export default function MyClubs (props: Props): JSX.Element {
     props.query
   )
 
+  if (queryData.viewer == null) {
+    return <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
+  }
+
   return (
-    <Swiper
-      style={{ height: 'calc(100vh - 100px)' }}
+    <PageSectionScroller
+      reversed={queryData?.viewer?.clubMembershipsCount > 0}
+      childrenTitle={<Trans>
+        Popular Clubs
+      </Trans>}
+      infiniteScrollTitle={<Trans>My Clubs</Trans>}
+      pageInfiniteScroll={<ClubPostsFeed
+        query={queryData.viewer}
+        viewerQuery={queryData.viewer}
+                          />}
     >
-      <SwiperSlide>
-        <Box>
-          <PageSectionWrap>
-            <PageSectionTitle colorScheme='primary'>
-              <Trans>Popular Clubs</Trans>
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
-        </Box>
-      </SwiperSlide>
-      <SwiperSlide>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='primary'>
-            <Trans>My Clubs</Trans>
-          </PageSectionTitle>
-        </PageSectionWrap>
-        <ClubPostsFeed query={queryData.viewer} viewerQuery={queryData.viewer} />
-      </SwiperSlide>
-    </Swiper>
+      <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
+    </PageSectionScroller>
   )
 }
