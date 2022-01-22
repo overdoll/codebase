@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "running cleanup && setup commands for all services"
 
 parent_path=$(

@@ -75,13 +75,17 @@ func (r PostsCassandraRepository) GetAudienceIdsFromSlugs(ctx context.Context, a
 
 	var audienceSlugResults []audienceSlug
 
+	var lowercaseSlugs []string
+
+	for _, s := range audienceSlugs {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
 	if err := qb.Select(audienceSlugTable.Name()).
 		Where(qb.In("slug")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(map[string]interface{}{
-			"slug": audienceSlugs,
-		}).
+		Bind(lowercaseSlugs).
 		Select(&audienceSlugResults); err != nil {
 		return nil, fmt.Errorf("failed to get audience slugs: %v", err)
 	}
@@ -99,8 +103,8 @@ func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, request
 
 	queryAudienceSlug := r.session.
 		Query(audienceSlugTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(audienceSlug{Slug: slug})
+		Consistency(gocql.LocalQuorum).
+		BindStruct(audienceSlug{Slug: strings.ToLower(slug)})
 
 	var b audienceSlug
 
@@ -129,7 +133,7 @@ func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, request
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(audiences)
+		Bind(audienceIds)
 
 	var audienceModels []*audience
 
@@ -156,7 +160,7 @@ func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceI
 
 	queryAudience := r.session.
 		Query(audienceTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(audience{Id: audienceId})
 
 	var b audience

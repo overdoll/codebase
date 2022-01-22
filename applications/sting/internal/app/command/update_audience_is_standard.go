@@ -24,7 +24,7 @@ func NewUpdateAudienceIsStandardHandler(pr post.Repository, pi post.IndexReposit
 
 func (h UpdateAudienceIsStandardHandler) Handle(ctx context.Context, cmd UpdateAudienceIsStandard) (*post.Audience, error) {
 
-	aud, err := h.pr.UpdateAudienceTitle(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
+	aud, err := h.pr.UpdateAudienceIsStandard(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
 		return audience.UpdateIsStandard(cmd.Principal, cmd.IsStandard)
 	})
 

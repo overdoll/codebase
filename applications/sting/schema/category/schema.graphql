@@ -85,7 +85,7 @@ extend type Query {
 
 extend type Post {
   """Categories that belong to this post"""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
 }
 
 """Create a new category."""

@@ -257,9 +257,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForCharacterOperator(ctx
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("characters",
-					elastic.NewTermQuery("character.id", character.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("character_ids", character.ID()),
 			)).
 		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
 		Do(ctx)
@@ -279,9 +277,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCharacterOperator(ctx
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("characters",
-					elastic.NewTermQuery("character.id", character.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("character_ids", character.ID()),
 			)).
 		Do(ctx)
 
@@ -298,9 +294,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForAudienceOperator(ctx 
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("audience",
-					elastic.NewTermQuery("audience.id", audience.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("audience_id", audience.ID()),
 			)).
 		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
 		Do(ctx)
@@ -320,9 +314,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForAudienceOperator(ctx 
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("audience",
-					elastic.NewTermQuery("audience.id", audience.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("audience_id", audience.ID()),
 			)).
 		Do(ctx)
 
@@ -339,9 +331,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForSeriesOperator(ctx co
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("characters.series",
-					elastic.NewTermQuery("characters.series.id", series.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("series_ids", series.ID()),
 			)).
 		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
 		Do(ctx)
@@ -361,9 +351,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForSeriesOperator(ctx co
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("characters.series",
-					elastic.NewTermQuery("characters.series.id", series.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("series_ids", series.ID()),
 			)).
 		Do(ctx)
 
@@ -380,9 +368,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForCategoryOperator(ctx 
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("categories",
-					elastic.NewTermQuery("categories.id", category.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("category_ids", category.ID()),
 			)).
 		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
 		Do(ctx)
@@ -402,9 +388,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx 
 		Index(PostIndexName).
 		Query(elastic.NewBoolQuery().
 			Filter(
-				elastic.NewNestedQuery("categories",
-					elastic.NewTermQuery("categories.id", category.ID()),
-				),
+				elastic.NewTermsQueryFromStrings("category_ids", category.ID()),
 			)).
 		Do(ctx)
 
@@ -451,10 +435,11 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 	filterQueries = append(filterQueries)
 
 	if len(filter.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries)
+
 		query.Add(
-			elastic.NewNestedQuery("audience",
-				elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...),
-			), likesFunc,
+			elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...),
+			likesFunc,
 		)
 	} else {
 		query.AddScoreFunc(likesFunc)
@@ -526,14 +511,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
 	}
 
-	if len(filter.CategoryIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermsQueryFromStrings("categories.id", filter.CategoryIds()...)))
-	}
-
-	if len(filter.AudienceIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermsQueryFromStrings("audience.id", filter.AudienceIds()...)))
-	}
-
 	if filter.ModeratorId() != nil {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
@@ -554,12 +531,12 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("character_ids", filter.CharacterIds()...))
 	}
 
-	if len(filter.AudienceIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", filter.AudienceIds()...))
-	}
-
 	if len(filter.SeriesIds()) > 0 {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("series_ids", filter.SeriesIds()...))
+	}
+
+	if len(filter.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
 	}
 
 	if filterQueries != nil {

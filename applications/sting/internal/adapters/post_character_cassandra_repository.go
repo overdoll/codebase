@@ -72,12 +72,18 @@ func (r PostsCassandraRepository) GetCharacterIdsFromSlugs(ctx context.Context, 
 
 	var characterSlugResults []seriesSlug
 
+	var lowercaseSlugs []string
+
+	for _, s := range characterSlugs {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
 	if err := qb.Select(charactersSlugTable.Name()).
 		Where(qb.In("slug"), qb.In("series_id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(map[string]interface{}{
-			"slug":      characterSlugs,
+		BindMap(map[string]interface{}{
+			"slug":      lowercaseSlugs,
 			"series_id": seriesIds,
 		}).
 		Select(&characterSlugResults); err != nil {
@@ -104,9 +110,9 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 
 	queryCharacterSlug := r.session.
 		Query(charactersSlugTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
-			Slug:     slug,
+			Slug:     strings.ToLower(slug),
 			SeriesId: series.SeriesId,
 		})
 
@@ -297,7 +303,7 @@ func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characte
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(character{Id: characterId})
 
 	var char character

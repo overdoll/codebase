@@ -84,12 +84,13 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 	fake := TestCategory{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake category")
+	currentCategorySlug := fake.Slug
 
 	var createCategory CreateCategory
 
 	err = client.Mutate(context.Background(), &createCategory, map[string]interface{}{
 		"input": types.CreateCategoryInput{
-			Slug:  fake.Slug,
+			Slug:  currentCategorySlug,
 			Title: fake.Title,
 		},
 	})
@@ -98,7 +99,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	refreshCategoryIndex(t)
 
-	category := getCategoryBySlug(t, client, fake.Slug)
+	category := getCategoryBySlug(t, client, currentCategorySlug)
 
 	require.NotNil(t, category, "should have found the category")
 	require.Equal(t, fake.Title, category.Title, "correct title for category")
@@ -140,7 +141,9 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating category thumbnail")
 
-	category = getCategoryBySlug(t, client, fake.Slug)
+	category = getCategoryBySlug(t, client, currentCategorySlug)
+
+	require.NotNil(t, category, "found category")
 	require.Equal(t, fake.Title, category.Title, "title has been updated")
 	require.NotNil(t, category.Thumbnail, "has a thumbnail")
 }

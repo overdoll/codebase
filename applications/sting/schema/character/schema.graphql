@@ -98,7 +98,7 @@ extend type Query {
 
 extend type Post {
   """Characters that belong to this post"""
-  characters: [Character!]!
+  characters: [Character!]! @goField(forceResolver: true)
 }
 
 """Create a new character."""

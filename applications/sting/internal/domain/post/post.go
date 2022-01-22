@@ -390,7 +390,7 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 
 	var characterIds []string
 	var seriesIds []string
-	var visitedSeries map[string]bool
+	visitedSeries := make(map[string]bool)
 
 	for _, c := range characters {
 		characterIds = append(characterIds, c.id)

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrAudienceNotFound      = errors.New("club not found")
+	ErrAudienceNotFound      = errors.New("audience not found")
 	ErrAudienceSlugNotUnique = errors.New("audience slug is not unique")
 )
 

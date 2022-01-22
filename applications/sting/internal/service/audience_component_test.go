@@ -89,12 +89,13 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	fake := TestAudience{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake audience")
+	currentAudienceSlug := fake.Slug
 
 	var createAudience CreateAudience
 
 	err = client.Mutate(context.Background(), &createAudience, map[string]interface{}{
 		"input": types.CreateAudienceInput{
-			Slug:     fake.Slug,
+			Slug:     currentAudienceSlug,
 			Title:    fake.Title,
 			Standard: false,
 		},
@@ -104,7 +105,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	refreshAudienceIndex(t)
 
-	audience := getAudienceBySlug(t, client, fake.Slug)
+	audience := getAudienceBySlug(t, client, currentAudienceSlug)
 
 	require.NotNil(t, audience)
 	require.Equal(t, fake.Title, audience.Title, "same title for audience")
@@ -157,7 +158,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	require.NoError(t, err, "no error updating audience is standard")
 
-	audience = getAudienceBySlug(t, client, fake.Slug)
+	audience = getAudienceBySlug(t, client, currentAudienceSlug)
+	require.NotNil(t, audience, "expected to have found audience")
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
 	require.NotNil(t, audience.Thumbnail, "has a thumbnail")

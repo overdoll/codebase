@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -14,6 +15,49 @@ import (
 
 type PostResolver struct {
 	App *app.Application
+}
+
+func (r PostResolver) Categories(ctx context.Context, obj *types.Post) ([]*types.Category, error) {
+
+	var categories []*types.Category
+
+	for _, c := range obj.Categories {
+		cat, err := dataloader.For(ctx).GetCategoryById(ctx, c.ID.GetID())
+
+		if err != nil {
+			return nil, err
+		}
+
+		categories = append(categories, cat)
+	}
+
+	return categories, nil
+}
+
+func (r PostResolver) Characters(ctx context.Context, obj *types.Post) ([]*types.Character, error) {
+
+	var characters []*types.Character
+
+	for _, c := range obj.Characters {
+		chr, err := dataloader.For(ctx).GetCharacterById(ctx, c.ID.GetID())
+
+		if err != nil {
+			return nil, err
+		}
+
+		characters = append(characters, chr)
+	}
+
+	return characters, nil
+}
+
+func (r PostResolver) Audience(ctx context.Context, obj *types.Post) (*types.Audience, error) {
+
+	if obj.Audience == nil {
+		return nil, nil
+	}
+
+	return dataloader.For(ctx).GetAudienceById(ctx, obj.Audience.ID.GetID())
 }
 
 func (r PostResolver) SuggestedPosts(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {

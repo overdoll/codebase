@@ -79,7 +79,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	if result.AudienceId() != nil {
 		audience = &Audience{
-			ID: relay.NewID(Audience{}, result.ID()),
+			ID: relay.NewID(Audience{}, *result.AudienceId()),
 		}
 	}
 
@@ -177,6 +177,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		TitleTranslations: titleTranslations,
 		Slug:              result.Slug(),
 		Thumbnail:         res,
+		Standard:          result.IsStandard(),
 		TotalLikes:        result.TotalLikes(),
 	}
 }

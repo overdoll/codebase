@@ -47,6 +47,8 @@ type Audience struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
+	// If this audience is standard or not.
+	Standard bool `json:"standard"`
 	// All translations for this title.
 	TitleTranslations []*AudienceTitleTranslation `json:"titleTranslations"`
 	// Total amount of likes.

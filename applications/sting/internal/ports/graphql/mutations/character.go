@@ -22,6 +22,7 @@ func (r *MutationResolver) CreateCharacter(ctx context.Context, input types.Crea
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				Name:      input.Name,
+				SeriesId:  input.SeriesID.GetID(),
 			},
 		)
 

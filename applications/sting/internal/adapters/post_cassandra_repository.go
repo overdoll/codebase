@@ -256,7 +256,7 @@ func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, reques
 }
 
 func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids", "series_ids"})
 }
 
 func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

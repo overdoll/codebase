@@ -66,13 +66,17 @@ func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, c
 
 	var categorySlugResults []categorySlugs
 
+	var lowercaseSlugs []string
+
+	for _, s := range categorySlug {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
 	if err := qb.Select(categorySlugTable.Name()).
 		Where(qb.In("slug")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(map[string]interface{}{
-			"slug": categorySlug,
-		}).
+		Bind(lowercaseSlugs).
 		Select(&categorySlugResults); err != nil {
 		return nil, fmt.Errorf("failed to get category slugs: %v", err)
 	}
@@ -90,8 +94,8 @@ func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, request
 
 	queryCategorySlug := r.session.
 		Query(categorySlugTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(categorySlugs{Slug: slug})
+		Consistency(gocql.LocalQuorum).
+		BindStruct(categorySlugs{Slug: strings.ToLower(slug)})
 
 	var b categorySlugs
 
@@ -235,7 +239,7 @@ func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryI
 
 	queryCategories := r.session.
 		Query(categoryTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(category{Id: categoryId})
 
 	var cat category

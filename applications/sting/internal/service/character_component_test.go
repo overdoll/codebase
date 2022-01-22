@@ -87,13 +87,14 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 	fake := TestCharacter{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake category")
+	currentCharacterSlug := fake.Slug
 
 	var createCharacter CreateCharacter
 
 	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
 		"input": types.CreateCharacterInput{
 			SeriesID: relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, "1pcKiQL7dgUW8CIN7uO1wqFaMql")))),
-			Slug:     fake.Slug,
+			Slug:     currentCharacterSlug,
 			Name:     fake.Name,
 		},
 	})
@@ -102,7 +103,7 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 
 	refreshCharacterIndex(t)
 
-	character := getCharacterBySlug(t, client, fake.Slug)
+	character := getCharacterBySlug(t, client, currentCharacterSlug)
 
 	require.NotNil(t, character, "found character")
 	require.Equal(t, fake.Name, character.Name, "correct name")
@@ -144,7 +145,9 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character thumbnail")
 
-	character = getCharacterBySlug(t, client, fake.Slug)
+	character = getCharacterBySlug(t, client, currentCharacterSlug)
+	require.NotNil(t, character, "expected to have found character")
+
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
 	require.NotNil(t, character.Thumbnail, "has a thumbnail")
 }

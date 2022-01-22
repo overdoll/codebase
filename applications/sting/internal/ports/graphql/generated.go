@@ -72,6 +72,7 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
+		Standard          func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int) int
 		TitleTranslations func(childComplexity int) int
@@ -479,6 +480,9 @@ type MutationResolver interface {
 }
 type PostResolver interface {
 	SuggestedPosts(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Audience(ctx context.Context, obj *types.Post) (*types.Audience, error)
+	Categories(ctx context.Context, obj *types.Post) ([]*types.Category, error)
+	Characters(ctx context.Context, obj *types.Post) ([]*types.Character, error)
 
 	ViewerLiked(ctx context.Context, obj *types.Post) (*types.PostLike, error)
 }
@@ -596,6 +600,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Audience.Slug(childComplexity), true
+
+	case "Audience.standard":
+		if e.complexity.Audience.Standard == nil {
+			break
+		}
+
+		return e.complexity.Audience.Standard(childComplexity), true
 
 	case "Audience.thumbnail":
 		if e.complexity.Audience.Thumbnail == nil {
@@ -2183,6 +2194,9 @@ type Audience implements Node @key(fields: "id") {
   """A title for this audience."""
   title: String!
 
+  """If this audience is standard or not."""
+  standard: Boolean!
+
   """All translations for this title."""
   titleTranslations: [AudienceTitleTranslation!]!
 
@@ -2249,7 +2263,7 @@ extend type Query {
 
 extend type Post {
   """Represents the audience that this post belongs to"""
-  audience: Audience
+  audience: Audience @goField(forceResolver: true)
 }
 
 """Create a new audience."""
@@ -2435,7 +2449,7 @@ extend type Query {
 
 extend type Post {
   """Categories that belong to this post"""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
 }
 
 """Create a new category."""
@@ -2611,7 +2625,7 @@ extend type Query {
 
 extend type Post {
   """Characters that belong to this post"""
-  characters: [Character!]!
+  characters: [Character!]! @goField(forceResolver: true)
 }
 
 """Create a new character."""
@@ -5818,6 +5832,41 @@ func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Audience_standard(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Audience",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Standard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -9962,14 +10011,14 @@ func (ec *executionContext) _Post_audience(ctx context.Context, field graphql.Co
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Audience, nil
+		return ec.resolvers.Post().Audience(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9994,14 +10043,14 @@ func (ec *executionContext) _Post_categories(ctx context.Context, field graphql.
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Categories, nil
+		return ec.resolvers.Post().Categories(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10029,14 +10078,14 @@ func (ec *executionContext) _Post_characters(ctx context.Context, field graphql.
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Characters, nil
+		return ec.resolvers.Post().Characters(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14489,6 +14538,16 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "standard":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Audience_standard(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "titleTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Audience_titleTranslations(ctx, field, obj)
@@ -16216,32 +16275,62 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 
 			})
 		case "audience":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_audience(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_audience(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "categories":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_categories(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_categories(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "characters":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_characters(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_characters(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "likes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_likes(ctx, field, obj)

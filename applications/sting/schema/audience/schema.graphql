@@ -19,6 +19,9 @@ type Audience implements Node @key(fields: "id") {
   """A title for this audience."""
   title: String!
 
+  """If this audience is standard or not."""
+  standard: Boolean!
+
   """All translations for this title."""
   titleTranslations: [AudienceTitleTranslation!]!
 
@@ -85,7 +88,7 @@ extend type Query {
 
 extend type Post {
   """Represents the audience that this post belongs to"""
-  audience: Audience
+  audience: Audience @goField(forceResolver: true)
 }
 
 """Create a new audience."""

@@ -17,6 +17,7 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/ports/graphql/dataloader",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/paging",
         "//libraries/passport",

@@ -83,12 +83,13 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	fake := TestSeries{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake series")
+	currentSeriesSlug := fake.Slug
 
 	var createSeries CreateSeries
 
 	err = client.Mutate(context.Background(), &createSeries, map[string]interface{}{
 		"input": types.CreateSeriesInput{
-			Slug:  fake.Slug,
+			Slug:  currentSeriesSlug,
 			Title: fake.Title,
 		},
 	})
@@ -97,7 +98,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	refreshSeriesIndex(t)
 
-	series := getSeriesBySlug(t, client, fake.Slug)
+	series := getSeriesBySlug(t, client, currentSeriesSlug)
 
 	require.NotNil(t, series)
 	require.Equal(t, fake.Title, series.Title, "correct title")
@@ -128,7 +129,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series title")
 
-	var updateSeriesThumbnail UpdateCategoryThumbnail
+	var updateSeriesThumbnail UpdateSeriesThumbnail
 
 	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
 		"input": types.UpdateSeriesThumbnailInput{
@@ -139,7 +140,9 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series thumbnail")
 
-	series = getSeriesBySlug(t, client, fake.Slug)
+	series = getSeriesBySlug(t, client, currentSeriesSlug)
+
+	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
 	require.NotNil(t, series.Thumbnail, "has a thumbnail")
 }

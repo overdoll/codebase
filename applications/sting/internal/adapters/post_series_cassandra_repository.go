@@ -19,7 +19,7 @@ var seriesTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail_resource_ids",
+		"thumbnail_resource_id",
 		"total_likes",
 		"total_posts",
 	},
@@ -66,8 +66,8 @@ func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester
 
 	querySeriesSlug := r.session.
 		Query(seriesSlugTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(seriesSlug{Slug: slug})
+		Consistency(gocql.LocalQuorum).
+		BindStruct(seriesSlug{Slug: strings.ToLower(slug)})
 
 	var b seriesSlug
 
@@ -87,13 +87,17 @@ func (r PostsCassandraRepository) GetSeriesIdsFromSlugs(ctx context.Context, ser
 
 	var seriesSlugResults []seriesSlug
 
+	var lowercaseSlugs []string
+
+	for _, s := range seriesIds {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
 	if err := qb.Select(seriesSlugTable.Name()).
 		Where(qb.In("slug")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(map[string]interface{}{
-			"slug": seriesIds,
-		}).
+		Bind(lowercaseSlugs).
 		Select(&seriesSlugResults); err != nil {
 		return nil, fmt.Errorf("failed to get series slugs: %v", err)
 	}
@@ -126,7 +130,7 @@ func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, serie
 
 	queryMedia := r.session.
 		Query(seriesTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(series{Id: seriesId})
 
 	var med series
@@ -213,7 +217,7 @@ func (r PostsCassandraRepository) CreateSeries(ctx context.Context, requester *p
 	if err := r.session.
 		Query(seriesTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(series).
+		BindStruct(ser).
 		ExecRelease(); err != nil {
 		return err
 	}
