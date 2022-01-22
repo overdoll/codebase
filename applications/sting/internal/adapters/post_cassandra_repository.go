@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -24,6 +25,7 @@ var postTable = table.New(table.Metadata{
 		"audience_id",
 		"category_ids",
 		"character_ids",
+		"series_ids",
 		"created_at",
 		"posted_at",
 		"moderator_reassignment_at",
@@ -42,6 +44,7 @@ type posts struct {
 	AudienceId         *string    `db:"audience_id"`
 	CategoryIds        []string   `db:"category_ids"`
 	CharacterIds       []string   `db:"character_ids"`
+	SeriesIds          []string   `db:"series_ids"`
 	CreatedAt          time.Time  `db:"created_at"`
 	PostedAt           *time.Time `db:"posted_at"`
 	ReassignmentAt     *time.Time `db:"moderator_reassignment_at"`
@@ -56,24 +59,17 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
-
-	var audienceId *string
-
-	if pending.Audience() != nil {
-		id := pending.Audience().ID()
-		audienceId = &id
-	}
-
 	return &posts{
 		Id:                 pending.ID(),
 		State:              pending.State().String(),
 		ModeratorId:        pending.ModeratorId(),
 		ClubId:             pending.ClubId(),
-		AudienceId:         audienceId,
+		AudienceId:         pending.AudienceId(),
 		ContributorId:      pending.ContributorId(),
 		ContentResourceIds: pending.ContentResourceIds(),
 		CategoryIds:        pending.CategoryIds(),
 		CharacterIds:       pending.CharacterIds(),
+		SeriesIds:          pending.SeriesIds(),
 		CreatedAt:          pending.CreatedAt(),
 		PostedAt:           pending.PostedAt(),
 		ReassignmentAt:     pending.ReassignmentAt(),
@@ -81,28 +77,6 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 }
 
 func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
-
-	characters, err := r.GetCharactersById(ctx, postPending.CharacterIds)
-
-	if err != nil {
-		return nil, err
-	}
-
-	categories, err := r.GetCategoriesById(ctx, postPending.CategoryIds)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var audienc *post.Audience
-
-	if postPending.AudienceId != nil {
-		audienc, err = r.GetAudienceById(ctx, nil, *postPending.AudienceId)
-
-		if err != nil {
-			return nil, err
-		}
-	}
 
 	likes, err := r.getLikesForPost(ctx, postPending.Id)
 
@@ -118,9 +92,10 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
 		postPending.ClubId,
-		audienc,
-		characters,
-		categories,
+		postPending.AudienceId,
+		postPending.CharacterIds,
+		postPending.SeriesIds,
+		postPending.CategoryIds,
 		postPending.CreatedAt,
 		postPending.PostedAt,
 		postPending.ReassignmentAt,
@@ -159,6 +134,38 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 	}
 
 	return nil
+}
+
+func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
+
+	var postResults []*post.Post
+
+	// if none then we get out or else the query will fail
+	if len(postIds) == 0 {
+		return postResults, nil
+	}
+
+	queryPosts := qb.Select(postTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		Bind(postIds)
+
+	var postsModels []*posts
+
+	if err := queryPosts.Select(&postsModels); err != nil {
+		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
+	}
+
+	for _, b := range postsModels {
+		p, err := r.unmarshalPost(ctx, *b)
+		if err != nil {
+			return nil, err
+		}
+		postResults = append(postResults, p)
+	}
+
+	return postResults, nil
 }
 
 func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
@@ -277,7 +284,7 @@ func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, reques
 }
 
 func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids", "series_ids"})
 }
 
 func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

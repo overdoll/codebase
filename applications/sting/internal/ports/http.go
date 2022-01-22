@@ -2,7 +2,9 @@ package ports
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"net/http"
+	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
@@ -27,10 +29,19 @@ func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal
 	return acc, nil
 }
 
+func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewDataLoader(app))
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}
+
 func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 
 	rtr := router.NewGinRouter()
 
+	rtr.Use(dataLoaderToContext(app))
 	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
 
 	// graphql

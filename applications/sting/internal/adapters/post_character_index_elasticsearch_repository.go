@@ -64,7 +64,7 @@ const characterIndex = `
 	}
 }`
 
-const characterIndexName = "characters"
+const CharacterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 	parse, err := ksuid.Parse(char.ID())
@@ -101,7 +101,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacter(ctx context.Context, c
 
 	_, err = r.client.
 		Index().
-		Index(characterIndexName).
+		Index(CharacterIndexName).
 		Id(character.ID()).
 		BodyJson(char).
 		Do(ctx)
@@ -116,7 +116,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacter(ctx context.Context, c
 func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
-		Index(characterIndexName)
+		Index(CharacterIndexName)
 
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")
@@ -257,7 +257,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 
 			_, err = r.client.
 				Index().
-				Index(characterIndexName).
+				Index(CharacterIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -279,20 +279,20 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(characterIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(CharacterIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(characterIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(CharacterIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(characterIndexName).BodyString(characterIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(CharacterIndexName).BodyString(characterIndex).Do(ctx); err != nil {
 		return err
 	}
 

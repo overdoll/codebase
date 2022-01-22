@@ -93,29 +93,47 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
 			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
 			UpdateCurationProfileDateOfBirth: command.NewUpdateCurationProfileDateOfBirthHandler(personalizationRepo),
+
+			CreateAudience:           command.NewCreateAudienceHandler(postRepo, postIndexRepo),
+			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo, postIndexRepo),
+			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, postIndexRepo, loader),
+			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo, postIndexRepo),
+
+			CreateCategory:          command.NewCreateCategoryHandler(postRepo, postIndexRepo),
+			UpdateCategoryThumbnail: command.NewUpdateCategoryThumbnailHandler(postRepo, postIndexRepo, loader),
+			UpdateCategoryTitle:     command.NewUpdateCategoryTitleHandler(postRepo, postIndexRepo),
+
+			CreateCharacter:          command.NewCreateCharacterHandler(postRepo, postIndexRepo),
+			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo, postIndexRepo),
+			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, postIndexRepo, loader),
+
+			CreateSeries:          command.NewCreateSeriesHandler(postRepo, postIndexRepo),
+			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo, postIndexRepo),
+			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, postIndexRepo, loader),
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 
 			SearchCharacters: query.NewSearchCharactersHandler(postIndexRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
-			CharacterById:    query.NewCharacterByIdHandler(postRepo),
+			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
 
 			SearchCategories: query.NewSearchCategoriesHandler(postIndexRepo),
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
-			CategoryById:     query.NewCategoryByIdHandler(postRepo),
+			CategoriesByIds:  query.NewCategoriesByIdsHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(postIndexRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postRepo, postIndexRepo),
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
+			PostsByIds:       query.NewPostsByIdsHandler(postRepo),
 
 			SearchAudience: query.NewSearchAudienceHandler(postIndexRepo),
 			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),
-			AudienceById:   query.NewAudienceByIdHandler(postRepo),
+			AudiencesByIds: query.NewAudiencesByIdsHandler(postRepo),
 
 			SearchSeries: query.NewSearchSeriesHandler(postIndexRepo),
 			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
-			SeriesById:   query.NewSeriesByIdHandler(postRepo),
+			SeriesByIds:  query.NewSeriesByIdsHandler(postRepo),
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/libraries/localization"
+	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -67,6 +68,37 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 	}, nil
 }
 
+func (r PostsCassandraRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
+
+	var characterSlugResults []seriesSlug
+
+	var lowercaseSlugs []string
+
+	for _, s := range characterSlugs {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
+	if err := qb.Select(charactersSlugTable.Name()).
+		Where(qb.In("slug"), qb.In("series_id")).
+		Query(r.session).
+		Consistency(gocql.One).
+		BindMap(map[string]interface{}{
+			"slug":      lowercaseSlugs,
+			"series_id": seriesIds,
+		}).
+		Select(&characterSlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get character slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range characterSlugResults {
+		ids = append(ids, i.Slug)
+	}
+
+	return ids, nil
+}
+
 func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
 
 	// get series first
@@ -78,9 +110,9 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 
 	queryCharacterSlug := r.session.
 		Query(charactersSlugTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
-			Slug:     slug,
+			Slug:     strings.ToLower(slug),
 			SeriesId: series.SeriesId,
 		})
 
@@ -98,7 +130,7 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 	return r.GetCharacterById(ctx, requester, b.CharacterId)
 }
 
-func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
+func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, requester *principal.Principal, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 
@@ -181,6 +213,58 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 	return r.getCharacterById(ctx, characterId)
 }
 
+func (r PostsCassandraRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
+
+	char, err := marshalCharacterToDatabase(character)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := charactersSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesId: char.SeriesId}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique character slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrCharacterSlugNotUnique
+	}
+
+	if err := r.session.
+		Query(characterTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(char).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"name"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
+}
+
 func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string, updateFn func(char *post.Character) error, columns []string) (*post.Character, error) {
 
 	char, err := r.getCharacterById(ctx, id)
@@ -215,19 +299,11 @@ func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string
 	return char, nil
 }
 
-func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
-}
-
-func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
-}
-
 func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(character{Id: characterId})
 
 	var char character

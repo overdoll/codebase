@@ -52,7 +52,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Avatar                    func(childComplexity int, size *int) int
+		Avatar                    func(childComplexity int) int
 		CanDisableMultiFactor     func(childComplexity int) int
 		Emails                    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		EmailsLimit               func(childComplexity int) int
@@ -421,12 +421,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Account_avatar_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Avatar(childComplexity, args["size"].(*int)), true
+		return e.complexity.Account.Avatar(childComplexity), true
 
 	case "Account.canDisableMultiFactor":
 		if e.complexity.Account.CanDisableMultiFactor == nil {
@@ -1674,7 +1669,7 @@ var sources = []*ast.Source{
   reference: String!
 
   """A URL pointing to the account's public avatar."""
-  avatar(size: Int): Resource
+  avatar: Resource
 
   """The username of the account."""
   username: String!
@@ -1769,10 +1764,7 @@ extend type Query {
   ): AccountConnection!
 }
 `, BuiltIn: false},
-	{Name: "schema/language/schema.graphql", Input: `# Localization formatted in BCP47
-scalar BCP47
-
-type Language {
+	{Name: "schema/language/schema.graphql", Input: `type Language {
   """
   BCP47 locale
   """
@@ -2644,6 +2636,9 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -2705,21 +2700,6 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 		}
 	}
 	args["multi"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_avatar_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
 	return args, nil
 }
 
@@ -3405,13 +3385,6 @@ func (ec *executionContext) _Account_avatar(ctx context.Context, field graphql.C
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_avatar_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Avatar, nil

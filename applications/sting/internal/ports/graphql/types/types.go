@@ -47,6 +47,10 @@ type Audience struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
+	// If this audience is standard or not.
+	Standard bool `json:"standard"`
+	// All translations for this title.
+	TitleTranslations []*AudienceTitleTranslation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -77,6 +81,13 @@ type AudienceEdge struct {
 	Node   *Audience `json:"node"`
 }
 
+type AudienceTitleTranslation struct {
+	// Localization formatted in BCP47.
+	Locale string `json:"locale"`
+	// A title for this audience.
+	Title string `json:"title"`
+}
+
 type Category struct {
 	// An ID pointing to this category.
 	ID relay.ID `json:"id"`
@@ -86,6 +97,8 @@ type Category struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*CategoryTitleTranslation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -116,6 +129,13 @@ type CategoryEdge struct {
 	Node   *Category `json:"node"`
 }
 
+type CategoryTitleTranslation struct {
+	// Localization formatted in BCP47.
+	Locale string `json:"locale"`
+	// A title for this category.
+	Title string `json:"title"`
+}
+
 type Character struct {
 	// An ID pointing to this character.
 	ID relay.ID `json:"id"`
@@ -125,6 +145,8 @@ type Character struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
+	// All translations for this name.
+	NameTranslations []*CharacterNameTranslation `json:"nameTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -148,6 +170,13 @@ type CharacterEdge struct {
 	Node   *Character `json:"node"`
 }
 
+type CharacterNameTranslation struct {
+	// Localization formatted in BCP47.
+	Locale string `json:"locale"`
+	// A name for this category.
+	Name string `json:"name"`
+}
+
 type Club struct {
 	// Posts belonging to this club
 	Posts *PostConnection `json:"posts"`
@@ -155,6 +184,58 @@ type Club struct {
 }
 
 func (Club) IsEntity() {}
+
+// Create a new audience.
+type CreateAudienceInput struct {
+	// The chosen slug for the audience.
+	Slug string `json:"slug"`
+	// The chosen title for the audience.
+	Title string `json:"title"`
+	// If the audience is standard or not.
+	Standard bool `json:"standard"`
+}
+
+// Payload for a new audience
+type CreateAudiencePayload struct {
+	// The audience after creation
+	Audience *Audience `json:"audience"`
+	// Validation for creating a new audience
+	Validation *CreateAudienceValidation `json:"validation"`
+}
+
+// Create a new category.
+type CreateCategoryInput struct {
+	// The chosen slug for the category.
+	Slug string `json:"slug"`
+	// The chosen title for the category.
+	Title string `json:"title"`
+}
+
+// Payload for a new category
+type CreateCategoryPayload struct {
+	// The category after creation
+	Category *Category `json:"category"`
+	// Validation for creating a new category
+	Validation *CreateCategoryValidation `json:"validation"`
+}
+
+// Create a new character.
+type CreateCharacterInput struct {
+	// The chosen series for the character.
+	SeriesID relay.ID `json:"seriesId"`
+	// The chosen slug for the character.
+	Slug string `json:"slug"`
+	// The chosen name for the character.
+	Name string `json:"name"`
+}
+
+// Payload for a new character
+type CreateCharacterPayload struct {
+	// The character after creation
+	Character *Character `json:"character"`
+	// Validation for creating a new character
+	Validation *CreateCharacterValidation `json:"validation"`
+}
 
 // Create a new post. A club ID is required.
 type CreatePostInput struct {
@@ -166,6 +247,22 @@ type CreatePostInput struct {
 type CreatePostPayload struct {
 	// The pending post after the creation
 	Post *Post `json:"post"`
+}
+
+// Create a new series.
+type CreateSeriesInput struct {
+	// The chosen slug for the series.
+	Slug string `json:"slug"`
+	// The chosen title for the series.
+	Title string `json:"title"`
+}
+
+// Payload for a new series
+type CreateSeriesPayload struct {
+	// The series after creation
+	Series *Series `json:"series"`
+	// Validation for creating a new series
+	Validation *CreateSeriesValidation `json:"validation"`
 }
 
 type CurationProfile struct {
@@ -292,6 +389,8 @@ type Series struct {
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this series.
 	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*SeriesTitleTranslation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -311,6 +410,13 @@ type SeriesConnection struct {
 type SeriesEdge struct {
 	Cursor string  `json:"cursor"`
 	Node   *Series `json:"node"`
+}
+
+type SeriesTitleTranslation struct {
+	// Localization formatted in BCP47.
+	Locale string `json:"locale"`
+	// A title for this series.
+	Title string `json:"title"`
 }
 
 // Publish post.
@@ -337,6 +443,110 @@ type UndoLikePostInput struct {
 type UndoLikePostPayload struct {
 	// The post like that was deleted.
 	PostLikeID *relay.ID `json:"postLikeId"`
+}
+
+// Update audience.
+type UpdateAudienceIsStandardInput struct {
+	// The audience to update
+	ID relay.ID `json:"id"`
+	// Standard
+	Standard bool `json:"standard"`
+}
+
+// Payload for updating audience
+type UpdateAudienceIsStandardPayload struct {
+	// The audience after update
+	Audience *Audience `json:"audience"`
+}
+
+// Update audience.
+type UpdateAudienceThumbnailInput struct {
+	// The audience to update
+	ID relay.ID `json:"id"`
+	// The thumbnail
+	Thumbnail string `json:"thumbnail"`
+}
+
+// Payload for updating audience
+type UpdateAudienceThumbnailPayload struct {
+	// The audience after update
+	Audience *Audience `json:"audience"`
+}
+
+// Update audience.
+type UpdateAudienceTitleInput struct {
+	// The audience to update
+	ID relay.ID `json:"id"`
+	// The title to update
+	Title string `json:"title"`
+	// The localization for this title
+	Locale string `json:"locale"`
+}
+
+// Payload for updating audience
+type UpdateAudienceTitlePayload struct {
+	// The audience after update
+	Audience *Audience `json:"audience"`
+}
+
+// Update category.
+type UpdateCategoryThumbnailInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The thumbnail
+	Thumbnail string `json:"thumbnail"`
+}
+
+// Payload for updating category
+type UpdateCategoryThumbnailPayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
+// Update category.
+type UpdateCategoryTitleInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The title to update
+	Title string `json:"title"`
+	// The localization for this title
+	Locale string `json:"locale"`
+}
+
+// Payload for updating category
+type UpdateCategoryTitlePayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
+// Update character.
+type UpdateCharacterNameInput struct {
+	// The character to update
+	ID relay.ID `json:"id"`
+	// The name to update
+	Name string `json:"name"`
+	// The localization for this name
+	Locale string `json:"locale"`
+}
+
+// Payload for updating character
+type UpdateCharacterNamePayload struct {
+	// The character after update
+	Character *Character `json:"character"`
+}
+
+// Update character.
+type UpdateCharacterThumbnailInput struct {
+	// The character to update
+	ID relay.ID `json:"id"`
+	// The thumbnail
+	Thumbnail string `json:"thumbnail"`
+}
+
+// Payload for updating character
+type UpdateCharacterThumbnailPayload struct {
+	// The character after update
+	Character *Character `json:"character"`
 }
 
 // Update curation profile audience.
@@ -441,6 +651,36 @@ type UpdatePostContentOrderInput struct {
 type UpdatePostContentOrderPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
+}
+
+// Update series.
+type UpdateSeriesThumbnailInput struct {
+	// The series to update
+	ID relay.ID `json:"id"`
+	// The thumbnail
+	Thumbnail string `json:"thumbnail"`
+}
+
+// Payload for updating series
+type UpdateSeriesThumbnailPayload struct {
+	// The category after update
+	Series *Series `json:"series"`
+}
+
+// Update series.
+type UpdateSeriesTitleInput struct {
+	// The series to update
+	ID relay.ID `json:"id"`
+	// The title to update
+	Title string `json:"title"`
+	// The localization for this title
+	Locale string `json:"locale"`
+}
+
+// Payload for updating series
+type UpdateSeriesTitlePayload struct {
+	// The series after update
+	Series *Series `json:"series"`
 }
 
 // Properties by which audience connections can be sorted.
@@ -581,6 +821,166 @@ func (e *CharactersSort) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CharactersSort) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new audience
+type CreateAudienceValidation string
+
+const (
+	CreateAudienceValidationSlugTaken CreateAudienceValidation = "SLUG_TAKEN"
+)
+
+var AllCreateAudienceValidation = []CreateAudienceValidation{
+	CreateAudienceValidationSlugTaken,
+}
+
+func (e CreateAudienceValidation) IsValid() bool {
+	switch e {
+	case CreateAudienceValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateAudienceValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateAudienceValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateAudienceValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateAudienceValidation", str)
+	}
+	return nil
+}
+
+func (e CreateAudienceValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new category
+type CreateCategoryValidation string
+
+const (
+	CreateCategoryValidationSlugTaken CreateCategoryValidation = "SLUG_TAKEN"
+)
+
+var AllCreateCategoryValidation = []CreateCategoryValidation{
+	CreateCategoryValidationSlugTaken,
+}
+
+func (e CreateCategoryValidation) IsValid() bool {
+	switch e {
+	case CreateCategoryValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateCategoryValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateCategoryValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateCategoryValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateCategoryValidation", str)
+	}
+	return nil
+}
+
+func (e CreateCategoryValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new character
+type CreateCharacterValidation string
+
+const (
+	CreateCharacterValidationSlugTaken CreateCharacterValidation = "SLUG_TAKEN"
+)
+
+var AllCreateCharacterValidation = []CreateCharacterValidation{
+	CreateCharacterValidationSlugTaken,
+}
+
+func (e CreateCharacterValidation) IsValid() bool {
+	switch e {
+	case CreateCharacterValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateCharacterValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateCharacterValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateCharacterValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateCharacterValidation", str)
+	}
+	return nil
+}
+
+func (e CreateCharacterValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new series
+type CreateSeriesValidation string
+
+const (
+	CreateSeriesValidationSlugTaken CreateSeriesValidation = "SLUG_TAKEN"
+)
+
+var AllCreateSeriesValidation = []CreateSeriesValidation{
+	CreateSeriesValidationSlugTaken,
+}
+
+func (e CreateSeriesValidation) IsValid() bool {
+	switch e {
+	case CreateSeriesValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateSeriesValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateSeriesValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateSeriesValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateSeriesValidation", str)
+	}
+	return nil
+}
+
+func (e CreateSeriesValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

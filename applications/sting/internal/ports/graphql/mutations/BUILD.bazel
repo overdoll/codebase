@@ -3,10 +3,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mutations",
     srcs = [
+        "audience.go",
+        "category.go",
+        "character.go",
         "curation_profile.go",
         "post.go",
         "post_like.go",
         "resolvers.go",
+        "series.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/mutations",
     visibility = ["//visibility:public"],
@@ -14,6 +18,7 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/workflows",
+        "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/graphql/relay",
         "//libraries/passport",

@@ -6,7 +6,7 @@ type Account implements Node {
   reference: String!
 
   """A URL pointing to the account's public avatar."""
-  avatar(size: Int): Resource
+  avatar: Resource
 
   """The username of the account."""
   username: String!
@@ -548,10 +548,16 @@ type Audience implements Node {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
+  thumbnail: Resource
 
   """A title for this audience."""
   title: String!
+
+  """If this audience is standard or not."""
+  standard: Boolean!
+
+  """All translations for this title."""
+  titleTranslations: [AudienceTitleTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -625,6 +631,14 @@ enum AudiencesSort {
   POPULAR
 }
 
+type AudienceTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this audience."""
+  title: String!
+}
+
 """Authentication token. Used for logging in."""
 type AuthenticationToken {
   """Unique ID of the token"""
@@ -673,6 +687,7 @@ type AuthenticationTokenAccountStatus {
   multiFactor: MultiFactor
 }
 
+"""Localization formatted in BCP47."""
 scalar BCP47
 
 """Become a club member."""
@@ -707,10 +722,13 @@ type Category implements Node {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
+  thumbnail: Resource
 
   """A title for this category."""
   title: String!
+
+  """All translations for this title."""
+  titleTranslations: [CategoryTitleTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -772,6 +790,14 @@ type CategoryEdge {
   node: Category!
 }
 
+type CategoryTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this category."""
+  title: String!
+}
+
 type Character implements Node {
   """An ID pointing to this character."""
   id: ID!
@@ -780,10 +806,13 @@ type Character implements Node {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
+  thumbnail: Resource
 
   """A name for this character."""
   name: String!
+
+  """All translations for this name."""
+  nameTranslations: [CharacterNameTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -832,6 +861,14 @@ type CharacterConnection {
 type CharacterEdge {
   cursor: String!
   node: Character!
+}
+
+type CharacterNameTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A name for this category."""
+  name: String!
 }
 
 """Properties by which character connections can be sorted."""
@@ -972,7 +1009,7 @@ type ClubMemberEdge {
 
 """Properties by which club member connections can be sorted."""
 enum ClubMembersSort {
-  """By newest members"""
+  """By oldest members"""
   NEWEST
 }
 
@@ -1040,6 +1077,81 @@ enum CreateAccountWithAuthenticationTokenValidation {
   TOKEN_INVALID
 }
 
+"""Create a new audience."""
+input CreateAudienceInput {
+  """The chosen slug for the audience."""
+  slug: String!
+
+  """The chosen title for the audience."""
+  title: String!
+
+  """If the audience is standard or not."""
+  standard: Boolean!
+}
+
+"""Payload for a new audience"""
+type CreateAudiencePayload {
+  """The audience after creation"""
+  audience: Audience
+
+  """Validation for creating a new audience"""
+  validation: CreateAudienceValidation
+}
+
+"""Validation for creating a new audience"""
+enum CreateAudienceValidation {
+  SLUG_TAKEN
+}
+
+"""Create a new category."""
+input CreateCategoryInput {
+  """The chosen slug for the category."""
+  slug: String!
+
+  """The chosen title for the category."""
+  title: String!
+}
+
+"""Payload for a new category"""
+type CreateCategoryPayload {
+  """The category after creation"""
+  category: Category
+
+  """Validation for creating a new category"""
+  validation: CreateCategoryValidation
+}
+
+"""Validation for creating a new category"""
+enum CreateCategoryValidation {
+  SLUG_TAKEN
+}
+
+"""Create a new character."""
+input CreateCharacterInput {
+  """The chosen series for the character."""
+  seriesId: ID!
+
+  """The chosen slug for the character."""
+  slug: String!
+
+  """The chosen name for the character."""
+  name: String!
+}
+
+"""Payload for a new character"""
+type CreateCharacterPayload {
+  """The character after creation"""
+  character: Character
+
+  """Validation for creating a new character"""
+  validation: CreateCharacterValidation
+}
+
+"""Validation for creating a new character"""
+enum CreateCharacterValidation {
+  SLUG_TAKEN
+}
+
 """Create club."""
 input CreateClubInput {
   """The chosen slug for the club."""
@@ -1073,6 +1185,29 @@ input CreatePostInput {
 type CreatePostPayload {
   """The pending post after the creation"""
   post: Post
+}
+
+"""Create a new series."""
+input CreateSeriesInput {
+  """The chosen slug for the series."""
+  slug: String!
+
+  """The chosen title for the series."""
+  title: String!
+}
+
+"""Payload for a new series"""
+type CreateSeriesPayload {
+  """The series after creation"""
+  series: Series
+
+  """Validation for creating a new series"""
+  validation: CreateSeriesValidation
+}
+
+"""Validation for creating a new series"""
+enum CreateSeriesValidation {
+  SLUG_TAKEN
 }
 
 type CurationProfile {
@@ -1470,6 +1605,36 @@ type Mutation {
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload
 
+  """Create a new audience"""
+  createAudience(input: CreateAudienceInput!): CreateAudiencePayload
+
+  """Update audience title"""
+  updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
+
+  """Update audience thumbnail"""
+  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """Update audience standard"""
+  updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
+
+  """Create a new category"""
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload
+
+  """Update category title"""
+  updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
+
+  """Update category thumbnail"""
+  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+
+  """Create a new character"""
+  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
+
+  """Update character title"""
+  updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
+
+  """Update character thumbnail"""
+  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
+
   """Update the audience for the curation profile"""
   updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
 
@@ -1512,6 +1677,15 @@ type Mutation {
   Submit a post. Will be either in review or instantly move to publishing if the account is verified
   """
   submitPost(input: SubmitPostInput!): SubmitPostPayload
+
+  """Create a new series"""
+  createSeries(input: CreateSeriesInput!): CreateSeriesPayload
+
+  """Update series title"""
+  updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
+
+  """Update series thumbnail"""
+  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 
   """Reject a specific post"""
   rejectPost(input: RejectPostInput!): RejectPostPayload
@@ -1988,38 +2162,6 @@ type Query {
     slug: String!
   ): Category
 
-  """Get or search all series"""
-  series(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by series slugs."""
-    slugs: [String!]
-
-    """Filter by the title of the series."""
-    title: String
-
-    """Sorting options for series."""
-    sortBy: SeriesSort! = POPULAR
-  ): SeriesConnection!
-
-  """Get a single serial."""
-  serial(
-    """Search by slug of the serial."""
-    slug: String!
-  ): Series
-
   """Get or search all characters"""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2119,6 +2261,38 @@ type Query {
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection!
+
+  """Get or search all series"""
+  series(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the series."""
+    title: String
+
+    """Sorting options for series."""
+    sortBy: SeriesSort! = POPULAR
+  ): SeriesConnection!
+
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
 
   """
   Get rejection reasons that can be used for pending posts
@@ -2390,10 +2564,13 @@ type Series implements Node {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
+  thumbnail: Resource
 
   """A title for this series."""
   title: String!
+
+  """All translations for this title."""
+  titleTranslations: [SeriesTitleTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -2454,6 +2631,14 @@ enum SeriesSort {
 
   """Series by most posts"""
   POPULAR
+}
+
+type SeriesTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this series."""
+  title: String!
 }
 
 """Publish post."""
@@ -2544,6 +2729,120 @@ type UpdateAccountUsernamePayload {
 """Validation message for updating account username"""
 enum UpdateAccountUsernameValidation {
   USERNAME_TAKEN
+}
+
+"""Update audience."""
+input UpdateAudienceIsStandardInput {
+  """The audience to update"""
+  id: ID!
+
+  """Standard"""
+  standard: Boolean!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceIsStandardPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Update audience."""
+input UpdateAudienceThumbnailInput {
+  """The audience to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Update audience."""
+input UpdateAudienceTitleInput {
+  """The audience to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceTitlePayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Update category."""
+input UpdateCategoryThumbnailInput {
+  """The category to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryThumbnailPayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Update category."""
+input UpdateCategoryTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Update character."""
+input UpdateCharacterNameInput {
+  """The character to update"""
+  id: ID!
+
+  """The name to update"""
+  name: String!
+
+  """The localization for this name"""
+  locale: BCP47!
+}
+
+"""Payload for updating character"""
+type UpdateCharacterNamePayload {
+  """The character after update"""
+  character: Character
+}
+
+"""Update character."""
+input UpdateCharacterThumbnailInput {
+  """The character to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating character"""
+type UpdateCharacterThumbnailPayload {
+  """The character after update"""
+  character: Character
 }
 
 """Update club name."""
@@ -2697,6 +2996,39 @@ input UpdatePostContentOrderInput {
 type UpdatePostContentOrderPayload {
   """The post after the update"""
   post: Post
+}
+
+"""Update series."""
+input UpdateSeriesThumbnailInput {
+  """The series to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating series"""
+type UpdateSeriesThumbnailPayload {
+  """The category after update"""
+  series: Series
+}
+
+"""Update series."""
+input UpdateSeriesTitleInput {
+  """The series to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Payload for updating series"""
+type UpdateSeriesTitlePayload {
+  """The series after update"""
+  series: Series
 }
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""

@@ -1,31 +1,9 @@
-type Series implements Node @key(fields: "id") {
-  """An ID pointing to this series."""
-  id: ID!
+type CharacterNameTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
 
-  """A url-friendly ID. Should be used when searching"""
-  slug: String!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
-
-  """A title for this series."""
-  title: String!
-
-  """Total amount of likes."""
-  totalLikes: Int!
-
-  """Total amount of posts."""
-  totalPosts: Int!
-}
-
-type SeriesEdge {
-  cursor: String!
-  node: Series!
-}
-
-type SeriesConnection {
-  edges: [SeriesEdge!]!
-  pageInfo: PageInfo!
+  """A name for this category."""
+  name: String!
 }
 
 type Character implements Node @key(fields: "id") {
@@ -36,10 +14,13 @@ type Character implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A name for this character."""
   name: String!
+
+  """All translations for this name."""
+  nameTranslations: [CharacterNameTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -73,49 +54,7 @@ enum CharactersSort {
   POPULAR
 }
 
-"""Properties by which series connections can be sorted."""
-enum SeriesSort {
-  """Series by newest first"""
-  NEW
-
-  """Series by top likes"""
-  TOP
-
-  """Series by most posts"""
-  POPULAR
-}
-
 extend type Query {
-  """Get or search all series"""
-  series(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by series slugs."""
-    slugs: [String!]
-
-    """Filter by the title of the series."""
-    title: String
-
-    """Sorting options for series."""
-    sortBy: SeriesSort! = POPULAR
-  ): SeriesConnection!
-
-  """Get a single serial."""
-  serial(
-    """Search by slug of the serial."""
-    slug: String!
-  ): Series
-
   """Get or search all characters"""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
@@ -159,5 +98,81 @@ extend type Query {
 
 extend type Post {
   """Characters that belong to this post"""
-  characters: [Character!]!
+  characters: [Character!]! @goField(forceResolver: true)
+}
+
+"""Create a new character."""
+input CreateCharacterInput {
+  """The chosen series for the character."""
+  seriesId: ID!
+
+  """The chosen slug for the character."""
+  slug: String!
+
+  """The chosen name for the character."""
+  name: String!
+}
+
+"""Payload for a new character"""
+type CreateCharacterPayload {
+  """The character after creation"""
+  character: Character
+
+  """Validation for creating a new character"""
+  validation: CreateCharacterValidation
+}
+
+"""Validation for creating a new character"""
+enum CreateCharacterValidation {
+  SLUG_TAKEN
+}
+
+"""Update character."""
+input UpdateCharacterNameInput {
+  """The character to update"""
+  id: ID!
+
+  """The name to update"""
+  name: String!
+
+  """The localization for this name"""
+  locale: BCP47!
+}
+
+"""Update character."""
+input UpdateCharacterThumbnailInput {
+  """The character to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating character"""
+type UpdateCharacterNamePayload {
+  """The character after update"""
+  character: Character
+}
+
+"""Payload for updating character"""
+type UpdateCharacterThumbnailPayload {
+  """The character after update"""
+  character: Character
+}
+
+extend type Mutation {
+  """
+  Create a new character
+  """
+  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
+
+  """
+  Update character title
+  """
+  updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
+
+  """
+  Update character thumbnail
+  """
+  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }

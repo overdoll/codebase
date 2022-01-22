@@ -3,7 +3,7 @@ module overdoll
 go 1.16
 
 require (
-	github.com/99designs/gqlgen v0.14.1-0.20220105021018-47015f12e3aa
+	github.com/99designs/gqlgen v0.15.1
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
@@ -25,7 +25,7 @@ require (
 	github.com/h2non/filetype v1.1.1
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
-	github.com/mitchellh/mapstructure v1.4.1 // indirect
+	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/olivere/elastic/v7 v7.0.26
 	github.com/oschwald/geoip2-golang v1.5.0
@@ -48,7 +48,9 @@ require (
 	go.uber.org/zap v1.18.1
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7
+	golang.org/x/tools v0.1.8 // indirect
 	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect

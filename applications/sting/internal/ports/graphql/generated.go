@@ -69,13 +69,15 @@ type ComplexityRoot struct {
 	}
 
 	Audience struct {
-		ID         func(childComplexity int) int
-		Posts      func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Slug       func(childComplexity int) int
-		Thumbnail  func(childComplexity int, size *int) int
-		Title      func(childComplexity int) int
-		TotalLikes func(childComplexity int) int
-		TotalPosts func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Slug              func(childComplexity int) int
+		Standard          func(childComplexity int) int
+		Thumbnail         func(childComplexity int) int
+		Title             func(childComplexity int) int
+		TitleTranslations func(childComplexity int) int
+		TotalLikes        func(childComplexity int) int
+		TotalPosts        func(childComplexity int) int
 	}
 
 	AudienceConnection struct {
@@ -94,14 +96,20 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	AudienceTitleTranslation struct {
+		Locale func(childComplexity int) int
+		Title  func(childComplexity int) int
+	}
+
 	Category struct {
-		ID         func(childComplexity int) int
-		Posts      func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Slug       func(childComplexity int) int
-		Thumbnail  func(childComplexity int, size *int) int
-		Title      func(childComplexity int) int
-		TotalLikes func(childComplexity int) int
-		TotalPosts func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Slug              func(childComplexity int) int
+		Thumbnail         func(childComplexity int) int
+		Title             func(childComplexity int) int
+		TitleTranslations func(childComplexity int) int
+		TotalLikes        func(childComplexity int) int
+		TotalPosts        func(childComplexity int) int
 	}
 
 	CategoryConnection struct {
@@ -120,15 +128,21 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	CategoryTitleTranslation struct {
+		Locale func(childComplexity int) int
+		Title  func(childComplexity int) int
+	}
+
 	Character struct {
-		ID         func(childComplexity int) int
-		Name       func(childComplexity int) int
-		Posts      func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Series     func(childComplexity int) int
-		Slug       func(childComplexity int) int
-		Thumbnail  func(childComplexity int, size *int) int
-		TotalLikes func(childComplexity int) int
-		TotalPosts func(childComplexity int) int
+		ID               func(childComplexity int) int
+		Name             func(childComplexity int) int
+		NameTranslations func(childComplexity int) int
+		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Series           func(childComplexity int) int
+		Slug             func(childComplexity int) int
+		Thumbnail        func(childComplexity int) int
+		TotalLikes       func(childComplexity int) int
+		TotalPosts       func(childComplexity int) int
 	}
 
 	CharacterConnection struct {
@@ -141,13 +155,38 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	CharacterNameTranslation struct {
+		Locale func(childComplexity int) int
+		Name   func(childComplexity int) int
+	}
+
 	Club struct {
 		ID    func(childComplexity int) int
 		Posts func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
 	}
 
+	CreateAudiencePayload struct {
+		Audience   func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
+	CreateCategoryPayload struct {
+		Category   func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
+	CreateCharacterPayload struct {
+		Character  func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
 	CreatePostPayload struct {
 		Post func(childComplexity int) int
+	}
+
+	CreateSeriesPayload struct {
+		Series     func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	CurationProfile struct {
@@ -181,11 +220,22 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddPostContent                   func(childComplexity int, input types.AddPostContentInput) int
+		CreateAudience                   func(childComplexity int, input types.CreateAudienceInput) int
+		CreateCategory                   func(childComplexity int, input types.CreateCategoryInput) int
+		CreateCharacter                  func(childComplexity int, input types.CreateCharacterInput) int
 		CreatePost                       func(childComplexity int, input types.CreatePostInput) int
+		CreateSeries                     func(childComplexity int, input types.CreateSeriesInput) int
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
 		RemovePostContent                func(childComplexity int, input types.RemovePostContentInput) int
 		SubmitPost                       func(childComplexity int, input types.SubmitPostInput) int
 		UndoLikePost                     func(childComplexity int, input types.UndoLikePostInput) int
+		UpdateAudienceIsStandard         func(childComplexity int, input types.UpdateAudienceIsStandardInput) int
+		UpdateAudienceThumbnail          func(childComplexity int, input types.UpdateAudienceThumbnailInput) int
+		UpdateAudienceTitle              func(childComplexity int, input types.UpdateAudienceTitleInput) int
+		UpdateCategoryThumbnail          func(childComplexity int, input types.UpdateCategoryThumbnailInput) int
+		UpdateCategoryTitle              func(childComplexity int, input types.UpdateCategoryTitleInput) int
+		UpdateCharacterName              func(childComplexity int, input types.UpdateCharacterNameInput) int
+		UpdateCharacterThumbnail         func(childComplexity int, input types.UpdateCharacterThumbnailInput) int
 		UpdateCurationProfileAudience    func(childComplexity int, input types.UpdateCurationProfileAudienceInput) int
 		UpdateCurationProfileCategory    func(childComplexity int, input types.UpdateCurationProfileCategoryInput) int
 		UpdateCurationProfileDateOfBirth func(childComplexity int, input types.UpdateCurationProfileDateOfBirthInput) int
@@ -193,6 +243,8 @@ type ComplexityRoot struct {
 		UpdatePostCategories             func(childComplexity int, input types.UpdatePostCategoriesInput) int
 		UpdatePostCharacters             func(childComplexity int, input types.UpdatePostCharactersInput) int
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
+		UpdateSeriesThumbnail            func(childComplexity int, input types.UpdateSeriesThumbnailInput) int
+		UpdateSeriesTitle                func(childComplexity int, input types.UpdateSeriesTitleInput) int
 	}
 
 	PageInfo struct {
@@ -263,13 +315,14 @@ type ComplexityRoot struct {
 	}
 
 	Series struct {
-		ID         func(childComplexity int) int
-		Posts      func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Slug       func(childComplexity int) int
-		Thumbnail  func(childComplexity int, size *int) int
-		Title      func(childComplexity int) int
-		TotalLikes func(childComplexity int) int
-		TotalPosts func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Slug              func(childComplexity int) int
+		Thumbnail         func(childComplexity int) int
+		Title             func(childComplexity int) int
+		TitleTranslations func(childComplexity int) int
+		TotalLikes        func(childComplexity int) int
+		TotalPosts        func(childComplexity int) int
 	}
 
 	SeriesConnection struct {
@@ -282,6 +335,11 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	SeriesTitleTranslation struct {
+		Locale func(childComplexity int) int
+		Title  func(childComplexity int) int
+	}
+
 	SubmitPostPayload struct {
 		InReview func(childComplexity int) int
 		Post     func(childComplexity int) int
@@ -289,6 +347,34 @@ type ComplexityRoot struct {
 
 	UndoLikePostPayload struct {
 		PostLikeID func(childComplexity int) int
+	}
+
+	UpdateAudienceIsStandardPayload struct {
+		Audience func(childComplexity int) int
+	}
+
+	UpdateAudienceThumbnailPayload struct {
+		Audience func(childComplexity int) int
+	}
+
+	UpdateAudienceTitlePayload struct {
+		Audience func(childComplexity int) int
+	}
+
+	UpdateCategoryThumbnailPayload struct {
+		Category func(childComplexity int) int
+	}
+
+	UpdateCategoryTitlePayload struct {
+		Category func(childComplexity int) int
+	}
+
+	UpdateCharacterNamePayload struct {
+		Character func(childComplexity int) int
+	}
+
+	UpdateCharacterThumbnailPayload struct {
+		Character func(childComplexity int) int
 	}
 
 	UpdateCurationProfileAudiencePayload struct {
@@ -323,6 +409,14 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	UpdateSeriesThumbnailPayload struct {
+		Series func(childComplexity int) int
+	}
+
+	UpdateSeriesTitlePayload struct {
+		Series func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -335,18 +429,12 @@ type AccountResolver interface {
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Audience, size *int) (*types.Resource, error)
-
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CategoryResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Category, size *int) (*types.Resource, error)
-
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CharacterResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Character, size *int) (*types.Resource, error)
-
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type ClubResolver interface {
@@ -363,6 +451,16 @@ type EntityResolver interface {
 	FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error)
 }
 type MutationResolver interface {
+	CreateAudience(ctx context.Context, input types.CreateAudienceInput) (*types.CreateAudiencePayload, error)
+	UpdateAudienceTitle(ctx context.Context, input types.UpdateAudienceTitleInput) (*types.UpdateAudienceTitlePayload, error)
+	UpdateAudienceThumbnail(ctx context.Context, input types.UpdateAudienceThumbnailInput) (*types.UpdateAudienceThumbnailPayload, error)
+	UpdateAudienceIsStandard(ctx context.Context, input types.UpdateAudienceIsStandardInput) (*types.UpdateAudienceIsStandardPayload, error)
+	CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error)
+	UpdateCategoryTitle(ctx context.Context, input types.UpdateCategoryTitleInput) (*types.UpdateCategoryTitlePayload, error)
+	UpdateCategoryThumbnail(ctx context.Context, input types.UpdateCategoryThumbnailInput) (*types.UpdateCategoryThumbnailPayload, error)
+	CreateCharacter(ctx context.Context, input types.CreateCharacterInput) (*types.CreateCharacterPayload, error)
+	UpdateCharacterName(ctx context.Context, input types.UpdateCharacterNameInput) (*types.UpdateCharacterNamePayload, error)
+	UpdateCharacterThumbnail(ctx context.Context, input types.UpdateCharacterThumbnailInput) (*types.UpdateCharacterThumbnailPayload, error)
 	UpdateCurationProfileAudience(ctx context.Context, input types.UpdateCurationProfileAudienceInput) (*types.UpdateCurationProfileAudiencePayload, error)
 	UpdateCurationProfileCategory(ctx context.Context, input types.UpdateCurationProfileCategoryInput) (*types.UpdateCurationProfileCategoryPayload, error)
 	UpdateCurationProfileDateOfBirth(ctx context.Context, input types.UpdateCurationProfileDateOfBirthInput) (*types.UpdateCurationProfileDateOfBirthPayload, error)
@@ -376,11 +474,15 @@ type MutationResolver interface {
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
+	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
+	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
+	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
 }
 type PostResolver interface {
-	Content(ctx context.Context, obj *types.Post) ([]*types.Resource, error)
-
 	SuggestedPosts(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Audience(ctx context.Context, obj *types.Post) (*types.Audience, error)
+	Categories(ctx context.Context, obj *types.Post) ([]*types.Category, error)
+	Characters(ctx context.Context, obj *types.Post) ([]*types.Character, error)
 
 	ViewerLiked(ctx context.Context, obj *types.Post) (*types.PostLike, error)
 }
@@ -389,17 +491,15 @@ type QueryResolver interface {
 	Audience(ctx context.Context, slug string) (*types.Audience, error)
 	Categories(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.CategoriesSort) (*types.CategoryConnection, error)
 	Category(ctx context.Context, slug string) (*types.Category, error)
-	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) (*types.SeriesConnection, error)
-	Serial(ctx context.Context, slug string) (*types.Series, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
 	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) (*types.SeriesConnection, error)
+	Serial(ctx context.Context, slug string) (*types.Series, error)
 }
 type SeriesResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Series, size *int) (*types.Resource, error)
-
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 
@@ -501,17 +601,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Audience.Slug(childComplexity), true
 
+	case "Audience.standard":
+		if e.complexity.Audience.Standard == nil {
+			break
+		}
+
+		return e.complexity.Audience.Standard(childComplexity), true
+
 	case "Audience.thumbnail":
 		if e.complexity.Audience.Thumbnail == nil {
 			break
 		}
 
-		args, err := ec.field_Audience_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Audience.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Audience.Thumbnail(childComplexity), true
 
 	case "Audience.title":
 		if e.complexity.Audience.Title == nil {
@@ -519,6 +621,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Audience.Title(childComplexity), true
+
+	case "Audience.titleTranslations":
+		if e.complexity.Audience.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.Audience.TitleTranslations(childComplexity), true
 
 	case "Audience.totalLikes":
 		if e.complexity.Audience.TotalLikes == nil {
@@ -583,6 +692,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AudienceEdge.Node(childComplexity), true
 
+	case "AudienceTitleTranslation.locale":
+		if e.complexity.AudienceTitleTranslation.Locale == nil {
+			break
+		}
+
+		return e.complexity.AudienceTitleTranslation.Locale(childComplexity), true
+
+	case "AudienceTitleTranslation.title":
+		if e.complexity.AudienceTitleTranslation.Title == nil {
+			break
+		}
+
+		return e.complexity.AudienceTitleTranslation.Title(childComplexity), true
+
 	case "Category.id":
 		if e.complexity.Category.ID == nil {
 			break
@@ -614,12 +737,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Category_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Category.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Category.Thumbnail(childComplexity), true
 
 	case "Category.title":
 		if e.complexity.Category.Title == nil {
@@ -627,6 +745,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Category.Title(childComplexity), true
+
+	case "Category.titleTranslations":
+		if e.complexity.Category.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.Category.TitleTranslations(childComplexity), true
 
 	case "Category.totalLikes":
 		if e.complexity.Category.TotalLikes == nil {
@@ -691,6 +816,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CategoryEdge.Node(childComplexity), true
 
+	case "CategoryTitleTranslation.locale":
+		if e.complexity.CategoryTitleTranslation.Locale == nil {
+			break
+		}
+
+		return e.complexity.CategoryTitleTranslation.Locale(childComplexity), true
+
+	case "CategoryTitleTranslation.title":
+		if e.complexity.CategoryTitleTranslation.Title == nil {
+			break
+		}
+
+		return e.complexity.CategoryTitleTranslation.Title(childComplexity), true
+
 	case "Character.id":
 		if e.complexity.Character.ID == nil {
 			break
@@ -704,6 +843,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Character.Name(childComplexity), true
+
+	case "Character.nameTranslations":
+		if e.complexity.Character.NameTranslations == nil {
+			break
+		}
+
+		return e.complexity.Character.NameTranslations(childComplexity), true
 
 	case "Character.posts":
 		if e.complexity.Character.Posts == nil {
@@ -736,12 +882,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Character_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Character.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Character.Thumbnail(childComplexity), true
 
 	case "Character.totalLikes":
 		if e.complexity.Character.TotalLikes == nil {
@@ -785,6 +926,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CharacterEdge.Node(childComplexity), true
 
+	case "CharacterNameTranslation.locale":
+		if e.complexity.CharacterNameTranslation.Locale == nil {
+			break
+		}
+
+		return e.complexity.CharacterNameTranslation.Locale(childComplexity), true
+
+	case "CharacterNameTranslation.name":
+		if e.complexity.CharacterNameTranslation.Name == nil {
+			break
+		}
+
+		return e.complexity.CharacterNameTranslation.Name(childComplexity), true
+
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
 			break
@@ -804,12 +959,68 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
 
+	case "CreateAudiencePayload.audience":
+		if e.complexity.CreateAudiencePayload.Audience == nil {
+			break
+		}
+
+		return e.complexity.CreateAudiencePayload.Audience(childComplexity), true
+
+	case "CreateAudiencePayload.validation":
+		if e.complexity.CreateAudiencePayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateAudiencePayload.Validation(childComplexity), true
+
+	case "CreateCategoryPayload.category":
+		if e.complexity.CreateCategoryPayload.Category == nil {
+			break
+		}
+
+		return e.complexity.CreateCategoryPayload.Category(childComplexity), true
+
+	case "CreateCategoryPayload.validation":
+		if e.complexity.CreateCategoryPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateCategoryPayload.Validation(childComplexity), true
+
+	case "CreateCharacterPayload.character":
+		if e.complexity.CreateCharacterPayload.Character == nil {
+			break
+		}
+
+		return e.complexity.CreateCharacterPayload.Character(childComplexity), true
+
+	case "CreateCharacterPayload.validation":
+		if e.complexity.CreateCharacterPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateCharacterPayload.Validation(childComplexity), true
+
 	case "CreatePostPayload.post":
 		if e.complexity.CreatePostPayload.Post == nil {
 			break
 		}
 
 		return e.complexity.CreatePostPayload.Post(childComplexity), true
+
+	case "CreateSeriesPayload.series":
+		if e.complexity.CreateSeriesPayload.Series == nil {
+			break
+		}
+
+		return e.complexity.CreateSeriesPayload.Series(childComplexity), true
+
+	case "CreateSeriesPayload.validation":
+		if e.complexity.CreateSeriesPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateSeriesPayload.Validation(childComplexity), true
 
 	case "CurationProfile.audience":
 		if e.complexity.CurationProfile.Audience == nil {
@@ -982,6 +1193,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddPostContent(childComplexity, args["input"].(types.AddPostContentInput)), true
 
+	case "Mutation.createAudience":
+		if e.complexity.Mutation.CreateAudience == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createAudience_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateAudience(childComplexity, args["input"].(types.CreateAudienceInput)), true
+
+	case "Mutation.createCategory":
+		if e.complexity.Mutation.CreateCategory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createCategory_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateCategory(childComplexity, args["input"].(types.CreateCategoryInput)), true
+
+	case "Mutation.createCharacter":
+		if e.complexity.Mutation.CreateCharacter == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createCharacter_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateCharacter(childComplexity, args["input"].(types.CreateCharacterInput)), true
+
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
 			break
@@ -993,6 +1240,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreatePost(childComplexity, args["input"].(types.CreatePostInput)), true
+
+	case "Mutation.createSeries":
+		if e.complexity.Mutation.CreateSeries == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSeries_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSeries(childComplexity, args["input"].(types.CreateSeriesInput)), true
 
 	case "Mutation.likePost":
 		if e.complexity.Mutation.LikePost == nil {
@@ -1041,6 +1300,90 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UndoLikePost(childComplexity, args["input"].(types.UndoLikePostInput)), true
+
+	case "Mutation.updateAudienceIsStandard":
+		if e.complexity.Mutation.UpdateAudienceIsStandard == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAudienceIsStandard_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAudienceIsStandard(childComplexity, args["input"].(types.UpdateAudienceIsStandardInput)), true
+
+	case "Mutation.updateAudienceThumbnail":
+		if e.complexity.Mutation.UpdateAudienceThumbnail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAudienceThumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAudienceThumbnail(childComplexity, args["input"].(types.UpdateAudienceThumbnailInput)), true
+
+	case "Mutation.updateAudienceTitle":
+		if e.complexity.Mutation.UpdateAudienceTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAudienceTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAudienceTitle(childComplexity, args["input"].(types.UpdateAudienceTitleInput)), true
+
+	case "Mutation.updateCategoryThumbnail":
+		if e.complexity.Mutation.UpdateCategoryThumbnail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCategoryThumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCategoryThumbnail(childComplexity, args["input"].(types.UpdateCategoryThumbnailInput)), true
+
+	case "Mutation.updateCategoryTitle":
+		if e.complexity.Mutation.UpdateCategoryTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCategoryTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCategoryTitle(childComplexity, args["input"].(types.UpdateCategoryTitleInput)), true
+
+	case "Mutation.updateCharacterName":
+		if e.complexity.Mutation.UpdateCharacterName == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCharacterName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCharacterName(childComplexity, args["input"].(types.UpdateCharacterNameInput)), true
+
+	case "Mutation.updateCharacterThumbnail":
+		if e.complexity.Mutation.UpdateCharacterThumbnail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCharacterThumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCharacterThumbnail(childComplexity, args["input"].(types.UpdateCharacterThumbnailInput)), true
 
 	case "Mutation.updateCurationProfileAudience":
 		if e.complexity.Mutation.UpdateCurationProfileAudience == nil {
@@ -1125,6 +1468,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePostContentOrder(childComplexity, args["input"].(types.UpdatePostContentOrderInput)), true
+
+	case "Mutation.updateSeriesThumbnail":
+		if e.complexity.Mutation.UpdateSeriesThumbnail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSeriesThumbnail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSeriesThumbnail(childComplexity, args["input"].(types.UpdateSeriesThumbnailInput)), true
+
+	case "Mutation.updateSeriesTitle":
+		if e.complexity.Mutation.UpdateSeriesTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSeriesTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSeriesTitle(childComplexity, args["input"].(types.UpdateSeriesTitleInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1523,12 +1890,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Series_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Series.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Series.Thumbnail(childComplexity), true
 
 	case "Series.title":
 		if e.complexity.Series.Title == nil {
@@ -1536,6 +1898,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Series.Title(childComplexity), true
+
+	case "Series.titleTranslations":
+		if e.complexity.Series.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.Series.TitleTranslations(childComplexity), true
 
 	case "Series.totalLikes":
 		if e.complexity.Series.TotalLikes == nil {
@@ -1579,6 +1948,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SeriesEdge.Node(childComplexity), true
 
+	case "SeriesTitleTranslation.locale":
+		if e.complexity.SeriesTitleTranslation.Locale == nil {
+			break
+		}
+
+		return e.complexity.SeriesTitleTranslation.Locale(childComplexity), true
+
+	case "SeriesTitleTranslation.title":
+		if e.complexity.SeriesTitleTranslation.Title == nil {
+			break
+		}
+
+		return e.complexity.SeriesTitleTranslation.Title(childComplexity), true
+
 	case "SubmitPostPayload.inReview":
 		if e.complexity.SubmitPostPayload.InReview == nil {
 			break
@@ -1599,6 +1982,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UndoLikePostPayload.PostLikeID(childComplexity), true
+
+	case "UpdateAudienceIsStandardPayload.audience":
+		if e.complexity.UpdateAudienceIsStandardPayload.Audience == nil {
+			break
+		}
+
+		return e.complexity.UpdateAudienceIsStandardPayload.Audience(childComplexity), true
+
+	case "UpdateAudienceThumbnailPayload.audience":
+		if e.complexity.UpdateAudienceThumbnailPayload.Audience == nil {
+			break
+		}
+
+		return e.complexity.UpdateAudienceThumbnailPayload.Audience(childComplexity), true
+
+	case "UpdateAudienceTitlePayload.audience":
+		if e.complexity.UpdateAudienceTitlePayload.Audience == nil {
+			break
+		}
+
+		return e.complexity.UpdateAudienceTitlePayload.Audience(childComplexity), true
+
+	case "UpdateCategoryThumbnailPayload.category":
+		if e.complexity.UpdateCategoryThumbnailPayload.Category == nil {
+			break
+		}
+
+		return e.complexity.UpdateCategoryThumbnailPayload.Category(childComplexity), true
+
+	case "UpdateCategoryTitlePayload.category":
+		if e.complexity.UpdateCategoryTitlePayload.Category == nil {
+			break
+		}
+
+		return e.complexity.UpdateCategoryTitlePayload.Category(childComplexity), true
+
+	case "UpdateCharacterNamePayload.character":
+		if e.complexity.UpdateCharacterNamePayload.Character == nil {
+			break
+		}
+
+		return e.complexity.UpdateCharacterNamePayload.Character(childComplexity), true
+
+	case "UpdateCharacterThumbnailPayload.character":
+		if e.complexity.UpdateCharacterThumbnailPayload.Character == nil {
+			break
+		}
+
+		return e.complexity.UpdateCharacterThumbnailPayload.Character(childComplexity), true
 
 	case "UpdateCurationProfileAudiencePayload.curationProfile":
 		if e.complexity.UpdateCurationProfileAudiencePayload.CurationProfile == nil {
@@ -1655,6 +2087,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostContentOrderPayload.Post(childComplexity), true
+
+	case "UpdateSeriesThumbnailPayload.series":
+		if e.complexity.UpdateSeriesThumbnailPayload.Series == nil {
+			break
+		}
+
+		return e.complexity.UpdateSeriesThumbnailPayload.Series(childComplexity), true
+
+	case "UpdateSeriesTitlePayload.series":
+		if e.complexity.UpdateSeriesTitlePayload.Series == nil {
+			break
+		}
+
+		return e.complexity.UpdateSeriesTitlePayload.Series(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -1727,7 +2173,15 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/audience/schema.graphql", Input: `type Audience implements Node @key(fields: "id") {
+	{Name: "schema/audience/schema.graphql", Input: `type AudienceTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this audience."""
+  title: String!
+}
+
+type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
 
@@ -1735,10 +2189,16 @@ var sources = []*ast.Source{
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A title for this audience."""
   title: String!
+
+  """If this audience is standard or not."""
+  standard: Boolean!
+
+  """All translations for this title."""
+  titleTranslations: [AudienceTitleTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -1803,10 +2263,114 @@ extend type Query {
 
 extend type Post {
   """Represents the audience that this post belongs to"""
+  audience: Audience @goField(forceResolver: true)
+}
+
+"""Create a new audience."""
+input CreateAudienceInput {
+  """The chosen slug for the audience."""
+  slug: String!
+
+  """The chosen title for the audience."""
+  title: String!
+
+  """If the audience is standard or not."""
+  standard: Boolean!
+}
+
+"""Payload for a new audience"""
+type CreateAudiencePayload {
+  """The audience after creation"""
+  audience: Audience
+
+  """Validation for creating a new audience"""
+  validation: CreateAudienceValidation
+}
+
+"""Validation for creating a new audience"""
+enum CreateAudienceValidation {
+  SLUG_TAKEN
+}
+
+"""Update audience."""
+input UpdateAudienceTitleInput {
+  """The audience to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update audience."""
+input UpdateAudienceThumbnailInput {
+  """The audience to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Update audience."""
+input UpdateAudienceIsStandardInput {
+  """The audience to update"""
+  id: ID!
+
+  """Standard"""
+  standard: Boolean!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceTitlePayload {
+  """The audience after update"""
   audience: Audience
 }
+
+"""Payload for updating audience"""
+type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceIsStandardPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+extend type Mutation {
+  """
+  Create a new audience
+  """
+  createAudience(input: CreateAudienceInput!): CreateAudiencePayload
+
+  """
+  Update audience title
+  """
+  updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
+
+  """
+  Update audience thumbnail
+  """
+  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """
+  Update audience standard
+  """
+  updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
+}
 `, BuiltIn: false},
-	{Name: "schema/category/schema.graphql", Input: `type Category implements Node @key(fields: "id") {
+	{Name: "schema/category/schema.graphql", Input: `type CategoryTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this category."""
+  title: String!
+}
+
+type Category implements Node @key(fields: "id") {
   """An ID pointing to this category."""
   id: ID!
 
@@ -1814,10 +2378,13 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A title for this category."""
   title: String!
+
+  """All translations for this title."""
+  titleTranslations: [CategoryTitleTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -1882,37 +2449,88 @@ extend type Query {
 
 extend type Post {
   """Categories that belong to this post"""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
 }
-`, BuiltIn: false},
-	{Name: "schema/character/schema.graphql", Input: `type Series implements Node @key(fields: "id") {
-  """An ID pointing to this series."""
-  id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
+"""Create a new category."""
+input CreateCategoryInput {
+  """The chosen slug for the category."""
   slug: String!
 
-  """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  """The chosen title for the category."""
+  title: String!
+}
 
-  """A title for this series."""
+"""Payload for a new category"""
+type CreateCategoryPayload {
+  """The category after creation"""
+  category: Category
+
+  """Validation for creating a new category"""
+  validation: CreateCategoryValidation
+}
+
+"""Validation for creating a new category"""
+enum CreateCategoryValidation {
+  SLUG_TAKEN
+}
+
+"""Update category."""
+input UpdateCategoryTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The title to update"""
   title: String!
 
-  """Total amount of likes."""
-  totalLikes: Int!
-
-  """Total amount of posts."""
-  totalPosts: Int!
+  """The localization for this title"""
+  locale: BCP47!
 }
 
-type SeriesEdge {
-  cursor: String!
-  node: Series!
+"""Update category."""
+input UpdateCategoryThumbnailInput {
+  """The category to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
 }
 
-type SeriesConnection {
-  edges: [SeriesEdge!]!
-  pageInfo: PageInfo!
+"""Payload for updating category"""
+type UpdateCategoryTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type UpdateCategoryThumbnailPayload {
+  """The category after update"""
+  category: Category
+}
+
+extend type Mutation {
+  """
+  Create a new category
+  """
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload
+
+  """
+  Update category title
+  """
+  updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
+
+  """
+  Update category thumbnail
+  """
+  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+}
+`, BuiltIn: false},
+	{Name: "schema/character/schema.graphql", Input: `type CharacterNameTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A name for this category."""
+  name: String!
 }
 
 type Character implements Node @key(fields: "id") {
@@ -1923,10 +2541,13 @@ type Character implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A name for this character."""
   name: String!
+
+  """All translations for this name."""
+  nameTranslations: [CharacterNameTranslation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -1960,49 +2581,7 @@ enum CharactersSort {
   POPULAR
 }
 
-"""Properties by which series connections can be sorted."""
-enum SeriesSort {
-  """Series by newest first"""
-  NEW
-
-  """Series by top likes"""
-  TOP
-
-  """Series by most posts"""
-  POPULAR
-}
-
 extend type Query {
-  """Get or search all series"""
-  series(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by series slugs."""
-    slugs: [String!]
-
-    """Filter by the title of the series."""
-    title: String
-
-    """Sorting options for series."""
-    sortBy: SeriesSort! = POPULAR
-  ): SeriesConnection!
-
-  """Get a single serial."""
-  serial(
-    """Search by slug of the serial."""
-    slug: String!
-  ): Series
-
   """Get or search all characters"""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2046,7 +2625,83 @@ extend type Query {
 
 extend type Post {
   """Characters that belong to this post"""
-  characters: [Character!]!
+  characters: [Character!]! @goField(forceResolver: true)
+}
+
+"""Create a new character."""
+input CreateCharacterInput {
+  """The chosen series for the character."""
+  seriesId: ID!
+
+  """The chosen slug for the character."""
+  slug: String!
+
+  """The chosen name for the character."""
+  name: String!
+}
+
+"""Payload for a new character"""
+type CreateCharacterPayload {
+  """The character after creation"""
+  character: Character
+
+  """Validation for creating a new character"""
+  validation: CreateCharacterValidation
+}
+
+"""Validation for creating a new character"""
+enum CreateCharacterValidation {
+  SLUG_TAKEN
+}
+
+"""Update character."""
+input UpdateCharacterNameInput {
+  """The character to update"""
+  id: ID!
+
+  """The name to update"""
+  name: String!
+
+  """The localization for this name"""
+  locale: BCP47!
+}
+
+"""Update character."""
+input UpdateCharacterThumbnailInput {
+  """The character to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating character"""
+type UpdateCharacterNamePayload {
+  """The character after update"""
+  character: Character
+}
+
+"""Payload for updating character"""
+type UpdateCharacterThumbnailPayload {
+  """The character after update"""
+  character: Character
+}
+
+extend type Mutation {
+  """
+  Create a new character
+  """
+  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
+
+  """
+  Update character title
+  """
+  updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
+
+  """
+  Update character thumbnail
+  """
+  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }
 `, BuiltIn: false},
 	{Name: "schema/curation/schema.graphql", Input: `type DateOfBirthCurationProfile {
@@ -2243,7 +2898,7 @@ extend type Mutation {
   club: Club!
 
   """Content belonging to this post"""
-  content: [Resource!]! @goField(forceResolver: true)
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!
@@ -2779,6 +3434,164 @@ extend type Club @key(fields: "id")  {
   id: ID! @external
 }
 `, BuiltIn: false},
+	{Name: "schema/series/schema.graphql", Input: `type SeriesTitleTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A title for this series."""
+  title: String!
+}
+
+type Series implements Node @key(fields: "id") {
+  """An ID pointing to this series."""
+  id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """A title for this series."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [SeriesTitleTranslation!]!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
+}
+
+type SeriesEdge {
+  cursor: String!
+  node: Series!
+}
+
+type SeriesConnection {
+  edges: [SeriesEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Properties by which series connections can be sorted."""
+enum SeriesSort {
+  """Series by newest first"""
+  NEW
+
+  """Series by top likes"""
+  TOP
+
+  """Series by most posts"""
+  POPULAR
+}
+
+extend type Query {
+  """Get or search all series"""
+  series(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the series."""
+    title: String
+
+    """Sorting options for series."""
+    sortBy: SeriesSort! = POPULAR
+  ): SeriesConnection!
+
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
+}
+
+"""Create a new series."""
+input CreateSeriesInput {
+  """The chosen slug for the series."""
+  slug: String!
+
+  """The chosen title for the series."""
+  title: String!
+}
+
+"""Payload for a new series"""
+type CreateSeriesPayload {
+  """The series after creation"""
+  series: Series
+
+  """Validation for creating a new series"""
+  validation: CreateSeriesValidation
+}
+
+"""Validation for creating a new series"""
+enum CreateSeriesValidation {
+  SLUG_TAKEN
+}
+
+"""Update series."""
+input UpdateSeriesTitleInput {
+  """The series to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update series."""
+input UpdateSeriesThumbnailInput {
+  """The series to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating series"""
+type UpdateSeriesTitlePayload {
+  """The series after update"""
+  series: Series
+}
+
+"""Payload for updating series"""
+type UpdateSeriesThumbnailPayload {
+  """The category after update"""
+  series: Series
+}
+
+extend type Mutation {
+  """
+  Create a new series
+  """
+  createSeries(input: CreateSeriesInput!): CreateSeriesPayload
+
+  """
+  Update series title
+  """
+  updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
+
+  """
+  Update series thumbnail
+  """
+  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
+}
+`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
@@ -2788,6 +3601,9 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -3178,21 +3994,6 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
-func (ec *executionContext) field_Audience_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3280,21 +4081,6 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
-func (ec *executionContext) field_Category_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3370,21 +4156,6 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 		}
 	}
 	args["sortBy"] = arg7
-	return args, nil
-}
-
-func (ec *executionContext) field_Character_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
 	return args, nil
 }
 
@@ -3619,6 +4390,51 @@ func (ec *executionContext) field_Mutation_addPostContent_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createAudience_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateAudienceInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudienceInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createCategory_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateCategoryInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateCategoryInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createCharacter_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateCharacterInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateCharacterInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3626,6 +4442,21 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSeries_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateSeriesInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateSeriesInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3686,6 +4517,111 @@ func (ec *executionContext) field_Mutation_undoLikePost_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUndoLikePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAudienceIsStandard_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAudienceIsStandardInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAudienceIsStandardInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAudienceThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAudienceThumbnailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAudienceThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAudienceTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAudienceTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAudienceTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCategoryThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCategoryThumbnailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCategoryThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCategoryTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCategoryTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCategoryTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCharacterName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCharacterNameInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCharacterNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNameInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCharacterThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCharacterThumbnailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCharacterThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3791,6 +4727,36 @@ func (ec *executionContext) field_Mutation_updatePostContentOrder_args(ctx conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostContentOrderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSeriesThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateSeriesThumbnailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSeriesThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSeriesTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateSeriesTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSeriesTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitleInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4465,21 +5431,6 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Series_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4827,21 +5778,14 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 		Object:     "Audience",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Audience_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4888,6 +5832,76 @@ func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Audience_standard(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Audience",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Standard, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Audience_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Audience",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.AudienceTitleTranslation)
+	fc.Result = res
+	return ec.marshalNAudienceTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceTitleTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -5247,6 +6261,76 @@ func (ec *executionContext) _AudienceEdge_node(ctx context.Context, field graphq
 	return ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AudienceTitleTranslation_locale(ctx context.Context, field graphql.CollectedField, obj *types.AudienceTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AudienceTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AudienceTitleTranslation_title(ctx context.Context, field graphql.CollectedField, obj *types.AudienceTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AudienceTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5328,21 +6412,14 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		Object:     "Category",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Category_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5389,6 +6466,41 @@ func (ec *executionContext) _Category_title(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Category_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.CategoryTitleTranslation)
+	fc.Result = res
+	return ec.marshalNCategoryTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryTitleTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -5748,6 +6860,76 @@ func (ec *executionContext) _CategoryEdge_node(ctx context.Context, field graphq
 	return ec.marshalNCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CategoryTitleTranslation_locale(ctx context.Context, field graphql.CollectedField, obj *types.CategoryTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CategoryTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CategoryTitleTranslation_title(ctx context.Context, field graphql.CollectedField, obj *types.CategoryTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CategoryTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Character_id(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5829,21 +7011,14 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		Object:     "Character",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Character_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5890,6 +7065,41 @@ func (ec *executionContext) _Character_name(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_nameTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NameTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.CharacterNameTranslation)
+	fc.Result = res
+	return ec.marshalNCharacterNameTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterNameTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -6179,6 +7389,76 @@ func (ec *executionContext) _CharacterEdge_node(ctx context.Context, field graph
 	return ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CharacterNameTranslation_locale(ctx context.Context, field graphql.CollectedField, obj *types.CharacterNameTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CharacterNameTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CharacterNameTranslation_name(ctx context.Context, field graphql.CollectedField, obj *types.CharacterNameTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CharacterNameTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Club_posts(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6256,6 +7536,198 @@ func (ec *executionContext) _Club_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateAudiencePayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.CreateAudiencePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateAudiencePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateAudiencePayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateAudiencePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateAudiencePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateAudienceValidation)
+	fc.Result = res
+	return ec.marshalOCreateAudienceValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudienceValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateCategoryPayload_category(ctx context.Context, field graphql.CollectedField, obj *types.CreateCategoryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCategoryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateCategoryPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateCategoryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCategoryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateCategoryValidation)
+	fc.Result = res
+	return ec.marshalOCreateCategoryValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateCharacterPayload_character(ctx context.Context, field graphql.CollectedField, obj *types.CreateCharacterPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCharacterPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Character, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Character)
+	fc.Result = res
+	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateCharacterPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateCharacterPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCharacterPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateCharacterValidation)
+	fc.Result = res
+	return ec.marshalOCreateCharacterValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreatePostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.CreatePostPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6286,6 +7758,70 @@ func (ec *executionContext) _CreatePostPayload_post(ctx context.Context, field g
 	res := resTmp.(*types.Post)
 	fc.Result = res
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateSeriesPayload_series(ctx context.Context, field graphql.CollectedField, obj *types.CreateSeriesPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateSeriesPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Series, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateSeriesPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateSeriesPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateSeriesPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateSeriesValidation)
+	fc.Result = res
+	return ec.marshalOCreateSeriesValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CurationProfile_id(ctx context.Context, field graphql.CollectedField, obj *types.CurationProfile) (ret graphql.Marshaler) {
@@ -6933,6 +8469,396 @@ func (ec *executionContext) _LikePostPayload_postLike(ctx context.Context, field
 	return ec.marshalOPostLike2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostLike(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createAudience_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAudience(rctx, args["input"].(types.CreateAudienceInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateAudiencePayload)
+	fc.Result = res
+	return ec.marshalOCreateAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudiencePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateAudienceTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAudienceTitle_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAudienceTitle(rctx, args["input"].(types.UpdateAudienceTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAudienceTitlePayload)
+	fc.Result = res
+	return ec.marshalOUpdateAudienceTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateAudienceThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAudienceThumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAudienceThumbnail(rctx, args["input"].(types.UpdateAudienceThumbnailInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAudienceThumbnailPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAudienceThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateAudienceIsStandard(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAudienceIsStandard_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAudienceIsStandard(rctx, args["input"].(types.UpdateAudienceIsStandardInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAudienceIsStandardPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAudienceIsStandardPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createCategory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createCategory_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateCategory(rctx, args["input"].(types.CreateCategoryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateCategoryPayload)
+	fc.Result = res
+	return ec.marshalOCreateCategoryPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateCategoryTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCategoryTitle_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCategoryTitle(rctx, args["input"].(types.UpdateCategoryTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCategoryTitlePayload)
+	fc.Result = res
+	return ec.marshalOUpdateCategoryTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateCategoryThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCategoryThumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCategoryThumbnail(rctx, args["input"].(types.UpdateCategoryThumbnailInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCategoryThumbnailPayload)
+	fc.Result = res
+	return ec.marshalOUpdateCategoryThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createCharacter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createCharacter_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateCharacter(rctx, args["input"].(types.CreateCharacterInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateCharacterPayload)
+	fc.Result = res
+	return ec.marshalOCreateCharacterPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateCharacterName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCharacterName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCharacterName(rctx, args["input"].(types.UpdateCharacterNameInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCharacterNamePayload)
+	fc.Result = res
+	return ec.marshalOUpdateCharacterNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNamePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateCharacterThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCharacterThumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCharacterThumbnail(rctx, args["input"].(types.UpdateCharacterThumbnailInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCharacterThumbnailPayload)
+	fc.Result = res
+	return ec.marshalOUpdateCharacterThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateCurationProfileAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7440,6 +9366,123 @@ func (ec *executionContext) _Mutation_submitPost(ctx context.Context, field grap
 	return ec.marshalOSubmitPostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSubmitPostPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createSeries(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createSeries_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSeries(rctx, args["input"].(types.CreateSeriesInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateSeriesPayload)
+	fc.Result = res
+	return ec.marshalOCreateSeriesPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSeriesTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSeriesTitle_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSeriesTitle(rctx, args["input"].(types.UpdateSeriesTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateSeriesTitlePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSeriesTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSeriesThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSeriesThumbnail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSeriesThumbnail(rctx, args["input"].(types.UpdateSeriesThumbnailInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateSeriesThumbnailPayload)
+	fc.Result = res
+	return ec.marshalOUpdateSeriesThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7792,14 +9835,14 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Post().Content(rctx, obj)
+		return obj.Content, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7968,14 +10011,14 @@ func (ec *executionContext) _Post_audience(ctx context.Context, field graphql.Co
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Audience, nil
+		return ec.resolvers.Post().Audience(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8000,14 +10043,14 @@ func (ec *executionContext) _Post_categories(ctx context.Context, field graphql.
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Categories, nil
+		return ec.resolvers.Post().Categories(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8035,14 +10078,14 @@ func (ec *executionContext) _Post_characters(ctx context.Context, field graphql.
 		Object:     "Post",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Characters, nil
+		return ec.resolvers.Post().Characters(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8568,87 +10611,6 @@ func (ec *executionContext) _Query_category(ctx context.Context, field graphql.C
 	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_series(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_series_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Series(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["sortBy"].(types.SeriesSort))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.SeriesConnection)
-	fc.Result = res
-	return ec.marshalNSeriesConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_serial(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_serial_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Serial(rctx, args["slug"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Series)
-	fc.Result = res
-	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Query_characters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8851,6 +10813,87 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	res := resTmp.(*types.PostConnection)
 	fc.Result = res
 	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_series(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_series_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Series(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["sortBy"].(types.SeriesSort))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.SeriesConnection)
+	fc.Result = res
+	return ec.marshalNSeriesConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_serial(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_serial_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Serial(rctx, args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -9149,21 +11192,14 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 		Object:     "Series",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Series_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Series().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9210,6 +11246,41 @@ func (ec *executionContext) _Series_title(ctx context.Context, field graphql.Col
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Series_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Series",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.SeriesTitleTranslation)
+	fc.Result = res
+	return ec.marshalNSeriesTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesTitleTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -9464,6 +11535,76 @@ func (ec *executionContext) _SeriesEdge_node(ctx context.Context, field graphql.
 	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SeriesTitleTranslation_locale(ctx context.Context, field graphql.CollectedField, obj *types.SeriesTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SeriesTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SeriesTitleTranslation_title(ctx context.Context, field graphql.CollectedField, obj *types.SeriesTitleTranslation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SeriesTitleTranslation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SubmitPostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.SubmitPostPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9558,6 +11699,230 @@ func (ec *executionContext) _UndoLikePostPayload_postLikeId(ctx context.Context,
 	res := resTmp.(*relay.ID)
 	fc.Result = res
 	return ec.marshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAudienceIsStandardPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceIsStandardPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAudienceIsStandardPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAudienceThumbnailPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceThumbnailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAudienceThumbnailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAudienceTitlePayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceTitlePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAudienceTitlePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCategoryThumbnailPayload_category(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCategoryThumbnailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCategoryThumbnailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCategoryTitlePayload_category(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCategoryTitlePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCategoryTitlePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCharacterNamePayload_character(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCharacterNamePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCharacterNamePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Character, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Character)
+	fc.Result = res
+	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCharacterThumbnailPayload_character(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCharacterThumbnailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCharacterThumbnailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Character, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Character)
+	fc.Result = res
+	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateCurationProfileAudiencePayload_curationProfile(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCurationProfileAudiencePayload) (ret graphql.Marshaler) {
@@ -9814,6 +12179,70 @@ func (ec *executionContext) _UpdatePostContentOrderPayload_post(ctx context.Cont
 	res := resTmp.(*types.Post)
 	fc.Result = res
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateSeriesThumbnailPayload_series(ctx context.Context, field graphql.CollectedField, obj *types.UpdateSeriesThumbnailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSeriesThumbnailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Series, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateSeriesTitlePayload_series(ctx context.Context, field graphql.CollectedField, obj *types.UpdateSeriesTitlePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSeriesTitlePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Series, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -11001,6 +13430,115 @@ func (ec *executionContext) unmarshalInputAddPostContentInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateAudienceInput(ctx context.Context, obj interface{}) (types.CreateAudienceInput, error) {
+	var it types.CreateAudienceInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "standard":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("standard"))
+			it.Standard, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateCategoryInput(ctx context.Context, obj interface{}) (types.CreateCategoryInput, error) {
+	var it types.CreateCategoryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateCharacterInput(ctx context.Context, obj interface{}) (types.CreateCharacterInput, error) {
+	var it types.CreateCharacterInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "seriesId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesId"))
+			it.SeriesID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, obj interface{}) (types.CreatePostInput, error) {
 	var it types.CreatePostInput
 	asMap := map[string]interface{}{}
@@ -11015,6 +13553,37 @@ func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
 			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateSeriesInput(ctx context.Context, obj interface{}) (types.CreateSeriesInput, error) {
+	var it types.CreateSeriesInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11115,6 +13684,247 @@ func (ec *executionContext) unmarshalInputUndoLikePostInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postId"))
 			it.PostID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateAudienceIsStandardInput(ctx context.Context, obj interface{}) (types.UpdateAudienceIsStandardInput, error) {
+	var it types.UpdateAudienceIsStandardInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "standard":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("standard"))
+			it.Standard, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateAudienceThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateAudienceThumbnailInput, error) {
+	var it types.UpdateAudienceThumbnailInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateAudienceTitleInput(ctx context.Context, obj interface{}) (types.UpdateAudienceTitleInput, error) {
+	var it types.UpdateAudienceTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCategoryThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateCategoryThumbnailInput, error) {
+	var it types.UpdateCategoryThumbnailInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCategoryTitleInput(ctx context.Context, obj interface{}) (types.UpdateCategoryTitleInput, error) {
+	var it types.UpdateCategoryTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCharacterNameInput(ctx context.Context, obj interface{}) (types.UpdateCharacterNameInput, error) {
+	var it types.UpdateCharacterNameInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCharacterThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateCharacterThumbnailInput, error) {
+	var it types.UpdateCharacterThumbnailInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11341,6 +14151,76 @@ func (ec *executionContext) unmarshalInputUpdatePostContentOrderInput(ctx contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateSeriesThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateSeriesThumbnailInput, error) {
+	var it types.UpdateSeriesThumbnailInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSeriesTitleInput(ctx context.Context, obj interface{}) (types.UpdateSeriesTitleInput, error) {
+	var it types.UpdateSeriesTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -11363,13 +14243,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Category(ctx, sel, obj)
-	case types.Series:
-		return ec._Series(ctx, sel, &obj)
-	case *types.Series:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Series(ctx, sel, obj)
 	case types.Character:
 		return ec._Character(ctx, sel, &obj)
 	case *types.Character:
@@ -11391,6 +14264,13 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Post(ctx, sel, obj)
+	case types.Series:
+		return ec._Series(ctx, sel, &obj)
+	case *types.Series:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Series(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -11642,25 +14522,35 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Audience_thumbnail(ctx, field, obj)
-				return res
+				return ec._Audience_thumbnail(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Audience_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "standard":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Audience_standard(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "titleTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Audience_titleTranslations(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11852,6 +14742,47 @@ func (ec *executionContext) _AudienceEdge(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var audienceTitleTranslationImplementors = []string{"AudienceTitleTranslation"}
+
+func (ec *executionContext) _AudienceTitleTranslation(ctx context.Context, sel ast.SelectionSet, obj *types.AudienceTitleTranslation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, audienceTitleTranslationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AudienceTitleTranslation")
+		case "locale":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AudienceTitleTranslation_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AudienceTitleTranslation_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var categoryImplementors = []string{"Category", "Node", "_Entity"}
 
 func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *types.Category) graphql.Marshaler {
@@ -11883,25 +14814,25 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Category_thumbnail(ctx, field, obj)
-				return res
+				return ec._Category_thumbnail(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Category_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "titleTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Category_titleTranslations(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -12093,6 +15024,47 @@ func (ec *executionContext) _CategoryEdge(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var categoryTitleTranslationImplementors = []string{"CategoryTitleTranslation"}
+
+func (ec *executionContext) _CategoryTitleTranslation(ctx context.Context, sel ast.SelectionSet, obj *types.CategoryTitleTranslation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, categoryTitleTranslationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CategoryTitleTranslation")
+		case "locale":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CategoryTitleTranslation_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CategoryTitleTranslation_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var characterImplementors = []string{"Character", "Node", "_Entity"}
 
 func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet, obj *types.Character) graphql.Marshaler {
@@ -12124,25 +15096,25 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Character_thumbnail(ctx, field, obj)
-				return res
+				return ec._Character_thumbnail(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "name":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Character_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "nameTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Character_nameTranslations(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -12293,6 +15265,47 @@ func (ec *executionContext) _CharacterEdge(ctx context.Context, sel ast.Selectio
 	return out
 }
 
+var characterNameTranslationImplementors = []string{"CharacterNameTranslation"}
+
+func (ec *executionContext) _CharacterNameTranslation(ctx context.Context, sel ast.SelectionSet, obj *types.CharacterNameTranslation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, characterNameTranslationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CharacterNameTranslation")
+		case "locale":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CharacterNameTranslation_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CharacterNameTranslation_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var clubImplementors = []string{"Club", "_Entity"}
 
 func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
@@ -12344,6 +15357,111 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
+var createAudiencePayloadImplementors = []string{"CreateAudiencePayload"}
+
+func (ec *executionContext) _CreateAudiencePayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateAudiencePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createAudiencePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateAudiencePayload")
+		case "audience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateAudiencePayload_audience(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "validation":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateAudiencePayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createCategoryPayloadImplementors = []string{"CreateCategoryPayload"}
+
+func (ec *executionContext) _CreateCategoryPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateCategoryPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createCategoryPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateCategoryPayload")
+		case "category":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateCategoryPayload_category(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "validation":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateCategoryPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createCharacterPayloadImplementors = []string{"CreateCharacterPayload"}
+
+func (ec *executionContext) _CreateCharacterPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateCharacterPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createCharacterPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateCharacterPayload")
+		case "character":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateCharacterPayload_character(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "validation":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateCharacterPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createPostPayloadImplementors = []string{"CreatePostPayload"}
 
 func (ec *executionContext) _CreatePostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreatePostPayload) graphql.Marshaler {
@@ -12357,6 +15475,41 @@ func (ec *executionContext) _CreatePostPayload(ctx context.Context, sel ast.Sele
 		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CreatePostPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createSeriesPayloadImplementors = []string{"CreateSeriesPayload"}
+
+func (ec *executionContext) _CreateSeriesPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateSeriesPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createSeriesPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateSeriesPayload")
+		case "series":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateSeriesPayload_series(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "validation":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateSeriesPayload_validation(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -12752,6 +15905,76 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
+		case "createAudience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createAudience(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateAudienceTitle":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAudienceTitle(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateAudienceThumbnail":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAudienceThumbnail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateAudienceIsStandard":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAudienceIsStandard(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createCategory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createCategory(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCategoryTitle":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCategoryTitle(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCategoryThumbnail":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCategoryThumbnail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createCharacter":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createCharacter(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCharacterName":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCharacterName(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCharacterThumbnail":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCharacterThumbnail(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updateCurationProfileAudience":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateCurationProfileAudience(ctx, field)
@@ -12839,6 +16062,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "submitPost":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_submitPost(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createSeries":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSeries(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateSeriesTitle":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSeriesTitle(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateSeriesThumbnail":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSeriesThumbnail(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -12977,25 +16221,15 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "content":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Post_content(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+				return ec._Post_content(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "createdAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_createdAt(ctx, field, obj)
@@ -13041,32 +16275,62 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 
 			})
 		case "audience":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_audience(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_audience(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "categories":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_categories(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_categories(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "characters":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_characters(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_characters(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "likes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_likes(ctx, field, obj)
@@ -13353,49 +16617,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "series":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_series(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "serial":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_serial(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
 		case "characters":
 			field := field
 
@@ -13495,6 +16716,49 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "series":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_series(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "serial":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_serial(ctx, field)
 				return res
 			}
 
@@ -13666,25 +16930,25 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			field := field
-
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Series_thumbnail(ctx, field, obj)
-				return res
+				return ec._Series_thumbnail(ctx, field, obj)
 			}
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+			out.Values[i] = innerFunc(ctx)
 
-			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Series_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "titleTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Series_titleTranslations(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13825,6 +17089,47 @@ func (ec *executionContext) _SeriesEdge(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
+var seriesTitleTranslationImplementors = []string{"SeriesTitleTranslation"}
+
+func (ec *executionContext) _SeriesTitleTranslation(ctx context.Context, sel ast.SelectionSet, obj *types.SeriesTitleTranslation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, seriesTitleTranslationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SeriesTitleTranslation")
+		case "locale":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SeriesTitleTranslation_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SeriesTitleTranslation_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var submitPostPayloadImplementors = []string{"SubmitPostPayload"}
 
 func (ec *executionContext) _SubmitPostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.SubmitPostPayload) graphql.Marshaler {
@@ -13873,6 +17178,202 @@ func (ec *executionContext) _UndoLikePostPayload(ctx context.Context, sel ast.Se
 		case "postLikeId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._UndoLikePostPayload_postLikeId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAudienceIsStandardPayloadImplementors = []string{"UpdateAudienceIsStandardPayload"}
+
+func (ec *executionContext) _UpdateAudienceIsStandardPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceIsStandardPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAudienceIsStandardPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAudienceIsStandardPayload")
+		case "audience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAudienceIsStandardPayload_audience(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAudienceThumbnailPayloadImplementors = []string{"UpdateAudienceThumbnailPayload"}
+
+func (ec *executionContext) _UpdateAudienceThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceThumbnailPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAudienceThumbnailPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAudienceThumbnailPayload")
+		case "audience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAudienceThumbnailPayload_audience(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAudienceTitlePayloadImplementors = []string{"UpdateAudienceTitlePayload"}
+
+func (ec *executionContext) _UpdateAudienceTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAudienceTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAudienceTitlePayload")
+		case "audience":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAudienceTitlePayload_audience(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCategoryThumbnailPayloadImplementors = []string{"UpdateCategoryThumbnailPayload"}
+
+func (ec *executionContext) _UpdateCategoryThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCategoryThumbnailPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCategoryThumbnailPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCategoryThumbnailPayload")
+		case "category":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCategoryThumbnailPayload_category(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCategoryTitlePayloadImplementors = []string{"UpdateCategoryTitlePayload"}
+
+func (ec *executionContext) _UpdateCategoryTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCategoryTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCategoryTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCategoryTitlePayload")
+		case "category":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCategoryTitlePayload_category(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCharacterNamePayloadImplementors = []string{"UpdateCharacterNamePayload"}
+
+func (ec *executionContext) _UpdateCharacterNamePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCharacterNamePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCharacterNamePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCharacterNamePayload")
+		case "character":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCharacterNamePayload_character(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCharacterThumbnailPayloadImplementors = []string{"UpdateCharacterThumbnailPayload"}
+
+func (ec *executionContext) _UpdateCharacterThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCharacterThumbnailPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCharacterThumbnailPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCharacterThumbnailPayload")
+		case "character":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCharacterThumbnailPayload_character(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14097,6 +17598,62 @@ func (ec *executionContext) _UpdatePostContentOrderPayload(ctx context.Context, 
 		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._UpdatePostContentOrderPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateSeriesThumbnailPayloadImplementors = []string{"UpdateSeriesThumbnailPayload"}
+
+func (ec *executionContext) _UpdateSeriesThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateSeriesThumbnailPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateSeriesThumbnailPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateSeriesThumbnailPayload")
+		case "series":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateSeriesThumbnailPayload_series(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateSeriesTitlePayloadImplementors = []string{"UpdateSeriesTitlePayload"}
+
+func (ec *executionContext) _UpdateSeriesTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateSeriesTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateSeriesTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateSeriesTitlePayload")
+		case "series":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateSeriesTitlePayload_series(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14704,6 +18261,60 @@ func (ec *executionContext) marshalNAudienceEdge2ᚖoverdollᚋapplicationsᚋst
 	return ec._AudienceEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNAudienceTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceTitleTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AudienceTitleTranslation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAudienceTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceTitleTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNAudienceTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceTitleTranslation(ctx context.Context, sel ast.SelectionSet, v *types.AudienceTitleTranslation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AudienceTitleTranslation(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNAudiencesSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesSort(ctx context.Context, v interface{}) (types.AudiencesSort, error) {
 	var res types.AudiencesSort
 	err := res.UnmarshalGQL(v)
@@ -14712,6 +18323,21 @@ func (ec *executionContext) unmarshalNAudiencesSort2overdollᚋapplicationsᚋst
 
 func (ec *executionContext) marshalNAudiencesSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesSort(ctx context.Context, sel ast.SelectionSet, v types.AudiencesSort) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBCP472string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -14875,6 +18501,60 @@ func (ec *executionContext) marshalNCategoryEdge2ᚖoverdollᚋapplicationsᚋst
 	return ec._CategoryEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCategoryTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryTitleTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.CategoryTitleTranslation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCategoryTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryTitleTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCategoryTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryTitleTranslation(ctx context.Context, sel ast.SelectionSet, v *types.CategoryTitleTranslation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CategoryTitleTranslation(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCharacter2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx context.Context, sel ast.SelectionSet, v types.Character) graphql.Marshaler {
 	return ec._Character(ctx, sel, &v)
 }
@@ -15001,6 +18681,60 @@ func (ec *executionContext) marshalNCharacterEdge2ᚖoverdollᚋapplicationsᚋs
 	return ec._CharacterEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCharacterNameTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterNameTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.CharacterNameTranslation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCharacterNameTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterNameTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCharacterNameTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterNameTranslation(ctx context.Context, sel ast.SelectionSet, v *types.CharacterNameTranslation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CharacterNameTranslation(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNCharactersSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersSort(ctx context.Context, v interface{}) (types.CharactersSort, error) {
 	var res types.CharactersSort
 	err := res.UnmarshalGQL(v)
@@ -15025,8 +18759,28 @@ func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋstingᚋin
 	return ec._Club(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCreateAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudienceInput(ctx context.Context, v interface{}) (types.CreateAudienceInput, error) {
+	res, err := ec.unmarshalInputCreateAudienceInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateCategoryInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryInput(ctx context.Context, v interface{}) (types.CreateCategoryInput, error) {
+	res, err := ec.unmarshalInputCreateCategoryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateCharacterInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterInput(ctx context.Context, v interface{}) (types.CreateCharacterInput, error) {
+	res, err := ec.unmarshalInputCreateCharacterInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx context.Context, v interface{}) (types.CreatePostInput, error) {
 	res, err := ec.unmarshalInputCreatePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateSeriesInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesInput(ctx context.Context, v interface{}) (types.CreateSeriesInput, error) {
+	res, err := ec.unmarshalInputCreateSeriesInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -15393,6 +19147,60 @@ func (ec *executionContext) marshalNSeriesSort2overdollᚋapplicationsᚋsting�
 	return v
 }
 
+func (ec *executionContext) marshalNSeriesTitleTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesTitleTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.SeriesTitleTranslation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSeriesTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesTitleTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSeriesTitleTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesTitleTranslation(ctx context.Context, sel ast.SelectionSet, v *types.SeriesTitleTranslation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SeriesTitleTranslation(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -15465,6 +19273,41 @@ func (ec *executionContext) unmarshalNUndoLikePostInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdateAudienceIsStandardInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardInput(ctx context.Context, v interface{}) (types.UpdateAudienceIsStandardInput, error) {
+	res, err := ec.unmarshalInputUpdateAudienceIsStandardInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateAudienceThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailInput(ctx context.Context, v interface{}) (types.UpdateAudienceThumbnailInput, error) {
+	res, err := ec.unmarshalInputUpdateAudienceThumbnailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateAudienceTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitleInput(ctx context.Context, v interface{}) (types.UpdateAudienceTitleInput, error) {
+	res, err := ec.unmarshalInputUpdateAudienceTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCategoryThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailInput(ctx context.Context, v interface{}) (types.UpdateCategoryThumbnailInput, error) {
+	res, err := ec.unmarshalInputUpdateCategoryThumbnailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCategoryTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitleInput(ctx context.Context, v interface{}) (types.UpdateCategoryTitleInput, error) {
+	res, err := ec.unmarshalInputUpdateCategoryTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCharacterNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNameInput(ctx context.Context, v interface{}) (types.UpdateCharacterNameInput, error) {
+	res, err := ec.unmarshalInputUpdateCharacterNameInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCharacterThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailInput(ctx context.Context, v interface{}) (types.UpdateCharacterThumbnailInput, error) {
+	res, err := ec.unmarshalInputUpdateCharacterThumbnailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateCurationProfileAudienceInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCurationProfileAudienceInput(ctx context.Context, v interface{}) (types.UpdateCurationProfileAudienceInput, error) {
 	res, err := ec.unmarshalInputUpdateCurationProfileAudienceInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -15497,6 +19340,16 @@ func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋappli
 
 func (ec *executionContext) unmarshalNUpdatePostContentOrderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderInput(ctx context.Context, v interface{}) (types.UpdatePostContentOrderInput, error) {
 	res, err := ec.unmarshalInputUpdatePostContentOrderInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSeriesThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailInput(ctx context.Context, v interface{}) (types.UpdateSeriesThumbnailInput, error) {
+	res, err := ec.unmarshalInputUpdateSeriesThumbnailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSeriesTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitleInput(ctx context.Context, v interface{}) (types.UpdateSeriesTitleInput, error) {
+	res, err := ec.unmarshalInputUpdateSeriesTitleInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -15924,11 +19777,103 @@ func (ec *executionContext) marshalOCharacter2ᚖoverdollᚋapplicationsᚋsting
 	return ec._Character(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCreateAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateAudiencePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateAudiencePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateAudienceValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudienceValidation(ctx context.Context, v interface{}) (*types.CreateAudienceValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateAudienceValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateAudienceValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAudienceValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateAudienceValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) marshalOCreateCategoryPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateCategoryPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateCategoryPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateCategoryValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryValidation(ctx context.Context, v interface{}) (*types.CreateCategoryValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateCategoryValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateCategoryValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCategoryValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateCategoryValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) marshalOCreateCharacterPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateCharacterPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateCharacterPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateCharacterValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterValidation(ctx context.Context, v interface{}) (*types.CreateCharacterValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateCharacterValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateCharacterValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCharacterValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateCharacterValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CreatePostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreateSeriesPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateSeriesPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateSeriesPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateSeriesValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesValidation(ctx context.Context, v interface{}) (*types.CreateSeriesValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateSeriesValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateSeriesValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateSeriesValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateSeriesValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOCurationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurationProfile(ctx context.Context, sel ast.SelectionSet, v *types.CurationProfile) graphql.Marshaler {
@@ -16122,6 +20067,55 @@ func (ec *executionContext) marshalOUndoLikePostPayload2ᚖoverdollᚋapplicatio
 	return ec._UndoLikePostPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOUpdateAudienceIsStandardPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceIsStandardPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAudienceIsStandardPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateAudienceThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceThumbnailPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAudienceThumbnailPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateAudienceTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAudienceTitlePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCategoryThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCategoryThumbnailPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCategoryThumbnailPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCategoryTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCategoryTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCategoryTitlePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCharacterNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNamePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCharacterNamePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCharacterNamePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCharacterThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCharacterThumbnailPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCharacterThumbnailPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOUpdateCurationProfileAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCurationProfileAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCurationProfileAudiencePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -16169,6 +20163,20 @@ func (ec *executionContext) marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋ
 		return graphql.Null
 	}
 	return ec._UpdatePostContentOrderPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateSeriesThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateSeriesThumbnailPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateSeriesThumbnailPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateSeriesTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateSeriesTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateSeriesTitlePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

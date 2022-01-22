@@ -20,7 +20,7 @@ async function generate () {
   const output = await cli.generate(
     {
       schema: {
-        'https://overdoll.test/api/graphql': {
+        [process.env.URL + '/api/graphql']: {
           headers: {
             'x-csrf-token': token,
             Cookie: Cookie.serialize('_csrf', val)
