@@ -4,7 +4,7 @@ import type {
   MultiFactorSettingsQuery as MultiFactorSettingsQueryType
 } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'

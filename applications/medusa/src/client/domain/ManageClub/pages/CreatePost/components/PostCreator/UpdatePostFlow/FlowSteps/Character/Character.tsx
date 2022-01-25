@@ -5,10 +5,12 @@ import { useFragment } from 'react-relay'
 import { EVENTS } from '../../../../../constants/constants'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import SearchInput from '../../../SearchInput/SearchInput'
-import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
+import { Wrap, WrapItem } from '@chakra-ui/react'
 import RootSearchCharacters from './RootSearchCharacters/RootSearchCharacters'
 import { t, Trans } from '@lingui/macro'
 import { DispatchContext, StateContext } from '../../../../../context'
+import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: CharacterFragment$key
@@ -38,6 +40,8 @@ export default function Category ({
   query
 }: Props): JSX.Element {
   const data = useFragment(CharacterFragmentGQL, query)
+
+  const { i18n } = useLingui()
 
   const state = useContext(StateContext)
   const dispatch = useContext(DispatchContext)
@@ -96,21 +100,17 @@ export default function Category ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput placeholder={t`Search for a character by name`}>
+      <SearchInput placeholder={i18n._(t`Search for a character by name`)}>
         {({ searchInput }) =>
           <>
             <Wrap>
               {Object.values(state.characters).map((item, index) =>
                 <WrapItem key={index}>
-                  <Tag borderRadius='full' size='lg'>
-                    <TagLabel>{item.name}</TagLabel>
-                    <TagCloseButton
-                      color='gray.00'
-                      opacity={1}
-                      bg='orange.400'
-                      onClick={() => removeSelection(item.id)}
-                    />
-                  </Tag>
+                  <RemovableTag
+                    onRemove={removeSelection}
+                    id={item.id}
+                    title={item.name}
+                  />
                 </WrapItem>
               )}
             </Wrap>

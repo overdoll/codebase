@@ -1,14 +1,14 @@
 import { QueryArguments } from '@//:types/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
-import SearchCategoriesSelector from './SearchCategoriesSelector/SearchCategoriesSelector'
+import SearchCategoriesGeneral from './SearchCategoriesGeneral/SearchCategoriesGeneral'
 import { StateProps } from '../../FloatingGeneralSearchButton'
 import { addKeyToObject } from '../../helpers/addKeyToObject'
 import { removeKeyFromObject } from '../../helpers/removeKeyFromObject'
 import { filterObjectByKeyValue } from '../../helpers/filterObjectByKeyValue'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
-import SearchCharactersSelector from './SearchCharactersSelector/SearchCharactersSelector'
-import SearchSeriesSelector from './SearchSeriesSelector/SearchSeriesSelector'
+import SearchCharactersGeneral from './SearchCharactersGeneral/SearchCharactersGeneral'
+import SearchSeriesGeneral from './SearchSeriesGeneral/SearchSeriesGeneral'
 import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import TagManager from './TagManager/TagManager'
@@ -23,12 +23,12 @@ const Query = graphql`
     $first: Int,
     $seriesSlugs: [String!],
     $charactersSlugs: [String!],
-    $categoriesSlugs: [String!]
+    $categoriesSlugs: [String!],
+    $charactersSeriesSlug: String
   ){
-    ...SearchCategoriesSelectorFragment
-    ...SearchCharactersSelectorFragment
-    ...SearchSeriesSelectorFragment
-    ...TagManagerFragment
+    ...SearchCategoriesGeneralFragment
+    ...SearchCharactersGeneralFragment
+    ...SearchSeriesGeneralFragment
   }
 `
 
@@ -43,9 +43,9 @@ export default function GeneralSearch ({
     queryArguments.options
   )
 
-  const [searchSeriesCount, setSearchSeriesCount] = useState(0)
-  const [searchCharactersCount, setSearchCharactersCount] = useState(0)
-  const [searchCategoriesCount, setSearchCategoriesCount] = useState(0)
+  const [searchSeriesCount, setSearchSeriesCount] = useState([])
+  const [searchCharactersCount, setSearchCharactersCount] = useState([])
+  const [searchCategoriesCount, setSearchCategoriesCount] = useState([])
 
   const categories = filterObjectByKeyValue('type', 'category', searchValues)
   const characters = filterObjectByKeyValue('type', 'character', searchValues)
@@ -89,18 +89,18 @@ export default function GeneralSearch ({
   }
 
   const onSeriesChange = (data): void => {
-    setSearchSeriesCount(data.series.edges.length)
+    setSearchSeriesCount(data.series.edges)
   }
 
   const onCharactersChange = (data): void => {
-    setSearchCharactersCount(data.characters.edges.length)
+    setSearchCharactersCount(data.characters.edges)
   }
 
   const onCategoriesChange = (data): void => {
-    setSearchCategoriesCount(data.categories.edges.length)
+    setSearchCategoriesCount(data.categories.edges)
   }
 
-  const emptyResults = searchSeriesCount < 1 && searchCharactersCount < 1 && searchCategoriesCount < 1
+  const emptyResults = searchSeriesCount.length < 1 && searchCharactersCount.length < 1 && searchCategoriesCount.length < 1
 
   return (
     <Stack spacing={2}>
@@ -112,33 +112,28 @@ export default function GeneralSearch ({
                 <Trans>Nothing was found</Trans>
               </Heading>
             </Flex>}
-          <SearchSeriesSelector
-            showEmptyPlaceholder={false}
+          <SearchSeriesGeneral
             onDataChange={onSeriesChange}
             selected={Object.keys(series)}
             onSelect={onSelectSeries}
             query={queryData}
           />
-          <SearchCharactersSelector
-            showEmptyPlaceholder={false}
+          <SearchCharactersGeneral
             onDataChange={onCharactersChange}
             selected={Object.keys(characters)}
             onSelect={onSelectCharacter}
             query={queryData}
           />
-          <SearchCategoriesSelector
-            showEmptyPlaceholder={false}
+          <SearchCategoriesGeneral
             onDataChange={onCategoriesChange}
             selected={Object.keys(categories)}
             onSelect={onSelectCategory}
             query={queryData}
           />
-
         </Stack>
       </Box>
       <Box px={2}>
         <TagManager
-          query={queryData}
           searchValues={searchValues}
           setSearchValues={setSearchValues}
         />

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7e7ddb74d9e2b8d671217b4bc1a14d72 */
+/* @relayHash f226535674bf8037ec9b809a70480952 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -109,6 +109,10 @@ fragment CharacterFragment on Post {
   }
 }
 
+fragment ControlledVideoFragment on Resource {
+  ...RenderVideoFragment
+}
+
 fragment DraggableContentFragment on Resource {
   id
   type
@@ -152,11 +156,41 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostGalleryContentFragment on Post {
+fragment PostClickableCategoriesFragment on Post {
+  categories {
+    slug
+    title
+    thumbnail {
+      ...ResourceIconFragment
+      id
+    }
+    id
+  }
+}
+
+fragment PostClickableCharactersFragment on Post {
+  characters {
+    name
+    slug
+    series {
+      title
+      id
+    }
+    thumbnail {
+      ...ResourceIconFragment
+      id
+    }
+    id
+  }
+}
+
+fragment PostGalleryPublicDetailedFragment on Post {
+  id
+  reference
   content {
     type
     ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ControlledVideoFragment
     id
   }
 }
@@ -171,6 +205,14 @@ fragment PostHeaderClubFragment on Post {
     }
     id
   }
+}
+
+fragment PostReviewFragment on Post {
+  reference
+  ...PostGalleryPublicDetailedFragment
+  ...PostHeaderClubFragment
+  ...PostClickableCharactersFragment
+  ...PostClickableCategoriesFragment
 }
 
 fragment ProcessButtonFragment on Post {
@@ -196,6 +238,13 @@ fragment ProcessUploadsFragment on Post {
   }
 }
 
+fragment RenderVideoFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
 fragment ResourceIconFragment on Resource {
   ...ResourceItemFragment
 }
@@ -207,20 +256,7 @@ fragment ResourceItemFragment on Resource {
 }
 
 fragment ReviewFragment on Post {
-  id
-  content {
-    urls {
-      url
-      mimeType
-    }
-    id
-  }
-  ...PostGalleryContentFragment
-  ...PostHeaderClubFragment
-  club {
-    name
-    id
-  }
+  ...PostReviewFragment
 }
 
 fragment RootProcessContentFragment on Post {
@@ -609,7 +645,7 @@ return {
     ]
   },
   "params": {
-    "id": "7e7ddb74d9e2b8d671217b4bc1a14d72",
+    "id": "f226535674bf8037ec9b809a70480952",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

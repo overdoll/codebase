@@ -1,5 +1,5 @@
 export interface QueryArgumentsVariables {
-  [variable: string]: string | number | null
+  [variable: string]: any
 }
 
 export interface QueryArguments {

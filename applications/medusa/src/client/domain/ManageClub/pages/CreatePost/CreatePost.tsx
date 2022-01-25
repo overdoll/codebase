@@ -14,7 +14,7 @@ import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
 import getIdFromUppyUrl from './hooks/getIdFromUppyUrl/getIdFromUppyUrl'
-import SkeletonPost from '@//:modules/content/Skeleton/SkeletonPost/SkeletonPost'
+import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {

@@ -10,7 +10,7 @@ import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/Obser
 import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
-import { LargeBackgroundBox, PostPlaceholder } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { ReactNode, useState } from 'react'
 import { Trans } from '@lingui/macro'
 
@@ -69,7 +69,15 @@ export default function PostsInfiniteScroll ({
     }
   }
 
-  if (((data?.edges) != null) && data?.edges.length < 1) return <></>
+  if (((data?.edges) != null) && data?.edges.length < 1) {
+    return (
+      <SmallBackgroundBox>
+        <Trans>
+          No posts found
+        </Trans>
+      </SmallBackgroundBox>
+    )
+  }
 
   return (
     <Box>

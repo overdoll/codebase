@@ -5,17 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type ReviewFragment = {
-    readonly id: string;
-    readonly content: ReadonlyArray<{
-        readonly urls: ReadonlyArray<{
-            readonly url: string;
-            readonly mimeType: string;
-        }>;
-    }>;
-    readonly club: {
-        readonly name: string;
-    };
-    readonly " $fragmentRefs": FragmentRefs<"PostGalleryContentFragment" | "PostHeaderClubFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"PostReviewFragment">;
     readonly " $refType": "ReviewFragment";
 };
 export type ReviewFragment$data = ReviewFragment;
@@ -33,79 +23,13 @@ const node: ReaderFragment = {
   "name": "ReviewFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "mimeType",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Club",
-      "kind": "LinkedField",
-      "name": "club",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostGalleryContentFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostHeaderClubFragment"
+      "name": "PostReviewFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '7bb7a9489a6ccb7017a85f4e7fdc2f0f';
+(node as any).hash = 'b9fffff9ef7f5f561b9e36dd4f583688';
 export default node;

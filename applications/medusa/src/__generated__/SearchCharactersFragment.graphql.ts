@@ -10,13 +10,7 @@ export type SearchCharactersFragment = {
             readonly node: {
                 readonly id: string;
                 readonly name: string;
-                readonly series: {
-                    readonly title: string;
-                };
-                readonly slug: string;
-                readonly thumbnail: {
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                } | null;
+                readonly " $fragmentRefs": FragmentRefs<"CharacterTileOverlayFragment">;
             };
         }>;
     };
@@ -124,50 +118,14 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Series",
-                  "kind": "LinkedField",
-                  "name": "series",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "title",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "slug",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceItemFragment"
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CharacterTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -215,5 +173,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'eae53434575ed72b1d71e6b699da0a0c';
+(node as any).hash = 'ccffac4ef48b0e0365b2f9ab9e150404';
 export default node;

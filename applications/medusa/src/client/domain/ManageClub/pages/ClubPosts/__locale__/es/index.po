@@ -22,10 +22,10 @@ msgid "In Review"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:135
-msgid "Load More"
-msgstr ""
+#~ msgid "Load More"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:72
 msgid "No posts found"
 msgstr ""
 

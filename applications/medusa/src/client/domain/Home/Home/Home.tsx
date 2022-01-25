@@ -3,6 +3,7 @@ import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import FloatingGeneralSearchButton from '../../../components/FloatingGeneralSearchButton/FloatingGeneralSearchButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -52,6 +53,7 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <GlobalVideoManagerProvider>
+      <FloatingGeneralSearchButton />
       <PostsInfiniteScroll
         hasNext={hasNext}
         isLoadingNext={isLoadingNext}

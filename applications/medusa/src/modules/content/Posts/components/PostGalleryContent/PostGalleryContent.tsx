@@ -1,8 +1,8 @@
 import { graphql, useFragment } from 'react-relay'
 import type { PostGalleryContentFragment$key } from '@//:artifacts/PostGalleryContentFragment.graphql'
 import { Box, Flex } from '@chakra-ui/react'
-import ImageSnippet from '../../../DataDisplay/Snippets/ImageSnippet/ImageSnippet'
-import VideoSnippet from '../../../DataDisplay/Snippets/VideoSnippet/VideoSnippet'
+import ImageSnippet from '../../../DataDisplay/ImageSnippet/ImageSnippet'
+import VideoSnippet from '../../../DataDisplay/VideoSnippet/VideoSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperClass } from 'swiper'
 import 'swiper/swiper.min.css'
@@ -31,7 +31,7 @@ const PostGalleryContentFragmentGQL = graphql`
 
 export default function PostGalleryContent ({
   query,
-  children,
+  children
 }: Props): JSX.Element {
   const data = useFragment(PostGalleryContentFragmentGQL, query)
 
@@ -97,7 +97,7 @@ export default function PostGalleryContent ({
       </Swiper>
       {children?.({
         slidesCount,
-        currentSlide,
+        currentSlide
       })}
     </Box>
   )

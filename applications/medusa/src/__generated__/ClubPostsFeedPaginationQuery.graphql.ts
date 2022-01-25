@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3495ea319879b7d93545b2ac495da08e */
+/* @relayHash 6ef238ac2540e4f0d28e27e3a1e97790 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -89,6 +89,7 @@ fragment JoinClubButtonClubFragment on Club {
 
 fragment PostClickableCategoriesFragment on Post {
   categories {
+    slug
     title
     thumbnail {
       ...ResourceIconFragment
@@ -101,6 +102,7 @@ fragment PostClickableCategoriesFragment on Post {
 fragment PostClickableCharactersFragment on Post {
   characters {
     name
+    slug
     series {
       title
       id
@@ -275,10 +277,17 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "slug",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -288,14 +297,14 @@ v7 = {
   "selections": (v5/*: any*/),
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v9 = [
+v10 = [
   (v3/*: any*/),
   (v4/*: any*/)
 ];
@@ -406,6 +415,7 @@ return {
                             "selections": [
                               (v6/*: any*/),
                               (v7/*: any*/),
+                              (v8/*: any*/),
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -418,7 +428,8 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v8/*: any*/),
+                              (v9/*: any*/),
+                              (v6/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -427,12 +438,12 @@ return {
                                 "name": "series",
                                 "plural": false,
                                 "selections": [
-                                  (v6/*: any*/),
+                                  (v7/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
                               },
-                              (v7/*: any*/),
+                              (v8/*: any*/),
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -444,7 +455,7 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v9/*: any*/),
+                            "selections": (v10/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -462,15 +473,9 @@ return {
                             "name": "club",
                             "plural": false,
                             "selections": [
+                              (v9/*: any*/),
+                              (v6/*: any*/),
                               (v8/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "slug",
-                                "storageKey": null
-                              },
-                              (v7/*: any*/),
                               (v4/*: any*/),
                               {
                                 "alias": null,
@@ -479,7 +484,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "viewerMember",
                                 "plural": false,
-                                "selections": (v9/*: any*/),
+                                "selections": (v10/*: any*/),
                                 "storageKey": null
                               }
                             ],
@@ -538,7 +543,7 @@ return {
     ]
   },
   "params": {
-    "id": "3495ea319879b7d93545b2ac495da08e",
+    "id": "6ef238ac2540e4f0d28e27e3a1e97790",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

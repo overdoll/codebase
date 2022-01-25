@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0077facef5e14717ca597ebe15addc30 */
+/* @relayHash f2bf5e69d2c4096d1aa9b5bb0eb3ab27 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,18 @@ query SearchCharactersQuery(
   ...SearchCharactersFragment_2aiVTE
 }
 
+fragment CharacterTileOverlayFragment on Character {
+  name
+  series {
+    title
+    id
+  }
+  thumbnail {
+    ...ResourceItemFragment
+    id
+  }
+}
+
 fragment ImageSnippetFragment on Resource {
   urls {
     url
@@ -44,15 +56,7 @@ fragment SearchCharactersFragment_2aiVTE on Query {
       node {
         id
         name
-        series {
-          title
-          id
-        }
-        slug
-        thumbnail {
-          ...ResourceItemFragment
-          id
-        }
+        ...CharacterTileOverlayFragment
         __typename
       }
       cursor
@@ -178,13 +182,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "slug",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
                     "name": "thumbnail",
@@ -288,7 +285,7 @@ return {
     ]
   },
   "params": {
-    "id": "0077facef5e14717ca597ebe15addc30",
+    "id": "f2bf5e69d2c4096d1aa9b5bb0eb3ab27",
     "metadata": {},
     "name": "SearchCharactersQuery",
     "operationKind": "query",

@@ -4,16 +4,14 @@ import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
 import {
+  CharacterTileOverlay,
+  GridTile,
   GridWrap,
-  RectangleGridItem,
-  Selector,
-  SelectorTextOverlay
-} from '../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+  LoadMoreGridTile,
+  Selector
+} from '../../../../../../../../../../../../modules/content/ContentSelection'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { Trans } from '@lingui/macro'
-import LoadMoreRectangle
-  from '../../../../../../../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   selected: string[]
@@ -46,13 +44,7 @@ const SearchCharactersFragmentGQL = graphql`
         node {
           id
           name
-          series {
-            title
-          }
-          slug
-          thumbnail {
-            ...ResourceItemFragment
-          }
+          ...CharacterTileOverlayFragment
         }
       }
     }
@@ -104,22 +96,18 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {characters.map((item, index) => (
-          <RectangleGridItem key={index}>
+          <GridTile key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
-              <SelectorTextOverlay label={item.name} description={item.series.title}>
-                <ResourceItem
-                  query={item.thumbnail}
-                />
-              </SelectorTextOverlay>
+              <CharacterTileOverlay query={item} />
             </Selector>
-          </RectangleGridItem>
+          </GridTile>
         )
         )}
-        <LoadMoreRectangle
+        <LoadMoreGridTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}

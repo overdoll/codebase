@@ -1,8 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
-import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
 import { Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
@@ -10,8 +9,6 @@ import PostPreviewContent
 import { useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
-import LoadMoreRectangle
-  from '../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -103,30 +100,30 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         switch (item.node.state) {
           case 'DRAFT':
             return (
-              <RectangleGridItem key={index}>
-                <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
+              <GridTile key={index}>
+                <ClickableTile onClick={onClick}>
                   <PostPreviewContent query={item.node} />
-                </ClickableBox>
-              </RectangleGridItem>
+                </ClickableTile>
+              </GridTile>
             )
           case 'PUBLISHED':
             return (
-              <RectangleGridItem key={index}>
-                <ClickableBox onClick={onClick} borderRadius='md' overflow='hidden' h='100%' p={0}>
+              <GridTile key={index}>
+                <ClickableTile onClick={onClick}>
                   <PostPreviewContent query={item.node} />
-                </ClickableBox>
-              </RectangleGridItem>
+                </ClickableTile>
+              </GridTile>
             )
           default:
             return (
-              <RectangleGridItem key={index}>
+              <GridTile key={index}>
                 <PostPreviewContent query={item.node} />
-              </RectangleGridItem>
+              </GridTile>
             )
         }
       }
       )}
-      <LoadMoreRectangle
+      <LoadMoreGridTile
         hasNext={hasNext}
         onLoadNext={() => loadNext(4)}
         isLoadingNext={isLoadingNext}

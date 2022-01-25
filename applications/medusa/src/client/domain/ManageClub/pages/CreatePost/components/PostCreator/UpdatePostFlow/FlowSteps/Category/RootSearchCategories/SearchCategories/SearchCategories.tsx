@@ -1,24 +1,23 @@
 import { usePaginationFragment } from 'react-relay'
-import type { QueryArgs as QueryArgsType } from '@//:types/upload'
+import { QueryArguments } from '@//:types/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Flex, Text } from '@chakra-ui/react'
 import {
+  GridTile,
   GridWrap,
-  RectangleGridItem,
-  Selector,
-  SelectorTextOverlay
-} from '../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+  LoadMoreGridTile,
+  Selector
+} from '../../../../../../../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
 import { Trans } from '@lingui/macro'
-import LoadMoreRectangle
-  from '../../../../../../../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
+import CategoryTileOverlay
+  from '../../../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
 
 interface Props {
   selected: string[]
   onSelect: (category: any) => void
-  queryArgs: QueryArgsType
+  queryArgs: QueryArguments
 }
 
 const SearchCategoriesQueryGQL = graphql`
@@ -46,15 +45,7 @@ const SearchCategoriesFragmentGQL = graphql`
         node {
           id
           title
-          slug
-          thumbnail {
-            ...ResourceItemFragment
-            type
-            urls {
-              mimeType
-              url
-            }
-          }
+          ...CategoryTileOverlayFragment
         }
       }
     }
@@ -105,22 +96,18 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {categories.map((item, index) => (
-          <RectangleGridItem key={index}>
+          <GridTile key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
-              <SelectorTextOverlay label={item.title}>
-                <ResourceItem
-                  query={item.thumbnail}
-                />
-              </SelectorTextOverlay>
+              <CategoryTileOverlay query={item} />
             </Selector>
-          </RectangleGridItem>
+          </GridTile>
         )
         )}
-        <LoadMoreRectangle
+        <LoadMoreGridTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}

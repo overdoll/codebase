@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 77631c12a7198e832d5bfc9550a211ed */
+/* @relayHash 5bfe0f800f9ec5354fd7797aa24086d8 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,14 @@ query SearchCategoriesQuery(
   ...SearchCategoriesFragment_3FzUSU
 }
 
+fragment CategoryTileOverlayFragment on Category {
+  title
+  thumbnail {
+    ...ResourceItemFragment
+    id
+  }
+}
+
 fragment ImageSnippetFragment on Resource {
   urls {
     url
@@ -44,16 +52,7 @@ fragment SearchCategoriesFragment_3FzUSU on Query {
       node {
         id
         title
-        slug
-        thumbnail {
-          ...ResourceItemFragment
-          type
-          urls {
-            mimeType
-            url
-          }
-          id
-        }
+        ...CategoryTileOverlayFragment
         __typename
       }
       cursor
@@ -155,13 +154,6 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "title",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "slug",
                     "storageKey": null
                   },
                   {
@@ -270,7 +262,7 @@ return {
     ]
   },
   "params": {
-    "id": "77631c12a7198e832d5bfc9550a211ed",
+    "id": "5bfe0f800f9ec5354fd7797aa24086d8",
     "metadata": {},
     "name": "SearchCategoriesQuery",
     "operationKind": "query",

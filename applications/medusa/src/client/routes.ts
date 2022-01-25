@@ -346,6 +346,54 @@ const routes: Route[] = [
         }
       },
       {
+        path: '/search',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/Search/RootSearch'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Search/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        middleware: [
+          ({ history }) => {
+            if (history.location.search == null || history.location.search === '') {
+              history.push('/')
+              return false
+            }
+
+            return true
+          }
+        ],
+        prepare: ({
+          query
+        }) => {
+          const Query = require('@//:artifacts/SearchQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                sortBy: query.get('sort') ?? 'TOP',
+                categorySlugs: query.get('categories'),
+                seriesSlugs: query.get('series'),
+                characterSlugs: query.get('characters')
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
         path: '/clubs',
         exact: true,
         component: loadable(async () =>
@@ -744,7 +792,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/PublicPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -753,17 +801,17 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Public/ViewPost/ViewPostRoot'
+            './domain/PublicPost/RootPublicPost'
           )
         ),
         prepare: ({
           params,
           query
         }) => {
-          const ViewPostQuery = require('@//:artifacts/ViewPostQuery.graphql')
+          const Query = require('@//:artifacts/PublicPostQuery.graphql')
           return {
             query: {
-              query: ViewPostQuery,
+              query: Query,
               variables: {
                 reference: params.reference ?? ''
               },
@@ -780,7 +828,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Public/ViewPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/PublicPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -1077,14 +1125,14 @@ const routes: Route[] = [
         path: '/:slug',
         component: loadable(async () =>
           await import(
-            './domain/Public/ViewClub/RootViewClub'
+            './domain/ManageClub/pages/ClubPublicPage/RootClubPublicPage'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Public/ViewClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ManageClub/pages/ClubPublicPage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -1094,7 +1142,7 @@ const routes: Route[] = [
           params,
           query
         }) => {
-          const Query = require('@//:artifacts/ViewClubQuery.graphql')
+          const Query = require('@//:artifacts/ClubPublicPageQuery.graphql')
           return {
             query: {
               query: Query,

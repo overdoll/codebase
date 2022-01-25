@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2c4efdd192933db4408b592d0110f18f */
+/* @relayHash 0addcedc432e975c4470cc890fda6fd4 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -29,6 +29,14 @@ query SearchCategoriesPaginationFragment(
   ...SearchCategoriesFragment_2PG6LC
 }
 
+fragment CategoryTileOverlayFragment on Category {
+  title
+  thumbnail {
+    ...ResourceItemFragment
+    id
+  }
+}
+
 fragment ImageSnippetFragment on Resource {
   urls {
     url
@@ -48,16 +56,7 @@ fragment SearchCategoriesFragment_2PG6LC on Query {
       node {
         id
         title
-        slug
-        thumbnail {
-          ...ResourceItemFragment
-          type
-          urls {
-            mimeType
-            url
-          }
-          id
-        }
+        ...CategoryTileOverlayFragment
         __typename
       }
       cursor
@@ -176,13 +175,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "slug",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
                     "name": "thumbnail",
@@ -286,7 +278,7 @@ return {
     ]
   },
   "params": {
-    "id": "2c4efdd192933db4408b592d0110f18f",
+    "id": "0addcedc432e975c4470cc890fda6fd4",
     "metadata": {},
     "name": "SearchCategoriesPaginationFragment",
     "operationKind": "query",
@@ -294,5 +286,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'c61dfb7b802db19dbbe3ed7a39623a8c';
+(node as any).hash = '820591d8df74cc47f6fe5704e3841869';
 export default node;

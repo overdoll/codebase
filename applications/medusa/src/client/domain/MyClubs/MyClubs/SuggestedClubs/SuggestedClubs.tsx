@@ -1,17 +1,15 @@
 import type { SuggestedClubsFragment, SuggestedClubsFragment$key } from '@//:artifacts/SuggestedClubsFragment.graphql'
 import type { SuggestedClubsViewerFragment$key } from '@//:artifacts/SuggestedClubsViewerFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { Heading, Stack } from '@chakra-ui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
-import { GridWrap, RectangleGridItem } from '../../../../components/ContentSelection'
+import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../modules/content/ContentSelection'
 import { useFragment } from 'react-relay/hooks'
 import { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
 import { Trans } from '@lingui/macro'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import ItemOverlay from '../../../../components/ContentSelection/components/ItemOverlay/ItemOverlay'
+import ClubTileOverlay
+  from '../../../../../modules/content/ContentSelection/components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
+import { Box } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
-import LoadMoreRectangle from '../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   query: SuggestedClubsFragment$key | null
@@ -35,19 +33,7 @@ const Fragment = graphql`
         node {
           slug
           ...JoinClubButtonClubFragment
-          posts(first: 1) {
-            edges {
-              node {
-                content {
-                  ...ResourceItemFragment
-                }
-              }
-            }
-          }
-          thumbnail {
-            ...ResourceIconFragment
-          }
-          name
+          ...ClubTileOverlayFragment
         }
       }
     }
@@ -79,22 +65,16 @@ export default function SuggestedClubs ({
 
   const ClubItem = ({ node }: ClubProps): JSX.Element => {
     return (
-      <ItemOverlay background={
-        <ResourceItem h='100%' query={node.posts?.edges[0]?.node?.content[0]} />
-      }
-      >
-        <Stack w='100%' spacing={4} h='100%' align='center' justify='center'>
-          <Link to={`/${node.slug}`}>
-            <Stack w='100%' align='center' justify='center' spacing={2}>
-              <ResourceIcon h={12} w={12} query={node.thumbnail} />
-              <Heading textAlign='center' color='gray.00' fontSize='md'>
-                {node.name}
-              </Heading>
-            </Stack>
-          </Link>
+      <>
+        <Link to={`/${node.slug as string}`}>
+          <ClickableTile>
+            <ClubTileOverlay query={node} />
+          </ClickableTile>
+        </Link>
+        <Box mt={2}>
           <JoinClubButton w='100%' size='md' clubQuery={node} viewerQuery={viewerData} />
-        </Stack>
-      </ItemOverlay>
+        </Box>
+      </>
     )
   }
 
@@ -105,10 +85,10 @@ export default function SuggestedClubs ({
   return (
     <GridWrap>
       {data.clubs.edges.map((item, index) =>
-        <RectangleGridItem key={index}>
+        <GridTile key={index}>
           <ClubItem node={item.node} />
-        </RectangleGridItem>)}
-      <LoadMoreRectangle
+        </GridTile>)}
+      <LoadMoreGridTile
         hasNext={hasNext}
         onLoadNext={() => loadNext(10)}
         isLoadingNext={isLoadingNext}

@@ -12,7 +12,7 @@ import { Box, Select, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { useQueryParam } from 'use-query-params'
 import { PostState } from '@//:artifacts/ClubPostsFragment.graphql'
-import SkeletonRectangleGrid from '@//:modules/content/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
 
 interface Props {
   prepared: {

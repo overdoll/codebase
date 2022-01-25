@@ -3,7 +3,7 @@ import type { AudienceFragment$key } from '@//:artifacts/AudienceFragment.graphq
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Flex } from '@chakra-ui/react'
-import { useSingleSelector } from '../../../../../../../../../components/ContentSelection'
+import { useSingleSelector } from '../../../../../../../../../../modules/content/ContentSelection'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { EVENTS } from '../../../../../constants/constants'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'

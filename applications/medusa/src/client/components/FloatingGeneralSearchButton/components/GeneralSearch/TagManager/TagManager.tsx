@@ -1,54 +1,13 @@
 import { StateProps } from '../../../FloatingGeneralSearchButton'
 import { Wrap, WrapItem } from '@chakra-ui/react'
-import RemovableTag from '../RemovableTag/RemovableTag'
+import RemovableTag from '../../../../../../modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { CategoryIdentifier, CharacterIdentifier, SeriesIdentifier } from '@//:assets/icons/interface'
 import { removeKeyFromObject } from '../../../helpers/removeKeyFromObject'
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { TagManagerFragment$key } from '@//:artifacts/TagManagerFragment.graphql'
-
-interface Props extends StateProps {
-  query: TagManagerFragment$key
-}
-
-const Fragment = graphql`
-  fragment TagManagerFragment on Query {
-    series (slugs: $seriesSlugs) {
-      edges {
-        node {
-          id
-          title
-          slug
-        }
-      }
-    }
-    characters (slugs: $charactersSlugs) {
-      edges {
-        node {
-          id
-          name
-          slug
-        }
-      }
-    }
-    categories (slugs: $categoriesSlugs) {
-      edges {
-        node {
-          id
-          title
-          slug
-        }
-      }
-    }
-  }
-`
 
 export default function TagManager ({
   searchValues,
-  setSearchValues,
-  query
-}: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
+  setSearchValues
+}: StateProps): JSX.Element {
   const onRemove = (id): void => {
     setSearchValues((prev) => removeKeyFromObject(id, prev))
   }

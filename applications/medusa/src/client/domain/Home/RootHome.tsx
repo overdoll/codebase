@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import type { HomeQuery as HomeQueryType } from '@//:artifacts/HomeQuery.graphql'
 import HomeQuery from '@//:artifacts/HomeQuery.graphql'
 import Home from './Home/Home'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {
@@ -25,7 +25,7 @@ export default function RootHome (props: Props): JSX.Element {
       <Helmet title='home' />
       <PageWrapper fillPage>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonStack />}>
+          <Suspense fallback={<SkeletonPost />}>
             <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

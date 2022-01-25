@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b5bd3410e12ea89650b709232e3c9a1b */
+/* @relayHash d44fdede4814ad885f1e4a9e8855722b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -25,6 +25,25 @@ query SuggestedClubsPaginationQuery(
   $first: Int = 7
 ) {
   ...SuggestedClubsFragment_2HEEH6
+}
+
+fragment ClubTileOverlayFragment on Club {
+  name
+  thumbnail {
+    ...ResourceIconFragment
+    id
+  }
+  posts(first: 1) {
+    edges {
+      node {
+        content {
+          ...ResourceItemFragment
+          id
+        }
+        id
+      }
+    }
+  }
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -59,22 +78,7 @@ fragment SuggestedClubsFragment_2HEEH6 on Query {
       node {
         slug
         ...JoinClubButtonClubFragment
-        posts(first: 1) {
-          edges {
-            node {
-              content {
-                ...ResourceItemFragment
-                id
-              }
-              id
-            }
-          }
-        }
-        thumbnail {
-          ...ResourceIconFragment
-          id
-        }
-        name
+        ...ClubTileOverlayFragment
         id
         __typename
       }
@@ -245,6 +249,16 @@ return {
                   },
                   {
                     "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "thumbnail",
+                    "plural": false,
+                    "selections": (v4/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
                     "args": [
                       {
                         "kind": "Literal",
@@ -292,16 +306,6 @@ return {
                       }
                     ],
                     "storageKey": "posts(first:1)"
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "thumbnail",
-                    "plural": false,
-                    "selections": (v4/*: any*/),
-                    "storageKey": null
                   },
                   (v3/*: any*/)
                 ],
@@ -357,7 +361,7 @@ return {
     ]
   },
   "params": {
-    "id": "b5bd3410e12ea89650b709232e3c9a1b",
+    "id": "d44fdede4814ad885f1e4a9e8855722b",
     "metadata": {},
     "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",
@@ -365,5 +369,5 @@ return {
   }
 };
 })();
-(node as any).hash = '84173363a2cc00f9831ded492c18c87f';
+(node as any).hash = '3005950f7f75e61df8c2fe462ba5203b';
 export default node;

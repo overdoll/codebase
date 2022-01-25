@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash cfcdf8c8128a88f717f1c2fbd1a7db07 */
+/* @relayHash ac17bc24120fed0e522dcccd7245af0e */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -80,6 +80,7 @@ fragment JoinClubButtonClubFragment on Club {
 
 fragment PostClickableCategoriesFragment on Post {
   categories {
+    slug
     title
     thumbnail {
       ...ResourceIconFragment
@@ -92,6 +93,7 @@ fragment PostClickableCategoriesFragment on Post {
 fragment PostClickableCharactersFragment on Post {
   characters {
     name
+    slug
     series {
       title
       id
@@ -261,10 +263,17 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "slug",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -274,14 +283,14 @@ v8 = {
   "selections": (v6/*: any*/),
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v10 = [
+v11 = [
   (v4/*: any*/),
   (v5/*: any*/)
 ];
@@ -371,6 +380,7 @@ return {
                     "selections": [
                       (v7/*: any*/),
                       (v8/*: any*/),
+                      (v9/*: any*/),
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -383,7 +393,8 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v9/*: any*/),
+                      (v10/*: any*/),
+                      (v7/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -392,12 +403,12 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
-                          (v7/*: any*/),
+                          (v8/*: any*/),
                           (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v8/*: any*/),
+                      (v9/*: any*/),
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -409,7 +420,7 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v11/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -427,15 +438,9 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
+                      (v10/*: any*/),
+                      (v7/*: any*/),
                       (v9/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "slug",
-                        "storageKey": null
-                      },
-                      (v8/*: any*/),
                       (v5/*: any*/),
                       {
                         "alias": null,
@@ -444,7 +449,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerMember",
                         "plural": false,
-                        "selections": (v10/*: any*/),
+                        "selections": (v11/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -498,7 +503,7 @@ return {
     ]
   },
   "params": {
-    "id": "cfcdf8c8128a88f717f1c2fbd1a7db07",
+    "id": "ac17bc24120fed0e522dcccd7245af0e",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

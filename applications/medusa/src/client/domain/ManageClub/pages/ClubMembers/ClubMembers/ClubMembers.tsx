@@ -1,13 +1,12 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubMembersQuery } from '@//:artifacts/ClubMembersQuery.graphql'
-import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
-import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
+import { Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
-import LoadMoreRectangle
-  from '../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
+import AccountTileOverlay
+  from '../../../../../../modules/content/ContentSelection/components/TileOverlay/AccountTileOverlay/AccountTileOverlay'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -34,10 +33,7 @@ const Fragment = graphql`
         node {
           id
           account {
-            username
-            avatar {
-              ...ResourceIconFragment
-            }
+            ...AccountTileOverlayFragment
           }
         }
       }
@@ -76,22 +72,15 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
   return (
     <GridWrap justify='flex-start'>
       {data.members.edges.map((item, index) =>
-        <RectangleGridItem key={index}>
-          <Box w='100%' h='100%'>
-            <Link to={`/u/${item.node.id}`}>
-              <ClickableBox overflow='hidden' whiteSpace='normal' w='100%' h='100%'>
-                <Flex direction='column' align='center' justify='center'>
-                  <ResourceIcon mb={2} query={item.node.account.avatar} />
-                  <Text fontSize='md' color='gray.00'>
-                    {item.node.account.username}
-                  </Text>
-                </Flex>
-              </ClickableBox>
-            </Link>
-          </Box>
-        </RectangleGridItem>
+        <GridTile key={index}>
+          <Link to={`/u/${item.node.id as string}`}>
+            <ClickableTile>
+              <AccountTileOverlay query={item.node.account} />
+            </ClickableTile>
+          </Link>
+        </GridTile>
       )}
-      <LoadMoreRectangle
+      <LoadMoreGridTile
         hasNext={hasNext}
         onLoadNext={() => loadNext(20)}
         isLoadingNext={isLoadingNext}

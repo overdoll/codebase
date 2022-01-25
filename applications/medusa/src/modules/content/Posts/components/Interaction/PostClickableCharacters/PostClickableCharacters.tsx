@@ -3,6 +3,9 @@ import { graphql, useFragment } from 'react-relay'
 import type { PostClickableCharactersFragment$key } from '@//:artifacts/PostClickableCharactersFragment.graphql'
 import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
+import { ArrayParam, encodeQueryParams, StringParam } from 'serialize-query-params'
+import { stringify } from 'query-string'
+import { useHistory } from '../../../../../routing'
 
 interface Props {
   query: PostClickableCharactersFragment$key | null
@@ -12,6 +15,7 @@ const Fragment = graphql`
   fragment PostClickableCharactersFragment on Post {
     characters {
       name
+      slug
       series {
         title
       }
@@ -25,11 +29,25 @@ const Fragment = graphql`
 export default function PostClickableCharacters ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const history = useHistory()
+
+  const onClick = (node): void => {
+    const encodedQuery = encodeQueryParams({
+      characters: ArrayParam,
+      sort: StringParam
+    }, {
+      characters: node.slug,
+      sort: 'TOP'
+    })
+
+    history.push(`/search?${stringify(encodedQuery)}`)
+  }
+
   return (
     <Wrap>
       {data?.characters.map((item, index) =>
         <WrapItem key={index}>
-          <ClickableBox variant='ghost' borderRadius='xl' p={0}>
+          <ClickableBox onClick={() => onClick(item)} variant='ghost' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={4} py={3}>
               <ResourceIcon
                 w={10}

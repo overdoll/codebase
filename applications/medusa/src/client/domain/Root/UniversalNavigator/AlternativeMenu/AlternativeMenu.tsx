@@ -21,7 +21,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
 import SkeletonDropdownMenuButton
-  from '@//:modules/content/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
+  from '@//:modules/content/Placeholder/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null

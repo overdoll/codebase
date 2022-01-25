@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex, Stack } from '@chakra-ui/react'
-import ImageSnippet from '../../../../DataDisplay/Snippets/ImageSnippet/ImageSnippet'
+import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import { useContext } from 'react'

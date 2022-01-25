@@ -115,6 +115,10 @@ export default {
     {
       path: 'src/client/domain/Help/__locale__/{locale}/index',
       include: ['src/client/domain/Help']
+    },
+    {
+      path: 'src/client/domain/Search/__locale__/{locale}/index',
+      include: ['src/client/domain/Search']
     }
   ],
   format: 'po',

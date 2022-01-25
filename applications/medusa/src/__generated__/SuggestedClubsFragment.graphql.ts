@@ -9,20 +9,7 @@ export type SuggestedClubsFragment = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly slug: string;
-                readonly posts: {
-                    readonly edges: ReadonlyArray<{
-                        readonly node: {
-                            readonly content: ReadonlyArray<{
-                                readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                            }>;
-                        };
-                    }>;
-                };
-                readonly thumbnail: {
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-                } | null;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment">;
+                readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment" | "ClubTileOverlayFragment">;
             };
         }>;
     };
@@ -111,84 +98,6 @@ return {
                 },
                 {
                   "alias": null,
-                  "args": [
-                    {
-                      "kind": "Literal",
-                      "name": "first",
-                      "value": 1
-                    }
-                  ],
-                  "concreteType": "PostConnection",
-                  "kind": "LinkedField",
-                  "name": "posts",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "PostEdge",
-                      "kind": "LinkedField",
-                      "name": "edges",
-                      "plural": true,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "concreteType": "Post",
-                          "kind": "LinkedField",
-                          "name": "node",
-                          "plural": false,
-                          "selections": [
-                            {
-                              "alias": null,
-                              "args": null,
-                              "concreteType": "Resource",
-                              "kind": "LinkedField",
-                              "name": "content",
-                              "plural": true,
-                              "selections": [
-                                {
-                                  "args": null,
-                                  "kind": "FragmentSpread",
-                                  "name": "ResourceItemFragment"
-                                }
-                              ],
-                              "storageKey": null
-                            }
-                          ],
-                          "storageKey": null
-                        }
-                      ],
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": "posts(first:1)"
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceIconFragment"
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
@@ -198,6 +107,11 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "JoinClubButtonClubFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ClubTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -245,5 +159,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '84173363a2cc00f9831ded492c18c87f';
+(node as any).hash = '3005950f7f75e61df8c2fe462ba5203b';
 export default node;

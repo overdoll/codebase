@@ -1,15 +1,20 @@
-import { Box, Button, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
+import { Box, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
 import { useHistoryDisclosure } from '@//:modules/hooks'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import SearchInput from '../../domain/ManageClub/pages/CreatePost/components/PostCreator/SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
-import { Dispatch, SetStateAction, Suspense, useEffect, useRef, useState } from 'react'
-import useSearchQueryArguments from '../useSearchQueryArguments'
-import SkeletonRectangleGrid from '@//:modules/content/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import { Dispatch, SetStateAction, Suspense, useRef, useState } from 'react'
+import useSearchQueryArguments from '../../../modules/hooks/useSearchQueryArguments'
+import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
+import ErrorFallback from '@//:modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback'
 import GeneralSearch from './components/GeneralSearch/GeneralSearch'
 import SaveSearchButton from './components/GeneralSearch/SaveSearchButton/SaveSearchButton'
+import { useQueryParam } from 'use-query-params'
+import { useUpdateEffect } from 'usehooks-ts'
+import { ClickableBox } from '@//:modules/content/PageLayout'
+import { Icon } from '@//:modules/content'
+import { SearchBar } from '@//:assets/icons/navigation'
 
 export interface SearchValues {
   [id: string]: {
@@ -33,36 +38,76 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
 
   const { i18n } = useLingui()
 
+  const [series] = useQueryParam<string[] | null | undefined>('series')
+  const [categories] = useQueryParam<string[] | null | undefined>('categories')
+  const [characters] = useQueryParam<string[] | null | undefined>('characters')
+
+  // TODO handle character search somehow
+
   const inputRef = useRef(null)
 
   const [search, setSearch] = useState<string>('')
 
   const [queryArgs, setQueryArgs] = useSearchQueryArguments({
     search: null,
-    first: 3
+    first: 3,
+    seriesSlugs: series,
+    categoriesSlugs: categories,
+    charactersSlugs: null,
+    charactersSeriesSlug: series != null ? series[0] : null
   })
 
   const [searchValues, setSearchValues] = useState<SearchValues>({})
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     setQueryArgs({
       search: search,
-      first: 3
+      first: 3,
+      seriesSlugs: null,
+      categoriesSlugs: null,
+      charactersSlugs: null,
+      charactersSeriesSlug: null
     })
   }, [search])
 
+  useUpdateEffect(() => {
+    setQueryArgs({
+      search: null,
+      first: 3,
+      seriesSlugs: series,
+      categoriesSlugs: categories,
+      charactersSlugs: null,
+      charactersSeriesSlug: series != null ? series[0] : null
+    })
+  }, [series, categories])
+
   return (
     <>
-      <Button onClick={onOpen}>
-        <Trans>
-          open search
-        </Trans>
-      </Button>
+      <Box
+        top={{
+          base: 2,
+          md: 62
+        }}
+        right={2}
+        zIndex='docked'
+        position='fixed'
+      >
+        <ClickableBox
+          boxShadow='lg'
+          borderRadius='full'
+          h={14}
+          w={14}
+          colorScheme='primary'
+          variant='solid'
+          onClick={onOpen}
+        >
+          <Icon fill='primary.900' w={8} h={8} icon={SearchBar} />
+        </ClickableBox>
+      </Box>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         size='full'
-        motionPreset='slideInBottom'
         initialFocusRef={inputRef}
         isCentered
         scrollBehavior='inside'

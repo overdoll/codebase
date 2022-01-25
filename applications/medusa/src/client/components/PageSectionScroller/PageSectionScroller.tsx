@@ -78,8 +78,7 @@ export default function PageSectionScroller ({
           onSwiper={(swiper) => setSwiper(swiper)}
           onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
           style={{
-            height: '100%',
-            overflow: 'visible'
+            height: '100%'
           }}
           spaceBetween={20}
           simulateTouch={false}
@@ -93,7 +92,7 @@ export default function PageSectionScroller ({
                 {pageInfiniteScroll}
               </SwiperSlide>
               <SwiperSlide>
-                <Box mt={6} mb={28}>
+                <Box mx={1} mt={6} mb={28}>
                   {children}
                 </Box>
               </SwiperSlide>
@@ -101,7 +100,7 @@ export default function PageSectionScroller ({
             </>
             : <>
               <SwiperSlide>
-                <Box mt={6} mb={16}>
+                <Box mx={1} mt={6} mb={16}>
                   {children}
                 </Box>
               </SwiperSlide>

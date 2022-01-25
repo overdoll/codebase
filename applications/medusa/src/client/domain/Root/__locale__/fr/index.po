@@ -17,7 +17,7 @@ msgstr ""
 msgid "Account Locked"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:98
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:104
 msgid "Account Settings"
 msgstr ""
 
@@ -33,11 +33,15 @@ msgstr ""
 msgid "Changing to your preferred language..."
 msgstr ""
 
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:56
+msgid "Close"
+msgstr ""
+
 #: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:15
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:80
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:86
 msgid "Content Moderation"
 msgstr ""
 
@@ -56,17 +60,21 @@ msgid "Copy"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonClub/DropdownMenuButtonClub.tsx:35
-#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:34
+#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:35
 msgid "Create a Club"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:42
-#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:56
+#: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:57
 msgid "Create a Post"
 msgstr ""
 
 #: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:105
 msgid "Drag and drop or tap to upload"
+msgstr ""
+
+#: src/modules/content/Posts/components/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:23
+msgid "Error Loading Video"
 msgstr ""
 
 #: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:34
@@ -76,6 +84,10 @@ msgstr ""
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:27
 msgid "Go to my profile"
+msgstr ""
+
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:115
+msgid "Help"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:106
@@ -90,12 +102,28 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:45
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:65
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:71
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:108
+#: src/client/components/ContentSelection/components/GridTile/LoadMoreTile/LoadMoreTile.tsx:37
+msgid "Load More"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesSelector/SearchCategoriesSelector.tsx:125
+msgid "Load More Categories"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersSelector/SearchCharactersSelector.tsx:136
+msgid "Load More Characters"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesSelector/SearchSeriesSelector.tsx:126
+msgid "Load More Series"
+msgstr ""
+
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:126
 msgid "Log Out"
 msgstr ""
 
@@ -107,7 +135,7 @@ msgstr ""
 #~ msgid "Manage Content"
 #~ msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:56
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:62
 msgid "Menu"
 msgstr ""
 
@@ -123,16 +151,44 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:89
+msgid "New"
+msgstr ""
+
 #: src/modules/content/DataDisplay/ResourceItem/ResourceItem.tsx:34
-msgid "No Resource"
+#~ msgid "No Resource"
+#~ msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesSelector/SearchCategoriesSelector.tsx:87
+msgid "No categories were found"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersSelector/SearchCharactersSelector.tsx:91
+msgid "No characters were found"
+msgstr ""
+
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:127
+msgid "No more content available"
+msgstr ""
+
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
+msgid "No posts found"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:116
 msgid "No reason was found"
 msgstr ""
 
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesSelector/SearchSeriesSelector.tsx:88
+msgid "No series were found"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:115
+msgid "Nothing was found"
+msgstr ""
+
 #: src/modules/content/Interactables/Menus/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/Posts/components/Interaction/PostMenu/PostMenu.tsx:31
+#: src/modules/content/Posts/components/Interaction/PostMenu/PostMenu.tsx:54
 msgid "Open Menu"
 msgstr ""
 
@@ -164,12 +220,21 @@ msgstr ""
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
+#: src/modules/content/Posts/components/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:28
 #: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:53
 msgid "Retry"
 msgstr ""
 
 #: src/client/components/ContentHints/SpoilerText/SpoilerText.tsx:38
 msgid "Reveal Spoiler"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:72
+msgid "Save ({0})"
+msgstr ""
+
+#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:142
+msgid "Search for characters, categories, or series"
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:6
@@ -233,6 +298,10 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:84
+msgid "Top"
+msgstr ""
+
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:121
 msgid "Unlock Account"
 msgstr ""
@@ -251,6 +320,10 @@ msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:60
 msgid "View Details"
+msgstr ""
+
+#: src/modules/content/Posts/components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:81
+msgid "View Post"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:129

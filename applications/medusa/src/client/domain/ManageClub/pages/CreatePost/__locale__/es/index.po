@@ -65,7 +65,7 @@ msgstr ""
 #~ msgid "Create a Club"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:76
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:82
 msgid "Creating your post..."
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Drop your files to upload them"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/SearchInput/SearchInput.tsx:30
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/SearchInput/SearchInput.tsx:42
 msgid "Enter a search term"
 msgstr "<<<<<<< HEAD"
 
@@ -91,12 +91,12 @@ msgid "Go to my posts"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/RootSearchCategories/SearchCategories/SearchCategories.tsx:134
-msgid "Load More Categories"
-msgstr ""
+#~ msgid "Load More Categories"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/RootSearchCharacters/SearchCharacters/SearchCharacters.tsx:133
-msgid "Load More Characters"
-msgstr ""
+#~ msgid "Load More Characters"
+#~ msgstr ""
 
 #: src/client/domain/Manage/ManagePosts/CreatePost/components/ClubSelector/ClubSelector.tsx:181
 #~ msgid "Load more clubs"
@@ -110,11 +110,11 @@ msgstr ""
 #~ msgid "My Content"
 #~ msgstr "<<<<<<< HEAD"
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/ProcessButton/ProcessButton.tsx:49
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:107
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:123
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:122
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:136
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/ProcessButton/ProcessButton.tsx:50
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:109
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:125
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:124
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:138
 msgid "Next"
 msgstr ""
 
@@ -170,10 +170,10 @@ msgstr "<<<<<<< HEAD"
 msgid "Review your selections"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:93
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:109
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:109
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:122
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:94
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:110
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:110
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:123
 msgid "Save"
 msgstr ""
 
@@ -233,7 +233,7 @@ msgstr "<<<<<<< HEAD"
 msgid "Step 6"
 msgstr "=======>>>>>>> master"
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:90
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:91
 msgid "Submit"
 msgstr ""
 
@@ -245,7 +245,7 @@ msgstr ""
 msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:49
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:48
 msgid "There was an error creating a draft post"
 msgstr ""
 
@@ -277,12 +277,12 @@ msgstr ""
 msgid "This post was already submitted"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:93
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:99
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:150
 msgid "Upload Files"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:98
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:104
 msgid "Upload one or more files by dragging and dropping them or by clicking here"
 msgstr ""
 

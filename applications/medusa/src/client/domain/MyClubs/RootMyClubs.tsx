@@ -6,7 +6,7 @@ import type { MyClubsQuery as MyClubsQueryType } from '@//:artifacts/MyClubsQuer
 import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import SkeletonPost from '@//:modules/content/Skeleton/SkeletonPost/SkeletonPost'
+import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {

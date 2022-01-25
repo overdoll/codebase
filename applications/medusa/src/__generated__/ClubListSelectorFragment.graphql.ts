@@ -9,7 +9,7 @@ export type ClubListSelectorFragment = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly slug: string;
-                readonly " $fragmentRefs": FragmentRefs<"ClubPreviewFragment">;
+                readonly " $fragmentRefs": FragmentRefs<"ClubTileOverlayFragment">;
             };
         }>;
     };
@@ -121,7 +121,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ClubPreviewFragment"
+                  "name": "ClubTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -176,5 +176,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '7bac6130a4d785829a5c3f65d8e39fbb';
+(node as any).hash = '895ae34790f2e7dece66f96eb0659eda';
 export default node;

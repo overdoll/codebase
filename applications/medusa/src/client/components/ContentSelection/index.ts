@@ -1,7 +1,0 @@
-export { default as SelectorTextOverlay } from './components/SelectorTextOverlay/SelectorTextOverlay'
-export { default as Selector } from './components/Selector/Selector'
-export { default as RowWrap } from './components/RowWrap/RowWrap'
-export { default as RowItem } from './components/RowItem/RowItem'
-export { default as GridWrap } from './components/GridWrap/GridWrap'
-export { default as RectangleGridItem } from './components/RectangleGridItem/RectangleGridItem'
-export { default as useSingleSelector } from './hooks/useSingleSelector/index'

@@ -1,11 +1,15 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFragment.graphql'
-import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Trans } from '@lingui/macro'
-import { Flex, Text } from '@chakra-ui/react'
-import ClubPreview from '../../ClubPreview/ClubPreview'
-import { RowItem, RowWrap, Selector, useSingleSelector } from '../../../../../components/ContentSelection'
+import {
+  GridTile,
+  GridWrap,
+  LoadMoreGridTile,
+  Selector,
+  useSingleSelector
+} from '../../../../../../modules/content/ContentSelection'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
+import ClubTileOverlay
+  from '../../../../../../modules/content/ContentSelection/components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 
 interface Props {
   query: ClubListSelectorFragment$key | null
@@ -31,7 +35,7 @@ const Fragment = graphql`
       edges {
         node {
           slug
-          ...ClubPreviewFragment
+          ...ClubTileOverlayFragment
         }
       }
     }
@@ -62,39 +66,24 @@ export default function ClubListSelector ({
   }
 
   return (
-    <RowWrap>
+    <GridWrap>
       {data.clubs.edges.map((item, index) => (
-        <RowItem h='100%' key={index}>
+        <GridTile key={index}>
           <Selector
             onSelect={onSelect}
             selected={(currentSelection != null) ? [currentSelection] : []}
             id={item.node.slug}
           >
-            <Flex
-              px={2}
-              py={2}
-            >
-              <ClubPreview query={item.node} />
-            </Flex>
+            <ClubTileOverlay query={item.node} />
           </Selector>
-        </RowItem>
+        </GridTile>
       )
       )}
-      {hasNext &&
-        <RowItem h='100%'>
-          <ClickableBox
-            onClick={() => loadNext(3)}
-            isLoading={isLoadingNext}
-          >
-            <Flex justify='center'>
-              <Text>
-                <Trans>
-                  Load more clubs
-                </Trans>
-              </Text>
-            </Flex>
-          </ClickableBox>
-        </RowItem>}
-    </RowWrap>
+      <LoadMoreGridTile
+        hasNext={hasNext}
+        onLoadNext={() => loadNext(3)}
+        isLoadingNext={isLoadingNext}
+      />
+    </GridWrap>
   )
 }
