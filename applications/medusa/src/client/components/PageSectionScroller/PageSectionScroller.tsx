@@ -77,7 +77,10 @@ export default function PageSectionScroller ({
         <Swiper
           onSwiper={(swiper) => setSwiper(swiper)}
           onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
-          style={{ height: '100%' }}
+          style={{
+            height: '100%',
+            overflow: 'visible'
+          }}
           spaceBetween={20}
           simulateTouch={false}
           nested

@@ -3,7 +3,7 @@ import type { ViewClubQuery } from '@//:artifacts/ViewClubQuery.graphql'
 import { graphql } from 'react-relay'
 import { useHistory } from '@//:modules/routing'
 import LargeClubHeader from '../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
-import { Avatar, AvatarGroup, Flex, HStack, Stack } from '@chakra-ui/react'
+import { Avatar, AvatarGroup, Box, HStack, Stack } from '@chakra-ui/react'
 import StatisticNumber from '../../../ManageClub/components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
@@ -11,6 +11,8 @@ import { abbreviateNumber } from '@//:modules/support'
 import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
 import PublicClubPosts from '../../../ManageClub/components/PublicClubPosts/PublicClubPosts'
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
+import ItemOverlay from '../../../../components/ContentSelection/components/ItemOverlay/ItemOverlay'
+import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 
 interface Props {
   query: PreloadedQuery<ViewClubQuery>
@@ -27,6 +29,15 @@ const Query = graphql`
               avatar {
                 ...ResourceIconFragment
               }
+            }
+          }
+        }
+      }
+      backgroundPost: posts(first: 1) {
+        edges {
+          node {
+            content {
+              ...ResourceItemFragment
             }
           }
         }
@@ -49,7 +60,7 @@ export default function ViewClub (props: Props): JSX.Element {
 
   const history = useHistory()
 
-  if (queryData.club == null) {
+  if (queryData?.club == null) {
     history.push('/')
   }
 
@@ -79,19 +90,26 @@ export default function ViewClub (props: Props): JSX.Element {
 
   return (
     <Stack spacing={12}>
-      <Flex align='center' justify='space-between'>
-        <LargeClubHeader query={queryData?.club} />
+      <Stack spacing={2}>
+        <Box h={140}>
+          <ItemOverlay
+            background={<ResourceItem query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0] ?? null} />}
+          >
+            <LargeClubHeader query={queryData?.club} />
+
+          </ItemOverlay>
+        </Box>
         <JoinClubButton
+          w='100%'
           clubQuery={queryData?.club}
           viewerQuery={queryData?.viewer}
         />
-      </Flex>
+      </Stack>
       <Stack spacing={4}>
         <HStack spacing={8}>
           <StatisticNumber value={number} text={i18n._(t`Members`)} />
           <AddAvatars />
         </HStack>
-
       </Stack>
       <Stack spacing={2}>
         <PageSectionWrap>

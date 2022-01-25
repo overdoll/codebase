@@ -1,15 +1,22 @@
-import { useState } from 'react'
-import { CloseButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { MutableRefObject, useEffect, useState } from 'react'
+import { CloseButton, HTMLChakraProps, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 
-interface Props {
-  children: ({ searchInput: string }) => {}
+interface Props extends HTMLChakraProps<any> {
+  children?: ({ searchInput: string }) => {}
   placeholder?: string
+  onChange?: (search) => void
+  variant?: string
+  sendRef?: MutableRefObject<any>
 }
 
 export default function SearchInput ({
   placeholder,
-  children
+  children,
+  onChange,
+  variant = 'filled',
+  sendRef,
+  ...rest
 }: Props): JSX.Element {
   const [searchInput, setSearch] = useState('')
 
@@ -21,25 +28,32 @@ export default function SearchInput ({
     setSearch(e.target.value)
   }
 
+  useEffect(() => {
+    onChange?.(searchInput)
+  }, [searchInput])
+
   return (
     <>
       <InputGroup>
         <Input
+          ref={sendRef}
           size='lg'
           value={searchInput}
           placeholder={placeholder ?? t`Enter a search term`}
           onChange={onChangeInput}
-          variant='filled'
+          variant={variant}
+          {...rest}
         />
         <InputRightElement mr={2} h='100%'>
           <CloseButton
+            my={1}
             color='gray.200'
-            hidden={searchInput !== ''}
+            hidden={searchInput === ''}
             onClick={clearSearch}
           />
         </InputRightElement>
       </InputGroup>
-      {children({ searchInput })}
+      {children?.({ searchInput })}
     </>
   )
 }

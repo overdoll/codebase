@@ -26,7 +26,7 @@ export default function RootViewClub (props: Props): JSX.Element {
   return (
     <>
       <Helmet title='club' />
-      <PageWrapper fillPage>
+      <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
           <Suspense fallback={<SkeletonPost />}>
             <ViewClub query={queryRef as PreloadedQuery<ViewClubQueryType>} />

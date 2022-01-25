@@ -1,47 +1,43 @@
-import {
-  PlaceholderResourceRabbit,
-  PlaceholderResourceRobot,
-  PlaceholderResourceSkull
-} from '@//:assets/icons/interface'
-import { Box } from '@chakra-ui/react'
-import { ReactNode } from 'react'
-import { Icon } from '../../index'
-import { OverlappingCircles } from '@//:assets/icons/patterns'
+import { OverlappingBubbles, OverlappingCircles, OverlappingPlus } from '@//:assets/icons/patterns'
+import IconPattern from '../../PageLayout/Flair/IconPattern/IconPattern'
 
-interface Props {
-  children: ReactNode
-}
-
-export default function RandomPattern ({ children }: Props): JSX.Element {
+export default function RandomPattern (): JSX.Element {
   const icons = [
-    PlaceholderResourceRabbit,
-    PlaceholderResourceSkull,
-    PlaceholderResourceRobot
+    {
+      icon: OverlappingBubbles,
+      zoom: 'large'
+    },
+    {
+      icon: OverlappingCircles,
+      zoom: 'small'
+    },
+    {
+      icon: OverlappingPlus,
+      zoom: 'medium'
+    }
   ]
 
   const colors = [
     'gray.00',
-    'purple.400',
-    'orange.400',
-    'teal.400',
-    'green.400',
-    'primary.400'
+    'purple.300',
+    'orange.300',
+    'teal.300',
+    'green.300',
+    'primary.300'
   ]
+
+  // TODO center it or position randomly so it doesnt look clipped on right/bottom edge
 
   const randomIcon = icons[Math.floor(Math.random() * 3)]
   const randomColor = colors[Math.floor(Math.random() * 6)]
 
-  const icon = <Icon icon={OverlappingCircles} fill='gray.00' />
-
   return (
-    <Box
-      w='100%'
-      h='100%'
-      backgroundColor='gray.100'
-      backgroundRepeat='repeat'
-      backgroundImage={`url(data:image/svg+xml;utf8,${OverlappingCircles})`}
-    >
-      {children}
-    </Box>
+    <IconPattern
+      opacity='0.05'
+      zoom={randomIcon.zoom}
+      icon={randomIcon.icon}
+      fill={randomColor}
+    />
+
   )
 }

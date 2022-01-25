@@ -10,9 +10,10 @@ import {
   SelectorTextOverlay
 } from '../../../../../../../../../../../components/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import { ClickableBox } from '@//:modules/content/PageLayout'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { Trans } from '@lingui/macro'
+import LoadMoreRectangle
+  from '../../../../../../../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   selected: string[]
@@ -118,24 +119,11 @@ export default function SearchCategories ({
           </RectangleGridItem>
         )
         )}
-        {hasNext &&
-          <RectangleGridItem height='inherit'>
-            <ClickableBox
-              w='100%'
-              h='100%'
-              onClick={() => loadNext(5)}
-              isLoading={isLoadingNext}
-              whiteSpace='normal'
-              align='center'
-              justify='center'
-            >
-              <Text textAlign='center' color='gray.00'>
-                <Trans>
-                  Load More Characters
-                </Trans>
-              </Text>
-            </ClickableBox>
-          </RectangleGridItem>}
+        <LoadMoreRectangle
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(5)}
+          isLoadingNext={isLoadingNext}
+        />
       </GridWrap>
     </>
   )

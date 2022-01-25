@@ -11,8 +11,9 @@ import {
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
-import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import LoadMoreRectangle
+  from '../../../../../../../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   selected: string[]
@@ -119,24 +120,11 @@ export default function SearchCategories ({
           </RectangleGridItem>
         )
         )}
-        {hasNext &&
-          <RectangleGridItem h='inherit'>
-            <ClickableBox
-              h='100%'
-              w='100%'
-              align='center'
-              justify='center'
-              onClick={() => loadNext(5)}
-              isLoading={isLoadingNext}
-              whiteSpace='normal'
-            >
-              <Text textAlign='center' color='gray.00'>
-                <Trans>
-                  Load More Categories
-                </Trans>
-              </Text>
-            </ClickableBox>
-          </RectangleGridItem>}
+        <LoadMoreRectangle
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(5)}
+          isLoadingNext={isLoadingNext}
+        />
       </GridWrap>
     </>
   )

@@ -113,7 +113,7 @@ export default function PostsInfiniteScroll ({
               </PostPlaceholder>}
           </SwiperSlide>
           : <SwiperSlide>
-            <LargeBackgroundBox h='75vh'>
+            <LargeBackgroundBox h='72vh'>
               <Flex align='center' h='100%' justify='center'>
                 <Heading fontSize='xl' color='gray.00'>
                   <Trans>

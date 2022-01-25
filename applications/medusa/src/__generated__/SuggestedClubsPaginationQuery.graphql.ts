@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8ae4af59008cb61236fc17297abe32e3 */
+/* @relayHash b5bd3410e12ea89650b709232e3c9a1b */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -57,7 +57,19 @@ fragment SuggestedClubsFragment_2HEEH6 on Query {
   clubs(first: $first, after: $after) {
     edges {
       node {
+        slug
         ...JoinClubButtonClubFragment
+        posts(first: 1) {
+          edges {
+            node {
+              content {
+                ...ResourceItemFragment
+                id
+              }
+              id
+            }
+          }
+        }
         thumbnail {
           ...ResourceIconFragment
           id
@@ -121,7 +133,42 @@ v3 = {
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
-};
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "urls",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "url",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -168,6 +215,13 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "slug",
+                    "storageKey": null
+                  },
                   (v2/*: any*/),
                   {
                     "alias": null,
@@ -191,46 +245,62 @@ return {
                   },
                   {
                     "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
+                    "args": [
+                      {
+                        "kind": "Literal",
+                        "name": "first",
+                        "value": 1
+                      }
+                    ],
+                    "concreteType": "PostConnection",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "posts",
                     "plural": false,
                     "selections": [
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ResourceUrl",
+                        "concreteType": "PostEdge",
                         "kind": "LinkedField",
-                        "name": "urls",
+                        "name": "edges",
                         "plural": true,
                         "selections": [
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "url",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "mimeType",
+                            "concreteType": "Post",
+                            "kind": "LinkedField",
+                            "name": "node",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "content",
+                                "plural": true,
+                                "selections": (v4/*: any*/),
+                                "storageKey": null
+                              },
+                              (v2/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
-                      },
-                      (v2/*: any*/)
+                      }
                     ],
+                    "storageKey": "posts(first:1)"
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "thumbnail",
+                    "plural": false,
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   (v3/*: any*/)
@@ -287,7 +357,7 @@ return {
     ]
   },
   "params": {
-    "id": "8ae4af59008cb61236fc17297abe32e3",
+    "id": "b5bd3410e12ea89650b709232e3c9a1b",
     "metadata": {},
     "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",
@@ -295,5 +365,5 @@ return {
   }
 };
 })();
-(node as any).hash = '25329969f78081d84085198ec59e5f5e';
+(node as any).hash = '84173363a2cc00f9831ded492c18c87f';
 export default node;

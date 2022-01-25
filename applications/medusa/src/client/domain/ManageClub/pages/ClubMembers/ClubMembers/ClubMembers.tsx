@@ -2,10 +2,12 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubMembersQuery } from '@//:artifacts/ClubMembersQuery.graphql'
 import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
 import { ClickableBox, ResourceIcon } from '@//:modules/content/PageLayout'
-import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
+import LoadMoreRectangle
+  from '../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -89,21 +91,11 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
           </Box>
         </RectangleGridItem>
       )}
-      {hasNext &&
-        <RectangleGridItem>
-          <ClickableBox
-            h='100%'
-            w='100%'
-            isLoading={isLoadingNext}
-            onClick={() => loadNext(20)}
-          >
-            <Heading fontSize='lg' textAlign='center' color='gray.00'>
-              <Trans>
-                Load More
-              </Trans>
-            </Heading>
-          </ClickableBox>
-        </RectangleGridItem>}
+      <LoadMoreRectangle
+        hasNext={hasNext}
+        onLoadNext={() => loadNext(20)}
+        isLoadingNext={isLoadingNext}
+      />
     </GridWrap>
   )
 }

@@ -58,7 +58,7 @@ export default function PostGalleryPublicSimple ({
           <SwiperSlide
             key={index}
           >
-            <Flex h='67vh' align='center' justify='center'>
+            <Flex h='72vh' align='center' justify='center'>
               {item.type === 'IMAGE' &&
                 <ImageSnippet h='100%' query={item} />}
               {item.type === 'VIDEO' &&
@@ -75,7 +75,7 @@ export default function PostGalleryPublicSimple ({
             </Flex>
           </SwiperSlide>)}
         <SwiperSlide>
-          <Stack h='67vh' align='center' justify='center' spacing={2}>
+          <Stack h='72vh' align='center' justify='center' spacing={2}>
             <Link to={`/p/${data?.reference as string}`}>
               <Button size='lg' colorScheme='primary'>
                 <Trans>

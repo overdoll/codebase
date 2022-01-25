@@ -8,6 +8,16 @@ export type SuggestedClubsFragment = {
     readonly clubs: {
         readonly edges: ReadonlyArray<{
             readonly node: {
+                readonly slug: string;
+                readonly posts: {
+                    readonly edges: ReadonlyArray<{
+                        readonly node: {
+                            readonly content: ReadonlyArray<{
+                                readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
+                            }>;
+                        };
+                    }>;
+                };
                 readonly thumbnail: {
                     readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
                 } | null;
@@ -95,6 +105,68 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "kind": "ScalarField",
+                  "name": "slug",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": [
+                    {
+                      "kind": "Literal",
+                      "name": "first",
+                      "value": 1
+                    }
+                  ],
+                  "concreteType": "PostConnection",
+                  "kind": "LinkedField",
+                  "name": "posts",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "PostEdge",
+                      "kind": "LinkedField",
+                      "name": "edges",
+                      "plural": true,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "concreteType": "Post",
+                          "kind": "LinkedField",
+                          "name": "node",
+                          "plural": false,
+                          "selections": [
+                            {
+                              "alias": null,
+                              "args": null,
+                              "concreteType": "Resource",
+                              "kind": "LinkedField",
+                              "name": "content",
+                              "plural": true,
+                              "selections": [
+                                {
+                                  "args": null,
+                                  "kind": "FragmentSpread",
+                                  "name": "ResourceItemFragment"
+                                }
+                              ],
+                              "storageKey": null
+                            }
+                          ],
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": "posts(first:1)"
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "Resource",
                   "kind": "LinkedField",
                   "name": "thumbnail",
@@ -173,5 +245,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '25329969f78081d84085198ec59e5f5e';
+(node as any).hash = '84173363a2cc00f9831ded492c18c87f';
 export default node;

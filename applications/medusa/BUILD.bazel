@@ -125,6 +125,7 @@ _RUNTIME_DEPS = [
     "@npm//@apollographql/graphql-playground-html",
     "@npm//url-slug",
     "@npm//usehooks-ts",
+    "@npm//@svgr/webpack"
 ]
 
 TEST_DEPS = [

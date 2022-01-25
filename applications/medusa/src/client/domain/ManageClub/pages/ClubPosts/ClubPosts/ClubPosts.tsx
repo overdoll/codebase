@@ -3,13 +3,15 @@ import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { GridWrap, RectangleGridItem } from '../../../../../components/ContentSelection'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Heading, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
 import { useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
+import LoadMoreRectangle
+  from '../../../../../components/ContentSelection/components/LoadMoreRectangle/LoadMoreRectangle'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -124,21 +126,11 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         }
       }
       )}
-      {hasNext &&
-        <RectangleGridItem>
-          <ClickableBox
-            h='100%'
-            borderRadius='md'
-            isLoading={isLoadingNext}
-            onClick={() => loadNext(4)}
-          >
-            <Heading fontSize='lg' textAlign='center' color='gray.00'>
-              <Trans>
-                Load More
-              </Trans>
-            </Heading>
-          </ClickableBox>
-        </RectangleGridItem>}
+      <LoadMoreRectangle
+        hasNext={hasNext}
+        onLoadNext={() => loadNext(4)}
+        isLoadingNext={isLoadingNext}
+      />
     </GridWrap>
   )
 }

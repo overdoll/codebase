@@ -1,6 +1,7 @@
 const baseStyle = {
   opacity: 1,
-  borderColor: 'inherit'
+  borderColor: 'gray.500',
+  borderWidth: 3
 }
 
 const variantSolid = {

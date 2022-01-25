@@ -30,10 +30,8 @@ export default function ResourceItem ({
 
   if (data == null) {
     return (
-      <Flex h='100%' w='100%' bg='gray.800' direction='column' justify='center' align='center' {...rest}>
-        <RandomPattern>
-          <></>
-        </RandomPattern>
+      <Flex bg='gray.800' h='100%' w='100%' direction='column' justify='center' align='center' {...rest}>
+        <RandomPattern />
       </Flex>
     )
   }

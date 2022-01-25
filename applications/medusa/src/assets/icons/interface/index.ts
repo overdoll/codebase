@@ -30,3 +30,6 @@ export { default as ControlFullscreenEnable } from './mini-bold/actions/control-
 export { default as PlaceholderResourceRabbit } from './normal-bold/placeholder-resource-rabbit.svg'
 export { default as PlaceholderResourceRobot } from './normal-bold/placeholder-resource-robot.svg'
 export { default as PlaceholderResourceSkull } from './normal-bold/placeholder-resource-skull.svg'
+export { default as CategoryIdentifier } from './normal-bold/category-identifier.svg'
+export { default as CharacterIdentifier } from './normal-bold/character-identifier.svg'
+export { default as SeriesIdentifier } from './normal-bold/series-identifier.svg'
