@@ -15,11 +15,26 @@ message GetAccountClubMembershipIdsRequest {
   string accountId = 1;
 }
 
+message GetClubByIdRequest {
+  string clubId = 1;
+}
+
+message SuspendClubRequest {
+  string clubId = 1;
+  int64 endTimeUnix = 2;
+}
+
+message GetClubByIdResponse {}
+
+message SuspendClubResponse {}
+
 message GetAccountClubMembershipIdsResponse {
   repeated string clubIds = 1;
 }
 
 service Stella {
+  rpc SuspendClub(SuspendClubRequest) returns (SuspendClubResponse);
+  rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
   rpc CanAccountPostUnderClub(CanAccountPostUnderClubRequest) returns (CanAccountPostUnderClubResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }

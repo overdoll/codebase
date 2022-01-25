@@ -9,37 +9,43 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"time"
 )
+
+type postAuditLog struct {
+	Id                    string  `db:"id"`
+	Bucket                int     `db:"bucket"`
+	PostId                string  `db:"post_id"`
+	ModeratorAccountId    string  `db:"moderator_account_id"`
+	Action                string  `db:"action"`
+	PostRejectionReasonId *string `db:"post_rejection_reason_id"`
+	Notes                 *string `db:"notes"`
+}
 
 var postAuditLogTable = table.New(table.Metadata{
 	Name: "post_audit_logs",
 	Columns: []string{
 		"id",
-		"moderator_account_id",
 		"bucket",
+		"post_id",
+		"moderator_account_id",
+		"action",
+		"post_rejection_reason_id",
+		"notes",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
-type postAuditLog struct {
-	Id          string `db:"id"`
-	Bucket      int    `db:"bucket"`
-	ModeratorId string `db:"moderator_account_id"`
-}
-
 var postAuditLogByPostTable = table.New(table.Metadata{
 	Name: "post_audit_logs_by_post",
 	Columns: []string{
 		"id",
-		"moderator_account_id",
 		"bucket",
 		"post_id",
-		"contributor_account_id",
-		"account_infraction_id",
+		"moderator_account_id",
 		"action",
 		"post_rejection_reason_id",
 		"notes",
@@ -48,27 +54,13 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
-type postAuditLogByPost struct {
-	Id                    string  `db:"id"`
-	Bucket                int     `db:"bucket"`
-	PostId                string  `db:"post_id"`
-	ContributorId         string  `db:"contributor_account_id"`
-	ModeratorId           string  `db:"moderator_account_id"`
-	AccountInfractionId   string  `db:"account_infraction_id"`
-	Action                string  `db:"action"`
-	PostRejectionReasonId string  `db:"post_rejection_reason_id"`
-	Notes                 *string `db:"notes"`
-}
-
 var postAuditLogByModeratorTable = table.New(table.Metadata{
 	Name: "post_audit_logs_by_moderator",
 	Columns: []string{
 		"id",
-		"moderator_account_id",
 		"bucket",
 		"post_id",
-		"contributor_account_id",
-		"account_infraction_id",
+		"moderator_account_id",
 		"action",
 		"post_rejection_reason_id",
 		"notes",
@@ -77,35 +69,25 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
-type postAuditLogByModerator struct {
-	Id                    string  `db:"id"`
-	Bucket                int     `db:"bucket"`
-	PostId                string  `db:"post_id"`
-	ContributorId         string  `db:"contributor_account_id"`
-	ModeratorId           string  `db:"moderator_account_id"`
-	AccountInfractionId   *string `db:"account_infraction_id"`
-	Action                string  `db:"action"`
-	PostRejectionReasonId *string `db:"post_rejection_reason_id"`
-	Notes                 *string `db:"notes"`
-}
-
 var postRejectionReasonTable = table.New(table.Metadata{
 	Name: "post_rejection_reasons",
 	Columns: []string{
 		"id",
-		"infraction",
 		"bucket",
+		"club_infraction_reason_id",
 		"reason",
+		"deprecated",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
 })
 
 type postRejectionReason struct {
-	Id         string            `db:"id"`
-	Infraction bool              `db:"infraction"`
-	Bucket     int               `db:"bucket"`
-	Reason     map[string]string `db:"reason"`
+	Id                     string            `db:"id"`
+	Bucket                 int               `db:"bucket"`
+	ClubInfractionReasonId string            `db:"club_infraction_reason_id"`
+	Reason                 map[string]string `db:"reason"`
+	Deprecated             bool              `db:"deprecated"`
 }
 
 type PostAuditLogCassandraRepository struct {
@@ -116,15 +98,9 @@ func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCass
 	return PostAuditLogCassandraRepository{session: session}
 }
 
-func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLogByModerator, error) {
+func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLog, error) {
 
-	var userInfractionId *string
 	var reason *string
-
-	if auditLog.IsDeniedWithInfraction() && auditLog.AccountInfraction() != nil {
-		id := auditLog.AccountInfraction().ID()
-		userInfractionId = &id
-	}
 
 	if auditLog.IsDenied() {
 		id := auditLog.RejectionReason().ID()
@@ -137,14 +113,12 @@ func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*post
 		return nil, err
 	}
 
-	return &postAuditLogByModerator{
+	return &postAuditLog{
 		Id:                    auditLog.ID(),
 		Bucket:                buck,
-		PostId:                auditLog.PostID(),
-		ModeratorId:           auditLog.ModeratorId(),
-		ContributorId:         auditLog.ContributorId(),
-		AccountInfractionId:   userInfractionId,
-		Action:                auditLog.Status().String(),
+		PostId:                auditLog.PostId(),
+		ModeratorAccountId:    auditLog.ModeratorId(),
+		Action:                auditLog.Action().String(),
 		PostRejectionReasonId: reason,
 		Notes:                 auditLog.Notes(),
 	}, nil
@@ -164,19 +138,21 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 
 	batch.Query(stmt,
 		marshalledAuditLog.Id,
-		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ModeratorAccountId,
+		marshalledAuditLog.Action,
+		marshalledAuditLog.PostRejectionReasonId,
+		marshalledAuditLog.Notes,
 	)
 
 	stmt, _ = postAuditLogByPostTable.Insert()
 
 	batch.Query(stmt,
 		marshalledAuditLog.Id,
-		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
 		marshalledAuditLog.PostId,
-		marshalledAuditLog.ContributorId,
-		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.ModeratorAccountId,
 		marshalledAuditLog.Action,
 		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
@@ -186,11 +162,9 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 
 	batch.Query(stmt,
 		marshalledAuditLog.Id,
-		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
 		marshalledAuditLog.PostId,
-		marshalledAuditLog.ContributorId,
-		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.ModeratorAccountId,
 		marshalledAuditLog.Action,
 		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
@@ -200,77 +174,34 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 		return fmt.Errorf("failed to create audit log: %v", err)
 	}
 
-	// if denied with infraction, add to infraction history for this user
-	if auditLog.IsDeniedWithInfraction() {
-		if err := r.CreateAccountInfractionHistory(ctx, auditLog.AccountInfraction()); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
-func (r PostAuditLogCassandraRepository) GetPostAuditLog(ctx context.Context, requester *principal.Principal, logId string) (*post_audit_log.PostAuditLog, error) {
+func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context, logId string) (*post_audit_log.PostAuditLog, error) {
 
-	// grab the pending post audit log to get all of the composite keys
-	postAuditLogQuery := r.session.
+	var postAudit postAuditLog
+
+	if err := r.session.
 		Query(postAuditLogTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postAuditLog{
 			Id: logId,
-		})
-
-	var postAuditLog postAuditLog
-
-	if err := postAuditLogQuery.Get(&postAuditLog); err != nil {
+		}).
+		Get(&postAudit); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post_audit_log.ErrPostRejectionReasonNotFound
+			return nil, post_audit_log.ErrPostAuditLogNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
 	}
-
-	postAuditLogByModeratorQuery := r.session.
-		Query(postAuditLogByModeratorTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(postAuditLog)
-
-	var pendingPostAuditLogByModerator postAuditLogByModerator
-
-	if err := postAuditLogByModeratorQuery.Get(&pendingPostAuditLogByModerator); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, post_audit_log.ErrPostRejectionReasonNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get audit log by moderator: %v", err)
-	}
-
-	// grab the final audit log, which is stored in the moderator spot
-
-	var userInfractionHistory *club_infraction.ClubInfraction
+	var rejectionReason *post_audit_log.PostRejectionReason
 	var err error
 
-	if pendingPostAuditLogByModerator.AccountInfractionId != nil {
-		userInfractionHistory, err = r.GetAccountInfractionHistoryById(
+	if postAudit.PostRejectionReasonId != nil {
+		rejectionReason, err = r.getPostRejectionReasonById(
 			ctx,
-			requester,
-			pendingPostAuditLogByModerator.ContributorId,
-			*pendingPostAuditLogByModerator.AccountInfractionId,
-		)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	var rejectionReason *post_audit_log.PostRejectionReason
-	if pendingPostAuditLogByModerator.PostRejectionReasonId != nil {
-		rejectionReason, err = r.GetPostRejectionReason(
-			ctx,
-			requester,
-			*pendingPostAuditLogByModerator.PostRejectionReasonId,
+			*postAudit.PostRejectionReasonId,
 		)
 
 		if err != nil {
@@ -279,24 +210,37 @@ func (r PostAuditLogCassandraRepository) GetPostAuditLog(ctx context.Context, re
 	}
 
 	infractionReason := post_audit_log.UnmarshalPostAuditLogFromDatabase(
-		pendingPostAuditLogByModerator.Id,
-		pendingPostAuditLogByModerator.PostId,
-		pendingPostAuditLogByModerator.ModeratorId,
-		pendingPostAuditLogByModerator.ContributorId,
-		pendingPostAuditLogByModerator.Action,
+		postAudit.Id,
+		postAudit.PostId,
+		postAudit.ModeratorAccountId,
+		postAudit.Action,
 		rejectionReason,
-		pendingPostAuditLogByModerator.Notes,
-		userInfractionHistory,
+		postAudit.Notes,
 	)
-
-	if err := infractionReason.CanView(requester); err != nil {
-		return nil, err
-	}
 
 	return infractionReason, nil
 }
 
+func (r PostAuditLogCassandraRepository) GetPostAuditLogByIdOperator(ctx context.Context, logId string) (*post_audit_log.PostAuditLog, error) {
+	return r.getPostAuditLogById(ctx, logId)
+}
+
+func (r PostAuditLogCassandraRepository) GetPostAuditLogById(ctx context.Context, requester *principal.Principal, logId string) (*post_audit_log.PostAuditLog, error) {
+	auditLog, err := r.getPostAuditLogById(ctx, logId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := auditLog.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return auditLog, nil
+}
+
 func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post_audit_log.PostAuditLogFilters) ([]*post_audit_log.PostAuditLog, error) {
+
 	var auditLogs []*post_audit_log.PostAuditLog
 
 	if cursor.IsEmpty() {
@@ -330,7 +274,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 		return nil, err
 	}
 
-	var results []*postAuditLogByModerator
+	var results []*postAuditLog
 
 	if err := builder.
 		// this say this may be nil but it would never actually happen because theres a validator on the filter level
@@ -349,110 +293,44 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 
 	var pendingPostAuditLogs []*post_audit_log.PostAuditLog
 
-	for _, pendingPostAuditLog := range results {
+	for _, auditLog := range results {
 
-		var userInfractionHistory *club_infraction.ClubInfraction
 		var postRejectionReason *post_audit_log.PostRejectionReason
 
 		// if rejection reason not nil, get it
-		if pendingPostAuditLog.PostRejectionReasonId != nil {
-			if rejectionReason, ok := rejectionReasonMap[*pendingPostAuditLog.PostRejectionReasonId]; ok {
+		if auditLog.PostRejectionReasonId != nil {
+			if rejectionReason, ok := rejectionReasonMap[*auditLog.PostRejectionReasonId]; ok {
 				postRejectionReason = rejectionReason
-
-				// then, get infraction record
-				if pendingPostAuditLog.AccountInfractionId != nil {
-					userInfractionHistory = club_infraction.UnmarshalAccountInfractionHistoryFromDatabase(
-						*pendingPostAuditLog.AccountInfractionId,
-						pendingPostAuditLog.ContributorId,
-						postRejectionReason,
-						time.Now(),
-					)
-				}
 			} else {
 				return nil, post_audit_log.ErrPostRejectionReasonNotFound
 			}
 		}
 
 		result := post_audit_log.UnmarshalPostAuditLogFromDatabase(
-			pendingPostAuditLog.Id,
-			pendingPostAuditLog.PostId,
-			pendingPostAuditLog.ModeratorId,
-			pendingPostAuditLog.ContributorId,
-			pendingPostAuditLog.Action,
+			auditLog.Id,
+			auditLog.PostId,
+			auditLog.ModeratorAccountId,
+			auditLog.Action,
 			postRejectionReason,
-			pendingPostAuditLog.Notes,
-			userInfractionHistory,
+			auditLog.Notes,
 		)
 
-		result.Node = paging.NewNode(pendingPostAuditLog.Id)
-
+		result.Node = paging.NewNode(auditLog.Id)
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
 	return pendingPostAuditLogs, nil
 }
 
-func (r PostAuditLogCassandraRepository) UpdatePostAuditLog(ctx context.Context, requester *principal.Principal, id string, updateFn func(auditLog *post_audit_log.PostAuditLog) error) (*post_audit_log.PostAuditLog, error) {
-
-	auditLog, err := r.GetPostAuditLog(ctx, requester, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := auditLog.CanUpdate(requester); err != nil {
-		return nil, err
-	}
-
-	err = updateFn(auditLog)
-
-	if err != nil {
-		return nil, err
-	}
-
-	marshalledAuditLog, err := marshalPostAuditLogToDatabase(auditLog)
-
-	if err != nil {
-		return nil, err
-	}
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id")
-
-	batch.Query(stmt,
-		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.Id,
-	)
-
-	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id")
-
-	batch.Query(stmt,
-		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.ModeratorId,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.Id,
-	)
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, fmt.Errorf("failed to update audit log: %v", err)
-	}
-
-	return auditLog, nil
-
-}
-
-func (r PostAuditLogCassandraRepository) GetPostRejectionReason(ctx context.Context, requester *principal.Principal, id string) (*post_audit_log.PostRejectionReason, error) {
-
-	rejectionReasonQuery := r.session.
-		Query(postRejectionReasonTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&postRejectionReason{Id: id, Bucket: 0})
+func (r PostAuditLogCassandraRepository) getPostRejectionReasonById(ctx context.Context, id string) (*post_audit_log.PostRejectionReason, error) {
 
 	var rejectionReason postRejectionReason
 
-	if err := rejectionReasonQuery.Get(&rejectionReason); err != nil {
+	if err := r.session.
+		Query(postRejectionReasonTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postRejectionReason{Id: id, Bucket: 0}).
+		Get(&rejectionReason); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post_audit_log.ErrPostRejectionReasonNotFound
@@ -461,7 +339,42 @@ func (r PostAuditLogCassandraRepository) GetPostRejectionReason(ctx context.Cont
 		return nil, fmt.Errorf("failed to get post rejection reason: %v", err)
 	}
 
-	reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+	reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(
+		rejectionReason.Id,
+		rejectionReason.Reason,
+		rejectionReason.ClubInfractionReasonId,
+		rejectionReason.Deprecated,
+	)
+
+	return reason, nil
+}
+
+func (r PostAuditLogCassandraRepository) CreatePostRejectionReason(ctx context.Context, postRejection *post_audit_log.PostRejectionReason) error {
+
+	if err := r.session.
+		Query(postRejectionReasonTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postRejectionReason{
+			Id:                     postRejection.ID(),
+			Deprecated:             postRejection.Deprecated(),
+			Bucket:                 0,
+			Reason:                 localization.MarshalTranslationToDatabase(postRejection.Reason()),
+			ClubInfractionReasonId: postRejection.ClubInfractionReasonId(),
+		}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to create post rejection reason: %v", err)
+	}
+
+	return nil
+}
+
+func (r PostAuditLogCassandraRepository) GetPostRejectionReasonById(ctx context.Context, requester *principal.Principal, id string) (*post_audit_log.PostRejectionReason, error) {
+
+	reason, err := r.getPostRejectionReasonById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := reason.CanView(requester); err != nil {
 		return nil, err
@@ -470,7 +383,7 @@ func (r PostAuditLogCassandraRepository) GetPostRejectionReason(ctx context.Cont
 	return reason, nil
 }
 
-func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post_audit_log.PostRejectionReason, error) {
+func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, deprecated bool) ([]*post_audit_log.PostRejectionReason, error) {
 
 	if err := post_audit_log.CanViewRejectionReasons(requester); err != nil {
 		return nil, err
@@ -500,7 +413,16 @@ func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Con
 	var rejectionReasons []*post_audit_log.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
 
-		reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+		if rejectionReason.Deprecated != deprecated {
+			continue
+		}
+
+		reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(
+			rejectionReason.Id,
+			rejectionReason.Reason,
+			rejectionReason.ClubInfractionReasonId,
+			rejectionReason.Deprecated,
+		)
 
 		reason.Node = paging.NewNode(rejectionReason.Id)
 		rejectionReasons = append(rejectionReasons, reason)
@@ -513,7 +435,7 @@ func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Con
 // rejection reasons as a map, which can then be used to map audit logs and infraction history without a performance penalty on hitting multiple partitions
 func (r PostAuditLogCassandraRepository) getPostRejectionReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*post_audit_log.PostRejectionReason, error) {
 
-	rejectionReasons, err := r.GetPostRejectionReasons(ctx, requester, nil)
+	rejectionReasons, err := r.GetPostRejectionReasons(ctx, requester, nil, true)
 
 	if err != nil {
 		return nil, err
@@ -526,4 +448,49 @@ func (r PostAuditLogCassandraRepository) getPostRejectionReasonsAsMap(ctx contex
 	}
 
 	return rejectionReasonMap, nil
+}
+
+func (r PostAuditLogCassandraRepository) updatePostRejectionReason(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error, columns []string) (*post_audit_log.PostRejectionReason, error) {
+
+	postRejection, err := r.getPostRejectionReasonById(ctx, postRejectionReasonId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(postRejection)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(postRejectionReasonTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postRejectionReason{
+			Id:                     postRejection.ID(),
+			Deprecated:             postRejection.Deprecated(),
+			Bucket:                 0,
+			Reason:                 localization.MarshalTranslationToDatabase(postRejection.Reason()),
+			ClubInfractionReasonId: postRejection.ClubInfractionReasonId(),
+		}).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update post rejection reason: %v", err)
+	}
+
+	return postRejection, nil
+}
+
+func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonDeprecated(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
+	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"deprecated"})
+}
+
+func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonText(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
+	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"reason"})
+}
+
+func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonClubInfractionReason(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
+	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"club_infraction_reason_id"})
 }

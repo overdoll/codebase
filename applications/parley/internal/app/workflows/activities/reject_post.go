@@ -14,11 +14,11 @@ func (h *Activities) RejectPost(ctx context.Context, postAuditLogId string) (boo
 	}
 
 	if postAuditLog.IsDeniedWithInfraction() {
-		if err := h.sting.DiscardPost(ctx, postAuditLog.PostID()); err != nil {
+		if err := h.sting.DiscardPost(ctx, postAuditLog.PostId()); err != nil {
 			return false, errors.Wrap(err, "failed to discard post")
 		}
 	} else {
-		if err := h.sting.RejectPost(ctx, postAuditLog.PostID()); err != nil {
+		if err := h.sting.RejectPost(ctx, postAuditLog.PostId()); err != nil {
 			return false, errors.Wrap(err, "failed to reject post")
 		}
 	}

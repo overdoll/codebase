@@ -9,7 +9,6 @@ import (
 
 type ModeratorById struct {
 	Principal *principal.Principal
-
 	AccountId string
 }
 

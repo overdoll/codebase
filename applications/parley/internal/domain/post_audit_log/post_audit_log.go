@@ -15,36 +15,35 @@ var (
 type PostAuditLog struct {
 	*paging.Node
 
-	id            string
-	pendingPostId string
+	id     string
+	postId string
 
 	moderatorId   string
 	contributorId string
 
 	notes *string
 
-	status PostAuditLogStatus
+	action PostAuditLogAction
 
 	rejectionReason *PostRejectionReason
 }
 
-func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
+func NewRemovePostAuditLog(requester *principal.Principal, postId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
 	}
 
 	return &PostAuditLog{
 		id:              ksuid.New().String(),
-		pendingPostId:   postId,
+		postId:          postId,
 		moderatorId:     requester.AccountId(),
-		contributorId:   contributorId,
-		status:          PostAuditLogStatusRemoved,
+		action:          PostAuditLogActionRemoved,
 		rejectionReason: rejectionReason,
 		notes:           notes,
 	}, nil
 }
 
-func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId, contributorId string) (*PostAuditLog, error) {
+func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId string) (*PostAuditLog, error) {
 	if !requester.IsStaff() {
 		// ensure moderator is the same as the one who is doing the moderation
 		if requester.AccountId() != moderatorId {
@@ -54,16 +53,15 @@ func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId,
 
 	return &PostAuditLog{
 		id:              ksuid.New().String(),
-		pendingPostId:   postId,
+		postId:          postId,
 		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          PostAuditLogStatusApproved,
+		action:          PostAuditLogActionApproved,
 		rejectionReason: nil,
 		notes:           nil,
 	}, nil
 }
 
-func NewRejectPostAuditLog(requester *principal.Principal, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
+func NewRejectPostAuditLog(requester *principal.Principal, postId, moderatorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
 	if !requester.IsStaff() {
@@ -75,25 +73,23 @@ func NewRejectPostAuditLog(requester *principal.Principal, postId, moderatorId, 
 
 	return &PostAuditLog{
 		id:              ksuid.New().String(),
-		pendingPostId:   postId,
+		postId:          postId,
 		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          PostAuditLogStatusDenied,
+		action:          PostAuditLogActionDenied,
 		rejectionReason: rejectionReason,
 		notes:           notes,
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, status string, rejectionReason *PostRejectionReason, notes *string) *PostAuditLog {
 
-	st, _ := PostAuditLogStatusFromString(status)
+	st, _ := PostAuditLogActionFromString(status)
 
 	return &PostAuditLog{
 		id:              id,
-		pendingPostId:   postId,
+		postId:          postId,
 		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          st,
+		action:          st,
 		rejectionReason: rejectionReason,
 		notes:           notes,
 	}
@@ -103,12 +99,12 @@ func (m *PostAuditLog) ID() string {
 	return m.id
 }
 
-func (m *PostAuditLog) PostID() string {
-	return m.pendingPostId
+func (m *PostAuditLog) PostId() string {
+	return m.postId
 }
 
-func (m *PostAuditLog) Status() PostAuditLogStatus {
-	return m.status
+func (m *PostAuditLog) Action() PostAuditLogAction {
+	return m.action
 }
 
 func (m *PostAuditLog) Notes() *string {
@@ -119,20 +115,16 @@ func (m *PostAuditLog) ModeratorId() string {
 	return m.moderatorId
 }
 
-func (m *PostAuditLog) ContributorId() string {
-	return m.contributorId
-}
-
 func (m *PostAuditLog) IsApproved() bool {
-	return m.status == PostAuditLogStatusApproved
+	return m.action == PostAuditLogActionApproved
 }
 
 func (m *PostAuditLog) IsRemoved() bool {
-	return m.status == PostAuditLogStatusRemoved
+	return m.action == PostAuditLogActionRemoved
 }
 
 func (m *PostAuditLog) IsDenied() bool {
-	return m.status == PostAuditLogStatusDenied
+	return m.action == PostAuditLogActionDenied
 }
 
 func (m *PostAuditLog) CanView(requester *principal.Principal) error {
@@ -153,7 +145,7 @@ func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
 }
 
 func (m *PostAuditLog) IsDeniedWithInfraction() bool {
-	return m.status == PostAuditLogStatusDenied && m.rejectionReason.InfractionId()
+	return m.action == PostAuditLogActionDenied && m.rejectionReason.IsInfraction()
 }
 
 func CanViewWithFilters(requester *principal.Principal, filter *PostAuditLogFilters) error {

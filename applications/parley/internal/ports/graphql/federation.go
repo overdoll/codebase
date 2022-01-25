@@ -100,21 +100,61 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
-		case "AccountInfractionHistory":
-			resolverName, err := entityResolverNameForAccountInfractionHistory(ctx, rep)
+		case "Club":
+			resolverName, err := entityResolverNameForClub(ctx, rep)
 			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "AccountInfractionHistory": %w`, err)
+				return fmt.Errorf(`finding resolver for Entity "Club": %w`, err)
 			}
 			switch resolverName {
 
-			case "findAccountInfractionHistoryByID":
+			case "findClubByID":
 				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findAccountInfractionHistoryByID(): %w`, err)
+					return fmt.Errorf(`unmarshalling param 0 for findClubByID(): %w`, err)
 				}
-				entity, err := ec.resolvers.Entity().FindAccountInfractionHistoryByID(ctx, id0)
+				entity, err := ec.resolvers.Entity().FindClubByID(ctx, id0)
 				if err != nil {
-					return fmt.Errorf(`resolving Entity "AccountInfractionHistory": %w`, err)
+					return fmt.Errorf(`resolving Entity "Club": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "ClubInfractionHistory":
+			resolverName, err := entityResolverNameForClubInfractionHistory(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ClubInfractionHistory": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubInfractionHistoryByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubInfractionHistoryByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubInfractionHistoryByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubInfractionHistory": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "ClubInfractionReason":
+			resolverName, err := entityResolverNameForClubInfractionReason(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ClubInfractionReason": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubInfractionReasonByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubInfractionReasonByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubInfractionReasonByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubInfractionReason": %w`, err)
 				}
 
 				list[idx[i]] = entity
@@ -292,9 +332,11 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -304,27 +346,65 @@ func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{
 	return "", fmt.Errorf("%w for Account", ErrTypeNotFound)
 }
 
-func entityResolverNameForAccountInfractionHistory(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
 		}
-		return "findAccountInfractionHistoryByID", nil
+		return "findClubByID", nil
 	}
-	return "", fmt.Errorf("%w for AccountInfractionHistory", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for Club", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubInfractionHistory(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubInfractionHistoryByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubInfractionHistory", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubInfractionReason(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubInfractionReasonByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubInfractionReason", ErrTypeNotFound)
 }
 
 func entityResolverNameForPost(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -337,9 +417,11 @@ func entityResolverNameForPost(ctx context.Context, rep map[string]interface{}) 
 func entityResolverNameForPostAuditLog(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -352,9 +434,11 @@ func entityResolverNameForPostAuditLog(ctx context.Context, rep map[string]inter
 func entityResolverNameForPostRejectionReason(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -367,9 +451,11 @@ func entityResolverNameForPostRejectionReason(ctx context.Context, rep map[strin
 func entityResolverNameForPostReport(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -382,9 +468,11 @@ func entityResolverNameForPostReport(ctx context.Context, rep map[string]interfa
 func entityResolverNameForPostReportReason(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break

@@ -6,6 +6,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 )
 
 var (
@@ -29,6 +30,9 @@ type Club struct {
 	slugAliases         []string
 	name                *localization.Translation
 	thumbnailResourceId string
+
+	suspended      bool
+	suspendedUntil *time.Time
 
 	newClubMembers []string
 
@@ -67,7 +71,7 @@ func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) 
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil *time.Time) *Club {
 	return &Club{
 		id:                  id,
 		slug:                slug,
@@ -76,6 +80,8 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		thumbnailResourceId: thumbnail,
 		ownerAccountId:      ownerAccountId,
 		membersCount:        membersCount,
+		suspended:           suspended,
+		suspendedUntil:      suspendedUntil,
 	}
 }
 
@@ -109,6 +115,39 @@ func (m *Club) NewClubMembers() []string {
 
 func (m *Club) OwnerAccountId() string {
 	return m.ownerAccountId
+}
+
+func (m *Club) Suspended() bool {
+	return m.suspended
+}
+
+func (m *Club) SuspendedUntil() *time.Time {
+	return m.suspendedUntil
+}
+
+func (m *Club) Suspend(endTime time.Time) error {
+	m.suspended = true
+	m.suspendedUntil = &endTime
+
+	return nil
+}
+
+func (m *Club) UnSuspend(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		m.suspended = false
+		m.suspendedUntil = nil
+	}
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if !m.suspendedUntil.After(time.Now()) {
+		return errors.New("cannot un suspend yet")
+	}
+
+	return nil
 }
 
 func (m *Club) AddSlugAlias(requester *principal.Principal, slug string) error {
@@ -216,6 +255,27 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 
 func (m *Club) AccountIdCanPost(accountId string) bool {
 	return m.ownerAccountId == accountId
+}
+
+func (m *Club) CanViewWithSuspended(requester *principal.Principal, suspended bool) bool {
+
+	if !suspended {
+		return true
+	}
+
+	if requester == nil && suspended {
+		return false
+	}
+
+	if requester.IsStaff() {
+		return true
+	}
+
+	if err := m.canUpdate(requester); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {

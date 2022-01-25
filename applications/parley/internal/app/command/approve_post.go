@@ -25,7 +25,7 @@ func NewApprovePostHandler(pr post_audit_log.Repository, eva EvaService, sting S
 
 func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*post_audit_log.PostAuditLog, error) {
 
-	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
+	postModeratorId, _, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
@@ -36,7 +36,6 @@ func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*post_
 		cmd.Principal,
 		cmd.PostId,
 		postModeratorId,
-		postContributorId,
 	)
 
 	if err != nil {

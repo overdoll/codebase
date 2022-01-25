@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"overdoll/applications/stella/internal/domain/club"
 	"strconv"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -26,6 +27,8 @@ type clubDocument struct {
 	CreatedAt           string            `json:"created_at"`
 	MembersCount        int               `json:"members_count"`
 	OwnerAccountId      string            `json:"owner_account_id"`
+	Suspended           bool              `json:"suspended"`
+	SuspendedUntil      *time.Time        `json:"suspended_until"`
 }
 
 const clubsIndexProperties = `
@@ -48,6 +51,12 @@ const clubsIndexProperties = `
 	},
     "owner_account_id": {
 		"type": "keyword"
+	},
+    "suspended": {
+		"type": "bool"
+	},
+    "suspended_until": {
+		"type": "date"
 	},
 	"created_at": {
 		"type": "date"
@@ -91,6 +100,8 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
 		MembersCount:        cat.MembersCount(),
 		OwnerAccountId:      cat.OwnerAccountId(),
+		Suspended:           cat.Suspended(),
+		SuspendedUntil:      cat.SuspendedUntil(),
 	}, nil
 }
 
@@ -143,6 +154,8 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 
 	query := elastic.NewBoolQuery()
 
+	query.Filter(elastic.NewTermQuery("suspended", filter.Suspended()))
+
 	if filter.OwnerAccountId() != nil {
 		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))
 	}
@@ -166,7 +179,7 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search brands: %v", err)
+		return nil, fmt.Errorf("failed search clubs: %v", err)
 	}
 
 	var brands []*club.Club
@@ -181,8 +194,8 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId)
-		newBrand.Node = paging.NewNode(bd.CreatedAt)
+		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil)
+		newBrand.Node = paging.NewNode(hit.Sort)
 
 		brands = append(brands, newBrand)
 	}
@@ -218,7 +231,10 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 				SlugAliases:         m.SlugAliases,
 				ThumbnailResourceId: m.ThumbnailResourceId,
 				Name:                m.Name,
+				OwnerAccountId:      m.OwnerAccountId,
 				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				Suspended:           m.Suspended,
+				SuspendedUntil:      m.SuspendedUntil,
 			}
 
 			_, err = r.client.

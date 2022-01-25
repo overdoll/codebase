@@ -14,7 +14,7 @@ func (h *Activities) PublishPost(ctx context.Context, postAuditLogId string) err
 	}
 
 	// post approved
-	if err := h.sting.PublishPost(ctx, postAuditLog.PostID()); err != nil {
+	if err := h.sting.PublishPost(ctx, postAuditLog.PostId()); err != nil {
 		return errors.Wrap(err, "failed to publish post")
 	}
 

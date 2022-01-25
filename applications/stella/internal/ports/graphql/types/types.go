@@ -73,6 +73,8 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// Whether or not this club is suspended.
+	Suspension *ClubSuspension `json:"suspension"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.
@@ -124,6 +126,11 @@ type ClubSlugAlias struct {
 	Slug string `json:"slug"`
 }
 
+type ClubSuspension struct {
+	// When the suspension expires. Can call UnSuspendClub when time = now.
+	Expires time.Time `json:"expires"`
+}
+
 // Create club.
 type CreateClubInput struct {
 	// The chosen slug for the club.
@@ -173,6 +180,18 @@ type Resource struct {
 }
 
 func (Resource) IsEntity() {}
+
+// Un-Suspend the club.
+type UnSuspendClubInput struct {
+	// The club to un-suspend.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Un suspend club payload.
+type UnSuspendClubPayload struct {
+	// The new club after it's not suspended anymore.
+	Club *Club `json:"club"`
+}
 
 // Update club name.
 type UpdateClubNameInput struct {

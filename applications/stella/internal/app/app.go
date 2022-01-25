@@ -23,6 +23,9 @@ type Commands struct {
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
 	BecomeClubMember              command.BecomeClubMemberHandler
 	WithdrawClubMembership        command.WithdrawClubMembershipHandler
+
+	SuspendClub   command.SuspendClubHandler
+	UnSuspendClub command.UnSuspendClubHandler
 }
 
 type Queries struct {

@@ -40,9 +40,11 @@ type Config struct {
 
 type ResolverRoot interface {
 	Account() AccountResolver
+	Club() ClubResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
 	Post() PostResolver
+	PostRejectionReason() PostRejectionReasonResolver
 	Query() QueryResolver
 }
 
@@ -53,24 +55,8 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Account struct {
 		ID                func(childComplexity int) int
-		Infractions       func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ModeratorSettings func(childComplexity int) int
 		PostAuditLogs     func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) int
-	}
-
-	AccountInfractionHistory struct {
-		ID                  func(childComplexity int) int
-		PostRejectionReason func(childComplexity int) int
-	}
-
-	AccountInfractionHistoryConnection struct {
-		Edges    func(childComplexity int) int
-		PageInfo func(childComplexity int) int
-	}
-
-	AccountInfractionHistoryEdge struct {
-		Cursor func(childComplexity int) int
-		Node   func(childComplexity int) int
 	}
 
 	AddModeratorToPostQueuePayload struct {
@@ -81,14 +67,75 @@ type ComplexityRoot struct {
 		PostAuditLog func(childComplexity int) int
 	}
 
+	Club struct {
+		ID                func(childComplexity int) int
+		InfractionHistory func(childComplexity int, after *string, before *string, first *int, last *int) int
+	}
+
+	ClubInfractionHistory struct {
+		Club             func(childComplexity int) int
+		ExpiresAt        func(childComplexity int) int
+		ID               func(childComplexity int) int
+		InfractionReason func(childComplexity int) int
+		IssuedAt         func(childComplexity int) int
+		IssuerAccount    func(childComplexity int) int
+		Source           func(childComplexity int) int
+	}
+
+	ClubInfractionHistoryConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	ClubInfractionHistoryEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	ClubInfractionReason struct {
+		Deprecated         func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		Reason             func(childComplexity int) int
+		ReasonTranslations func(childComplexity int) int
+	}
+
+	ClubInfractionReasonConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	ClubInfractionReasonEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	CreateClubInfractionReasonPayload struct {
+		ClubInfractionReason func(childComplexity int) int
+	}
+
+	CreatePostRejectionReasonPayload struct {
+		PostRejectionReason func(childComplexity int) int
+	}
+
 	Entity struct {
-		FindAccountByID                  func(childComplexity int, id relay.ID) int
-		FindAccountInfractionHistoryByID func(childComplexity int, id relay.ID) int
-		FindPostAuditLogByID             func(childComplexity int, id relay.ID) int
-		FindPostByID                     func(childComplexity int, id relay.ID) int
-		FindPostRejectionReasonByID      func(childComplexity int, id relay.ID) int
-		FindPostReportByID               func(childComplexity int, id relay.ID) int
-		FindPostReportReasonByID         func(childComplexity int, id relay.ID) int
+		FindAccountByID               func(childComplexity int, id relay.ID) int
+		FindClubByID                  func(childComplexity int, id relay.ID) int
+		FindClubInfractionHistoryByID func(childComplexity int, id relay.ID) int
+		FindClubInfractionReasonByID  func(childComplexity int, id relay.ID) int
+		FindPostAuditLogByID          func(childComplexity int, id relay.ID) int
+		FindPostByID                  func(childComplexity int, id relay.ID) int
+		FindPostRejectionReasonByID   func(childComplexity int, id relay.ID) int
+		FindPostReportByID            func(childComplexity int, id relay.ID) int
+		FindPostReportReasonByID      func(childComplexity int, id relay.ID) int
+	}
+
+	IssueClubInfractionPayload struct {
+		ClubInfractionHistory func(childComplexity int) int
+	}
+
+	Language struct {
+		Locale func(childComplexity int) int
+		Name   func(childComplexity int) int
 	}
 
 	ModeratorSettings struct {
@@ -97,12 +144,21 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddModeratorToPostQueue      func(childComplexity int, input types.AddModeratorToPostQueueInput) int
-		ApprovePost                  func(childComplexity int, input types.ApprovePostInput) int
-		RejectPost                   func(childComplexity int, input types.RejectPostInput) int
-		RemoveModeratorFromPostQueue func(childComplexity int, input types.RemoveModeratorFromPostQueueInput) int
-		RemovePost                   func(childComplexity int, input types.RemovePostInput) int
-		ReportPost                   func(childComplexity int, input types.ReportPostInput) int
+		AddModeratorToPostQueue                       func(childComplexity int, input types.AddModeratorToPostQueueInput) int
+		ApprovePost                                   func(childComplexity int, input types.ApprovePostInput) int
+		CreateClubInfractionReason                    func(childComplexity int, input types.CreateClubInfractionReasonInput) int
+		CreatePostRejectionReason                     func(childComplexity int, input types.CreatePostRejectionReasonInput) int
+		IssueClubInfraction                           func(childComplexity int, input types.IssueClubInfractionInput) int
+		RejectPost                                    func(childComplexity int, input types.RejectPostInput) int
+		RemoveClubInfractionHistory                   func(childComplexity int, input types.RemoveClubInfractionHistoryInput) int
+		RemoveModeratorFromPostQueue                  func(childComplexity int, input types.RemoveModeratorFromPostQueueInput) int
+		RemovePost                                    func(childComplexity int, input types.RemovePostInput) int
+		ReportPost                                    func(childComplexity int, input types.ReportPostInput) int
+		UpdateClubInfractionReasonDeprecated          func(childComplexity int, input types.UpdateClubInfractionReasonDeprecatedInput) int
+		UpdateClubInfractionReasonText                func(childComplexity int, input types.UpdateClubInfractionReasonTextInput) int
+		UpdatePostRejectionReasonClubInfractionReason func(childComplexity int, input types.UpdatePostRejectionReasonClubInfractionReasonInput) int
+		UpdatePostRejectionReasonDeprecated           func(childComplexity int, input types.UpdatePostRejectionReasonDeprecatedInput) int
+		UpdatePostRejectionReasonText                 func(childComplexity int, input types.UpdatePostRejectionReasonTextInput) int
 	}
 
 	PageInfo struct {
@@ -121,7 +177,6 @@ type ComplexityRoot struct {
 
 	PostAuditLog struct {
 		Action              func(childComplexity int) int
-		Contributor         func(childComplexity int) int
 		ID                  func(childComplexity int) int
 		Moderator           func(childComplexity int) int
 		Notes               func(childComplexity int) int
@@ -140,9 +195,11 @@ type ComplexityRoot struct {
 	}
 
 	PostRejectionReason struct {
-		ID         func(childComplexity int) int
-		Infraction func(childComplexity int) int
-		Reason     func(childComplexity int) int
+		ClubInfractionReason func(childComplexity int) int
+		Deprecated           func(childComplexity int) int
+		ID                   func(childComplexity int) int
+		Reason               func(childComplexity int) int
+		ReasonTranslations   func(childComplexity int) int
 	}
 
 	PostRejectionReasonConnection struct {
@@ -187,14 +244,19 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		PostRejectionReasons func(childComplexity int, after *string, before *string, first *int, last *int) int
-		PostReportReasons    func(childComplexity int, after *string, before *string, first *int, last *int) int
-		__resolve__service   func(childComplexity int) int
-		__resolve_entities   func(childComplexity int, representations []map[string]interface{}) int
+		ClubInfractionReasons func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
+		PostRejectionReasons  func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
+		PostReportReasons     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		__resolve__service    func(childComplexity int) int
+		__resolve_entities    func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	RejectPostPayload struct {
 		PostAuditLog func(childComplexity int) int
+	}
+
+	RemoveClubInfractionHistoryPayload struct {
+		ClubInfractionHistoryID func(childComplexity int) int
 	}
 
 	RemoveModeratorFromPostQueuePayload struct {
@@ -209,6 +271,31 @@ type ComplexityRoot struct {
 		PostReport func(childComplexity int) int
 	}
 
+	Translation struct {
+		Language func(childComplexity int) int
+		Text     func(childComplexity int) int
+	}
+
+	UpdateClubInfractionReasonDeprecatedUpload struct {
+		ClubInfractionReason func(childComplexity int) int
+	}
+
+	UpdateClubInfractionReasonTextPayload struct {
+		ClubInfractionReason func(childComplexity int) int
+	}
+
+	UpdatePostRejectionReasonClubInfractionReasonPayload struct {
+		PostRejectionReason func(childComplexity int) int
+	}
+
+	UpdatePostRejectionReasonDeprecatedPayload struct {
+		PostRejectionReason func(childComplexity int) int
+	}
+
+	UpdatePostRejectionReasonTextPayload struct {
+		PostRejectionReason func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -216,12 +303,16 @@ type ComplexityRoot struct {
 
 type AccountResolver interface {
 	PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error)
-	Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error)
 	ModeratorSettings(ctx context.Context, obj *types.Account) (*types.ModeratorSettings, error)
+}
+type ClubResolver interface {
+	InfractionHistory(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubInfractionHistoryConnection, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
-	FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error)
+	FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error)
+	FindClubInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.ClubInfractionHistory, error)
+	FindClubInfractionReasonByID(ctx context.Context, id relay.ID) (*types.ClubInfractionReason, error)
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error)
 	FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error)
@@ -229,6 +320,15 @@ type EntityResolver interface {
 	FindPostReportReasonByID(ctx context.Context, id relay.ID) (*types.PostReportReason, error)
 }
 type MutationResolver interface {
+	CreatePostRejectionReason(ctx context.Context, input types.CreatePostRejectionReasonInput) (*types.CreatePostRejectionReasonPayload, error)
+	UpdatePostRejectionReasonDeprecated(ctx context.Context, input types.UpdatePostRejectionReasonDeprecatedInput) (*types.UpdatePostRejectionReasonDeprecatedPayload, error)
+	UpdatePostRejectionReasonText(ctx context.Context, input types.UpdatePostRejectionReasonTextInput) (*types.UpdatePostRejectionReasonTextPayload, error)
+	UpdatePostRejectionReasonClubInfractionReason(ctx context.Context, input types.UpdatePostRejectionReasonClubInfractionReasonInput) (*types.UpdatePostRejectionReasonClubInfractionReasonPayload, error)
+	CreateClubInfractionReason(ctx context.Context, input types.CreateClubInfractionReasonInput) (*types.CreateClubInfractionReasonPayload, error)
+	UpdateClubInfractionReasonDeprecated(ctx context.Context, input types.UpdateClubInfractionReasonDeprecatedInput) (*types.UpdateClubInfractionReasonDeprecatedUpload, error)
+	UpdateClubInfractionReasonText(ctx context.Context, input types.UpdateClubInfractionReasonTextInput) (*types.UpdateClubInfractionReasonTextPayload, error)
+	IssueClubInfraction(ctx context.Context, input types.IssueClubInfractionInput) (*types.IssueClubInfractionPayload, error)
+	RemoveClubInfractionHistory(ctx context.Context, input types.RemoveClubInfractionHistoryInput) (*types.RemoveClubInfractionHistoryPayload, error)
 	RejectPost(ctx context.Context, input types.RejectPostInput) (*types.RejectPostPayload, error)
 	RemovePost(ctx context.Context, input types.RemovePostInput) (*types.RemovePostPayload, error)
 	ApprovePost(ctx context.Context, input types.ApprovePostInput) (*types.ApprovePostPayload, error)
@@ -241,8 +341,12 @@ type PostResolver interface {
 	ViewerReport(ctx context.Context, obj *types.Post) (*types.PostReport, error)
 	Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
 }
+type PostRejectionReasonResolver interface {
+	ClubInfractionReason(ctx context.Context, obj *types.PostRejectionReason) (*types.ClubInfractionReason, error)
+}
 type QueryResolver interface {
-	PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error)
+	PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.PostRejectionReasonConnection, error)
+	ClubInfractionReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.ClubInfractionReasonConnection, error)
 	PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostReportReasonConnection, error)
 }
 
@@ -268,18 +372,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.ID(childComplexity), true
 
-	case "Account.infractions":
-		if e.complexity.Account.Infractions == nil {
-			break
-		}
-
-		args, err := ec.field_Account_infractions_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Infractions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
-
 	case "Account.moderatorSettings":
 		if e.complexity.Account.ModeratorSettings == nil {
 			break
@@ -299,48 +391,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.PostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange)), true
 
-	case "AccountInfractionHistory.id":
-		if e.complexity.AccountInfractionHistory.ID == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistory.ID(childComplexity), true
-
-	case "AccountInfractionHistory.postRejectionReason":
-		if e.complexity.AccountInfractionHistory.PostRejectionReason == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistory.PostRejectionReason(childComplexity), true
-
-	case "AccountInfractionHistoryConnection.edges":
-		if e.complexity.AccountInfractionHistoryConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistoryConnection.Edges(childComplexity), true
-
-	case "AccountInfractionHistoryConnection.pageInfo":
-		if e.complexity.AccountInfractionHistoryConnection.PageInfo == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistoryConnection.PageInfo(childComplexity), true
-
-	case "AccountInfractionHistoryEdge.cursor":
-		if e.complexity.AccountInfractionHistoryEdge.Cursor == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistoryEdge.Cursor(childComplexity), true
-
-	case "AccountInfractionHistoryEdge.node":
-		if e.complexity.AccountInfractionHistoryEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.AccountInfractionHistoryEdge.Node(childComplexity), true
-
 	case "AddModeratorToPostQueuePayload.account":
 		if e.complexity.AddModeratorToPostQueuePayload.Account == nil {
 			break
@@ -355,6 +405,172 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ApprovePostPayload.PostAuditLog(childComplexity), true
 
+	case "Club.id":
+		if e.complexity.Club.ID == nil {
+			break
+		}
+
+		return e.complexity.Club.ID(childComplexity), true
+
+	case "Club.infractionHistory":
+		if e.complexity.Club.InfractionHistory == nil {
+			break
+		}
+
+		args, err := ec.field_Club_infractionHistory_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Club.InfractionHistory(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "ClubInfractionHistory.club":
+		if e.complexity.ClubInfractionHistory.Club == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.Club(childComplexity), true
+
+	case "ClubInfractionHistory.expiresAt":
+		if e.complexity.ClubInfractionHistory.ExpiresAt == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.ExpiresAt(childComplexity), true
+
+	case "ClubInfractionHistory.id":
+		if e.complexity.ClubInfractionHistory.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.ID(childComplexity), true
+
+	case "ClubInfractionHistory.infractionReason":
+		if e.complexity.ClubInfractionHistory.InfractionReason == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.InfractionReason(childComplexity), true
+
+	case "ClubInfractionHistory.issuedAt":
+		if e.complexity.ClubInfractionHistory.IssuedAt == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.IssuedAt(childComplexity), true
+
+	case "ClubInfractionHistory.issuerAccount":
+		if e.complexity.ClubInfractionHistory.IssuerAccount == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.IssuerAccount(childComplexity), true
+
+	case "ClubInfractionHistory.source":
+		if e.complexity.ClubInfractionHistory.Source == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistory.Source(childComplexity), true
+
+	case "ClubInfractionHistoryConnection.edges":
+		if e.complexity.ClubInfractionHistoryConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistoryConnection.Edges(childComplexity), true
+
+	case "ClubInfractionHistoryConnection.pageInfo":
+		if e.complexity.ClubInfractionHistoryConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistoryConnection.PageInfo(childComplexity), true
+
+	case "ClubInfractionHistoryEdge.cursor":
+		if e.complexity.ClubInfractionHistoryEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistoryEdge.Cursor(childComplexity), true
+
+	case "ClubInfractionHistoryEdge.node":
+		if e.complexity.ClubInfractionHistoryEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionHistoryEdge.Node(childComplexity), true
+
+	case "ClubInfractionReason.deprecated":
+		if e.complexity.ClubInfractionReason.Deprecated == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReason.Deprecated(childComplexity), true
+
+	case "ClubInfractionReason.id":
+		if e.complexity.ClubInfractionReason.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReason.ID(childComplexity), true
+
+	case "ClubInfractionReason.reason":
+		if e.complexity.ClubInfractionReason.Reason == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReason.Reason(childComplexity), true
+
+	case "ClubInfractionReason.reasonTranslations":
+		if e.complexity.ClubInfractionReason.ReasonTranslations == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReason.ReasonTranslations(childComplexity), true
+
+	case "ClubInfractionReasonConnection.edges":
+		if e.complexity.ClubInfractionReasonConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReasonConnection.Edges(childComplexity), true
+
+	case "ClubInfractionReasonConnection.pageInfo":
+		if e.complexity.ClubInfractionReasonConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReasonConnection.PageInfo(childComplexity), true
+
+	case "ClubInfractionReasonEdge.cursor":
+		if e.complexity.ClubInfractionReasonEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReasonEdge.Cursor(childComplexity), true
+
+	case "ClubInfractionReasonEdge.node":
+		if e.complexity.ClubInfractionReasonEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.ClubInfractionReasonEdge.Node(childComplexity), true
+
+	case "CreateClubInfractionReasonPayload.clubInfractionReason":
+		if e.complexity.CreateClubInfractionReasonPayload.ClubInfractionReason == nil {
+			break
+		}
+
+		return e.complexity.CreateClubInfractionReasonPayload.ClubInfractionReason(childComplexity), true
+
+	case "CreatePostRejectionReasonPayload.postRejectionReason":
+		if e.complexity.CreatePostRejectionReasonPayload.PostRejectionReason == nil {
+			break
+		}
+
+		return e.complexity.CreatePostRejectionReasonPayload.PostRejectionReason(childComplexity), true
+
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
 			break
@@ -367,17 +583,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindAccountByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "Entity.findAccountInfractionHistoryByID":
-		if e.complexity.Entity.FindAccountInfractionHistoryByID == nil {
+	case "Entity.findClubByID":
+		if e.complexity.Entity.FindClubByID == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findAccountInfractionHistoryByID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Entity_findClubByID_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindAccountInfractionHistoryByID(childComplexity, args["id"].(relay.ID)), true
+		return e.complexity.Entity.FindClubByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubInfractionHistoryByID":
+		if e.complexity.Entity.FindClubInfractionHistoryByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubInfractionHistoryByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubInfractionHistoryByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubInfractionReasonByID":
+		if e.complexity.Entity.FindClubInfractionReasonByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubInfractionReasonByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubInfractionReasonByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "Entity.findPostAuditLogByID":
 		if e.complexity.Entity.FindPostAuditLogByID == nil {
@@ -439,6 +679,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindPostReportReasonByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "IssueClubInfractionPayload.clubInfractionHistory":
+		if e.complexity.IssueClubInfractionPayload.ClubInfractionHistory == nil {
+			break
+		}
+
+		return e.complexity.IssueClubInfractionPayload.ClubInfractionHistory(childComplexity), true
+
+	case "Language.locale":
+		if e.complexity.Language.Locale == nil {
+			break
+		}
+
+		return e.complexity.Language.Locale(childComplexity), true
+
+	case "Language.name":
+		if e.complexity.Language.Name == nil {
+			break
+		}
+
+		return e.complexity.Language.Name(childComplexity), true
+
 	case "ModeratorSettings.isInModeratorQueue":
 		if e.complexity.ModeratorSettings.IsInModeratorQueue == nil {
 			break
@@ -477,6 +738,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.ApprovePost(childComplexity, args["input"].(types.ApprovePostInput)), true
 
+	case "Mutation.createClubInfractionReason":
+		if e.complexity.Mutation.CreateClubInfractionReason == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createClubInfractionReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateClubInfractionReason(childComplexity, args["input"].(types.CreateClubInfractionReasonInput)), true
+
+	case "Mutation.createPostRejectionReason":
+		if e.complexity.Mutation.CreatePostRejectionReason == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createPostRejectionReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePostRejectionReason(childComplexity, args["input"].(types.CreatePostRejectionReasonInput)), true
+
+	case "Mutation.issueClubInfraction":
+		if e.complexity.Mutation.IssueClubInfraction == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_issueClubInfraction_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.IssueClubInfraction(childComplexity, args["input"].(types.IssueClubInfractionInput)), true
+
 	case "Mutation.rejectPost":
 		if e.complexity.Mutation.RejectPost == nil {
 			break
@@ -488,6 +785,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RejectPost(childComplexity, args["input"].(types.RejectPostInput)), true
+
+	case "Mutation.removeClubInfractionHistory":
+		if e.complexity.Mutation.RemoveClubInfractionHistory == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeClubInfractionHistory_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveClubInfractionHistory(childComplexity, args["input"].(types.RemoveClubInfractionHistoryInput)), true
 
 	case "Mutation.removeModeratorFromPostQueue":
 		if e.complexity.Mutation.RemoveModeratorFromPostQueue == nil {
@@ -524,6 +833,66 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ReportPost(childComplexity, args["input"].(types.ReportPostInput)), true
+
+	case "Mutation.updateClubInfractionReasonDeprecated":
+		if e.complexity.Mutation.UpdateClubInfractionReasonDeprecated == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubInfractionReasonDeprecated_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubInfractionReasonDeprecated(childComplexity, args["input"].(types.UpdateClubInfractionReasonDeprecatedInput)), true
+
+	case "Mutation.updateClubInfractionReasonText":
+		if e.complexity.Mutation.UpdateClubInfractionReasonText == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubInfractionReasonText_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubInfractionReasonText(childComplexity, args["input"].(types.UpdateClubInfractionReasonTextInput)), true
+
+	case "Mutation.updatePostRejectionReasonClubInfractionReason":
+		if e.complexity.Mutation.UpdatePostRejectionReasonClubInfractionReason == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostRejectionReasonClubInfractionReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostRejectionReasonClubInfractionReason(childComplexity, args["input"].(types.UpdatePostRejectionReasonClubInfractionReasonInput)), true
+
+	case "Mutation.updatePostRejectionReasonDeprecated":
+		if e.complexity.Mutation.UpdatePostRejectionReasonDeprecated == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostRejectionReasonDeprecated_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostRejectionReasonDeprecated(childComplexity, args["input"].(types.UpdatePostRejectionReasonDeprecatedInput)), true
+
+	case "Mutation.updatePostRejectionReasonText":
+		if e.complexity.Mutation.UpdatePostRejectionReasonText == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostRejectionReasonText_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostRejectionReasonText(childComplexity, args["input"].(types.UpdatePostRejectionReasonTextInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -598,13 +967,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostAuditLog.Action(childComplexity), true
 
-	case "PostAuditLog.contributor":
-		if e.complexity.PostAuditLog.Contributor == nil {
-			break
-		}
-
-		return e.complexity.PostAuditLog.Contributor(childComplexity), true
-
 	case "PostAuditLog.id":
 		if e.complexity.PostAuditLog.ID == nil {
 			break
@@ -668,6 +1030,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostAuditLogEdge.Node(childComplexity), true
 
+	case "PostRejectionReason.clubInfractionReason":
+		if e.complexity.PostRejectionReason.ClubInfractionReason == nil {
+			break
+		}
+
+		return e.complexity.PostRejectionReason.ClubInfractionReason(childComplexity), true
+
+	case "PostRejectionReason.deprecated":
+		if e.complexity.PostRejectionReason.Deprecated == nil {
+			break
+		}
+
+		return e.complexity.PostRejectionReason.Deprecated(childComplexity), true
+
 	case "PostRejectionReason.id":
 		if e.complexity.PostRejectionReason.ID == nil {
 			break
@@ -675,19 +1051,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostRejectionReason.ID(childComplexity), true
 
-	case "PostRejectionReason.infraction":
-		if e.complexity.PostRejectionReason.Infraction == nil {
-			break
-		}
-
-		return e.complexity.PostRejectionReason.Infraction(childComplexity), true
-
 	case "PostRejectionReason.reason":
 		if e.complexity.PostRejectionReason.Reason == nil {
 			break
 		}
 
 		return e.complexity.PostRejectionReason.Reason(childComplexity), true
+
+	case "PostRejectionReason.reasonTranslations":
+		if e.complexity.PostRejectionReason.ReasonTranslations == nil {
+			break
+		}
+
+		return e.complexity.PostRejectionReason.ReasonTranslations(childComplexity), true
 
 	case "PostRejectionReasonConnection.edges":
 		if e.complexity.PostRejectionReasonConnection.Edges == nil {
@@ -808,6 +1184,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostReportReasonEdge.Node(childComplexity), true
 
+	case "Query.clubInfractionReasons":
+		if e.complexity.Query.ClubInfractionReasons == nil {
+			break
+		}
+
+		args, err := ec.field_Query_clubInfractionReasons_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ClubInfractionReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool)), true
+
 	case "Query.postRejectionReasons":
 		if e.complexity.Query.PostRejectionReasons == nil {
 			break
@@ -818,7 +1206,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PostRejectionReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Query.PostRejectionReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool)), true
 
 	case "Query.postReportReasons":
 		if e.complexity.Query.PostReportReasons == nil {
@@ -858,6 +1246,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RejectPostPayload.PostAuditLog(childComplexity), true
 
+	case "RemoveClubInfractionHistoryPayload.clubInfractionHistoryId":
+		if e.complexity.RemoveClubInfractionHistoryPayload.ClubInfractionHistoryID == nil {
+			break
+		}
+
+		return e.complexity.RemoveClubInfractionHistoryPayload.ClubInfractionHistoryID(childComplexity), true
+
 	case "RemoveModeratorFromPostQueuePayload.account":
 		if e.complexity.RemoveModeratorFromPostQueuePayload.Account == nil {
 			break
@@ -878,6 +1273,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ReportPostPayload.PostReport(childComplexity), true
+
+	case "Translation.language":
+		if e.complexity.Translation.Language == nil {
+			break
+		}
+
+		return e.complexity.Translation.Language(childComplexity), true
+
+	case "Translation.text":
+		if e.complexity.Translation.Text == nil {
+			break
+		}
+
+		return e.complexity.Translation.Text(childComplexity), true
+
+	case "UpdateClubInfractionReasonDeprecatedUpload.clubInfractionReason":
+		if e.complexity.UpdateClubInfractionReasonDeprecatedUpload.ClubInfractionReason == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubInfractionReasonDeprecatedUpload.ClubInfractionReason(childComplexity), true
+
+	case "UpdateClubInfractionReasonTextPayload.clubInfractionReason":
+		if e.complexity.UpdateClubInfractionReasonTextPayload.ClubInfractionReason == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubInfractionReasonTextPayload.ClubInfractionReason(childComplexity), true
+
+	case "UpdatePostRejectionReasonClubInfractionReasonPayload.postRejectionReason":
+		if e.complexity.UpdatePostRejectionReasonClubInfractionReasonPayload.PostRejectionReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostRejectionReasonClubInfractionReasonPayload.PostRejectionReason(childComplexity), true
+
+	case "UpdatePostRejectionReasonDeprecatedPayload.postRejectionReason":
+		if e.complexity.UpdatePostRejectionReasonDeprecatedPayload.PostRejectionReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostRejectionReasonDeprecatedPayload.PostRejectionReason(childComplexity), true
+
+	case "UpdatePostRejectionReasonTextPayload.postRejectionReason":
+		if e.complexity.UpdatePostRejectionReasonTextPayload.PostRejectionReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostRejectionReasonTextPayload.PostRejectionReason(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -965,9 +1409,6 @@ type PostAuditLog implements Node @key(fields: "id") {
   """ID of the audit log"""
   id: ID!
 
-  """The contributor that the audit log belongs to"""
-  contributor: Account!
-
   """The moderator that this log belongs to"""
   moderator: Account!
 
@@ -1000,6 +1441,62 @@ type PostAuditLogConnection {
 input PostAuditLogDateRange {
   from: Time!
   to: Time!
+}
+
+"""Infraction history belonging to an account"""
+type PostRejectionReason implements Node @key(fields: "id") {
+  """ID of the rejection reason"""
+  id: ID!
+
+  """The reason for this rejection"""
+  reason: String!
+
+  """All translations for this reason."""
+  reasonTranslations: [Translation!]!
+
+  """The club infraction reason, linked to this rejection reason."""
+  clubInfractionReason: ClubInfractionReason @goField(forceResolver: true)
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
+}
+
+"""Edge of the pending post rejection reason"""
+type PostRejectionReasonEdge {
+  node: PostRejectionReason!
+  cursor: String!
+}
+
+"""Connection of the pending post rejection reason"""
+type PostRejectionReasonConnection {
+  edges: [PostRejectionReasonEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
+  """
+  Get rejection reasons that can be used for pending posts
+
+  Only viewable by moderators+
+  """
+  postRejectionReasons(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
+  ): PostRejectionReasonConnection! @goField(forceResolver: true)
 }
 
 extend type Post {
@@ -1046,41 +1543,172 @@ extend type Account {
     dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }
+
+"""Create a new post rejection reason input."""
+input CreatePostRejectionReasonInput {
+  """The reason text."""
+  reason: String!
+
+  """The club infraction reason to use. Optional."""
+  clubInfractionReason: ID
+}
+
+"""Update post rejection reason reason."""
+input UpdatePostRejectionReasonTextInput {
+  """The post rejection reason against."""
+  rejectionReasonId: ID!
+
+  """The reason to update"""
+  reason: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Update post rejection reason."""
+input UpdatePostRejectionReasonDeprecatedInput {
+  """The post rejection reason to take action against."""
+  rejectionReasonId: ID!
+
+  """Whether or not this post rejection reason should be deprecated."""
+  deprecated: Boolean!
+}
+
+"""Update post rejection reason club infraction reason."""
+input UpdatePostRejectionReasonClubInfractionReasonInput {
+  """The post rejection reason against."""
+  rejectionReasonId: ID!
+
+  """The club infraction reason to use. Pass nil if removing"""
+  clubInfractionReason: ID
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonDeprecatedPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonTextPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Create post rejection reason."""
+type CreatePostRejectionReasonPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonClubInfractionReasonPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+extend type Mutation {
+  """
+  Create a new post rejection reason.
+  """
+  createPostRejectionReason(input: CreatePostRejectionReasonInput!): CreatePostRejectionReasonPayload
+
+  """
+  Update post rejection reason deprecated.
+  """
+  updatePostRejectionReasonDeprecated(input: UpdatePostRejectionReasonDeprecatedInput!): UpdatePostRejectionReasonDeprecatedPayload
+
+  """
+  Update post rejection reason text.
+  """
+  updatePostRejectionReasonText(input: UpdatePostRejectionReasonTextInput!): UpdatePostRejectionReasonTextPayload
+
+  """
+  Update post rejection reason club infraction reason.
+  """
+  updatePostRejectionReasonClubInfractionReason(input: UpdatePostRejectionReasonClubInfractionReasonInput!): UpdatePostRejectionReasonClubInfractionReasonPayload
+}
 `, BuiltIn: false},
-	{Name: "schema/infraction/schema.graphql", Input: `"""Infraction history belonging to an account"""
-type AccountInfractionHistory implements Node @key(fields: "id") {
+	{Name: "schema/club_infraction/schema.graphql", Input: `"""Club infraction reason."""
+type ClubInfractionReason implements Node @key(fields: "id") {
+  """ID of the infraction reason."""
+  id: ID!
+
+  """The reason."""
+  reason: String!
+
+  """All translations for this reason."""
+  reasonTranslations: [Translation!]!
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
+}
+
+"""Edge of the club infraction reason"""
+type ClubInfractionReasonEdge {
+  node: ClubInfractionReason!
+  cursor: String!
+}
+
+"""Connection of the club infraction reason"""
+type ClubInfractionReasonConnection {
+  edges: [ClubInfractionReasonEdge!]!
+  pageInfo: PageInfo!
+}
+
+enum ClubInfractionHistorySource {
+  MANUAL
+  POST_MODERATION_REJECTION
+  POST_MANUAL_REMOVAL
+}
+
+"""Infraction history belonging to a club"""
+type ClubInfractionHistory implements Node @key(fields: "id") {
   """ID of the infraction history"""
   id: ID!
 
-  """The reason for this infraction, as a post rejection reason"""
-  postRejectionReason: PostRejectionReason!
+  """The club belonging to this history object."""
+  club: Club!
+
+  """The account that issued this infraction."""
+  issuerAccount: Account!
+
+  """The club infraction reason."""
+  infractionReason: ClubInfractionReason!
+
+  """The source for this infraction."""
+  source: ClubInfractionHistorySource!
+
+  """When this infraction was issued."""
+  issuedAt: Time!
+
+  """When this infraction expires (no longer considered when issuing future infractions)."""
+  expiresAt: Time!
 }
 
 """Edge of the infraction history"""
-type AccountInfractionHistoryEdge {
-  node: AccountInfractionHistory!
+type ClubInfractionHistoryEdge {
+  node: ClubInfractionHistory!
   cursor: String!
 }
 
 """Connection of the infraction history"""
-type AccountInfractionHistoryConnection {
-  edges: [AccountInfractionHistoryEdge!]!
+type ClubInfractionHistoryConnection {
+  edges: [ClubInfractionHistoryEdge!]!
   pageInfo: PageInfo!
 }
 
-extend type Account {
+extend type Club {
   """
-  Infraction history for this account
+  Infraction history for this club
 
   Viewable by the currently authenticated account or staff+
   """
-  infractions(
+  infractionHistory(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    """Returns the elements in the list that come before the specified cursor."""
     before: String
 
     """Returns the first _n_ elements from the list."""
@@ -1088,40 +1716,14 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountInfractionHistoryConnection! @goField(forceResolver: true)
-}
-
-"""Infraction history belonging to an account"""
-type PostRejectionReason implements Node @key(fields: "id") {
-  """ID of the rejection reason"""
-  id: ID!
-
-  """The reason for this rejection"""
-  reason: String!
-
-  """If the rejection reason will count against an infraction on the account"""
-  infraction: Boolean!
-}
-
-"""Edge of the pending post rejection reason"""
-type PostRejectionReasonEdge {
-  node: PostRejectionReason!
-  cursor: String!
-}
-
-"""Connection of the pending post rejection reason"""
-type PostRejectionReasonConnection {
-  edges: [PostRejectionReasonEdge!]!
-  pageInfo: PageInfo!
+  ): ClubInfractionHistoryConnection! @goField(forceResolver: true)
 }
 
 extend type Query {
   """
-  Get rejection reasons that can be used for pending posts
-
-  Only viewable by moderators+
+  Get club infraction reasons.
   """
-  postRejectionReasons(
+  clubInfractionReasons(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1135,8 +1737,116 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostRejectionReasonConnection! @goField(forceResolver: true)
-}`, BuiltIn: false},
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
+  ): ClubInfractionReasonConnection! @goField(forceResolver: true)
+}
+
+"""Create a new club infraction reason input."""
+input CreateClubInfractionReasonInput {
+  """The reason text."""
+  reason: String!
+}
+
+"""Update club infraction reason."""
+input UpdateClubInfractionReasonDeprecatedInput {
+  """The club infraction to take action against."""
+  reasonId: ID!
+
+  """Whether or not this club infraction reason should be deprecated."""
+  deprecated: Boolean!
+}
+
+"""Update club infraction reason."""
+input UpdateClubInfractionReasonTextInput {
+  """The club infraction to take action against."""
+  reasonId: ID!
+
+  """The reason to update"""
+  reason: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Issue a club infraction."""
+input IssueClubInfractionInput {
+  """The club to issue the infraction to."""
+  clubId: ID!
+
+  """The club infraction to use."""
+  infractionReasonId: ID!
+
+  """Pass a custom end time. If none is passed, will use sliding scale based on previous infractions."""
+  customEndTime: Time
+}
+
+"""Remove a club infraction."""
+input RemoveClubInfractionHistoryInput {
+  """The history item to remove."""
+  clubInfractionHistoryId: ID!
+}
+
+"""Update club infraction reason payload."""
+type UpdateClubInfractionReasonDeprecatedUpload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Create a new club infraction reason payload."""
+type CreateClubInfractionReasonPayload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Create a new club infraction reason payload."""
+type UpdateClubInfractionReasonTextPayload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Issue a new club infraction payload."""
+type IssueClubInfractionPayload {
+  """The new club infraction history item."""
+  clubInfractionHistory: ClubInfractionHistory
+}
+
+"""Remove club infraction history."""
+type RemoveClubInfractionHistoryPayload {
+  """The removed infraction history Id."""
+  clubInfractionHistoryId: ID!
+}
+
+extend type Mutation {
+  """
+  Create a club infraction reason.
+  """
+  createClubInfractionReason(input: CreateClubInfractionReasonInput!): CreateClubInfractionReasonPayload
+
+  """
+  Update club infraction reason deprecation.
+  """
+  updateClubInfractionReasonDeprecated(input: UpdateClubInfractionReasonDeprecatedInput!): UpdateClubInfractionReasonDeprecatedUpload
+
+  """
+  Update club infraction reason text.
+  """
+  updateClubInfractionReasonText(input: UpdateClubInfractionReasonTextInput!): UpdateClubInfractionReasonTextPayload
+
+  """
+  Issue a club infraction.
+  """
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+
+  """
+  In case of a false infraction, you can remove it from the club's history.
+
+  Staff+ only.
+  """
+  removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
+}
+`, BuiltIn: false},
 	{Name: "schema/moderation/schema.graphql", Input: `"""Moderate the pending post input"""
 input RejectPostInput {
   """Pending post to take action against"""
@@ -1384,7 +2094,12 @@ extend type Mutation {
 
 extend type Post @key(fields: "id") {
   id: ID! @external
-}`, BuiltIn: false},
+}
+
+extend type Club @key(fields: "id") {
+  id: ID! @external
+}
+`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
@@ -1394,6 +2109,29 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -1417,12 +2155,14 @@ directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountInfractionHistory | Post | PostAuditLog | PostRejectionReason | PostReport | PostReportReason
+union _Entity = Account | Club | ClubInfractionHistory | ClubInfractionReason | Post | PostAuditLog | PostRejectionReason | PostReport | PostReportReason
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
-	findAccountInfractionHistoryByID(id: ID!,): AccountInfractionHistory!
+	findClubByID(id: ID!,): Club!
+	findClubInfractionHistoryByID(id: ID!,): ClubInfractionHistory!
+	findClubInfractionReasonByID(id: ID!,): ClubInfractionReason!
 	findPostByID(id: ID!,): Post!
 	findPostAuditLogByID(id: ID!,): PostAuditLog!
 	findPostRejectionReasonByID(id: ID!,): PostRejectionReason!
@@ -1459,48 +2199,6 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 		}
 	}
 	args["multi"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_infractions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
 	return args, nil
 }
 
@@ -1555,6 +2253,48 @@ func (ec *executionContext) field_Account_postAuditLogs_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Club_infractionHistory_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	return args, nil
+}
+
 func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1570,7 +2310,37 @@ func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Contex
 	return args, nil
 }
 
-func (ec *executionContext) field_Entity_findAccountInfractionHistoryByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findClubByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubInfractionHistoryByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubInfractionReasonByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -1690,6 +2460,51 @@ func (ec *executionContext) field_Mutation_approvePost_args(ctx context.Context,
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createClubInfractionReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateClubInfractionReasonInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateClubInfractionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInfractionReasonInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createPostRejectionReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreatePostRejectionReasonInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreatePostRejectionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostRejectionReasonInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_issueClubInfraction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.IssueClubInfractionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNIssueClubInfractionInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_rejectPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1697,6 +2512,21 @@ func (ec *executionContext) field_Mutation_rejectPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRejectPostInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRejectPostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeClubInfractionHistory_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RemoveClubInfractionHistoryInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRemoveClubInfractionHistoryInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubInfractionHistoryInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1742,6 +2572,81 @@ func (ec *executionContext) field_Mutation_reportPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNReportPostInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐReportPostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateClubInfractionReasonDeprecated_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubInfractionReasonDeprecatedInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubInfractionReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonDeprecatedInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateClubInfractionReasonText_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubInfractionReasonTextInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubInfractionReasonTextInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonTextInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostRejectionReasonClubInfractionReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostRejectionReasonClubInfractionReasonInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostRejectionReasonClubInfractionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonClubInfractionReasonInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostRejectionReasonDeprecated_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostRejectionReasonDeprecatedInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostRejectionReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonDeprecatedInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostRejectionReasonText_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostRejectionReasonTextInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostRejectionReasonTextInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonTextInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1873,6 +2778,57 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_clubInfractionReasons_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 bool
+	if tmp, ok := rawArgs["deprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+		arg4, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["deprecated"] = arg4
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_postRejectionReasons_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1912,6 +2868,15 @@ func (ec *executionContext) field_Query_postRejectionReasons_args(ctx context.Co
 		}
 	}
 	args["last"] = arg3
+	var arg4 bool
+	if tmp, ok := rawArgs["deprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+		arg4, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["deprecated"] = arg4
 	return args, nil
 }
 
@@ -2037,48 +3002,6 @@ func (ec *executionContext) _Account_postAuditLogs(ctx context.Context, field gr
 	return ec.marshalNPostAuditLogConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_infractions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_infractions_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Infractions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountInfractionHistoryConnection)
-	fc.Result = res
-	return ec.marshalNAccountInfractionHistoryConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryConnection(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Account_moderatorSettings(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2149,216 +3072,6 @@ func (ec *executionContext) _Account_id(ctx context.Context, field graphql.Colle
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInfractionHistory_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistory) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistory",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountInfractionHistory_postRejectionReason(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistory) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistory",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PostRejectionReason, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.PostRejectionReason)
-	fc.Result = res
-	return ec.marshalNPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountInfractionHistoryConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistoryConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistoryConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.AccountInfractionHistoryEdge)
-	fc.Result = res
-	return ec.marshalNAccountInfractionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountInfractionHistoryConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistoryConnection) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistoryConnection",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageInfo, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*relay.PageInfo)
-	fc.Result = res
-	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountInfractionHistoryEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistoryEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistoryEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountInfractionHistory)
-	fc.Result = res
-	return ec.marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountInfractionHistoryEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistoryEdge) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountInfractionHistoryEdge",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cursor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _AddModeratorToPostQueuePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AddModeratorToPostQueuePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2423,6 +3136,812 @@ func (ec *executionContext) _ApprovePostPayload_postAuditLog(ctx context.Context
 	return ec.marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Club_infractionHistory(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Club_infractionHistory_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().InfractionHistory(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionHistoryConnection)
+	fc.Result = res
+	return ec.marshalNClubInfractionHistoryConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_club(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_issuerAccount(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IssuerAccount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_infractionReason(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InfractionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalNClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_source(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Source, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.ClubInfractionHistorySource)
+	fc.Result = res
+	return ec.marshalNClubInfractionHistorySource2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistorySource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_issuedAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IssuedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistory_expiresAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistoryConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistoryConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistoryConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubInfractionHistoryEdge)
+	fc.Result = res
+	return ec.marshalNClubInfractionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistoryConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistoryConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistoryConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistoryEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistoryEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistoryEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionHistory)
+	fc.Result = res
+	return ec.marshalNClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionHistoryEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionHistoryEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionHistoryEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReason_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReason_reason(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReason_reasonTranslations(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReasonTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReason_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Deprecated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReasonConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReasonConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReasonConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubInfractionReasonEdge)
+	fc.Result = res
+	return ec.marshalNClubInfractionReasonEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReasonConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReasonConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReasonConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReasonEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReasonEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReasonEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalNClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubInfractionReasonEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubInfractionReasonEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubInfractionReasonEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreateClubInfractionReasonPayload_clubInfractionReason(ctx context.Context, field graphql.CollectedField, obj *types.CreateClubInfractionReasonPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateClubInfractionReasonPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubInfractionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalOClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreatePostRejectionReasonPayload_postRejectionReason(ctx context.Context, field graphql.CollectedField, obj *types.CreatePostRejectionReasonPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreatePostRejectionReasonPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostRejectionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostRejectionReason)
+	fc.Result = res
+	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2465,7 +3984,7 @@ func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field g
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2482,7 +4001,7 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findAccountInfractionHistoryByID_args(ctx, rawArgs)
+	args, err := ec.field_Entity_findClubByID_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2490,7 +4009,7 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindAccountInfractionHistoryByID(rctx, args["id"].(relay.ID))
+		return ec.resolvers.Entity().FindClubByID(rctx, args["id"].(relay.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2502,9 +4021,93 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountInfractionHistory)
+	res := resTmp.(*types.Club)
 	fc.Result = res
-	return ec.marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx, field.Selections, res)
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubInfractionHistoryByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubInfractionHistoryByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubInfractionHistoryByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionHistory)
+	fc.Result = res
+	return ec.marshalNClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubInfractionReasonByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubInfractionReasonByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubInfractionReasonByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalNClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findPostByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2717,6 +4320,108 @@ func (ec *executionContext) _Entity_findPostReportReasonByID(ctx context.Context
 	return ec.marshalNPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _IssueClubInfractionPayload_clubInfractionHistory(ctx context.Context, field graphql.CollectedField, obj *types.IssueClubInfractionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "IssueClubInfractionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubInfractionHistory, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionHistory)
+	fc.Result = res
+	return ec.marshalOClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Language",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Language",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ModeratorSettings_isInModeratorQueue(ctx context.Context, field graphql.CollectedField, obj *types.ModeratorSettings) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2782,6 +4487,357 @@ func (ec *executionContext) _ModeratorSettings_lastSelected(ctx context.Context,
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createPostRejectionReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createPostRejectionReason_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePostRejectionReason(rctx, args["input"].(types.CreatePostRejectionReasonInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreatePostRejectionReasonPayload)
+	fc.Result = res
+	return ec.marshalOCreatePostRejectionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostRejectionReasonPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostRejectionReasonDeprecated(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostRejectionReasonDeprecated_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostRejectionReasonDeprecated(rctx, args["input"].(types.UpdatePostRejectionReasonDeprecatedInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostRejectionReasonDeprecatedPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostRejectionReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonDeprecatedPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostRejectionReasonText(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostRejectionReasonText_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostRejectionReasonText(rctx, args["input"].(types.UpdatePostRejectionReasonTextInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostRejectionReasonTextPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostRejectionReasonTextPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonTextPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostRejectionReasonClubInfractionReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostRejectionReasonClubInfractionReason_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostRejectionReasonClubInfractionReason(rctx, args["input"].(types.UpdatePostRejectionReasonClubInfractionReasonInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostRejectionReasonClubInfractionReasonPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostRejectionReasonClubInfractionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonClubInfractionReasonPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createClubInfractionReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createClubInfractionReason_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateClubInfractionReason(rctx, args["input"].(types.CreateClubInfractionReasonInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateClubInfractionReasonPayload)
+	fc.Result = res
+	return ec.marshalOCreateClubInfractionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInfractionReasonPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateClubInfractionReasonDeprecated(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateClubInfractionReasonDeprecated_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubInfractionReasonDeprecated(rctx, args["input"].(types.UpdateClubInfractionReasonDeprecatedInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubInfractionReasonDeprecatedUpload)
+	fc.Result = res
+	return ec.marshalOUpdateClubInfractionReasonDeprecatedUpload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonDeprecatedUpload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateClubInfractionReasonText(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateClubInfractionReasonText_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubInfractionReasonText(rctx, args["input"].(types.UpdateClubInfractionReasonTextInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubInfractionReasonTextPayload)
+	fc.Result = res
+	return ec.marshalOUpdateClubInfractionReasonTextPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonTextPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_issueClubInfraction(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_issueClubInfraction_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().IssueClubInfraction(rctx, args["input"].(types.IssueClubInfractionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.IssueClubInfractionPayload)
+	fc.Result = res
+	return ec.marshalOIssueClubInfractionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_removeClubInfractionHistory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_removeClubInfractionHistory_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveClubInfractionHistory(rctx, args["input"].(types.RemoveClubInfractionHistoryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RemoveClubInfractionHistoryPayload)
+	fc.Result = res
+	return ec.marshalORemoveClubInfractionHistoryPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubInfractionHistoryPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_rejectPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3338,41 +5394,6 @@ func (ec *executionContext) _PostAuditLog_id(ctx context.Context, field graphql.
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostAuditLog_contributor(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "PostAuditLog",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Contributor, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _PostAuditLog_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3752,7 +5773,7 @@ func (ec *executionContext) _PostRejectionReason_reason(ctx context.Context, fie
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostRejectionReason_infraction(ctx context.Context, field graphql.CollectedField, obj *types.PostRejectionReason) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostRejectionReason_reasonTranslations(ctx context.Context, field graphql.CollectedField, obj *types.PostRejectionReason) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3770,7 +5791,74 @@ func (ec *executionContext) _PostRejectionReason_infraction(ctx context.Context,
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Infraction, nil
+		return obj.ReasonTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostRejectionReason_clubInfractionReason(ctx context.Context, field graphql.CollectedField, obj *types.PostRejectionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostRejectionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PostRejectionReason().ClubInfractionReason(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalOClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostRejectionReason_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.PostRejectionReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostRejectionReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Deprecated, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4407,7 +6495,7 @@ func (ec *executionContext) _Query_postRejectionReasons(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PostRejectionReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Query().PostRejectionReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4422,6 +6510,48 @@ func (ec *executionContext) _Query_postRejectionReasons(ctx context.Context, fie
 	res := resTmp.(*types.PostRejectionReasonConnection)
 	fc.Result = res
 	return ec.marshalNPostRejectionReasonConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReasonConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_clubInfractionReasons(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_clubInfractionReasons_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ClubInfractionReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReasonConnection)
+	fc.Result = res
+	return ec.marshalNClubInfractionReasonConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_postReportReasons(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4646,6 +6776,41 @@ func (ec *executionContext) _RejectPostPayload_postAuditLog(ctx context.Context,
 	return ec.marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _RemoveClubInfractionHistoryPayload_clubInfractionHistoryId(ctx context.Context, field graphql.CollectedField, obj *types.RemoveClubInfractionHistoryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RemoveClubInfractionHistoryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubInfractionHistoryID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _RemoveModeratorFromPostQueuePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RemoveModeratorFromPostQueuePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4740,6 +6905,236 @@ func (ec *executionContext) _ReportPostPayload_postReport(ctx context.Context, f
 	res := resTmp.(*types.PostReport)
 	fc.Result = res
 	return ec.marshalOPostReport2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReport(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Translation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Translation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Text, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateClubInfractionReasonDeprecatedUpload_clubInfractionReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubInfractionReasonDeprecatedUpload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateClubInfractionReasonDeprecatedUpload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubInfractionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalOClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateClubInfractionReasonTextPayload_clubInfractionReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubInfractionReasonTextPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateClubInfractionReasonTextPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubInfractionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubInfractionReason)
+	fc.Result = res
+	return ec.marshalOClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostRejectionReasonClubInfractionReasonPayload_postRejectionReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostRejectionReasonClubInfractionReasonPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostRejectionReasonClubInfractionReasonPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostRejectionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostRejectionReason)
+	fc.Result = res
+	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostRejectionReasonDeprecatedPayload_postRejectionReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostRejectionReasonDeprecatedPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostRejectionReasonDeprecatedPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostRejectionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostRejectionReason)
+	fc.Result = res
+	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostRejectionReasonTextPayload_postRejectionReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostRejectionReasonTextPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostRejectionReasonTextPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostRejectionReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostRejectionReason)
+	fc.Result = res
+	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -5942,6 +8337,99 @@ func (ec *executionContext) unmarshalInputApprovePostInput(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateClubInfractionReasonInput(ctx context.Context, obj interface{}) (types.CreateClubInfractionReasonInput, error) {
+	var it types.CreateClubInfractionReasonInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreatePostRejectionReasonInput(ctx context.Context, obj interface{}) (types.CreatePostRejectionReasonInput, error) {
+	var it types.CreatePostRejectionReasonInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clubInfractionReason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubInfractionReason"))
+			it.ClubInfractionReason, err = ec.unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputIssueClubInfractionInput(ctx context.Context, obj interface{}) (types.IssueClubInfractionInput, error) {
+	var it types.IssueClubInfractionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "infractionReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("infractionReasonId"))
+			it.InfractionReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "customEndTime":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("customEndTime"))
+			it.CustomEndTime, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPostAuditLogDateRange(ctx context.Context, obj interface{}) (types.PostAuditLogDateRange, error) {
 	var it types.PostAuditLogDateRange
 	asMap := map[string]interface{}{}
@@ -6034,6 +8522,29 @@ func (ec *executionContext) unmarshalInputRejectPostInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notes"))
 			it.Notes, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRemoveClubInfractionHistoryInput(ctx context.Context, obj interface{}) (types.RemoveClubInfractionHistoryInput, error) {
+	var it types.RemoveClubInfractionHistoryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubInfractionHistoryId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubInfractionHistoryId"))
+			it.ClubInfractionHistoryID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6136,6 +8647,177 @@ func (ec *executionContext) unmarshalInputReportPostInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateClubInfractionReasonDeprecatedInput(ctx context.Context, obj interface{}) (types.UpdateClubInfractionReasonDeprecatedInput, error) {
+	var it types.UpdateClubInfractionReasonDeprecatedInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonId"))
+			it.ReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "deprecated":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+			it.Deprecated, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateClubInfractionReasonTextInput(ctx context.Context, obj interface{}) (types.UpdateClubInfractionReasonTextInput, error) {
+	var it types.UpdateClubInfractionReasonTextInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reasonId"))
+			it.ReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostRejectionReasonClubInfractionReasonInput(ctx context.Context, obj interface{}) (types.UpdatePostRejectionReasonClubInfractionReasonInput, error) {
+	var it types.UpdatePostRejectionReasonClubInfractionReasonInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "rejectionReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rejectionReasonId"))
+			it.RejectionReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clubInfractionReason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubInfractionReason"))
+			it.ClubInfractionReason, err = ec.unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostRejectionReasonDeprecatedInput(ctx context.Context, obj interface{}) (types.UpdatePostRejectionReasonDeprecatedInput, error) {
+	var it types.UpdatePostRejectionReasonDeprecatedInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "rejectionReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rejectionReasonId"))
+			it.RejectionReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "deprecated":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+			it.Deprecated, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostRejectionReasonTextInput(ctx context.Context, obj interface{}) (types.UpdatePostRejectionReasonTextInput, error) {
+	var it types.UpdatePostRejectionReasonTextInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "rejectionReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rejectionReasonId"))
+			it.RejectionReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -6151,13 +8833,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._PostAuditLog(ctx, sel, obj)
-	case types.AccountInfractionHistory:
-		return ec._AccountInfractionHistory(ctx, sel, &obj)
-	case *types.AccountInfractionHistory:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._AccountInfractionHistory(ctx, sel, obj)
 	case types.PostRejectionReason:
 		return ec._PostRejectionReason(ctx, sel, &obj)
 	case *types.PostRejectionReason:
@@ -6165,6 +8840,20 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._PostRejectionReason(ctx, sel, obj)
+	case types.ClubInfractionReason:
+		return ec._ClubInfractionReason(ctx, sel, &obj)
+	case *types.ClubInfractionReason:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubInfractionReason(ctx, sel, obj)
+	case types.ClubInfractionHistory:
+		return ec._ClubInfractionHistory(ctx, sel, &obj)
+	case *types.ClubInfractionHistory:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubInfractionHistory(ctx, sel, obj)
 	case types.PostReportReason:
 		return ec._PostReportReason(ctx, sel, &obj)
 	case *types.PostReportReason:
@@ -6195,13 +8884,27 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Account(ctx, sel, obj)
-	case types.AccountInfractionHistory:
-		return ec._AccountInfractionHistory(ctx, sel, &obj)
-	case *types.AccountInfractionHistory:
+	case types.Club:
+		return ec._Club(ctx, sel, &obj)
+	case *types.Club:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._AccountInfractionHistory(ctx, sel, obj)
+		return ec._Club(ctx, sel, obj)
+	case types.ClubInfractionHistory:
+		return ec._ClubInfractionHistory(ctx, sel, &obj)
+	case *types.ClubInfractionHistory:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubInfractionHistory(ctx, sel, obj)
+	case types.ClubInfractionReason:
+		return ec._ClubInfractionReason(ctx, sel, &obj)
+	case *types.ClubInfractionReason:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubInfractionReason(ctx, sel, obj)
 	case types.Post:
 		return ec._Post(ctx, sel, &obj)
 	case *types.Post:
@@ -6276,26 +8979,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
-		case "infractions":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_infractions(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "moderatorSettings":
 			field := field
 
@@ -6325,129 +9008,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountInfractionHistoryImplementors = []string{"AccountInfractionHistory", "Node", "_Entity"}
-
-func (ec *executionContext) _AccountInfractionHistory(ctx context.Context, sel ast.SelectionSet, obj *types.AccountInfractionHistory) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountInfractionHistoryImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountInfractionHistory")
-		case "id":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistory_id(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "postRejectionReason":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistory_postRejectionReason(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountInfractionHistoryConnectionImplementors = []string{"AccountInfractionHistoryConnection"}
-
-func (ec *executionContext) _AccountInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, obj *types.AccountInfractionHistoryConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountInfractionHistoryConnectionImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountInfractionHistoryConnection")
-		case "edges":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistoryConnection_edges(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "pageInfo":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistoryConnection_pageInfo(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountInfractionHistoryEdgeImplementors = []string{"AccountInfractionHistoryEdge"}
-
-func (ec *executionContext) _AccountInfractionHistoryEdge(ctx context.Context, sel ast.SelectionSet, obj *types.AccountInfractionHistoryEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountInfractionHistoryEdgeImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountInfractionHistoryEdge")
-		case "node":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistoryEdge_node(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "cursor":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInfractionHistoryEdge_cursor(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -6516,6 +9076,429 @@ func (ec *executionContext) _ApprovePostPayload(ctx context.Context, sel ast.Sel
 	return out
 }
 
+var clubImplementors = []string{"Club", "_Entity"}
+
+func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Club")
+		case "infractionHistory":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_infractionHistory(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Club_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionHistoryImplementors = []string{"ClubInfractionHistory", "Node", "_Entity"}
+
+func (ec *executionContext) _ClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionHistory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionHistoryImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionHistory")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "club":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_club(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "issuerAccount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_issuerAccount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "infractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_infractionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "source":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_source(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "issuedAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_issuedAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "expiresAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistory_expiresAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionHistoryConnectionImplementors = []string{"ClubInfractionHistoryConnection"}
+
+func (ec *executionContext) _ClubInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionHistoryConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionHistoryConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionHistoryConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistoryConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistoryConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionHistoryEdgeImplementors = []string{"ClubInfractionHistoryEdge"}
+
+func (ec *executionContext) _ClubInfractionHistoryEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionHistoryEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionHistoryEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionHistoryEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistoryEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionHistoryEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionReasonImplementors = []string{"ClubInfractionReason", "Node", "_Entity"}
+
+func (ec *executionContext) _ClubInfractionReason(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionReason) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionReasonImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionReason")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReason_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReason_reason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reasonTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReason_reasonTranslations(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReason_deprecated(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionReasonConnectionImplementors = []string{"ClubInfractionReasonConnection"}
+
+func (ec *executionContext) _ClubInfractionReasonConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionReasonConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionReasonConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionReasonConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReasonConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReasonConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubInfractionReasonEdgeImplementors = []string{"ClubInfractionReasonEdge"}
+
+func (ec *executionContext) _ClubInfractionReasonEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubInfractionReasonEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubInfractionReasonEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubInfractionReasonEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReasonEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubInfractionReasonEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createClubInfractionReasonPayloadImplementors = []string{"CreateClubInfractionReasonPayload"}
+
+func (ec *executionContext) _CreateClubInfractionReasonPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateClubInfractionReasonPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createClubInfractionReasonPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateClubInfractionReasonPayload")
+		case "clubInfractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateClubInfractionReasonPayload_clubInfractionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createPostRejectionReasonPayloadImplementors = []string{"CreatePostRejectionReasonPayload"}
+
+func (ec *executionContext) _CreatePostRejectionReasonPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreatePostRejectionReasonPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createPostRejectionReasonPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreatePostRejectionReasonPayload")
+		case "postRejectionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreatePostRejectionReasonPayload_postRejectionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var entityImplementors = []string{"Entity"}
 
 func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -6558,7 +9541,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "findAccountInfractionHistoryByID":
+		case "findClubByID":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -6567,7 +9550,53 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findAccountInfractionHistoryByID(ctx, field)
+				res = ec._Entity_findClubByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubInfractionHistoryByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubInfractionHistoryByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubInfractionReasonByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubInfractionReasonByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6707,6 +9736,75 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var issueClubInfractionPayloadImplementors = []string{"IssueClubInfractionPayload"}
+
+func (ec *executionContext) _IssueClubInfractionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.IssueClubInfractionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, issueClubInfractionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("IssueClubInfractionPayload")
+		case "clubInfractionHistory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._IssueClubInfractionPayload_clubInfractionHistory(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var languageImplementors = []string{"Language"}
+
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Language")
+		case "locale":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Language_locale(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Language_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var moderatorSettingsImplementors = []string{"ModeratorSettings"}
 
 func (ec *executionContext) _ModeratorSettings(ctx context.Context, sel ast.SelectionSet, obj *types.ModeratorSettings) graphql.Marshaler {
@@ -6764,6 +9862,69 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
+		case "createPostRejectionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createPostRejectionReason(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostRejectionReasonDeprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostRejectionReasonDeprecated(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostRejectionReasonText":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostRejectionReasonText(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostRejectionReasonClubInfractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostRejectionReasonClubInfractionReason(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createClubInfractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createClubInfractionReason(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateClubInfractionReasonDeprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubInfractionReasonDeprecated(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateClubInfractionReasonText":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubInfractionReasonText(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "issueClubInfraction":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_issueClubInfraction(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "removeClubInfractionHistory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeClubInfractionHistory(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "rejectPost":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_rejectPost(ctx, field)
@@ -6980,16 +10141,6 @@ func (ec *executionContext) _PostAuditLog(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "contributor":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostAuditLog_contributor(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "moderator":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._PostAuditLog_moderator(ctx, field, obj)
@@ -7145,7 +10296,7 @@ func (ec *executionContext) _PostRejectionReason(ctx context.Context, sel ast.Se
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "reason":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -7155,17 +10306,44 @@ func (ec *executionContext) _PostRejectionReason(ctx context.Context, sel ast.Se
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
-		case "infraction":
+		case "reasonTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostRejectionReason_infraction(ctx, field, obj)
+				return ec._PostRejectionReason_reasonTranslations(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "clubInfractionReason":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._PostRejectionReason_clubInfractionReason(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "deprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostRejectionReason_deprecated(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -7558,6 +10736,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "clubInfractionReasons":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_clubInfractionReasons(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "postReportReasons":
 			field := field
 
@@ -7680,6 +10881,37 @@ func (ec *executionContext) _RejectPostPayload(ctx context.Context, sel ast.Sele
 	return out
 }
 
+var removeClubInfractionHistoryPayloadImplementors = []string{"RemoveClubInfractionHistoryPayload"}
+
+func (ec *executionContext) _RemoveClubInfractionHistoryPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RemoveClubInfractionHistoryPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, removeClubInfractionHistoryPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RemoveClubInfractionHistoryPayload")
+		case "clubInfractionHistoryId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RemoveClubInfractionHistoryPayload_clubInfractionHistoryId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var removeModeratorFromPostQueuePayloadImplementors = []string{"RemoveModeratorFromPostQueuePayload"}
 
 func (ec *executionContext) _RemoveModeratorFromPostQueuePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RemoveModeratorFromPostQueuePayload) graphql.Marshaler {
@@ -7749,6 +10981,187 @@ func (ec *executionContext) _ReportPostPayload(ctx context.Context, sel ast.Sele
 		case "postReport":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._ReportPostPayload_postReport(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var translationImplementors = []string{"Translation"}
+
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Translation")
+		case "language":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Translation_language(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "text":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Translation_text(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateClubInfractionReasonDeprecatedUploadImplementors = []string{"UpdateClubInfractionReasonDeprecatedUpload"}
+
+func (ec *executionContext) _UpdateClubInfractionReasonDeprecatedUpload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubInfractionReasonDeprecatedUpload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubInfractionReasonDeprecatedUploadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubInfractionReasonDeprecatedUpload")
+		case "clubInfractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateClubInfractionReasonDeprecatedUpload_clubInfractionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateClubInfractionReasonTextPayloadImplementors = []string{"UpdateClubInfractionReasonTextPayload"}
+
+func (ec *executionContext) _UpdateClubInfractionReasonTextPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubInfractionReasonTextPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubInfractionReasonTextPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubInfractionReasonTextPayload")
+		case "clubInfractionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateClubInfractionReasonTextPayload_clubInfractionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostRejectionReasonClubInfractionReasonPayloadImplementors = []string{"UpdatePostRejectionReasonClubInfractionReasonPayload"}
+
+func (ec *executionContext) _UpdatePostRejectionReasonClubInfractionReasonPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostRejectionReasonClubInfractionReasonPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostRejectionReasonClubInfractionReasonPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostRejectionReasonClubInfractionReasonPayload")
+		case "postRejectionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostRejectionReasonClubInfractionReasonPayload_postRejectionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostRejectionReasonDeprecatedPayloadImplementors = []string{"UpdatePostRejectionReasonDeprecatedPayload"}
+
+func (ec *executionContext) _UpdatePostRejectionReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostRejectionReasonDeprecatedPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostRejectionReasonDeprecatedPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostRejectionReasonDeprecatedPayload")
+		case "postRejectionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostRejectionReasonDeprecatedPayload_postRejectionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostRejectionReasonTextPayloadImplementors = []string{"UpdatePostRejectionReasonTextPayload"}
+
+func (ec *executionContext) _UpdatePostRejectionReasonTextPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostRejectionReasonTextPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostRejectionReasonTextPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostRejectionReasonTextPayload")
+		case "postRejectionReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostRejectionReasonTextPayload_postRejectionReason(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -8215,35 +11628,89 @@ func (ec *executionContext) marshalNAccount2ᚖoverdollᚋapplicationsᚋparley�
 	return ec._Account(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistory2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx context.Context, sel ast.SelectionSet, v types.AccountInfractionHistory) graphql.Marshaler {
-	return ec._AccountInfractionHistory(ctx, sel, &v)
+func (ec *executionContext) unmarshalNAddModeratorToPostQueueInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddModeratorToPostQueueInput(ctx context.Context, v interface{}) (types.AddModeratorToPostQueueInput, error) {
+	res, err := ec.unmarshalInputAddModeratorToPostQueueInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.AccountInfractionHistory) graphql.Marshaler {
+func (ec *executionContext) unmarshalNApprovePostInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐApprovePostInput(ctx context.Context, v interface{}) (types.ApprovePostInput, error) {
+	res, err := ec.unmarshalInputApprovePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBCP472string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
+	res, err := graphql.UnmarshalBoolean(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
+	res := graphql.MarshalBoolean(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNClub2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v types.Club) graphql.Marshaler {
+	return ec._Club(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._AccountInfractionHistory(ctx, sel, v)
+	return ec._Club(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistoryConnection2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, v types.AccountInfractionHistoryConnection) graphql.Marshaler {
-	return ec._AccountInfractionHistoryConnection(ctx, sel, &v)
+func (ec *executionContext) marshalNClubInfractionHistory2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, v types.ClubInfractionHistory) graphql.Marshaler {
+	return ec._ClubInfractionHistory(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistoryConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, v *types.AccountInfractionHistoryConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistory) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._AccountInfractionHistoryConnection(ctx, sel, v)
+	return ec._ClubInfractionHistory(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountInfractionHistoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNClubInfractionHistoryConnection2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubInfractionHistoryConnection) graphql.Marshaler {
+	return ec._ClubInfractionHistoryConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubInfractionHistoryConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistoryConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubInfractionHistoryConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubInfractionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubInfractionHistoryEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -8267,7 +11734,7 @@ func (ec *executionContext) marshalNAccountInfractionHistoryEdge2ᚕᚖoverdoll�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNAccountInfractionHistoryEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalNClubInfractionHistoryEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -8287,39 +11754,116 @@ func (ec *executionContext) marshalNAccountInfractionHistoryEdge2ᚕᚖoverdoll�
 	return ret
 }
 
-func (ec *executionContext) marshalNAccountInfractionHistoryEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryEdge(ctx context.Context, sel ast.SelectionSet, v *types.AccountInfractionHistoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNClubInfractionHistoryEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistoryEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistoryEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._AccountInfractionHistoryEdge(ctx, sel, v)
+	return ec._ClubInfractionHistoryEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAddModeratorToPostQueueInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddModeratorToPostQueueInput(ctx context.Context, v interface{}) (types.AddModeratorToPostQueueInput, error) {
-	res, err := ec.unmarshalInputAddModeratorToPostQueueInput(ctx, v)
+func (ec *executionContext) unmarshalNClubInfractionHistorySource2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistorySource(ctx context.Context, v interface{}) (types.ClubInfractionHistorySource, error) {
+	var res types.ClubInfractionHistorySource
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNApprovePostInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐApprovePostInput(ctx context.Context, v interface{}) (types.ApprovePostInput, error) {
-	res, err := ec.unmarshalInputApprovePostInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) marshalNClubInfractionHistorySource2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistorySource(ctx context.Context, sel ast.SelectionSet, v types.ClubInfractionHistorySource) graphql.Marshaler {
+	return v
 }
 
-func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
-	res, err := graphql.UnmarshalBoolean(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) marshalNClubInfractionReason2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx context.Context, sel ast.SelectionSet, v types.ClubInfractionReason) graphql.Marshaler {
+	return ec._ClubInfractionReason(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	res := graphql.MarshalBoolean(v)
-	if res == graphql.Null {
+func (ec *executionContext) marshalNClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionReason) graphql.Marshaler {
+	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
+		return graphql.Null
 	}
-	return res
+	return ec._ClubInfractionReason(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubInfractionReasonConnection2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubInfractionReasonConnection) graphql.Marshaler {
+	return ec._ClubInfractionReasonConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubInfractionReasonConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionReasonConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubInfractionReasonConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubInfractionReasonEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubInfractionReasonEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubInfractionReasonEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubInfractionReasonEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReasonEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionReasonEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubInfractionReasonEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCreateClubInfractionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInfractionReasonInput(ctx context.Context, v interface{}) (types.CreateClubInfractionReasonInput, error) {
+	res, err := ec.unmarshalInputCreateClubInfractionReasonInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreatePostRejectionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostRejectionReasonInput(ctx context.Context, v interface{}) (types.CreatePostRejectionReasonInput, error) {
+	res, err := ec.unmarshalInputCreatePostRejectionReasonInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
@@ -8330,6 +11874,21 @@ func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelay�
 
 func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v relay.ID) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNIssueClubInfractionInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionInput(ctx context.Context, v interface{}) (types.IssueClubInfractionInput, error) {
+	res, err := ec.unmarshalInputIssueClubInfractionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Language(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNModeratorSettings2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐModeratorSettings(ctx context.Context, sel ast.SelectionSet, v types.ModeratorSettings) graphql.Marshaler {
@@ -8723,6 +12282,11 @@ func (ec *executionContext) unmarshalNRejectPostInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNRemoveClubInfractionHistoryInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubInfractionHistoryInput(ctx context.Context, v interface{}) (types.RemoveClubInfractionHistoryInput, error) {
+	res, err := ec.unmarshalInputRemoveClubInfractionHistoryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNRemoveModeratorFromPostQueueInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveModeratorFromPostQueueInput(ctx context.Context, v interface{}) (types.RemoveModeratorFromPostQueueInput, error) {
 	res, err := ec.unmarshalInputRemoveModeratorFromPostQueueInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -8766,6 +12330,85 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Translation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *types.Translation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Translation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUpdateClubInfractionReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonDeprecatedInput(ctx context.Context, v interface{}) (types.UpdateClubInfractionReasonDeprecatedInput, error) {
+	res, err := ec.unmarshalInputUpdateClubInfractionReasonDeprecatedInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateClubInfractionReasonTextInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonTextInput(ctx context.Context, v interface{}) (types.UpdateClubInfractionReasonTextInput, error) {
+	res, err := ec.unmarshalInputUpdateClubInfractionReasonTextInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostRejectionReasonClubInfractionReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonClubInfractionReasonInput(ctx context.Context, v interface{}) (types.UpdatePostRejectionReasonClubInfractionReasonInput, error) {
+	res, err := ec.unmarshalInputUpdatePostRejectionReasonClubInfractionReasonInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostRejectionReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonDeprecatedInput(ctx context.Context, v interface{}) (types.UpdatePostRejectionReasonDeprecatedInput, error) {
+	res, err := ec.unmarshalInputUpdatePostRejectionReasonDeprecatedInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostRejectionReasonTextInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonTextInput(ctx context.Context, v interface{}) (types.UpdatePostRejectionReasonTextInput, error) {
+	res, err := ec.unmarshalInputUpdatePostRejectionReasonTextInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -9178,6 +12821,50 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) marshalOClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClubInfractionHistory(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOClubInfractionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionReason(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionReason) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClubInfractionReason(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreateClubInfractionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInfractionReasonPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateClubInfractionReasonPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateClubInfractionReasonPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCreatePostRejectionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostRejectionReasonPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostRejectionReasonPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreatePostRejectionReasonPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(relay.ID)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v *relay.ID) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -9192,6 +12879,13 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOIssueClubInfractionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionPayload(ctx context.Context, sel ast.SelectionSet, v *types.IssueClubInfractionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._IssueClubInfractionPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PostAuditLog) graphql.Marshaler {
@@ -9220,6 +12914,13 @@ func (ec *executionContext) marshalORejectPostPayload2ᚖoverdollᚋapplications
 		return graphql.Null
 	}
 	return ec._RejectPostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORemoveClubInfractionHistoryPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubInfractionHistoryPayload(ctx context.Context, sel ast.SelectionSet, v *types.RemoveClubInfractionHistoryPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RemoveClubInfractionHistoryPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORemoveModeratorFromPostQueuePayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveModeratorFromPostQueuePayload(ctx context.Context, sel ast.SelectionSet, v *types.RemoveModeratorFromPostQueuePayload) graphql.Marshaler {
@@ -9283,6 +12984,41 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	}
 	res := graphql.MarshalTime(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOUpdateClubInfractionReasonDeprecatedUpload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonDeprecatedUpload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubInfractionReasonDeprecatedUpload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubInfractionReasonDeprecatedUpload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateClubInfractionReasonTextPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonTextPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubInfractionReasonTextPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubInfractionReasonTextPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostRejectionReasonClubInfractionReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonClubInfractionReasonPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostRejectionReasonClubInfractionReasonPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostRejectionReasonClubInfractionReasonPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostRejectionReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostRejectionReasonDeprecatedPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostRejectionReasonDeprecatedPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostRejectionReasonTextPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonTextPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostRejectionReasonTextPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostRejectionReasonTextPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

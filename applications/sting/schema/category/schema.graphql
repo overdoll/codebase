@@ -1,11 +1,3 @@
-type CategoryTitleTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A title for this category."""
-  title: String!
-}
-
 type Category implements Node @key(fields: "id") {
   """An ID pointing to this category."""
   id: ID!
@@ -20,7 +12,7 @@ type Category implements Node @key(fields: "id") {
   title: String!
 
   """All translations for this title."""
-  titleTranslations: [CategoryTitleTranslation!]!
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!

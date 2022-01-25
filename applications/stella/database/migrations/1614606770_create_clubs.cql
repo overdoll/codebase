@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS clubs
     slug                  text,
     slug_aliases          set<text>,
     name                  map<text, text>,
+    suspended             boolean,
+    suspended_until       timestamp,
     members_count         int,
     thumbnail_resource_id text,
     owner_account_id      text,

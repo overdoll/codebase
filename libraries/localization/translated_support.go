@@ -2,6 +2,7 @@ package localization
 
 import (
 	"golang.org/x/text/language"
+	"golang.org/x/text/language/display"
 )
 
 type TranslatedSupport struct {
@@ -11,6 +12,10 @@ type TranslatedSupport struct {
 
 func (p *TranslatedSupport) Locale() string {
 	return p.tag.String()
+}
+
+func (p *TranslatedSupport) Name() string {
+	return display.Self.Name(p.tag)
 }
 
 func (p *TranslatedSupport) Data() string {

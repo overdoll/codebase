@@ -28,65 +28,51 @@ CREATE TABLE IF NOT EXISTS club_infraction_history
     primary key ( club_id, id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
-CREATE TABLE IF NOT EXISTS club_suspension_status
+CREATE TABLE IF NOT EXISTS post_rejection_reasons
 (
-    club_id         text,
-    suspended       boolean,
-    suspended_until timestamp,
-    primary key ( club_id ),
+    bucket                    int,
+    id                        text,
+    reason                    map<text, text>,
+    deprecated                boolean,
+    club_infraction_reason_id text,
+    primary key ( bucket, id ),
 );
 
--- CREATE TABLE IF NOT EXISTS post_rejection_reasons
--- (
---     bucket                    int,
---     id                        text,
---     reason                    map<text, text>,
---     club_infraction_reason_id text,
---     primary key ( bucket, id ),
--- );
---
--- CREATE TABLE IF NOT EXISTS post_audit_logs
--- (
---     id                   text,
---     moderator_account_id text,
---     bucket               int,
---     primary key ( id ),
--- );
---
--- CREATE TABLE IF NOT EXISTS post_audit_logs_unique_action
--- (
---     post_id              text,
---     moderator_account_id text,
---     action               text,
---     primary key ( (post_id, moderator_account_id, action) ),
--- );
---
--- CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
--- (
---     post_id                  text,
---     id                       text,
---     moderator_account_id     text,
---     bucket                   int,
---     contributor_account_id   text,
---     action                   text,
---     post_rejection_reason_id text,
---     notes                    text,
---     primary key ( post_id, id ),
--- ) WITH CLUSTERING ORDER BY (id DESC);
---
--- CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
--- (
---     id                       text,
---     bucket                   int,
---     post_id                  text,
---     contributor_account_id   text,
---     moderator_account_id     text,
---     action                   text,
---     post_rejection_reason_id text,
---     notes                    text,
---     primary key ( (moderator_account_id, bucket), id ),
--- ) WITH CLUSTERING ORDER BY (id DESC);
+CREATE TABLE IF NOT EXISTS post_audit_logs
+(
+    id                       text,
+    bucket                   int,
+    post_id                  text,
+    moderator_account_id     text,
+    action                   text,
+    post_rejection_reason_id text,
+    notes                    text,
+    primary key ( id ),
+);
 
+CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
+(
+    post_id                  text,
+    id                       text,
+    moderator_account_id     text,
+    bucket                   int,
+    action                   text,
+    post_rejection_reason_id text,
+    notes                    text,
+    primary key ( post_id, id ),
+) WITH CLUSTERING ORDER BY (id DESC);
+
+CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
+(
+    id                       text,
+    bucket                   int,
+    post_id                  text,
+    moderator_account_id     text,
+    action                   text,
+    post_rejection_reason_id text,
+    notes                    text,
+    primary key ( (moderator_account_id, bucket), id ),
+) WITH CLUSTERING ORDER BY (id DESC);
 
 --
 -- CREATE TABLE IF NOT EXISTS post_report_reasons

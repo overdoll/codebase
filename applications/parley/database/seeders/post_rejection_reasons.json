@@ -4,7 +4,8 @@
     "reason": {
       "en": "Reason with infraction"
     },
-    "infraction": true,
+    "club_infraction_reason_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "deprecated": false,
     "bucket": 0
   },
   {
@@ -12,7 +13,8 @@
     "reason": {
       "en": "Reason with no infraction"
     },
-    "infraction": false,
+    "club_infraction_reason_id": null,
+    "deprecated": false,
     "bucket": 0
   }
 ]

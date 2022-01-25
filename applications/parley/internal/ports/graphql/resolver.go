@@ -52,3 +52,15 @@ func (r *Resolver) Post() PostResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Club() ClubResolver {
+	return &resolvers.ClubResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) PostRejectionReason() PostRejectionReasonResolver {
+	return &resolvers.PostRejectionReasonResolver{
+		App: r.app,
+	}
+}

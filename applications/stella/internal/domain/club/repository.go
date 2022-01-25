@@ -10,14 +10,15 @@ import (
 type Repository interface {
 	GetClubsByIds(ctx context.Context, clubIds []string) ([]*Club, error)
 	GetClubById(ctx context.Context, clubId string) (*Club, error)
-	GetClubBySlug(ctx context.Context, slug string) (*Club, error)
+	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string, suspended bool) (*Club, error)
 
-	CreateClub(ctx context.Context, requester *principal.Principal, club *Club) error
+	CreateClub(ctx context.Context, club *Club) error
 
-	UpdateClubThumbnail(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
-	UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
-	UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
-	UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 

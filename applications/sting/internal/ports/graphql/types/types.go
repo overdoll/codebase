@@ -50,7 +50,7 @@ type Audience struct {
 	// If this audience is standard or not.
 	Standard bool `json:"standard"`
 	// All translations for this title.
-	TitleTranslations []*AudienceTitleTranslation `json:"titleTranslations"`
+	TitleTranslations []*Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -81,13 +81,6 @@ type AudienceEdge struct {
 	Node   *Audience `json:"node"`
 }
 
-type AudienceTitleTranslation struct {
-	// Localization formatted in BCP47.
-	Locale string `json:"locale"`
-	// A title for this audience.
-	Title string `json:"title"`
-}
-
 type Category struct {
 	// An ID pointing to this category.
 	ID relay.ID `json:"id"`
@@ -98,7 +91,7 @@ type Category struct {
 	// A title for this category.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*CategoryTitleTranslation `json:"titleTranslations"`
+	TitleTranslations []*Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -129,13 +122,6 @@ type CategoryEdge struct {
 	Node   *Category `json:"node"`
 }
 
-type CategoryTitleTranslation struct {
-	// Localization formatted in BCP47.
-	Locale string `json:"locale"`
-	// A title for this category.
-	Title string `json:"title"`
-}
-
 type Character struct {
 	// An ID pointing to this character.
 	ID relay.ID `json:"id"`
@@ -146,7 +132,7 @@ type Character struct {
 	// A name for this character.
 	Name string `json:"name"`
 	// All translations for this name.
-	NameTranslations []*CharacterNameTranslation `json:"nameTranslations"`
+	NameTranslations []*Translation `json:"nameTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -168,13 +154,6 @@ type CharacterConnection struct {
 type CharacterEdge struct {
 	Cursor string     `json:"cursor"`
 	Node   *Character `json:"node"`
-}
-
-type CharacterNameTranslation struct {
-	// Localization formatted in BCP47.
-	Locale string `json:"locale"`
-	// A name for this category.
-	Name string `json:"name"`
 }
 
 type Club struct {
@@ -287,6 +266,13 @@ type DateOfBirthCurationProfile struct {
 	DateOfBirth *time.Time `json:"dateOfBirth"`
 }
 
+type Language struct {
+	// BCP47 locale
+	Locale string `json:"locale"`
+	// Fully qualified name
+	Name string `json:"name"`
+}
+
 // Like a post.
 type LikePostInput struct {
 	// The post ID that you want to like
@@ -390,7 +376,7 @@ type Series struct {
 	// A title for this series.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*SeriesTitleTranslation `json:"titleTranslations"`
+	TitleTranslations []*Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -412,13 +398,6 @@ type SeriesEdge struct {
 	Node   *Series `json:"node"`
 }
 
-type SeriesTitleTranslation struct {
-	// Localization formatted in BCP47.
-	Locale string `json:"locale"`
-	// A title for this series.
-	Title string `json:"title"`
-}
-
 // Publish post.
 type SubmitPostInput struct {
 	// The post to publish
@@ -431,6 +410,13 @@ type SubmitPostPayload struct {
 	Post *Post `json:"post"`
 	// Whether or not the submitted post is going in review
 	InReview *bool `json:"inReview"`
+}
+
+type Translation struct {
+	// The language linked to this translation.
+	Language *Language `json:"language"`
+	// The translation text.
+	Text string `json:"text"`
 }
 
 // Undo like on a post.

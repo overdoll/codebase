@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
 	"strings"
+	"time"
 )
 
 var clubTable = table.New(table.Metadata{
@@ -23,6 +24,8 @@ var clubTable = table.New(table.Metadata{
 		"thumbnail_resource_id",
 		"members_count",
 		"owner_account_id",
+		"suspended",
+		"suspended_until",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -36,6 +39,8 @@ type clubs struct {
 	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
 	MembersCount        int               `db:"members_count"`
 	OwnerAccountId      string            `db:"owner_account_id"`
+	Suspended           bool              `db:"suspended"`
+	SuspendedUntil      *time.Time        `db:"suspended_until"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -85,19 +90,20 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		ThumbnailResourceId: cl.ThumbnailResourceId(),
 		MembersCount:        cl.MembersCount(),
 		OwnerAccountId:      cl.OwnerAccountId(),
+		Suspended:           cl.Suspended(),
+		SuspendedUntil:      cl.SuspendedUntil(),
 	}, nil
 }
 
-func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, slug string) (*club.Club, error) {
-
-	queryBrandSlug := r.session.
-		Query(clubSlugTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(clubSlugs{Slug: strings.ToLower(slug)})
+func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string, suspended bool) (*club.Club, error) {
 
 	var b clubSlugs
 
-	if err := queryBrandSlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(clubSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(clubSlugs{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, club.ErrClubNotFound
@@ -106,7 +112,17 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, slug string)
 		return nil, fmt.Errorf("failed to get club by slug: %v", err)
 	}
 
-	return r.GetClubById(ctx, b.ClubId)
+	result, err := r.GetClubById(ctx, b.ClubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !result.CanViewWithSuspended(requester, suspended) {
+		return nil, club.ErrClubNotFound
+	}
+
+	return result, nil
 }
 
 func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string) (*club.Club, error) {
@@ -135,6 +151,8 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 		b.ThumbnailResourceId,
 		b.MembersCount,
 		b.OwnerAccountId,
+		b.Suspended,
+		b.SuspendedUntil,
 	), nil
 }
 
@@ -164,13 +182,16 @@ func (r ClubCassandraRepository) GetClubsByIds(ctx context.Context, clubIds []st
 			b.ThumbnailResourceId,
 			b.MembersCount,
 			b.OwnerAccountId,
+			b.Suspended,
+			b.SuspendedUntil,
 		))
 	}
 
 	return clbs, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+
 	currentClub, err := r.GetClubById(ctx, clubId)
 
 	if err != nil {
@@ -213,7 +234,7 @@ func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, requester *
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)
 
@@ -327,12 +348,17 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, requ
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"name"})
+func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"name"})
 }
 
-func (r ClubCassandraRepository) UpdateClubThumbnail(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, requester, clubId, updateFn, []string{"thumbnail_resource_id"})
+func (r ClubCassandraRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r ClubCassandraRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource_id"})
+
 }
 
 func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
@@ -349,7 +375,7 @@ func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, club
 	return nil
 }
 
-func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
+func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)
 
@@ -410,7 +436,7 @@ func (r ClubCassandraRepository) GetAccountClubsCount(ctx context.Context, reque
 	return clubsCount.Count, nil
 }
 
-func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *principal.Principal, club *club.Club) error {
+func (r ClubCassandraRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)
 
@@ -431,7 +457,7 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, requester *prin
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.OwnerAccountId)
+	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil)
 
 	stmt, _ = accountClubsTable.Insert()
 

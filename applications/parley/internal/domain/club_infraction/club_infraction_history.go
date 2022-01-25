@@ -136,6 +136,14 @@ func (m *ClubInfractionHistory) CanView(requester *principal.Principal) error {
 	return CanViewClubInfractionHistory(requester)
 }
 
+func (m *ClubInfractionHistory) CanDelete(requester *principal.Principal) error {
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
 func UnmarshalClubInfractionHistoryFromDatabase(id, clubId, issuerAccountId, source string, reason *ClubInfractionReason, issuedAt, expiresAt time.Time, clubSuspensionLength int64) *ClubInfractionHistory {
 	st, _ := ClubInfractionHistorySourceFromString(source)
 	return &ClubInfractionHistory{

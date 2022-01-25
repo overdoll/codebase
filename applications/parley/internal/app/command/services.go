@@ -13,3 +13,7 @@ type EvaService interface {
 type StingService interface {
 	GetPost(context.Context, string) (string, string, error)
 }
+
+type StellaService interface {
+	GetClubById(ctx context.Context, clubId string) error
+}

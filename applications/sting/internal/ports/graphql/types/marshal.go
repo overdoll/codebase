@@ -162,12 +162,15 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*AudienceTitleTranslation
+	var titleTranslations []*Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &AudienceTitleTranslation{
-			Locale: val.Locale(),
-			Title:  val.Data(),
+		titleTranslations = append(titleTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
 		})
 	}
 
@@ -190,12 +193,15 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*SeriesTitleTranslation
+	var titleTranslations []*Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &SeriesTitleTranslation{
-			Locale: val.Locale(),
-			Title:  val.Data(),
+		titleTranslations = append(titleTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
 		})
 	}
 
@@ -216,12 +222,15 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*CategoryTitleTranslation
+	var titleTranslations []*Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &CategoryTitleTranslation{
-			Locale: val.Locale(),
-			Title:  val.Data(),
+		titleTranslations = append(titleTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
 		})
 	}
 
@@ -243,12 +252,15 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
 	}
 
-	var nameTranslations []*CharacterNameTranslation
+	var nameTranslations []*Translation
 
 	for _, val := range result.Name().Translations() {
-		nameTranslations = append(nameTranslations, &CharacterNameTranslation{
-			Locale: val.Locale(),
-			Name:   val.Data(),
+		nameTranslations = append(nameTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
 		})
 	}
 

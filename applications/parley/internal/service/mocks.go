@@ -30,3 +30,10 @@ func (t StingServiceMock) UndoPost(ctx context.Context, s string) error {
 func (t StingServiceMock) RemovePost(ctx context.Context, s string) error {
 	return nil
 }
+
+type StellaServiceMock struct {
+}
+
+func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) error {
+	return nil
+}

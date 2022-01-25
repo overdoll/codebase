@@ -13,7 +13,7 @@ func (h *Activities) RemovePost(ctx context.Context, postAuditLogId string) (boo
 		return false, err
 	}
 
-	if err := h.sting.RemovePost(ctx, postAuditLog.PostID()); err != nil {
+	if err := h.sting.RemovePost(ctx, postAuditLog.PostId()); err != nil {
 		return false, errors.Wrap(err, "failed to remove post")
 	}
 

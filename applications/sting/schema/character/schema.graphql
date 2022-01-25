@@ -1,11 +1,3 @@
-type CharacterNameTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A name for this category."""
-  name: String!
-}
-
 type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
@@ -20,7 +12,7 @@ type Character implements Node @key(fields: "id") {
   name: String!
 
   """All translations for this name."""
-  nameTranslations: [CharacterNameTranslation!]!
+  nameTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!

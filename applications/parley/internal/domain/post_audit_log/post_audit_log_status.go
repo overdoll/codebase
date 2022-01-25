@@ -2,30 +2,30 @@ package post_audit_log
 
 import "errors"
 
-type PostAuditLogStatus struct {
+type PostAuditLogAction struct {
 	slug string
 }
 
 var (
-	PostAuditLogStatusUnknown  = PostAuditLogStatus{""}
-	PostAuditLogStatusRemoved  = PostAuditLogStatus{"removed"}
-	PostAuditLogStatusApproved = PostAuditLogStatus{"approved"}
-	PostAuditLogStatusDenied   = PostAuditLogStatus{"denied"}
+	PostAuditLogActionUnknown  = PostAuditLogAction{""}
+	PostAuditLogActionRemoved  = PostAuditLogAction{"removed"}
+	PostAuditLogActionApproved = PostAuditLogAction{"approved"}
+	PostAuditLogActionDenied   = PostAuditLogAction{"denied"}
 )
 
-func (r PostAuditLogStatus) String() string {
+func (r PostAuditLogAction) String() string {
 	return r.slug
 }
 
-func PostAuditLogStatusFromString(s string) (PostAuditLogStatus, error) {
+func PostAuditLogActionFromString(s string) (PostAuditLogAction, error) {
 	switch s {
-	case PostAuditLogStatusRemoved.slug:
-		return PostAuditLogStatusRemoved, nil
-	case PostAuditLogStatusApproved.slug:
-		return PostAuditLogStatusApproved, nil
-	case PostAuditLogStatusDenied.slug:
-		return PostAuditLogStatusDenied, nil
+	case PostAuditLogActionRemoved.slug:
+		return PostAuditLogActionRemoved, nil
+	case PostAuditLogActionApproved.slug:
+		return PostAuditLogActionApproved, nil
+	case PostAuditLogActionDenied.slug:
+		return PostAuditLogActionDenied, nil
 	}
 
-	return PostAuditLogStatusUnknown, errors.New("unknown post audit log status: " + s)
+	return PostAuditLogActionUnknown, errors.New("unknown post audit log action: " + s)
 }

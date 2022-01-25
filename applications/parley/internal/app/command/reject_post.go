@@ -28,13 +28,13 @@ func NewRejectPostHandler(pr post_audit_log.Repository, eva EvaService, sting St
 
 func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_audit_log.PostAuditLog, error) {
 
-	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
+	postModeratorId, _, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.pr.GetPostRejectionReason(ctx, cmd.Principal, cmd.PostRejectionReasonId)
+	rejectionReason, err := h.pr.GetPostRejectionReasonById(ctx, cmd.Principal, cmd.PostRejectionReasonId)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +45,6 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_au
 		cmd.Principal,
 		cmd.PostId,
 		postModeratorId,
-		postContributorId,
 		rejectionReason,
 		cmd.Notes,
 	)

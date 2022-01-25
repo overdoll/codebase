@@ -9,8 +9,7 @@ import (
 
 type PostReportById struct {
 	Principal *principal.Principal
-
-	Id string
+	Id        string
 }
 
 type PostReportByIdHandler struct {

@@ -76,7 +76,7 @@ func (r AccountResolver) ClubMembershipsCount(ctx context.Context, obj *types.Ac
 	return results, nil
 }
 
-func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error) {
+func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -95,6 +95,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 		Cursor:         cursor,
 		OwnerAccountId: &accountId,
 		Name:           name,
+		Suspended:      suspended,
 		SortBy:         strings.ToLower(sortBy.String()),
 		Slugs:          slugs,
 	})

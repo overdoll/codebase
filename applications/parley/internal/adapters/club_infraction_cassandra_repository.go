@@ -60,25 +60,6 @@ type clubInfractionReason struct {
 	Reason     map[string]string `db:"reason"`
 }
 
-var clubSuspensionStatusTable = table.New(table.Metadata{
-	Name: "club_suspension_status",
-	Columns: []string{
-		"club_id",
-		"suspended",
-		"suspension_reason",
-		"suspended_until",
-	},
-	PartKey: []string{"club_id"},
-	SortKey: []string{},
-})
-
-type clubSuspensionStatus struct {
-	ClubId           string    `db:"club_id"`
-	Suspended        bool      `db:"suspended"`
-	SuspensionReason string    `db:"suspension_reason"`
-	SuspendedUntil   time.Time `db:"suspended_until"`
-}
-
 type ClubInfractionCassandraRepository struct {
 	session gocqlx.Session
 }
@@ -118,7 +99,7 @@ func (r ClubInfractionCassandraRepository) CreateClubInfractionReason(ctx contex
 	return nil
 }
 
-func (r ClubInfractionCassandraRepository) GetClubInfractionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club_infraction.ClubInfractionReason, error) {
+func (r ClubInfractionCassandraRepository) GetClubInfractionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, deprecated bool) ([]*club_infraction.ClubInfractionReason, error) {
 
 	builder := clubInfractionReasonsTable.SelectBuilder()
 
@@ -143,6 +124,11 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionReasons(ctx context.
 
 	var clubInfractionReasons []*club_infraction.ClubInfractionReason
 	for _, clubInfractionR := range dbClubInfractionReasons {
+
+		if deprecated != clubInfractionR.Deprecated {
+			continue
+		}
+
 		reason := club_infraction.UnmarshalClubInfractionReasonFromDatabase(clubInfractionR.Id, clubInfractionR.Reason, clubInfractionR.Deprecated)
 		reason.Node = paging.NewNode(clubInfractionR.Id)
 		clubInfractionReasons = append(clubInfractionReasons, reason)
@@ -224,11 +210,28 @@ func (r ClubInfractionCassandraRepository) CreateClubInfractionHistory(ctx conte
 	return nil
 }
 
+func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx context.Context, requester *principal.Principal, clubInfraction *club_infraction.ClubInfractionHistory) error {
+
+	if err := clubInfraction.CanDelete(requester); err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(clubInfractionHistoryTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete club infraction: %v", err)
+	}
+
+	return nil
+}
+
 // since we dont want to duplicate rejection reasons (they're subject to changes like translations or updates) we can use this function to get all
 // rejection reasons as a map, which can then be used to map audit logs and infraction history without a performance penalty on hitting multiple partitions
 func (r ClubInfractionCassandraRepository) getClubInfractionReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*club_infraction.ClubInfractionReason, error) {
 
-	clubInfractionReasons, err := r.GetClubInfractionReasons(ctx, requester, nil)
+	clubInfractionReasons, err := r.GetClubInfractionReasons(ctx, requester, nil, true)
 
 	if err != nil {
 		return nil, err
@@ -312,25 +315,6 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryById(ctx cont
 	}
 
 	return history, nil
-}
-
-func (r ClubInfractionCassandraRepository) GetClubSuspensionStatusByClubId(ctx context.Context, requester *principal.Principal, clubId string) (*club_infraction.ClubSuspensionStatus, error) {
-
-	var clubSuspensionStatusRes clubSuspensionStatus
-
-	if err := r.session.
-		Query(clubSuspensionStatusTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&clubSuspensionStatus{ClubId: clubId}).
-		Get(&clubSuspensionStatusRes); err != nil {
-		return nil, err
-	}
-
-	return club_infraction.UnmarshalClubSuspensionStatusFromDatabase(
-		clubSuspensionStatusRes.ClubId,
-		clubSuspensionStatusRes.Suspended,
-		clubSuspensionStatusRes.SuspendedUntil,
-	), nil
 }
 
 func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx context.Context, requester *principal.Principal, userId, id string) (*club_infraction.ClubInfractionHistory, error) {

@@ -4,9 +4,11 @@ import (
 	"context"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app"
+	"overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/stella/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
+	"time"
 )
 
 type Server struct {
@@ -56,4 +58,29 @@ func (s Server) GetAccountClubMembershipIds(ctx context.Context, request *stella
 	}
 
 	return &stella.GetAccountClubMembershipIdsResponse{ClubIds: clubIds}, nil
+}
+
+func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequest) (*stella.GetClubByIdResponse, error) {
+
+	_, err := s.app.Queries.ClubById.Handle(ctx, query.ClubById{
+		Id: request.ClubId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stella.GetClubByIdResponse{}, nil
+}
+
+func (s Server) SuspendClub(ctx context.Context, request *stella.SuspendClubRequest) (*stella.SuspendClubResponse, error) {
+
+	if err := s.app.Commands.SuspendClub.Handle(ctx, command.SuspendClub{
+		ClubId:  request.ClubId,
+		EndTime: time.Unix(request.EndTimeUnix, 0),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &stella.SuspendClubResponse{}, nil
 }

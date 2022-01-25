@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error) {
+func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -23,6 +23,7 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		Name:      name,
+		Suspended: suspended,
 		Slugs:     slugs,
 		SortBy:    strings.ToLower(sortBy.String()),
 	})
@@ -34,11 +35,12 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 	return types.MarshalClubsToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Club(ctx context.Context, slug string) (*types.Club, error) {
+func (r *QueryResolver) Club(ctx context.Context, slug string, suspended bool) (*types.Club, error) {
 
 	media, err := r.App.Queries.ClubBySlug.Handle(ctx, query.ClubBySlug{
 		Principal: principal.FromContext(ctx),
 		Slug:      slug,
+		Suspended: suspended,
 	})
 
 	if err != nil {

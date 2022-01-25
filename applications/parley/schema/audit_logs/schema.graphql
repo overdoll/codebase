@@ -13,9 +13,6 @@ type PostAuditLog implements Node @key(fields: "id") {
   """ID of the audit log"""
   id: ID!
 
-  """The contributor that the audit log belongs to"""
-  contributor: Account!
-
   """The moderator that this log belongs to"""
   moderator: Account!
 
@@ -58,8 +55,14 @@ type PostRejectionReason implements Node @key(fields: "id") {
   """The reason for this rejection"""
   reason: String!
 
-  """If the rejection reason will count against an infraction on the account"""
-  infraction: Boolean!
+  """All translations for this reason."""
+  reasonTranslations: [Translation!]!
+
+  """The club infraction reason, linked to this rejection reason."""
+  clubInfractionReason: ClubInfractionReason @goField(forceResolver: true)
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
 }
 
 """Edge of the pending post rejection reason"""
@@ -94,6 +97,9 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
   ): PostRejectionReasonConnection! @goField(forceResolver: true)
 }
 
@@ -140,4 +146,89 @@ extend type Account {
     """The date range for audit logs. Required."""
     dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
+}
+
+"""Create a new post rejection reason input."""
+input CreatePostRejectionReasonInput {
+  """The reason text."""
+  reason: String!
+
+  """The club infraction reason to use. Optional."""
+  clubInfractionReason: ID
+}
+
+"""Update post rejection reason reason."""
+input UpdatePostRejectionReasonTextInput {
+  """The post rejection reason against."""
+  rejectionReasonId: ID!
+
+  """The reason to update"""
+  reason: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Update post rejection reason."""
+input UpdatePostRejectionReasonDeprecatedInput {
+  """The post rejection reason to take action against."""
+  rejectionReasonId: ID!
+
+  """Whether or not this post rejection reason should be deprecated."""
+  deprecated: Boolean!
+}
+
+"""Update post rejection reason club infraction reason."""
+input UpdatePostRejectionReasonClubInfractionReasonInput {
+  """The post rejection reason against."""
+  rejectionReasonId: ID!
+
+  """The club infraction reason to use. Pass nil if removing"""
+  clubInfractionReason: ID
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonDeprecatedPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonTextPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Create post rejection reason."""
+type CreatePostRejectionReasonPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonClubInfractionReasonPayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+extend type Mutation {
+  """
+  Create a new post rejection reason.
+  """
+  createPostRejectionReason(input: CreatePostRejectionReasonInput!): CreatePostRejectionReasonPayload
+
+  """
+  Update post rejection reason deprecated.
+  """
+  updatePostRejectionReasonDeprecated(input: UpdatePostRejectionReasonDeprecatedInput!): UpdatePostRejectionReasonDeprecatedPayload
+
+  """
+  Update post rejection reason text.
+  """
+  updatePostRejectionReasonText(input: UpdatePostRejectionReasonTextInput!): UpdatePostRejectionReasonTextPayload
+
+  """
+  Update post rejection reason club infraction reason.
+  """
+  updatePostRejectionReasonClubInfractionReason(input: UpdatePostRejectionReasonClubInfractionReasonInput!): UpdatePostRejectionReasonClubInfractionReasonPayload
 }

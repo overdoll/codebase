@@ -19,18 +19,40 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 	return &types.Post{ID: id}, nil
 }
 
+func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
+	return &types.Club{ID: id}, nil
+}
+
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
 	return &types.Account{ID: id}, nil
 }
 
-func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
+func (r EntityResolver) FindClubInfractionReasonByID(ctx context.Context, id relay.ID) (*types.ClubInfractionReason, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, query.AccountInfractionHistoryById{
-		AccountId:    id.GetCompositePartID(1),
+	infractionHistory, err := r.App.Queries.ClubInfractionReasonById.Handle(ctx, query.ClubInfractionReasonById{
+		ReasonId:  id.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalClubInfractionReasonToGraphQL(ctx, infractionHistory), nil
+}
+
+func (r EntityResolver) FindClubInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.ClubInfractionHistory, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	infractionHistory, err := r.App.Queries.ClubInfractionHistoryById.Handle(ctx, query.ClubInfractionHistoryById{
+		ClubId:       id.GetCompositePartID(1),
 		InfractionId: id.GetCompositePartID(0),
 		Principal:    principal.FromContext(ctx),
 	})
@@ -39,7 +61,7 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 		return nil, err
 	}
 
-	return types.MarshalAccountInfractionHistoryToGraphQL(ctx, infractionHistory), nil
+	return types.MarshalClubInfractionHistoryToGraphQL(ctx, infractionHistory), nil
 }
 
 func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {

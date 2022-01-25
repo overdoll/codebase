@@ -21,6 +21,17 @@ type Commands struct {
 
 	ReportPost command.ReportPostHandler
 
+	CreatePostRejectionReason                     command.CreatePostRejectionReasonHandler
+	UpdatePostRejectionReasonDeprecated           command.UpdatePostRejectionReasonDeprecatedHandler
+	UpdatePostRejectionReasonText                 command.UpdatePostRejectionReasonTextHandler
+	UpdatePostRejectionReasonClubInfractionReason command.UpdatePostRejectionReasonClubInfractionReasonHandler
+
+	CreateClubInfractionReason           command.CreateClubInfractionReasonHandler
+	UpdateClubInfractionReasonDeprecated command.UpdateClubInfractionReasonDeprecatedHandler
+	UpdateClubInfractionReasonText       command.UpdateClubInfractionReasonTextHandler
+	IssueClubInfraction                  command.IssueClubInfractionHandler
+	RemoveClubInfractionHistory          command.RemoveClubInfractionHistoryHandler
+
 	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
 }
@@ -28,8 +39,12 @@ type Commands struct {
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
-	PostRejectionReasons    query.PostsRejectionReasonsHandler
-	PostRejectionReasonById query.PostRejectionReasonByIdHandler
+	PostRejectionReasons      query.PostsRejectionReasonsHandler
+	PostRejectionReasonById   query.PostRejectionReasonByIdHandler
+	ClubInfractionHistoryById query.ClubInfractionHistoryByIdHandler
+	ClubInfractionReasonById  query.ClubInfractionReasonByIdHandler
+
+	ClubInfractionReasons query.ClubInfractionReasonsHandler
 
 	PostReportReasons    query.PostsReportReasonsHandler
 	PostReportReasonById query.PostReportReasonByIdHandler
@@ -38,9 +53,8 @@ type Queries struct {
 	PostReportById             query.PostReportByIdHandler
 	PostReportByAccountAndPost query.PostReportByAccountAndPostHandler
 
-	SearchPostAuditLogs          query.SearchPostAuditLogsHandler
-	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
-	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler
-	ModeratorById                query.ModeratorByIdHandler
-	PostAuditLogById             query.PostAuditLogByIdHandler
+	SearchPostAuditLogs   query.SearchPostAuditLogsHandler
+	ClubInfractionHistory query.ClubInfractionHistoryByAccountHandler
+	ModeratorById         query.ModeratorByIdHandler
+	PostAuditLogById      query.PostAuditLogByIdHandler
 }

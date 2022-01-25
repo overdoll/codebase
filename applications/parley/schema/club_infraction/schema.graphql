@@ -1,11 +1,3 @@
-type ClubInfractionReasonTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A reason for this club infraction reason."""
-  reason: String!
-}
-
 """Club infraction reason."""
 type ClubInfractionReason implements Node @key(fields: "id") {
   """ID of the infraction reason."""
@@ -15,7 +7,7 @@ type ClubInfractionReason implements Node @key(fields: "id") {
   reason: String!
 
   """All translations for this reason."""
-  reasonTranslations: [ClubInfractionReasonTranslation!]!
+  reasonTranslations: [Translation!]!
 
   """If this reason is deprecated."""
   deprecated: Boolean!
@@ -65,7 +57,7 @@ type ClubInfractionHistory implements Node @key(fields: "id") {
 
 """Edge of the infraction history"""
 type ClubInfractionHistoryEdge {
-  node: AccountInfractionHistory!
+  node: ClubInfractionHistory!
   cursor: String!
 }
 
@@ -118,4 +110,108 @@ extend type Query {
     """Whether or not to show deprecated reasons."""
     deprecated: Boolean! = false
   ): ClubInfractionReasonConnection! @goField(forceResolver: true)
+}
+
+"""Create a new club infraction reason input."""
+input CreateClubInfractionReasonInput {
+  """The reason text."""
+  reason: String!
+}
+
+"""Update club infraction reason."""
+input UpdateClubInfractionReasonDeprecatedInput {
+  """The club infraction to take action against."""
+  reasonId: ID!
+
+  """Whether or not this club infraction reason should be deprecated."""
+  deprecated: Boolean!
+}
+
+"""Update club infraction reason."""
+input UpdateClubInfractionReasonTextInput {
+  """The club infraction to take action against."""
+  reasonId: ID!
+
+  """The reason to update"""
+  reason: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Issue a club infraction."""
+input IssueClubInfractionInput {
+  """The club to issue the infraction to."""
+  clubId: ID!
+
+  """The club infraction to use."""
+  infractionReasonId: ID!
+
+  """Pass a custom end time. If none is passed, will use sliding scale based on previous infractions."""
+  customEndTime: Time
+}
+
+"""Remove a club infraction."""
+input RemoveClubInfractionHistoryInput {
+  """The history item to remove."""
+  clubInfractionHistoryId: ID!
+}
+
+"""Update club infraction reason payload."""
+type UpdateClubInfractionReasonDeprecatedUpload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Create a new club infraction reason payload."""
+type CreateClubInfractionReasonPayload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Create a new club infraction reason payload."""
+type UpdateClubInfractionReasonTextPayload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Issue a new club infraction payload."""
+type IssueClubInfractionPayload {
+  """The new club infraction history item."""
+  clubInfractionHistory: ClubInfractionHistory
+}
+
+"""Remove club infraction history."""
+type RemoveClubInfractionHistoryPayload {
+  """The removed infraction history Id."""
+  clubInfractionHistoryId: ID!
+}
+
+extend type Mutation {
+  """
+  Create a club infraction reason.
+  """
+  createClubInfractionReason(input: CreateClubInfractionReasonInput!): CreateClubInfractionReasonPayload
+
+  """
+  Update club infraction reason deprecation.
+  """
+  updateClubInfractionReasonDeprecated(input: UpdateClubInfractionReasonDeprecatedInput!): UpdateClubInfractionReasonDeprecatedUpload
+
+  """
+  Update club infraction reason text.
+  """
+  updateClubInfractionReasonText(input: UpdateClubInfractionReasonTextInput!): UpdateClubInfractionReasonTextPayload
+
+  """
+  Issue a club infraction.
+  """
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+
+  """
+  In case of a false infraction, you can remove it from the club's history.
+
+  Staff+ only.
+  """
+  removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
 }

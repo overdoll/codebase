@@ -14,6 +14,7 @@ type SearchClubs struct {
 	OwnerAccountId *string
 	Name           *string
 	SortBy         string
+	Suspended      bool
 	Slugs          []string
 }
 
@@ -29,6 +30,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*c
 
 	filters, err := club.NewFilters(
 		query.Name,
+		query.Suspended,
 		query.SortBy,
 		query.Slugs,
 		query.OwnerAccountId,

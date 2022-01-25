@@ -25,7 +25,7 @@ func NewUpdateClubNameHandler(cr club.Repository, ci club.IndexRepository) Updat
 
 func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (*club.Club, error) {
 
-	clb, err := h.cr.UpdateClubName(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
+	clb, err := h.cr.UpdateClubName(ctx, cmd.ClubId, func(club *club.Club) error {
 		return club.UpdateName(cmd.Principal, cmd.Name)
 	})
 

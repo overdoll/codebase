@@ -253,3 +253,25 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 		ClubMemberID: input.ClubID,
 	}, nil
 }
+
+func (r *MutationResolver) UnSuspendClub(ctx context.Context, input types.UnSuspendClubInput) (*types.UnSuspendClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.UnSuspendClub.
+		Handle(
+			ctx,
+			command.UnSuspendClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UnSuspendClubPayload{Club: types.MarshalClubToGraphQL(ctx, result)}, nil
+}
