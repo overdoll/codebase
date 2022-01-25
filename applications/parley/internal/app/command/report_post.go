@@ -39,17 +39,6 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 		return nil, err
 	}
 
-	// ensure post hasn't been reported before with the same post and account
-	_, err = h.rr.GetPostReportForAccount(ctx, cmd.Principal, cmd.PostId, cmd.Principal.AccountId())
-
-	if err != nil && err != report.ErrPostReportNotFound {
-		return nil, err
-	}
-
-	if err == nil {
-		return nil, errors.New("post already reported")
-	}
-
 	// create new post report
 	postReport, err := report.NewPostReport(cmd.Principal, cmd.PostId, reportReason)
 

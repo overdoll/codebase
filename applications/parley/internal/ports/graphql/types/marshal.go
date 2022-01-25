@@ -2,16 +2,17 @@ package types
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/libraries/passport"
 
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 )
 
-func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAuditLog) *PostAuditLog {
+func MarshalPostAuditLogToGraphQL(ctx context.Context, result *post_audit_log.PostAuditLog) *PostAuditLog {
 
 	var reason *PostRejectionReason
 
@@ -44,7 +45,7 @@ func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAu
 	}
 }
 
-func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infraction.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*post_audit_log.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
@@ -70,15 +71,15 @@ func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infr
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.PostAuditLog
+	var nodeAt func(int) *post_audit_log.PostAuditLog
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.PostAuditLog {
+		nodeAt = func(i int) *post_audit_log.PostAuditLog {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.PostAuditLog {
+		nodeAt = func(i int) *post_audit_log.PostAuditLog {
 			return results[i]
 		}
 	}
@@ -170,7 +171,7 @@ func MarshalPostReportToGraphQLConnection(ctx context.Context, results []*report
 	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
+func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *club_infraction.ClubInfraction) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		ID:                  relay.NewID(AccountInfractionHistory{}, result.AccountId(), result.ID()),
 		PostRejectionReason: MarshalPostRejectionReasonToGraphQL(ctx, result.Reason()),
@@ -243,7 +244,7 @@ func MarshalPostReportReasonToGraphQLConnection(ctx context.Context, results []*
 	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, results []*infraction.AccountInfractionHistory, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
+func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, results []*club_infraction.ClubInfraction, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
 
 	var infractionHistory []*AccountInfractionHistoryEdge
 
@@ -269,15 +270,15 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, res
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.AccountInfractionHistory
+	var nodeAt func(int) *club_infraction.ClubInfraction
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+		nodeAt = func(i int) *club_infraction.ClubInfraction {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+		nodeAt = func(i int) *club_infraction.ClubInfraction {
 			return results[i]
 		}
 	}
@@ -316,15 +317,15 @@ func MarshalModeratorSettingsToGraphQL(result *moderator.Moderator) *ModeratorSe
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *infraction.PostRejectionReason) *PostRejectionReason {
+func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *post_audit_log.PostRejectionReason) *PostRejectionReason {
 	return &PostRejectionReason{
 		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
 		Reason:     result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
-		Infraction: result.Infraction(),
+		Infraction: result.InfractionId(),
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results []*infraction.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
+func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results []*post_audit_log.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
 
 	var rejectionReasons []*PostRejectionReasonEdge
 
@@ -350,15 +351,15 @@ func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results 
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.PostRejectionReason
+	var nodeAt func(int) *post_audit_log.PostRejectionReason
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.PostRejectionReason {
+		nodeAt = func(i int) *post_audit_log.PostRejectionReason {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.PostRejectionReason {
+		nodeAt = func(i int) *post_audit_log.PostRejectionReason {
 			return results[i]
 		}
 	}

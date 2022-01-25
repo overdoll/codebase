@@ -3,7 +3,7 @@ package query
 import (
 	"context"
 
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -16,14 +16,14 @@ type AccountInfractionHistory struct {
 }
 
 type AccountInfractionHistoryByAccountHandler struct {
-	ir infraction.Repository
+	ir club_infraction.Repository
 }
 
-func NewAccountInfractionHistoryByAccountHandler(ir infraction.Repository) AccountInfractionHistoryByAccountHandler {
+func NewAccountInfractionHistoryByAccountHandler(ir club_infraction.Repository) AccountInfractionHistoryByAccountHandler {
 	return AccountInfractionHistoryByAccountHandler{ir: ir}
 }
 
-func (h AccountInfractionHistoryByAccountHandler) Handle(ctx context.Context, query AccountInfractionHistory) ([]*infraction.AccountInfractionHistory, error) {
+func (h AccountInfractionHistoryByAccountHandler) Handle(ctx context.Context, query AccountInfractionHistory) ([]*club_infraction.ClubInfractionHistory, error) {
 
 	history, err := h.ir.GetAccountInfractionHistory(ctx, query.Principal, query.Cursor, query.AccountId)
 

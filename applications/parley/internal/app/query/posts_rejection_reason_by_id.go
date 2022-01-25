@@ -2,8 +2,9 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/libraries/principal"
 )
 
@@ -13,14 +14,14 @@ type PostRejectionReasonById struct {
 }
 
 type PostRejectionReasonByIdHandler struct {
-	ir infraction.Repository
+	ir club_infraction.Repository
 }
 
-func NewPostsRejectionReasonByIdHandler(ir infraction.Repository) PostRejectionReasonByIdHandler {
+func NewPostsRejectionReasonByIdHandler(ir club_infraction.Repository) PostRejectionReasonByIdHandler {
 	return PostRejectionReasonByIdHandler{ir: ir}
 }
 
-func (h PostRejectionReasonByIdHandler) Handle(ctx context.Context, query PostRejectionReasonById) (*infraction.PostRejectionReason, error) {
+func (h PostRejectionReasonByIdHandler) Handle(ctx context.Context, query PostRejectionReasonById) (*post_audit_log.PostRejectionReason, error) {
 
 	reason, err := h.ir.GetPostRejectionReason(ctx, query.Principal, query.RejectionReasonId)
 

@@ -1,0 +1,121 @@
+type ClubInfractionReasonTranslation {
+  """Localization formatted in BCP47."""
+  locale: BCP47!
+
+  """A reason for this club infraction reason."""
+  reason: String!
+}
+
+"""Club infraction reason."""
+type ClubInfractionReason implements Node @key(fields: "id") {
+  """ID of the infraction reason."""
+  id: ID!
+
+  """The reason."""
+  reason: String!
+
+  """All translations for this reason."""
+  reasonTranslations: [ClubInfractionReasonTranslation!]!
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
+}
+
+"""Edge of the club infraction reason"""
+type ClubInfractionReasonEdge {
+  node: ClubInfractionReason!
+  cursor: String!
+}
+
+"""Connection of the club infraction reason"""
+type ClubInfractionReasonConnection {
+  edges: [ClubInfractionReasonEdge!]!
+  pageInfo: PageInfo!
+}
+
+enum ClubInfractionHistorySource {
+  MANUAL
+  POST_MODERATION_REJECTION
+  POST_MANUAL_REMOVAL
+}
+
+"""Infraction history belonging to a club"""
+type ClubInfractionHistory implements Node @key(fields: "id") {
+  """ID of the infraction history"""
+  id: ID!
+
+  """The club belonging to this history object."""
+  club: Club!
+
+  """The account that issued this infraction."""
+  issuerAccount: Account!
+
+  """The club infraction reason."""
+  infractionReason: ClubInfractionReason!
+
+  """The source for this infraction."""
+  source: ClubInfractionHistorySource!
+
+  """When this infraction was issued."""
+  issuedAt: Time!
+
+  """When this infraction expires (no longer considered when issuing future infractions)."""
+  expiresAt: Time!
+}
+
+"""Edge of the infraction history"""
+type ClubInfractionHistoryEdge {
+  node: AccountInfractionHistory!
+  cursor: String!
+}
+
+"""Connection of the infraction history"""
+type ClubInfractionHistoryConnection {
+  edges: [ClubInfractionHistoryEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """
+  Infraction history for this club
+
+  Viewable by the currently authenticated account or staff+
+  """
+  infractionHistory(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubInfractionHistoryConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """
+  Get club infraction reasons.
+  """
+  clubInfractionReasons(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
+  ): ClubInfractionReasonConnection! @goField(forceResolver: true)
+}

@@ -3,15 +3,15 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 var postAuditLogTable = table.New(table.Metadata{
@@ -89,7 +89,34 @@ type postAuditLogByModerator struct {
 	Notes                 *string `db:"notes"`
 }
 
-func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAuditLogByModerator, error) {
+var postRejectionReasonTable = table.New(table.Metadata{
+	Name: "post_rejection_reasons",
+	Columns: []string{
+		"id",
+		"infraction",
+		"bucket",
+		"reason",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"id"},
+})
+
+type postRejectionReason struct {
+	Id         string            `db:"id"`
+	Infraction bool              `db:"infraction"`
+	Bucket     int               `db:"bucket"`
+	Reason     map[string]string `db:"reason"`
+}
+
+type PostAuditLogCassandraRepository struct {
+	session gocqlx.Session
+}
+
+func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCassandraRepository {
+	return PostAuditLogCassandraRepository{session: session}
+}
+
+func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLogByModerator, error) {
 
 	var userInfractionId *string
 	var reason *string
@@ -123,7 +150,7 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	}, nil
 }
 
-func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, auditLog *infraction.PostAuditLog) error {
+func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context, auditLog *post_audit_log.PostAuditLog) error {
 
 	marshalledAuditLog, err := marshalPostAuditLogToDatabase(auditLog)
 
@@ -183,7 +210,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requester *principal.Principal, logId string) (*infraction.PostAuditLog, error) {
+func (r PostAuditLogCassandraRepository) GetPostAuditLog(ctx context.Context, requester *principal.Principal, logId string) (*post_audit_log.PostAuditLog, error) {
 
 	// grab the pending post audit log to get all of the composite keys
 	postAuditLogQuery := r.session.
@@ -198,7 +225,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 	if err := postAuditLogQuery.Get(&postAuditLog); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, infraction.ErrPostRejectionReasonNotFound
+			return nil, post_audit_log.ErrPostRejectionReasonNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
@@ -214,7 +241,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 	if err := postAuditLogByModeratorQuery.Get(&pendingPostAuditLogByModerator); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, infraction.ErrPostRejectionReasonNotFound
+			return nil, post_audit_log.ErrPostRejectionReasonNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get audit log by moderator: %v", err)
@@ -222,7 +249,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 
 	// grab the final audit log, which is stored in the moderator spot
 
-	var userInfractionHistory *infraction.AccountInfractionHistory
+	var userInfractionHistory *club_infraction.ClubInfraction
 	var err error
 
 	if pendingPostAuditLogByModerator.AccountInfractionId != nil {
@@ -238,7 +265,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 		}
 	}
 
-	var rejectionReason *infraction.PostRejectionReason
+	var rejectionReason *post_audit_log.PostRejectionReason
 	if pendingPostAuditLogByModerator.PostRejectionReasonId != nil {
 		rejectionReason, err = r.GetPostRejectionReason(
 			ctx,
@@ -251,7 +278,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 		}
 	}
 
-	infractionReason := infraction.UnmarshalPostAuditLogFromDatabase(
+	infractionReason := post_audit_log.UnmarshalPostAuditLogFromDatabase(
 		pendingPostAuditLogByModerator.Id,
 		pendingPostAuditLogByModerator.PostId,
 		pendingPostAuditLogByModerator.ModeratorId,
@@ -269,14 +296,14 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 	return infractionReason, nil
 }
 
-func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, error) {
-	var auditLogs []*infraction.PostAuditLog
+func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post_audit_log.PostAuditLogFilters) ([]*post_audit_log.PostAuditLog, error) {
+	var auditLogs []*post_audit_log.PostAuditLog
 
 	if cursor.IsEmpty() {
 		return auditLogs, nil
 	}
 
-	if err := infraction.CanViewWithFilters(requester, filter); err != nil {
+	if err := post_audit_log.CanViewWithFilters(requester, filter); err != nil {
 		return nil, err
 	}
 
@@ -320,12 +347,12 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		return nil, err
 	}
 
-	var pendingPostAuditLogs []*infraction.PostAuditLog
+	var pendingPostAuditLogs []*post_audit_log.PostAuditLog
 
 	for _, pendingPostAuditLog := range results {
 
-		var userInfractionHistory *infraction.AccountInfractionHistory
-		var postRejectionReason *infraction.PostRejectionReason
+		var userInfractionHistory *club_infraction.ClubInfraction
+		var postRejectionReason *post_audit_log.PostRejectionReason
 
 		// if rejection reason not nil, get it
 		if pendingPostAuditLog.PostRejectionReasonId != nil {
@@ -334,7 +361,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 				// then, get infraction record
 				if pendingPostAuditLog.AccountInfractionId != nil {
-					userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
+					userInfractionHistory = club_infraction.UnmarshalAccountInfractionHistoryFromDatabase(
 						*pendingPostAuditLog.AccountInfractionId,
 						pendingPostAuditLog.ContributorId,
 						postRejectionReason,
@@ -342,11 +369,11 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 					)
 				}
 			} else {
-				return nil, infraction.ErrPostRejectionReasonNotFound
+				return nil, post_audit_log.ErrPostRejectionReasonNotFound
 			}
 		}
 
-		result := infraction.UnmarshalPostAuditLogFromDatabase(
+		result := post_audit_log.UnmarshalPostAuditLogFromDatabase(
 			pendingPostAuditLog.Id,
 			pendingPostAuditLog.PostId,
 			pendingPostAuditLog.ModeratorId,
@@ -365,7 +392,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 	return pendingPostAuditLogs, nil
 }
 
-func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, requester *principal.Principal, id string, updateFn func(auditLog *infraction.PostAuditLog) error) (*infraction.PostAuditLog, error) {
+func (r PostAuditLogCassandraRepository) UpdatePostAuditLog(ctx context.Context, requester *principal.Principal, id string, updateFn func(auditLog *post_audit_log.PostAuditLog) error) (*post_audit_log.PostAuditLog, error) {
 
 	auditLog, err := r.GetPostAuditLog(ctx, requester, id)
 
@@ -414,4 +441,89 @@ func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, r
 
 	return auditLog, nil
 
+}
+
+func (r PostAuditLogCassandraRepository) GetPostRejectionReason(ctx context.Context, requester *principal.Principal, id string) (*post_audit_log.PostRejectionReason, error) {
+
+	rejectionReasonQuery := r.session.
+		Query(postRejectionReasonTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postRejectionReason{Id: id, Bucket: 0})
+
+	var rejectionReason postRejectionReason
+
+	if err := rejectionReasonQuery.Get(&rejectionReason); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post_audit_log.ErrPostRejectionReasonNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get post rejection reason: %v", err)
+	}
+
+	reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+
+	if err := reason.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return reason, nil
+}
+
+func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post_audit_log.PostRejectionReason, error) {
+
+	if err := post_audit_log.CanViewRejectionReasons(requester); err != nil {
+		return nil, err
+	}
+
+	builder := postRejectionReasonTable.SelectBuilder()
+
+	data := &postRejectionReason{Bucket: 0}
+
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
+	}
+
+	rejectionReasonsQuery := builder.
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(data)
+
+	var dbRejectionReasons []postRejectionReason
+
+	if err := rejectionReasonsQuery.Select(&dbRejectionReasons); err != nil {
+		return nil, fmt.Errorf("failed to get rejection reasons: %v", err)
+	}
+
+	var rejectionReasons []*post_audit_log.PostRejectionReason
+	for _, rejectionReason := range dbRejectionReasons {
+
+		reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+
+		reason.Node = paging.NewNode(rejectionReason.Id)
+		rejectionReasons = append(rejectionReasons, reason)
+	}
+
+	return rejectionReasons, nil
+}
+
+// since we dont want to duplicate rejection reasons (they're subject to changes like translations or updates) we can use this function to get all
+// rejection reasons as a map, which can then be used to map audit logs and infraction history without a performance penalty on hitting multiple partitions
+func (r PostAuditLogCassandraRepository) getPostRejectionReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*post_audit_log.PostRejectionReason, error) {
+
+	rejectionReasons, err := r.GetPostRejectionReasons(ctx, requester, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	rejectionReasonMap := make(map[string]*post_audit_log.PostRejectionReason)
+
+	for _, reason := range rejectionReasons {
+		rejectionReasonMap[reason.ID()] = reason
+	}
+
+	return rejectionReasonMap, nil
 }

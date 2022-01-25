@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"os"
+	"overdoll/applications/parley/internal/app/workflows/activities"
 
 	"overdoll/applications/parley/internal/adapters"
 	"overdoll/applications/parley/internal/app"
@@ -41,20 +42,22 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, sting activities.StingService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
+	clubInfractionRepo := adapters.NewClubInfractionCassandraRepository(session)
+	postAuditLogRepo := adapters.NewPostAuditLogCassandraRepository(session)
+
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
-	infractionRepo := adapters.NewInfractionCassandraRepository(session)
 	reportRepo := adapters.NewReportCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator:             command.NewGetNextModeratorHandler(moderatorRepo),
-			RejectPost:                   command.NewRejectPostHandler(infractionRepo, eva, sting),
-			ApprovePost:                  command.NewApprovePostHandler(infractionRepo, eva, sting),
-			RemovePost:                   command.NewRemovePostHandler(infractionRepo, eva, sting),
+			RejectPost:                   command.NewRejectPostHandler(postAuditLogRepo, eva, sting),
+			ApprovePost:                  command.NewApprovePostHandler(postAuditLogRepo, eva, sting),
+			RemovePost:                   command.NewRemovePostHandler(postAuditLogRepo, eva, sting),
 			ReportPost:                   command.NewReportPostHandler(reportRepo, eva, sting),
 			AddModeratorToPostQueue:      command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
 			RemoveModeratorFromPostQueue: command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
@@ -74,5 +77,6 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			PostAuditLogById:             query.NewPostAuditLogByIdHandler(infractionRepo),
 			ModeratorById:                query.NewModeratorByIdHandler(moderatorRepo),
 		},
+		Activities: activities.NewActivitiesHandler(postAuditLogRepo, clubInfractionRepo, sting),
 	}
 }

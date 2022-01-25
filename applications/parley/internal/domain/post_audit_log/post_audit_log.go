@@ -1,4 +1,4 @@
-package infraction
+package post_audit_log
 
 import (
 	"errors"
@@ -8,11 +8,10 @@ import (
 )
 
 var (
-	ErrInvalidModerator = errors.New("moderator does not match")
+	ErrInvalidModerator     = errors.New("moderator does not match")
+	ErrPostAuditLogNotFound = errors.New("post audit log not found")
 )
 
-// A class simply used to store the details of a PendingPost that we can use
-// later on
 type PostAuditLog struct {
 	*paging.Node
 
@@ -26,8 +25,7 @@ type PostAuditLog struct {
 
 	status PostAuditLogStatus
 
-	rejectionReason   *PostRejectionReason
-	accountInfraction *AccountInfractionHistory
+	rejectionReason *PostRejectionReason
 }
 
 func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
@@ -55,18 +53,17 @@ func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId,
 	}
 
 	return &PostAuditLog{
-		id:                ksuid.New().String(),
-		pendingPostId:     postId,
-		moderatorId:       moderatorId,
-		contributorId:     contributorId,
-		status:            PostAuditLogStatusApproved,
-		rejectionReason:   nil,
-		notes:             nil,
-		accountInfraction: nil,
+		id:              ksuid.New().String(),
+		pendingPostId:   postId,
+		moderatorId:     moderatorId,
+		contributorId:   contributorId,
+		status:          PostAuditLogStatusApproved,
+		rejectionReason: nil,
+		notes:           nil,
 	}, nil
 }
 
-func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
+func NewRejectPostAuditLog(requester *principal.Principal, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
 	if !requester.IsStaff() {
@@ -76,42 +73,29 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 		}
 	}
 
-	var accountInfraction *AccountInfractionHistory
-	var err error
-
-	if rejectionReason.Infraction() {
-		accountInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &PostAuditLog{
-		id:                ksuid.New().String(),
-		pendingPostId:     postId,
-		moderatorId:       moderatorId,
-		contributorId:     contributorId,
-		status:            PostAuditLogStatusDenied,
-		rejectionReason:   rejectionReason,
-		notes:             notes,
-		accountInfraction: accountInfraction,
+		id:              ksuid.New().String(),
+		pendingPostId:   postId,
+		moderatorId:     moderatorId,
+		contributorId:   contributorId,
+		status:          PostAuditLogStatusDenied,
+		rejectionReason: rejectionReason,
+		notes:           notes,
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, userInfraction *AccountInfractionHistory) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string) *PostAuditLog {
 
 	st, _ := PostAuditLogStatusFromString(status)
 
 	return &PostAuditLog{
-		id:                id,
-		pendingPostId:     postId,
-		moderatorId:       moderatorId,
-		contributorId:     contributorId,
-		status:            st,
-		rejectionReason:   rejectionReason,
-		notes:             notes,
-		accountInfraction: userInfraction,
+		id:              id,
+		pendingPostId:   postId,
+		moderatorId:     moderatorId,
+		contributorId:   contributorId,
+		status:          st,
+		rejectionReason: rejectionReason,
+		notes:           notes,
 	}
 }
 
@@ -168,12 +152,8 @@ func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
 	return m.rejectionReason
 }
 
-func (m *PostAuditLog) AccountInfraction() *AccountInfractionHistory {
-	return m.accountInfraction
-}
-
 func (m *PostAuditLog) IsDeniedWithInfraction() bool {
-	return m.status == PostAuditLogStatusDenied && m.rejectionReason.Infraction()
+	return m.status == PostAuditLogStatusDenied && m.rejectionReason.InfractionId()
 }
 
 func CanViewWithFilters(requester *principal.Principal, filter *PostAuditLogFilters) error {

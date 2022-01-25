@@ -1,4 +1,4 @@
-package infraction
+package post_audit_log
 
 import (
 	"errors"

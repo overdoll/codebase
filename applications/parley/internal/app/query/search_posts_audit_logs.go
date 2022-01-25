@@ -2,9 +2,10 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"time"
 
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -21,17 +22,17 @@ type SearchPostAuditLogs struct {
 }
 
 type SearchPostAuditLogsHandler struct {
-	ir  infraction.Repository
+	ir  club_infraction.Repository
 	eva EvaService
 }
 
-func NewSearchPostAuditLogsHandler(ir infraction.Repository, eva EvaService) SearchPostAuditLogsHandler {
+func NewSearchPostAuditLogsHandler(ir club_infraction.Repository, eva EvaService) SearchPostAuditLogsHandler {
 	return SearchPostAuditLogsHandler{ir: ir, eva: eva}
 }
 
-func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, query SearchPostAuditLogs) ([]*infraction.PostAuditLog, error) {
+func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, query SearchPostAuditLogs) ([]*post_audit_log.PostAuditLog, error) {
 
-	filters, err := infraction.NewPostAuditLogFilters(query.ModeratorAccountId, query.PostId, query.From, query.To)
+	filters, err := post_audit_log.NewPostAuditLogFilters(query.ModeratorAccountId, query.PostId, query.From, query.To)
 
 	if err != nil {
 		return nil, err

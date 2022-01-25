@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 
 	"github.com/pkg/errors"
-	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/principal"
 )
 
@@ -16,33 +16,30 @@ type RemovePost struct {
 }
 
 type RemovePostHandler struct {
-	ir    infraction.Repository
+	pr    post_audit_log.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewRemovePostHandler(ir infraction.Repository, eva EvaService, sting StingService) RemovePostHandler {
-	return RemovePostHandler{sting: sting, eva: eva, ir: ir}
+func NewRemovePostHandler(pr post_audit_log.Repository, eva EvaService, sting StingService) RemovePostHandler {
+	return RemovePostHandler{sting: sting, eva: eva, pr: pr}
 }
 
-func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*infraction.PostAuditLog, error) {
+func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*post_audit_log.PostAuditLog, error) {
 
-	// Get pending post
 	_, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.ir.GetPostRejectionReason(ctx, cmd.Principal, cmd.PostRejectionReasonId)
+	rejectionReason, err := h.pr.GetPostRejectionReason(ctx, cmd.Principal, cmd.PostRejectionReasonId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// remove post
-	// post removal doesn't result in any infractions (for now)
-	infractionAuditLog, err := infraction.NewRemovePostAuditLog(
+	postAuditLog, err := post_audit_log.NewRemovePostAuditLog(
 		cmd.Principal,
 		cmd.PostId,
 		postContributorId,
@@ -54,14 +51,10 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*infract
 		return nil, err
 	}
 
-	if err := h.sting.RemovePost(ctx, cmd.PostId); err != nil {
-		return nil, errors.Wrap(err, "failed to remove post")
-	}
-
 	// create audit log record
-	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
+	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
 		return nil, err
 	}
 
-	return infractionAuditLog, nil
+	return postAuditLog, nil
 }
