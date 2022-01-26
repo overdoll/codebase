@@ -3,7 +3,7 @@ import HorizontalNavigationDropdownMenu
   from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { Trans } from '@lingui/macro'
 import generatePath from '@//:modules/routing/generatePath'
-import { SettingHammer } from '@//:assets/icons/navigation'
+import { SettingHammer, ClubPeopleGroup } from '@//:assets/icons/navigation'
 import { AddPlus } from '@//:assets/icons/interface'
 import { DropdownMenuButtonClubQuery } from '@//:artifacts/DropdownMenuButtonClubQuery.graphql'
 
@@ -51,7 +51,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
     <HorizontalNavigationDropdownMenu.Button
       to={newPath}
       colorScheme='teal'
-      icon={SettingHammer}
+      icon={ClubPeopleGroup}
       label={
         <Trans>
           {selectedClub.name}

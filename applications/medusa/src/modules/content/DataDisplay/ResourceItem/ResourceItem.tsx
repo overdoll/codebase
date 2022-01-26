@@ -36,6 +36,8 @@ export default function ResourceItem ({
     )
   }
 
+  // TODO this should show the video thumbnail
+
   return (
     <Flex align='center' justify='center' h='100%'>
       {data.type === 'IMAGE' &&

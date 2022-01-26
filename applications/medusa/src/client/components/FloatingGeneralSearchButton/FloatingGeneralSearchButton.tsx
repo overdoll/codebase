@@ -50,7 +50,7 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
 
   const [queryArgs, setQueryArgs] = useSearchQueryArguments({
     search: null,
-    first: 3,
+    first: 2,
     seriesSlugs: series,
     categoriesSlugs: categories,
     charactersSlugs: null,
@@ -62,7 +62,7 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
   useUpdateEffect(() => {
     setQueryArgs({
       search: search,
-      first: 3,
+      first: 2,
       seriesSlugs: null,
       categoriesSlugs: null,
       charactersSlugs: null,
@@ -73,7 +73,7 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
   useUpdateEffect(() => {
     setQueryArgs({
       search: null,
-      first: 3,
+      first: 2,
       seriesSlugs: series,
       categoriesSlugs: categories,
       charactersSlugs: null,
@@ -101,7 +101,7 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
           variant='solid'
           onClick={onOpen}
         >
-          <Icon fill='primary.900' w={8} h={8} icon={SearchBar} />
+          <Icon fill='gray.00' w={8} h={8} icon={SearchBar} />
         </ClickableBox>
       </Box>
       <Modal
@@ -127,7 +127,7 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
                     reset={reset}
                     refetch={() => setQueryArgs({
                       search: null,
-                      first: 3
+                      first: 2
                     })}
                   />
                 )}

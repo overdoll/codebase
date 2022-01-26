@@ -5,6 +5,7 @@ import { Stack } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
+import { ClubMembers } from '@//:assets/icons/interface'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -32,7 +33,11 @@ export default function ClubHome ({ query }: Props): JSX.Element {
   return (
     <Stack spacing={8}>
       <LargeClubHeader query={queryData?.club} />
-      <StatisticNumber value={number} text={i18n._(t`Members`)} />
+      <StatisticNumber
+        value={number}
+        text={i18n._(t`Members`)}
+        icon={ClubMembers}
+      />
     </Stack>
   )
 }

@@ -33,3 +33,4 @@ export { default as PlaceholderResourceSkull } from './normal-bold/placeholder-r
 export { default as CategoryIdentifier } from './normal-bold/category-identifier.svg'
 export { default as CharacterIdentifier } from './normal-bold/character-identifier.svg'
 export { default as SeriesIdentifier } from './normal-bold/series-identifier.svg'
+export { default as ClubMembers } from './normal-bold/club-members.svg'

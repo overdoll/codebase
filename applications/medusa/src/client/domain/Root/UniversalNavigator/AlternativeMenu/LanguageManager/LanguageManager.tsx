@@ -126,6 +126,7 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
     <Select
       variant='outline'
       size='lg'
+      minW={150}
       h='50px'
       isDisabled={isUpdatingBrowserLanguage || isUpdatingAccountLanguage}
       defaultValue={query.language.locale}

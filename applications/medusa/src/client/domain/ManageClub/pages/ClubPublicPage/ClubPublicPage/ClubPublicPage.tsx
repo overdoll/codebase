@@ -1,9 +1,9 @@
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
+import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 import { graphql } from 'react-relay'
 import { useHistory } from '@//:modules/routing'
 import LargeClubHeader from '../../../components/LargeClubHeader/LargeClubHeader'
-import { Avatar, AvatarGroup, Box, HStack, Stack } from '@chakra-ui/react'
+import { Box, HStack, Stack } from '@chakra-ui/react'
 import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
@@ -12,6 +12,13 @@ import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/con
 import JoinClubButton from '../../../components/JoinClubButton/JoinClubButton'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+import { ClubMembers } from '@//:assets/icons/interface'
+import RandomIcon from '@//:modules/content/DataDisplay/RandomIcon/RandomIcon'
+import PostsHorizontalPreview from './PostsHorizontalPreview/PostsHorizontalPreview'
+import type { ClubPublicPageTopPostsFragment$key } from '@//:artifacts/ClubPublicPageTopPostsFragment.graphql'
+import type { ClubPublicPageNewPostsFragment$key } from '@//:artifacts/ClubPublicPageNewPostsFragment.graphql'
+import { encodeQueryParams, StringParam } from 'serialize-query-params'
+import { stringify } from 'query-string'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -20,6 +27,7 @@ interface Props {
 const Query = graphql`
   query ClubPublicPageQuery($slug: String!) {
     club(slug: $slug) {
+      slug
       membersCount
       members(first: 4, sortBy: NEWEST) {
         edges {
@@ -43,9 +51,27 @@ const Query = graphql`
       }
       ...LargeClubHeaderFragment
       ...JoinClubButtonClubFragment
+      ...ClubPublicPageNewPostsFragment
+      ...ClubPublicPageTopPostsFragment
     }
     viewer {
       ...JoinClubButtonViewerFragment
+    }
+  }
+`
+
+const TopPostsFragment = graphql`
+  fragment ClubPublicPageTopPostsFragment on Club {
+    topPosts: posts(first: 5, sortBy: TOP) {
+      ...PostsHorizontalPreviewFragment
+    }
+  }
+`
+
+const NewPostsFragment = graphql`
+  fragment ClubPublicPageNewPostsFragment on Club {
+    newPosts: posts(first: 5, sortBy: NEW) {
+      ...PostsHorizontalPreviewFragment
     }
   }
 `
@@ -55,6 +81,9 @@ export default function ClubPublicPage (props: Props): JSX.Element {
     Query,
     props.query
   )
+
+  const topPostsData = useFragment<ClubPublicPageTopPostsFragment$key>(TopPostsFragment, queryData.club)
+  const newPostsData = useFragment<ClubPublicPageNewPostsFragment$key>(NewPostsFragment, queryData.club)
 
   const history = useHistory()
 
@@ -66,35 +95,51 @@ export default function ClubPublicPage (props: Props): JSX.Element {
 
   const number = abbreviateNumber(queryData?.club?.membersCount ?? 0, 3)
 
+  const topPostsEncodedQuery = encodeQueryParams({
+    sort: StringParam
+  }, {
+    sort: 'TOP'
+  })
+
+  const newPostsEncodedQuery = encodeQueryParams({
+    sort: StringParam
+  }, {
+    sort: 'NEW'
+  })
+
   const AddAvatars = (): JSX.Element => {
     if (queryData?.club?.members.edges == null) return <></>
 
-    const placeholderLength = 4 - queryData?.club?.members.edges.length
+    const placeholderLength = 10 - queryData?.club?.members.edges.length
 
     return (
-      <AvatarGroup spacing={-8}>
-        {queryData?.club?.members.edges.map((item, index) =>
-          <ResourceIcon key={index} w={24} h={24} query={item.node.account.avatar} />)}
+      <HStack spacing={-8}>
         {[...Array(placeholderLength).keys()].map((item, index) =>
-          <Avatar
-            w={24}
-            h={24}
-            borderRadius='25%'
+          <Box
             key={index}
-          />)}
-      </AvatarGroup>
+            borderRadius='25%'
+            w={16}
+            h={16}
+            borderWidth={3}
+            borderColor='gray.900'
+            bg='gray.700'
+          >
+            <RandomIcon />
+          </Box>)}
+        {queryData?.club?.members.edges.map((item, index) =>
+          <ResourceIcon key={index} w={16} h={16} query={item.node.account.avatar} />)}
+      </HStack>
     )
   }
 
   return (
-    <Stack spacing={12}>
+    <Stack spacing={8}>
       <Stack spacing={2}>
         <Box h={140}>
           <TileOverlay
             background={<ResourceItem query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0] ?? null} />}
           >
             <LargeClubHeader query={queryData?.club} />
-
           </TileOverlay>
         </Box>
         <JoinClubButton
@@ -103,20 +148,38 @@ export default function ClubPublicPage (props: Props): JSX.Element {
           viewerQuery={queryData?.viewer}
         />
       </Stack>
-      <Stack spacing={4}>
-        <HStack spacing={8}>
-          <StatisticNumber value={number} text={i18n._(t`Members`)} />
-          <AddAvatars />
-        </HStack>
+      <Stack align='center' spacing={2}>
+        <StatisticNumber
+          value={number}
+          text={i18n._(t`Members`)}
+          icon={ClubMembers}
+        />
+        <AddAvatars />
       </Stack>
-      <Stack spacing={2}>
+      <Box>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='orange'>
             Top posts from this club
           </PageSectionTitle>
         </PageSectionWrap>
-        <></>
-      </Stack>
+        {topPostsData != null &&
+          <PostsHorizontalPreview
+            to={`/${queryData?.club?.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
+            query={topPostsData?.topPosts}
+          />}
+      </Box>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle colorScheme='teal'>
+            New posts from this club
+          </PageSectionTitle>
+        </PageSectionWrap>
+        {newPostsData != null &&
+          <PostsHorizontalPreview
+            to={`/${queryData?.club?.slug as string}/posts?${stringify(newPostsEncodedQuery)}`}
+            query={newPostsData?.newPosts}
+          />}
+      </Box>
     </Stack>
   )
 }
