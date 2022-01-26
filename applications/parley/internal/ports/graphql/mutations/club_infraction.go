@@ -66,10 +66,10 @@ func (r MutationResolver) UpdateClubInfractionReasonText(ctx context.Context, in
 	clubInfractionReason, err := r.App.Commands.UpdateClubInfractionReasonText.
 		Handle(
 			ctx,
-			command.UpdateClubInfractionReasonText{
+			command.UpdateClubInfractionReasonTitle{
 				Principal:          principal.FromContext(ctx),
 				InfractionReasonId: input.ReasonID.GetID(),
-				Reason:             input.Reason,
+				Title:              input.Reason,
 				Locale:             input.Locale,
 			},
 		)

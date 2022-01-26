@@ -17,25 +17,32 @@ type PostRejectionReason struct {
 	*paging.Node
 
 	id                     string
-	reason                 *localization.Translation
+	title                  *localization.Translation
+	description            *localization.Translation
 	clubInfractionReasonId string
 	deprecated             bool
 }
 
-func NewPostRejectionReason(requester *principal.Principal, reason string, clubInfractionReasonId string) (*PostRejectionReason, error) {
+func NewPostRejectionReason(requester *principal.Principal, title, description string, clubInfractionReasonId string) (*PostRejectionReason, error) {
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
 	}
 
-	l, err := localization.NewDefaultTranslation(reason)
+	titleT, err := localization.NewDefaultTranslation(title)
+	if err != nil {
+		return nil, err
+	}
+
+	descriptionT, err := localization.NewDefaultTranslation(description)
 	if err != nil {
 		return nil, err
 	}
 
 	return &PostRejectionReason{
 		id:                     uuid.New().String(),
-		reason:                 l,
+		title:                  titleT,
+		description:            descriptionT,
 		clubInfractionReasonId: clubInfractionReasonId,
 		deprecated:             false,
 	}, nil
@@ -45,8 +52,12 @@ func (m *PostRejectionReason) ID() string {
 	return m.id
 }
 
-func (m *PostRejectionReason) Reason() *localization.Translation {
-	return m.reason
+func (m *PostRejectionReason) Title() *localization.Translation {
+	return m.title
+}
+
+func (m *PostRejectionReason) Description() *localization.Translation {
+	return m.description
 }
 
 func (m *PostRejectionReason) IsInfraction() bool {
@@ -61,13 +72,26 @@ func (m *PostRejectionReason) ClubInfractionReasonId() string {
 	return m.clubInfractionReasonId
 }
 
-func (m *PostRejectionReason) UpdateReason(requester *principal.Principal, reason, locale string) error {
+func (m *PostRejectionReason) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	if err := m.reason.UpdateTranslation(reason, locale); err != nil {
+	if err := m.title.UpdateTranslation(title, locale); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostRejectionReason) UpdateDescription(requester *principal.Principal, description, locale string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := m.description.UpdateTranslation(description, locale); err != nil {
 		return err
 	}
 
@@ -115,10 +139,11 @@ func CanViewRejectionReasons(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalPostRejectionReasonFromDatabase(id string, reason map[string]string, infractionId string, deprecated bool) *PostRejectionReason {
+func UnmarshalPostRejectionReasonFromDatabase(id string, title map[string]string, description map[string]string, infractionId string, deprecated bool) *PostRejectionReason {
 	return &PostRejectionReason{
 		id:                     id,
-		reason:                 localization.UnmarshalTranslationFromDatabase(reason),
+		title:                  localization.UnmarshalTranslationFromDatabase(title),
+		description:            localization.UnmarshalTranslationFromDatabase(description),
 		clubInfractionReasonId: infractionId,
 		deprecated:             deprecated,
 	}

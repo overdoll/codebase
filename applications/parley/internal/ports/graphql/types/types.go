@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -142,6 +143,22 @@ type CreatePostRejectionReasonInput struct {
 type CreatePostRejectionReasonPayload struct {
 	// The post rejection reason.
 	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
+}
+
+// Create a new post report reason input.
+type CreatePostReportReasonInput struct {
+	// The title.
+	Title string `json:"title"`
+	// The description.
+	Description string `json:"description"`
+	// The link, if added
+	Link *graphql1.URI `json:"link"`
+}
+
+// Updated post report reason.
+type CreatePostReportReasonPayload struct {
+	// The post report reason.
+	PostReportReason *PostReportReason `json:"postReportReason"`
 }
 
 // Issue a club infraction.
@@ -290,10 +307,20 @@ type PostReportEdge struct {
 
 // Post report reason
 type PostReportReason struct {
-	// ID of the report reason
+	// ID of the report reason.
 	ID relay.ID `json:"id"`
-	// The reason for this report
-	Reason string `json:"reason"`
+	// The title for this report.
+	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*Translation `json:"titleTranslations"`
+	// The description for this report.
+	Description string `json:"description"`
+	// All translations for this description.
+	DescriptionTranslations []*Translation `json:"descriptionTranslations"`
+	// The link for this report, if there is one. This report reason can't be submitted if it has a link.
+	Link *graphql1.URI `json:"link"`
+	// If this reason is deprecated.
+	Deprecated bool `json:"deprecated"`
 }
 
 func (PostReportReason) IsNode()   {}
@@ -460,6 +487,66 @@ type UpdatePostRejectionReasonTextInput struct {
 type UpdatePostRejectionReasonTextPayload struct {
 	// The post rejection reason.
 	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
+}
+
+// Update post report reason.
+type UpdatePostReportReasonDeprecatedInput struct {
+	// The post report reason to update.
+	ReportReasonID relay.ID `json:"reportReasonId"`
+	// The deprecated status.
+	Deprecated bool `json:"deprecated"`
+}
+
+// Updated post report reason.
+type UpdatePostReportReasonDeprecatedPayload struct {
+	// The post report reason.
+	PostReportReason *PostReportReason `json:"postReportReason"`
+}
+
+// Update post report reason.
+type UpdatePostReportReasonDescriptionInput struct {
+	// The post report reason to update.
+	ReportReasonID relay.ID `json:"reportReasonId"`
+	// The description to update
+	Description string `json:"description"`
+	// The localization for this description.
+	Locale string `json:"locale"`
+}
+
+// Updated post report reason.
+type UpdatePostReportReasonDescriptionPayload struct {
+	// The post report reason.
+	PostReportReason *PostReportReason `json:"postReportReason"`
+}
+
+// Update post report reason.
+type UpdatePostReportReasonLinkInput struct {
+	// The post report reason to update.
+	ReportReasonID relay.ID `json:"reportReasonId"`
+	// The link to update to.
+	Link *graphql1.URI `json:"link"`
+}
+
+// Updated post report reason.
+type UpdatePostReportReasonLinkPayload struct {
+	// The post report reason.
+	PostReportReason *PostReportReason `json:"postReportReason"`
+}
+
+// Update post report reason.
+type UpdatePostReportReasonTitleInput struct {
+	// The post report reason to update.
+	ReportReasonID relay.ID `json:"reportReasonId"`
+	// The title to update
+	Title string `json:"title"`
+	// The localization for this title.
+	Locale string `json:"locale"`
+}
+
+// Updated post report reason.
+type UpdatePostReportReasonTitlePayload struct {
+	// The post report reason.
+	PostReportReason *PostReportReason `json:"postReportReason"`
 }
 
 type ClubInfractionHistorySource string

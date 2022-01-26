@@ -22,6 +22,11 @@ type PostReport struct {
 }
 
 func NewPostReport(requester *principal.Principal, postId string, reportReason *PostReportReason) (*PostReport, error) {
+
+	if reportReason.Link() != nil {
+		return nil, ErrPostReportReasonIsLink
+	}
+
 	return &PostReport{
 		id:                 ksuid.New().String(),
 		postId:             postId,

@@ -203,7 +203,7 @@ func MarshalClubInfractionHistoryToGraphQL(ctx context.Context, result *club_inf
 func MarshalPostReportReasonToGraphQL(ctx context.Context, result *report.PostReportReason) *PostReportReason {
 	return &PostReportReason{
 		ID:     relay.NewID(PostReportReason{}, result.ID()),
-		Reason: result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
+		Reason: result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 	}
 }
 
@@ -343,7 +343,7 @@ func MarshalClubInfractionReasonToGraphQL(ctx context.Context, result *club_infr
 
 	var reasonTranslations []*Translation
 
-	for _, val := range result.Reason().Translations() {
+	for _, val := range result.Title().Translations() {
 		reasonTranslations = append(reasonTranslations, &Translation{
 			Language: &Language{
 				Locale: val.Locale(),
@@ -355,7 +355,7 @@ func MarshalClubInfractionReasonToGraphQL(ctx context.Context, result *club_infr
 
 	return &ClubInfractionReason{
 		ID:                 relay.NewID(ClubInfractionReason{}, result.ID()),
-		Reason:             result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
+		Reason:             result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		ReasonTranslations: reasonTranslations,
 		Deprecated:         result.Deprecated(),
 	}
@@ -365,7 +365,7 @@ func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *post_audit
 
 	var reasonTranslations []*Translation
 
-	for _, val := range result.Reason().Translations() {
+	for _, val := range result.Title().Translations() {
 		reasonTranslations = append(reasonTranslations, &Translation{
 			Language: &Language{
 				Locale: val.Locale(),
@@ -385,7 +385,7 @@ func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *post_audit
 
 	return &PostRejectionReason{
 		ID:                   relay.NewID(PostRejectionReason{}, result.ID()),
-		Reason:               result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
+		Reason:               result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		ReasonTranslations:   reasonTranslations,
 		Deprecated:           result.Deprecated(),
 		ClubInfractionReason: clubInfractionReason,

@@ -75,7 +75,8 @@ var postRejectionReasonTable = table.New(table.Metadata{
 		"id",
 		"bucket",
 		"club_infraction_reason_id",
-		"reason",
+		"title",
+		"description",
 		"deprecated",
 	},
 	PartKey: []string{"bucket"},
@@ -86,7 +87,8 @@ type postRejectionReason struct {
 	Id                     string            `db:"id"`
 	Bucket                 int               `db:"bucket"`
 	ClubInfractionReasonId string            `db:"club_infraction_reason_id"`
-	Reason                 map[string]string `db:"reason"`
+	Title                  map[string]string `db:"title"`
+	Description            map[string]string `db:"description"`
 	Deprecated             bool              `db:"deprecated"`
 }
 
@@ -122,6 +124,17 @@ func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*post
 		PostRejectionReasonId: reason,
 		Notes:                 auditLog.Notes(),
 	}, nil
+}
+
+func marshalPostRejectionReasonToDatabase(postRejection *post_audit_log.PostRejectionReason) *postRejectionReason {
+	return &postRejectionReason{
+		Id:                     postRejection.ID(),
+		Deprecated:             postRejection.Deprecated(),
+		Bucket:                 0,
+		Title:                  localization.MarshalTranslationToDatabase(postRejection.Title()),
+		Description:            localization.MarshalTranslationToDatabase(postRejection.Description()),
+		ClubInfractionReasonId: postRejection.ClubInfractionReasonId(),
+	}
 }
 
 func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context, auditLog *post_audit_log.PostAuditLog) error {
@@ -341,7 +354,8 @@ func (r PostAuditLogCassandraRepository) getPostRejectionReasonById(ctx context.
 
 	reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(
 		rejectionReason.Id,
-		rejectionReason.Reason,
+		rejectionReason.Title,
+		rejectionReason.Description,
 		rejectionReason.ClubInfractionReasonId,
 		rejectionReason.Deprecated,
 	)
@@ -354,13 +368,7 @@ func (r PostAuditLogCassandraRepository) CreatePostRejectionReason(ctx context.C
 	if err := r.session.
 		Query(postRejectionReasonTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&postRejectionReason{
-			Id:                     postRejection.ID(),
-			Deprecated:             postRejection.Deprecated(),
-			Bucket:                 0,
-			Reason:                 localization.MarshalTranslationToDatabase(postRejection.Reason()),
-			ClubInfractionReasonId: postRejection.ClubInfractionReasonId(),
-		}).
+		BindStruct(marshalPostRejectionReasonToDatabase(postRejection)).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to create post rejection reason: %v", err)
 	}
@@ -399,27 +407,28 @@ func (r PostAuditLogCassandraRepository) GetPostRejectionReasons(ctx context.Con
 		}
 	}
 
-	rejectionReasonsQuery := builder.
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(data)
-
 	var dbRejectionReasons []postRejectionReason
 
-	if err := rejectionReasonsQuery.Select(&dbRejectionReasons); err != nil {
+	if err := builder.
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(data).
+		Select(&dbRejectionReasons); err != nil {
 		return nil, fmt.Errorf("failed to get rejection reasons: %v", err)
 	}
 
 	var rejectionReasons []*post_audit_log.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
 
-		if rejectionReason.Deprecated != deprecated {
+		// skip over deprecated
+		if rejectionReason.Deprecated && !deprecated {
 			continue
 		}
 
 		reason := post_audit_log.UnmarshalPostRejectionReasonFromDatabase(
 			rejectionReason.Id,
-			rejectionReason.Reason,
+			rejectionReason.Title,
+			rejectionReason.Description,
 			rejectionReason.ClubInfractionReasonId,
 			rejectionReason.Deprecated,
 		)
@@ -469,13 +478,7 @@ func (r PostAuditLogCassandraRepository) updatePostRejectionReason(ctx context.C
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&postRejectionReason{
-			Id:                     postRejection.ID(),
-			Deprecated:             postRejection.Deprecated(),
-			Bucket:                 0,
-			Reason:                 localization.MarshalTranslationToDatabase(postRejection.Reason()),
-			ClubInfractionReasonId: postRejection.ClubInfractionReasonId(),
-		}).
+		BindStruct(marshalPostRejectionReasonToDatabase(postRejection)).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update post rejection reason: %v", err)
 	}
@@ -487,8 +490,12 @@ func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonDeprecated(ctx
 	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"deprecated"})
 }
 
-func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonText(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
-	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"reason"})
+func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonTitle(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
+	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"title"})
+}
+
+func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonDescription(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {
+	return r.updatePostRejectionReason(ctx, postRejectionReasonId, updateFn, []string{"description"})
 }
 
 func (r PostAuditLogCassandraRepository) UpdatePostRejectionReasonClubInfractionReason(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *post_audit_log.PostRejectionReason) error) (*post_audit_log.PostRejectionReason, error) {

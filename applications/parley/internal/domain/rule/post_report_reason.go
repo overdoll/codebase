@@ -10,21 +10,20 @@ import (
 )
 
 var (
-	ErrPostReportReasonNotFound = errors.New("post report reason not found")
-	ErrPostReportReasonIsLink   = errors.New("cant submit a post report with a link")
+	ErrRuleNotFound = errors.New("rule not found")
 )
 
-type PostReportReason struct {
+type Rule struct {
 	*paging.Node
 
+	deprecated  bool
+	infraction  bool
+	id          string
 	title       *localization.Translation
 	description *localization.Translation
-	link        *string
-	deprecated  bool
-	id          string
 }
 
-func NewPostReportReason(requester *principal.Principal, title, description string, link *string) (*PostReportReason, error) {
+func NewRule(requester *principal.Principal, title, description string, infraction bool) (*Rule, error) {
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
@@ -40,36 +39,32 @@ func NewPostReportReason(requester *principal.Principal, title, description stri
 		return nil, err
 	}
 
-	return &PostReportReason{
+	return &Rule{
 		id:          uuid.New().String(),
 		title:       titleT,
 		description: descriptionT,
-		link:        link,
+		infraction:  infraction,
 		deprecated:  false,
 	}, nil
 }
 
-func (m *PostReportReason) ID() string {
+func (m *Rule) ID() string {
 	return m.id
 }
 
-func (m *PostReportReason) Title() *localization.Translation {
+func (m *Rule) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *PostReportReason) Description() *localization.Translation {
+func (m *Rule) Description() *localization.Translation {
 	return m.title
 }
 
-func (m *PostReportReason) Link() *string {
-	return m.link
-}
-
-func (m *PostReportReason) Deprecated() bool {
+func (m *Rule) Deprecated() bool {
 	return m.deprecated
 }
 
-func (m *PostReportReason) UpdateTitle(requester *principal.Principal, title, locale string) error {
+func (m *Rule) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
@@ -82,7 +77,7 @@ func (m *PostReportReason) UpdateTitle(requester *principal.Principal, title, lo
 	return nil
 }
 
-func (m *PostReportReason) UpdateDescription(requester *principal.Principal, description, locale string) error {
+func (m *Rule) UpdateDescription(requester *principal.Principal, description, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
@@ -95,7 +90,7 @@ func (m *PostReportReason) UpdateDescription(requester *principal.Principal, des
 	return nil
 }
 
-func (m *PostReportReason) UpdateDeprecated(requester *principal.Principal, deprecated bool) error {
+func (m *Rule) UpdateDeprecated(requester *principal.Principal, deprecated bool) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
@@ -105,17 +100,17 @@ func (m *PostReportReason) UpdateDeprecated(requester *principal.Principal, depr
 	return nil
 }
 
-func (m *PostReportReason) UpdateLink(requester *principal.Principal, link *string) error {
+func (m *Rule) UpdateInfraction(requester *principal.Principal, infraction bool) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.link = link
+	m.infraction = infraction
 	return nil
 }
 
-func (m *PostReportReason) canUpdate(requester *principal.Principal) error {
+func (m *Rule) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
@@ -124,12 +119,12 @@ func (m *PostReportReason) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalPostReportReasonFromDatabase(id string, title map[string]string, description map[string]string, link *string, deprecated bool) *PostReportReason {
-	return &PostReportReason{
+func UnmarshalRuleFromDatabase(id string, title map[string]string, description map[string]string, infraction, deprecated bool) *Rule {
+	return &Rule{
 		id:          id,
 		title:       localization.UnmarshalTranslationFromDatabase(title),
 		description: localization.UnmarshalTranslationFromDatabase(description),
-		link:        link,
+		infraction:  infraction,
 		deprecated:  deprecated,
 	}
 }

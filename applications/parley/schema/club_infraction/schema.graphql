@@ -3,11 +3,17 @@ type ClubInfractionReason implements Node @key(fields: "id") {
   """ID of the infraction reason."""
   id: ID!
 
-  """The reason."""
-  reason: String!
+  """The title."""
+  title: String!
 
-  """All translations for this reason."""
-  reasonTranslations: [Translation!]!
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The description."""
+  description: String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
 
   """If this reason is deprecated."""
   deprecated: Boolean!
@@ -128,12 +134,24 @@ input UpdateClubInfractionReasonDeprecatedInput {
 }
 
 """Update club infraction reason."""
-input UpdateClubInfractionReasonTextInput {
+input UpdateClubInfractionReasonTitleInput {
   """The club infraction to take action against."""
   reasonId: ID!
 
-  """The reason to update"""
-  reason: String!
+  """The title to update"""
+  title: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Update club infraction reason."""
+input UpdateClubInfractionReasonDescriptionInput {
+  """The club infraction to take action against."""
+  reasonId: ID!
+
+  """The title to update"""
+  description: String!
 
   """The localization for this reason"""
   locale: BCP47!
@@ -170,7 +188,13 @@ type CreateClubInfractionReasonPayload {
 }
 
 """Create a new club infraction reason payload."""
-type UpdateClubInfractionReasonTextPayload {
+type UpdateClubInfractionReasonTitlePayload {
+  """The club infraction reason."""
+  clubInfractionReason: ClubInfractionReason
+}
+
+"""Create a new club infraction reason payload."""
+type UpdateClubInfractionReasonDescriptionPayload {
   """The club infraction reason."""
   clubInfractionReason: ClubInfractionReason
 }
@@ -194,14 +218,19 @@ extend type Mutation {
   createClubInfractionReason(input: CreateClubInfractionReasonInput!): CreateClubInfractionReasonPayload
 
   """
+  Update club infraction reason title.
+  """
+  updateClubInfractionReasonTitle(input: UpdateClubInfractionReasonTitleInput!): UpdateClubInfractionReasonTitlePayload
+
+  """
+  Update club infraction reason description.
+  """
+  updateClubInfractionReasonDescription(input: UpdateClubInfractionReasonDescriptionInput!): UpdateClubInfractionReasonDescriptionPayload
+
+  """
   Update club infraction reason deprecation.
   """
   updateClubInfractionReasonDeprecated(input: UpdateClubInfractionReasonDeprecatedInput!): UpdateClubInfractionReasonDeprecatedUpload
-
-  """
-  Update club infraction reason text.
-  """
-  updateClubInfractionReasonText(input: UpdateClubInfractionReasonTextInput!): UpdateClubInfractionReasonTextPayload
 
   """
   Issue a club infraction.

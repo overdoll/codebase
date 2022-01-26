@@ -13,7 +13,8 @@ type Repository interface {
 
 	CreatePostRejectionReason(ctx context.Context, postRejectionReason *PostRejectionReason) error
 	UpdatePostRejectionReasonDeprecated(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *PostRejectionReason) error) (*PostRejectionReason, error)
-	UpdatePostRejectionReasonText(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *PostRejectionReason) error) (*PostRejectionReason, error)
+	UpdatePostRejectionReasonTitle(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *PostRejectionReason) error) (*PostRejectionReason, error)
+	UpdatePostRejectionReasonDescription(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *PostRejectionReason) error) (*PostRejectionReason, error)
 	UpdatePostRejectionReasonClubInfractionReason(ctx context.Context, postRejectionReasonId string, updateFn func(postRejectionReason *PostRejectionReason) error) (*PostRejectionReason, error)
 
 	GetPostAuditLogByIdOperator(ctx context.Context, auditLogId string) (*PostAuditLog, error)

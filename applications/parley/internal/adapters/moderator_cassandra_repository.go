@@ -47,14 +47,13 @@ func marshaModeratorToDatabase(mod *mod.Moderator) *moderator {
 
 func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id string) (*mod.Moderator, error) {
 
-	moderatorQuery := r.session.
-		Query(moderatorTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&moderator{AccountId: id, Bucket: 0})
-
 	var md moderator
 
-	if err := moderatorQuery.Get(&md); err != nil {
+	if err := r.session.
+		Query(moderatorTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&moderator{AccountId: id, Bucket: 0}).
+		Get(&md); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, mod.ErrModeratorNotFound
@@ -83,14 +82,13 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, requeste
 
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod.Moderator, error) {
 
-	moderatorQuery := r.session.
-		Query(moderatorTable.Select()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&moderator{Bucket: 0})
-
 	var dbModerators []moderator
 
-	if err := moderatorQuery.Select(&dbModerators); err != nil {
+	if err := r.session.
+		Query(moderatorTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&moderator{Bucket: 0}).
+		Select(&dbModerators); err != nil {
 		return nil, fmt.Errorf("failed to get moderators: %v", err)
 	}
 
@@ -104,12 +102,11 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 
 func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *mod.Moderator) error {
 
-	insertModerator := r.session.
+	if err := r.session.
 		Query(moderatorTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshaModeratorToDatabase(mod))
-
-	if err := insertModerator.ExecRelease(); err != nil {
+		BindStruct(marshaModeratorToDatabase(mod)).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to create moderator: %v", err)
 	}
 
@@ -130,12 +127,11 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		return nil, err
 	}
 
-	updateMod := r.session.
+	if err := r.session.
 		Query(moderatorTable.Update("last_selected")).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshaModeratorToDatabase(currentMod))
-
-	if err := updateMod.ExecRelease(); err != nil {
+		BindStruct(marshaModeratorToDatabase(currentMod)).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update moderator: %v", err)
 	}
 
@@ -150,15 +146,14 @@ func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, reque
 		return err
 	}
 
-	updateMod := r.session.
+	if err := r.session.
 		Query(moderatorTable.Delete()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderator{
 			AccountId: accountId,
 			Bucket:    0,
-		})
-
-	if err := updateMod.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to remove moderator: %v", err)
 	}
 

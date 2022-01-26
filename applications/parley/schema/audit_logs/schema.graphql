@@ -52,11 +52,17 @@ type PostRejectionReason implements Node @key(fields: "id") {
   """ID of the rejection reason"""
   id: ID!
 
-  """The reason for this rejection"""
-  reason: String!
+  """The title for this rejection"""
+  title: String!
 
-  """All translations for this reason."""
-  reasonTranslations: [Translation!]!
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The description for this rejection"""
+  description: String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
 
   """The club infraction reason, linked to this rejection reason."""
   clubInfractionReason: ClubInfractionReason @goField(forceResolver: true)
@@ -158,12 +164,24 @@ input CreatePostRejectionReasonInput {
 }
 
 """Update post rejection reason reason."""
-input UpdatePostRejectionReasonTextInput {
+input UpdatePostRejectionReasonTitleInput {
   """The post rejection reason against."""
   rejectionReasonId: ID!
 
-  """The reason to update"""
-  reason: String!
+  """The title to update"""
+  title: String!
+
+  """The localization for this reason"""
+  locale: BCP47!
+}
+
+"""Update post rejection reason reason."""
+input UpdatePostRejectionReasonDescriptionInput {
+  """The post rejection reason against."""
+  rejectionReasonId: ID!
+
+  """The description to update"""
+  description: String!
 
   """The localization for this reason"""
   locale: BCP47!
@@ -194,7 +212,13 @@ type UpdatePostRejectionReasonDeprecatedPayload {
 }
 
 """Update post rejection reason."""
-type UpdatePostRejectionReasonTextPayload {
+type UpdatePostRejectionReasonTitlePayload {
+  """The post rejection reason."""
+  postRejectionReason: PostRejectionReason
+}
+
+"""Update post rejection reason."""
+type UpdatePostRejectionReasonDescriptionPayload {
   """The post rejection reason."""
   postRejectionReason: PostRejectionReason
 }
@@ -223,9 +247,14 @@ extend type Mutation {
   updatePostRejectionReasonDeprecated(input: UpdatePostRejectionReasonDeprecatedInput!): UpdatePostRejectionReasonDeprecatedPayload
 
   """
-  Update post rejection reason text.
+  Update post rejection reason title.
   """
-  updatePostRejectionReasonText(input: UpdatePostRejectionReasonTextInput!): UpdatePostRejectionReasonTextPayload
+  updatePostRejectionReasonTitle(input: UpdatePostRejectionReasonTitleInput!): UpdatePostRejectionReasonTitlePayload
+
+  """
+  Update post rejection reason description.
+  """
+  updatePostRejectionReasonDescription(input: UpdatePostRejectionReasonDescriptionInput!): UpdatePostRejectionReasonDescriptionPayload
 
   """
   Update post rejection reason club infraction reason.

@@ -21,14 +21,20 @@ type Commands struct {
 
 	ReportPost command.ReportPostHandler
 
+	CreatePostReportReason            command.CreatePostReportReasonHandler
+	UpdatePostReportReasonTitle       command.UpdatePostReportReasonTitleHandler
+	UpdatePostReportReasonDescription command.UpdatePostReportReasonDescriptionHandler
+	UpdatePostReportReasonLink        command.UpdatePostReportReasonLinkHandler
+	UpdatePostReportReasonDeprecated  command.UpdatePostReportReasonDeprecatedHandler
+
 	CreatePostRejectionReason                     command.CreatePostRejectionReasonHandler
 	UpdatePostRejectionReasonDeprecated           command.UpdatePostRejectionReasonDeprecatedHandler
-	UpdatePostRejectionReasonText                 command.UpdatePostRejectionReasonTextHandler
+	UpdatePostRejectionReasonText                 command.UpdatePostRejectionReasonTitleHandler
 	UpdatePostRejectionReasonClubInfractionReason command.UpdatePostRejectionReasonClubInfractionReasonHandler
 
 	CreateClubInfractionReason           command.CreateClubInfractionReasonHandler
 	UpdateClubInfractionReasonDeprecated command.UpdateClubInfractionReasonDeprecatedHandler
-	UpdateClubInfractionReasonText       command.UpdateClubInfractionReasonTextHandler
+	UpdateClubInfractionReasonText       command.UpdateClubInfractionReasonTitleHandler
 	IssueClubInfraction                  command.IssueClubInfractionHandler
 	RemoveClubInfractionHistory          command.RemoveClubInfractionHistoryHandler
 

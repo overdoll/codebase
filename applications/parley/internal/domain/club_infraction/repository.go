@@ -11,7 +11,8 @@ type Repository interface {
 	GetClubInfractionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, deprecated bool) ([]*ClubInfractionReason, error)
 	GetClubInfractionReasonById(ctx context.Context, requester *principal.Principal, clubInfractionReasonId string) (*ClubInfractionReason, error)
 	UpdateClubInfractionReasonDeprecated(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *ClubInfractionReason) error) (*ClubInfractionReason, error)
-	UpdateClubInfractionReasonText(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *ClubInfractionReason) error) (*ClubInfractionReason, error)
+	UpdateClubInfractionReasonTitle(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *ClubInfractionReason) error) (*ClubInfractionReason, error)
+	UpdateClubInfractionReasonDescription(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *ClubInfractionReason) error) (*ClubInfractionReason, error)
 
 	CreateClubInfractionHistory(ctx context.Context, clubInfraction *ClubInfractionHistory) error
 	DeleteClubInfractionHistory(ctx context.Context, requester *principal.Principal, clubInfraction *ClubInfractionHistory) error

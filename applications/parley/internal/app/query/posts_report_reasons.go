@@ -9,8 +9,9 @@ import (
 )
 
 type PostsReportReasons struct {
-	Principal *principal.Principal
-	Cursor    *paging.Cursor
+	Principal  *principal.Principal
+	Cursor     *paging.Cursor
+	Deprecated bool
 }
 
 type PostsReportReasonsHandler struct {
@@ -23,7 +24,7 @@ func NewPostReportReasonsHandler(rr report.Repository) PostsReportReasonsHandler
 
 func (h PostsReportReasonsHandler) Handle(ctx context.Context, query PostsReportReasons) ([]*report.PostReportReason, error) {
 
-	reasons, err := h.rr.GetPostReportReasons(ctx, query.Principal, query.Cursor)
+	reasons, err := h.rr.GetPostReportReasons(ctx, query.Cursor, query.Deprecated)
 
 	if err != nil {
 		return nil, err

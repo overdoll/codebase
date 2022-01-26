@@ -1,8 +1,11 @@
 [
   {
     "id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
-    "reason": {
+    "title": {
       "en": "Reason with infraction"
+    },
+    "description": {
+      "en": "Some description stuff here"
     },
     "club_infraction_reason_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "deprecated": false,
@@ -10,8 +13,11 @@
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
-    "reason": {
+    "title": {
       "en": "Reason with no infraction"
+    },
+    "description": {
+      "en": "Some description stuff here"
     },
     "club_infraction_reason_id": null,
     "deprecated": false,

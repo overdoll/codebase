@@ -2,17 +2,23 @@ package report
 
 import (
 	"context"
+	"overdoll/libraries/principal"
 
 	"overdoll/libraries/paging"
-	"overdoll/libraries/principal"
 )
 
 type Repository interface {
-	GetPostReportReason(ctx context.Context, requester *principal.Principal, id string) (*PostReportReason, error)
-	GetPostReportReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*PostReportReason, error)
+	GetPostReportReasonById(ctx context.Context, id string) (*PostReportReason, error)
+	GetPostReportReasons(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*PostReportReason, error)
+
+	CreatePostReportReason(ctx context.Context, postReportReason *PostReportReason) error
+	UpdatePostReportReasonTitle(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *PostReportReason) error) (*PostReportReason, error)
+	UpdatePostReportReasonDescription(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *PostReportReason) error) (*PostReportReason, error)
+	UpdatePostReportReasonLink(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *PostReportReason) error) (*PostReportReason, error)
+	UpdatePostReportReasonDeprecated(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *PostReportReason) error) (*PostReportReason, error)
 
 	CreatePostReport(ctx context.Context, report *PostReport) error
-	GetPostReport(ctx context.Context, requester *principal.Principal, logId string) (*PostReport, error)
+	GetPostReportById(ctx context.Context, requester *principal.Principal, logId string) (*PostReport, error)
 	SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *PostReportFilters) ([]*PostReport, error)
-	GetPostReportForAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*PostReport, error)
+	GetPostReportForPostAndAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*PostReport, error)
 }

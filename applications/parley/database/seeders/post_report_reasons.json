@@ -1,15 +1,11 @@
 [
   {
     "id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
-    "reason": {
+    "title": {
       "en": "Some report reason"
     },
-    "bucket": 0
-  },
-  {
-    "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
-    "reason": {
-      "en": "Some report reason #2"
+    "description": {
+      "en": "A description for this report reason"
     },
     "bucket": 0
   }

@@ -33,7 +33,7 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	reportReason, err := h.rr.GetPostReportReason(ctx, cmd.Principal, cmd.PostReportReasonId)
+	reportReason, err := h.rr.GetPostReportReasonById(ctx, cmd.PostReportReasonId)
 
 	if err != nil {
 		return nil, err

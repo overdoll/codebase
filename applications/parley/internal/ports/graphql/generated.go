@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/parley/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
@@ -117,6 +118,10 @@ type ComplexityRoot struct {
 		PostRejectionReason func(childComplexity int) int
 	}
 
+	CreatePostReportReasonPayload struct {
+		PostReportReason func(childComplexity int) int
+	}
+
 	Entity struct {
 		FindAccountByID               func(childComplexity int, id relay.ID) int
 		FindClubByID                  func(childComplexity int, id relay.ID) int
@@ -148,6 +153,7 @@ type ComplexityRoot struct {
 		ApprovePost                                   func(childComplexity int, input types.ApprovePostInput) int
 		CreateClubInfractionReason                    func(childComplexity int, input types.CreateClubInfractionReasonInput) int
 		CreatePostRejectionReason                     func(childComplexity int, input types.CreatePostRejectionReasonInput) int
+		CreatePostReportReason                        func(childComplexity int, input types.CreatePostReportReasonInput) int
 		IssueClubInfraction                           func(childComplexity int, input types.IssueClubInfractionInput) int
 		RejectPost                                    func(childComplexity int, input types.RejectPostInput) int
 		RemoveClubInfractionHistory                   func(childComplexity int, input types.RemoveClubInfractionHistoryInput) int
@@ -159,6 +165,10 @@ type ComplexityRoot struct {
 		UpdatePostRejectionReasonClubInfractionReason func(childComplexity int, input types.UpdatePostRejectionReasonClubInfractionReasonInput) int
 		UpdatePostRejectionReasonDeprecated           func(childComplexity int, input types.UpdatePostRejectionReasonDeprecatedInput) int
 		UpdatePostRejectionReasonText                 func(childComplexity int, input types.UpdatePostRejectionReasonTextInput) int
+		UpdatePostReportReasonDeprecated              func(childComplexity int, input types.UpdatePostReportReasonDeprecatedInput) int
+		UpdatePostReportReasonDescription             func(childComplexity int, input types.UpdatePostReportReasonDescriptionInput) int
+		UpdatePostReportReasonLink                    func(childComplexity int, input types.UpdatePostReportReasonLinkInput) int
+		UpdatePostReportReasonTitle                   func(childComplexity int, input types.UpdatePostReportReasonTitleInput) int
 	}
 
 	PageInfo struct {
@@ -229,8 +239,13 @@ type ComplexityRoot struct {
 	}
 
 	PostReportReason struct {
-		ID     func(childComplexity int) int
-		Reason func(childComplexity int) int
+		Deprecated              func(childComplexity int) int
+		Description             func(childComplexity int) int
+		DescriptionTranslations func(childComplexity int) int
+		ID                      func(childComplexity int) int
+		Link                    func(childComplexity int) int
+		Title                   func(childComplexity int) int
+		TitleTranslations       func(childComplexity int) int
 	}
 
 	PostReportReasonConnection struct {
@@ -246,7 +261,7 @@ type ComplexityRoot struct {
 	Query struct {
 		ClubInfractionReasons func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		PostRejectionReasons  func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
-		PostReportReasons     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		PostReportReasons     func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		__resolve__service    func(childComplexity int) int
 		__resolve_entities    func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -296,6 +311,22 @@ type ComplexityRoot struct {
 		PostRejectionReason func(childComplexity int) int
 	}
 
+	UpdatePostReportReasonDeprecatedPayload struct {
+		PostReportReason func(childComplexity int) int
+	}
+
+	UpdatePostReportReasonDescriptionPayload struct {
+		PostReportReason func(childComplexity int) int
+	}
+
+	UpdatePostReportReasonLinkPayload struct {
+		PostReportReason func(childComplexity int) int
+	}
+
+	UpdatePostReportReasonTitlePayload struct {
+		PostReportReason func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -335,6 +366,11 @@ type MutationResolver interface {
 	AddModeratorToPostQueue(ctx context.Context, input types.AddModeratorToPostQueueInput) (*types.AddModeratorToPostQueuePayload, error)
 	RemoveModeratorFromPostQueue(ctx context.Context, input types.RemoveModeratorFromPostQueueInput) (*types.RemoveModeratorFromPostQueuePayload, error)
 	ReportPost(ctx context.Context, input types.ReportPostInput) (*types.ReportPostPayload, error)
+	CreatePostReportReason(ctx context.Context, input types.CreatePostReportReasonInput) (*types.CreatePostReportReasonPayload, error)
+	UpdatePostReportReasonTitle(ctx context.Context, input types.UpdatePostReportReasonTitleInput) (*types.UpdatePostReportReasonTitlePayload, error)
+	UpdatePostReportReasonDescription(ctx context.Context, input types.UpdatePostReportReasonDescriptionInput) (*types.UpdatePostReportReasonDescriptionPayload, error)
+	UpdatePostReportReasonLink(ctx context.Context, input types.UpdatePostReportReasonLinkInput) (*types.UpdatePostReportReasonLinkPayload, error)
+	UpdatePostReportReasonDeprecated(ctx context.Context, input types.UpdatePostReportReasonDeprecatedInput) (*types.UpdatePostReportReasonDeprecatedPayload, error)
 }
 type PostResolver interface {
 	AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
@@ -347,7 +383,7 @@ type PostRejectionReasonResolver interface {
 type QueryResolver interface {
 	PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.PostRejectionReasonConnection, error)
 	ClubInfractionReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.ClubInfractionReasonConnection, error)
-	PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostReportReasonConnection, error)
+	PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.PostReportReasonConnection, error)
 }
 
 type executableSchema struct {
@@ -571,6 +607,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreatePostRejectionReasonPayload.PostRejectionReason(childComplexity), true
 
+	case "CreatePostReportReasonPayload.postReportReason":
+		if e.complexity.CreatePostReportReasonPayload.PostReportReason == nil {
+			break
+		}
+
+		return e.complexity.CreatePostReportReasonPayload.PostReportReason(childComplexity), true
+
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
 			break
@@ -762,6 +805,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreatePostRejectionReason(childComplexity, args["input"].(types.CreatePostRejectionReasonInput)), true
 
+	case "Mutation.createPostReportReason":
+		if e.complexity.Mutation.CreatePostReportReason == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createPostReportReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePostReportReason(childComplexity, args["input"].(types.CreatePostReportReasonInput)), true
+
 	case "Mutation.issueClubInfraction":
 		if e.complexity.Mutation.IssueClubInfraction == nil {
 			break
@@ -893,6 +948,54 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePostRejectionReasonText(childComplexity, args["input"].(types.UpdatePostRejectionReasonTextInput)), true
+
+	case "Mutation.updatePostReportReasonDeprecated":
+		if e.complexity.Mutation.UpdatePostReportReasonDeprecated == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostReportReasonDeprecated_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostReportReasonDeprecated(childComplexity, args["input"].(types.UpdatePostReportReasonDeprecatedInput)), true
+
+	case "Mutation.updatePostReportReasonDescription":
+		if e.complexity.Mutation.UpdatePostReportReasonDescription == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostReportReasonDescription_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostReportReasonDescription(childComplexity, args["input"].(types.UpdatePostReportReasonDescriptionInput)), true
+
+	case "Mutation.updatePostReportReasonLink":
+		if e.complexity.Mutation.UpdatePostReportReasonLink == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostReportReasonLink_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostReportReasonLink(childComplexity, args["input"].(types.UpdatePostReportReasonLinkInput)), true
+
+	case "Mutation.updatePostReportReasonTitle":
+		if e.complexity.Mutation.UpdatePostReportReasonTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostReportReasonTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostReportReasonTitle(childComplexity, args["input"].(types.UpdatePostReportReasonTitleInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1142,6 +1245,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostReportEdge.Node(childComplexity), true
 
+	case "PostReportReason.deprecated":
+		if e.complexity.PostReportReason.Deprecated == nil {
+			break
+		}
+
+		return e.complexity.PostReportReason.Deprecated(childComplexity), true
+
+	case "PostReportReason.description":
+		if e.complexity.PostReportReason.Description == nil {
+			break
+		}
+
+		return e.complexity.PostReportReason.Description(childComplexity), true
+
+	case "PostReportReason.descriptionTranslations":
+		if e.complexity.PostReportReason.DescriptionTranslations == nil {
+			break
+		}
+
+		return e.complexity.PostReportReason.DescriptionTranslations(childComplexity), true
+
 	case "PostReportReason.id":
 		if e.complexity.PostReportReason.ID == nil {
 			break
@@ -1149,12 +1273,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostReportReason.ID(childComplexity), true
 
-	case "PostReportReason.reason":
-		if e.complexity.PostReportReason.Reason == nil {
+	case "PostReportReason.link":
+		if e.complexity.PostReportReason.Link == nil {
 			break
 		}
 
-		return e.complexity.PostReportReason.Reason(childComplexity), true
+		return e.complexity.PostReportReason.Link(childComplexity), true
+
+	case "PostReportReason.title":
+		if e.complexity.PostReportReason.Title == nil {
+			break
+		}
+
+		return e.complexity.PostReportReason.Title(childComplexity), true
+
+	case "PostReportReason.titleTranslations":
+		if e.complexity.PostReportReason.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.PostReportReason.TitleTranslations(childComplexity), true
 
 	case "PostReportReasonConnection.edges":
 		if e.complexity.PostReportReasonConnection.Edges == nil {
@@ -1218,7 +1356,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PostReportReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Query.PostReportReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -1322,6 +1460,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostRejectionReasonTextPayload.PostRejectionReason(childComplexity), true
+
+	case "UpdatePostReportReasonDeprecatedPayload.postReportReason":
+		if e.complexity.UpdatePostReportReasonDeprecatedPayload.PostReportReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostReportReasonDeprecatedPayload.PostReportReason(childComplexity), true
+
+	case "UpdatePostReportReasonDescriptionPayload.postReportReason":
+		if e.complexity.UpdatePostReportReasonDescriptionPayload.PostReportReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostReportReasonDescriptionPayload.PostReportReason(childComplexity), true
+
+	case "UpdatePostReportReasonLinkPayload.postReportReason":
+		if e.complexity.UpdatePostReportReasonLinkPayload.PostReportReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostReportReasonLinkPayload.PostReportReason(childComplexity), true
+
+	case "UpdatePostReportReasonTitlePayload.postReportReason":
+		if e.complexity.UpdatePostReportReasonTitlePayload.PostReportReason == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostReportReasonTitlePayload.PostReportReason(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -1966,11 +2132,26 @@ extend type Account {
 `, BuiltIn: false},
 	{Name: "schema/report/schema.graphql", Input: `"""Post report reason"""
 type PostReportReason implements Node @key(fields: "id") {
-  """ID of the report reason"""
+  """ID of the report reason."""
   id: ID!
 
-  """The reason for this report"""
-  reason: String!
+  """The title for this report."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The description for this report."""
+  description: String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
+  """The link for this report, if there is one. This report reason can't be submitted if it has a link."""
+  link: URI
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
 }
 
 """Edge of the pending post rejection reason"""
@@ -1984,7 +2165,6 @@ type PostReportReasonConnection {
   edges: [PostReportReasonEdge!]!
   pageInfo: PageInfo!
 }
-
 
 """Date range for post reports"""
 input PostReportDateRange {
@@ -2005,9 +2185,7 @@ extend type Query {
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    """Returns the elements in the list that come before the specified cursor."""
     before: String
 
     """Returns the first _n_ elements from the list."""
@@ -2015,6 +2193,9 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
   ): PostReportReasonConnection! @goField(forceResolver: true)
 }
 
@@ -2082,12 +2263,122 @@ type ReportPostPayload {
   postReport: PostReport
 }
 
+"""Create a new post report reason input."""
+input CreatePostReportReasonInput {
+  """The title."""
+  title: String!
+
+  """The description."""
+  description: String!
+
+  """The link, if added"""
+  link: URI
+}
+
+"""Updated post report reason."""
+type CreatePostReportReasonPayload {
+  """The post report reason."""
+  postReportReason: PostReportReason
+}
+
+"""Update post report reason."""
+input UpdatePostReportReasonTitleInput {
+  """The post report reason to update."""
+  reportReasonId: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated post report reason."""
+type UpdatePostReportReasonTitlePayload {
+  """The post report reason."""
+  postReportReason: PostReportReason
+}
+
+"""Update post report reason."""
+input UpdatePostReportReasonDescriptionInput {
+  """The post report reason to update."""
+  reportReasonId: ID!
+
+  """The description to update"""
+  description: String!
+
+  """The localization for this description."""
+  locale: BCP47!
+}
+
+"""Updated post report reason."""
+type UpdatePostReportReasonDescriptionPayload {
+  """The post report reason."""
+  postReportReason: PostReportReason
+}
+
+"""Update post report reason."""
+input UpdatePostReportReasonLinkInput {
+  """The post report reason to update."""
+  reportReasonId: ID!
+
+  """The link to update to."""
+  link: URI
+}
+
+"""Updated post report reason."""
+type UpdatePostReportReasonLinkPayload {
+  """The post report reason."""
+  postReportReason: PostReportReason
+}
+
+"""Update post report reason."""
+input UpdatePostReportReasonDeprecatedInput {
+  """The post report reason to update."""
+  reportReasonId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Updated post report reason."""
+type UpdatePostReportReasonDeprecatedPayload {
+  """The post report reason."""
+  postReportReason: PostReportReason
+}
+
 extend type Mutation {
   """
   Report a specific post
   """
   reportPost(input: ReportPostInput!): ReportPostPayload
-}`, BuiltIn: false},
+
+  """
+  Create a post report reason.
+  """
+  createPostReportReason(input: CreatePostReportReasonInput!): CreatePostReportReasonPayload
+
+  """
+  Update post report reason title.
+  """
+  updatePostReportReasonTitle(input: UpdatePostReportReasonTitleInput!): UpdatePostReportReasonTitlePayload
+
+  """
+  Update post report reason description.
+  """
+  updatePostReportReasonDescription(input: UpdatePostReportReasonDescriptionInput!): UpdatePostReportReasonDescriptionPayload
+
+  """
+  Update post report reason link.
+  """
+  updatePostReportReasonLink(input: UpdatePostReportReasonLinkInput!): UpdatePostReportReasonLinkPayload
+
+  """
+  Update post report reason deprecation.
+  """
+  updatePostReportReasonDeprecated(input: UpdatePostReportReasonDeprecatedInput!): UpdatePostReportReasonDeprecatedPayload
+}
+`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `extend type Account @key(fields: "id") {
   id: ID! @external
 }
@@ -2490,6 +2781,21 @@ func (ec *executionContext) field_Mutation_createPostRejectionReason_args(ctx co
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createPostReportReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreatePostReportReasonInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreatePostReportReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostReportReasonInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_issueClubInfraction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2647,6 +2953,66 @@ func (ec *executionContext) field_Mutation_updatePostRejectionReasonText_args(ct
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostRejectionReasonTextInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostRejectionReasonTextInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostReportReasonDeprecated_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostReportReasonDeprecatedInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostReportReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDeprecatedInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostReportReasonDescription_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostReportReasonDescriptionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostReportReasonDescriptionInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDescriptionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostReportReasonLink_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostReportReasonLinkInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostReportReasonLinkInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonLinkInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostReportReasonTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostReportReasonTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostReportReasonTitleInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonTitleInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2919,6 +3285,15 @@ func (ec *executionContext) field_Query_postReportReasons_args(ctx context.Conte
 		}
 	}
 	args["last"] = arg3
+	var arg4 bool
+	if tmp, ok := rawArgs["deprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+		arg4, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["deprecated"] = arg4
 	return args, nil
 }
 
@@ -3940,6 +4315,38 @@ func (ec *executionContext) _CreatePostRejectionReasonPayload_postRejectionReaso
 	res := resTmp.(*types.PostRejectionReason)
 	fc.Result = res
 	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CreatePostReportReasonPayload_postReportReason(ctx context.Context, field graphql.CollectedField, obj *types.CreatePostReportReasonPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreatePostReportReasonPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostReportReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportReason)
+	fc.Result = res
+	return ec.marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5072,6 +5479,201 @@ func (ec *executionContext) _Mutation_reportPost(ctx context.Context, field grap
 	res := resTmp.(*types.ReportPostPayload)
 	fc.Result = res
 	return ec.marshalOReportPostPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐReportPostPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createPostReportReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createPostReportReason_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePostReportReason(rctx, args["input"].(types.CreatePostReportReasonInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreatePostReportReasonPayload)
+	fc.Result = res
+	return ec.marshalOCreatePostReportReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostReportReasonPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostReportReasonTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostReportReasonTitle_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostReportReasonTitle(rctx, args["input"].(types.UpdatePostReportReasonTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostReportReasonTitlePayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostReportReasonTitlePayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostReportReasonDescription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostReportReasonDescription_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostReportReasonDescription(rctx, args["input"].(types.UpdatePostReportReasonDescriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostReportReasonDescriptionPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostReportReasonDescriptionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDescriptionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostReportReasonLink(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostReportReasonLink_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostReportReasonLink(rctx, args["input"].(types.UpdatePostReportReasonLinkInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostReportReasonLinkPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostReportReasonLinkPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonLinkPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updatePostReportReasonDeprecated(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostReportReasonDeprecated_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostReportReasonDeprecated(rctx, args["input"].(types.UpdatePostReportReasonDeprecatedInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostReportReasonDeprecatedPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostReportReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDeprecatedPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
@@ -6295,7 +6897,7 @@ func (ec *executionContext) _PostReportReason_id(ctx context.Context, field grap
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostReportReason_reason(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostReportReason_title(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6313,7 +6915,7 @@ func (ec *executionContext) _PostReportReason_reason(ctx context.Context, field 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Reason, nil
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6328,6 +6930,178 @@ func (ec *executionContext) _PostReportReason_reason(ctx context.Context, field 
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostReportReason_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReportReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostReportReason_description(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReportReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostReportReason_descriptionTranslations(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReportReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DescriptionTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostReportReason_link(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReportReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Link, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.URI)
+	fc.Result = res
+	return ec.marshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostReportReason_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReportReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Deprecated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostReportReasonConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostReportReasonConnection) (ret graphql.Marshaler) {
@@ -6579,7 +7353,7 @@ func (ec *executionContext) _Query_postReportReasons(ctx context.Context, field 
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PostReportReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Query().PostReportReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7135,6 +7909,134 @@ func (ec *executionContext) _UpdatePostRejectionReasonTextPayload_postRejectionR
 	res := resTmp.(*types.PostRejectionReason)
 	fc.Result = res
 	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostReportReasonDeprecatedPayload_postReportReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostReportReasonDeprecatedPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostReportReasonDeprecatedPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostReportReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportReason)
+	fc.Result = res
+	return ec.marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostReportReasonDescriptionPayload_postReportReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostReportReasonDescriptionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostReportReasonDescriptionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostReportReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportReason)
+	fc.Result = res
+	return ec.marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostReportReasonLinkPayload_postReportReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostReportReasonLinkPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostReportReasonLinkPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostReportReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportReason)
+	fc.Result = res
+	return ec.marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostReportReasonTitlePayload_postReportReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostReportReasonTitlePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostReportReasonTitlePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostReportReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportReason)
+	fc.Result = res
+	return ec.marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -8391,6 +9293,45 @@ func (ec *executionContext) unmarshalInputCreatePostRejectionReasonInput(ctx con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreatePostReportReasonInput(ctx context.Context, obj interface{}) (types.CreatePostReportReasonInput, error) {
+	var it types.CreatePostReportReasonInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "link":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("link"))
+			it.Link, err = ec.unmarshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputIssueClubInfractionInput(ctx context.Context, obj interface{}) (types.IssueClubInfractionInput, error) {
 	var it types.IssueClubInfractionInput
 	asMap := map[string]interface{}{}
@@ -8801,6 +9742,146 @@ func (ec *executionContext) unmarshalInputUpdatePostRejectionReasonTextInput(ctx
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			it.Reason, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostReportReasonDeprecatedInput(ctx context.Context, obj interface{}) (types.UpdatePostReportReasonDeprecatedInput, error) {
+	var it types.UpdatePostReportReasonDeprecatedInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reportReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reportReasonId"))
+			it.ReportReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "deprecated":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+			it.Deprecated, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostReportReasonDescriptionInput(ctx context.Context, obj interface{}) (types.UpdatePostReportReasonDescriptionInput, error) {
+	var it types.UpdatePostReportReasonDescriptionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reportReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reportReasonId"))
+			it.ReportReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostReportReasonLinkInput(ctx context.Context, obj interface{}) (types.UpdatePostReportReasonLinkInput, error) {
+	var it types.UpdatePostReportReasonLinkInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reportReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reportReasonId"))
+			it.ReportReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "link":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("link"))
+			it.Link, err = ec.unmarshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostReportReasonTitleInput(ctx context.Context, obj interface{}) (types.UpdatePostReportReasonTitleInput, error) {
+	var it types.UpdatePostReportReasonTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "reportReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reportReasonId"))
+			it.ReportReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9499,6 +10580,34 @@ func (ec *executionContext) _CreatePostRejectionReasonPayload(ctx context.Contex
 	return out
 }
 
+var createPostReportReasonPayloadImplementors = []string{"CreatePostReportReasonPayload"}
+
+func (ec *executionContext) _CreatePostReportReasonPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreatePostReportReasonPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createPostReportReasonPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreatePostReportReasonPayload")
+		case "postReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreatePostReportReasonPayload_postReportReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var entityImplementors = []string{"Entity"}
 
 func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -9963,6 +11072,41 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "reportPost":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_reportPost(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createPostReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createPostReportReason(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostReportReasonTitle":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostReportReasonTitle(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostReportReasonDescription":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostReportReasonDescription(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostReportReasonLink":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostReportReasonLink(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updatePostReportReasonDeprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostReportReasonDeprecated(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -10591,9 +11735,56 @@ func (ec *executionContext) _PostReportReason(ctx context.Context, sel ast.Selec
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "reason":
+		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostReportReason_reason(ctx, field, obj)
+				return ec._PostReportReason_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "titleTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReportReason_titleTranslations(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "description":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReportReason_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "descriptionTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReportReason_descriptionTranslations(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "link":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReportReason_link(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "deprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReportReason_deprecated(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11162,6 +12353,118 @@ func (ec *executionContext) _UpdatePostRejectionReasonTextPayload(ctx context.Co
 		case "postRejectionReason":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._UpdatePostRejectionReasonTextPayload_postRejectionReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostReportReasonDeprecatedPayloadImplementors = []string{"UpdatePostReportReasonDeprecatedPayload"}
+
+func (ec *executionContext) _UpdatePostReportReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostReportReasonDeprecatedPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostReportReasonDeprecatedPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostReportReasonDeprecatedPayload")
+		case "postReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostReportReasonDeprecatedPayload_postReportReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostReportReasonDescriptionPayloadImplementors = []string{"UpdatePostReportReasonDescriptionPayload"}
+
+func (ec *executionContext) _UpdatePostReportReasonDescriptionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostReportReasonDescriptionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostReportReasonDescriptionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostReportReasonDescriptionPayload")
+		case "postReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostReportReasonDescriptionPayload_postReportReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostReportReasonLinkPayloadImplementors = []string{"UpdatePostReportReasonLinkPayload"}
+
+func (ec *executionContext) _UpdatePostReportReasonLinkPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostReportReasonLinkPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostReportReasonLinkPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostReportReasonLinkPayload")
+		case "postReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostReportReasonLinkPayload_postReportReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostReportReasonTitlePayloadImplementors = []string{"UpdatePostReportReasonTitlePayload"}
+
+func (ec *executionContext) _UpdatePostReportReasonTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostReportReasonTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostReportReasonTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostReportReasonTitlePayload")
+		case "postReportReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostReportReasonTitlePayload_postReportReason(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11866,6 +13169,11 @@ func (ec *executionContext) unmarshalNCreatePostRejectionReasonInput2overdollᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreatePostReportReasonInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostReportReasonInput(ctx context.Context, v interface{}) (types.CreatePostReportReasonInput, error) {
+	res, err := ec.unmarshalInputCreatePostReportReasonInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -12411,6 +13719,26 @@ func (ec *executionContext) unmarshalNUpdatePostRejectionReasonTextInput2overdol
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdatePostReportReasonDeprecatedInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDeprecatedInput(ctx context.Context, v interface{}) (types.UpdatePostReportReasonDeprecatedInput, error) {
+	res, err := ec.unmarshalInputUpdatePostReportReasonDeprecatedInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostReportReasonDescriptionInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDescriptionInput(ctx context.Context, v interface{}) (types.UpdatePostReportReasonDescriptionInput, error) {
+	res, err := ec.unmarshalInputUpdatePostReportReasonDescriptionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostReportReasonLinkInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonLinkInput(ctx context.Context, v interface{}) (types.UpdatePostReportReasonLinkInput, error) {
+	res, err := ec.unmarshalInputUpdatePostReportReasonLinkInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostReportReasonTitleInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonTitleInput(ctx context.Context, v interface{}) (types.UpdatePostReportReasonTitleInput, error) {
+	res, err := ec.unmarshalInputUpdatePostReportReasonTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	res, err := graphql.UnmarshalMap(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -12849,6 +14177,13 @@ func (ec *executionContext) marshalOCreatePostRejectionReasonPayload2ᚖoverdoll
 	return ec._CreatePostRejectionReasonPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCreatePostReportReasonPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostReportReasonPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostReportReasonPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreatePostReportReasonPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {
 	if v == nil {
 		return nil, nil
@@ -12907,6 +14242,13 @@ func (ec *executionContext) marshalOPostReport2ᚖoverdollᚋapplicationsᚋparl
 		return graphql.Null
 	}
 	return ec._PostReport(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOPostReportReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportReason(ctx context.Context, sel ast.SelectionSet, v *types.PostReportReason) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._PostReportReason(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORejectPostPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRejectPostPayload(ctx context.Context, sel ast.SelectionSet, v *types.RejectPostPayload) graphql.Marshaler {
@@ -12986,6 +14328,22 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
+func (ec *executionContext) unmarshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (*graphql1.URI, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(graphql1.URI)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, sel ast.SelectionSet, v *graphql1.URI) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOUpdateClubInfractionReasonDeprecatedUpload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubInfractionReasonDeprecatedUpload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubInfractionReasonDeprecatedUpload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -13019,6 +14377,34 @@ func (ec *executionContext) marshalOUpdatePostRejectionReasonTextPayload2ᚖover
 		return graphql.Null
 	}
 	return ec._UpdatePostRejectionReasonTextPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostReportReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostReportReasonDeprecatedPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostReportReasonDeprecatedPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostReportReasonDescriptionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonDescriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostReportReasonDescriptionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostReportReasonDescriptionPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostReportReasonLinkPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonLinkPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostReportReasonLinkPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostReportReasonLinkPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostReportReasonTitlePayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostReportReasonTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostReportReasonTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostReportReasonTitlePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

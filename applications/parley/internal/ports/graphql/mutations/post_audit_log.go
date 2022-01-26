@@ -74,7 +74,7 @@ func (r MutationResolver) UpdatePostRejectionReasonText(ctx context.Context, inp
 	postRejectionReason, err := r.App.Commands.UpdatePostRejectionReasonText.
 		Handle(
 			ctx,
-			command.UpdatePostRejectionReasonText{
+			command.UpdatePostRejectionReasonTitle{
 				Principal:         principal.FromContext(ctx),
 				RejectionReasonId: input.RejectionReasonID.GetID(),
 				Locale:            input.Locale,

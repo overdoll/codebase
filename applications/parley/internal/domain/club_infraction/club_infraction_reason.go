@@ -10,26 +10,33 @@ import (
 type ClubInfractionReason struct {
 	*paging.Node
 
-	id         string
-	reason     *localization.Translation
-	deprecated bool
+	id          string
+	title       *localization.Translation
+	description *localization.Translation
+	deprecated  bool
 }
 
-func NewClubInfractionReason(requester *principal.Principal, reason string) (*ClubInfractionReason, error) {
+func NewClubInfractionReason(requester *principal.Principal, title, description string) (*ClubInfractionReason, error) {
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
 	}
 
-	l, err := localization.NewDefaultTranslation(reason)
+	titleT, err := localization.NewDefaultTranslation(title)
+	if err != nil {
+		return nil, err
+	}
+
+	descriptionT, err := localization.NewDefaultTranslation(description)
 	if err != nil {
 		return nil, err
 	}
 
 	return &ClubInfractionReason{
-		id:         uuid.New().String(),
-		reason:     l,
-		deprecated: false,
+		id:          uuid.New().String(),
+		title:       titleT,
+		description: descriptionT,
+		deprecated:  false,
 	}, nil
 }
 
@@ -37,17 +44,34 @@ func (m *ClubInfractionReason) ID() string {
 	return m.id
 }
 
-func (m *ClubInfractionReason) Reason() *localization.Translation {
-	return m.reason
+func (m *ClubInfractionReason) Title() *localization.Translation {
+	return m.title
 }
 
-func (m *ClubInfractionReason) UpdateReason(requester *principal.Principal, reason, locale string) error {
+func (m *ClubInfractionReason) Description() *localization.Translation {
+	return m.description
+}
+
+func (m *ClubInfractionReason) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	if err := m.reason.UpdateTranslation(reason, locale); err != nil {
+	if err := m.title.UpdateTranslation(title, locale); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ClubInfractionReason) UpdateDescription(requester *principal.Principal, description, locale string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := m.description.UpdateTranslation(description, locale); err != nil {
 		return err
 	}
 
@@ -77,10 +101,11 @@ func (m *ClubInfractionReason) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalClubInfractionReasonFromDatabase(id string, reason map[string]string, deprecated bool) *ClubInfractionReason {
+func UnmarshalClubInfractionReasonFromDatabase(id string, title map[string]string, description map[string]string, deprecated bool) *ClubInfractionReason {
 	return &ClubInfractionReason{
-		id:         id,
-		reason:     localization.UnmarshalTranslationFromDatabase(reason),
-		deprecated: deprecated,
+		id:          id,
+		title:       localization.UnmarshalTranslationFromDatabase(title),
+		description: localization.UnmarshalTranslationFromDatabase(description),
+		deprecated:  deprecated,
 	}
 }

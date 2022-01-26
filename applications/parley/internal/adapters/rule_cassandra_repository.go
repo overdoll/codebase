@@ -11,80 +11,43 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"time"
 )
 
-var clubInfractionHistoryTable = table.New(table.Metadata{
-	Name: "club_infraction_history",
-	Columns: []string{
-		"id",
-		"club_id",
-		"issuer_account_id",
-		"infraction_id",
-		"source",
-		"club_suspension_length",
-		"issued_at",
-		"expires_at",
-	},
-	PartKey: []string{"club_id"},
-	SortKey: []string{"id"},
-})
-
-type clubInfractionHistory struct {
-	Id                   string    `db:"id"`
-	ClubId               string    `db:"club_id"`
-	IssuerAccountId      string    `db:"issuer_account_id"`
-	InfractionId         string    `db:"infraction_id"`
-	Source               string    `db:"source"`
-	ClubSuspensionLength int64     `db:"club_suspension_length"`
-	IssuedAt             time.Time `db:"issued_at"`
-	ExpiresAt            time.Time `db:"expires_at"`
-}
-
-var clubInfractionReasonsTable = table.New(table.Metadata{
-	Name: "post_rejection_reasons",
+var rulesTable = table.New(table.Metadata{
+	Name: "rules",
 	Columns: []string{
 		"id",
 		"bucket",
 		"title",
 		"description",
 		"deprecated",
+		"infraction",
+		"options",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
 })
 
-type clubInfractionReason struct {
+type rule struct {
 	Id          string            `db:"id"`
+	Options     string            `db:"options"`
 	Deprecated  bool              `db:"deprecated"`
+	Infraction  bool              `db:"infraction"`
 	Bucket      int               `db:"bucket"`
 	Title       map[string]string `db:"title"`
 	Description map[string]string `db:"description"`
 }
 
-type ClubInfractionCassandraRepository struct {
+type RuleCassandraRepository struct {
 	session gocqlx.Session
 }
 
-func NewClubInfractionCassandraRepository(session gocqlx.Session) ClubInfractionCassandraRepository {
-	return ClubInfractionCassandraRepository{session: session}
+func NewRuleCassandraRepository(session gocqlx.Session) RuleCassandraRepository {
+	return RuleCassandraRepository{session: session}
 }
 
-func marshalClubInfractionHistoryToDatabase(infractionHistory *club_infraction.ClubInfractionHistory) *clubInfractionHistory {
-	return &clubInfractionHistory{
-		Id:                   infractionHistory.ID(),
-		ClubId:               infractionHistory.ClubId(),
-		InfractionId:         infractionHistory.Reason().ID(),
-		IssuerAccountId:      infractionHistory.IssuerAccountId(),
-		Source:               infractionHistory.Source().String(),
-		ClubSuspensionLength: infractionHistory.ClubSuspensionLength(),
-		IssuedAt:             infractionHistory.IssuedAt(),
-		ExpiresAt:            infractionHistory.ExpiresAt(),
-	}
-}
-
-func marshalClubInfractionReasonToDatabase(clubInfractionRs *club_infraction.ClubInfractionReason) *clubInfractionReason {
-	return &clubInfractionReason{
+func marshalRuleToDatabase(clubInfractionRs *club_infraction.ClubInfractionReason) *clubInfractionReason {
+	return &rule{
 		Id:          clubInfractionRs.ID(),
 		Deprecated:  clubInfractionRs.Deprecated(),
 		Bucket:      0,

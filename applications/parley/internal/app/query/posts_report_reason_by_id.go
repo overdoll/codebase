@@ -22,7 +22,7 @@ func NewPostsReportReasonByIdHandler(rr report.Repository) PostReportReasonByIdH
 
 func (h PostReportReasonByIdHandler) Handle(ctx context.Context, query PostReportReasonById) (*report.PostReportReason, error) {
 
-	reason, err := h.rr.GetPostReportReason(ctx, query.Principal, query.ReportReasonId)
+	reason, err := h.rr.GetPostReportReasonById(ctx, query.Principal, query.ReportReasonId)
 
 	if err != nil {
 		return nil, err

@@ -65,7 +65,7 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 	return types.MarshalPostRejectionReasonToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostReportReasonConnection, error) {
+func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.PostReportReasonConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -78,8 +78,9 @@ func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, bef
 	}
 
 	results, err := r.App.Queries.PostReportReasons.Handle(ctx, query.PostsReportReasons{
-		Principal: principal.FromContext(ctx),
-		Cursor:    cursor,
+		Principal:  principal.FromContext(ctx),
+		Cursor:     cursor,
+		Deprecated: deprecated,
 	})
 
 	if err != nil {

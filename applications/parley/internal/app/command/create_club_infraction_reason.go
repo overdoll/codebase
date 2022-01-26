@@ -7,8 +7,9 @@ import (
 )
 
 type CreateClubInfractionReason struct {
-	Principal *principal.Principal
-	Reason    string
+	Principal   *principal.Principal
+	Title       string
+	Description string
 }
 
 type CreateClubInfractionReasonHandler struct {
@@ -23,7 +24,8 @@ func (h CreateClubInfractionReasonHandler) Handle(ctx context.Context, cmd Creat
 
 	clubInfractionReason, err := club_infraction.NewClubInfractionReason(
 		cmd.Principal,
-		cmd.Reason,
+		cmd.Title,
+		cmd.Description,
 	)
 
 	if err != nil {

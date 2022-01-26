@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -65,16 +66,22 @@ var postReportReasonTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"bucket",
-		"reason",
+		"title",
+		"description",
+		"link",
+		"deprecated",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
 })
 
 type postReportReason struct {
-	Id     string            `db:"id"`
-	Bucket int               `db:"bucket"`
-	Reason map[string]string `db:"reason"`
+	Id          string            `db:"id"`
+	Bucket      int               `db:"bucket"`
+	Title       map[string]string `db:"title"`
+	Description map[string]string `db:"description"`
+	Link        *string           `db:"link"`
+	Deprecated  bool              `db:"deprecated"`
 }
 
 type ReportCassandraRepository struct {
@@ -100,6 +107,17 @@ func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error)
 		ReportingAccountId: report.ReportingAccountId(),
 		PostReportReasonId: report.ReportReason().ID(),
 	}, nil
+}
+
+func marshalPostReportReasonToDatabase(postReport *report.PostReportReason) *postReportReason {
+	return &postReportReason{
+		Id:          postReport.ID(),
+		Bucket:      0,
+		Title:       localization.MarshalTranslationToDatabase(postReport.Title()),
+		Description: localization.MarshalTranslationToDatabase(postReport.Description()),
+		Link:        postReport.Link(),
+		Deprecated:  postReport.Deprecated(),
+	}
 }
 
 func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
@@ -149,18 +167,17 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 	return nil
 }
 
-func (r ReportCassandraRepository) GetPostReport(ctx context.Context, requester *principal.Principal, logId string) (*report.PostReport, error) {
+func (r ReportCassandraRepository) GetPostReportById(ctx context.Context, requester *principal.Principal, logId string) (*report.PostReport, error) {
 
-	postReportQuery := r.session.
+	var postRep postReport
+
+	if err := r.session.
 		Query(postReportTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postReport{
 			Id: logId,
-		})
-
-	var postRep postReport
-
-	if err := postReportQuery.Get(&postRep); err != nil {
+		}).
+		Get(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, report.ErrPostReportNotFound
@@ -169,7 +186,7 @@ func (r ReportCassandraRepository) GetPostReport(ctx context.Context, requester 
 		return nil, fmt.Errorf("failed to get report for post: %v", err)
 	}
 
-	reportReason, err := r.GetPostReportReason(ctx, requester, postRep.PostReportReasonId)
+	reportReason, err := r.GetPostReportReasonById(ctx, postRep.PostReportReasonId)
 
 	if err != nil {
 		return nil, err
@@ -190,6 +207,7 @@ func (r ReportCassandraRepository) GetPostReport(ctx context.Context, requester 
 }
 
 func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *report.PostReportFilters) ([]*report.PostReport, error) {
+
 	var postReports []*report.PostReport
 
 	if cursor.IsEmpty() {
@@ -250,19 +268,20 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 	return postReports, nil
 }
 
-func (r ReportCassandraRepository) GetPostReportForAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*report.PostReport, error) {
-
-	postReportQuery := r.session.
-		Query(postReportForAccountAndPostTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&postReport{
-			PostId:             postId,
-			ReportingAccountId: accountId,
-		})
+func (r ReportCassandraRepository) GetPostReportForPostAndAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*report.PostReport, error) {
 
 	var postRep postReport
 
-	if err := postReportQuery.Get(&postRep); err != nil {
+	if err := r.session.
+		Query(postReportForAccountAndPostTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(
+			&postReport{
+				PostId:             postId,
+				ReportingAccountId: accountId,
+			},
+		).
+		Get(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, report.ErrPostReportNotFound
@@ -271,7 +290,7 @@ func (r ReportCassandraRepository) GetPostReportForAccount(ctx context.Context, 
 		return nil, fmt.Errorf("failed to get report for post: %v", err)
 	}
 
-	reportReason, err := r.GetPostReportReason(ctx, requester, postRep.PostReportReasonId)
+	reportReason, err := r.GetPostReportReasonById(ctx, postRep.PostReportReasonId)
 
 	if err != nil {
 		return nil, err
@@ -291,77 +310,11 @@ func (r ReportCassandraRepository) GetPostReportForAccount(ctx context.Context, 
 	return rep, nil
 }
 
-func (r ReportCassandraRepository) GetPostReportReason(ctx context.Context, requester *principal.Principal, id string) (*report.PostReportReason, error) {
-
-	reportReasonQuery := r.session.
-		Query(postReportReasonTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&postReportReason{Id: id, Bucket: 0})
-
-	var reportReason postReportReason
-
-	if err := reportReasonQuery.Get(&reportReason); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, report.ErrPostReportReasonNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get post report reason: %v", err)
-	}
-
-	reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Reason)
-
-	if err := reason.CanView(requester); err != nil {
-		return nil, err
-	}
-
-	return reason, nil
-}
-
-func (r ReportCassandraRepository) GetPostReportReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*report.PostReportReason, error) {
-
-	if err := report.CanViewPostReportReasons(requester); err != nil {
-		return nil, err
-	}
-
-	builder := postReportReasonTable.SelectBuilder()
-
-	data := &postReportReason{Bucket: 0}
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	reportReasonQuery := builder.
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(data)
-
-	var dbReportReasons []postReportReason
-
-	if err := reportReasonQuery.Select(&dbReportReasons); err != nil {
-		return nil, fmt.Errorf("failed to get report reasons: %v", err)
-	}
-
-	var reportReasons []*report.PostReportReason
-	for _, reportReason := range dbReportReasons {
-
-		reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Reason)
-
-		reason.Node = paging.NewNode(reportReason.Id)
-		reportReasons = append(reportReasons, reason)
-	}
-
-	return reportReasons, nil
-}
-
 // since we dont want to duplicate report reasons (they're subject to changes like translations or updates) we can use this function to get all
 // rejection reasons as a map, which can then be used to map account reports to posts
 func (r ReportCassandraRepository) getPostReportReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*report.PostReportReason, error) {
 
-	reportReasons, err := r.GetPostReportReasons(ctx, requester, nil)
+	reportReasons, err := r.GetPostReportReasons(ctx, nil, true)
 
 	if err != nil {
 		return nil, err
@@ -374,4 +327,129 @@ func (r ReportCassandraRepository) getPostReportReasonsAsMap(ctx context.Context
 	}
 
 	return reportReasonMap, nil
+}
+
+func (r ReportCassandraRepository) GetPostReportReasonById(ctx context.Context, id string) (*report.PostReportReason, error) {
+
+	var reportReason postReportReason
+
+	if err := r.session.
+		Query(postReportReasonTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postReportReason{Id: id, Bucket: 0}).
+		Get(&reportReason); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, report.ErrPostReportReasonNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get post report reason: %v", err)
+	}
+
+	return report.UnmarshalPostReportReasonFromDatabase(
+		reportReason.Id,
+		reportReason.Title,
+		reportReason.Description,
+		reportReason.Link,
+		reportReason.Deprecated,
+	), nil
+}
+
+func (r ReportCassandraRepository) GetPostReportReasons(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*report.PostReportReason, error) {
+
+	builder := postReportReasonTable.SelectBuilder()
+
+	data := &postReportReason{Bucket: 0}
+
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
+	}
+
+	var dbReportReasons []postReportReason
+
+	if err := builder.
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(data).
+		Select(&dbReportReasons); err != nil {
+		return nil, fmt.Errorf("failed to get report reasons: %v", err)
+	}
+
+	var reportReasons []*report.PostReportReason
+	for _, reportReason := range dbReportReasons {
+
+		// skip over deprecated
+		if reportReason.Deprecated && !deprecated {
+			continue
+		}
+
+		reason := report.UnmarshalPostReportReasonFromDatabase(
+			reportReason.Id,
+			reportReason.Title,
+			reportReason.Description,
+			reportReason.Link,
+			reportReason.Deprecated,
+		)
+
+		reason.Node = paging.NewNode(reportReason.Id)
+		reportReasons = append(reportReasons, reason)
+	}
+
+	return reportReasons, nil
+}
+
+func (r ReportCassandraRepository) CreatePostReportReason(ctx context.Context, postReportReason *report.PostReportReason) error {
+
+	if err := r.session.
+		Query(postRejectionReasonTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalPostReportReasonToDatabase(postReportReason)).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to insert report reason: %v", err)
+	}
+
+	return nil
+}
+
+func (r ReportCassandraRepository) updatePostReportReason(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *report.PostReportReason) error, columns []string) (*report.PostReportReason, error) {
+
+	postReportR, err := r.GetPostReportReasonById(ctx, postReportReasonId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = updateFn(postReportR); err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(postReportReasonTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalPostReportReasonToDatabase(postReportR)).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update post report reason: %v", err)
+	}
+
+	return postReportR, nil
+}
+
+func (r ReportCassandraRepository) UpdatePostReportReasonTitle(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *report.PostReportReason) error) (*report.PostReportReason, error) {
+	return r.updatePostReportReason(ctx, postReportReasonId, updateFn, []string{"title"})
+}
+
+func (r ReportCassandraRepository) UpdatePostReportReasonDescription(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *report.PostReportReason) error) (*report.PostReportReason, error) {
+	return r.updatePostReportReason(ctx, postReportReasonId, updateFn, []string{"description"})
+}
+
+func (r ReportCassandraRepository) UpdatePostReportReasonLink(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *report.PostReportReason) error) (*report.PostReportReason, error) {
+	return r.updatePostReportReason(ctx, postReportReasonId, updateFn, []string{"link"})
+}
+
+func (r ReportCassandraRepository) UpdatePostReportReasonDeprecated(ctx context.Context, postReportReasonId string, updateFn func(postReportReason *report.PostReportReason) error) (*report.PostReportReason, error) {
+	return r.updatePostReportReason(ctx, postReportReasonId, updateFn, []string{"deprecated"})
 }
