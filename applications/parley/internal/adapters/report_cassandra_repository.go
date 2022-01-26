@@ -28,10 +28,23 @@ var postReportTable = table.New(table.Metadata{
 		"post_id",
 		"bucket",
 		"reporting_account_id",
-		"post_report_reason_id",
+		"rule_id",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
+})
+
+var postReportsByBucketTable = table.New(table.Metadata{
+	Name: "post_reports_by_bucket",
+	Columns: []string{
+		"post_id",
+		"bucket",
+		"id",
+		"reporting_account_id",
+		"rule_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"id"},
 })
 
 var postReportByPostTable = table.New(table.Metadata{
@@ -41,7 +54,7 @@ var postReportByPostTable = table.New(table.Metadata{
 		"bucket",
 		"id",
 		"reporting_account_id",
-		"post_report_reason_id",
+		"rule_id",
 	},
 	PartKey: []string{"post_id", "bucket"},
 	SortKey: []string{"id"},
@@ -54,24 +67,10 @@ var postReportForAccountAndPostTable = table.New(table.Metadata{
 		"reporting_account_id",
 		"bucket",
 		"id",
-		"post_report_reason_id",
+		"rule_id",
 	},
 	PartKey: []string{"post_id", "reporting_account_id"},
 	SortKey: []string{},
-})
-
-var postReportReasonTable = table.New(table.Metadata{
-	Name: "post_report_reasons",
-	Columns: []string{
-		"id",
-		"bucket",
-		"title",
-		"description",
-		"link",
-		"deprecated",
-	},
-	PartKey: []string{"bucket"},
-	SortKey: []string{"id"},
 })
 
 type ReportCassandraRepository struct {
@@ -139,6 +138,16 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 		marshalledPostReport.RuleId,
 	)
 
+	stmt, _ = postReportsByBucketTable.Insert()
+
+	batch.Query(stmt,
+		marshalledPostReport.PostId,
+		marshalledPostReport.ReportingAccountId,
+		marshalledPostReport.Bucket,
+		marshalledPostReport.Id,
+		marshalledPostReport.RuleId,
+	)
+
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create audit log: %v", err)
 	}
@@ -196,8 +205,15 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 		"post_id": filters.PostId(),
 	}
 
-	builder := qb.Select(postReportByPostTable.Name()).
-		Where(qb.In("bucket"), qb.Eq("post_id"))
+	var builder *qb.SelectBuilder
+
+	if filters.PostId() != nil {
+		builder = qb.Select(postReportByPostTable.Name()).
+			Where(qb.In("bucket"), qb.Eq("post_id"))
+	} else {
+		builder = qb.Select(postReportsByBucketTable.Name()).
+			Where(qb.In("bucket"))
+	}
 
 	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
 		return nil, err

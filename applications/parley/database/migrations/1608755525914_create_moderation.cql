@@ -87,6 +87,17 @@ CREATE TABLE IF NOT EXISTS post_reports_by_post
     primary key ( (post_id, bucket), id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
+CREATE TABLE IF NOT EXISTS post_reports_by_bucket
+(
+    post_id              text,
+    bucket               int,
+    id                   text,
+    reporting_account_id text,
+    rule_id              text,
+    primary key ( (bucket), id ),
+) WITH CLUSTERING ORDER BY (id DESC);
+
+
 CREATE TABLE IF NOT EXISTS post_report_for_account_and_post
 (
     post_id              text,

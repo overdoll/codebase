@@ -53,7 +53,7 @@ const clubsIndexProperties = `
 		"type": "keyword"
 	},
     "suspended": {
-		"type": "bool"
+		"type": "boolean"
 	},
     "suspended_until": {
 		"type": "date"
@@ -127,6 +127,35 @@ func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *c
 	return nil
 }
 
+func (r ClubIndexElasticSearchRepository) SuspendedClubs(ctx context.Context) ([]*club.Club, error) {
+
+	builder := r.client.Search().
+		Index(ClubsIndexName).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermQuery("suspended", true)))
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed search suspended clubs: %v", err)
+	}
+
+	var brands []*club.Club
+
+	for _, hit := range response.Hits.Hits {
+
+		var bd clubDocument
+
+		if err := json.Unmarshal(hit.Source, &bd); err != nil {
+			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
+		}
+
+		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil)
+		brands = append(brands, newBrand)
+	}
+
+	return brands, nil
+}
+
 func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
@@ -154,10 +183,12 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 
 	query := elastic.NewBoolQuery()
 
-	query.Filter(elastic.NewTermQuery("suspended", filter.Suspended()))
-
 	if filter.OwnerAccountId() != nil {
 		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))
+	} else {
+		if !requester.IsStaff() {
+			query.Filter(elastic.NewTermQuery("suspended", filter.Suspended()))
+		}
 	}
 
 	if filter.Search() != nil {

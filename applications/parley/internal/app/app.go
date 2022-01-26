@@ -3,13 +3,11 @@ package app
 import (
 	"overdoll/applications/parley/internal/app/command"
 	"overdoll/applications/parley/internal/app/query"
-	"overdoll/applications/parley/internal/app/workflows/activities"
 )
 
 type Application struct {
-	Commands   Commands
-	Queries    Queries
-	Activities *activities.Activities
+	Commands Commands
+	Queries  Queries
 }
 
 type Commands struct {

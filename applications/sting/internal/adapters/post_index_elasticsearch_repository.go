@@ -428,15 +428,9 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		Factor(1).
 		Modifier("none")
 
-	var filterQueries []elastic.Query
-
 	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
 
-	filterQueries = append(filterQueries)
-
 	if len(filter.AudienceIds()) > 0 {
-		filterQueries = append(filterQueries)
-
 		query.Add(
 			elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...),
 			likesFunc,
@@ -506,6 +500,10 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	query := elastic.NewBoolQuery()
 
 	var filterQueries []elastic.Query
+
+	if len(filter.SuspendedClubIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...)))
+	}
 
 	if filter.State() != post.Unknown {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))

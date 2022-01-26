@@ -55,7 +55,7 @@ type ComplexityRoot struct {
 		ClubMemberships      func(childComplexity int, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) int
 		ClubMembershipsCount func(childComplexity int) int
 		ClubMembershipsLimit func(childComplexity int) int
-		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) int
+		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
 		ClubsCount           func(childComplexity int) int
 		ClubsLimit           func(childComplexity int) int
 		ID                   func(childComplexity int) int
@@ -161,8 +161,8 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Club               func(childComplexity int, slug string, suspended bool) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) int
+		Club               func(childComplexity int, slug string) int
+		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -208,7 +208,7 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	ClubsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubsCount(ctx context.Context, obj *types.Account) (int, error)
-	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	ClubMembershipsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubMembershipsCount(ctx context.Context, obj *types.Account) (int, error)
 	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
@@ -240,8 +240,8 @@ type MutationResolver interface {
 	UnSuspendClub(ctx context.Context, input types.UnSuspendClubInput) (*types.UnSuspendClubPayload, error)
 }
 type QueryResolver interface {
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
-	Club(ctx context.Context, slug string, suspended bool) (*types.Club, error)
+	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error)
+	Club(ctx context.Context, slug string) (*types.Club, error)
 }
 
 type executableSchema struct {
@@ -295,7 +295,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["sortBy"].(types.ClubsSort)), true
+		return e.complexity.Account.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort)), true
 
 	case "Account.clubsCount":
 		if e.complexity.Account.ClubsCount == nil {
@@ -760,7 +760,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Club(childComplexity, args["slug"].(string), args["suspended"].(bool)), true
+		return e.complexity.Query.Club(childComplexity, args["slug"].(string)), true
 
 	case "Query.clubs":
 		if e.complexity.Query.Clubs == nil {
@@ -772,7 +772,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["sortBy"].(types.ClubsSort)), true
+		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -1275,9 +1275,6 @@ extend type Query {
     """Filter by the name of the club."""
     name: String
 
-    """Also view clubs that are currently suspended."""
-    suspended: Boolean! = false
-
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
@@ -1286,9 +1283,6 @@ extend type Query {
   club(
     """Search by slug of the club."""
     slug: String!
-
-    """Show club even if it's suspended. Can only view if staff+ or club owner."""
-    suspended: Boolean! = false
   ): Club
 }
 
@@ -1323,9 +1317,6 @@ extend type Account {
 
     """Filter by the name of the club."""
     name: String
-
-    """Also view clubs that are currently suspended."""
-    suspended: Boolean! = true
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
@@ -1572,24 +1563,15 @@ func (ec *executionContext) field_Account_clubs_args(ctx context.Context, rawArg
 		}
 	}
 	args["name"] = arg5
-	var arg6 bool
-	if tmp, ok := rawArgs["suspended"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("suspended"))
-		arg6, err = ec.unmarshalNBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["suspended"] = arg6
-	var arg7 types.ClubsSort
+	var arg6 types.ClubsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg7, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
+		arg6, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg7
+	args["sortBy"] = arg6
 	return args, nil
 }
 
@@ -1896,15 +1878,6 @@ func (ec *executionContext) field_Query_club_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["slug"] = arg0
-	var arg1 bool
-	if tmp, ok := rawArgs["suspended"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("suspended"))
-		arg1, err = ec.unmarshalNBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["suspended"] = arg1
 	return args, nil
 }
 
@@ -1965,24 +1938,15 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["name"] = arg5
-	var arg6 bool
-	if tmp, ok := rawArgs["suspended"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("suspended"))
-		arg6, err = ec.unmarshalNBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["suspended"] = arg6
-	var arg7 types.ClubsSort
+	var arg6 types.ClubsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg7, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
+		arg6, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg7
+	args["sortBy"] = arg6
 	return args, nil
 }
 
@@ -2119,7 +2083,7 @@ func (ec *executionContext) _Account_clubs(ctx context.Context, field graphql.Co
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Clubs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["sortBy"].(types.ClubsSort))
+		return ec.resolvers.Account().Clubs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4135,7 +4099,7 @@ func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["sortBy"].(types.ClubsSort))
+		return ec.resolvers.Query().Clubs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4177,7 +4141,7 @@ func (ec *executionContext) _Query_club(ctx context.Context, field graphql.Colle
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Club(rctx, args["slug"].(string), args["suspended"].(bool))
+		return ec.resolvers.Query().Club(rctx, args["slug"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

@@ -15,13 +15,14 @@ type PostsFeed struct {
 }
 
 type PostsFeedHandler struct {
-	ppr curation.Repository
-	pr  post.Repository
-	pi  post.IndexRepository
+	ppr    curation.Repository
+	pr     post.Repository
+	pi     post.IndexRepository
+	stella StellaService
 }
 
-func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository) PostsFeedHandler {
-	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr}
+func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository, stella StellaService) PostsFeedHandler {
+	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr, stella: stella}
 }
 
 func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.Post, error) {
@@ -57,7 +58,13 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		}
 	}
 
-	filters, err := post.NewPostFeed(audienceIDs, categoryIds)
+	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filters, err := post.NewPostFeed(audienceIDs, categoryIds, suspendedClubIds)
 
 	if err != nil {
 		return nil, err

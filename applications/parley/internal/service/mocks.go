@@ -34,6 +34,10 @@ func (t StingServiceMock) RemovePost(ctx context.Context, s string) error {
 type StellaServiceMock struct {
 }
 
+func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, endTime int64) error {
+	return nil
+}
+
 func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) error {
 	return nil
 }

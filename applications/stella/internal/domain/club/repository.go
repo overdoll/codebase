@@ -10,7 +10,7 @@ import (
 type Repository interface {
 	GetClubsByIds(ctx context.Context, clubIds []string) ([]*Club, error)
 	GetClubById(ctx context.Context, clubId string) (*Club, error)
-	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string, suspended bool) (*Club, error)
+	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)
 
 	CreateClub(ctx context.Context, club *Club) error
 
@@ -41,5 +41,6 @@ type IndexRepository interface {
 	IndexAllClubs(ctx context.Context) error
 	IndexClub(ctx context.Context, club *Club) error
 	DeleteClubsIndex(ctx context.Context) error
+	SuspendedClubs(ctx context.Context) ([]*Club, error)
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
 }

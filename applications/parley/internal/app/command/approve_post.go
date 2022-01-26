@@ -47,5 +47,10 @@ func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*post_
 		return nil, err
 	}
 
+	// post approved
+	if err := h.sting.PublishPost(ctx, postAuditLog.PostId()); err != nil {
+		return nil, errors.Wrap(err, "failed to publish post")
+	}
+
 	return postAuditLog, nil
 }

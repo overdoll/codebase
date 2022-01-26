@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/command"
 	"overdoll/applications/parley/internal/app/query"
-	"overdoll/applications/parley/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
@@ -42,7 +41,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting activities.StingService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -60,9 +59,9 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AddModeratorToPostQueue:      command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
 			RemoveModeratorFromPostQueue: command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
-			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, eva, sting),
+			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting),
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, eva, sting),
-			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, eva, sting),
+			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting, stella),
 
 			CreateRule:            command.NewCreateRuleHandler(ruleRepo),
 			UpdateRuleInfraction:  command.NewUpdateRuleInfractionHandler(ruleRepo),
@@ -70,9 +69,9 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			UpdateRuleTitle:       command.NewUpdateRuleTitleHandler(ruleRepo),
 			UpdateRuleDescription: command.NewUpdateRuleDescriptionHandler(ruleRepo),
 
-			ReportPost: command.NewReportPostHandler(reportRepo, eva, sting),
+			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, eva, sting),
 
-			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, stella),
+			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, stella),
 			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
 		},
 		Queries: app.Queries{
@@ -90,6 +89,5 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			PostAuditLogById:           query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:              query.NewModeratorByIdHandler(moderatorRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postAuditLogRepo, clubInfractionRepo, sting),
 	}
 }

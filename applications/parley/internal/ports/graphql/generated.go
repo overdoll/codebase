@@ -188,6 +188,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		PostReports        func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) int
 		Rules              func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
@@ -305,6 +306,7 @@ type PostReportResolver interface {
 	Rule(ctx context.Context, obj *types.PostReport) (*types.Rule, error)
 }
 type QueryResolver interface {
+	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
 	Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error)
 }
 
@@ -926,6 +928,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostReportEdge.Node(childComplexity), true
 
+	case "Query.postReports":
+		if e.complexity.Query.PostReports == nil {
+			break
+		}
+
+		args, err := ec.field_Query_postReports_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PostReports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange)), true
+
 	case "Query.rules":
 		if e.complexity.Query.Rules == nil {
 			break
@@ -1531,6 +1545,28 @@ type PostReportEdge {
 type PostReportConnection {
   edges: [PostReportEdge!]!
   pageInfo: PageInfo!
+}
+
+extend type Query {
+  """All post reports."""
+  postReports(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """The date range for post reports. Required."""
+    dateRange: PostReportDateRange!
+  ): PostReportConnection! @goField(forceResolver: true)
 }
 
 extend type Post {
@@ -2373,6 +2409,57 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_postReports_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 types.PostReportDateRange
+	if tmp, ok := rawArgs["dateRange"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
+		arg4, err = ec.unmarshalNPostReportDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportDateRange(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["dateRange"] = arg4
 	return args, nil
 }
 
@@ -4977,6 +5064,48 @@ func (ec *executionContext) _PostReportEdge_cursor(ctx context.Context, field gr
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_postReports(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_postReports_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PostReports(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostReportConnection)
+	fc.Result = res
+	return ec.marshalNPostReportConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_rules(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8933,6 +9062,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "postReports":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_postReports(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "rules":
 			field := field
 

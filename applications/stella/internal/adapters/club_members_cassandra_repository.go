@@ -119,13 +119,12 @@ func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx conte
 func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId string, bucket gocql.UUID, fresh bool) error {
 
 	// first, grab the partition to get the last timestamp count
-	queryPartitions := r.session.
-		Query(clubMembersPartitionsTable.Get()).
-		BindStruct(clubMembersPartition{ClubId: clubId, Bucket: bucket})
-
 	var partition clubMembersPartition
 
-	if err := queryPartitions.Get(&partition); err != nil {
+	if err := r.session.
+		Query(clubMembersPartitionsTable.Get()).
+		BindStruct(clubMembersPartition{ClubId: clubId, Bucket: bucket}).
+		Get(&partition); err != nil {
 		return fmt.Errorf("failed to get club by id: %v", err)
 	}
 
@@ -143,12 +142,6 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 	}
 
 	// then, using the last timestamp, count the number of new rows since then
-	getCurrentCount := builder.
-		CountAll().
-		Max("joined_at").
-		Query(r.session).
-		BindStruct(clubMemberItem)
-
 	type clubMemberCountStruct struct {
 		MaxJoinedAt *gocql.UUID `db:"system.max(joined_at)"`
 		Count       int         `db:"count"`
@@ -156,7 +149,12 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 
 	var clubMemberCounter clubMemberCountStruct
 
-	if err := getCurrentCount.Get(&clubMemberCounter); err != nil {
+	if err := builder.
+		CountAll().
+		Max("joined_at").
+		Query(r.session).
+		BindStruct(clubMemberItem).
+		Get(&clubMemberCounter); err != nil {
 		return fmt.Errorf("failed to count: %v", err)
 	}
 
@@ -216,14 +214,13 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 
 func (r ClubCassandraRepository) getNextClosestEmptyClubMembersPartition(ctx context.Context, clubId string) (*clubMembersPartition, error) {
 
-	queryPartitions := r.session.
-		Query(clubMembersPartitionsTable.Select()).
-		Consistency(gocql.One).
-		BindStruct(clubMembersPartition{ClubId: clubId})
-
 	var partitions []clubMembersPartition
 
-	if err := queryPartitions.Select(&partitions); err != nil {
+	if err := r.session.
+		Query(clubMembersPartitionsTable.Select()).
+		Consistency(gocql.One).
+		BindStruct(clubMembersPartition{ClubId: clubId}).
+		Select(&partitions); err != nil {
 
 		return nil, fmt.Errorf("failed to get club by id: %v", err)
 	}
@@ -278,14 +275,13 @@ func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, requester
 
 func (r ClubCassandraRepository) getClubMemberById(ctx context.Context, clubId, accountId string) (*clubMember, error) {
 
-	queryMember := r.session.
-		Query(clubMembersTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId})
-
 	var clubMem clubMember
 
-	if err := queryMember.Get(&clubMem); err != nil {
+	if err := r.session.
+		Query(clubMembersTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
+		Get(&clubMem); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, club.ErrClubMemberNotFound
@@ -299,12 +295,11 @@ func (r ClubCassandraRepository) getClubMemberById(ctx context.Context, clubId, 
 
 func (r ClubCassandraRepository) deleteClubMemberById(ctx context.Context, clubId, accountId string) error {
 
-	queryMember := r.session.
+	if err := r.session.
 		Query(clubMembersTable.Delete()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId})
-
-	if err := queryMember.ExecRelease(); err != nil {
+		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to get club member by id: %v", err)
 	}
 

@@ -2,12 +2,21 @@ syntax = "proto3";
 
 package applications.grpc.stella.v1;
 
-message CanAccountPostUnderClubRequest {
+message CanAccountCreatePostUnderClubRequest {
   string clubId = 1;
   string accountId = 2;
 }
 
-message CanAccountPostUnderClubResponse {
+message CanAccountViewPostUnderClubRequest {
+  string clubId = 1;
+  string accountId = 2;
+}
+
+message CanAccountCreatePostUnderClubResponse {
+  bool allowed = 1;
+}
+
+message CanAccountViewPostUnderClubResponse {
   bool allowed = 1;
 }
 
@@ -32,9 +41,16 @@ message GetAccountClubMembershipIdsResponse {
   repeated string clubIds = 1;
 }
 
+message GetSuspendedClubsRequest {}
+message GetSuspendedClubsResponse {
+  repeated string clubIds = 1;
+}
+
 service Stella {
   rpc SuspendClub(SuspendClubRequest) returns (SuspendClubResponse);
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
-  rpc CanAccountPostUnderClub(CanAccountPostUnderClubRequest) returns (CanAccountPostUnderClubResponse);
+  rpc CanAccountCreatePostUnderClub(CanAccountCreatePostUnderClubRequest) returns (CanAccountCreatePostUnderClubResponse);
+  rpc CanAccountViewPostUnderClub(CanAccountViewPostUnderClubRequest) returns (CanAccountViewPostUnderClubResponse);
+  rpc GetSuspendedClubs(GetSuspendedClubsRequest) returns (GetSuspendedClubsResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }

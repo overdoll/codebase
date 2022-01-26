@@ -346,9 +346,6 @@ extend type Query {
     """Filter by the name of the club."""
     name: String
 
-    """Also view clubs that are currently suspended."""
-    suspended: Boolean! = false
-
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
@@ -357,9 +354,6 @@ extend type Query {
   club(
     """Search by slug of the club."""
     slug: String!
-
-    """Show club even if it's suspended. Can only view if staff+ or club owner."""
-    suspended: Boolean! = false
   ): Club
 }
 
@@ -394,9 +388,6 @@ extend type Account {
 
     """Filter by the name of the club."""
     name: String
-
-    """Also view clubs that are currently suspended."""
-    suspended: Boolean! = true
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR

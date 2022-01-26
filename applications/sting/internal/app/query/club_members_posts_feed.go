@@ -36,7 +36,13 @@ func (h ClubMembersPostsFeedHandler) Handle(ctx context.Context, query ClubMembe
 		return nil, nil
 	}
 
-	filters, err := post.NewClubMembersPostsFeed(clubIds)
+	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filters, err := post.NewClubMembersPostsFeed(clubIds, suspendedClubIds)
 
 	if err != nil {
 		return nil, err

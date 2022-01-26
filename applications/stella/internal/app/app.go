@@ -39,7 +39,11 @@ type Queries struct {
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
-	CanAccountPostUnderClub     query.CanAccountPostUnderClubHandler
+
+	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
+	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
+
+	SuspendedClubs query.SuspendedClubsHandler
 
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler

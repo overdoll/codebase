@@ -53,9 +53,11 @@ func (r PostResolver) Reports(ctx context.Context, obj *types.Post, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
+	postId := obj.ID.GetID()
+
 	logs, err := r.App.Queries.SearchPostReports.Handle(ctx, query.SearchPostReports{
 		Cursor:    cursor,
-		PostId:    obj.ID.GetID(),
+		PostId:    &postId,
 		Principal: principal.FromContext(ctx),
 		From:      dateRange.From,
 		To:        dateRange.To,

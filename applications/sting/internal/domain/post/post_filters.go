@@ -12,13 +12,15 @@ type Filters struct {
 
 	state State
 
+	suspendedClubIds []string
+
 	characterIds []string
 	seriesIds    []string
 	audienceIds  []string
 	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds []string) (*Filters, error) {
 
 	newState := Unknown
 	var err error
@@ -44,15 +46,16 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, cl
 	}
 
 	return &Filters{
-		sortBy:        sorting,
-		state:         newState,
-		moderatorId:   moderatorId,
-		contributorId: contributorId,
-		clubIds:       clubIds,
-		audienceIds:   audienceIds,
-		categoryIds:   categoryIds,
-		characterIds:  characterIds,
-		seriesIds:     seriesIds,
+		sortBy:           sorting,
+		state:            newState,
+		moderatorId:      moderatorId,
+		contributorId:    contributorId,
+		clubIds:          clubIds,
+		audienceIds:      audienceIds,
+		categoryIds:      categoryIds,
+		characterIds:     characterIds,
+		seriesIds:        seriesIds,
+		suspendedClubIds: suspendedClubIds,
 	}, nil
 }
 
@@ -70,6 +73,10 @@ func (e *Filters) ClubIds() []string {
 
 func (e *Filters) State() State {
 	return e.state
+}
+
+func (e *Filters) SuspendedClubIds() []string {
+	return e.suspendedClubIds
 }
 
 func (e *Filters) SortBy() Sorting {

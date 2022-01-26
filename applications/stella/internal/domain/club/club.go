@@ -274,26 +274,26 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func (m *Club) AccountIdCanPost(accountId string) bool {
+func (m *Club) AccountIdCanCreatePost(accountId string) bool {
 	return m.ownerAccountId == accountId
 }
 
-func (m *Club) CanViewWithSuspended(requester *principal.Principal, suspended bool) bool {
+func (m *Club) CanView(requester *principal.Principal) bool {
 
-	if !suspended {
+	if m.suspended {
+		if requester == nil {
+			return false
+		}
+
+		if requester.IsStaff() {
+			return true
+		}
+
+		if err := m.canUpdate(requester); err != nil {
+			return false
+		}
+
 		return true
-	}
-
-	if requester == nil && suspended {
-		return false
-	}
-
-	if requester.IsStaff() {
-		return true
-	}
-
-	if err := m.canUpdate(requester); err != nil {
-		return false
 	}
 
 	return true

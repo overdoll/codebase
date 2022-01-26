@@ -10,7 +10,6 @@ import (
 type ClubBySlug struct {
 	Principal *principal.Principal
 	Slug      string
-	Suspended bool
 }
 
 type ClubBySlugHandler struct {
@@ -23,7 +22,7 @@ func NewClubBySlugHandler(cr club.Repository) ClubBySlugHandler {
 
 func (h ClubBySlugHandler) Handle(ctx context.Context, query ClubBySlug) (*club.Club, error) {
 
-	result, err := h.cr.GetClubBySlug(ctx, query.Principal, query.Slug, query.Suspended)
+	result, err := h.cr.GetClubBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

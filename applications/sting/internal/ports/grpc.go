@@ -25,7 +25,6 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 	}
 }
 
-// this is here so our GRPC server can use it to grab the current principal
 func (s Server) GetPrincipalById(ctx context.Context, id string) (*principal.Principal, error) {
 
 	p, err := s.app.Queries.PrincipalById.Handle(ctx, id)
@@ -54,8 +53,8 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 	}
 
 	return &sting.Post{
-		ModeratorId:   moderatorId,
-		ContributorId: post.ContributorId(),
+		ModeratorId: moderatorId,
+		ClubId:      post.ClubId(),
 	}, nil
 }
 

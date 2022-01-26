@@ -81,15 +81,16 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:         cursor,
-		ModeratorId:    &moderatorId,
-		State:          stateModified,
-		SortBy:         strings.ToLower(sortBy.String()),
-		AudienceSlugs:  audienceSlugs,
-		CharacterSlugs: characterSlugs,
-		CategorySlugs:  categorySlugs,
-		SeriesSlugs:    seriesSlugs,
-		Principal:      principal.FromContext(ctx),
+		Cursor:             cursor,
+		ModeratorId:        &moderatorId,
+		State:              stateModified,
+		SortBy:             strings.ToLower(sortBy.String()),
+		AudienceSlugs:      audienceSlugs,
+		CharacterSlugs:     characterSlugs,
+		CategorySlugs:      categorySlugs,
+		SeriesSlugs:        seriesSlugs,
+		Principal:          principal.FromContext(ctx),
+		ShowSuspendedClubs: true,
 	})
 
 	if err != nil {
@@ -121,15 +122,16 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:         cursor,
-		ContributorId:  &contributorId,
-		AudienceSlugs:  audienceSlugs,
-		SeriesSlugs:    seriesSlugs,
-		CategorySlugs:  categorySlugs,
-		CharacterSlugs: characterSlugs,
-		SortBy:         strings.ToLower(sortBy.String()),
-		State:          stateModified,
-		Principal:      principal.FromContext(ctx),
+		Cursor:             cursor,
+		ContributorId:      &contributorId,
+		AudienceSlugs:      audienceSlugs,
+		SeriesSlugs:        seriesSlugs,
+		CategorySlugs:      categorySlugs,
+		CharacterSlugs:     characterSlugs,
+		SortBy:             strings.ToLower(sortBy.String()),
+		State:              stateModified,
+		Principal:          principal.FromContext(ctx),
+		ShowSuspendedClubs: true,
 	})
 
 	if err != nil {

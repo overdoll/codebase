@@ -95,7 +95,7 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	}, nil
 }
 
-func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string, suspended bool) (*club.Club, error) {
+func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
 
 	var b clubSlugs
 
@@ -118,7 +118,7 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *p
 		return nil, err
 	}
 
-	if !result.CanViewWithSuspended(requester, suspended) {
+	if !result.CanView(requester) {
 		return nil, club.ErrClubNotFound
 	}
 
