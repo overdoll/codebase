@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS rules
     description map<text, text>,
     deprecated  boolean,
     infraction  boolean,
-    options     text,
     primary key ( bucket, id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 

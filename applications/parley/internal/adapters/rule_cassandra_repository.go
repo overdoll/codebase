@@ -6,11 +6,9 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/parley/internal/domain/club_infraction"
-	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/principal"
 )
 
 var rulesTable = table.New(table.Metadata{
@@ -22,15 +20,13 @@ var rulesTable = table.New(table.Metadata{
 		"description",
 		"deprecated",
 		"infraction",
-		"options",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
 })
 
-type rule struct {
+type rules struct {
 	Id          string            `db:"id"`
-	Options     string            `db:"options"`
 	Deprecated  bool              `db:"deprecated"`
 	Infraction  bool              `db:"infraction"`
 	Bucket      int               `db:"bucket"`
@@ -46,34 +42,35 @@ func NewRuleCassandraRepository(session gocqlx.Session) RuleCassandraRepository 
 	return RuleCassandraRepository{session: session}
 }
 
-func marshalRuleToDatabase(clubInfractionRs *club_infraction.ClubInfractionReason) *clubInfractionReason {
-	return &rule{
+func marshalRuleToDatabase(clubInfractionRs *rule.Rule) *rules {
+	return &rules{
 		Id:          clubInfractionRs.ID(),
 		Deprecated:  clubInfractionRs.Deprecated(),
+		Infraction:  clubInfractionRs.Infraction(),
 		Bucket:      0,
 		Title:       localization.MarshalTranslationToDatabase(clubInfractionRs.Title()),
 		Description: localization.MarshalTranslationToDatabase(clubInfractionRs.Description()),
 	}
 }
 
-func (r ClubInfractionCassandraRepository) CreateClubInfractionReason(ctx context.Context, clubInfractionRs *club_infraction.ClubInfractionReason) error {
+func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.Rule) error {
 
 	if err := r.session.
-		Query(clubInfractionReasonsTable.Insert()).
+		Query(rulesTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalClubInfractionReasonToDatabase(clubInfractionRs)).
+		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create club infraction reason: %v", err)
+		return fmt.Errorf("failed to create rule reason: %v", err)
 	}
 
 	return nil
 }
 
-func (r ClubInfractionCassandraRepository) GetClubInfractionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, deprecated bool) ([]*club_infraction.ClubInfractionReason, error) {
+func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*rule.Rule, error) {
 
-	builder := clubInfractionReasonsTable.SelectBuilder()
+	builder := rulesTable.SelectBuilder()
 
-	data := &clubInfractionReason{Bucket: 0}
+	data := &rules{Bucket: 0}
 
 	if cursor != nil {
 		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
@@ -81,250 +78,108 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionReasons(ctx context.
 		}
 	}
 
-	var dbClubInfractionReasons []clubInfractionReason
+	var dbRules []rules
 
 	if err := builder.
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
-		Select(&dbClubInfractionReasons); err != nil {
-		return nil, fmt.Errorf("failed to get club infraction reasons: %v", err)
+		Select(&dbRules); err != nil {
+		return nil, fmt.Errorf("failed to get rules: %v", err)
 	}
 
-	var clubInfractionReasons []*club_infraction.ClubInfractionReason
-	for _, clubInfractionR := range dbClubInfractionReasons {
+	var rulesItems []*rule.Rule
+	for _, ruleSingle := range dbRules {
 
 		// skip over deprecated
-		if clubInfractionR.Deprecated && !deprecated {
+		if ruleSingle.Deprecated && !deprecated {
 			continue
 		}
 
-		reason := club_infraction.UnmarshalClubInfractionReasonFromDatabase(
-			clubInfractionR.Id,
-			clubInfractionR.Title,
-			clubInfractionR.Description,
-			clubInfractionR.Deprecated,
+		reason := rule.UnmarshalRuleFromDatabase(
+			ruleSingle.Id,
+			ruleSingle.Title,
+			ruleSingle.Description,
+			ruleSingle.Infraction,
+			ruleSingle.Deprecated,
 		)
-		reason.Node = paging.NewNode(clubInfractionR.Id)
-		clubInfractionReasons = append(clubInfractionReasons, reason)
+		reason.Node = paging.NewNode(ruleSingle.Id)
+		rulesItems = append(rulesItems, reason)
 	}
 
-	return clubInfractionReasons, nil
+	return rulesItems, nil
 }
 
-func (r ClubInfractionCassandraRepository) getClubInfractionReasonById(ctx context.Context, clubInfractionReasonId string) (*club_infraction.ClubInfractionReason, error) {
+func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string) (*rule.Rule, error) {
 
-	var clubInfractionR clubInfractionReason
+	var ruleSingle rules
 
 	if err := r.session.
-		Query(clubInfractionReasonsTable.Get()).
+		Query(rulesTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&clubInfractionReason{Id: clubInfractionReasonId, Bucket: 0}).
-		Get(&clubInfractionR); err != nil {
-		return nil, fmt.Errorf("failed to get club infraction reasons: %v", err)
+		BindStruct(&rules{Id: ruleId, Bucket: 0}).
+		Get(&ruleSingle); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, rule.ErrRuleNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get rule by id: %v", err)
 	}
 
-	return club_infraction.UnmarshalClubInfractionReasonFromDatabase(
-		clubInfractionR.Id,
-		clubInfractionR.Title,
-		clubInfractionR.Description,
-		clubInfractionR.Deprecated,
+	return rule.UnmarshalRuleFromDatabase(
+		ruleSingle.Id,
+		ruleSingle.Title,
+		ruleSingle.Description,
+		ruleSingle.Infraction,
+		ruleSingle.Deprecated,
 	), nil
 }
 
-func (r ClubInfractionCassandraRepository) GetClubInfractionReasonById(ctx context.Context, requester *principal.Principal, clubInfractionReasonId string) (*club_infraction.ClubInfractionReason, error) {
-	return r.getClubInfractionReasonById(ctx, clubInfractionReasonId)
+func (r RuleCassandraRepository) GetRuleById(ctx context.Context, id string) (*rule.Rule, error) {
+	return r.getRuleById(ctx, id)
 }
 
-func (r ClubInfractionCassandraRepository) updateClubInfractionReason(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *club_infraction.ClubInfractionReason) error, columns []string) (*club_infraction.ClubInfractionReason, error) {
+func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error, columns []string) (*rule.Rule, error) {
 
-	clubInfractionR, err := r.getClubInfractionReasonById(ctx, clubInfractionReasonId)
+	ruleItem, err := r.getRuleById(ctx, ruleId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	err = updateFn(clubInfractionR)
+	err = updateFn(ruleItem)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if err := r.session.
-		Query(clubInfractionReasonsTable.Update(
+		Query(rulesTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalClubInfractionReasonToDatabase(clubInfractionR)).
+		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club infraction reason: %v", err)
+		return nil, fmt.Errorf("failed to update rule: %v", err)
 	}
 
-	return clubInfractionR, nil
+	return ruleItem, nil
 }
 
-func (r ClubInfractionCassandraRepository) UpdateClubInfractionReasonDeprecated(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *club_infraction.ClubInfractionReason) error) (*club_infraction.ClubInfractionReason, error) {
-	return r.updateClubInfractionReason(ctx, clubInfractionReasonId, updateFn, []string{"deprecated"})
+func (r RuleCassandraRepository) UpdateRuleDeprecated(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error) (*rule.Rule, error) {
+	return r.updateRule(ctx, ruleId, updateFn, []string{"deprecated"})
 }
 
-func (r ClubInfractionCassandraRepository) UpdateClubInfractionReasonTitle(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *club_infraction.ClubInfractionReason) error) (*club_infraction.ClubInfractionReason, error) {
-	return r.updateClubInfractionReason(ctx, clubInfractionReasonId, updateFn, []string{"title"})
+func (r RuleCassandraRepository) UpdateRuleTitle(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error) (*rule.Rule, error) {
+	return r.updateRule(ctx, ruleId, updateFn, []string{"title"})
 }
 
-func (r ClubInfractionCassandraRepository) UpdateClubInfractionReasonDescription(ctx context.Context, clubInfractionReasonId string, updateFn func(clubInfractionReason *club_infraction.ClubInfractionReason) error) (*club_infraction.ClubInfractionReason, error) {
-	return r.updateClubInfractionReason(ctx, clubInfractionReasonId, updateFn, []string{"description"})
+func (r RuleCassandraRepository) UpdateRuleDescription(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error) (*rule.Rule, error) {
+	return r.updateRule(ctx, ruleId, updateFn, []string{"description"})
 }
 
-func (r ClubInfractionCassandraRepository) CreateClubInfractionHistory(ctx context.Context, clubInfraction *club_infraction.ClubInfractionHistory) error {
+func (r RuleCassandraRepository) UpdateRuleInfraction(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error) (*rule.Rule, error) {
+	return r.updateRule(ctx, ruleId, updateFn, []string{"infraction"})
 
-	if err := r.session.
-		Query(clubInfractionHistoryTable.Insert()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
-		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create club infraction: %v", err)
-	}
-
-	return nil
-}
-
-func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx context.Context, requester *principal.Principal, clubInfraction *club_infraction.ClubInfractionHistory) error {
-
-	if err := clubInfraction.CanDelete(requester); err != nil {
-		return err
-	}
-
-	if err := r.session.
-		Query(clubInfractionHistoryTable.Delete()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
-		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete club infraction: %v", err)
-	}
-
-	return nil
-}
-
-// since we dont want to duplicate rejection reasons (they're subject to changes like translations or updates) we can use this function to get all
-// rejection reasons as a map, which can then be used to map audit logs and infraction history without a performance penalty on hitting multiple partitions
-func (r ClubInfractionCassandraRepository) getClubInfractionReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*club_infraction.ClubInfractionReason, error) {
-
-	clubInfractionReasons, err := r.GetClubInfractionReasons(ctx, requester, nil, true)
-
-	if err != nil {
-		return nil, err
-	}
-
-	rejectionReasonMap := make(map[string]*club_infraction.ClubInfractionReason)
-
-	for _, reason := range clubInfractionReasons {
-		rejectionReasonMap[reason.ID()] = reason
-	}
-
-	return rejectionReasonMap, nil
-}
-
-func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club_infraction.ClubInfractionHistory, error) {
-
-	if err := club_infraction.CanViewClubInfractionHistory(requester); err != nil {
-		return nil, err
-	}
-
-	builder := clubInfractionHistoryTable.SelectBuilder()
-
-	data := &clubInfractionHistory{ClubId: accountId}
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	var dbClubInfractionHistory []clubInfractionHistory
-
-	if err := builder.
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(data).
-		Select(&dbClubInfractionHistory); err != nil {
-		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
-	}
-
-	clubInfractionReasonsMap, err := r.getClubInfractionReasonsAsMap(ctx, requester)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var infractionHistory []*club_infraction.ClubInfractionHistory
-	for _, infractionHist := range dbClubInfractionHistory {
-		if clubInfractionReason, ok := clubInfractionReasonsMap[infractionHist.InfractionId]; ok {
-			infract := club_infraction.UnmarshalClubInfractionHistoryFromDatabase(
-				infractionHist.Id,
-				infractionHist.ClubId,
-				infractionHist.IssuerAccountId,
-				infractionHist.Source,
-				clubInfractionReason,
-				infractionHist.IssuedAt,
-				infractionHist.ExpiresAt,
-				infractionHist.ClubSuspensionLength,
-			)
-			infract.Node = paging.NewNode(infractionHist.Id)
-			infractionHistory = append(infractionHistory, infract)
-		} else {
-			return nil, post_audit_log.ErrPostRejectionReasonNotFound
-		}
-	}
-
-	return infractionHistory, nil
-}
-
-func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryById(ctx context.Context, requester *principal.Principal, clubId, historyId string) (*club_infraction.ClubInfractionHistory, error) {
-
-	history, err := r.getClubInfractionHistoryById(ctx, requester, clubId, historyId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := history.CanView(requester); err != nil {
-		return nil, err
-	}
-
-	return history, nil
-}
-
-func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx context.Context, requester *principal.Principal, userId, id string) (*club_infraction.ClubInfractionHistory, error) {
-
-	var dbAccountInfractionHistory clubInfractionHistory
-
-	if err := r.session.
-		Query(clubInfractionHistoryTable.Select()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&clubInfractionHistory{Id: id, ClubId: userId}).
-		Get(&dbAccountInfractionHistory); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, club_infraction.ErrClubInfractionHistoryNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get club infraction history: %v", err)
-	}
-
-	clubInfractionReason, err := r.GetClubInfractionReasonById(ctx, requester, dbAccountInfractionHistory.InfractionId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return club_infraction.UnmarshalClubInfractionHistoryFromDatabase(
-		dbAccountInfractionHistory.Id,
-		dbAccountInfractionHistory.ClubId,
-		dbAccountInfractionHistory.IssuerAccountId,
-		dbAccountInfractionHistory.Source,
-		clubInfractionReason,
-		dbAccountInfractionHistory.IssuedAt,
-		dbAccountInfractionHistory.ExpiresAt,
-		dbAccountInfractionHistory.ClubSuspensionLength,
-	), nil
 }

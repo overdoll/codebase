@@ -2,33 +2,35 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/principal"
+	"time"
 
 	"overdoll/applications/eva/internal/domain/account"
 )
 
 type LockAccount struct {
+	Principal *principal.Principal
 	AccountId string
-	Duration  int
-	Reason    string
+	Duration  time.Time
 }
 
-type LockAccountOperatorHandler struct {
+type LockAccountHandler struct {
 	ur account.Repository
 }
 
-func NewLockAccountOperatorHandler(ur account.Repository) LockAccountOperatorHandler {
-	return LockAccountOperatorHandler{ur: ur}
+func NewLockAccountHandler(ur account.Repository) LockAccountHandler {
+	return LockAccountHandler{ur: ur}
 }
 
-func (h LockAccountOperatorHandler) Handle(ctx context.Context, cmd LockAccount) (*account.Account, error) {
+func (h LockAccountHandler) Handle(ctx context.Context, cmd LockAccount) (*account.Account, error) {
 
-	usr, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
-		return u.Lock(cmd.Duration, cmd.Reason)
+	acc, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
+		return u.Lock(cmd.Principal, cmd.Duration)
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return usr, nil
+	return acc, nil
 }

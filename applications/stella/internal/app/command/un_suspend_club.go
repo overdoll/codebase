@@ -31,5 +31,9 @@ func (h UnSuspendClubHandler) Handle(ctx context.Context, cmd UnSuspendClub) (*c
 		return nil, err
 	}
 
+	if err := h.ci.IndexClub(ctx, clb); err != nil {
+		return nil, err
+	}
+
 	return clb, nil
 }

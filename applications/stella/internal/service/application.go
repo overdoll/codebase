@@ -69,6 +69,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
 			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
 			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, clubIndexRepo, loader),
+			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, clubIndexRepo),
 			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, clubIndexRepo),
 			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, clubIndexRepo),
 		},

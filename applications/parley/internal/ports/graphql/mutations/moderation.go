@@ -47,10 +47,10 @@ func (r MutationResolver) RejectPost(ctx context.Context, input types.RejectPost
 	}
 
 	auditLog, err := r.App.Commands.RejectPost.Handle(ctx, command.RejectPost{
-		Principal:             principal.FromContext(ctx),
-		PostId:                input.PostID.GetID(),
-		PostRejectionReasonId: input.PostRejectionReasonID.GetID(),
-		Notes:                 input.Notes,
+		Principal: principal.FromContext(ctx),
+		PostId:    input.PostID.GetID(),
+		RuleId:    input.RuleID.GetID(),
+		Notes:     input.Notes,
 	})
 
 	if err != nil {
@@ -67,10 +67,10 @@ func (r MutationResolver) RemovePost(ctx context.Context, input types.RemovePost
 	}
 
 	auditLog, err := r.App.Commands.RemovePost.Handle(ctx, command.RemovePost{
-		Principal:             principal.FromContext(ctx),
-		PostRejectionReasonId: input.PostRejectionReasonID.GetID(),
-		Notes:                 input.Notes,
-		PostId:                input.PostID.GetID(),
+		Principal: principal.FromContext(ctx),
+		RuleId:    input.RuleID.GetID(),
+		Notes:     input.Notes,
+		PostId:    input.PostID.GetID(),
 	})
 
 	if err != nil {

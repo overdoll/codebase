@@ -92,14 +92,13 @@ func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, c
 
 func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
 
-	queryCategorySlug := r.session.
-		Query(categorySlugTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(categorySlugs{Slug: strings.ToLower(slug)})
-
 	var b categorySlugs
 
-	if err := queryCategorySlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(categorySlugTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(categorySlugs{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCategoryNotFound
@@ -119,15 +118,14 @@ func (r PostsCassandraRepository) GetCategoriesByIds(ctx context.Context, reques
 		return categories, nil
 	}
 
-	queryCategories := qb.Select(categoryTable.Name()).
+	var categoriesModels []category
+
+	if err := qb.Select(categoryTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		Bind(cats)
-
-	var categoriesModels []category
-
-	if err := queryCategories.Select(&categoriesModels); err != nil {
+		Bind(cats).
+		Select(&categoriesModels); err != nil {
 		return nil, fmt.Errorf("failed to get categories by id: %v", err)
 	}
 
@@ -205,14 +203,13 @@ func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string,
 		return nil, err
 	}
 
-	updateCatQuery := r.session.
+	if err := r.session.
 		Query(categoryTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateCatQuery.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update category: %v", err)
 	}
 
@@ -237,14 +234,13 @@ func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.C
 
 func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 
-	queryCategories := r.session.
-		Query(categoryTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(category{Id: categoryId})
-
 	var cat category
 
-	if err := queryCategories.Get(&cat); err != nil {
+	if err := r.session.
+		Query(categoryTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(category{Id: categoryId}).
+		Get(&cat); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCategoryNotFound

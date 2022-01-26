@@ -75,7 +75,7 @@ func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequ
 
 func (s Server) SuspendClub(ctx context.Context, request *stella.SuspendClubRequest) (*stella.SuspendClubResponse, error) {
 
-	if err := s.app.Commands.SuspendClub.Handle(ctx, command.SuspendClub{
+	if err := s.app.Commands.SuspendClubOperator.Handle(ctx, command.SuspendClubOperator{
 		ClubId:  request.ClubId,
 		EndTime: time.Unix(request.EndTimeUnix, 0),
 	}); err != nil {

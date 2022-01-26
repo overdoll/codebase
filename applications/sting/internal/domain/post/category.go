@@ -31,6 +31,10 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		return nil, principal.ErrNotAuthorized
 	}
 
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
 	lc, err := localization.NewDefaultTranslation(title)
 
 	if err != nil {
@@ -109,6 +113,10 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	return nil

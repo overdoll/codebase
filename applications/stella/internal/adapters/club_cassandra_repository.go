@@ -127,14 +127,13 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *p
 
 func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string) (*club.Club, error) {
 
-	queryBrand := r.session.
-		Query(clubTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(clubs{Id: brandId})
-
 	var b clubs
 
-	if err := queryBrand.Get(&b); err != nil {
+	if err := r.session.
+		Query(clubTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(clubs{Id: brandId}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, club.ErrClubNotFound
@@ -158,16 +157,15 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 
 func (r ClubCassandraRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
 
-	queryClubs := qb.
+	var databaseClubs []clubs
+
+	if err := qb.
 		Select(clubTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalOne).
-		Bind(clubIds)
-
-	var databaseClubs []clubs
-
-	if err := queryClubs.Select(&databaseClubs); err != nil {
+		Bind(clubIds).
+		Select(&databaseClubs); err != nil {
 		return nil, fmt.Errorf("failed to get clubs by ids: %v", err)
 	}
 
@@ -301,16 +299,15 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, club
 			return nil, err
 		}
 
-		clubUpdate := clubTable.
+		if err := clubTable.
 			UpdateBuilder().
 			Add("slug_aliases").
 			Query(r.session).
 			BindMap(map[string]interface{}{
 				"id":           pst.Id,
 				"slug_aliases": []string{newAliasSlugToAdd},
-			})
-
-		if err := clubUpdate.ExecRelease(); err != nil {
+			}).
+			ExecRelease(); err != nil {
 
 			if err := r.deleteUniqueClubSlug(ctx, pst.Id, newAliasSlugToAdd); err != nil {
 				return nil, err
@@ -327,16 +324,15 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, club
 		return nil, err
 	}
 
-	clubUpdate := clubTable.
+	if err := clubTable.
 		UpdateBuilder().
 		Remove("slug_aliases").
 		Query(r.session).
 		BindMap(map[string]interface{}{
 			"id":           pst.Id,
 			"slug_aliases": []string{aliasSlugToRemove},
-		})
-
-	if err := clubUpdate.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 
 		if err := r.createUniqueClubSlug(ctx, pst.Id, aliasSlugToRemove); err != nil {
 			return nil, err
@@ -363,12 +359,11 @@ func (r ClubCassandraRepository) UpdateClubSuspensionStatus(ctx context.Context,
 
 func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
 
-	clubUpdate := r.session.
+	if err := r.session.
 		Query(clubTable.Update("members_count")).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(clubs{Id: clubId, MembersCount: count})
-
-	if err := clubUpdate.ExecRelease(); err != nil {
+		BindStruct(clubs{Id: clubId, MembersCount: count}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to update club member count: %v", err)
 	}
 
@@ -395,12 +390,11 @@ func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, clubId s
 		return nil, err
 	}
 
-	clubUpdate := r.session.
+	if err := r.session.
 		Query(clubTable.Update(columns...)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := clubUpdate.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 
 		return nil, fmt.Errorf("failed to update club: %v", err)
 	}
@@ -420,16 +414,15 @@ func (r ClubCassandraRepository) GetAccountClubsCount(ctx context.Context, reque
 
 	var clubsCount accountClubsCount
 
-	queryAccountsClubCount := accountClubsTable.
+	if err := accountClubsTable.
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountClubs{
 			AccountId: accountId,
-		})
-
-	if err := queryAccountsClubCount.Get(&clubsCount); err != nil {
+		}).
+		Get(&clubsCount); err != nil {
 		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 

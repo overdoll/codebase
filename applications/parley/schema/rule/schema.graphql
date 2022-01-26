@@ -1,0 +1,167 @@
+"""Rule."""
+type Rule implements Node @key(fields: "id") {
+  """ID of the rule."""
+  id: ID!
+
+  """The title for this rule."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The description for this rule."""
+  description: String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
+  """If this rule is deprecated."""
+  deprecated: Boolean!
+
+  """If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied."""
+  infraction: Boolean!
+}
+
+"""Edge of the rule"""
+type RuleEdge {
+  node: Rule!
+  cursor: String!
+}
+
+"""Connection of the rule"""
+type RuleConnection {
+  edges: [RuleEdge!]!
+  pageInfo: PageInfo!
+}
+extend type Query {
+  """
+  Get all rules for the site.
+  """
+  rules(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated rules."""
+    deprecated: Boolean! = false
+  ): RuleConnection! @goField(forceResolver: true)
+}
+
+"""Create a new rule input."""
+input CreateRuleInput {
+  """The title."""
+  title: String!
+
+  """The description."""
+  description: String!
+
+  """If breaking this rule would cause an infraction."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type CreateRulePayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleTitleInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleTitlePayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleDescriptionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The description to update"""
+  description: String!
+
+  """The localization for this description."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleDescriptionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update post report reason."""
+input UpdateRuleDeprecatedInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Update post report reason."""
+input UpdateRuleInfractionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The infraction status."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type UpdateRuleDeprecatedPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Updated rule."""
+type UpdateRuleInfractionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+extend type Mutation {
+  """
+  Create a new rule.
+  """
+  createRule(input: CreateRuleInput!): CreateRulePayload
+
+  """
+  Update a rule title.
+  """
+  updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
+
+  """
+  Update a rule description.
+  """
+  updateRuleDescription(input: UpdateRuleDescriptionInput!): UpdateRuleDescriptionPayload
+
+  """
+  Update a rule infraction.
+  """
+  updateRuleInfraction(input: UpdateRuleInfractionInput!): UpdateRuleInfractionPayload
+
+  """
+  Update a rule deprecation.
+  """
+  updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
+}

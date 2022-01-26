@@ -273,5 +273,32 @@ func (r *MutationResolver) UnSuspendClub(ctx context.Context, input types.UnSusp
 		return nil, err
 	}
 
-	return &types.UnSuspendClubPayload{Club: types.MarshalClubToGraphQL(ctx, result)}, nil
+	return &types.UnSuspendClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}
+
+func (r *MutationResolver) SuspendClub(ctx context.Context, input types.SuspendClubInput) (*types.SuspendClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.SuspendClub.
+		Handle(
+			ctx,
+			command.SuspendClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+				EndTime:   input.EndTime,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.SuspendClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
 }

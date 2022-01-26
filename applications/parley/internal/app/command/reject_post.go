@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
 	"overdoll/libraries/principal"
@@ -11,19 +12,19 @@ import (
 type RejectPost struct {
 	Principal *principal.Principal
 	PostId    string
-	// optional
-	PostRejectionReasonId string
-	Notes                 *string
+	RuleId    string
+	Notes     *string
 }
 
 type RejectPostHandler struct {
 	pr    post_audit_log.Repository
+	rr    rule.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewRejectPostHandler(pr post_audit_log.Repository, eva EvaService, sting StingService) RejectPostHandler {
-	return RejectPostHandler{sting: sting, eva: eva, pr: pr}
+func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, eva EvaService, sting StingService) RejectPostHandler {
+	return RejectPostHandler{sting: sting, eva: eva, pr: pr, rr: rr}
 }
 
 func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_audit_log.PostAuditLog, error) {
@@ -34,7 +35,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_au
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.pr.GetPostRejectionReasonById(ctx, cmd.Principal, cmd.PostRejectionReasonId)
+	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_au
 		cmd.Principal,
 		cmd.PostId,
 		postModeratorId,
-		rejectionReason,
+		ruleItem,
 		cmd.Notes,
 	)
 

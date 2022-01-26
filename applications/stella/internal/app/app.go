@@ -26,6 +26,8 @@ type Commands struct {
 
 	SuspendClub   command.SuspendClubHandler
 	UnSuspendClub command.UnSuspendClubHandler
+
+	SuspendClubOperator command.SuspendClubOperatorHandler
 }
 
 type Queries struct {

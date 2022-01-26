@@ -46,14 +46,13 @@ func NewCurationProfileCassandraRepository(session gocqlx.Session) CurationProfi
 
 func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Context, accountId string) (*curation.Profile, error) {
 
-	queryPersonalProfile := r.session.
-		Query(curationProfileTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(curationProfile{AccountId: accountId})
-
 	var personalProfile curationProfile
 
-	if err := queryPersonalProfile.Get(&personalProfile); err != nil {
+	if err := r.session.
+		Query(curationProfileTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(curationProfile{AccountId: accountId}).
+		Get(&personalProfile); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return curation.UnmarshalProfileFromDatabase(
@@ -82,6 +81,7 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 }
 
 func (r CurationProfileCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*curation.Profile, error) {
+
 	profile, err := r.getProfileByAccountId(ctx, accountId)
 
 	if err != nil {

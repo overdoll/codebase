@@ -52,6 +52,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
 	reportRepo := adapters.NewReportCassandraRepository(session)
 
+	ruleRepo := adapters.NewRuleCassandraRepository(session)
+
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator:             command.NewGetNextModeratorHandler(moderatorRepo),
@@ -62,38 +64,28 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, eva, sting),
 			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, eva, sting),
 
-			CreatePostRejectionReason:                     command.NewCreatePostRejectionReasonHandler(postAuditLogRepo, clubInfractionRepo),
-			UpdatePostRejectionReasonClubInfractionReason: command.NewUpdatePostRejectionReasonClubInfractionReasonHandler(postAuditLogRepo, clubInfractionRepo),
-			UpdatePostRejectionReasonDeprecated:           command.NewUpdatePostRejectionReasonDeprecatedHandler(postAuditLogRepo),
-			UpdatePostRejectionReasonText:                 command.NewUpdatePostRejectionReasonTitleHandler(postAuditLogRepo),
+			CreateRule:            command.NewCreateRuleHandler(ruleRepo),
+			UpdateRuleInfraction:  command.NewUpdateRuleInfractionHandler(ruleRepo),
+			UpdateRuleDeprecated:  command.NewUpdateRuleDeprecatedHandler(ruleRepo),
+			UpdateRuleTitle:       command.NewUpdateRuleTitleHandler(ruleRepo),
+			UpdateRuleDescription: command.NewUpdateRuleDescriptionHandler(ruleRepo),
 
-			CreatePostReportReason:            command.NewCreatePostReportReasonHandler(reportRepo),
-			UpdatePostReportReasonLink:        command.NewUpdatePostReportReasonLinkHandler(reportRepo),
-			UpdatePostReportReasonDescription: command.NewUpdatePostReportReasonDescriptionHandler(reportRepo),
-			UpdatePostReportReasonTitle:       command.NewUpdatePostReportReasonTitleHandler(reportRepo),
-			UpdatePostReportReasonDeprecated:  command.NewUpdatePostReportReasonDeprecatedHandler(reportRepo),
-			ReportPost:                        command.NewReportPostHandler(reportRepo, eva, sting),
+			ReportPost: command.NewReportPostHandler(reportRepo, eva, sting),
 
-			UpdateClubInfractionReasonDeprecated: command.NewUpdateClubInfractionReasonDeprecatedHandler(clubInfractionRepo),
-			UpdateClubInfractionReasonText:       command.NewUpdateClubInfractionReasonTitleHandler(clubInfractionRepo),
-			CreateClubInfractionReason:           command.NewCreateClubInfractionReasonHandler(clubInfractionRepo),
-			IssueClubInfraction:                  command.NewIssueClubInfractionHandler(clubInfractionRepo, stella),
-			RemoveClubInfractionHistory:          command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
+			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, stella),
+			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
 		},
 		Queries: app.Queries{
-			ClubInfractionReasons:    query.NewClubInfractionReasonsHandler(clubInfractionRepo),
-			ClubInfractionHistory:    query.NewClubInfractionHistoryByAccountHandler(clubInfractionRepo),
-			ClubInfractionReasonById: query.NewClubInfractionReasonByIdHandler(clubInfractionRepo),
+			ClubInfractionHistory: query.NewClubInfractionHistoryByAccountHandler(clubInfractionRepo),
 
-			PrincipalById:              query.NewPrincipalByIdHandler(eva),
-			PostReportReasonById:       query.NewPostsReportReasonByIdHandler(reportRepo),
-			PostReportReasons:          query.NewPostReportReasonsHandler(reportRepo),
+			PrincipalById: query.NewPrincipalByIdHandler(eva),
+			RuleById:      query.NewRuleByIdHandler(ruleRepo),
+			Rules:         query.NewRulesHandler(ruleRepo),
+
 			PostReportById:             query.NewPostReportByIdHandler(reportRepo),
 			PostReportByAccountAndPost: query.NewPostReportByAccountAndPostHandler(reportRepo),
 			SearchPostReports:          query.NewSearchPostReportsHandler(reportRepo),
-			PostRejectionReasons:       query.NewPostsRejectionReasonsHandler(postAuditLogRepo, eva),
 			SearchPostAuditLogs:        query.NewSearchPostAuditLogsHandler(postAuditLogRepo, eva),
-			PostRejectionReasonById:    query.NewPostsRejectionReasonByIdHandler(postAuditLogRepo),
 			ClubInfractionHistoryById:  query.NewClubInfractionHistoryByIdHandler(clubInfractionRepo),
 			PostAuditLogById:           query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:              query.NewModeratorByIdHandler(moderatorRepo),

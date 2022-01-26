@@ -5,7 +5,6 @@ package types
 import (
 	"fmt"
 	"io"
-	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -67,8 +66,8 @@ type ClubInfractionHistory struct {
 	Club *Club `json:"club"`
 	// The account that issued this infraction.
 	IssuerAccount *Account `json:"issuerAccount"`
-	// The club infraction reason.
-	InfractionReason *ClubInfractionReason `json:"infractionReason"`
+	// The rule cited for this infraction.
+	Rule *Rule `json:"rule"`
 	// The source for this infraction.
 	Source ClubInfractionHistorySource `json:"source"`
 	// When this infraction was issued.
@@ -92,81 +91,28 @@ type ClubInfractionHistoryEdge struct {
 	Cursor string                 `json:"cursor"`
 }
 
-// Club infraction reason.
-type ClubInfractionReason struct {
-	// ID of the infraction reason.
-	ID relay.ID `json:"id"`
-	// The reason.
-	Reason string `json:"reason"`
-	// All translations for this reason.
-	ReasonTranslations []*Translation `json:"reasonTranslations"`
-	// If this reason is deprecated.
-	Deprecated bool `json:"deprecated"`
-}
-
-func (ClubInfractionReason) IsNode()   {}
-func (ClubInfractionReason) IsEntity() {}
-
-// Connection of the club infraction reason
-type ClubInfractionReasonConnection struct {
-	Edges    []*ClubInfractionReasonEdge `json:"edges"`
-	PageInfo *relay.PageInfo             `json:"pageInfo"`
-}
-
-// Edge of the club infraction reason
-type ClubInfractionReasonEdge struct {
-	Node   *ClubInfractionReason `json:"node"`
-	Cursor string                `json:"cursor"`
-}
-
-// Create a new club infraction reason input.
-type CreateClubInfractionReasonInput struct {
-	// The reason text.
-	Reason string `json:"reason"`
-}
-
-// Create a new club infraction reason payload.
-type CreateClubInfractionReasonPayload struct {
-	// The club infraction reason.
-	ClubInfractionReason *ClubInfractionReason `json:"clubInfractionReason"`
-}
-
-// Create a new post rejection reason input.
-type CreatePostRejectionReasonInput struct {
-	// The reason text.
-	Reason string `json:"reason"`
-	// The club infraction reason to use. Optional.
-	ClubInfractionReason *relay.ID `json:"clubInfractionReason"`
-}
-
-// Create post rejection reason.
-type CreatePostRejectionReasonPayload struct {
-	// The post rejection reason.
-	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
-}
-
-// Create a new post report reason input.
-type CreatePostReportReasonInput struct {
+// Create a new rule input.
+type CreateRuleInput struct {
 	// The title.
 	Title string `json:"title"`
 	// The description.
 	Description string `json:"description"`
-	// The link, if added
-	Link *graphql1.URI `json:"link"`
+	// If breaking this rule would cause an infraction.
+	Infraction bool `json:"infraction"`
 }
 
-// Updated post report reason.
-type CreatePostReportReasonPayload struct {
-	// The post report reason.
-	PostReportReason *PostReportReason `json:"postReportReason"`
+// Updated rule.
+type CreateRulePayload struct {
+	// The updated rule.
+	Rule *Rule `json:"rule"`
 }
 
 // Issue a club infraction.
 type IssueClubInfractionInput struct {
 	// The club to issue the infraction to.
 	ClubID relay.ID `json:"clubId"`
-	// The club infraction to use.
-	InfractionReasonID relay.ID `json:"infractionReasonId"`
+	// The rule to cite.
+	RuleID relay.ID `json:"ruleId"`
 	// Pass a custom end time. If none is passed, will use sliding scale based on previous infractions.
 	CustomEndTime *time.Time `json:"customEndTime"`
 }
@@ -214,8 +160,8 @@ type PostAuditLog struct {
 	Moderator *Account `json:"moderator"`
 	// The status or the action that was taken against the pending post
 	Action PostAuditLogAction `json:"action"`
-	// The reason the action was taken
-	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
+	// If a post was removed or rejected, this is the rule that was cited.
+	Rule *Rule `json:"rule"`
 	// Additional notes by the moderator
 	Notes *string `json:"notes"`
 	// The post linked to this audit log
@@ -243,43 +189,14 @@ type PostAuditLogEdge struct {
 	Cursor string        `json:"cursor"`
 }
 
-// Infraction history belonging to an account
-type PostRejectionReason struct {
-	// ID of the rejection reason
-	ID relay.ID `json:"id"`
-	// The reason for this rejection
-	Reason string `json:"reason"`
-	// All translations for this reason.
-	ReasonTranslations []*Translation `json:"reasonTranslations"`
-	// The club infraction reason, linked to this rejection reason.
-	ClubInfractionReason *ClubInfractionReason `json:"clubInfractionReason"`
-	// If this reason is deprecated.
-	Deprecated bool `json:"deprecated"`
-}
-
-func (PostRejectionReason) IsNode()   {}
-func (PostRejectionReason) IsEntity() {}
-
-// Connection of the pending post rejection reason
-type PostRejectionReasonConnection struct {
-	Edges    []*PostRejectionReasonEdge `json:"edges"`
-	PageInfo *relay.PageInfo            `json:"pageInfo"`
-}
-
-// Edge of the pending post rejection reason
-type PostRejectionReasonEdge struct {
-	Node   *PostRejectionReason `json:"node"`
-	Cursor string               `json:"cursor"`
-}
-
 // Post report
 type PostReport struct {
 	// ID of the report
 	ID relay.ID `json:"id"`
 	// The account that initiated this report
 	Account *Account `json:"account"`
-	// The reason for this report
-	PostReportReason *PostReportReason `json:"postReportReason"`
+	// The rule that was cited for this report.
+	Rule *Rule `json:"rule"`
 }
 
 func (PostReport) IsNode()   {}
@@ -305,45 +222,12 @@ type PostReportEdge struct {
 	Cursor string      `json:"cursor"`
 }
 
-// Post report reason
-type PostReportReason struct {
-	// ID of the report reason.
-	ID relay.ID `json:"id"`
-	// The title for this report.
-	Title string `json:"title"`
-	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
-	// The description for this report.
-	Description string `json:"description"`
-	// All translations for this description.
-	DescriptionTranslations []*Translation `json:"descriptionTranslations"`
-	// The link for this report, if there is one. This report reason can't be submitted if it has a link.
-	Link *graphql1.URI `json:"link"`
-	// If this reason is deprecated.
-	Deprecated bool `json:"deprecated"`
-}
-
-func (PostReportReason) IsNode()   {}
-func (PostReportReason) IsEntity() {}
-
-// Connection of the pending post rejection reason
-type PostReportReasonConnection struct {
-	Edges    []*PostReportReasonEdge `json:"edges"`
-	PageInfo *relay.PageInfo         `json:"pageInfo"`
-}
-
-// Edge of the pending post rejection reason
-type PostReportReasonEdge struct {
-	Node   *PostReportReason `json:"node"`
-	Cursor string            `json:"cursor"`
-}
-
 // Moderate the pending post input
 type RejectPostInput struct {
 	// Pending post to take action against
 	PostID relay.ID `json:"postId"`
-	// Required to enter a rejection reason ID
-	PostRejectionReasonID relay.ID `json:"postRejectionReasonId"`
+	// Required to enter a rule ID.
+	RuleID relay.ID `json:"ruleId"`
 	// Any extra notes for the moderator
 	Notes *string `json:"notes"`
 }
@@ -382,8 +266,8 @@ type RemoveModeratorFromPostQueuePayload struct {
 type RemovePostInput struct {
 	// Pending post to take action against
 	PostID relay.ID `json:"postId"`
-	// Required to enter a rejection reason ID
-	PostRejectionReasonID relay.ID `json:"postRejectionReasonId"`
+	// Required to enter a rule ID.
+	RuleID relay.ID `json:"ruleId"`
 	// Any extra notes for the staff member
 	Notes *string `json:"notes"`
 }
@@ -398,14 +282,47 @@ type RemovePostPayload struct {
 type ReportPostInput struct {
 	// The post to report
 	PostID relay.ID `json:"postId"`
-	// The post report reason ID
-	PostReportReason relay.ID `json:"postReportReason"`
+	// The rule to report this post for.
+	RuleID relay.ID `json:"ruleId"`
 }
 
 // Report the post payload
 type ReportPostPayload struct {
 	// The post report that was generated
 	PostReport *PostReport `json:"postReport"`
+}
+
+// Rule.
+type Rule struct {
+	// ID of the rule.
+	ID relay.ID `json:"id"`
+	// The title for this rule.
+	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*Translation `json:"titleTranslations"`
+	// The description for this rule.
+	Description string `json:"description"`
+	// All translations for this description.
+	DescriptionTranslations []*Translation `json:"descriptionTranslations"`
+	// If this rule is deprecated.
+	Deprecated bool `json:"deprecated"`
+	// If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied.
+	Infraction bool `json:"infraction"`
+}
+
+func (Rule) IsNode()   {}
+func (Rule) IsEntity() {}
+
+// Connection of the rule
+type RuleConnection struct {
+	Edges    []*RuleEdge     `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+// Edge of the rule
+type RuleEdge struct {
+	Node   *Rule  `json:"node"`
+	Cursor string `json:"cursor"`
 }
 
 type Translation struct {
@@ -415,138 +332,64 @@ type Translation struct {
 	Text string `json:"text"`
 }
 
-// Update club infraction reason.
-type UpdateClubInfractionReasonDeprecatedInput struct {
-	// The club infraction to take action against.
-	ReasonID relay.ID `json:"reasonId"`
-	// Whether or not this club infraction reason should be deprecated.
-	Deprecated bool `json:"deprecated"`
-}
-
-// Update club infraction reason payload.
-type UpdateClubInfractionReasonDeprecatedUpload struct {
-	// The club infraction reason.
-	ClubInfractionReason *ClubInfractionReason `json:"clubInfractionReason"`
-}
-
-// Update club infraction reason.
-type UpdateClubInfractionReasonTextInput struct {
-	// The club infraction to take action against.
-	ReasonID relay.ID `json:"reasonId"`
-	// The reason to update
-	Reason string `json:"reason"`
-	// The localization for this reason
-	Locale string `json:"locale"`
-}
-
-// Create a new club infraction reason payload.
-type UpdateClubInfractionReasonTextPayload struct {
-	// The club infraction reason.
-	ClubInfractionReason *ClubInfractionReason `json:"clubInfractionReason"`
-}
-
-// Update post rejection reason club infraction reason.
-type UpdatePostRejectionReasonClubInfractionReasonInput struct {
-	// The post rejection reason against.
-	RejectionReasonID relay.ID `json:"rejectionReasonId"`
-	// The club infraction reason to use. Pass nil if removing
-	ClubInfractionReason *relay.ID `json:"clubInfractionReason"`
-}
-
-// Update post rejection reason.
-type UpdatePostRejectionReasonClubInfractionReasonPayload struct {
-	// The post rejection reason.
-	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
-}
-
-// Update post rejection reason.
-type UpdatePostRejectionReasonDeprecatedInput struct {
-	// The post rejection reason to take action against.
-	RejectionReasonID relay.ID `json:"rejectionReasonId"`
-	// Whether or not this post rejection reason should be deprecated.
-	Deprecated bool `json:"deprecated"`
-}
-
-// Update post rejection reason.
-type UpdatePostRejectionReasonDeprecatedPayload struct {
-	// The post rejection reason.
-	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
-}
-
-// Update post rejection reason reason.
-type UpdatePostRejectionReasonTextInput struct {
-	// The post rejection reason against.
-	RejectionReasonID relay.ID `json:"rejectionReasonId"`
-	// The reason to update
-	Reason string `json:"reason"`
-	// The localization for this reason
-	Locale string `json:"locale"`
-}
-
-// Update post rejection reason.
-type UpdatePostRejectionReasonTextPayload struct {
-	// The post rejection reason.
-	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
-}
-
 // Update post report reason.
-type UpdatePostReportReasonDeprecatedInput struct {
-	// The post report reason to update.
-	ReportReasonID relay.ID `json:"reportReasonId"`
+type UpdateRuleDeprecatedInput struct {
+	// The rule to update.
+	RuleID relay.ID `json:"ruleId"`
 	// The deprecated status.
 	Deprecated bool `json:"deprecated"`
 }
 
-// Updated post report reason.
-type UpdatePostReportReasonDeprecatedPayload struct {
-	// The post report reason.
-	PostReportReason *PostReportReason `json:"postReportReason"`
+// Updated rule.
+type UpdateRuleDeprecatedPayload struct {
+	// The updated rule.
+	Rule *Rule `json:"rule"`
 }
 
-// Update post report reason.
-type UpdatePostReportReasonDescriptionInput struct {
-	// The post report reason to update.
-	ReportReasonID relay.ID `json:"reportReasonId"`
+// Update rule.
+type UpdateRuleDescriptionInput struct {
+	// The rule to update.
+	RuleID relay.ID `json:"ruleId"`
 	// The description to update
 	Description string `json:"description"`
 	// The localization for this description.
 	Locale string `json:"locale"`
 }
 
-// Updated post report reason.
-type UpdatePostReportReasonDescriptionPayload struct {
-	// The post report reason.
-	PostReportReason *PostReportReason `json:"postReportReason"`
+// Updated rule.
+type UpdateRuleDescriptionPayload struct {
+	// The updated rule.
+	Rule *Rule `json:"rule"`
 }
 
 // Update post report reason.
-type UpdatePostReportReasonLinkInput struct {
-	// The post report reason to update.
-	ReportReasonID relay.ID `json:"reportReasonId"`
-	// The link to update to.
-	Link *graphql1.URI `json:"link"`
+type UpdateRuleInfractionInput struct {
+	// The rule to update.
+	RuleID relay.ID `json:"ruleId"`
+	// The infraction status.
+	Infraction bool `json:"infraction"`
 }
 
-// Updated post report reason.
-type UpdatePostReportReasonLinkPayload struct {
-	// The post report reason.
-	PostReportReason *PostReportReason `json:"postReportReason"`
+// Updated rule.
+type UpdateRuleInfractionPayload struct {
+	// The updated rule.
+	Rule *Rule `json:"rule"`
 }
 
-// Update post report reason.
-type UpdatePostReportReasonTitleInput struct {
-	// The post report reason to update.
-	ReportReasonID relay.ID `json:"reportReasonId"`
+// Update rule.
+type UpdateRuleTitleInput struct {
+	// The rule to update.
+	RuleID relay.ID `json:"ruleId"`
 	// The title to update
 	Title string `json:"title"`
 	// The localization for this title.
 	Locale string `json:"locale"`
 }
 
-// Updated post report reason.
-type UpdatePostReportReasonTitlePayload struct {
-	// The post report reason.
-	PostReportReason *PostReportReason `json:"postReportReason"`
+// Updated rule.
+type UpdateRuleTitlePayload struct {
+	// The updated rule.
+	Rule *Rule `json:"rule"`
 }
 
 type ClubInfractionHistorySource string

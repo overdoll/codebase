@@ -248,9 +248,24 @@ input UnSuspendClubInput {
   clubId: ID!
 }
 
+"""Suspend the club."""
+input SuspendClubInput {
+  """The club to suspend."""
+  clubId: ID!
+
+  """When the suspension should end."""
+  endTime: Time!
+}
+
 """Un suspend club payload."""
 type UnSuspendClubPayload {
   """The new club after it's not suspended anymore."""
+  club: Club
+}
+
+"""Suspend club payload."""
+type SuspendClubPayload {
+  """The new club after it's suspended."""
   club: Club
 }
 
@@ -294,6 +309,13 @@ extend type Mutation {
   Update the club thumbnail
   """
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Suspend the club.
+
+  Staff+ only.
+  """
+  suspendClub(input: SuspendClubInput!): SuspendClubPayload
 
   """
   Un-Suspend the club. Suspension must be expired.

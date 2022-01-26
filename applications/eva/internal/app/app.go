@@ -15,7 +15,6 @@ type Commands struct {
 	GrantAuthenticationToken  command.GrantAuthenticationTokenHandler
 
 	UpdateAccountLanguage                   command.UpdateAccountLanguageHandler
-	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsername                   command.UpdateAccountUsernameHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
@@ -29,6 +28,9 @@ type Commands struct {
 	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
 	IndexAllAccounts                        command.IndexAllAccountsHandler
 
+	UnlockAccount command.UnlockAccountHandler
+	LockAccount   command.LockAccountHandler
+
 	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
 	RevokeAccountStaffRole     command.RevokeAccountStaffRoleHandler
 	AssignAccountModeratorRole command.AssignAccountModeratorRoleHandler
@@ -37,8 +39,6 @@ type Commands struct {
 	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
 
-	// operator handlers don't do any permission checks
-	LockAccountOperator          command.LockAccountOperatorHandler
 	CreateAccountSessionOperator command.CreateAccountSessionOperatorHandler
 	TouchAccountSessionOperator  command.TouchAccountSessionOperatorHandler
 	RevokeAccountSessionOperator command.RevokeAccountSessionOperatorHandler

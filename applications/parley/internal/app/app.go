@@ -21,22 +21,14 @@ type Commands struct {
 
 	ReportPost command.ReportPostHandler
 
-	CreatePostReportReason            command.CreatePostReportReasonHandler
-	UpdatePostReportReasonTitle       command.UpdatePostReportReasonTitleHandler
-	UpdatePostReportReasonDescription command.UpdatePostReportReasonDescriptionHandler
-	UpdatePostReportReasonLink        command.UpdatePostReportReasonLinkHandler
-	UpdatePostReportReasonDeprecated  command.UpdatePostReportReasonDeprecatedHandler
+	CreateRule            command.CreateRuleHandler
+	UpdateRuleTitle       command.UpdateRuleTitleHandler
+	UpdateRuleDescription command.UpdateRuleDescriptionHandler
+	UpdateRuleDeprecated  command.UpdateRuleDeprecatedHandler
+	UpdateRuleInfraction  command.UpdateRuleInfractionHandler
 
-	CreatePostRejectionReason                     command.CreatePostRejectionReasonHandler
-	UpdatePostRejectionReasonDeprecated           command.UpdatePostRejectionReasonDeprecatedHandler
-	UpdatePostRejectionReasonText                 command.UpdatePostRejectionReasonTitleHandler
-	UpdatePostRejectionReasonClubInfractionReason command.UpdatePostRejectionReasonClubInfractionReasonHandler
-
-	CreateClubInfractionReason           command.CreateClubInfractionReasonHandler
-	UpdateClubInfractionReasonDeprecated command.UpdateClubInfractionReasonDeprecatedHandler
-	UpdateClubInfractionReasonText       command.UpdateClubInfractionReasonTitleHandler
-	IssueClubInfraction                  command.IssueClubInfractionHandler
-	RemoveClubInfractionHistory          command.RemoveClubInfractionHistoryHandler
+	IssueClubInfraction         command.IssueClubInfractionHandler
+	RemoveClubInfractionHistory command.RemoveClubInfractionHistoryHandler
 
 	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
@@ -45,15 +37,10 @@ type Commands struct {
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
-	PostRejectionReasons      query.PostsRejectionReasonsHandler
-	PostRejectionReasonById   query.PostRejectionReasonByIdHandler
 	ClubInfractionHistoryById query.ClubInfractionHistoryByIdHandler
-	ClubInfractionReasonById  query.ClubInfractionReasonByIdHandler
 
-	ClubInfractionReasons query.ClubInfractionReasonsHandler
-
-	PostReportReasons    query.PostsReportReasonsHandler
-	PostReportReasonById query.PostReportReasonByIdHandler
+	RuleById query.RuleByIdHandler
+	Rules    query.RulesHandler
 
 	SearchPostReports          query.SearchPostReportsHandler
 	PostReportById             query.PostReportByIdHandler

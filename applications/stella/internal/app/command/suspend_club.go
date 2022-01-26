@@ -3,12 +3,14 @@ package command
 import (
 	"context"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/principal"
 	"time"
 )
 
 type SuspendClub struct {
-	ClubId  string
-	EndTime time.Time
+	Principal *principal.Principal
+	ClubId    string
+	EndTime   time.Time
 }
 
 type SuspendClubHandler struct {
@@ -20,15 +22,19 @@ func NewSuspendClubHandler(cr club.Repository, ci club.IndexRepository) SuspendC
 	return SuspendClubHandler{cr: cr, ci: ci}
 }
 
-func (h SuspendClubHandler) Handle(ctx context.Context, cmd SuspendClub) error {
+func (h SuspendClubHandler) Handle(ctx context.Context, cmd SuspendClub) (*club.Club, error) {
 
-	_, err := h.cr.UpdateClubSuspensionStatus(ctx, cmd.ClubId, func(club *club.Club) error {
-		return club.Suspend(cmd.EndTime)
+	clb, err := h.cr.UpdateClubSuspensionStatus(ctx, cmd.ClubId, func(club *club.Club) error {
+		return club.Suspend(cmd.Principal, cmd.EndTime)
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	if err := h.ci.IndexClub(ctx, clb); err != nil {
+		return nil, err
+	}
+
+	return clb, nil
 }

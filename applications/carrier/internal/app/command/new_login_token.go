@@ -17,7 +17,6 @@ type NewLoginToken struct {
 
 type NewLoginTokenHandler struct {
 	mr mailing.Repository
-	ar EvaService
 }
 
 func NewNewLoginTokenHandler(mr mailing.Repository) NewLoginTokenHandler {

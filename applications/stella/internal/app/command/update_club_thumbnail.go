@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/principal"
 )
@@ -31,7 +32,7 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail})
 
 		if err != nil {
-			return err
+			return errors.Wrap(err, "failed to create processed resources from uploads")
 		}
 
 		return clb.UpdateThumbnail(cmd.Principal, resourceIds[0])

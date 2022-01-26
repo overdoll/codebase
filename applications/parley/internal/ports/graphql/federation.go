@@ -140,26 +140,6 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
-		case "ClubInfractionReason":
-			resolverName, err := entityResolverNameForClubInfractionReason(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "ClubInfractionReason": %w`, err)
-			}
-			switch resolverName {
-
-			case "findClubInfractionReasonByID":
-				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findClubInfractionReasonByID(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindClubInfractionReasonByID(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "ClubInfractionReason": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
 		case "Post":
 			resolverName, err := entityResolverNameForPost(ctx, rep)
 			if err != nil {
@@ -200,26 +180,6 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
-		case "PostRejectionReason":
-			resolverName, err := entityResolverNameForPostRejectionReason(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "PostRejectionReason": %w`, err)
-			}
-			switch resolverName {
-
-			case "findPostRejectionReasonByID":
-				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findPostRejectionReasonByID(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindPostRejectionReasonByID(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "PostRejectionReason": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
 		case "PostReport":
 			resolverName, err := entityResolverNameForPostReport(ctx, rep)
 			if err != nil {
@@ -240,21 +200,21 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
-		case "PostReportReason":
-			resolverName, err := entityResolverNameForPostReportReason(ctx, rep)
+		case "Rule":
+			resolverName, err := entityResolverNameForRule(ctx, rep)
 			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "PostReportReason": %w`, err)
+				return fmt.Errorf(`finding resolver for Entity "Rule": %w`, err)
 			}
 			switch resolverName {
 
-			case "findPostReportReasonByID":
+			case "findRuleByID":
 				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findPostReportReasonByID(): %w`, err)
+					return fmt.Errorf(`unmarshalling param 0 for findRuleByID(): %w`, err)
 				}
-				entity, err := ec.resolvers.Entity().FindPostReportReasonByID(ctx, id0)
+				entity, err := ec.resolvers.Entity().FindRuleByID(ctx, id0)
 				if err != nil {
-					return fmt.Errorf(`resolving Entity "PostReportReason": %w`, err)
+					return fmt.Errorf(`resolving Entity "Rule": %w`, err)
 				}
 
 				list[idx[i]] = entity
@@ -380,23 +340,6 @@ func entityResolverNameForClubInfractionHistory(ctx context.Context, rep map[str
 	return "", fmt.Errorf("%w for ClubInfractionHistory", ErrTypeNotFound)
 }
 
-func entityResolverNameForClubInfractionReason(ctx context.Context, rep map[string]interface{}) (string, error) {
-	for {
-		var (
-			m   map[string]interface{}
-			val interface{}
-			ok  bool
-		)
-		_ = val
-		m = rep
-		if _, ok = m["id"]; !ok {
-			break
-		}
-		return "findClubInfractionReasonByID", nil
-	}
-	return "", fmt.Errorf("%w for ClubInfractionReason", ErrTypeNotFound)
-}
-
 func entityResolverNameForPost(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
@@ -431,23 +374,6 @@ func entityResolverNameForPostAuditLog(ctx context.Context, rep map[string]inter
 	return "", fmt.Errorf("%w for PostAuditLog", ErrTypeNotFound)
 }
 
-func entityResolverNameForPostRejectionReason(ctx context.Context, rep map[string]interface{}) (string, error) {
-	for {
-		var (
-			m   map[string]interface{}
-			val interface{}
-			ok  bool
-		)
-		_ = val
-		m = rep
-		if _, ok = m["id"]; !ok {
-			break
-		}
-		return "findPostRejectionReasonByID", nil
-	}
-	return "", fmt.Errorf("%w for PostRejectionReason", ErrTypeNotFound)
-}
-
 func entityResolverNameForPostReport(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
@@ -465,7 +391,7 @@ func entityResolverNameForPostReport(ctx context.Context, rep map[string]interfa
 	return "", fmt.Errorf("%w for PostReport", ErrTypeNotFound)
 }
 
-func entityResolverNameForPostReportReason(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForRule(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
 			m   map[string]interface{}
@@ -477,7 +403,7 @@ func entityResolverNameForPostReportReason(ctx context.Context, rep map[string]i
 		if _, ok = m["id"]; !ok {
 			break
 		}
-		return "findPostReportReasonByID", nil
+		return "findRuleByID", nil
 	}
-	return "", fmt.Errorf("%w for PostReportReason", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for Rule", ErrTypeNotFound)
 }

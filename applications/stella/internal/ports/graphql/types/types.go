@@ -147,6 +147,13 @@ type CreateClubPayload struct {
 	Validation *CreateClubValidation `json:"validation"`
 }
 
+type Language struct {
+	// BCP47 locale
+	Locale string `json:"locale"`
+	// Fully qualified name
+	Name string `json:"name"`
+}
+
 // Update alias slug to default.
 type PromoteClubSlugAliasToDefaultInput struct {
 	// The club to update
@@ -180,6 +187,27 @@ type Resource struct {
 }
 
 func (Resource) IsEntity() {}
+
+// Suspend the club.
+type SuspendClubInput struct {
+	// The club to suspend.
+	ClubID relay.ID `json:"clubId"`
+	// When the suspension should end.
+	EndTime time.Time `json:"endTime"`
+}
+
+// Suspend club payload.
+type SuspendClubPayload struct {
+	// The new club after it's suspended.
+	Club *Club `json:"club"`
+}
+
+type Translation struct {
+	// The language linked to this translation.
+	Language *Language `json:"language"`
+	// The translation text.
+	Text string `json:"text"`
+}
 
 // Un-Suspend the club.
 type UnSuspendClubInput struct {

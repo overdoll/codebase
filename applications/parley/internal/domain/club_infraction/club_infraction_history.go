@@ -2,6 +2,7 @@ package club_infraction
 
 import (
 	"errors"
+	"overdoll/applications/parley/internal/domain/rule"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -16,7 +17,7 @@ type ClubInfractionHistory struct {
 	clubId               string
 	issuerAccountId      string
 	source               ClubInfractionHistorySource
-	reason               *ClubInfractionReason
+	ruleId               string
 	issuedAt             time.Time
 	expiresAt            time.Time
 	clubSuspensionLength int64
@@ -30,10 +31,18 @@ var (
 	ErrClubInfractionHistoryNotFound = errors.New("club infraction not found")
 )
 
-func newClubInfraction(requester *principal.Principal, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, reason *ClubInfractionReason, customLength time.Time) (*ClubInfractionHistory, error) {
+func newClubInfraction(requester *principal.Principal, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleInstance *rule.Rule, customLength time.Time) (*ClubInfractionHistory, error) {
+
+	if ruleInstance.Deprecated() {
+		return nil, rule.ErrRuleDeprecated
+	}
 
 	if !(requester.IsStaff() || requester.IsModerator()) {
 		return nil, principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
 	}
 
 	var activeInfractions []*ClubInfractionHistory
@@ -51,7 +60,7 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 		return &ClubInfractionHistory{
 			id:                   ksuid.New().String(),
 			clubId:               clubId,
-			reason:               reason,
+			ruleId:               ruleInstance.ID(),
 			source:               source,
 			issuedAt:             time.Now(),
 			expiresAt:            time.Now(),
@@ -76,7 +85,7 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 		id:                   ksuid.New().String(),
 		clubId:               clubId,
 		issuerAccountId:      requester.AccountId(),
-		reason:               reason,
+		ruleId:               ruleInstance.ID(),
 		source:               source,
 		issuedAt:             time.Now(),
 		expiresAt:            expiration,
@@ -84,20 +93,20 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 	}, nil
 }
 
-func IssueClubInfractionHistoryManual(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, reason *ClubInfractionReason) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, pastClubInfractionHistory, reason, time.Time{})
+func IssueClubInfractionHistoryManual(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
+	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, pastClubInfractionHistory, rule, time.Time{})
 }
 
-func IssueClubInfractionHistoryManualWithCustomLength(requester *principal.Principal, clubId string, reason *ClubInfractionReason, until time.Time) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, nil, reason, until)
+func IssueClubInfractionHistoryManualWithCustomLength(requester *principal.Principal, clubId string, rule *rule.Rule, until time.Time) (*ClubInfractionHistory, error) {
+	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, nil, rule, until)
 }
 
-func IssueClubInfractionHistoryFromPostModeration(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, reason *ClubInfractionReason) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourcePostModerationRejection, clubId, pastClubInfractionHistory, reason, time.Time{})
+func IssueClubInfractionHistoryFromPostModeration(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
+	return newClubInfraction(requester, ClubInfractionHistorySourcePostModerationRejection, clubId, pastClubInfractionHistory, rule, time.Time{})
 }
 
-func IssueClubInfractionHistoryFromPostManualRemoval(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, reason *ClubInfractionReason) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourcePostManualRemoval, clubId, pastClubInfractionHistory, reason, time.Time{})
+func IssueClubInfractionHistoryFromPostManualRemoval(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
+	return newClubInfraction(requester, ClubInfractionHistorySourcePostManualRemoval, clubId, pastClubInfractionHistory, rule, time.Time{})
 }
 
 func (m *ClubInfractionHistory) ID() string {
@@ -120,8 +129,8 @@ func (m *ClubInfractionHistory) ClubSuspensionLength() int64 {
 	return m.clubSuspensionLength
 }
 
-func (m *ClubInfractionHistory) Reason() *ClubInfractionReason {
-	return m.reason
+func (m *ClubInfractionHistory) RuleId() string {
+	return m.ruleId
 }
 
 func (m *ClubInfractionHistory) IssuedAt() time.Time {
@@ -141,17 +150,21 @@ func (m *ClubInfractionHistory) CanDelete(requester *principal.Principal) error 
 		return principal.ErrNotAuthorized
 	}
 
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
+
 	return nil
 }
 
-func UnmarshalClubInfractionHistoryFromDatabase(id, clubId, issuerAccountId, source string, reason *ClubInfractionReason, issuedAt, expiresAt time.Time, clubSuspensionLength int64) *ClubInfractionHistory {
+func UnmarshalClubInfractionHistoryFromDatabase(id, clubId, issuerAccountId, source, ruleId string, issuedAt, expiresAt time.Time, clubSuspensionLength int64) *ClubInfractionHistory {
 	st, _ := ClubInfractionHistorySourceFromString(source)
 	return &ClubInfractionHistory{
 		id:                   id,
 		clubId:               clubId,
 		issuerAccountId:      issuerAccountId,
 		source:               st,
-		reason:               reason,
+		ruleId:               ruleId,
 		issuedAt:             issuedAt,
 		expiresAt:            expiresAt,
 		clubSuspensionLength: clubSuspensionLength,

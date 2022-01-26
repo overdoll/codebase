@@ -1,39 +1,3 @@
-"""Post report reason"""
-type PostReportReason implements Node @key(fields: "id") {
-  """ID of the report reason."""
-  id: ID!
-
-  """The title for this report."""
-  title: String!
-
-  """All translations for this title."""
-  titleTranslations: [Translation!]!
-
-  """The description for this report."""
-  description: String!
-
-  """All translations for this description."""
-  descriptionTranslations: [Translation!]!
-
-  """The link for this report, if there is one. This report reason can't be submitted if it has a link."""
-  link: URI
-
-  """If this reason is deprecated."""
-  deprecated: Boolean!
-}
-
-"""Edge of the pending post rejection reason"""
-type PostReportReasonEdge {
-  node: PostReportReason!
-  cursor: String!
-}
-
-"""Connection of the pending post rejection reason"""
-type PostReportReasonConnection {
-  edges: [PostReportReasonEdge!]!
-  pageInfo: PageInfo!
-}
-
 """Date range for post reports"""
 input PostReportDateRange {
   """The starting date range"""
@@ -41,30 +5,6 @@ input PostReportDateRange {
 
   """The ending date range"""
   to: Time!
-}
-
-extend type Query {
-  """
-  Get rejection reasons that can be used for pending posts
-
-  Viewable by everyone who is authenticated
-  """
-  postReportReasons(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Whether or not to show deprecated reasons."""
-    deprecated: Boolean! = false
-  ): PostReportReasonConnection! @goField(forceResolver: true)
 }
 
 """Post report"""
@@ -75,8 +15,8 @@ type PostReport implements Node @key(fields: "id") {
   """The account that initiated this report"""
   account: Account!
 
-  """The reason for this report"""
-  postReportReason: PostReportReason!
+  """The rule that was cited for this report."""
+  rule: Rule! @goField(forceResolver: true)
 }
 
 """Edge of the post report"""
@@ -121,8 +61,8 @@ input ReportPostInput {
   """The post to report"""
   postId: ID!
 
-  """The post report reason ID"""
-  postReportReason: ID!
+  """The rule to report this post for."""
+  ruleId: ID!
 }
 
 """Report the post payload"""
@@ -131,118 +71,9 @@ type ReportPostPayload {
   postReport: PostReport
 }
 
-"""Create a new post report reason input."""
-input CreatePostReportReasonInput {
-  """The title."""
-  title: String!
-
-  """The description."""
-  description: String!
-
-  """The link, if added"""
-  link: URI
-}
-
-"""Updated post report reason."""
-type CreatePostReportReasonPayload {
-  """The post report reason."""
-  postReportReason: PostReportReason
-}
-
-"""Update post report reason."""
-input UpdatePostReportReasonTitleInput {
-  """The post report reason to update."""
-  reportReasonId: ID!
-
-  """The title to update"""
-  title: String!
-
-  """The localization for this title."""
-  locale: BCP47!
-}
-
-"""Updated post report reason."""
-type UpdatePostReportReasonTitlePayload {
-  """The post report reason."""
-  postReportReason: PostReportReason
-}
-
-"""Update post report reason."""
-input UpdatePostReportReasonDescriptionInput {
-  """The post report reason to update."""
-  reportReasonId: ID!
-
-  """The description to update"""
-  description: String!
-
-  """The localization for this description."""
-  locale: BCP47!
-}
-
-"""Updated post report reason."""
-type UpdatePostReportReasonDescriptionPayload {
-  """The post report reason."""
-  postReportReason: PostReportReason
-}
-
-"""Update post report reason."""
-input UpdatePostReportReasonLinkInput {
-  """The post report reason to update."""
-  reportReasonId: ID!
-
-  """The link to update to."""
-  link: URI
-}
-
-"""Updated post report reason."""
-type UpdatePostReportReasonLinkPayload {
-  """The post report reason."""
-  postReportReason: PostReportReason
-}
-
-"""Update post report reason."""
-input UpdatePostReportReasonDeprecatedInput {
-  """The post report reason to update."""
-  reportReasonId: ID!
-
-  """The deprecated status."""
-  deprecated: Boolean!
-}
-
-"""Updated post report reason."""
-type UpdatePostReportReasonDeprecatedPayload {
-  """The post report reason."""
-  postReportReason: PostReportReason
-}
-
 extend type Mutation {
   """
   Report a specific post
   """
   reportPost(input: ReportPostInput!): ReportPostPayload
-
-  """
-  Create a post report reason.
-  """
-  createPostReportReason(input: CreatePostReportReasonInput!): CreatePostReportReasonPayload
-
-  """
-  Update post report reason title.
-  """
-  updatePostReportReasonTitle(input: UpdatePostReportReasonTitleInput!): UpdatePostReportReasonTitlePayload
-
-  """
-  Update post report reason description.
-  """
-  updatePostReportReasonDescription(input: UpdatePostReportReasonDescriptionInput!): UpdatePostReportReasonDescriptionPayload
-
-  """
-  Update post report reason link.
-  """
-  updatePostReportReasonLink(input: UpdatePostReportReasonLinkInput!): UpdatePostReportReasonLinkPayload
-
-  """
-  Update post report reason deprecation.
-  """
-  updatePostReportReasonDeprecated(input: UpdatePostReportReasonDeprecatedInput!): UpdatePostReportReasonDeprecatedPayload
 }

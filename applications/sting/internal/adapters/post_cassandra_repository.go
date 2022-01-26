@@ -110,12 +110,11 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 		return err
 	}
 
-	insertPost := r.session.
+	if err := r.session.
 		Query(postTable.Insert()).
 		BindStruct(pst).
-		Consistency(gocql.LocalQuorum)
-
-	if err := insertPost.ExecRelease(); err != nil {
+		Consistency(gocql.LocalQuorum).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to create post: %v", err)
 	}
 
@@ -124,12 +123,11 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 
 func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
 
-	deletePost := r.session.
+	if err := r.session.
 		Query(postTable.Delete()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&posts{Id: id})
-
-	if err := deletePost.ExecRelease(); err != nil {
+		BindStruct(&posts{Id: id}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete post: %v", err)
 	}
 
@@ -145,15 +143,14 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 		return postResults, nil
 	}
 
-	queryPosts := qb.Select(postTable.Name()).
+	var postsModels []*posts
+
+	if err := qb.Select(postTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		Bind(postIds)
-
-	var postsModels []*posts
-
-	if err := queryPosts.Select(&postsModels); err != nil {
+		Bind(postIds).
+		Select(&postsModels); err != nil {
 		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
 	}
 
@@ -170,14 +167,13 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 
 func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
 
-	postQuery := r.session.
-		Query(postTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&posts{Id: id})
-
 	var postPending posts
 
-	if err := postQuery.Get(&postPending); err != nil {
+	if err := r.session.
+		Query(postTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&posts{Id: id}).
+		Get(&postPending); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrNotFound
@@ -224,7 +220,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		return nil, err
 	}
 
-	postQuery := r.session.
+	if err := r.session.
 		Query(postTable.Update(
 			"state",
 			"moderator_reassignment_at",
@@ -232,9 +228,8 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 			"moderator_account_id",
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := postQuery.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
@@ -261,14 +256,13 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, err
 	}
 
-	postQuery := r.session.
+	if err := r.session.
 		Query(postTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := postQuery.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 

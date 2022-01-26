@@ -3,26 +3,28 @@ package command
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
 	"overdoll/libraries/principal"
 )
 
 type RemovePost struct {
-	Principal             *principal.Principal
-	PostId                string
-	PostRejectionReasonId string
-	Notes                 *string
+	Principal *principal.Principal
+	PostId    string
+	RuleId    string
+	Notes     *string
 }
 
 type RemovePostHandler struct {
 	pr    post_audit_log.Repository
+	rr    rule.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewRemovePostHandler(pr post_audit_log.Repository, eva EvaService, sting StingService) RemovePostHandler {
-	return RemovePostHandler{sting: sting, eva: eva, pr: pr}
+func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, eva EvaService, sting StingService) RemovePostHandler {
+	return RemovePostHandler{sting: sting, eva: eva, pr: pr, rr: rr}
 }
 
 func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*post_audit_log.PostAuditLog, error) {
@@ -33,7 +35,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*post_au
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.pr.GetPostRejectionReasonById(ctx, cmd.Principal, cmd.PostRejectionReasonId)
+	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
@@ -42,7 +44,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*post_au
 	postAuditLog, err := post_audit_log.NewRemovePostAuditLog(
 		cmd.Principal,
 		cmd.PostId,
-		rejectionReason,
+		ruleItem,
 		cmd.Notes,
 	)
 

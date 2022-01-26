@@ -1,9 +1,5 @@
 package gen
 
-// This file will not be regenerated automatically.
-//
-// It serves as dependency injection for your app, add any dependencies you require here.
-
 import (
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/ports/graphql/entities"
@@ -20,21 +16,18 @@ func NewResolver(app *app.Application) *Resolver {
 	return &Resolver{app: app}
 }
 
-// Mutation returns gen.MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver {
 	return &mutations.MutationResolver{
 		App: r.app,
 	}
 }
 
-// Query returns gen.QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver {
 	return &queries.QueryResolver{
 		App: r.app,
 	}
 }
 
-// Query returns gen.QueryResolver implementation.
 func (r *Resolver) Entity() EntityResolver {
 	return &entities.EntityResolver{
 		App: r.app,
@@ -59,8 +52,20 @@ func (r *Resolver) Club() ClubResolver {
 	}
 }
 
-func (r *Resolver) PostRejectionReason() PostRejectionReasonResolver {
-	return &resolvers.PostRejectionReasonResolver{
+func (r *Resolver) ClubInfractionHistory() ClubInfractionHistoryResolver {
+	return &resolvers.ClubInfractionHistory{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) PostAuditLog() PostAuditLogResolver {
+	return &resolvers.PostAuditLog{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) PostReport() PostReportResolver {
+	return &resolvers.PostReport{
 		App: r.app,
 	}
 }

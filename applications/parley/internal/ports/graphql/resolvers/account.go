@@ -18,6 +18,7 @@ type AccountResolver struct {
 }
 
 func (r AccountResolver) PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error) {
+
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}

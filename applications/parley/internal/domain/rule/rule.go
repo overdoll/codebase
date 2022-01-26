@@ -1,4 +1,4 @@
-package report
+package rule
 
 import (
 	"errors"
@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	ErrRuleNotFound = errors.New("rule not found")
+	ErrRuleNotFound   = errors.New("rule not found")
+	ErrRuleDeprecated = errors.New("rule not found")
 )
 
 type Rule struct {
@@ -27,6 +28,10 @@ func NewRule(requester *principal.Principal, title, description string, infracti
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
 	}
 
 	titleT, err := localization.NewDefaultTranslation(title)
@@ -62,6 +67,10 @@ func (m *Rule) Description() *localization.Translation {
 
 func (m *Rule) Deprecated() bool {
 	return m.deprecated
+}
+
+func (m *Rule) Infraction() bool {
+	return m.infraction
 }
 
 func (m *Rule) UpdateTitle(requester *principal.Principal, title, locale string) error {
@@ -114,6 +123,10 @@ func (m *Rule) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	return nil

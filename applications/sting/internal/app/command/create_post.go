@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"errors"
+	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -16,12 +16,11 @@ type CreatePostHandler struct {
 	pr     post.Repository
 	pi     post.IndexRepository
 	parley ParleyService
-	eva    EvaService
 	stella StellaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, eva EvaService, parley ParleyService, stella StellaService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pi: pi, eva: eva, parley: parley, stella: stella}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, stella StellaService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi, parley: parley, stella: stella}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
@@ -29,7 +28,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 	validClub, err := h.stella.CanAccountPostUnderClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get account permissions for posting")
 	}
 
 	if !validClub {

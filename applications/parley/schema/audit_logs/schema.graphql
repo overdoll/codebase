@@ -19,8 +19,8 @@ type PostAuditLog implements Node @key(fields: "id") {
   """The status or the action that was taken against the pending post"""
   action: PostAuditLogAction!
 
-  """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason
+  """If a post was removed or rejected, this is the rule that was cited."""
+  rule: Rule @goField(forceResolver: true)
 
   """Additional notes by the moderator"""
   notes: String
@@ -45,68 +45,6 @@ type PostAuditLogConnection {
 input PostAuditLogDateRange {
   from: Time!
   to: Time!
-}
-
-"""Infraction history belonging to an account"""
-type PostRejectionReason implements Node @key(fields: "id") {
-  """ID of the rejection reason"""
-  id: ID!
-
-  """The title for this rejection"""
-  title: String!
-
-  """All translations for this title."""
-  titleTranslations: [Translation!]!
-
-  """The description for this rejection"""
-  description: String!
-
-  """All translations for this description."""
-  descriptionTranslations: [Translation!]!
-
-  """The club infraction reason, linked to this rejection reason."""
-  clubInfractionReason: ClubInfractionReason @goField(forceResolver: true)
-
-  """If this reason is deprecated."""
-  deprecated: Boolean!
-}
-
-"""Edge of the pending post rejection reason"""
-type PostRejectionReasonEdge {
-  node: PostRejectionReason!
-  cursor: String!
-}
-
-"""Connection of the pending post rejection reason"""
-type PostRejectionReasonConnection {
-  edges: [PostRejectionReasonEdge!]!
-  pageInfo: PageInfo!
-}
-
-extend type Query {
-  """
-  Get rejection reasons that can be used for pending posts
-
-  Only viewable by moderators+
-  """
-  postRejectionReasons(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Whether or not to show deprecated reasons."""
-    deprecated: Boolean! = false
-  ): PostRejectionReasonConnection! @goField(forceResolver: true)
 }
 
 extend type Post {
@@ -152,112 +90,4 @@ extend type Account {
     """The date range for audit logs. Required."""
     dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
-}
-
-"""Create a new post rejection reason input."""
-input CreatePostRejectionReasonInput {
-  """The reason text."""
-  reason: String!
-
-  """The club infraction reason to use. Optional."""
-  clubInfractionReason: ID
-}
-
-"""Update post rejection reason reason."""
-input UpdatePostRejectionReasonTitleInput {
-  """The post rejection reason against."""
-  rejectionReasonId: ID!
-
-  """The title to update"""
-  title: String!
-
-  """The localization for this reason"""
-  locale: BCP47!
-}
-
-"""Update post rejection reason reason."""
-input UpdatePostRejectionReasonDescriptionInput {
-  """The post rejection reason against."""
-  rejectionReasonId: ID!
-
-  """The description to update"""
-  description: String!
-
-  """The localization for this reason"""
-  locale: BCP47!
-}
-
-"""Update post rejection reason."""
-input UpdatePostRejectionReasonDeprecatedInput {
-  """The post rejection reason to take action against."""
-  rejectionReasonId: ID!
-
-  """Whether or not this post rejection reason should be deprecated."""
-  deprecated: Boolean!
-}
-
-"""Update post rejection reason club infraction reason."""
-input UpdatePostRejectionReasonClubInfractionReasonInput {
-  """The post rejection reason against."""
-  rejectionReasonId: ID!
-
-  """The club infraction reason to use. Pass nil if removing"""
-  clubInfractionReason: ID
-}
-
-"""Update post rejection reason."""
-type UpdatePostRejectionReasonDeprecatedPayload {
-  """The post rejection reason."""
-  postRejectionReason: PostRejectionReason
-}
-
-"""Update post rejection reason."""
-type UpdatePostRejectionReasonTitlePayload {
-  """The post rejection reason."""
-  postRejectionReason: PostRejectionReason
-}
-
-"""Update post rejection reason."""
-type UpdatePostRejectionReasonDescriptionPayload {
-  """The post rejection reason."""
-  postRejectionReason: PostRejectionReason
-}
-
-"""Create post rejection reason."""
-type CreatePostRejectionReasonPayload {
-  """The post rejection reason."""
-  postRejectionReason: PostRejectionReason
-}
-
-"""Update post rejection reason."""
-type UpdatePostRejectionReasonClubInfractionReasonPayload {
-  """The post rejection reason."""
-  postRejectionReason: PostRejectionReason
-}
-
-extend type Mutation {
-  """
-  Create a new post rejection reason.
-  """
-  createPostRejectionReason(input: CreatePostRejectionReasonInput!): CreatePostRejectionReasonPayload
-
-  """
-  Update post rejection reason deprecated.
-  """
-  updatePostRejectionReasonDeprecated(input: UpdatePostRejectionReasonDeprecatedInput!): UpdatePostRejectionReasonDeprecatedPayload
-
-  """
-  Update post rejection reason title.
-  """
-  updatePostRejectionReasonTitle(input: UpdatePostRejectionReasonTitleInput!): UpdatePostRejectionReasonTitlePayload
-
-  """
-  Update post rejection reason description.
-  """
-  updatePostRejectionReasonDescription(input: UpdatePostRejectionReasonDescriptionInput!): UpdatePostRejectionReasonDescriptionPayload
-
-  """
-  Update post rejection reason club infraction reason.
-  """
-  updatePostRejectionReasonClubInfractionReason(input: UpdatePostRejectionReasonClubInfractionReasonInput!): UpdatePostRejectionReasonClubInfractionReasonPayload
 }

@@ -3,24 +3,26 @@ package command
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/club_infraction"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/principal"
 	"time"
 )
 
 type IssueClubInfraction struct {
-	Principal          *principal.Principal
-	ClubId             string
-	InfractionReasonId string
-	CustomEndTime      *time.Time
+	Principal     *principal.Principal
+	ClubId        string
+	RuleId        string
+	CustomEndTime *time.Time
 }
 
 type IssueClubInfractionHandler struct {
 	cr     club_infraction.Repository
+	rr     rule.Repository
 	stella StellaService
 }
 
-func NewIssueClubInfractionHandler(cr club_infraction.Repository, ss StellaService) IssueClubInfractionHandler {
-	return IssueClubInfractionHandler{cr: cr, stella: ss}
+func NewIssueClubInfractionHandler(cr club_infraction.Repository, rr rule.Repository, ss StellaService) IssueClubInfractionHandler {
+	return IssueClubInfractionHandler{cr: cr, rr: rr, stella: ss}
 }
 
 func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInfraction) (*club_infraction.ClubInfractionHistory, error) {
@@ -29,7 +31,7 @@ func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInf
 		return nil, err
 	}
 
-	clubInfractionReason, err := h.cr.GetClubInfractionReasonById(ctx, cmd.Principal, cmd.InfractionReasonId)
+	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
@@ -42,7 +44,7 @@ func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInf
 		clubInfractionHistory, err = club_infraction.IssueClubInfractionHistoryManualWithCustomLength(
 			cmd.Principal,
 			cmd.ClubId,
-			clubInfractionReason,
+			ruleItem,
 			*cmd.CustomEndTime,
 		)
 
@@ -62,7 +64,7 @@ func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInf
 			cmd.Principal,
 			cmd.ClubId,
 			pastClubInfractionHistory,
-			clubInfractionReason,
+			ruleItem,
 		)
 
 		if err != nil {

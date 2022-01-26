@@ -329,7 +329,11 @@ func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requeste
 
 func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
 
-	deleteMember := r.session.
+	if err := club.CanRemoveClubMembership(requester, accountId); err != nil {
+		return err
+	}
+
+	if err := r.session.
 		Query(clubMembersTable.Update("deleted")).
 		BindStruct(clubMember{
 			ClubId:          clubId,
@@ -337,9 +341,8 @@ func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester
 			// we don't delete the club member, since we require the entry to delete it from the list, so we mark it as "deleted" and
 			// the "client" will now see it as deleted while we do other background jobs
 			Deleted: true,
-		})
-
-	if err := deleteMember.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete club member by id: %v", err)
 	}
 
@@ -376,21 +379,20 @@ func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId
 func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context, clubId string) error {
 
 	// Grab the sum of all partitions counters
-	getCurrentCount := clubMembersPartitionsTable.
-		SelectBuilder().
-		Sum("members_count").
-		Query(r.session).
-		BindStruct(clubMemberByClub{
-			ClubId: clubId,
-		})
-
 	type clubMembersPartitionSum struct {
 		SumMembersCount int `db:"system.sum(members_count)"`
 	}
 
 	var clubMembersPartitionSums clubMembersPartitionSum
 
-	if err := getCurrentCount.Get(&clubMembersPartitionSums); err != nil {
+	if err := clubMembersPartitionsTable.
+		SelectBuilder().
+		Sum("members_count").
+		Query(r.session).
+		BindStruct(clubMemberByClub{
+			ClubId: clubId,
+		}).
+		Get(&clubMembersPartitionSums); err != nil {
 		return fmt.Errorf("failed to get club by id: %v", err)
 	}
 
@@ -400,17 +402,16 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 
 func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*club.Member, error) {
 
-	queryClubMemberships := clubMembersByAccountTable.
+	var accountClubs []*clubMembersByAccount
+
+	if err := clubMembersByAccountTable.
 		SelectBuilder().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
-		})
-
-	var accountClubs []*clubMembersByAccount
-
-	if err := queryClubMemberships.Select(&accountClubs); err != nil {
+		}).
+		Select(&accountClubs); err != nil {
 		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 
@@ -437,15 +438,14 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 		}
 	}
 
-	queryClubMemberships := builder.Query(r.session).
+	var accountClubs []*clubMembersByAccount
+
+	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
-		})
-
-	var accountClubs []*clubMembersByAccount
-
-	if err := queryClubMemberships.Select(&accountClubs); err != nil {
+		}).
+		Select(&accountClubs); err != nil {
 		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 
@@ -472,16 +472,15 @@ func (r ClubCassandraRepository) GetAccountClubMembershipsCount(ctx context.Cont
 
 	var clubMembersCount accountClubMembersCount
 
-	queryAccountsCount := clubMembersByAccountTable.
+	if err := clubMembersByAccountTable.
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
-		})
-
-	if err := queryAccountsCount.Get(&clubMembersCount); err != nil {
+		}).
+		Get(&clubMembersCount); err != nil {
 		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 
@@ -530,17 +529,15 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 		return nil, errors.New("cursor required")
 	}
 
-	// get first partition
-	getAllPartitions := clubMembersPartitionsTable.
+	var partitions []clubMembersPartition
+
+	if err := clubMembersPartitionsTable.
 		SelectBuilder().
 		Query(r.session).
 		BindStruct(clubMembersPartition{
 			ClubId: clubId,
-		})
-
-	var partitions []clubMembersPartition
-
-	if err := getAllPartitions.Select(&partitions); err != nil {
+		}).
+		Select(&partitions); err != nil {
 		return nil, fmt.Errorf("failed to get partitions: %v", err)
 	}
 
@@ -589,11 +586,10 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 		var clubMembers []clubMemberByClub
 
 		// then, using the last timestamp, count the number of new rows since then
-		getMembers := builder.
+		if err := builder.
 			Query(r.session).
-			BindStruct(memberClubLookup)
-
-		if err := getMembers.Select(&clubMembers); err != nil {
+			BindStruct(memberClubLookup).
+			Select(&clubMembers); err != nil {
 			return nil, fmt.Errorf("failed to get club members: %v", err)
 		}
 

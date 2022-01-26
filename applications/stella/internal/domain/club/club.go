@@ -40,9 +40,13 @@ type Club struct {
 	ownerAccountId string
 }
 
-func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
+func NewClub(requester *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
 
-	res, err := IsAccountClubsLimitReached(acc, acc.AccountId(), currentClubCount)
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
+	res, err := IsAccountClubsLimitReached(requester, requester.AccountId(), currentClubCount)
 
 	if err != nil {
 		return nil, err
@@ -67,7 +71,7 @@ func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) 
 		slugAliases:         []string{},
 		thumbnailResourceId: "",
 		membersCount:        0,
-		ownerAccountId:      acc.AccountId(),
+		ownerAccountId:      requester.AccountId(),
 	}, nil
 }
 
@@ -125,7 +129,19 @@ func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
 }
 
-func (m *Club) Suspend(endTime time.Time) error {
+func (m *Club) SuspendOperator(endTime time.Time) error {
+	m.suspended = true
+	m.suspendedUntil = &endTime
+
+	return nil
+}
+
+func (m *Club) Suspend(requester *principal.Principal, endTime time.Time) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
 	m.suspended = true
 	m.suspendedUntil = &endTime
 
@@ -137,6 +153,7 @@ func (m *Club) UnSuspend(requester *principal.Principal) error {
 	if requester.IsStaff() {
 		m.suspended = false
 		m.suspendedUntil = nil
+		return nil
 	}
 
 	if err := m.canUpdate(requester); err != nil {
@@ -245,6 +262,10 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 }
 
 func (m *Club) canUpdate(requester *principal.Principal) error {
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
 
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err

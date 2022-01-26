@@ -1,36 +1,3 @@
-"""Club infraction reason."""
-type ClubInfractionReason implements Node @key(fields: "id") {
-  """ID of the infraction reason."""
-  id: ID!
-
-  """The title."""
-  title: String!
-
-  """All translations for this title."""
-  titleTranslations: [Translation!]!
-
-  """The description."""
-  description: String!
-
-  """All translations for this description."""
-  descriptionTranslations: [Translation!]!
-
-  """If this reason is deprecated."""
-  deprecated: Boolean!
-}
-
-"""Edge of the club infraction reason"""
-type ClubInfractionReasonEdge {
-  node: ClubInfractionReason!
-  cursor: String!
-}
-
-"""Connection of the club infraction reason"""
-type ClubInfractionReasonConnection {
-  edges: [ClubInfractionReasonEdge!]!
-  pageInfo: PageInfo!
-}
-
 enum ClubInfractionHistorySource {
   MANUAL
   POST_MODERATION_REJECTION
@@ -48,8 +15,8 @@ type ClubInfractionHistory implements Node @key(fields: "id") {
   """The account that issued this infraction."""
   issuerAccount: Account!
 
-  """The club infraction reason."""
-  infractionReason: ClubInfractionReason!
+  """The rule cited for this infraction."""
+  rule: Rule! @goField(forceResolver: true)
 
   """The source for this infraction."""
   source: ClubInfractionHistorySource!
@@ -94,76 +61,13 @@ extend type Club {
   ): ClubInfractionHistoryConnection! @goField(forceResolver: true)
 }
 
-extend type Query {
-  """
-  Get club infraction reasons.
-  """
-  clubInfractionReasons(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Whether or not to show deprecated reasons."""
-    deprecated: Boolean! = false
-  ): ClubInfractionReasonConnection! @goField(forceResolver: true)
-}
-
-"""Create a new club infraction reason input."""
-input CreateClubInfractionReasonInput {
-  """The reason text."""
-  reason: String!
-}
-
-"""Update club infraction reason."""
-input UpdateClubInfractionReasonDeprecatedInput {
-  """The club infraction to take action against."""
-  reasonId: ID!
-
-  """Whether or not this club infraction reason should be deprecated."""
-  deprecated: Boolean!
-}
-
-"""Update club infraction reason."""
-input UpdateClubInfractionReasonTitleInput {
-  """The club infraction to take action against."""
-  reasonId: ID!
-
-  """The title to update"""
-  title: String!
-
-  """The localization for this reason"""
-  locale: BCP47!
-}
-
-"""Update club infraction reason."""
-input UpdateClubInfractionReasonDescriptionInput {
-  """The club infraction to take action against."""
-  reasonId: ID!
-
-  """The title to update"""
-  description: String!
-
-  """The localization for this reason"""
-  locale: BCP47!
-}
-
 """Issue a club infraction."""
 input IssueClubInfractionInput {
   """The club to issue the infraction to."""
   clubId: ID!
 
-  """The club infraction to use."""
-  infractionReasonId: ID!
+  """The rule to cite."""
+  ruleId: ID!
 
   """Pass a custom end time. If none is passed, will use sliding scale based on previous infractions."""
   customEndTime: Time
@@ -173,30 +77,6 @@ input IssueClubInfractionInput {
 input RemoveClubInfractionHistoryInput {
   """The history item to remove."""
   clubInfractionHistoryId: ID!
-}
-
-"""Update club infraction reason payload."""
-type UpdateClubInfractionReasonDeprecatedUpload {
-  """The club infraction reason."""
-  clubInfractionReason: ClubInfractionReason
-}
-
-"""Create a new club infraction reason payload."""
-type CreateClubInfractionReasonPayload {
-  """The club infraction reason."""
-  clubInfractionReason: ClubInfractionReason
-}
-
-"""Create a new club infraction reason payload."""
-type UpdateClubInfractionReasonTitlePayload {
-  """The club infraction reason."""
-  clubInfractionReason: ClubInfractionReason
-}
-
-"""Create a new club infraction reason payload."""
-type UpdateClubInfractionReasonDescriptionPayload {
-  """The club infraction reason."""
-  clubInfractionReason: ClubInfractionReason
 }
 
 """Issue a new club infraction payload."""
@@ -212,26 +92,6 @@ type RemoveClubInfractionHistoryPayload {
 }
 
 extend type Mutation {
-  """
-  Create a club infraction reason.
-  """
-  createClubInfractionReason(input: CreateClubInfractionReasonInput!): CreateClubInfractionReasonPayload
-
-  """
-  Update club infraction reason title.
-  """
-  updateClubInfractionReasonTitle(input: UpdateClubInfractionReasonTitleInput!): UpdateClubInfractionReasonTitlePayload
-
-  """
-  Update club infraction reason description.
-  """
-  updateClubInfractionReasonDescription(input: UpdateClubInfractionReasonDescriptionInput!): UpdateClubInfractionReasonDescriptionPayload
-
-  """
-  Update club infraction reason deprecation.
-  """
-  updateClubInfractionReasonDeprecated(input: UpdateClubInfractionReasonDeprecatedInput!): UpdateClubInfractionReasonDeprecatedUpload
-
   """
   Issue a club infraction.
   """

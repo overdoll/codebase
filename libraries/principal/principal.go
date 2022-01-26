@@ -8,6 +8,7 @@ import (
 
 var (
 	ErrNotAuthorized = errors.New("not authorized")
+	ErrLocked        = errors.New("account is locked")
 )
 
 // principal contains all methods required for authorization checks
