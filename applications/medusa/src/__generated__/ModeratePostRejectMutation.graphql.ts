@@ -6,7 +6,7 @@
 import { ConcreteRequest } from "relay-runtime";
 export type RejectPostInput = {
     postId: string;
-    postRejectionReasonId: string;
+    ruleId: string;
     notes?: string | null | undefined;
 };
 export type ModeratePostRejectMutationVariables = {

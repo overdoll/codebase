@@ -5,21 +5,25 @@ import { Controller, useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import Button from '@//:modules/form/Button/Button'
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UnlockAccountFormMutation } from '@//:artifacts/UnlockAccountFormMutation.graphql'
+import { UnlockAccountFormFragment$key } from '@//:artifacts/UnlockAccountFormFragment.graphql'
 
 interface FormValues {
   checkbox: boolean
 }
 
+interface Props {
+  queryRef: UnlockAccountFormFragment$key
+}
+
 const Mutation = graphql`
-  mutation UnlockAccountFormMutation {
-    unlockAccount {
+  mutation UnlockAccountFormMutation($input: UnlockAccountInput!) {
+    unlockAccount(input: $input) {
       account {
         id
         lock {
           expires
-          reason
         }
         isModerator
         isStaff
@@ -28,8 +32,16 @@ const Mutation = graphql`
   }
 `
 
-export default function UnlockAccountForm (): JSX.Element | null {
+const UnlockAccountFormGQL = graphql`
+  fragment UnlockAccountFormFragment on Account {
+    id
+  }
+`
+
+export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | null {
   const [unlockAccount, isUnlockingAccount] = useMutation<UnlockAccountFormMutation>(Mutation)
+
+  const data = useFragment(UnlockAccountFormGQL, queryRef)
 
   const { i18n } = useLingui()
 
@@ -60,7 +72,11 @@ export default function UnlockAccountForm (): JSX.Element | null {
 
   const onUnlockAccount = (): void => {
     unlockAccount({
-      variables: {},
+      variables: {
+        input: {
+          accountID: data.id
+        }
+      },
       onCompleted () {
         notify({
           status: 'success',

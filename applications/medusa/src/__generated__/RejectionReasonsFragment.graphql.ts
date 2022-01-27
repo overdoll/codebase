@@ -5,11 +5,11 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type RejectionReasonsFragment = {
-    readonly postRejectionReasons: {
+    readonly rules: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
-                readonly reason: string;
+                readonly title: string;
                 readonly infraction: boolean;
             };
         }>;
@@ -33,15 +33,15 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "PostRejectionReasonConnection",
+      "concreteType": "RuleConnection",
       "kind": "LinkedField",
-      "name": "postRejectionReasons",
+      "name": "rules",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "PostRejectionReasonEdge",
+          "concreteType": "RuleEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -49,7 +49,7 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
-              "concreteType": "PostRejectionReason",
+              "concreteType": "Rule",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -65,7 +65,7 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "reason",
+                  "name": "title",
                   "storageKey": null
                 },
                 {
@@ -88,5 +88,5 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
-(node as any).hash = '7250faaec4208f87d53fdbce39f7855d';
+(node as any).hash = '119c98a1df163dd7aebae6f0e69c3f67';
 export default node;
