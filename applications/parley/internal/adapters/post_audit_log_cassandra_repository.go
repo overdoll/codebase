@@ -31,7 +31,7 @@ var postAuditLogTable = table.New(table.Metadata{
 		"post_id",
 		"moderator_account_id",
 		"action",
-		"post_rejection_reason_id",
+		"rule_id",
 		"notes",
 	},
 	PartKey: []string{"id"},
@@ -46,7 +46,7 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"post_id",
 		"moderator_account_id",
 		"action",
-		"post_rejection_reason_id",
+		"rule_id",
 		"notes",
 	},
 	PartKey: []string{"post_id"},
@@ -61,7 +61,7 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"post_id",
 		"moderator_account_id",
 		"action",
-		"post_rejection_reason_id",
+		"rule_id",
 		"notes",
 	},
 	PartKey: []string{"moderator_account_id", "bucket"},
@@ -228,7 +228,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 		info["post_id"] = *filter.PostId()
 	}
 
-	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+	if err := cursor.BuildCassandra(builder, "id", false); err != nil {
 		return nil, err
 	}
 

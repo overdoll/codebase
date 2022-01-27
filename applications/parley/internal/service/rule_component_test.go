@@ -110,7 +110,7 @@ func TestCreateRule_and_update(t *testing.T) {
 
 	require.NoError(t, err, "no error updating rule description")
 
-	require.Equal(t, newFake.Description, updateRuleTitle.UpdateRuleTitle.Rule.Description, "new update should match")
+	require.Equal(t, newFake.Description, updateRuleDescription.UpdateRuleDescription.Rule.Description, "new update should match")
 
 	var updateRuleDeprecated UpdateRuleDeprecated
 
@@ -123,7 +123,7 @@ func TestCreateRule_and_update(t *testing.T) {
 
 	require.NoError(t, err, "no error updating rule deprecated")
 
-	require.True(t, updateRuleDescription.UpdateRuleDescription.Rule.Deprecated, "new update should be deprecated")
+	require.True(t, updateRuleDeprecated.UpdateRuleDeprecated.Rule.Deprecated, "new update should be deprecated")
 
 	var updateRuleInfraction UpdateRuleInfraction
 
@@ -136,5 +136,5 @@ func TestCreateRule_and_update(t *testing.T) {
 
 	require.NoError(t, err, "no error updating rule infraction")
 
-	require.True(t, updateRuleDescription.UpdateRuleDescription.Rule.Infraction, "new update should be an infraction")
+	require.True(t, updateRuleInfraction.UpdateRuleInfraction.Rule.Infraction, "new update should be an infraction")
 }

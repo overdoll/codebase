@@ -431,7 +431,6 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 				"locked_until",
 				"language",
 				"locked",
-				"locked_reason",
 				"avatar_resource_id",
 				"multi_factor_enabled",
 			),

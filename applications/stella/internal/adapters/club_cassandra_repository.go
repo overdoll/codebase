@@ -353,7 +353,7 @@ func (r ClubCassandraRepository) UpdateClubThumbnail(ctx context.Context, clubId
 }
 
 func (r ClubCassandraRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"suspended", "suspended_until"})
 
 }
 

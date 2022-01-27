@@ -134,7 +134,6 @@ func (r CurationProfileCassandraRepository) UpdateProfileDateOfBirth(ctx context
 
 func (r CurationProfileCassandraRepository) UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"category_ids", "category_ids_skipped"})
-
 }
 
 func (r CurationProfileCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {

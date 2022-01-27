@@ -41,7 +41,7 @@ type PostReports struct {
 		Edges []struct {
 			Node PostReportModified
 		}
-	} `graphql:"reports(dateRange: $dateRange)"`
+	} `graphql:"postReports(dateRange: $dateRange)"`
 }
 
 func TestReportPost(t *testing.T) {

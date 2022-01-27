@@ -27,8 +27,8 @@ type RejectPostHandler struct {
 	stella StellaService
 }
 
-func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, eva EvaService, sting StingService) RejectPostHandler {
-	return RejectPostHandler{sting: sting, eva: eva, pr: pr, rr: rr, cr: cr}
+func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, eva EvaService, sting StingService, stella StellaService) RejectPostHandler {
+	return RejectPostHandler{sting: sting, eva: eva, pr: pr, rr: rr, cr: cr, stella: stella}
 }
 
 func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_audit_log.PostAuditLog, error) {

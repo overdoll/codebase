@@ -322,7 +322,7 @@ type UnSuspendClub struct {
 func TestSuspendClub_and_unsuspend(t *testing.T) {
 	t.Parallel()
 
-	staffAccountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
+	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	grpcClient := getGrpcClient(t)

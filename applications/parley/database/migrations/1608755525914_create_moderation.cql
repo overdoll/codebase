@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS club_infraction_history
     id                     text,
     club_id                text,
     issuer_account_id      text,
-    infraction_id          text,
+    rule_id                text,
     source                 text,
     club_suspension_length int,
     issued_at              timestamp,

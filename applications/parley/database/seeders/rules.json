@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "title": {
+      "en": "Rule #1 without infraction"
+    },
+    "description": {
+      "en": "A description about this rule"
+    },
+    "deprecated": false,
+    "infraction": false,
+    "bucket": 0
+  },
+  {
+    "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "title": {
+      "en": "Rule #2 with infraction"
+    },
+    "description": {
+      "en": "A description about this rule"
+    },
+    "deprecated": false,
+    "infraction": true,
+    "bucket": 0
+  }
+]

@@ -11,7 +11,7 @@ import (
 type LockAccount struct {
 	Principal *principal.Principal
 	AccountId string
-	Duration  time.Time
+	EndTime   time.Time
 }
 
 type LockAccountHandler struct {
@@ -25,7 +25,7 @@ func NewLockAccountHandler(ur account.Repository) LockAccountHandler {
 func (h LockAccountHandler) Handle(ctx context.Context, cmd LockAccount) (*account.Account, error) {
 
 	acc, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
-		return u.Lock(cmd.Principal, cmd.Duration)
+		return u.Lock(cmd.Principal, cmd.EndTime)
 	})
 
 	if err != nil {

@@ -142,14 +142,14 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 
 	batch.Query(stmt,
 		marshalledPostReport.PostId,
-		marshalledPostReport.ReportingAccountId,
 		marshalledPostReport.Bucket,
 		marshalledPostReport.Id,
+		marshalledPostReport.ReportingAccountId,
 		marshalledPostReport.RuleId,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create audit log: %v", err)
+		return fmt.Errorf("failed to create report log: %v", err)
 	}
 
 	return nil
@@ -215,7 +215,7 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 			Where(qb.In("bucket"))
 	}
 
-	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+	if err := cursor.BuildCassandra(builder, "id", false); err != nil {
 		return nil, err
 	}
 

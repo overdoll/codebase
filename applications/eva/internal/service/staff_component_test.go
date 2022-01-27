@@ -132,7 +132,7 @@ func TestAccount_lock_unlock(t *testing.T) {
 	accountId := acc.ID()
 	accountIdRelay := convertAccountIdToRelayId(accountId)
 
-	staffAccountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
+	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
 
 	gClient, _ := getHttpClientWithAuthenticatedAccount(t, staffAccountId)
 
@@ -158,7 +158,9 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	var unlockAccount UnlockAccount
 
-	err = gClient.Mutate(context.Background(), &unlockAccount, nil)
+	err = gClient.Mutate(context.Background(), &unlockAccount, map[string]interface{}{
+		"input": types.UnlockAccountInput{AccountID: accountIdRelay},
+	})
 
 	require.NoError(t, err, "no error when unlocking")
 

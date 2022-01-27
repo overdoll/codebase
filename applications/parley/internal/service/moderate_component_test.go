@@ -157,7 +157,7 @@ func TestModeratePost_approve(t *testing.T) {
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error approving post")
 
 	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action, "action is approved")
 
@@ -209,7 +209,7 @@ func TestModeratePost_remove(t *testing.T) {
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error removing post")
 
 	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action, "action is removed")
 
@@ -230,7 +230,7 @@ type RejectPost struct {
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	notes := "some additional notes"
 	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
@@ -248,7 +248,7 @@ func TestModeratePost_reject(t *testing.T) {
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error rejecting post")
 
 	require.Equal(t, types.PostAuditLogActionDenied, rejectPost.RejectPost.PostAuditLog.Action, "should be denied")
 	require.Equal(t, notes, rejectPost.RejectPost.PostAuditLog.Notes, "correct note was added")
@@ -264,7 +264,7 @@ func TestModeratePost_reject(t *testing.T) {
 func TestModeratePost_reject_with_infraction(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	postId := ksuid.New().String()
 	postIdRelay := convertPostIdToRelayId(postId)
@@ -294,13 +294,13 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 
 type IssueClubInfraction struct {
 	IssueClubInfraction *struct {
-		ClubInfraction *ClubInfractionHistory
+		ClubInfractionHistory *ClubInfractionHistoryModified
 	} `graphql:"issueClubInfraction(input: $input)"`
 }
 
 type RemoveClubInfractionHistory struct {
 	RemoveClubInfractionHistory *struct {
-		ClubInfractionId *relay.ID
+		ClubInfractionHistoryId *relay.ID
 	} `graphql:"removeClubInfractionHistory(input: $input)"`
 }
 
@@ -310,7 +310,7 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	clubId := convertClubIdToRelayId(ksuid.New().String())
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	var issueClubInfraction IssueClubInfraction
 
@@ -338,5 +338,8 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error removing infraction history")
+
+	clubInfractionHistory = getClubInfractionHistory(t, client, clubId)
+
 	require.Equal(t, 0, len(clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges), "should have no infraction history")
 }

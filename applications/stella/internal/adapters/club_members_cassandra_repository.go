@@ -158,6 +158,8 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		return fmt.Errorf("failed to count: %v", err)
 	}
 
+	fmt.Println(clubMemberCounter)
+
 	partBuilder := clubMembersPartitionsTable.
 		UpdateBuilder().
 		Set("last_joined_at_count", "members_count")
@@ -202,11 +204,17 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 	clubPartItem.MembersCount = clubMemberCounter.Count
 
 	// do an overwritten query since we are updating the "total" count here
-	if err := partBuilder.
+	if applied, err := partBuilder.
+		Existing().
 		Query(r.session).
 		BindStruct(clubPartItem).
-		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to update count: %v", err)
+		ExecCAS(); err != nil || !applied {
+
+		if err != nil {
+			return fmt.Errorf("failed to update count: %v", err)
+		}
+
+		return fmt.Errorf("failed to update count")
 	}
 
 	return nil

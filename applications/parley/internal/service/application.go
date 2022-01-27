@@ -59,7 +59,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AddModeratorToPostQueue:      command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
 			RemoveModeratorFromPostQueue: command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
-			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting),
+			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting, stella),
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, eva, sting),
 			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting, stella),
 
