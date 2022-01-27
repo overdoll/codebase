@@ -29,7 +29,7 @@ expiration date of your credit card, your billing address, and your shipping inf
 You represent and warrant that: (i) you have the legal right to use any credit card(s) or other payment method(s) in
 connection with any Purchase; and that (ii) the information you supply to us is true, correct and complete.
 
-We may employ the use of third party services for the purpose of facilitating payment and the completion of Purchases.
+We may employ the use of third party services for the purpose of facilitating payment and the completion of Purchases. 
 By submitting your information, you grant us the right to provide the information to these third parties subject to our
 Privacy Policy.
 

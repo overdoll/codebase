@@ -45,7 +45,7 @@ export default function PagePanelWrap ({
 
   if (isExternal) {
     return (
-      <ExternalLink to={path}>
+      <ExternalLink to={`https://${path}`}>
         <BoxComponent />
       </ExternalLink>
     )
