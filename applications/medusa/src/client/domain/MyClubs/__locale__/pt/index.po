@@ -17,7 +17,7 @@ msgstr ""
 msgid "My Clubs"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/SuggestedClubs/SuggestedClubs.tsx:100
+#: src/client/domain/MyClubs/MyClubs/SuggestedClubs/SuggestedClubs.tsx:82
 msgid "No clubs found"
 msgstr ""
 

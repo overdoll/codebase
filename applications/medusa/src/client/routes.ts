@@ -193,7 +193,7 @@ const routes: Route[] = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'Account')) {
-              history.push('/profile')
+              history.push('/')
               return false
             }
 
@@ -253,7 +253,7 @@ const routes: Route[] = [
             const ability = getAbilityFromUser(environment)
 
             if (ability.can('manage', 'Account')) {
-              history.push('/profile')
+              history.push('/')
               return false
             }
 
@@ -764,29 +764,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/profile',
-        exact: true,
-        component: loadable(async () =>
-          await import(
-            './domain/Profile/Profile'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'Account')) {
-              return true
-            }
-            history.push('/')
-            return false
-          }
-        ]
-      },
-      {
         path: '/p/:reference',
         dependencies: [
           {
@@ -823,23 +800,40 @@ const routes: Route[] = [
         }
       },
       {
-        path: '/u/:reference',
+        path: '/u/:username',
+        exact: true,
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/PublicPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Profile/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
           }
         ],
-        exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Home/RootHome'
+            './domain/Profile/RootProfile'
           )
-        )
+        ),
+        prepare: ({
+          params,
+          query
+        }) => {
+          const Query = require('@//:artifacts/ProfileQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                username: params.username
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/configure/create-club',
@@ -1123,6 +1117,7 @@ const routes: Route[] = [
       },
       {
         path: '/:slug',
+        exact: true,
         component: loadable(async () =>
           await import(
             './domain/ManageClub/pages/ClubPublicPage/RootClubPublicPage'
@@ -1148,6 +1143,56 @@ const routes: Route[] = [
               query: Query,
               variables: {
                 slug: params.slug
+              },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
+        path: '/:slug/:entity(posts)',
+        exact: true,
+        component: loadable(async () =>
+          await import(
+            './domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/RootClubPublicPosts'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        middleware: [
+          ({ history }) => {
+            if (history.location.search == null || history.location.search === '') {
+              history.push('/')
+              return false
+            }
+
+            return true
+          }
+        ],
+        prepare: ({
+          query,
+          params
+        }) => {
+          const Query = require('@//:artifacts/ClubPublicPostsQuery.graphql')
+          return {
+            query: {
+              query: Query,
+              variables: {
+                slug: params.slug,
+                sortBy: query.get('sort') ?? 'TOP',
+                categorySlugs: query.get('categories'),
+                seriesSlugs: query.get('series'),
+                characterSlugs: query.get('characters')
               },
               options: {
                 fetchPolicy: 'store-or-network'

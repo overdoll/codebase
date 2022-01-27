@@ -5,6 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type QuickAccessButtonProfileFragment = {
+    readonly username: string;
     readonly avatar: {
         readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
     } | null;
@@ -27,6 +28,13 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "username",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Resource",
       "kind": "LinkedField",
       "name": "avatar",
@@ -44,5 +52,5 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '9110d5ea7845df8ea7557b35ee2a7594';
+(node as any).hash = '65af5247a5dcb73fd68149cacc5d7b82';
 export default node;

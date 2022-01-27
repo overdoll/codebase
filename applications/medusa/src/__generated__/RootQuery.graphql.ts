@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5a9b0351ef2de136ddd986acf12e52a6 */
+/* @relayHash c2cf5746513b1f70789f79056917896f */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -81,6 +81,7 @@ fragment LockedAccountModalFragment on AccountLock {
 }
 
 fragment QuickAccessButtonProfileFragment on Account {
+  username
   avatar {
     ...ResourceIconFragment
     id
@@ -293,7 +294,7 @@ return {
     ]
   },
   "params": {
-    "id": "5a9b0351ef2de136ddd986acf12e52a6",
+    "id": "c2cf5746513b1f70789f79056917896f",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

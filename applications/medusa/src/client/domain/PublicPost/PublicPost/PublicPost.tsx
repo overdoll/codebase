@@ -16,6 +16,7 @@ interface Props {
 const Query = graphql`
   query PublicPostQuery($reference: String!) {
     post(reference: $reference) {
+      reference
       ...FullDetailedPostFragment
       ...PublicPostFragment
     }
@@ -68,6 +69,7 @@ export default function PublicPost (props: Props): JSX.Element {
   return (
     <GlobalVideoManagerProvider>
       <PageSectionScroller
+        watchChange={queryData?.post?.reference}
         childrenTitle={<Trans>View Post</Trans>}
         infiniteScrollTitle={<Trans>Suggested Posts</Trans>}
         pageInfiniteScroll={<PostsInfiniteScroll

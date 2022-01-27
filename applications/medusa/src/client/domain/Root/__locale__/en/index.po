@@ -33,7 +33,7 @@ msgstr ""
 msgid "Changing to your preferred language..."
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:56
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:58
 msgid "Close"
 msgstr ""
 
@@ -77,12 +77,12 @@ msgstr ""
 msgid "Error Loading Video"
 msgstr ""
 
-#: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:34
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:34
 msgid "Error {0}"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:27
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:28
 msgid "Go to my profile"
 msgstr ""
 
@@ -107,19 +107,19 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/client/components/ContentSelection/components/GridTile/LoadMoreTile/LoadMoreTile.tsx:37
+#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:33
 msgid "Load More"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesSelector/SearchCategoriesSelector.tsx:125
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesGeneral/SearchCategoriesGeneral.tsx:94
 msgid "Load More Categories"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersSelector/SearchCharactersSelector.tsx:136
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersGeneral/SearchCharactersGeneral.tsx:94
 msgid "Load More Characters"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesSelector/SearchSeriesSelector.tsx:126
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesGeneral/SearchSeriesGeneral.tsx:91
 msgid "Load More Series"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:89
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:91
 msgid "New"
 msgstr ""
 
@@ -160,14 +160,14 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesSelector/SearchCategoriesSelector.tsx:87
-msgid "No categories were found"
-msgstr ""
+#~ msgid "No categories were found"
+#~ msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersSelector/SearchCharactersSelector.tsx:91
-msgid "No characters were found"
-msgstr ""
+#~ msgid "No characters were found"
+#~ msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:127
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:128
 msgid "No more content available"
 msgstr ""
 
@@ -180,10 +180,10 @@ msgid "No reason was found"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesSelector/SearchSeriesSelector.tsx:88
-msgid "No series were found"
-msgstr ""
+#~ msgid "No series were found"
+#~ msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:115
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:112
 msgid "Nothing was found"
 msgstr ""
 
@@ -220,8 +220,8 @@ msgstr ""
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:53
 #: src/modules/content/Posts/components/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:28
-#: src/modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback.tsx:53
 msgid "Retry"
 msgstr ""
 
@@ -229,11 +229,11 @@ msgstr ""
 msgid "Reveal Spoiler"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:72
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:74
 msgid "Save ({0})"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:142
+#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:154
 msgid "Search for characters, categories, or series"
 msgstr ""
 
@@ -298,7 +298,7 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:84
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:86
 msgid "Top"
 msgstr ""
 
@@ -322,7 +322,7 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:81
+#: src/modules/content/Posts/components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:86
 msgid "View Post"
 msgstr ""
 

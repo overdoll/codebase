@@ -28,6 +28,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { DispatchContext, StateContext, UppyContext } from '../../../../context'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import ProcessContent from './ProcessContent/ProcessContent'
 
 interface Props {
   query: FlowHeaderFragment$key
@@ -36,6 +37,7 @@ interface Props {
 const FlowHeaderFragmentGQL = graphql`
   fragment FlowHeaderFragment on Post {
     ...checkPostRequirementsFragment
+    ...ProcessContentFragment
   }
 `
 
@@ -81,10 +83,8 @@ export default function FlowHeader ({
         return [i18n._(t`Step 3`), i18n._(t`Add categories`)]
       case STEPS.CHARACTER:
         return [i18n._(t`Step 4`), i18n._(t`Add characters`)]
-      case STEPS.PROCESS:
-        return [i18n._(t`Step 5`), i18n._(t`Process post`)]
       case STEPS.REVIEW:
-        return [i18n._(t`Step 6`), i18n._(t`Wait for processing`)]
+        return [i18n._(t`Step 5`), i18n._(t`Review post`)]
       default:
         return [i18n._(t`Step 1`), i18n._(t`Arrange your uploads`)]
     }
@@ -107,7 +107,10 @@ export default function FlowHeader ({
             </Flex>
             <CloseButton size='lg' onClick={onOpen} />
           </Flex>
-          <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'teal'} value={score} />
+          <Stack spacing={2}>
+            <Progress size='sm' colorScheme={score >= 100 ? 'green' : 'teal'} value={score} />
+            <ProcessContent query={data} />
+          </Stack>
         </SmallBackgroundBox>
       </Stack>
       <AlertDialog

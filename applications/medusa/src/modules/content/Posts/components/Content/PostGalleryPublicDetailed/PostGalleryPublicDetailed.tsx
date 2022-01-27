@@ -46,8 +46,10 @@ export default function PostGalleryPublicDetailed ({
   return (
     <Box>
       <Swiper
+        observer
         onSwiper={(swiper) =>
           onInitialize(swiper)}
+        onObserverUpdate={(swiper) => onInitialize(swiper)}
       >
         {data?.content.map((item, index) =>
           <SwiperSlide

@@ -20,11 +20,15 @@ export default function RequiredPrompt ({ children }: Props): JSX.Element {
     <Box>
       <Popover>
         <PopoverTrigger>
-          <Heading role='button' fontSize='md' color='gray.200'><Trans>Why is this required</Trans></Heading>
+          <Heading role='button' fontSize='md' color='gray.200'>
+            <Trans>Why is this required</Trans>
+          </Heading>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverCloseButton />
-          <PopoverHeader fontWeight='semibold'><Trans>Why is this required</Trans></PopoverHeader>
+          <PopoverHeader fontWeight='semibold'>
+            <Trans>Why is this required</Trans>
+          </PopoverHeader>
           <PopoverBody textAlign='left' fontSize='sm'>{children}</PopoverBody>
         </PopoverContent>
       </Popover>

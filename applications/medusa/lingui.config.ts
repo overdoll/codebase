@@ -77,12 +77,8 @@ export default {
       include: ['src/client/domain/Moderation/Queue']
     },
     {
-      path: 'src/client/domain/Public/ViewClub/__locale__/{locale}/index',
-      include: ['src/client/domain/Public/ViewClub']
-    },
-    {
-      path: 'src/client/domain/Public/ViewPost/__locale__/{locale}/index',
-      include: ['src/client/domain/Public/ViewPost']
+      path: 'src/client/domain/PublicPost/__locale__/{locale}/index',
+      include: ['src/client/domain/PublicPost']
     },
     {
       path: 'src/client/domain/ManageClub/__locale__/{locale}/index',
@@ -101,6 +97,14 @@ export default {
       include: ['src/client/domain/ManageClub/pages/ClubPosts']
     },
     {
+      path: 'src/client/domain/ManageClub/pages/ClubPublicPage/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubPublicPage']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts']
+    },
+    {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/ClubSettings']
     },
@@ -113,12 +117,12 @@ export default {
       include: ['src/client/domain/ManageClub/pages/CreatePost']
     },
     {
-      path: 'src/client/domain/Help/__locale__/{locale}/index',
-      include: ['src/client/domain/Help']
-    },
-    {
       path: 'src/client/domain/Search/__locale__/{locale}/index',
       include: ['src/client/domain/Search']
+    },
+    {
+      path: 'src/client/domain/Help/__locale__/{locale}/index',
+      include: ['src/client/domain/Help']
     }
   ],
   format: 'po',

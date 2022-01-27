@@ -11,6 +11,7 @@ interface Props {
 
 const QuickAccessButtonProfileGQL = graphql`
   fragment QuickAccessButtonProfileFragment on Account {
+    username
     avatar {
       ...ResourceIconFragment
     }
@@ -22,7 +23,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
 
   return (
     <HorizontalNavigation.Button
-      to='/profile'
+      to={`/u/${data?.username as string}`}
       label={
         <Trans>
           Go to my profile

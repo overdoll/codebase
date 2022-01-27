@@ -29,7 +29,7 @@ export default function VolumeButton ({
   return (
     <Popover isOpen={isOpen}>
       <PopoverTrigger>
-        <Box onClick={onChangeMuted} cursor='pointer' boxShadow='lg' w={6} h={6}>
+        <Box onClick={onChangeMuted} cursor='pointer' w={6} h={6}>
           <Icon icon={isMuted ? ControlVolumeMuted : ControlVolumeHigh} fill='whiteAlpha.800' />
         </Box>
       </PopoverTrigger>

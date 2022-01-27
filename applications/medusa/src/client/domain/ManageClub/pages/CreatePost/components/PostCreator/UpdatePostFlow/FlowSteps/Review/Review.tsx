@@ -5,6 +5,7 @@ import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
 
 interface Props {
   query: ReviewFragment$key
@@ -36,9 +37,11 @@ export default function Review ({
         </PageSectionDescription>
       </PageSectionWrap>
       <GlobalVideoManagerProvider>
-        <PostVideoManagerProvider>
-          <PostReview query={data} />
-        </PostVideoManagerProvider>
+        <ObserverManagerProvider>
+          <PostVideoManagerProvider>
+            <PostReview query={data} />
+          </PostVideoManagerProvider>
+        </ObserverManagerProvider>
       </GlobalVideoManagerProvider>
     </>
   )

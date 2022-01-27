@@ -7,7 +7,9 @@ describe('Join', () => {
 
     join(email)
 
-    cy.url().should('include', '/profile')
+    cy.url().should('include', '/')
+
+    cy.findByText(/Welcome back!/iu).should('exist')
   })
 
   it('check join on new random account', () => {
@@ -23,6 +25,8 @@ describe('Join', () => {
     cy.findByRole('button', { name: /Register/iu })
       .click()
 
-    cy.url().should('include', '/profile')
+    cy.url().should('include', '/')
+
+    cy.findByText(/Welcome to overdoll!/iu).should('exist')
   })
 })

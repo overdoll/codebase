@@ -29,7 +29,8 @@ export default function useSearchQueryArguments (initialVariables: QueryArgument
 
     setQueryArgumentsState(prev => ({
       options: {
-        fetchKey: (prev?.options?.fetchKey ?? 0) + 1
+        fetchKey: (prev?.options?.fetchKey ?? 0) + 1,
+        fetchPolicy: 'network-only'
       },
       variables: {
         ...variablesObject

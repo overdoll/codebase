@@ -87,6 +87,7 @@ export default function PostsInfiniteScroll ({
         scrollbar={{ hide: true }}
         style={{ height: 'calc(100vh - 54px)' }}
         mousewheel
+        slidesOffsetBefore={10}
         virtual={{
           cache: true,
           addSlidesBefore: 7,

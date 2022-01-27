@@ -4,5 +4,5 @@ export interface QueryArgumentsVariables {
 
 export interface QueryArguments {
   options: { fetchKey: number }
-  variables: QueryArgumentsVariables
+  variables: any
 }

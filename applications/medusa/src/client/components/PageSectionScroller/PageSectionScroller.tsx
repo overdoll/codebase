@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { ReactNode, useState } from 'react'
 import { Box, Flex, Tab, TabList, Tabs } from '@chakra-ui/react'
 import SwiperCore from 'swiper'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   children: ReactNode
@@ -9,6 +10,7 @@ interface Props {
   childrenTitle: ReactNode
   infiniteScrollTitle: ReactNode
   reversed?: boolean
+  watchChange?: string | null
 }
 
 export default function PageSectionScroller ({
@@ -16,7 +18,8 @@ export default function PageSectionScroller ({
   pageInfiniteScroll,
   childrenTitle,
   infiniteScrollTitle,
-  reversed = false
+  reversed = false,
+  watchChange = null
 }: Props): JSX.Element {
   const [swiper, setSwiper] = useState<SwiperCore | null>(null)
 
@@ -70,6 +73,11 @@ export default function PageSectionScroller ({
       </Flex>
     )
   }
+
+  useUpdateEffect(() => {
+    if (watchChange == null) return
+    onChangeTab(reversed ? 1 : 0)
+  }, [watchChange])
 
   return (
     <Box position='relative'>

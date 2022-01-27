@@ -53,7 +53,9 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <GlobalVideoManagerProvider>
-      <FloatingGeneralSearchButton />
+      <FloatingGeneralSearchButton
+        routeTo='/search'
+      />
       <PostsInfiniteScroll
         hasNext={hasNext}
         isLoadingNext={isLoadingNext}

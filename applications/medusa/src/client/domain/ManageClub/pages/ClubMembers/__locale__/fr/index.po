@@ -17,6 +17,6 @@ msgstr ""
 #~ msgid "Load More"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:67
+#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:65
 msgid "No members found"
 msgstr ""

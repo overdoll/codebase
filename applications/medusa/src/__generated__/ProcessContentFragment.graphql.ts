@@ -4,37 +4,34 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type ProcessButtonFragment = {
-    readonly id: string;
+export type ProcessContentFragment = {
+    readonly reference: string;
     readonly content: ReadonlyArray<{
-        readonly id: string;
         readonly processed: boolean;
     }>;
-    readonly " $refType": "ProcessButtonFragment";
+    readonly " $refType": "ProcessContentFragment";
 };
-export type ProcessButtonFragment$data = ProcessButtonFragment;
-export type ProcessButtonFragment$key = {
-    readonly " $data"?: ProcessButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ProcessButtonFragment">;
+export type ProcessContentFragment$data = ProcessContentFragment;
+export type ProcessContentFragment$key = {
+    readonly " $data"?: ProcessContentFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"ProcessContentFragment">;
 };
 
 
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ProcessButtonFragment",
+  "name": "ProcessContentFragment",
   "selections": [
-    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -43,7 +40,6 @@ return {
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -58,6 +54,5 @@ return {
   "type": "Post",
   "abstractKey": null
 };
-})();
-(node as any).hash = 'cb30e6c90977e0240827c73ffbcc8c8a';
+(node as any).hash = 'bacc31f8b7304038514d4c8efac6120b';
 export default node;

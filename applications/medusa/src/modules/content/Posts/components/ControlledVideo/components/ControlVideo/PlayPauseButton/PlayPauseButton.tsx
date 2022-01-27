@@ -12,7 +12,7 @@ export default function PlayPauseButton ({
   onClick
 }: Props): JSX.Element {
   return (
-    <Box onClick={onClick} cursor='pointer' boxShadow='lg' w={6} h={6}>
+    <Box onClick={onClick} cursor='pointer' w={6} h={6}>
       <Icon icon={isPaused ? ControlPlayButton : ControlPauseButton} fill='whiteAlpha.800' />
     </Box>
   )

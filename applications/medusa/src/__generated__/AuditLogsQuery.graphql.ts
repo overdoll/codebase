@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 04212617437c2e94cd3b62e975e8c478 */
+/* @relayHash bf7348e6536d84e61441bc7a664683e7 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -72,6 +72,10 @@ fragment AuditLogsFragment on Account {
   id
 }
 
+fragment ControlledVideoFragment on Resource {
+  ...RenderVideoFragment
+}
+
 fragment ImageSnippetFragment on Resource {
   urls {
     url
@@ -79,11 +83,25 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostGalleryContentFragment on Post {
+fragment PostGalleryPublicDetailedFragment on Post {
+  id
+  reference
   content {
     type
     ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ControlledVideoFragment
+    id
+  }
+}
+
+fragment PostHeaderClubFragment on Post {
+  club {
+    name
+    slug
+    thumbnail {
+      ...ResourceIconFragment
+      id
+    }
     id
   }
 }
@@ -92,7 +110,8 @@ fragment PostPreviewFragment on Post {
   ...PostStaticAudienceFragment
   ...PostStaticCharactersFragment
   ...PostStaticCategoriesFragment
-  ...PostGalleryContentFragment
+  ...PostGalleryPublicDetailedFragment
+  ...PostHeaderClubFragment
 }
 
 fragment PostStaticAudienceFragment on Post {
@@ -118,6 +137,23 @@ fragment PostStaticCharactersFragment on Post {
     }
     id
   }
+}
+
+fragment RenderVideoFragment on Resource {
+  urls {
+    url
+    mimeType
+  }
+}
+
+fragment ResourceIconFragment on Resource {
+  ...ResourceItemFragment
+}
+
+fragment ResourceItemFragment on Resource {
+  type
+  ...ImageSnippetFragment
+  ...VideoSnippetFragment
 }
 
 fragment VideoSnippetFragment on Resource {
@@ -179,6 +215,41 @@ v3 = {
   "storageKey": null
 },
 v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "urls",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "url",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v3/*: any*/)
+],
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -277,7 +348,24 @@ return {
                             "plural": false,
                             "selections": [
                               (v2/*: any*/),
-                              (v3/*: any*/)
+                              (v3/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "slug",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "thumbnail",
+                                "plural": false,
+                                "selections": (v4/*: any*/),
+                                "storageKey": null
+                              }
                             ],
                             "storageKey": null
                           },
@@ -289,7 +377,7 @@ return {
                             "kind": "LinkedField",
                             "name": "audience",
                             "plural": false,
-                            "selections": (v4/*: any*/),
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -308,7 +396,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v4/*: any*/),
+                                "selections": (v5/*: any*/),
                                 "storageKey": null
                               },
                               (v3/*: any*/)
@@ -322,7 +410,14 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v4/*: any*/),
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "reference",
                             "storageKey": null
                           },
                           {
@@ -332,41 +427,7 @@ return {
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "url",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              },
-                              (v3/*: any*/)
-                            ],
+                            "selections": (v4/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -453,7 +514,7 @@ return {
     ]
   },
   "params": {
-    "id": "04212617437c2e94cd3b62e975e8c478",
+    "id": "bf7348e6536d84e61441bc7a664683e7",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

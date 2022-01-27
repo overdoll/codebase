@@ -22,6 +22,7 @@ interface Props {
 
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
+    id
     ...PostGalleryPublicSimpleFragment
     ...PostMenuFragment
     ...PostLikeButtonFragment

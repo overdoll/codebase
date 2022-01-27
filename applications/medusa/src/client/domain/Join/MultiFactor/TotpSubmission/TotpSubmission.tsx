@@ -86,7 +86,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t`You have been logged in using two-factor authentication.`,
+          title: t`Welcome back! Thanks for using two-factor to log in!`,
           isClosable: true
         })
       },

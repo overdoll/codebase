@@ -66,7 +66,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t`You have been logged in`,
+          title: t`Welcome back!`,
           isClosable: true
         })
       },
@@ -74,7 +74,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         prepareViewer(store, payload)
         removeCookie('token')
-        history.push('/profile')
+        history.push('/')
       },
       onError (data) {
         notify({

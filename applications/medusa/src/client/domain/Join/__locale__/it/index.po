@@ -117,6 +117,14 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+#: src/client/domain/Join/Grant/Grant.tsx:69
+msgid "Welcome back!"
+msgstr ""
+
+#: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:89
+msgid "Welcome back! Thanks for using two-factor to log in!"
+msgstr ""
+
 #: src/client/domain/Join/Register/Register.tsx:82
 msgid "Welcome to overdoll!"
 msgstr ""
@@ -126,9 +134,9 @@ msgid "You can find this in the same app you used to set up two-factor authentic
 msgstr ""
 
 #: src/client/domain/Join/Grant/Grant.tsx:69
-msgid "You have been logged in"
-msgstr ""
+#~ msgid "You have been logged in"
+#~ msgstr ""
 
 #: src/client/domain/Join/MultiFactor/TotpSubmission/TotpSubmission.tsx:89
-msgid "You have been logged in using two-factor authentication."
-msgstr ""
+#~ msgid "You have been logged in using two-factor authentication."
+#~ msgstr ""

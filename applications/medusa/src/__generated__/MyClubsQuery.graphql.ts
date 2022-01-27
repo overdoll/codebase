@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e75551fcd6915955ed1a9fef9cf762a5 */
+/* @relayHash 2ebf68a4a7cb00eefba3151628e11715 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -79,6 +79,7 @@ fragment ControlledVideoFragment on Resource {
 }
 
 fragment FullSimplePostFragment on Post {
+  id
   ...PostGalleryPublicSimpleFragment
   ...PostMenuFragment
   ...PostLikeButtonFragment
@@ -696,7 +697,7 @@ return {
     ]
   },
   "params": {
-    "id": "e75551fcd6915955ed1a9fef9cf762a5",
+    "id": "2ebf68a4a7cb00eefba3151628e11715",
     "metadata": {},
     "name": "MyClubsQuery",
     "operationKind": "query",

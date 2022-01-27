@@ -69,9 +69,7 @@ export default function Arrange ({
     <>
       <PageSectionWrap>
         <PageSectionTitle colorScheme='teal'>
-          <Trans>
-            Posting {contentData.length} Media
-          </Trans>
+          <Trans>Posting {contentData.length} media</Trans>
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>

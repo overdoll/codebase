@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d2aac5f668532c46935ea02ab8b49243 */
+/* @relayHash 1f7c979d17ba068ea6a12b8c216ec8df */
 
 import { ConcreteRequest } from "relay-runtime";
-export type ProcessContentQueryVariables = {
+export type RefreshProcessContentQueryVariables = {
     reference: string;
 };
-export type ProcessContentQueryResponse = {
+export type RefreshProcessContentQueryResponse = {
     readonly post: {
         readonly id: string;
         readonly reference: string;
@@ -17,15 +17,15 @@ export type ProcessContentQueryResponse = {
         }>;
     } | null;
 };
-export type ProcessContentQuery = {
-    readonly response: ProcessContentQueryResponse;
-    readonly variables: ProcessContentQueryVariables;
+export type RefreshProcessContentQuery = {
+    readonly response: RefreshProcessContentQueryResponse;
+    readonly variables: RefreshProcessContentQueryVariables;
 };
 
 
 
 /*
-query ProcessContentQuery(
+query RefreshProcessContentQuery(
   $reference: String!
 ) {
   post(reference: $reference) {
@@ -105,7 +105,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ProcessContentQuery",
+    "name": "RefreshProcessContentQuery",
     "selections": (v2/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -114,17 +114,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ProcessContentQuery",
+    "name": "RefreshProcessContentQuery",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "d2aac5f668532c46935ea02ab8b49243",
+    "id": "1f7c979d17ba068ea6a12b8c216ec8df",
     "metadata": {},
-    "name": "ProcessContentQuery",
+    "name": "RefreshProcessContentQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '089ae584e94d5abf50931bdc9b230d94';
+(node as any).hash = 'a0e5a1df244f026dfd280f1d95b2eb4a';
 export default node;

@@ -5,6 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FullSimplePostFragment = {
+    readonly id: string;
     readonly club: {
         readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment">;
     };
@@ -25,6 +26,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "FullSimplePostFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -75,5 +83,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'b24ac6cddff1ad138723694119bb6336';
+(node as any).hash = 'd24b1e2a3778b9ad97a96486f180be3d';
 export default node;

@@ -83,6 +83,12 @@ const reducer = (state: State, action: Action): State => {
         [act]: true
       }
     }
+    case EVENTS.IS_PROCESSING: {
+      return {
+        ...state,
+        [act]: action.value
+      }
+    }
     case EVENTS.FILES: {
       let files = [...state.files]
 

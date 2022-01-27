@@ -29,7 +29,7 @@ msgstr ""
 #~ msgid "Post Not Found"
 #~ msgstr ""
 
-#: src/client/domain/Public/ViewPost/ViewPost/ViewPost.tsx:72
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:72
 msgid "Suggested Posts"
 msgstr ""
 
@@ -37,6 +37,6 @@ msgstr ""
 #~ msgid "This post could not be found"
 #~ msgstr ""
 
-#: src/client/domain/Public/ViewPost/ViewPost/ViewPost.tsx:71
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:71
 msgid "View Post"
 msgstr ""

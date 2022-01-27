@@ -16,6 +16,10 @@ import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Icon } from '@//:modules/content'
 import { SearchBar } from '@//:assets/icons/navigation'
 
+interface Props {
+  routeTo: string
+}
+
 export interface SearchValues {
   [id: string]: {
     type: 'category' | 'series' | 'character'
@@ -29,7 +33,7 @@ export interface StateProps {
   setSearchValues: Dispatch<SetStateAction<SearchValues>>
 }
 
-export default function FloatingGeneralSearchButton (): JSX.Element {
+export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.Element {
   const {
     isOpen,
     onOpen,
@@ -149,7 +153,12 @@ export default function FloatingGeneralSearchButton (): JSX.Element {
                   onChange={setSearch}
                   placeholder={i18n._(t`Search for characters, categories, or series`)}
                 />
-                <SaveSearchButton onClose={onClose} searchValues={searchValues} setSearchValues={setSearchValues} />
+                <SaveSearchButton
+                  routeTo={routeTo}
+                  onClose={onClose}
+                  searchValues={searchValues}
+                  setSearchValues={setSearchValues}
+                />
               </Stack>
             </Box>
           </ModalBody>

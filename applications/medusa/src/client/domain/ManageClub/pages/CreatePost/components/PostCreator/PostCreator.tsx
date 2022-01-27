@@ -52,7 +52,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
         <Box>
           <Heading color='gray.00' fontSize='xl'>
             <Trans>
-              As a reminder of the guidelines...
+              As a reminder of the guidelines
             </Trans>
           </Heading>
           <Box ml={4}>
@@ -63,7 +63,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
         </Box>
         <Box>
           <Text fontSize='md' color='gray.100'>
-            <Trans>Upstanding netizens shall read all the rules before posting</Trans>
+            <Trans>Upstanding netizens will read all the rules before posting</Trans>
           </Text>
           <CommunityGuidelines size='md' />
         </Box>

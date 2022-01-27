@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6255a51dcbd380b84eb2c90e0d5f217a */
+/* @relayHash 05a03798f2ce9e1ce5b6f99b0177e373 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -10,6 +10,7 @@ export type PublicPostQueryVariables = {
 };
 export type PublicPostQueryResponse = {
     readonly post: {
+        readonly reference: string;
         readonly " $fragmentRefs": FragmentRefs<"FullDetailedPostFragment" | "PublicPostFragment">;
     } | null;
     readonly viewer: {
@@ -28,6 +29,7 @@ query PublicPostQuery(
   $reference: String!
 ) {
   post(reference: $reference) {
+    reference
     ...FullDetailedPostFragment
     ...PublicPostFragment
     id
@@ -62,6 +64,7 @@ fragment FullDetailedPostViewerFragment on Account {
 }
 
 fragment FullSimplePostFragment on Post {
+  id
   ...PostGalleryPublicSimpleFragment
   ...PostMenuFragment
   ...PostLikeButtonFragment
@@ -456,6 +459,7 @@ return {
         "name": "post",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -632,7 +636,7 @@ return {
     ]
   },
   "params": {
-    "id": "6255a51dcbd380b84eb2c90e0d5f217a",
+    "id": "05a03798f2ce9e1ce5b6f99b0177e373",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -640,5 +644,5 @@ return {
   }
 };
 })();
-(node as any).hash = '66fb8e25813f5a44189ee74db1fdcd55';
+(node as any).hash = 'a1251e4967f8c5085eba24a19bab6c87';
 export default node;

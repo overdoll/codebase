@@ -8,7 +8,7 @@ interface Props extends HTMLChakraProps<any> {
 
 export default function FullscreenButton ({ onClick }: Props): JSX.Element {
   return (
-    <Box onClick={onClick} cursor='pointer' boxShadow='lg' w={6} h={6}>
+    <Box onClick={onClick} cursor='pointer' w={6} h={6}>
       <Icon icon={ControlFullscreenEnable} fill='whiteAlpha.800' />
     </Box>
   )

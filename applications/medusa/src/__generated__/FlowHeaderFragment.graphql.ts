@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type FlowHeaderFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"checkPostRequirementsFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"checkPostRequirementsFragment" | "ProcessContentFragment">;
     readonly " $refType": "FlowHeaderFragment";
 };
 export type FlowHeaderFragment$data = FlowHeaderFragment;
@@ -26,10 +26,15 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "checkPostRequirementsFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ProcessContentFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'b71aeae73c3b1e83f4151e6de8991dc2';
+(node as any).hash = 'c3b56f8d9f198223a1e6495fbf9fb1a7';
 export default node;

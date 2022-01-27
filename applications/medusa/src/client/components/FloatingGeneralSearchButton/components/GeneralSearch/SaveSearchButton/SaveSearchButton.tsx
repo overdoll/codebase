@@ -10,12 +10,14 @@ import { useQueryParam } from 'use-query-params'
 
 interface Props extends StateProps {
   onClose: () => void
+  routeTo: string
 }
 
 export default function SaveSearchButton ({
   searchValues,
   setSearchValues,
-  onClose
+  onClose,
+  routeTo
 }: Props): JSX.Element {
   const history = useHistory()
 
@@ -46,7 +48,7 @@ export default function SaveSearchButton ({
       sort: sortBy
     })
 
-    history.push(`/search?${stringify(encodedQuery)}`)
+    history.push(`${routeTo}?${stringify(encodedQuery)}`)
     onClose()
   }
 

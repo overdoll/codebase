@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f226535674bf8037ec9b809a70480952 */
+/* @relayHash 00279dd31a63376a305c940545282aeb */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -133,11 +133,11 @@ fragment FlowForwardButtonFragment on Post {
   ...UpdateCategoryButtonFragment
   ...UpdateCharacterButtonFragment
   ...UpdateContentButtonFragment
-  ...ProcessButtonFragment
 }
 
 fragment FlowHeaderFragment on Post {
   ...checkPostRequirementsFragment
+  ...ProcessContentFragment
 }
 
 fragment FlowStepsFragment on Post {
@@ -146,7 +146,6 @@ fragment FlowStepsFragment on Post {
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
-  ...ProcessFragment
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -215,16 +214,12 @@ fragment PostReviewFragment on Post {
   ...PostClickableCategoriesFragment
 }
 
-fragment ProcessButtonFragment on Post {
-  id
+fragment ProcessContentFragment on Post {
+  reference
   content {
-    id
     processed
+    id
   }
-}
-
-fragment ProcessFragment on Post {
-  ...RootProcessContentFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -257,14 +252,6 @@ fragment ResourceItemFragment on Resource {
 
 fragment ReviewFragment on Post {
   ...PostReviewFragment
-}
-
-fragment RootProcessContentFragment on Post {
-  reference
-  content {
-    processed
-    id
-  }
 }
 
 fragment SubmitPostButtonFragment on Post {
@@ -532,14 +519,14 @@ return {
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "processed",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -645,7 +632,7 @@ return {
     ]
   },
   "params": {
-    "id": "f226535674bf8037ec9b809a70480952",
+    "id": "00279dd31a63376a305c940545282aeb",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",
