@@ -23,15 +23,18 @@ type SearchPosts struct {
 	State *string
 
 	SortBy string
+
+	ShowSuspendedClubs bool
 }
 
 type SearchPostsHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	pr     post.Repository
+	pi     post.IndexRepository
+	stella StellaService
 }
 
-func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr, pi: pi}
+func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr, pi: pi, stella: stella}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
@@ -78,6 +81,16 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		}
 	}
 
+	var suspendedClubIds []string
+
+	if !query.ShowSuspendedClubs {
+		suspendedClubIds, err = h.stella.GetSuspendedClubs(ctx)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	filters, err := post.NewPostFilters(
 		query.SortBy,
 		query.State,
@@ -88,6 +101,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		categoryIds,
 		characterIds,
 		seriesIds,
+		suspendedClubIds,
 	)
 
 	if err != nil {

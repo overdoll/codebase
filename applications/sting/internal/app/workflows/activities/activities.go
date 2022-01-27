@@ -9,10 +9,9 @@ type Activities struct {
 	pi post.IndexRepository
 
 	parley ParleyService
-	stella StellaService
 	loader LoaderService
 }
 
-func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, stella StellaService, loader LoaderService) *Activities {
-	return &Activities{pr: pr, pi: pi, parley: parley, stella: stella, loader: loader}
+func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, loader LoaderService) *Activities {
+	return &Activities{pr: pr, pi: pi, parley: parley, loader: loader}
 }

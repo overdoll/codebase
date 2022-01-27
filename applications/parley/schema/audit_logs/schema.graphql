@@ -13,17 +13,14 @@ type PostAuditLog implements Node @key(fields: "id") {
   """ID of the audit log"""
   id: ID!
 
-  """The contributor that the audit log belongs to"""
-  contributor: Account!
-
   """The moderator that this log belongs to"""
   moderator: Account!
 
   """The status or the action that was taken against the pending post"""
   action: PostAuditLogAction!
 
-  """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason
+  """If a post was removed or rejected, this is the rule that was cited."""
+  rule: Rule @goField(forceResolver: true)
 
   """Additional notes by the moderator"""
   notes: String

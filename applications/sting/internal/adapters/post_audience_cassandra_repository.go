@@ -101,14 +101,13 @@ func (r PostsCassandraRepository) GetAudienceIdsFromSlugs(ctx context.Context, a
 
 func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
 
-	queryAudienceSlug := r.session.
-		Query(audienceSlugTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(audienceSlug{Slug: strings.ToLower(slug)})
-
 	var b audienceSlug
 
-	if err := queryAudienceSlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(audienceSlugTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(audienceSlug{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrAudienceNotFound
@@ -129,15 +128,14 @@ func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, request
 		return audiences, nil
 	}
 
-	queryAudiences := qb.Select(audienceTable.Name()).
+	var audienceModels []*audience
+
+	if err := qb.Select(audienceTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(audienceIds)
-
-	var audienceModels []*audience
-
-	if err := queryAudiences.Select(&audienceModels); err != nil {
+		Bind(audienceIds).
+		Select(&audienceModels); err != nil {
 		return nil, fmt.Errorf("failed to get audiences by id: %v", err)
 	}
 
@@ -158,14 +156,13 @@ func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, request
 
 func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
 
-	queryAudience := r.session.
-		Query(audienceTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(audience{Id: audienceId})
-
 	var b audience
 
-	if err := queryAudience.Get(&b); err != nil {
+	if err := r.session.
+		Query(audienceTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(audience{Id: audienceId}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrAudienceNotFound
@@ -191,13 +188,12 @@ func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester
 
 func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *principal.Principal) ([]*post.Audience, error) {
 
-	queryAudiences := r.session.
-		Query(audienceTable.SelectAll()).
-		Consistency(gocql.One)
-
 	var res []audience
 
-	if err := queryAudiences.Select(&res); err != nil {
+	if err := r.session.
+		Query(audienceTable.SelectAll()).
+		Consistency(gocql.One).
+		Select(&res); err != nil {
 		return nil, fmt.Errorf("failed to get audiences: %v", err)
 	}
 
@@ -294,14 +290,13 @@ func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string,
 		return nil, err
 	}
 
-	updateAudTable := r.session.
+	if err := r.session.
 		Query(audienceTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateAudTable.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update audience: %v", err)
 	}
 

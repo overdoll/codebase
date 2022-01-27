@@ -86,6 +86,8 @@ async function request (req, res): Promise<void> {
         }
       )
 
+      console.log(response)
+
       const json = response.data
 
       const responseSetCookie = response.headers['set-cookie']

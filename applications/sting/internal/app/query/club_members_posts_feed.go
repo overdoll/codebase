@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -27,7 +28,7 @@ func (h ClubMembersPostsFeedHandler) Handle(ctx context.Context, query ClubMembe
 	clubIds, err := h.stella.GetClubMembershipsForAccount(ctx, query.AccountId)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get club memberships for account")
 	}
 
 	// no club ids - return empty feed
@@ -35,7 +36,13 @@ func (h ClubMembersPostsFeedHandler) Handle(ctx context.Context, query ClubMembe
 		return nil, nil
 	}
 
-	filters, err := post.NewClubMembersPostsFeed(clubIds)
+	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filters, err := post.NewClubMembersPostsFeed(clubIds, suspendedClubIds)
 
 	if err != nil {
 		return nil, err

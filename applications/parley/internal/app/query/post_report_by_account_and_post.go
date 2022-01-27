@@ -22,7 +22,7 @@ func NewPostReportByAccountAndPostHandler(rr report.Repository) PostReportByAcco
 
 func (h PostReportByAccountAndPostHandler) Handle(ctx context.Context, query PostReportByAccountAndPost) (*report.PostReport, error) {
 
-	postReport, err := h.rr.GetPostReportForAccount(ctx, query.Principal, query.PostId, query.Principal.AccountId())
+	postReport, err := h.rr.GetPostReportForPostAndAccount(ctx, query.Principal, query.PostId, query.Principal.AccountId())
 
 	if err != nil {
 		return nil, err

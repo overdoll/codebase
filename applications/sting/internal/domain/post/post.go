@@ -45,14 +45,18 @@ type Post struct {
 	likes int
 }
 
-func NewPost(contributor *principal.Principal, clubId string) (*Post, error) {
+func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	id := uuid.New()
+
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
 
 	return &Post{
 		id:            id.String(),
 		clubId:        clubId,
 		state:         Draft,
-		contributorId: contributor.AccountId(),
+		contributorId: requester.AccountId(),
 		createdAt:     time.Now(),
 	}, nil
 }
@@ -281,7 +285,7 @@ func (p *Post) MakeReview() error {
 
 func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string, allResourcesProcessed bool) error {
 
-	if err := p.CanView(requester); err != nil {
+	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
@@ -425,6 +429,10 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 
 	if err := requester.BelongsToAccount(requester.AccountId()); err != nil {
 		return err
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	if p.state != Draft {

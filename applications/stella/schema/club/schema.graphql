@@ -25,6 +25,11 @@ type Club implements Node @key(fields: "id") {
   """The account that owns this club."""
   owner: Account!
 
+  """
+  Whether or not this club is suspended.
+  """
+  suspension: ClubSuspension
+
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 
@@ -48,6 +53,11 @@ type Club implements Node @key(fields: "id") {
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
+}
+
+type ClubSuspension {
+  """When the suspension expires. Can call UnSuspendClub when time = now."""
+  expires: Time!
 }
 
 """The club slug alias"""
@@ -232,6 +242,33 @@ enum ClubsSort {
   POPULAR
 }
 
+"""Un-Suspend the club."""
+input UnSuspendClubInput {
+  """The club to un-suspend."""
+  clubId: ID!
+}
+
+"""Suspend the club."""
+input SuspendClubInput {
+  """The club to suspend."""
+  clubId: ID!
+
+  """When the suspension should end."""
+  endTime: Time!
+}
+
+"""Un suspend club payload."""
+type UnSuspendClubPayload {
+  """The new club after it's not suspended anymore."""
+  club: Club
+}
+
+"""Suspend club payload."""
+type SuspendClubPayload {
+  """The new club after it's suspended."""
+  club: Club
+}
+
 extend type Mutation {
   """
   Become a member of a club
@@ -272,6 +309,20 @@ extend type Mutation {
   Update the club thumbnail
   """
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Suspend the club.
+
+  Staff+ only.
+  """
+  suspendClub(input: SuspendClubInput!): SuspendClubPayload
+
+  """
+  Un-Suspend the club. Suspension must be expired.
+
+  Staff+ may un-suspend even if suspension hasn't expired yet.
+  """
+  unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
 }
 
 extend type Query {

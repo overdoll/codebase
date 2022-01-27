@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/report"
@@ -9,19 +10,20 @@ import (
 )
 
 type ReportPost struct {
-	Principal          *principal.Principal
-	PostId             string
-	PostReportReasonId string
+	Principal *principal.Principal
+	PostId    string
+	RuleId    string
 }
 
 type ReportPostHandler struct {
 	rr    report.Repository
+	rur   rule.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewReportPostHandler(rr report.Repository, eva EvaService, sting StingService) ReportPostHandler {
-	return ReportPostHandler{sting: sting, eva: eva, rr: rr}
+func NewReportPostHandler(rr report.Repository, rur rule.Repository, eva EvaService, sting StingService) ReportPostHandler {
+	return ReportPostHandler{sting: sting, eva: eva, rr: rr, rur: rur}
 }
 
 func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.PostReport, error) {
@@ -33,25 +35,14 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	reportReason, err := h.rr.GetPostReportReason(ctx, cmd.Principal, cmd.PostReportReasonId)
+	ruleItem, err := h.rur.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// ensure post hasn't been reported before with the same post and account
-	_, err = h.rr.GetPostReportForAccount(ctx, cmd.Principal, cmd.PostId, cmd.Principal.AccountId())
-
-	if err != nil && err != report.ErrPostReportNotFound {
-		return nil, err
-	}
-
-	if err == nil {
-		return nil, errors.New("post already reported")
-	}
-
 	// create new post report
-	postReport, err := report.NewPostReport(cmd.Principal, cmd.PostId, reportReason)
+	postReport, err := report.NewPostReport(cmd.Principal, cmd.PostId, ruleItem)
 
 	if err != nil {
 		return nil, err

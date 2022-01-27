@@ -212,9 +212,11 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -227,9 +229,11 @@ func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{
 func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break
@@ -242,9 +246,11 @@ func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) 
 func entityResolverNameForClubMember(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
-			m  map[string]interface{}
-			ok bool
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
 		)
+		_ = val
 		m = rep
 		if _, ok = m["id"]; !ok {
 			break

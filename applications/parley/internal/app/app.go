@@ -19,6 +19,15 @@ type Commands struct {
 
 	ReportPost command.ReportPostHandler
 
+	CreateRule            command.CreateRuleHandler
+	UpdateRuleTitle       command.UpdateRuleTitleHandler
+	UpdateRuleDescription command.UpdateRuleDescriptionHandler
+	UpdateRuleDeprecated  command.UpdateRuleDeprecatedHandler
+	UpdateRuleInfraction  command.UpdateRuleInfractionHandler
+
+	IssueClubInfraction         command.IssueClubInfractionHandler
+	RemoveClubInfractionHistory command.RemoveClubInfractionHistoryHandler
+
 	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
 }
@@ -26,19 +35,17 @@ type Commands struct {
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
-	PostRejectionReasons    query.PostsRejectionReasonsHandler
-	PostRejectionReasonById query.PostRejectionReasonByIdHandler
+	ClubInfractionHistoryById query.ClubInfractionHistoryByIdHandler
 
-	PostReportReasons    query.PostsReportReasonsHandler
-	PostReportReasonById query.PostReportReasonByIdHandler
+	RuleById query.RuleByIdHandler
+	Rules    query.RulesHandler
 
 	SearchPostReports          query.SearchPostReportsHandler
 	PostReportById             query.PostReportByIdHandler
 	PostReportByAccountAndPost query.PostReportByAccountAndPostHandler
 
-	SearchPostAuditLogs          query.SearchPostAuditLogsHandler
-	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
-	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler
-	ModeratorById                query.ModeratorByIdHandler
-	PostAuditLogById             query.PostAuditLogByIdHandler
+	SearchPostAuditLogs   query.SearchPostAuditLogsHandler
+	ClubInfractionHistory query.ClubInfractionHistoryByAccountHandler
+	ModeratorById         query.ModeratorByIdHandler
+	PostAuditLogById      query.PostAuditLogByIdHandler
 }

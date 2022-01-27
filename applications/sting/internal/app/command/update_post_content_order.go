@@ -14,13 +14,12 @@ type UpdatePostContentOrder struct {
 }
 
 type UpdatePostContentOrderHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	loader LoaderService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewUpdatePostContentOrderHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) UpdatePostContentOrderHandler {
-	return UpdatePostContentOrderHandler{pr: pr, pi: pi, loader: loader}
+func NewUpdatePostContentOrderHandler(pr post.Repository, pi post.IndexRepository) UpdatePostContentOrderHandler {
+	return UpdatePostContentOrderHandler{pr: pr, pi: pi}
 }
 
 func (h UpdatePostContentOrderHandler) Handle(ctx context.Context, cmd UpdatePostContentOrder) (*post.Post, error) {

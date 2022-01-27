@@ -82,17 +82,16 @@ func (r ResourceCassandraRepository) CreateResources(ctx context.Context, res []
 
 func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
 
-	queryResources := qb.
+	var b []resources
+
+	if err := qb.
 		Select(resourcesTable.Name()).
 		Where(qb.In("item_id")).
 		Query(r.session).
 		BindMap(map[string]interface{}{
 			"item_id": itemId,
-		})
-
-	var b []resources
-
-	if err := queryResources.Select(&b); err != nil {
+		}).
+		Select(&b); err != nil {
 		return nil, fmt.Errorf("failed to get resources by ids: %v", err)
 	}
 
@@ -113,14 +112,13 @@ func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, item
 
 func (r ResourceCassandraRepository) GetResourceById(ctx context.Context, itemId string, resourceId string) (*resource.Resource, error) {
 
-	queryResources := r.session.
-		Query(resourcesTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(resources{ItemId: itemId, ResourceId: resourceId})
-
 	var b resources
 
-	if err := queryResources.Get(&b); err != nil {
+	if err := r.session.
+		Query(resourcesTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(resources{ItemId: itemId, ResourceId: resourceId}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, resource.ErrResourceNotFound

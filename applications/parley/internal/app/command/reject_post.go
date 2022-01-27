@@ -2,60 +2,55 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/club_infraction"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
-	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/principal"
 )
 
 type RejectPost struct {
 	Principal *principal.Principal
 	PostId    string
-	// optional
-	PostRejectionReasonId string
-	Notes                 *string
+	RuleId    string
+	Notes     *string
 }
 
 type RejectPostHandler struct {
-	ir    infraction.Repository
-	eva   EvaService
-	sting StingService
+	pr post_audit_log.Repository
+	cr club_infraction.Repository
+
+	rr     rule.Repository
+	eva    EvaService
+	sting  StingService
+	stella StellaService
 }
 
-func NewRejectPostHandler(ir infraction.Repository, eva EvaService, sting StingService) RejectPostHandler {
-	return RejectPostHandler{sting: sting, eva: eva, ir: ir}
+func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, eva EvaService, sting StingService, stella StellaService) RejectPostHandler {
+	return RejectPostHandler{sting: sting, eva: eva, pr: pr, rr: rr, cr: cr, stella: stella}
 }
 
-func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*infraction.PostAuditLog, error) {
+func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_audit_log.PostAuditLog, error) {
 
-	// Get pending post
-	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
+	postModeratorId, clubId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.ir.GetPostRejectionReason(ctx, cmd.Principal, cmd.PostRejectionReasonId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// also grab the infraction history, since we will need it to calculate the time for the next infraction
-	accountInfractionHistory, err := h.ir.GetAccountInfractionHistory(ctx, cmd.Principal, nil, postContributorId)
+	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// create new audit log - all necessary permission checks will be performed
-	infractionAuditLog, err := infraction.NewRejectPostAuditLog(
+	postAuditLog, err := post_audit_log.NewRejectPostAuditLog(
 		cmd.Principal,
-		accountInfractionHistory,
 		cmd.PostId,
 		postModeratorId,
-		postContributorId,
-		rejectionReason,
+		ruleItem,
 		cmd.Notes,
 	)
 
@@ -63,27 +58,43 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*infract
 		return nil, err
 	}
 
-	// Based on outcome of moderation action, perform moderation action (has to be done on sting)
-	// has to be done synchronously since it may perform some checks (i.e. creates a new user, etc..)
-	if infractionAuditLog.IsDeniedWithInfraction() {
-		if err := h.sting.DiscardPost(ctx, cmd.PostId); err != nil {
+	// create audit log record
+	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
+		return nil, err
+	}
+
+	if ruleItem.Infraction() {
+
+		pastInfractionHistory, err := h.cr.GetClubInfractionHistoryByClubId(ctx, cmd.Principal, nil, clubId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		// create a new infraction for this club
+		infraction, err := club_infraction.IssueClubInfractionHistoryFromPostModeration(cmd.Principal, clubId, pastInfractionHistory, ruleItem)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err := h.cr.CreateClubInfractionHistory(ctx, infraction); err != nil {
+			return nil, err
+		}
+
+		if err := h.stella.SuspendClub(ctx, clubId, infraction.ClubSuspensionLength()); err != nil {
+			return nil, err
+		}
+
+		if err := h.sting.DiscardPost(ctx, postAuditLog.PostId()); err != nil {
 			return nil, errors.Wrap(err, "failed to discard post")
 		}
 
-		// Lock user account
-		if err := h.eva.LockAccount(ctx, infractionAuditLog.ContributorId(), infractionAuditLog.AccountInfraction().UserLockLength()); err != nil {
-			return nil, errors.Wrap(err, "failed to lock account")
-		}
 	} else {
-		if err := h.sting.RejectPost(ctx, cmd.PostId); err != nil {
+		if err := h.sting.RejectPost(ctx, postAuditLog.PostId()); err != nil {
 			return nil, errors.Wrap(err, "failed to reject post")
 		}
 	}
 
-	// create audit log record
-	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
-		return nil, err
-	}
-
-	return infractionAuditLog, nil
+	return postAuditLog, nil
 }

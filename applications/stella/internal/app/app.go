@@ -23,6 +23,11 @@ type Commands struct {
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
 	BecomeClubMember              command.BecomeClubMemberHandler
 	WithdrawClubMembership        command.WithdrawClubMembershipHandler
+
+	SuspendClub   command.SuspendClubHandler
+	UnSuspendClub command.UnSuspendClubHandler
+
+	SuspendClubOperator command.SuspendClubOperatorHandler
 }
 
 type Queries struct {
@@ -34,7 +39,11 @@ type Queries struct {
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
-	CanAccountPostUnderClub     query.CanAccountPostUnderClubHandler
+
+	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
+	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
+
+	SuspendedClubs query.SuspendedClubsHandler
 
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler

@@ -108,17 +108,16 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 		return nil, err
 	}
 
-	queryCharacterSlug := r.session.
+	var b characterSlug
+
+	if err := r.session.
 		Query(charactersSlugTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
 			Slug:     strings.ToLower(slug),
 			SeriesId: series.SeriesId,
-		})
-
-	var b characterSlug
-
-	if err := queryCharacterSlug.Get(&b); err != nil {
+		}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCharacterNotFound
@@ -139,15 +138,14 @@ func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, reques
 		return characters, nil
 	}
 
-	queryCharacters := qb.Select(characterTable.Name()).
+	var characterModels []*character
+
+	if err := qb.Select(characterTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		Bind(chars)
-
-	var characterModels []*character
-
-	if err := queryCharacters.Select(&characterModels); err != nil {
+		Bind(chars).
+		Select(&characterModels); err != nil {
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
@@ -161,15 +159,14 @@ func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, reques
 		mediaIds = append(mediaIds, cat.SeriesId)
 	}
 
-	queryMedia := qb.Select(seriesTable.Name()).
+	var mediaModels []*series
+
+	if err := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(mediaIds)
-
-	var mediaModels []*series
-
-	if err := queryMedia.Select(&mediaModels); err != nil {
+		Bind(mediaIds).
+		Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
@@ -285,14 +282,13 @@ func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string
 		return nil, err
 	}
 
-	updateCharTable := r.session.
+	if err := r.session.
 		Query(characterTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateCharTable.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update character: %v", err)
 	}
 
@@ -301,14 +297,13 @@ func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string
 
 func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 
-	queryCharacters := r.session.
-		Query(characterTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(character{Id: characterId})
-
 	var char character
 
-	if err := queryCharacters.Get(&char); err != nil {
+	if err := r.session.
+		Query(characterTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(character{Id: characterId}).
+		Get(&char); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCharacterNotFound

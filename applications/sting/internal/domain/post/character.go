@@ -33,6 +33,10 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		return nil, principal.ErrNotAuthorized
 	}
 
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
 	lc, err := localization.NewDefaultTranslation(name)
 
 	if err != nil {
@@ -116,6 +120,10 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	return nil

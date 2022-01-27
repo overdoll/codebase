@@ -65,6 +65,7 @@ func refreshCategoryIndex(t *testing.T) {
 }
 
 func getCategoryBySlug(t *testing.T, client *graphql.Client, slug string) *CategoryModified {
+
 	var getCategory Category
 
 	err := client.Query(context.Background(), &getCategory, map[string]interface{}{

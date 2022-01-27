@@ -6,6 +6,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 )
 
 var (
@@ -30,15 +31,22 @@ type Club struct {
 	name                *localization.Translation
 	thumbnailResourceId string
 
+	suspended      bool
+	suspendedUntil *time.Time
+
 	newClubMembers []string
 
 	membersCount   int
 	ownerAccountId string
 }
 
-func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
+func NewClub(requester *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
 
-	res, err := IsAccountClubsLimitReached(acc, acc.AccountId(), currentClubCount)
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
+	res, err := IsAccountClubsLimitReached(requester, requester.AccountId(), currentClubCount)
 
 	if err != nil {
 		return nil, err
@@ -63,11 +71,11 @@ func NewClub(acc *principal.Principal, slug, name string, currentClubCount int) 
 		slugAliases:         []string{},
 		thumbnailResourceId: "",
 		membersCount:        0,
-		ownerAccountId:      acc.AccountId(),
+		ownerAccountId:      requester.AccountId(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil *time.Time) *Club {
 	return &Club{
 		id:                  id,
 		slug:                slug,
@@ -76,6 +84,8 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		thumbnailResourceId: thumbnail,
 		ownerAccountId:      ownerAccountId,
 		membersCount:        membersCount,
+		suspended:           suspended,
+		suspendedUntil:      suspendedUntil,
 	}
 }
 
@@ -109,6 +119,52 @@ func (m *Club) NewClubMembers() []string {
 
 func (m *Club) OwnerAccountId() string {
 	return m.ownerAccountId
+}
+
+func (m *Club) Suspended() bool {
+	return m.suspended
+}
+
+func (m *Club) SuspendedUntil() *time.Time {
+	return m.suspendedUntil
+}
+
+func (m *Club) SuspendOperator(endTime time.Time) error {
+	m.suspended = true
+	m.suspendedUntil = &endTime
+
+	return nil
+}
+
+func (m *Club) Suspend(requester *principal.Principal, endTime time.Time) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	m.suspended = true
+	m.suspendedUntil = &endTime
+
+	return nil
+}
+
+func (m *Club) UnSuspend(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		m.suspended = false
+		m.suspendedUntil = nil
+		return nil
+	}
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if !m.suspendedUntil.After(time.Now()) {
+		return errors.New("cannot un suspend yet")
+	}
+
+	return nil
 }
 
 func (m *Club) AddSlugAlias(requester *principal.Principal, slug string) error {
@@ -207,6 +263,10 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 func (m *Club) canUpdate(requester *principal.Principal) error {
 
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
+
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
 	}
@@ -214,8 +274,29 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func (m *Club) AccountIdCanPost(accountId string) bool {
+func (m *Club) AccountIdCanCreatePost(accountId string) bool {
 	return m.ownerAccountId == accountId
+}
+
+func (m *Club) CanView(requester *principal.Principal) bool {
+
+	if m.suspended {
+		if requester == nil {
+			return false
+		}
+
+		if requester.IsStaff() {
+			return true
+		}
+
+		if err := m.canUpdate(requester); err != nil {
+			return false
+		}
+
+		return true
+	}
+
+	return true
 }
 
 func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {

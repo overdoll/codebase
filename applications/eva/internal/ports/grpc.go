@@ -50,21 +50,6 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 	return marshalAccountToProto(acc), nil
 }
 
-func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountRequest) (*eva.Account, error) {
-
-	acc, err := s.app.Commands.LockAccountOperator.Handle(ctx, command.LockAccount{
-		AccountId: request.Id,
-		Duration:  int(request.Duration),
-		Reason:    request.Reason.String(),
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return marshalAccountToProto(acc), nil
-}
-
 func (s Server) GetSession(ctx context.Context, request *eva.SessionRequest) (*eva.SessionResponse, error) {
 
 	ss, err := s.app.Commands.TouchAccountSessionOperator.Handle(ctx, command.TouchAccountSessionOperator{

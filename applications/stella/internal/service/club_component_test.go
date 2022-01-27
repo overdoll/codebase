@@ -3,12 +3,14 @@ package service_test
 import (
 	"context"
 	"github.com/bxcodec/faker/v3"
+	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
 	"testing"
+	"time"
 )
 
 type ClubModified struct {
@@ -23,6 +25,7 @@ type ClubModified struct {
 		ID relay.ID
 	}
 	SlugAliasesLimit int
+	Suspension       *types.ClubSuspension
 }
 
 type Club struct {
@@ -94,10 +97,13 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	newClb := getClub(t, client, fake.Slug)
 	require.Equal(t, newClb.Club.Slug, fake.Slug, "should see club with correct slug")
 
+	// refresh index or else we don't see it
+	refreshClubESIndex(t)
+
 	grpcClient := getGrpcClient(t)
 
 	// check permissions
-	res, err := grpcClient.CanAccountPostUnderClub(context.Background(), &stella.CanAccountPostUnderClubRequest{
+	res, err := grpcClient.CanAccountCreatePostUnderClub(context.Background(), &stella.CanAccountCreatePostUnderClubRequest{
 		ClubId:    newClb.Club.Reference,
 		AccountId: testingAccountId,
 	})
@@ -105,8 +111,10 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.NoError(t, err, "no error checking permission")
 	require.True(t, res.Allowed, "should be allowed")
 
-	// refresh index or else we don't see it
-	refreshClubESIndex(t)
+	_, err = grpcClient.GetClubById(context.Background(), &stella.GetClubByIdRequest{
+		ClubId: newClb.Club.Reference,
+	})
+	require.NoError(t, err, "no error getting club")
 
 	var accountClubs AccountClubs
 	err = client.Query(context.Background(), &accountClubs, map[string]interface{}{
@@ -297,4 +305,95 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
 	require.NotNil(t, updatedClb.Club.Thumbnail, "thumbnail is not nil")
+}
+
+type SuspendClub struct {
+	SuspendClub *struct {
+		Club *ClubModified
+	} `graphql:"suspendClub(input: $input)"`
+}
+
+type UnSuspendClub struct {
+	UnSuspendClub *struct {
+		Club *ClubModified
+	} `graphql:"unSuspendClub(input: $input)"`
+}
+
+func TestSuspendClub_and_unsuspend(t *testing.T) {
+	t.Parallel()
+
+	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
+	grpcClient := getGrpcClient(t)
+	clb := seedClub(t, staffAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
+	clubId := clb.ID()
+
+	var suspendClub SuspendClub
+	err := client.Mutate(context.Background(), &suspendClub, map[string]interface{}{
+		"input": types.SuspendClubInput{
+			ClubID:  relayId,
+			EndTime: time.Now().Add(time.Hour * 24 * 30),
+		},
+	})
+
+	require.NoError(t, err, "no error suspending club")
+
+	refreshClubESIndex(t)
+
+	// make sure thumbnail is set
+	updatedClb := getClub(t, client, clb.Slug())
+	require.NotNil(t, updatedClb.Club.Suspension, "club is suspended")
+
+	// check permissions
+	res, err := grpcClient.CanAccountViewPostUnderClub(context.Background(), &stella.CanAccountViewPostUnderClubRequest{
+		ClubId:    clubId,
+		AccountId: staffAccountId,
+	})
+
+	require.NoError(t, err, "no error getting permission")
+	require.True(t, res.Allowed, "should be allowed to view")
+
+	// check permissions for a random account
+	res, err = grpcClient.CanAccountViewPostUnderClub(context.Background(), &stella.CanAccountViewPostUnderClubRequest{
+		ClubId:    clubId,
+		AccountId: ksuid.New().String(),
+	})
+
+	require.NoError(t, err, "no error getting permission")
+	require.False(t, res.Allowed, "should not be allowed to view")
+
+	// check permissions for a random account
+	suspendedRes, err := grpcClient.GetSuspendedClubs(context.Background(), &stella.GetSuspendedClubsRequest{})
+	require.NoError(t, err, "no error getting suspended clubs")
+	require.GreaterOrEqual(t, len(suspendedRes.ClubIds), 1, "should have at least 1")
+
+	var foundClubId string
+	for _, id := range suspendedRes.ClubIds {
+		if id == clubId {
+			foundClubId = clubId
+			break
+		}
+	}
+
+	require.Equal(t, foundClubId, clubId, "should have found our club in the suspended list")
+
+	_, err = grpcClient.SuspendClub(context.Background(), &stella.SuspendClubRequest{
+		ClubId:      clubId,
+		EndTimeUnix: time.Now().Add(time.Hour * 24).Unix(),
+	})
+	require.NoError(t, err, "no error suspending club")
+
+	var unSuspendClub UnSuspendClub
+	err = client.Mutate(context.Background(), &unSuspendClub, map[string]interface{}{
+		"input": types.UnSuspendClubInput{
+			ClubID: relayId,
+		},
+	})
+
+	require.NoError(t, err, "no error un suspending club")
+
+	updatedClb = getClub(t, client, clb.Slug())
+	require.Nil(t, updatedClb.Club.Suspension, "club is no longer suspended")
 }

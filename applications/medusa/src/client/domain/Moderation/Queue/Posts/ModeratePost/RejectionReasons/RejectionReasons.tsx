@@ -10,7 +10,7 @@ import {
   FormLabel,
   Select,
   Stack,
-  Textarea,
+  Textarea
 } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import { Controller, useForm } from 'react-hook-form'
@@ -33,11 +33,11 @@ interface Props {
 
 const InfractionsGQL = graphql`
   fragment RejectionReasonsFragment on Query {
-    postRejectionReasons {
+    rules {
       edges {
         node {
           id
-          reason
+          title
           infraction
         }
       }
@@ -53,7 +53,7 @@ export default function RejectionReasons (props: Props): JSX.Element {
   const [infraction, setInfraction] = useState<boolean>(false)
 
   const findInfraction = (id): void => {
-    setInfraction(data.postRejectionReasons.edges.filter((item) => item.node.id === id)[0]?.node.infraction)
+    setInfraction(data.rules.edges.filter((item) => item.node.id === id)[0]?.node.infraction)
   }
 
   const schema = Joi.object({
@@ -114,8 +114,8 @@ export default function RejectionReasons (props: Props): JSX.Element {
                 placeholder={i18n._(t`Select the rejection reason`)}
                 isInvalid={invalid}
               >
-                {data.postRejectionReasons.edges.map((item, index) =>
-                  <option key={index} value={item.node.id}>{item.node.reason}</option>
+                {data.rules.edges.map((item, index) =>
+                  <option key={index} value={item.node.id}>{item.node.title}</option>
                 )}
               </Select>
             )}

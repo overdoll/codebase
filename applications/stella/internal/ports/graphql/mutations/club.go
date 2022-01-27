@@ -207,9 +207,7 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 		ID:        "AddClubMember_" + clubId + "_" + accountId,
 	}
 
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, clubId, accountId)
-
-	if err != nil {
+	if _, err = r.Client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, clubId, accountId); err != nil {
 		return nil, err
 	}
 
@@ -243,13 +241,64 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 		ID:        "RemoveClubMember_" + clubId + "_" + accountId,
 	}
 
-	_, err := r.Client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, clubId, accountId)
-
-	if err != nil {
+	if _, err := r.Client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, clubId, accountId); err != nil {
 		return nil, err
 	}
 
 	return &types.WithdrawClubMembershipPayload{
 		ClubMemberID: input.ClubID,
+	}, nil
+}
+
+func (r *MutationResolver) UnSuspendClub(ctx context.Context, input types.UnSuspendClubInput) (*types.UnSuspendClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	clubId := input.ClubID.GetID()
+
+	result, err := r.App.Commands.UnSuspendClub.
+		Handle(
+			ctx,
+			command.UnSuspendClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    clubId,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UnSuspendClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}
+
+func (r *MutationResolver) SuspendClub(ctx context.Context, input types.SuspendClubInput) (*types.SuspendClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	clubId := input.ClubID.GetID()
+
+	result, err := r.App.Commands.SuspendClub.
+		Handle(
+			ctx,
+			command.SuspendClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    clubId,
+				EndTime:   input.EndTime,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.SuspendClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
 	}, nil
 }

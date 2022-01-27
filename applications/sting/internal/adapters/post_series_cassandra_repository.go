@@ -64,14 +64,13 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
 
-	querySeriesSlug := r.session.
-		Query(seriesSlugTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(seriesSlug{Slug: strings.ToLower(slug)})
-
 	var b seriesSlug
 
-	if err := querySeriesSlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(seriesSlugTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(seriesSlug{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrSeriesNotFound
@@ -128,14 +127,13 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 
 func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
-	queryMedia := r.session.
-		Query(seriesTable.Get()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(series{Id: seriesId})
-
 	var med series
 
-	if err := queryMedia.Get(&med); err != nil {
+	if err := r.session.
+		Query(seriesTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(series{Id: seriesId}).
+		Get(&med); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrSeriesNotFound
@@ -163,15 +161,14 @@ func (r PostsCassandraRepository) GetSeriesByIds(ctx context.Context, requester 
 		return medias, nil
 	}
 
-	queryMedia := qb.Select(seriesTable.Name()).
+	var mediaModels []*series
+
+	if err := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(medi)
-
-	var mediaModels []*series
-
-	if err := queryMedia.Select(&mediaModels); err != nil {
+		Bind(medi).
+		Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
@@ -261,14 +258,13 @@ func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, u
 		return nil, err
 	}
 
-	updateSeriesTable := r.session.
+	if err := r.session.
 		Query(seriesTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateSeriesTable.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update series: %v", err)
 	}
 

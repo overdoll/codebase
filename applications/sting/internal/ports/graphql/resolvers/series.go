@@ -31,14 +31,15 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:         cursor,
-		SeriesSlugs:    []string{obj.Slug},
-		AudienceSlugs:  audienceSlugs,
-		CategorySlugs:  categorySlugs,
-		CharacterSlugs: characterSlugs,
-		Principal:      principal.FromContext(ctx),
-		State:          stateModified,
-		SortBy:         strings.ToLower(sortBy.String()),
+		Cursor:             cursor,
+		SeriesSlugs:        []string{obj.Slug},
+		AudienceSlugs:      audienceSlugs,
+		CategorySlugs:      categorySlugs,
+		CharacterSlugs:     characterSlugs,
+		Principal:          principal.FromContext(ctx),
+		State:              stateModified,
+		SortBy:             strings.ToLower(sortBy.String()),
+		ShowSuspendedClubs: false,
 	})
 
 	if err != nil {

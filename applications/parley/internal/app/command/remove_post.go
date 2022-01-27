@@ -2,51 +2,52 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/club_infraction"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
-	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/principal"
 )
 
 type RemovePost struct {
-	Principal             *principal.Principal
-	PostId                string
-	PostRejectionReasonId string
-	Notes                 *string
+	Principal *principal.Principal
+	PostId    string
+	RuleId    string
+	Notes     *string
 }
 
 type RemovePostHandler struct {
-	ir    infraction.Repository
-	eva   EvaService
-	sting StingService
+	pr     post_audit_log.Repository
+	rr     rule.Repository
+	cr     club_infraction.Repository
+	eva    EvaService
+	sting  StingService
+	stella StellaService
 }
 
-func NewRemovePostHandler(ir infraction.Repository, eva EvaService, sting StingService) RemovePostHandler {
-	return RemovePostHandler{sting: sting, eva: eva, ir: ir}
+func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, eva EvaService, sting StingService, stella StellaService) RemovePostHandler {
+	return RemovePostHandler{sting: sting, eva: eva, pr: pr, rr: rr, cr: cr, stella: stella}
 }
 
-func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*infraction.PostAuditLog, error) {
+func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*post_audit_log.PostAuditLog, error) {
 
-	// Get pending post
-	_, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
+	_, clubId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
-	rejectionReason, err := h.ir.GetPostRejectionReason(ctx, cmd.Principal, cmd.PostRejectionReasonId)
+	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// remove post
-	// post removal doesn't result in any infractions (for now)
-	infractionAuditLog, err := infraction.NewRemovePostAuditLog(
+	postAuditLog, err := post_audit_log.NewRemovePostAuditLog(
 		cmd.Principal,
 		cmd.PostId,
-		postContributorId,
-		rejectionReason,
+		ruleItem,
 		cmd.Notes,
 	)
 
@@ -54,14 +55,39 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) (*infract
 		return nil, err
 	}
 
-	if err := h.sting.RemovePost(ctx, cmd.PostId); err != nil {
-		return nil, errors.Wrap(err, "failed to remove post")
-	}
-
 	// create audit log record
-	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
+	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
 		return nil, err
 	}
 
-	return infractionAuditLog, nil
+	if ruleItem.Infraction() {
+
+		pastInfractionHistory, err := h.cr.GetClubInfractionHistoryByClubId(ctx, cmd.Principal, nil, clubId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		// create a new infraction for this club
+		infraction, err := club_infraction.IssueClubInfractionHistoryFromPostManualRemoval(cmd.Principal, clubId, pastInfractionHistory, ruleItem)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err := h.cr.CreateClubInfractionHistory(ctx, infraction); err != nil {
+			return nil, err
+		}
+
+		if err := h.stella.SuspendClub(ctx, clubId, infraction.ClubSuspensionLength()); err != nil {
+			return nil, err
+		}
+	}
+
+	// remove post
+	if err := h.sting.RemovePost(ctx, postAuditLog.PostId()); err != nil {
+		return nil, errors.Wrap(err, "failed to remove post")
+	}
+
+	return postAuditLog, nil
 }

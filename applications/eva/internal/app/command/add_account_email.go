@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/confirm_email"
 
 	"overdoll/applications/eva/internal/domain/account"
@@ -38,7 +39,7 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, cmd AddAccountEmail)
 
 	// tell carrier to send a notification email
 	if err := h.carrier.ConfirmAccountEmail(ctx, cmd.Principal.AccountId(), cmd.Email, confirm.ID(), secret); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to send confirmation email")
 	}
 
 	return confirm, nil

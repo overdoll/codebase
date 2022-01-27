@@ -76,14 +76,13 @@ func (r PostsCassandraRepository) DeletePostLike(ctx context.Context, requester 
 
 func (r PostsCassandraRepository) getLikesForPost(ctx context.Context, postId string) (int, error) {
 
-	queryPostLikeCounter := r.session.
-		Query(postLikeCounterTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(postLikeCounter{PostId: postId})
-
 	var pstLikeCounter postLikeCounter
 
-	if err := queryPostLikeCounter.Get(&pstLikeCounter); err != nil {
+	if err := r.session.
+		Query(postLikeCounterTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(postLikeCounter{PostId: postId}).
+		Get(&pstLikeCounter); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return 0, nil
@@ -119,14 +118,13 @@ func (r PostsCassandraRepository) updatePostLikes(ctx context.Context, postId st
 
 func (r PostsCassandraRepository) GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*post.Like, error) {
 
-	queryPostLike := r.session.
-		Query(postLikeTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(postLike{PostId: postId, LikedAccountId: accountId})
-
 	var pstLike postLike
 
-	if err := queryPostLike.Get(&pstLike); err != nil {
+	if err := r.session.
+		Query(postLikeTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(postLike{PostId: postId, LikedAccountId: accountId}).
+		Get(&pstLike); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrLikeNotFound

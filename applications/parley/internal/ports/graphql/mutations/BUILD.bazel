@@ -2,7 +2,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "mutations",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "club_infraction.go",
+        "moderation.go",
+        "report.go",
+        "resolvers.go",
+        "rule.go",
+    ],
     importpath = "overdoll/applications/parley/internal/ports/graphql/mutations",
     visibility = ["//visibility:public"],
     deps = [

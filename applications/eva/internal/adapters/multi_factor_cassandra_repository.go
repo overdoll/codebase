@@ -59,14 +59,14 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 	}
 
 	// delete all current MFA codes
-	deleteOldCodes := qb.Delete(accountMultiFactorRecoveryCodeTable.Name()).
+
+	if err := qb.Delete(accountMultiFactorRecoveryCodeTable.Name()).
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-		})
-
-	if err := deleteOldCodes.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete recovery codes: %v", err)
 	}
 
@@ -101,13 +101,12 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 
 	var recoveryCodes []*accountMultiFactorRecoveryCodes
 
-	getAccountMultiFactorRecoveryCodes := r.session.
+	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-		})
-
-	if err := getAccountMultiFactorRecoveryCodes.Select(&recoveryCodes); err != nil {
+		}).
+		Select(&recoveryCodes); err != nil {
 		return nil, fmt.Errorf("failed to get recovery codes for account: %v", err)
 	}
 
@@ -138,15 +137,14 @@ func (r MultiFactorCassandraRepository) HasAccountRecoveryCodes(ctx context.Cont
 
 	var recoveryCodesCounts recoveryCodesCount
 
-	recoveryCodeCount := accountMultiFactorRecoveryCodeTable.
+	if err := accountMultiFactorRecoveryCodeTable.
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-		})
-
-	if err := recoveryCodeCount.Get(&recoveryCodesCounts); err != nil {
+		}).
+		Get(&recoveryCodesCounts); err != nil {
 		return false, fmt.Errorf("failed to get recovery codes for account: %v", err)
 	}
 
@@ -159,13 +157,12 @@ func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Co
 	// get all recovery codes for this account
 	var recoveryCodes []*accountMultiFactorRecoveryCodes
 
-	getAccountMultiFactorRecoveryCodes := r.session.
+	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-		})
-
-	if err := getAccountMultiFactorRecoveryCodes.Select(&recoveryCodes); err != nil {
+		}).
+		Select(&recoveryCodes); err != nil {
 		return fmt.Errorf("failed to get recovery codes for account: %v", err)
 	}
 
@@ -190,14 +187,13 @@ func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Co
 		return multi_factor.ErrRecoveryCodeInvalid
 	}
 
-	deleteAccountMultiFactorCodes := r.session.
+	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Delete()).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 			Code:      foundCode.Code,
-		})
-
-	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to verify recovery code: %v", err)
 	}
 
@@ -209,13 +205,12 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 
 	var multiTOTP accountMultiFactorTOTP
 
-	getMultiFactorTOTP := r.session.
+	if err := r.session.
 		Query(accountMultiFactorTotpTable.Get()).
 		BindStruct(&accountMultiFactorTOTP{
 			AccountId: accountId,
-		})
-
-	if err := getMultiFactorTOTP.Get(&multiTOTP); err != nil {
+		}).
+		Get(&multiTOTP); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, multi_factor.ErrTOTPNotConfigured
@@ -246,14 +241,13 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 		return fmt.Errorf("failed to encrypt MFA TOTP: %v", err)
 	}
 
-	createMultiFactorTOTP := r.session.
+	if err := r.session.
 		Query(accountMultiFactorTotpTable.Insert()).
 		BindStruct(&accountMultiFactorTOTP{
 			AccountId: accountId,
 			Secret:    encryptedOTP,
-		})
-
-	if err := createMultiFactorTOTP.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to create MFA TOTP: %v", err)
 	}
 
@@ -266,13 +260,12 @@ func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context
 		return err
 	}
 
-	deleteMultiFactorTOTP := r.session.
+	if err := r.session.
 		Query(accountMultiFactorTotpTable.Delete()).
 		BindStruct(&accountMultiFactorTOTP{
 			AccountId: accountId,
-		})
-
-	if err := deleteMultiFactorTOTP.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete MFA TOTP: %v", err)
 	}
 

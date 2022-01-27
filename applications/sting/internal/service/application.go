@@ -55,7 +55,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella command.StellaService, loader command.LoaderService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella query.StellaService, loader command.LoaderService) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	client := bootstrap.InitializeElasticSearchSession()
@@ -66,8 +66,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo, eva, parley, stella),
-			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eva),
+			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo, parley, stella),
+			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
 			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley, loader),
@@ -80,8 +80,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
 			AddPostContent:         command.NewAddPostContentHandler(postRepo, postIndexRepo, loader),
-			RemovePostContent:      command.NewRemovePostContentHandler(postRepo, postIndexRepo, loader),
-			UpdatePostContentOrder: command.NewUpdatePostContentOrderHandler(postRepo, postIndexRepo, loader),
+			RemovePostContent:      command.NewRemovePostContentHandler(postRepo, postIndexRepo),
+			UpdatePostContentOrder: command.NewUpdatePostContentOrderHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
@@ -122,8 +122,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoriesByIds:  query.NewCategoriesByIdsHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(postRepo, postIndexRepo),
-			PostById:         query.NewPostByIdHandler(postRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postRepo, postIndexRepo, stella),
+			PostById:         query.NewPostByIdHandler(postRepo, stella),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 			PostsByIds:       query.NewPostsByIdsHandler(postRepo),
 
@@ -137,12 +137,12 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 
-			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo),
+			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo, stella),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(stella, postIndexRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, stella, loader),
+		Activities: activities.NewActivitiesHandler(postRepo, postIndexRepo, parley, loader),
 	}
 }

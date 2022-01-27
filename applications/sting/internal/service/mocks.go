@@ -35,11 +35,19 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
+func (e StellaServiceMock) CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error) {
+	return true, nil
+}
+
+func (e StellaServiceMock) GetSuspendedClubs(ctx context.Context) ([]string, error) {
+	return []string{}, nil
+}
+
 func (e StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error) {
 	return []string{accountId}, nil
 }
 
-func (e StellaServiceMock) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
+func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
 	return true, nil
 }
 

@@ -12,6 +12,7 @@ go_library(
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
         "//applications/stella/internal/app",
+        "//applications/stella/internal/app/command",
         "//applications/stella/internal/app/query",
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/domain/club",

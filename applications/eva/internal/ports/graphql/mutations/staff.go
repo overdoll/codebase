@@ -2,7 +2,6 @@ package mutations
 
 import (
 	"context"
-
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
@@ -79,4 +78,45 @@ func (r *MutationResolver) RevokeAccountStaffRole(ctx context.Context, input typ
 	}
 
 	return &types.RevokeAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
+func (r *MutationResolver) UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.UnlockAccount.Handle(ctx, command.UnlockAccount{
+		Principal: principal.FromContext(ctx),
+		AccountId: input.AccountID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UnlockAccountPayload{
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
+}
+
+func (r *MutationResolver) LockAccount(ctx context.Context, input types.LockAccountInput) (*types.LockAccountPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.LockAccount.Handle(ctx, command.LockAccount{
+		Principal: principal.FromContext(ctx),
+		AccountId: input.AccountID.GetID(),
+		EndTime:   input.EndTime,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.LockAccountPayload{
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
 }

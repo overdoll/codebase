@@ -5,13 +5,12 @@ go_library(
     srcs = [
         "post_report.go",
         "post_report_filters.go",
-        "post_report_reason.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/parley/internal/domain/report",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
-        "//libraries/localization",
+        "//applications/parley/internal/domain/rule",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_segmentio_ksuid//:ksuid",

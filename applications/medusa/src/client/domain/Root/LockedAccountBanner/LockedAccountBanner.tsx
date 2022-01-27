@@ -12,9 +12,7 @@ interface Props {
 
 const LockedAccountBannerGQL = graphql`
   fragment LockedAccountBannerFragment on Account {
-    lock {
-      ...LockedAccountModalFragment
-    }
+    ...LockedAccountModalFragment
   }
 `
 

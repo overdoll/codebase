@@ -31,6 +31,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		slugAliases = append(slugAliases, &ClubSlugAlias{Slug: s})
 	}
 
+	var suspension *ClubSuspension
+
+	if result.Suspended() {
+		suspension = &ClubSuspension{Expires: *result.SuspendedUntil()}
+	}
+
 	return &Club{
 		ID:           relay.NewID(Club{}, result.ID()),
 		Reference:    result.ID(),
@@ -40,6 +46,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		MembersCount: result.MembersCount(),
 		Thumbnail:    res,
 		Owner:        &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:   suspension,
 	}
 }
 

@@ -22,9 +22,8 @@ type Account struct {
 	avatarResourceId string
 	language         *localization.Language
 
-	locked       bool
-	lockedUntil  int
-	lockedReason LockReason
+	locked      bool
+	lockedUntil *time.Time
 
 	lastUsernameEdit time.Time
 
@@ -42,7 +41,7 @@ var (
 	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
 
 	var newRoles []Role
 
@@ -50,8 +49,6 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		rl, _ := RoleFromString(role)
 		newRoles = append(newRoles, rl)
 	}
-
-	lr, _ := LockReasonFromString(lockedReason)
 
 	return &Account{
 		id:                 id,
@@ -63,7 +60,6 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		lockedUntil:        lockedUntil,
 		locked:             locked,
 		language:           localization.NewLanguageWithFallback(locale),
-		lockedReason:       lr,
 		multiFactorEnabled: multiFactorEnabled,
 		lastUsernameEdit:   lastUsernameEdit,
 	}
@@ -108,29 +104,19 @@ func (a *Account) AvatarResourceId() string {
 	return a.avatarResourceId
 }
 
-func (a *Account) LockedUntil() int {
+func (a *Account) LockedUntil() *time.Time {
 	return a.lockedUntil
 }
 
 func (a *Account) CanUnlock() bool {
-
-	if a.lockedUntil == -1 {
+	if a.locked {
 		return true
 	}
-
-	return time.Now().After(time.Unix(int64(a.lockedUntil), 0))
+	return time.Now().After(*a.lockedUntil)
 }
 
 func (a *Account) IsLocked() bool {
 	return a.locked
-}
-
-func (a *Account) LockedReason() LockReason {
-	return a.lockedReason
-}
-
-func (a *Account) IsLockedDueToPostInfraction() bool {
-	return a.lockedReason == PostInfraction
 }
 
 func (a *Account) MultiFactorEnabled() bool {
@@ -152,34 +138,35 @@ func (a *Account) EnableMultiFactor() error {
 	return nil
 }
 
-func (a *Account) Lock(duration int, reason string) error {
-	if duration == 0 {
-		a.lockedUntil = 0
-		a.lockedReason = Unlocked
-		a.locked = false
-		return nil
+func (a *Account) Lock(requester *principal.Principal, time2 time.Time) error {
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
 	}
 
-	rs, err := LockReasonFromString(reason)
-
-	if err != nil {
-		return nil
-	}
-
-	a.lockedUntil = duration
-	a.lockedReason = rs
+	a.lockedUntil = &time2
 	a.locked = true
 
 	return nil
 }
 
-func (a *Account) Unlock() error {
+func (a *Account) unlock() error {
+	a.lockedUntil = nil
+	a.locked = false
+
+	return nil
+}
+
+func (a *Account) Unlock(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return a.unlock()
+	}
 
 	if !a.CanUnlock() {
 		return errors.New("cannot unlock yet")
 	}
 
-	return a.Lock(0, "")
+	return a.unlock()
 }
 
 func (a *Account) LastUsernameEdit() time.Time {
@@ -306,6 +293,10 @@ func (a *Account) assignRoleCheck(requester *principal.Principal) error {
 		return principal.ErrNotAuthorized
 	}
 
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
+
 	// need MFA enabled for a priv. role
 	if !a.multiFactorEnabled {
 		return ErrMultiFactorRequired
@@ -410,7 +401,6 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 	return nil
 }
 
-// convert account to a principal for global usage
 func ToPrincipal(acc *Account) *principal.Principal {
 	return principal.NewPrincipal(acc.id, acc.RolesAsString(), acc.verified, acc.locked)
 }

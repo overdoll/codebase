@@ -216,27 +216,6 @@ type Account implements Node {
   ): PostAuditLogConnection!
 
   """
-  Infraction history for this account
-  
-  Viewable by the currently authenticated account or staff+
-  """
-  infractions(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): AccountInfractionHistoryConnection!
-
-  """
   Moderator settings and status for this account
   
   Viewable by the currently authenticated account or staff+
@@ -353,34 +332,8 @@ enum AccountEmailStatus {
   PRIMARY
 }
 
-"""Infraction history belonging to an account"""
-type AccountInfractionHistory implements Node {
-  """ID of the infraction history"""
-  id: ID!
-
-  """The reason for this infraction, as a post rejection reason"""
-  postRejectionReason: PostRejectionReason!
-}
-
-"""Connection of the infraction history"""
-type AccountInfractionHistoryConnection {
-  edges: [AccountInfractionHistoryEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Edge of the infraction history"""
-type AccountInfractionHistoryEdge {
-  node: AccountInfractionHistory!
-  cursor: String!
-}
-
 type AccountLock {
   expires: Time!
-  reason: AccountLockReason!
-}
-
-enum AccountLockReason {
-  POST_INFRACTION
 }
 
 """The multi-factor recovery code belonging to the account"""
@@ -557,7 +510,7 @@ type Audience implements Node {
   standard: Boolean!
 
   """All translations for this title."""
-  titleTranslations: [AudienceTitleTranslation!]!
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -629,14 +582,6 @@ enum AudiencesSort {
 
   """Audience by most posts"""
   POPULAR
-}
-
-type AudienceTitleTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A title for this audience."""
-  title: String!
 }
 
 """Authentication token. Used for logging in."""
@@ -728,7 +673,7 @@ type Category implements Node {
   title: String!
 
   """All translations for this title."""
-  titleTranslations: [CategoryTitleTranslation!]!
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -790,14 +735,6 @@ type CategoryEdge {
   node: Category!
 }
 
-type CategoryTitleTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A title for this category."""
-  title: String!
-}
-
 type Character implements Node {
   """An ID pointing to this character."""
   id: ID!
@@ -812,7 +749,7 @@ type Character implements Node {
   name: String!
 
   """All translations for this name."""
-  nameTranslations: [CharacterNameTranslation!]!
+  nameTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -863,14 +800,6 @@ type CharacterEdge {
   node: Character!
 }
 
-type CharacterNameTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A name for this category."""
-  name: String!
-}
-
 """Properties by which character connections can be sorted."""
 enum CharactersSort {
   """Characters by newest first"""
@@ -910,6 +839,9 @@ type Club implements Node {
 
   """The account that owns this club."""
   owner: Account!
+
+  """Whether or not this club is suspended."""
+  suspension: ClubSuspension
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember
@@ -971,6 +903,27 @@ type Club implements Node {
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection!
+
+  """
+  Infraction history for this club
+  
+  Viewable by the currently authenticated account or staff+
+  """
+  infractionHistory(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubInfractionHistoryConnection!
 }
 
 type ClubConnection {
@@ -981,6 +934,50 @@ type ClubConnection {
 type ClubEdge {
   cursor: String!
   node: Club!
+}
+
+"""Infraction history belonging to a club"""
+type ClubInfractionHistory implements Node {
+  """ID of the infraction history"""
+  id: ID!
+
+  """The club belonging to this history object."""
+  club: Club!
+
+  """The account that issued this infraction."""
+  issuerAccount: Account!
+
+  """The rule cited for this infraction."""
+  rule: Rule!
+
+  """The source for this infraction."""
+  source: ClubInfractionHistorySource!
+
+  """When this infraction was issued."""
+  issuedAt: Time!
+
+  """
+  When this infraction expires (no longer considered when issuing future infractions).
+  """
+  expiresAt: Time!
+}
+
+"""Connection of the infraction history"""
+type ClubInfractionHistoryConnection {
+  edges: [ClubInfractionHistoryEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the infraction history"""
+type ClubInfractionHistoryEdge {
+  node: ClubInfractionHistory!
+  cursor: String!
+}
+
+enum ClubInfractionHistorySource {
+  MANUAL
+  POST_MODERATION_REJECTION
+  POST_MANUAL_REMOVAL
 }
 
 type ClubMember implements Node {
@@ -1023,6 +1020,11 @@ type ClubSlugAlias {
 enum ClubsSort {
   """Clubs by popularity"""
   POPULAR
+}
+
+type ClubSuspension {
+  """When the suspension expires. Can call UnSuspendClub when time = now."""
+  expires: Time!
 }
 
 """Input for confirming the account email"""
@@ -1185,6 +1187,24 @@ input CreatePostInput {
 type CreatePostPayload {
   """The pending post after the creation"""
   post: Post
+}
+
+"""Create a new rule input."""
+input CreateRuleInput {
+  """The title."""
+  title: String!
+
+  """The description."""
+  description: String!
+
+  """If breaking this rule would cause an infraction."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type CreateRulePayload {
+  """The updated rule."""
+  rule: Rule
 }
 
 """Create a new series."""
@@ -1402,6 +1422,26 @@ enum GrantAuthenticationTokenValidation {
   INVALID_EMAIL
 }
 
+"""Issue a club infraction."""
+input IssueClubInfractionInput {
+  """The club to issue the infraction to."""
+  clubId: ID!
+
+  """The rule to cite."""
+  ruleId: ID!
+
+  """
+  Pass a custom end time. If none is passed, will use sliding scale based on previous infractions.
+  """
+  customEndTime: Time
+}
+
+"""Issue a new club infraction payload."""
+type IssueClubInfractionPayload {
+  """The new club infraction history item."""
+  clubInfractionHistory: ClubInfractionHistory
+}
+
 type Language {
   """BCP47 locale"""
   locale: BCP47!
@@ -1443,6 +1483,21 @@ type Location {
   longitude: Float!
 }
 
+"""Input for locking an account."""
+input LockAccountInput {
+  """The account to lock."""
+  accountID: ID!
+
+  """When the lock should end."""
+  endTime: Time!
+}
+
+"""Payload for the locked account"""
+type LockAccountPayload {
+  """Account that was locked"""
+  account: Account
+}
+
 """General moderator settings."""
 type ModeratorSettings {
   """If this moderator is in queue."""
@@ -1475,9 +1530,14 @@ type MultiFactorTotp {
 
 type Mutation {
   """
-  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
+  
+  Can be unlocked by staff+ regardless if time is past.
   """
-  unlockAccount: UnlockAccountPayload
+  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """Lock an account for a specific duration."""
+  lockAccount(input: LockAccountInput!): LockAccountPayload
 
   """Update the current language."""
   updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
@@ -1687,6 +1747,16 @@ type Mutation {
   """Update series thumbnail"""
   updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 
+  """Issue a club infraction."""
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+
+  """
+  In case of a false infraction, you can remove it from the club's history.
+  
+  Staff+ only.
+  """
+  removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
+
   """Reject a specific post"""
   rejectPost(input: RejectPostInput!): RejectPostPayload
 
@@ -1704,6 +1774,21 @@ type Mutation {
 
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
+
+  """Create a new rule."""
+  createRule(input: CreateRuleInput!): CreateRulePayload
+
+  """Update a rule title."""
+  updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
+
+  """Update a rule description."""
+  updateRuleDescription(input: UpdateRuleDescriptionInput!): UpdateRuleDescriptionPayload
+
+  """Update a rule infraction."""
+  updateRuleInfraction(input: UpdateRuleInfractionInput!): UpdateRuleInfractionPayload
+
+  """Update a rule deprecation."""
+  updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
 
   """Become a member of a club"""
   becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
@@ -1730,6 +1815,20 @@ type Mutation {
 
   """Update the club thumbnail"""
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Suspend the club.
+  
+  Staff+ only.
+  """
+  suspendClub(input: SuspendClubInput!): SuspendClubPayload
+
+  """
+  Un-Suspend the club. Suspension must be expired.
+  
+  Staff+ may un-suspend even if suspension hasn't expired yet.
+  """
+  unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
 }
 
 """
@@ -1861,17 +1960,14 @@ type PostAuditLog implements Node {
   """ID of the audit log"""
   id: ID!
 
-  """The contributor that the audit log belongs to"""
-  contributor: Account!
-
   """The moderator that this log belongs to"""
   moderator: Account!
 
   """The status or the action that was taken against the pending post"""
   action: PostAuditLogAction!
 
-  """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason
+  """If a post was removed or rejected, this is the rule that was cited."""
+  rule: Rule
 
   """Additional notes by the moderator"""
   notes: String
@@ -1928,32 +2024,6 @@ type PostLike implements Node {
   account: Account!
 }
 
-"""Infraction history belonging to an account"""
-type PostRejectionReason implements Node {
-  """ID of the rejection reason"""
-  id: ID!
-
-  """The reason for this rejection"""
-  reason: String!
-
-  """
-  If the rejection reason will count against an infraction on the account
-  """
-  infraction: Boolean!
-}
-
-"""Connection of the pending post rejection reason"""
-type PostRejectionReasonConnection {
-  edges: [PostRejectionReasonEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Edge of the pending post rejection reason"""
-type PostRejectionReasonEdge {
-  node: PostRejectionReason!
-  cursor: String!
-}
-
 """Post report"""
 type PostReport implements Node {
   """ID of the report"""
@@ -1962,8 +2032,8 @@ type PostReport implements Node {
   """The account that initiated this report"""
   account: Account!
 
-  """The reason for this report"""
-  postReportReason: PostReportReason!
+  """The rule that was cited for this report."""
+  rule: Rule!
 }
 
 """Connection of the post report"""
@@ -1984,27 +2054,6 @@ input PostReportDateRange {
 """Edge of the post report"""
 type PostReportEdge {
   node: PostReport!
-  cursor: String!
-}
-
-"""Post report reason"""
-type PostReportReason implements Node {
-  """ID of the report reason"""
-  id: ID!
-
-  """The reason for this report"""
-  reason: String!
-}
-
-"""Connection of the pending post rejection reason"""
-type PostReportReasonConnection {
-  edges: [PostReportReasonEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Edge of the pending post rejection reason"""
-type PostReportReasonEdge {
-  node: PostReportReason!
   cursor: String!
 }
 
@@ -2294,12 +2343,8 @@ type Query {
     slug: String!
   ): Series
 
-  """
-  Get rejection reasons that can be used for pending posts
-  
-  Only viewable by moderators+
-  """
-  postRejectionReasons(
+  """All post reports."""
+  postReports(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -2313,14 +2358,13 @@ type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostRejectionReasonConnection!
 
-  """
-  Get rejection reasons that can be used for pending posts
-  
-  Viewable by everyone who is authenticated
-  """
-  postReportReasons(
+    """The date range for post reports. Required."""
+    dateRange: PostReportDateRange!
+  ): PostReportConnection!
+
+  """Get all rules for the site."""
+  rules(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -2334,7 +2378,10 @@ type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostReportReasonConnection!
+
+    """Whether or not to show deprecated rules."""
+    deprecated: Boolean! = false
+  ): RuleConnection!
 
   """Search multiple clubs."""
   clubs(
@@ -2375,8 +2422,8 @@ input RejectPostInput {
   """Pending post to take action against"""
   postId: ID!
 
-  """Required to enter a rejection reason ID"""
-  postRejectionReasonId: ID!
+  """Required to enter a rule ID."""
+  ruleId: ID!
 
   """Any extra notes for the moderator"""
   notes: String
@@ -2386,6 +2433,18 @@ input RejectPostInput {
 type RejectPostPayload {
   """The audit log generated by the pending post"""
   postAuditLog: PostAuditLog
+}
+
+"""Remove a club infraction."""
+input RemoveClubInfractionHistoryInput {
+  """The history item to remove."""
+  clubInfractionHistoryId: ID!
+}
+
+"""Remove club infraction history."""
+type RemoveClubInfractionHistoryPayload {
+  """The removed infraction history Id."""
+  clubInfractionHistoryId: ID!
 }
 
 """Remove alias slug."""
@@ -2435,8 +2494,8 @@ input RemovePostInput {
   """Pending post to take action against"""
   postId: ID!
 
-  """Required to enter a rejection reason ID"""
-  postRejectionReasonId: ID!
+  """Required to enter a rule ID."""
+  ruleId: ID!
 
   """Any extra notes for the staff member"""
   notes: String
@@ -2453,8 +2512,8 @@ input ReportPostInput {
   """The post to report"""
   postId: ID!
 
-  """The post report reason ID"""
-  postReportReason: ID!
+  """The rule to report this post for."""
+  ruleId: ID!
 }
 
 """Report the post payload"""
@@ -2556,6 +2615,44 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
+"""Rule."""
+type Rule implements Node {
+  """ID of the rule."""
+  id: ID!
+
+  """The title for this rule."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The description for this rule."""
+  description: String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
+  """If this rule is deprecated."""
+  deprecated: Boolean!
+
+  """
+  If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied.
+  """
+  infraction: Boolean!
+}
+
+"""Connection of the rule"""
+type RuleConnection {
+  edges: [RuleEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the rule"""
+type RuleEdge {
+  node: Rule!
+  cursor: String!
+}
+
 type Series implements Node {
   """An ID pointing to this series."""
   id: ID!
@@ -2570,7 +2667,7 @@ type Series implements Node {
   title: String!
 
   """All translations for this title."""
-  titleTranslations: [SeriesTitleTranslation!]!
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -2633,14 +2730,6 @@ enum SeriesSort {
   POPULAR
 }
 
-type SeriesTitleTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A title for this series."""
-  title: String!
-}
-
 """Publish post."""
 input SubmitPostInput {
   """The post to publish"""
@@ -2656,7 +2745,30 @@ type SubmitPostPayload {
   inReview: Boolean
 }
 
+"""Suspend the club."""
+input SuspendClubInput {
+  """The club to suspend."""
+  clubId: ID!
+
+  """When the suspension should end."""
+  endTime: Time!
+}
+
+"""Suspend club payload."""
+type SuspendClubPayload {
+  """The new club after it's suspended."""
+  club: Club
+}
+
 scalar Time
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
 
 """Undo like on a post."""
 input UndoLikePostInput {
@@ -2672,6 +2784,7 @@ type UndoLikePostPayload {
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
+  """The account to unlock."""
   accountID: ID!
 }
 
@@ -2679,6 +2792,18 @@ input UnlockAccountInput {
 type UnlockAccountPayload {
   """Account that was unlocked"""
   account: Account
+}
+
+"""Un-Suspend the club."""
+input UnSuspendClubInput {
+  """The club to un-suspend."""
+  clubId: ID!
+}
+
+"""Un suspend club payload."""
+type UnSuspendClubPayload {
+  """The new club after it's not suspended anymore."""
+  club: Club
 }
 
 """Input for updating the account status to primary"""
@@ -2996,6 +3121,72 @@ input UpdatePostContentOrderInput {
 type UpdatePostContentOrderPayload {
   """The post after the update"""
   post: Post
+}
+
+"""Update post report reason."""
+input UpdateRuleDeprecatedInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Updated rule."""
+type UpdateRuleDeprecatedPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleDescriptionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The description to update"""
+  description: String!
+
+  """The localization for this description."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleDescriptionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update post report reason."""
+input UpdateRuleInfractionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The infraction status."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type UpdateRuleInfractionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleTitleInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleTitlePayload {
+  """The updated rule."""
+  rule: Rule
 }
 
 """Update series."""

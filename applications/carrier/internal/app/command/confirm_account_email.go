@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"net/url"
 	"os"
 	"path"
@@ -17,20 +18,20 @@ type ConfirmAccountEmail struct {
 }
 
 type ConfirmAccountEmailHandler struct {
-	mr mailing.Repository
-	ar EvaService
+	mr  mailing.Repository
+	eva EvaService
 }
 
-func NewConfirmAccountEmailHandler(mr mailing.Repository, ar EvaService) ConfirmAccountEmailHandler {
-	return ConfirmAccountEmailHandler{mr: mr, ar: ar}
+func NewConfirmAccountEmailHandler(mr mailing.Repository, eva EvaService) ConfirmAccountEmailHandler {
+	return ConfirmAccountEmailHandler{mr: mr, eva: eva}
 }
 
 func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccountEmail) error {
 
-	acc, err := h.ar.GetAccount(ctx, cmd.AccountId)
+	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to get account")
 	}
 
 	u, err := url.Parse(os.Getenv("APP_URL"))

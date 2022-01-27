@@ -119,23 +119,6 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTotpEnabled: &enabled}, nil
 }
 
-func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	acc, err := r.App.Commands.UnlockAccount.Handle(ctx, command.UnlockAccount{
-		Principal: principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UnlockAccountPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
-}
-
 func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

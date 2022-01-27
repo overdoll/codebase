@@ -36,7 +36,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 
 		id, _ := ksuid.NewRandomWithTime(postTime)
 
-		audienceId := uuid.New().String()
+		audienceId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
 
 		newPost :=
 			post.UnmarshalPostFromDatabase(
@@ -82,6 +82,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 		nil,
 		nil,
 		[]string{testClubId},
+		nil,
 		nil,
 		nil,
 		nil,

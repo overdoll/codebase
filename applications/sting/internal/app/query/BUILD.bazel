@@ -34,5 +34,6 @@ go_library(
         "//applications/sting/internal/domain/post",
         "//libraries/paging",
         "//libraries/principal",
+        "@com_github_pkg_errors//:errors",
     ],
 )

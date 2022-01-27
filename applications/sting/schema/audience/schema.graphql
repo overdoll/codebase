@@ -1,11 +1,3 @@
-type AudienceTitleTranslation {
-  """Localization formatted in BCP47."""
-  locale: BCP47!
-
-  """A title for this audience."""
-  title: String!
-}
-
 type Audience implements Node @key(fields: "id") {
   """An ID pointing to this audience."""
   id: ID!
@@ -23,7 +15,7 @@ type Audience implements Node @key(fields: "id") {
   standard: Boolean!
 
   """All translations for this title."""
-  titleTranslations: [AudienceTitleTranslation!]!
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f64164cfbae53166e09e347e38472c5d */
+/* @relayHash 2afaf28843c67f2abec807fd2237e6f1 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -130,11 +130,11 @@ fragment PostsFragment on Account {
 }
 
 fragment RejectionReasonsFragment on Query {
-  postRejectionReasons {
+  rules {
     edges {
       node {
         id
-        reason
+        title
         infraction
       }
     }
@@ -216,14 +216,15 @@ v3 = [
   },
   (v1/*: any*/)
 ],
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v5 = [
+  (v4/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -359,7 +360,7 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
-                        "selections": (v4/*: any*/),
+                        "selections": (v5/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -378,7 +379,7 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
-                            "selections": (v4/*: any*/),
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -392,7 +393,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
-                        "selections": (v4/*: any*/),
+                        "selections": (v5/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -488,15 +489,15 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "PostRejectionReasonConnection",
+        "concreteType": "RuleConnection",
         "kind": "LinkedField",
-        "name": "postRejectionReasons",
+        "name": "rules",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostRejectionReasonEdge",
+            "concreteType": "RuleEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -504,19 +505,13 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PostRejectionReason",
+                "concreteType": "Rule",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "reason",
-                    "storageKey": null
-                  },
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -536,7 +531,7 @@ return {
     ]
   },
   "params": {
-    "id": "f64164cfbae53166e09e347e38472c5d",
+    "id": "2afaf28843c67f2abec807fd2237e6f1",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

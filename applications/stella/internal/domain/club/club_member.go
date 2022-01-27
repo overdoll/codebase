@@ -24,9 +24,13 @@ type Member struct {
 	joinedAt  time.Time
 }
 
-func NewMember(acc *principal.Principal, club *Club, currentClubIds []*Member) (*Member, error) {
+func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Member) (*Member, error) {
 
-	res, err := IsAccountClubMembershipReached(acc, acc.AccountId(), currentClubIds)
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
+	res, err := IsAccountClubMembershipReached(requester, requester.AccountId(), currentClubIds)
 
 	if err != nil {
 		return nil, err
@@ -37,7 +41,7 @@ func NewMember(acc *principal.Principal, club *Club, currentClubIds []*Member) (
 	}
 
 	return &Member{
-		accountId: acc.AccountId(),
+		accountId: requester.AccountId(),
 		clubId:    club.ID(),
 		joinedAt:  time.Now(),
 	}, nil
@@ -61,6 +65,15 @@ func (m *Member) ClubId() string {
 
 func (m *Member) JoinedAt() time.Time {
 	return m.joinedAt
+}
+
+func CanRemoveClubMembership(requester *principal.Principal, clubMemberId string) error {
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
+
+	return requester.BelongsToAccount(clubMemberId)
 }
 
 func IsAccountClubMembershipReached(requester *principal.Principal, accountId string, currentClubIds []*Member) (bool, error) {
