@@ -8,15 +8,6 @@ message Moderator {
 
 message GetModeratorRequest {}
 
-message IsClubSuspendedRequest {
-  string clubId = 1;
-}
-
-message IsClubSuspendedResponse {
-  bool suspended = 1;
-}
-
 service Parley {
   rpc GetNextModerator(GetModeratorRequest) returns (Moderator);
-  rpc IsClubSuspended(IsClubSuspendedRequest) returns (IsClubSuspendedResponse);
 }

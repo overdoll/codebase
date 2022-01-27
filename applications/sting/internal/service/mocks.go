@@ -47,7 +47,7 @@ func (e StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, acc
 	return []string{accountId}, nil
 }
 
-func (e StellaServiceMock) CanAccountPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
+func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
 	return true, nil
 }
 

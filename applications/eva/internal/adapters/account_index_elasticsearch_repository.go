@@ -112,7 +112,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		}
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
-		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.AvatarResourceId, "", false, 0, "", false, time.Now())
+		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.AvatarResourceId, "", false, nil, false, time.Now())
 		acc.Node = paging.NewNode(hit.Sort)
 
 		accounts = append(accounts, acc)

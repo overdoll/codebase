@@ -1,18 +1,17 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "report",
+    name = "rule",
     srcs = [
-        "post_report.go",
-        "post_report_filters.go",
         "repository.go",
+        "rule.go",
     ],
-    importpath = "overdoll/applications/parley/internal/domain/report",
+    importpath = "overdoll/applications/parley/internal/domain/rule",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
-        "//applications/parley/internal/domain/rule",
+        "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
-        "@com_github_segmentio_ksuid//:ksuid",
+        "//libraries/uuid",
     ],
 )

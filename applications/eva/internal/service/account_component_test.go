@@ -2,13 +2,10 @@ package service_test
 
 import (
 	"context"
-	"overdoll/applications/eva/internal/ports/graphql/types"
-	"testing"
-	"time"
-
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	eva "overdoll/applications/eva/proto"
+	"testing"
 )
 
 func viewerAccount(t *testing.T, client *graphql.Client) ViewerAccount {
@@ -72,53 +69,4 @@ func TestAccount_get(t *testing.T) {
 	require.NoError(t, err, "no error for fetching an account")
 
 	require.Equal(t, "poisonminion", res.Username, "correct username for grpc request")
-}
-
-type UnlockAccount struct {
-	UnlockAccount struct {
-		Account struct {
-			Id string
-		}
-	} `graphql:"unlockAccount()"`
-}
-
-func TestAccount_lock_unlock(t *testing.T) {
-	t.Parallel()
-
-	acc := seedNormalAccount(t)
-	accountId := acc.ID()
-
-	client, _ := getGrpcClient(t)
-
-	// lock account with grpc endpoint
-	res, err := client.LockAccount(context.Background(), &eva.LockAccountRequest{
-		Id:       accountId,
-		Duration: time.Now().Add(time.Duration(-15) * time.Minute).Unix(),
-		Reason:   eva.LockAccountReason_POST_INFRACTION,
-	})
-
-	require.NoError(t, err, "no error for locking account")
-
-	require.Equal(t, true, res.Locked, "account should be locked")
-
-	gClient, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
-
-	var query ViewerAccountLock
-	err = gClient.Query(context.Background(), &query, nil)
-	require.NoError(t, err, "no error fetching viewer")
-
-	require.NotNil(t, query.Viewer.Lock, "should be locked")
-	require.Equal(t, types.AccountLockReasonPostInfraction, query.Viewer.Lock.Reason, "viewer should see that the account is locked")
-
-	var unlockAccount UnlockAccount
-
-	err = gClient.Mutate(context.Background(), &unlockAccount, nil)
-
-	require.NoError(t, err, "no error when unlocking")
-
-	// check account
-	err = gClient.Query(context.Background(), &query, nil)
-	require.NoError(t, err, "no error fetching viewer")
-
-	require.Nil(t, query.Viewer.Lock, "should not be locked")
 }

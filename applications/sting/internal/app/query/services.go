@@ -14,5 +14,5 @@ type StellaService interface {
 	GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error)
 	CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error)
 	GetSuspendedClubs(ctx context.Context) ([]string, error)
-	CanAccountPostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
+	CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
 }

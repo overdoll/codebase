@@ -6,7 +6,6 @@ go_library(
         "account.go",
         "account_filters.go",
         "account_filters_sorting.go",
-        "account_lock_reason.go",
         "account_role.go",
         "email.go",
         "email_status.go",

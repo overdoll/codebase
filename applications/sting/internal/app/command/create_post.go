@@ -25,7 +25,7 @@ func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, parley Pa
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	validClub, err := h.stella.CanAccountPostUnderClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
+	validClub, err := h.stella.CanAccountCreatePostUnderClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get account permissions for posting")

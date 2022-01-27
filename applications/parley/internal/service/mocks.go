@@ -8,7 +8,7 @@ type StingServiceMock struct {
 }
 
 func (t StingServiceMock) GetPost(ctx context.Context, s string) (string, string, error) {
-	return "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", "1q7MJ5IyRTV0X4J27F3m5wGD5mj", nil
+	return s, s, nil
 }
 
 func (t StingServiceMock) PublishPost(ctx context.Context, s string) error {

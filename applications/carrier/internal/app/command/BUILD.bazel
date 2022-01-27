@@ -12,5 +12,6 @@ go_library(
     deps = [
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
+        "@com_github_pkg_errors//:errors",
     ],
 )

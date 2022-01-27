@@ -1,13 +1,14 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "report",
+    name = "post_audit_log",
     srcs = [
-        "post_report.go",
-        "post_report_filters.go",
+        "post_audit_log.go",
+        "post_audit_log_filters.go",
+        "post_audit_log_status.go",
         "repository.go",
     ],
-    importpath = "overdoll/applications/parley/internal/domain/report",
+    importpath = "overdoll/applications/parley/internal/domain/post_audit_log",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
         "//applications/parley/internal/domain/rule",

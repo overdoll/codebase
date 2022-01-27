@@ -16,7 +16,7 @@ type ParleyService interface {
 
 type StellaService interface {
 	GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error)
-	CanAccountPostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
+	CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
 }
 
 type LoaderService interface {

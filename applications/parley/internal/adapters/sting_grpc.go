@@ -22,7 +22,7 @@ func (s StingGrpc) GetPost(ctx context.Context, id string) (string, string, erro
 		return "", "", err
 	}
 
-	return md.ModeratorId, md.ContributorId, nil
+	return md.ModeratorId, md.ClubId, nil
 }
 
 func (s StingGrpc) PublishPost(ctx context.Context, id string) error {

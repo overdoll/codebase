@@ -1027,8 +1027,8 @@ def go_repositories():
         name = "com_github_matryer_moq",
         build_file_proto_mode = "disable",
         importpath = "github.com/matryer/moq",
-        sum = "h1:BGQISyhl7Gc9W/gMYmAJONh9mT6AYeyeTjNupNPknMs=",
-        version = "v0.2.5",
+        sum = "h1:Q06vEqnBYjjfx5KKgHfYRKE/lvlRu+Nj+xodG4YdHnU=",
+        version = "v0.2.3",
     )
     go_repository(
         name = "com_github_mattn_go_colorable",

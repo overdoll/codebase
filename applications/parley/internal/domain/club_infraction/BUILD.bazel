@@ -19,3 +19,20 @@ go_library(
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )
+
+go_library(
+    name = "club_infraction",
+    srcs = [
+        "club_infraction_history.go",
+        "club_infraction_history_source.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/domain/club_infraction",
+    visibility = ["//applications/parley:__subpackages__"],
+    deps = [
+        "//applications/parley/internal/domain/rule",
+        "//libraries/paging",
+        "//libraries/principal",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)

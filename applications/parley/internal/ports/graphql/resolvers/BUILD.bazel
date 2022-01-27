@@ -4,7 +4,11 @@ go_library(
     name = "resolvers",
     srcs = [
         "account.go",
+        "club.go",
+        "club_infraction_history.go",
         "post.go",
+        "post_audit_log.go",
+        "post_report.go",
     ],
     importpath = "overdoll/applications/parley/internal/ports/graphql/resolvers",
     visibility = ["//visibility:public"],
