@@ -37,7 +37,7 @@ func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Cl
 		return nil, err
 	}
 
-	if err := h.cr.CreateClub(ctx, cmd.Principal, clb); err != nil {
+	if err := h.cr.CreateClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

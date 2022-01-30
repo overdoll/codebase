@@ -2,8 +2,6 @@ package post
 
 import (
 	"strings"
-
-	"overdoll/libraries/principal"
 )
 
 type Filters struct {
@@ -12,17 +10,17 @@ type Filters struct {
 	contributorId *string
 	clubIds       []string
 
-	state          State
-	audienceSlugs  []string
-	categorySlugs  []string
-	characterSlugs []string
-	seriesSlugs    []string
+	state State
 
-	audienceIds []string
-	categoryIds []string
+	suspendedClubIds []string
+
+	characterIds []string
+	seriesIds    []string
+	audienceIds  []string
+	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds []string) (*Filters, error) {
 
 	newState := Unknown
 	var err error
@@ -48,15 +46,16 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, cl
 	}
 
 	return &Filters{
-		sortBy:         sorting,
-		state:          newState,
-		moderatorId:    moderatorId,
-		contributorId:  contributorId,
-		clubIds:        clubIds,
-		audienceSlugs:  audienceSlugs,
-		categorySlugs:  categorySlugs,
-		characterSlugs: characterSlugs,
-		seriesSlugs:    seriesSlugs,
+		sortBy:           sorting,
+		state:            newState,
+		moderatorId:      moderatorId,
+		contributorId:    contributorId,
+		clubIds:          clubIds,
+		audienceIds:      audienceIds,
+		categoryIds:      categoryIds,
+		characterIds:     characterIds,
+		seriesIds:        seriesIds,
+		suspendedClubIds: suspendedClubIds,
 	}, nil
 }
 
@@ -76,24 +75,20 @@ func (e *Filters) State() State {
 	return e.state
 }
 
+func (e *Filters) SuspendedClubIds() []string {
+	return e.suspendedClubIds
+}
+
 func (e *Filters) SortBy() Sorting {
 	return e.sortBy
 }
 
-func (e *Filters) AudienceSlugs() []string {
-	return e.audienceSlugs
+func (e *Filters) SeriesIds() []string {
+	return e.seriesIds
 }
 
-func (e *Filters) SeriesSlugs() []string {
-	return e.seriesSlugs
-}
-
-func (e *Filters) CategorySlugs() []string {
-	return e.categorySlugs
-}
-
-func (e *Filters) CharacterSlugs() []string {
-	return e.characterSlugs
+func (e *Filters) CharacterIds() []string {
+	return e.characterIds
 }
 
 func (e *Filters) CategoryIds() []string {
@@ -102,9 +97,4 @@ func (e *Filters) CategoryIds() []string {
 
 func (e *Filters) AudienceIds() []string {
 	return e.audienceIds
-}
-
-// permission checks to gate what can actually be filtered
-func CanViewWithFilters(requester *principal.Principal, filter *Filters) error {
-	return nil
 }

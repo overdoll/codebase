@@ -37,10 +37,6 @@ type TestUser struct {
 	Username string `faker:"username"`
 }
 
-type AccountModifiedLock struct {
-	Lock *types.AccountLock
-}
-
 type AccountModified struct {
 	Username    string
 	IsStaff     bool
@@ -53,10 +49,6 @@ type AccountByUsername struct {
 
 type ViewerAccount struct {
 	Viewer *AccountModified `graphql:"viewer()"`
-}
-
-type ViewerAccountLock struct {
-	Viewer *AccountModifiedLock `graphql:"viewer()"`
 }
 
 type GrantAuthenticationToken struct {

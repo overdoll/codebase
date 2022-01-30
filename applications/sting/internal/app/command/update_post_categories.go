@@ -27,7 +27,7 @@ func (h UpdatePostCategoriesHandler) Handle(ctx context.Context, cmd UpdatePostC
 
 	pendingPost, err := h.pr.UpdatePostCategories(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
-		cats, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
+		cats, err := h.pr.GetCategoriesByIds(ctx, cmd.Principal, cmd.CategoryIds)
 
 		if err != nil {
 			return err

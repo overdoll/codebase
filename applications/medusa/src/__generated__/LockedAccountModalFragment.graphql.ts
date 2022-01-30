@@ -4,10 +4,11 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type AccountLockReason = "POST_INFRACTION" | "%future added value";
 export type LockedAccountModalFragment = {
-    readonly reason: AccountLockReason;
-    readonly expires: unknown;
+    readonly lock: {
+        readonly expires: unknown;
+    } | null;
+    readonly " $fragmentRefs": FragmentRefs<"UnlockAccountFormFragment">;
     readonly " $refType": "LockedAccountModalFragment";
 };
 export type LockedAccountModalFragment$data = LockedAccountModalFragment;
@@ -27,20 +28,29 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "reason",
+      "concreteType": "AccountLock",
+      "kind": "LinkedField",
+      "name": "lock",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "expires",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "expires",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "UnlockAccountFormFragment"
     }
   ],
-  "type": "AccountLock",
+  "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'b09e76a2450dccbc87864d8e54df398c';
+(node as any).hash = '8139d92350ad572a882dd19c7c557183';
 export default node;

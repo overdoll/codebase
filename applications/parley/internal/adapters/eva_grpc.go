@@ -26,18 +26,3 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 
 	return principal.UnmarshalFromEvaProto(usr), nil
 }
-
-func (s EvaGrpc) LockAccount(ctx context.Context, id string, duration int64) error {
-
-	_, err := s.client.LockAccount(ctx, &eva.LockAccountRequest{
-		Id:       id,
-		Duration: duration,
-		Reason:   eva.LockAccountReason_POST_INFRACTION,
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}

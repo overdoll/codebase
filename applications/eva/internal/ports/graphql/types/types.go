@@ -103,8 +103,7 @@ type AccountEmailEdge struct {
 }
 
 type AccountLock struct {
-	Expires time.Time         `json:"expires"`
-	Reason  AccountLockReason `json:"reason"`
+	Expires time.Time `json:"expires"`
 }
 
 // The multi-factor recovery code belonging to the account
@@ -382,6 +381,20 @@ type Location struct {
 	Longitude float64 `json:"longitude"`
 }
 
+// Input for locking an account.
+type LockAccountInput struct {
+	// The account to lock.
+	AccountID relay.ID `json:"accountID"`
+	// When the lock should end.
+	EndTime time.Time `json:"endTime"`
+}
+
+// Payload for the locked account
+type LockAccountPayload struct {
+	// Account that was locked
+	Account *Account `json:"account"`
+}
+
 // Types of multi factor enabled for this account
 type MultiFactor struct {
 	Totp bool `json:"totp"`
@@ -459,8 +472,16 @@ type RevokeAuthenticationTokenPayload struct {
 	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
 
+type Translation struct {
+	// The language linked to this translation.
+	Language *Language `json:"language"`
+	// The translation text.
+	Text string `json:"text"`
+}
+
 // Input for unlocking an account
 type UnlockAccountInput struct {
+	// The account to unlock.
 	AccountID relay.ID `json:"accountID"`
 }
 
@@ -580,45 +601,6 @@ func (e *AccountEmailStatus) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type AccountLockReason string
-
-const (
-	AccountLockReasonPostInfraction AccountLockReason = "POST_INFRACTION"
-)
-
-var AllAccountLockReason = []AccountLockReason{
-	AccountLockReasonPostInfraction,
-}
-
-func (e AccountLockReason) IsValid() bool {
-	switch e {
-	case AccountLockReasonPostInfraction:
-		return true
-	}
-	return false
-}
-
-func (e AccountLockReason) String() string {
-	return string(e)
-}
-
-func (e *AccountLockReason) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = AccountLockReason(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountLockReason", str)
-	}
-	return nil
-}
-
-func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

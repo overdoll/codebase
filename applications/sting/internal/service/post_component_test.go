@@ -18,7 +18,7 @@ import (
 )
 
 type PostModified struct {
-	ID        string
+	ID        relay.ID
 	Reference string
 	Moderator *struct {
 		Id string
@@ -136,6 +136,12 @@ type AccountModeratorPosts struct {
 				}
 			}
 		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type PostsEntities struct {
+	Entities []struct {
+		Post PostModified `graphql:"... on Post"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -418,7 +424,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"audienceSlugs":  []graphql.String{},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error searching for published")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in published state")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
@@ -429,7 +435,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"seriesSlugs":    []graphql.String{},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error searching for category")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
@@ -440,7 +446,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"seriesSlugs":    []graphql.String{},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error searching for character")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
@@ -451,15 +457,28 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"seriesSlugs":    []graphql.String{},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error searching for audience")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)
 	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
-	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Contributor.Id).GetID(), data.ContributorId, "should have correct contributor ID assigned")
+	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Club.Id).GetID(), data.ClubId, "should have correct club ID assigned")
 	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
+
+	var postsEntities PostsEntities
+	err = client.Query(context.Background(), &postsEntities, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Post",
+				"id":         newPostId,
+			},
+		},
+	})
+	require.NoError(t, err, "no error grabbing entities")
+
+	require.Len(t, postsEntities.Entities, 1, "should have found the post")
 }
 
 // Test_CreatePost_Discard - discard post

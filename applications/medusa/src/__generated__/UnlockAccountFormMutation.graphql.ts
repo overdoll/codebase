@@ -1,18 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6be0469a447b5ccc4e9fe393299b575f */
+/* @relayHash a79f1c0558459bc05fce835276d72821 */
 
 import { ConcreteRequest } from "relay-runtime";
-export type AccountLockReason = "POST_INFRACTION" | "%future added value";
-export type UnlockAccountFormMutationVariables = {};
+export type UnlockAccountInput = {
+    accountID: string;
+};
+export type UnlockAccountFormMutationVariables = {
+    input: UnlockAccountInput;
+};
 export type UnlockAccountFormMutationResponse = {
     readonly unlockAccount: {
         readonly account: {
             readonly id: string;
             readonly lock: {
                 readonly expires: unknown;
-                readonly reason: AccountLockReason;
             } | null;
             readonly isModerator: boolean;
             readonly isStaff: boolean;
@@ -27,13 +30,14 @@ export type UnlockAccountFormMutation = {
 
 
 /*
-mutation UnlockAccountFormMutation {
-  unlockAccount {
+mutation UnlockAccountFormMutation(
+  $input: UnlockAccountInput!
+) {
+  unlockAccount(input: $input) {
     account {
       id
       lock {
         expires
-        reason
       }
       isModerator
       isStaff
@@ -45,8 +49,21 @@ mutation UnlockAccountFormMutation {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
     "alias": null,
-    "args": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
     "concreteType": "UnlockAccountPayload",
     "kind": "LinkedField",
     "name": "unlockAccount",
@@ -81,13 +98,6 @@ var v0 = [
                 "kind": "ScalarField",
                 "name": "expires",
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "reason",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -115,23 +125,23 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "UnlockAccountFormMutation",
-    "selections": (v0/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UnlockAccountFormMutation",
-    "selections": (v0/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "6be0469a447b5ccc4e9fe393299b575f",
+    "id": "a79f1c0558459bc05fce835276d72821",
     "metadata": {},
     "name": "UnlockAccountFormMutation",
     "operationKind": "mutation",
@@ -139,5 +149,5 @@ return {
   }
 };
 })();
-(node as any).hash = '2b1e34faa7765c18d83d65740c329a09';
+(node as any).hash = '35681dad4ffdc25551e0acf9ec09503a';
 export default node;

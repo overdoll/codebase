@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 
 	"github.com/pkg/errors"
-	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/principal"
 )
 
@@ -14,45 +14,43 @@ type ApprovePost struct {
 }
 
 type ApprovePostHandler struct {
-	ir    infraction.Repository
+	pr    post_audit_log.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewApprovePostHandler(ir infraction.Repository, eva EvaService, sting StingService) ApprovePostHandler {
-	return ApprovePostHandler{sting: sting, eva: eva, ir: ir}
+func NewApprovePostHandler(pr post_audit_log.Repository, eva EvaService, sting StingService) ApprovePostHandler {
+	return ApprovePostHandler{sting: sting, eva: eva, pr: pr}
 }
 
-func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*infraction.PostAuditLog, error) {
+func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*post_audit_log.PostAuditLog, error) {
 
-	// Get pending post
-	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
+	postModeratorId, _, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
 	}
 
 	// create new audit log - all necessary permission checks will be performed
-	infractionAuditLog, err := infraction.NewApprovePostAuditLog(
+	postAuditLog, err := post_audit_log.NewApprovePostAuditLog(
 		cmd.Principal,
 		cmd.PostId,
 		postModeratorId,
-		postContributorId,
 	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// post approved
-	if err := h.sting.PublishPost(ctx, cmd.PostId); err != nil {
-		return nil, errors.Wrap(err, "failed to publish post")
-	}
-
 	// create audit log record
-	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
+	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
 		return nil, err
 	}
 
-	return infractionAuditLog, nil
+	// post approved
+	if err := h.sting.PublishPost(ctx, postAuditLog.PostId()); err != nil {
+		return nil, errors.Wrap(err, "failed to publish post")
+	}
+
+	return postAuditLog, nil
 }

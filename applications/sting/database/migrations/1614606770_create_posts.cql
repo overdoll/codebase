@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS posts
     audience_id               text,
     category_ids              list<text>,
     character_ids             list<text>,
+    series_ids                list<text>,
     content_resource_ids      list<text>,
     created_at                timestamp,
     posted_at                 timestamp,

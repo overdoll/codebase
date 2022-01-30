@@ -17,7 +17,7 @@ type Post implements Node @key(fields: "id") {
   club: Club!
 
   """Content belonging to this post"""
-  content: [Resource!]! @goField(forceResolver: true)
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!

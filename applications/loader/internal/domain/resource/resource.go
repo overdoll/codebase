@@ -198,7 +198,7 @@ func (r *Resource) Url() string {
 		return "/" + r.itemId + "/" + r.processedId
 	}
 
-	return r.id
+	return "/" + r.id
 }
 
 func (r *Resource) MimeTypes() []string {
@@ -241,14 +241,14 @@ func (r *Resource) FullUrls() []*Url {
 
 		format, err := extensionByType(m)
 
-		if err == nil {
+		if err == nil && r.processed {
 			extension = format
 		}
 
-		domain := os.Getenv("APP_URL") + "/api/upload/"
+		domain := os.Getenv("UPLOADS_URL")
 
 		if r.processed {
-			domain = os.Getenv("STATIC_URL")
+			domain = os.Getenv("RESOURCES_URL")
 		}
 
 		// generate the proper content url

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"overdoll/libraries/localization"
+	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -61,16 +62,43 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
 
-	queryCategorySlug := r.session.
-		Query(categorySlugTable.Get()).
+	var categorySlugResults []categorySlugs
+
+	var lowercaseSlugs []string
+
+	for _, s := range categorySlug {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
+	if err := qb.Select(categorySlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
 		Consistency(gocql.One).
-		BindStruct(categorySlugs{Slug: slug})
+		Bind(lowercaseSlugs).
+		Select(&categorySlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get category slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range categorySlugResults {
+		ids = append(ids, i.CategoryId)
+	}
+
+	return ids, nil
+}
+
+func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
 
 	var b categorySlugs
 
-	if err := queryCategorySlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(categorySlugTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(categorySlugs{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCategoryNotFound
@@ -82,7 +110,7 @@ func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, request
 	return r.GetCategoryById(ctx, requester, b.CategoryId)
 }
 
-func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 
@@ -90,15 +118,14 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 		return categories, nil
 	}
 
-	queryCategories := qb.Select(categoryTable.Name()).
+	var categoriesModels []category
+
+	if err := qb.Select(categoryTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		Bind(cats)
-
-	var categoriesModels []category
-
-	if err := queryCategories.Select(&categoriesModels); err != nil {
+		Bind(cats).
+		Select(&categoriesModels); err != nil {
 		return nil, fmt.Errorf("failed to get categories by id: %v", err)
 	}
 
@@ -118,6 +145,42 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
+}
+
+func (r PostsCassandraRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
+
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := categorySlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(categorySlugs{Slug: strings.ToLower(pst.Slug), CategoryId: pst.Id}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique category slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrCategorySlugNotUnique
+	}
+
+	if err := r.session.
+		Query(categoryTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
@@ -140,18 +203,25 @@ func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string,
 		return nil, err
 	}
 
-	updateCatQuery := r.session.
+	if err := r.session.
 		Query(categoryTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateCatQuery.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update category: %v", err)
 	}
 
 	return category, nil
+}
+
+func (r PostsCassandraRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"title"})
 }
 
 func (r PostsCassandraRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
@@ -164,14 +234,13 @@ func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.C
 
 func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 
-	queryCategories := r.session.
-		Query(categoryTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(category{Id: categoryId})
-
 	var cat category
 
-	if err := queryCategories.Get(&cat); err != nil {
+	if err := r.session.
+		Query(categoryTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(category{Id: categoryId}).
+		Get(&cat); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCategoryNotFound

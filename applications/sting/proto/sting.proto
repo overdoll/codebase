@@ -10,7 +10,7 @@ message UpdatePostResponse {}
 
 message Post {
   string moderatorId = 1;
-  string contributorId = 2;
+  string clubId = 2;
 }
 
 service Sting {

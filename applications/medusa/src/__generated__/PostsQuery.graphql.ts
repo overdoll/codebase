@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD
 /* @relayHash 8ec655cbf9c39e12613d9ec1d68f0046 */
+=======
+/* @relayHash 2afaf28843c67f2abec807fd2237e6f1 */
+>>>>>>> master
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -131,11 +135,11 @@ fragment PostsFragment on Account {
 }
 
 fragment RejectionReasonsFragment on Query {
-  postRejectionReasons {
+  rules {
     edges {
       node {
         id
-        reason
+        title
         infraction
       }
     }
@@ -233,6 +237,20 @@ v4 = [
     "storageKey": null
   },
   (v1/*: any*/)
+<<<<<<< HEAD
+=======
+],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v5 = [
+  (v4/*: any*/),
+  (v1/*: any*/)
+>>>>>>> master
 ];
 return {
   "fragment": {
@@ -330,7 +348,11 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
+<<<<<<< HEAD
                         "selections": (v2/*: any*/),
+=======
+                        "selections": (v5/*: any*/),
+>>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -349,7 +371,11 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
+<<<<<<< HEAD
                             "selections": (v2/*: any*/),
+=======
+                            "selections": (v5/*: any*/),
+>>>>>>> master
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -363,6 +389,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
+<<<<<<< HEAD
                         "selections": (v2/*: any*/),
                         "storageKey": null
                       },
@@ -371,6 +398,9 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "reference",
+=======
+                        "selections": (v5/*: any*/),
+>>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -496,15 +526,15 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "PostRejectionReasonConnection",
+        "concreteType": "RuleConnection",
         "kind": "LinkedField",
-        "name": "postRejectionReasons",
+        "name": "rules",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostRejectionReasonEdge",
+            "concreteType": "RuleEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -512,19 +542,13 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PostRejectionReason",
+                "concreteType": "Rule",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "reason",
-                    "storageKey": null
-                  },
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -544,7 +568,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "8ec655cbf9c39e12613d9ec1d68f0046",
+=======
+    "id": "2afaf28843c67f2abec807fd2237e6f1",
+>>>>>>> master
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

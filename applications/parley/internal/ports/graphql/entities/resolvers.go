@@ -19,18 +19,35 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 	return &types.Post{ID: id}, nil
 }
 
+func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
+	return &types.Club{ID: id}, nil
+}
+
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
 	return &types.Account{ID: id}, nil
 }
 
-func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
+func (r EntityResolver) FindRuleByID(ctx context.Context, id relay.ID) (*types.Rule, error) {
+
+	rule, err := r.App.Queries.RuleById.Handle(ctx, query.RuleById{
+		RuleId: id.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalRuleToGraphQL(ctx, rule), nil
+}
+
+func (r EntityResolver) FindClubInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.ClubInfractionHistory, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, query.AccountInfractionHistoryById{
-		AccountId:    id.GetCompositePartID(1),
+	infractionHistory, err := r.App.Queries.ClubInfractionHistoryById.Handle(ctx, query.ClubInfractionHistoryById{
+		ClubId:       id.GetCompositePartID(1),
 		InfractionId: id.GetCompositePartID(0),
 		Principal:    principal.FromContext(ctx),
 	})
@@ -39,7 +56,7 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 		return nil, err
 	}
 
-	return types.MarshalAccountInfractionHistoryToGraphQL(ctx, infractionHistory), nil
+	return types.MarshalClubInfractionHistoryToGraphQL(ctx, infractionHistory), nil
 }
 
 func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
@@ -60,24 +77,6 @@ func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (
 	return types.MarshalPostAuditLogToGraphQL(ctx, auditLog), nil
 }
 
-func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	rejectionReason, err := r.App.Queries.PostRejectionReasonById.Handle(ctx, query.PostRejectionReasonById{
-		RejectionReasonId: id.GetID(),
-		Principal:         principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalPostRejectionReasonToGraphQL(ctx, rejectionReason), nil
-}
-
 func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*types.PostReport, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -94,22 +93,4 @@ func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*t
 	}
 
 	return types.MarshalPostReportToGraphQL(ctx, mod), nil
-}
-
-func (r EntityResolver) FindPostReportReasonByID(ctx context.Context, id relay.ID) (*types.PostReportReason, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	reportReason, err := r.App.Queries.PostReportReasonById.Handle(ctx, query.PostReportReasonById{
-		Principal:      principal.FromContext(ctx),
-		ReportReasonId: id.GetID(),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalPostReportReasonToGraphQL(ctx, reportReason), nil
 }

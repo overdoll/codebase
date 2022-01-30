@@ -111,6 +111,10 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 		return nil, err
 	}
 
+	if principal.FromContext(ctx).IsStaff() {
+		return obj.Lock, nil
+	}
+
 	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
 		return nil, err
 	}

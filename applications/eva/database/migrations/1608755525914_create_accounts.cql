@@ -8,8 +8,7 @@ CREATE TABLE IF NOT EXISTS accounts
     avatar_resource_id   text,
     language             text,
     locked               boolean,
-    locked_until         int,
-    locked_reason        text,
+    locked_until         timestamp,
     last_username_edit   timestamp,
     multi_factor_enabled boolean,
     primary key ( id )

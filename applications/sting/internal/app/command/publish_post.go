@@ -11,13 +11,12 @@ type PublishPost struct {
 }
 
 type PublishPostHandler struct {
-	pi  post.IndexRepository
-	pr  post.Repository
-	eva EvaService
+	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) PublishPostHandler {
-	return PublishPostHandler{pr: pr, pi: pi, eva: eva}
+func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository) PublishPostHandler {
+	return PublishPostHandler{pr: pr, pi: pi}
 }
 
 func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {

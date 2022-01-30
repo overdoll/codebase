@@ -25,7 +25,7 @@ func NewAddClubSlugAliasHandler(cr club.Repository, ci club.IndexRepository) Add
 
 func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlias) (*club.Club, error) {
 
-	clb, err := h.cr.UpdateClubSlugAliases(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
+	clb, err := h.cr.UpdateClubSlugAliases(ctx, cmd.ClubId, func(club *club.Club) error {
 		return club.AddSlugAlias(cmd.Principal, cmd.Slug)
 	})
 

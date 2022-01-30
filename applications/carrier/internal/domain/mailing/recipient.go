@@ -9,6 +9,11 @@ type Recipient struct {
 }
 
 func NewRecipient(username, email, language string) (*Recipient, error) {
+
+	if _, err := validateEmail(email); err != nil {
+		return nil, err
+	}
+
 	return &Recipient{
 		username: username,
 		email:    email,

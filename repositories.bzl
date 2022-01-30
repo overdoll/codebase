@@ -12,8 +12,8 @@ def go_repositories():
         name = "com_github_99designs_gqlgen",
         build_file_proto_mode = "disable",
         importpath = "github.com/99designs/gqlgen",
-        sum = "h1:kwMX8Upw8Wc0+NGEolXk9/qRVnbRps6lq3+3ml3PSZs=",
-        version = "v0.14.1-0.20220105021018-47015f12e3aa",
+        sum = "h1:48bRXecwlCNTa/n2bMSp2rQsXNxwZ54QHbiULNf78ec=",
+        version = "v0.15.1",
     )
 
     go_repository(
@@ -1109,8 +1109,8 @@ def go_repositories():
         name = "com_github_mitchellh_mapstructure",
         build_file_proto_mode = "disable",
         importpath = "github.com/mitchellh/mapstructure",
-        sum = "h1:CpVNEelQCZBooIPDn+AR3NpivK/TIKU8bDxdASFVQag=",
-        version = "v1.4.1",
+        sum = "h1:OVowDSCllw/YjdLkam3/sm7wEtOy59d8ndGgCcyj8cs=",
+        version = "v1.4.3",
     )
 
     go_repository(
@@ -1402,8 +1402,8 @@ def go_repositories():
         name = "com_github_scylladb_gocqlx_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/scylladb/gocqlx/v2",
-        sum = "h1:XkmIf3F++iP8jWCqZuabcF5Vw2bqD7VRpyTVmPFQnks=",
-        version = "v2.4.0",
+        sum = "h1:qEuomw8ymIp+ocHqcFPgTssByJx8UJIRTc5MAXlLYQk=",
+        version = "v2.6.0",
     )
 
     go_repository(
@@ -1421,20 +1421,7 @@ def go_repositories():
         sum = "h1:FoResxvleQwYiPAVKe1tMUlEirodZqlqglIuFsdDntY=",
         version = "v1.0.3",
     )
-    go_repository(
-        name = "com_github_sendgrid_rest",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/sendgrid/rest",
-        sum = "h1:lq6gAQxLwVBf3mVyCCSHI6mgF+NfaJFJHjT0kl6SSo8=",
-        version = "v2.6.4+incompatible",
-    )
-    go_repository(
-        name = "com_github_sendgrid_sendgrid_go",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/sendgrid/sendgrid-go",
-        sum = "h1:aSYyurHxEZSDy7kxhvZ4fH0inNkEEmRssZNbAmETR2c=",
-        version = "v3.10.0+incompatible",
-    )
+
     go_repository(
         name = "com_github_sergi_go_diff",
         build_file_proto_mode = "disable",
@@ -1701,8 +1688,8 @@ def go_repositories():
         name = "com_github_yuin_goldmark",
         build_file_proto_mode = "disable",
         importpath = "github.com/yuin/goldmark",
-        sum = "h1:dPmz1Snjq0kmkz159iL7S6WzdahUTHnHB5M56WFVifs=",
-        version = "v1.3.5",
+        sum = "h1:/vn0k+RBvwlxEmP5E7SZMqNxPhfMVFEJiykr15/0XKM=",
+        version = "v1.4.1",
     )
     go_repository(
         name = "com_google_cloud_go",
@@ -1994,15 +1981,15 @@ def go_repositories():
         name = "org_golang_x_mod",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/mod",
-        sum = "h1:Gz96sIWK3OalVv/I/qNygP42zyoKp3xptRVCWRFEBvo=",
-        version = "v0.4.2",
+        sum = "h1:OJxoQ/rynoF0dcCdI7cLPktw/hR2cueqYfjm43oqK38=",
+        version = "v0.5.1",
     )
     go_repository(
         name = "org_golang_x_net",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/net",
-        sum = "h1:/6y1LfuqNuQdHAm0jjtPtgRcxIxjVZgm5OTu8/QhZvk=",
-        version = "v0.0.0-20210916014120-12bc252f5db8",
+        sum = "h1:OfiFi4JbukWwe3lzw+xunroH1mnC1e2Gy5cxNJApiSY=",
+        version = "v0.0.0-20211015210444-4f30a5c0130f",
     )
     go_repository(
         name = "org_golang_x_oauth2",
@@ -2023,8 +2010,8 @@ def go_repositories():
         name = "org_golang_x_sys",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/sys",
-        sum = "h1:xrCZDmdtoloIiooiA9q0OQb9r8HejIHYoHGhGCe1pGg=",
-        version = "v0.0.0-20210910150752-751e447fb3d0",
+        sum = "h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=",
+        version = "v0.0.0-20220114195835-da31bd327af9",
     )
     go_repository(
         name = "org_golang_x_term",
@@ -2051,8 +2038,8 @@ def go_repositories():
         name = "org_golang_x_tools",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/tools",
-        sum = "h1:ouewzE6p+/VEB31YYnTbEJdi8pFqKp4P4n85vwo3DHA=",
-        version = "v0.1.5",
+        sum = "h1:P1HhGGuLW4aAclzjtmJdf0mJOjVUZUzOTqkAkWL+l6w=",
+        version = "v0.1.8",
     )
     go_repository(
         name = "org_golang_x_xerrors",

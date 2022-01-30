@@ -8,7 +8,6 @@ services:
     depends_on:
       - temporal
       - elasticsearch
-      - minio
     deploy:
       restart_policy:
         condition: on-failure

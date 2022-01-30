@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
@@ -12,32 +13,49 @@ import (
 )
 
 type PostAuditLogModified struct {
-	PostRejectionReason *types.PostRejectionReason
-	Notes               string
-	ID                  string
-	Post                struct {
-		ID string
+	Rule  *types.Rule
+	Notes string
+	ID    string
+	Post  struct {
+		ID relay.ID
 	}
 	Action types.PostAuditLogAction
 }
 
-type PostRejectionReasons struct {
-	PostRejectionReasons *types.PostRejectionReasonConnection `graphql:"postRejectionReasons()"`
+type ClubInfractionHistory struct {
+	Entities []struct {
+		Club struct {
+			ID                string
+			InfractionHistory *struct {
+				Edges []struct {
+					Node ClubInfractionHistoryModified
+				}
+			} `graphql:"infractionHistory()"`
+		} `graphql:"... on Club"`
+	} `graphql:"_entities(representations: $representations)"`
 }
 
-// TestPostRejectionReasons - get some rejection reasons
-func TestPostRejectionReasons(t *testing.T) {
-	t.Parallel()
+type ClubInfractionHistoryModified struct {
+	ID     relay.ID
+	Source types.ClubInfractionHistorySource
+}
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+func getClubInfractionHistory(t *testing.T, client *graphql.Client, clubId relay.ID) ClubInfractionHistory {
 
-	var search PostRejectionReasons
+	var clubInfractionHistory ClubInfractionHistory
 
-	err := client.Query(context.Background(), &search, nil)
+	err := client.Query(context.Background(), &clubInfractionHistory, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         string(clubId),
+			},
+		},
+	})
 
-	require.NoError(t, err)
-	require.Len(t, search.PostRejectionReasons.Edges, 2)
-	require.Equal(t, "Reason with infraction", search.PostRejectionReasons.Edges[0].Node.Reason, "correct infraction reason")
+	require.NoError(t, err, "no error getting club infraction history")
+
+	return clubInfractionHistory
 }
 
 type AccountPostAuditLogs struct {
@@ -88,7 +106,7 @@ type PostAuditLogs struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-func auditLogsForPost(t *testing.T, client *graphql.Client, postId string) PostAuditLogs {
+func auditLogsForPost(t *testing.T, client *graphql.Client, postId relay.ID) PostAuditLogs {
 
 	var account PostAuditLogs
 
@@ -96,7 +114,7 @@ func auditLogsForPost(t *testing.T, client *graphql.Client, postId string) PostA
 		"representations": []_Any{
 			{
 				"__typename": "Post",
-				"id":         postId,
+				"id":         string(postId),
 			},
 		},
 	})
@@ -104,29 +122,6 @@ func auditLogsForPost(t *testing.T, client *graphql.Client, postId string) PostA
 	require.NoError(t, err)
 
 	return account
-}
-
-type RejectPost struct {
-	RejectPost *struct {
-		PostAuditLog PostAuditLogModified
-	} `graphql:"rejectPost(input: $input)"`
-}
-
-func rejectPost(t *testing.T, client *graphql.Client, postId, rejectionReason string, notes *string) RejectPost {
-
-	var modPost RejectPost
-
-	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
-		"input": types.RejectPostInput{
-			PostID:                relay.ID(postId),
-			PostRejectionReasonID: relay.ID(rejectionReason),
-			Notes:                 notes,
-		},
-	})
-
-	require.NoError(t, err)
-
-	return modPost
 }
 
 // TestGetNextModerator - get next mod id
@@ -154,15 +149,15 @@ func TestModeratePost_approve(t *testing.T) {
 
 	var approvePost ApprovePost
 
-	postId := getRandomPostId()
+	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
 
 	err := client.Mutate(context.Background(), &approvePost, map[string]interface{}{
 		"input": types.ApprovePostInput{
-			PostID: relay.ID(postId),
+			PostID: postIdRelay,
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error approving post")
 
 	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action, "action is approved")
 
@@ -172,7 +167,7 @@ func TestModeratePost_approve(t *testing.T) {
 	var moderatorAuditLog *PostAuditLogModified
 
 	for _, l := range logs.Entities[0].Account.PostAuditLogs.Edges {
-		if l.Node.Post.ID == postId {
+		if l.Node.Post.ID == postIdRelay {
 			moderatorAuditLog = &l.Node
 			break
 		}
@@ -181,7 +176,7 @@ func TestModeratePost_approve(t *testing.T) {
 	require.NotNil(t, moderatorAuditLog, "should have found moderator post audit logs")
 	require.Equal(t, types.PostAuditLogActionApproved, moderatorAuditLog.Action)
 
-	posts := auditLogsForPost(t, client, postId)
+	posts := auditLogsForPost(t, client, postIdRelay)
 
 	// should be exactly 1 - a reverted audit log
 	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
@@ -203,20 +198,22 @@ func TestModeratePost_remove(t *testing.T) {
 
 	var removePost RemovePost
 
-	postId := getRandomPostId()
+	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
+	rule := seedRule(t)
+	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{
-			PostID:                relay.ID(postId),
-			PostRejectionReasonID: "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+			PostID: postIdRelay,
+			RuleID: ruleIdRelay,
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error removing post")
 
 	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action, "action is removed")
 
-	posts := auditLogsForPost(t, client, postId)
+	posts := auditLogsForPost(t, client, postIdRelay)
 
 	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1, "1 value")
 
@@ -224,88 +221,125 @@ func TestModeratePost_remove(t *testing.T) {
 	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action, "action is removed still")
 }
 
+type RejectPost struct {
+	RejectPost *struct {
+		PostAuditLog PostAuditLogModified
+	} `graphql:"rejectPost(input: $input)"`
+}
+
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	notes := "some additional notes"
-	postId := getRandomPostId()
-	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", &notes)
+	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
 
-	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
-	require.Equal(t, "some additional notes", res.RejectPost.PostAuditLog.Notes)
-	require.Equal(t, "Reason with no infraction", res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
+	var rejectPost RejectPost
 
-	posts := auditLogsForPost(t, client, postId)
+	rule := seedRule(t)
+	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
-	// should be exactly 1 - a reverted audit log
-	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
-
-	// audit logs should exist for this action
-	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
-}
-
-type AccountInfractionHistory struct {
-	Entities []struct {
-		Account struct {
-			ID          string
-			Infractions *types.AccountInfractionHistoryConnection
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
-	t.Parallel()
-
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	postId := getRandomPostId()
-	notes := "some additional notes and stuff"
-
-	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", &notes)
-	infractionReason := "Reason with infraction"
-
-	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
-	require.Equal(t, notes, res.RejectPost.PostAuditLog.Notes)
-	require.Equal(t, infractionReason, res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
-
-	client = getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
-
-	// get infraction history for this account
-	var infractionHistory AccountInfractionHistory
-
-	err := client.Query(context.Background(), &infractionHistory, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
-			},
+	err := client.Mutate(context.Background(), &rejectPost, map[string]interface{}{
+		"input": types.RejectPostInput{
+			PostID: postIdRelay,
+			RuleID: ruleIdRelay,
+			Notes:  &notes,
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error rejecting post")
 
-	foundInfraction := false
+	require.Equal(t, types.PostAuditLogActionDenied, rejectPost.RejectPost.PostAuditLog.Action, "should be denied")
+	require.Equal(t, notes, rejectPost.RejectPost.PostAuditLog.Notes, "correct note was added")
+	require.Equal(t, ruleIdRelay, rejectPost.RejectPost.PostAuditLog.Rule.ID, "correct rule was set")
 
-	// look for the infraction that we created
-	for _, infra := range infractionHistory.Entities[0].Account.Infractions.Edges {
-		if infra.Node.PostRejectionReason.Reason == infractionReason {
-			foundInfraction = true
-		}
-	}
+	posts := auditLogsForPost(t, client, postIdRelay)
 
-	require.True(t, foundInfraction)
+	require.Equal(t, 1, len(posts.Entities[0].Post.AuditLogs.Edges))
 
-	client = getHttpClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	require.Equal(t, rejectPost.RejectPost.PostAuditLog.ID, posts.Entities[0].Post.AuditLogs.Edges[0].Node.ID, "found the audit log at the top")
+}
 
-	// check audit log record exists
-	posts := auditLogsForPost(t, client, postId)
+func TestModeratePost_reject_with_infraction(t *testing.T) {
+	t.Parallel()
 
-	// should be exactly 1 - a reverted audit log
-	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
-	// audit logs should exist for this action
-	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
-	require.Equal(t, "some additional notes and stuff", posts.Entities[0].Post.AuditLogs.Edges[0].Node.Notes)
+	postId := ksuid.New().String()
+	postIdRelay := convertPostIdToRelayId(postId)
+	clubId := convertClubIdToRelayId(postId)
+
+	var rejectPost RejectPost
+
+	rule := seedRuleInfraction(t)
+	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
+
+	err := client.Mutate(context.Background(), &rejectPost, map[string]interface{}{
+		"input": types.RejectPostInput{
+			PostID: postIdRelay,
+			RuleID: ruleIdRelay,
+		},
+	})
+
+	require.NoError(t, err, "no error rejecting a post with infraction")
+	require.Equal(t, ruleIdRelay, rejectPost.RejectPost.PostAuditLog.Rule.ID, "correct rule was set")
+
+	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
+
+	require.Equal(t, 1, len(clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges), "should have 1 infraction history")
+	require.Equal(t, types.ClubInfractionHistorySourcePostModerationRejection, clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges[0].Node.Source, "correct source")
+
+}
+
+type IssueClubInfraction struct {
+	IssueClubInfraction *struct {
+		ClubInfractionHistory *ClubInfractionHistoryModified
+	} `graphql:"issueClubInfraction(input: $input)"`
+}
+
+type RemoveClubInfractionHistory struct {
+	RemoveClubInfractionHistory *struct {
+		ClubInfractionHistoryId *relay.ID
+	} `graphql:"removeClubInfractionHistory(input: $input)"`
+}
+
+func TestIssueClubManualInfraction_and_remove(t *testing.T) {
+	rule := seedRuleInfraction(t)
+	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
+
+	clubId := convertClubIdToRelayId(ksuid.New().String())
+
+	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	var issueClubInfraction IssueClubInfraction
+
+	err := client.Mutate(context.Background(), &issueClubInfraction, map[string]interface{}{
+		"input": types.IssueClubInfractionInput{
+			ClubID:        clubId,
+			RuleID:        ruleIdRelay,
+			CustomEndTime: nil,
+		},
+	})
+
+	require.NoError(t, err, "no error issuing manual infraction")
+
+	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
+
+	require.Equal(t, 1, len(clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges), "should have 1 infraction history")
+	require.Equal(t, types.ClubInfractionHistorySourceManual, clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges[0].Node.Source, "correct source")
+
+	infractionId := clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges[0].Node.ID
+
+	var removeClubInfractionHistory RemoveClubInfractionHistory
+
+	err = client.Mutate(context.Background(), &removeClubInfractionHistory, map[string]interface{}{
+		"input": types.RemoveClubInfractionHistoryInput{ClubInfractionHistoryID: infractionId},
+	})
+
+	require.NoError(t, err, "no error removing infraction history")
+
+	clubInfractionHistory = getClubInfractionHistory(t, client, clubId)
+
+	require.Equal(t, 0, len(clubInfractionHistory.Entities[0].Club.InfractionHistory.Edges), "should have no infraction history")
 }

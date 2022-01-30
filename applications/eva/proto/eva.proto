@@ -17,16 +17,6 @@ message GetAccountRequest {
   string id = 1;
 }
 
-enum LockAccountReason {
-  POST_INFRACTION = 0;
-}
-
-message LockAccountRequest {
-  string id = 1;
-  int64 duration = 2;
-  LockAccountReason reason = 3;
-}
-
 message CreateAccountRequest {
   string username = 1;
   string email = 2;
@@ -50,7 +40,6 @@ message CreateSessionResponse {
 }
 
 service Eva {
-  rpc LockAccount(LockAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
 
   rpc GetSession(SessionRequest) returns (SessionResponse);

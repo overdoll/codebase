@@ -40,30 +40,49 @@ type Commands struct {
 	UpdateCurationProfileAudience    command.UpdateCurationProfileAudienceHandler
 	UpdateCurationProfileCategory    command.UpdateCurationProfileCategoryHandler
 	UpdateCurationProfileDateOfBirth command.UpdateCurationProfileDateOfBirthHandler
+
+	CreateAudience           command.CreateAudienceHandler
+	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
+	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
+	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
+
+	CreateCategory          command.CreateCategoryHandler
+	UpdateCategoryTitle     command.UpdateCategoryTitleHandler
+	UpdateCategoryThumbnail command.UpdateCategoryThumbnailHandler
+
+	CreateCharacter          command.CreateCharacterHandler
+	UpdateCharacterName      command.UpdateCharacterNameHandler
+	UpdateCharacterThumbnail command.UpdateCharacterThumbnailHandler
+
+	CreateSeries          command.CreateSeriesHandler
+	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
+	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
 }
 
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
-	SearchPosts      query.SearchPostsHandler
-	PostById         query.PostByIdHandler
+	SearchPosts query.SearchPostsHandler
+	PostById    query.PostByIdHandler
+	PostsByIds  query.PostsByIdsHandler
+
 	PostByIdOperator query.PostByIdOperatorHandler
 
 	SearchCharacters query.SearchCharactersHandler
 	CharacterBySlug  query.CharacterBySlugHandler
-	CharacterById    query.CharacterByIdHandler
+	CharactersByIds  query.CharactersByIdsHandler
 
 	SearchCategories query.SearchCategoriesHandler
 	CategoryBySlug   query.CategoryBySlugHandler
-	CategoryById     query.CategoryByIdHandler
+	CategoriesByIds  query.CategoriesByIdsHandler
 
 	SearchSeries query.SearchSeriesHandler
 	SeriesBySlug query.SeriesBySlugHandler
-	SeriesById   query.SeriesByIdHandler
+	SeriesByIds  query.SeriesByIdsHandler
 
 	SearchAudience query.SearchAudienceHandler
 	AudienceBySlug query.AudienceBySlugHandler
-	AudienceById   query.AudienceByIdHandler
+	AudiencesByIds query.AudiencesByIdsHandler
 
 	PostLikeById query.PostLikeByIdHandler
 

@@ -2,21 +2,24 @@ package types
 
 import (
 	"context"
-	"overdoll/libraries/passport"
-
-	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/report"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 )
 
-func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAuditLog) *PostAuditLog {
+func MarshalPostAuditLogToGraphQL(ctx context.Context, result *post_audit_log.PostAuditLog) *PostAuditLog {
 
-	var reason *PostRejectionReason
+	var ruleItem *Rule
 
-	if result.RejectionReason() != nil {
-		reason = MarshalPostRejectionReasonToGraphQL(ctx, result.RejectionReason())
+	if result.RuleId() != nil {
+		ruleItem = &Rule{
+			ID: relay.NewID(Rule{}, *result.RuleId()),
+		}
 	}
 
 	var action PostAuditLogAction
@@ -34,17 +37,16 @@ func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAu
 	}
 
 	return &PostAuditLog{
-		ID:                  relay.NewID(PostAuditLog{}, result.PostID(), result.ID()),
-		Contributor:         &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Moderator:           &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
-		Action:              action,
-		PostRejectionReason: reason,
-		Notes:               result.Notes(),
-		Post:                &Post{ID: relay.NewID(Post{}, result.PostID())},
+		ID:        relay.NewID(PostAuditLog{}, result.PostId(), result.ID()),
+		Moderator: &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
+		Action:    action,
+		Rule:      ruleItem,
+		Notes:     result.Notes(),
+		Post:      &Post{ID: relay.NewID(Post{}, result.PostId())},
 	}
 }
 
-func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infraction.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*post_audit_log.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
@@ -70,15 +72,15 @@ func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infr
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.PostAuditLog
+	var nodeAt func(int) *post_audit_log.PostAuditLog
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.PostAuditLog {
+		nodeAt = func(i int) *post_audit_log.PostAuditLog {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.PostAuditLog {
+		nodeAt = func(i int) *post_audit_log.PostAuditLog {
 			return results[i]
 		}
 	}
@@ -105,9 +107,11 @@ func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infr
 
 func MarshalPostReportToGraphQL(ctx context.Context, result *report.PostReport) *PostReport {
 	return &PostReport{
-		ID:               relay.NewID(PostReport{}, result.PostID(), result.ID()),
-		Account:          &Account{ID: relay.NewID(Account{}, result.ReportingAccountId())},
-		PostReportReason: MarshalPostReportReasonToGraphQL(ctx, result.ReportReason()),
+		ID:      relay.NewID(PostReport{}, result.PostID(), result.ID()),
+		Account: &Account{ID: relay.NewID(Account{}, result.ReportingAccountId())},
+		Rule: &Rule{
+			ID: relay.NewID(Rule{}, result.RuleId()),
+		},
 	}
 }
 
@@ -170,84 +174,44 @@ func MarshalPostReportToGraphQLConnection(ctx context.Context, results []*report
 	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
-	return &AccountInfractionHistory{
-		ID:                  relay.NewID(AccountInfractionHistory{}, result.AccountId(), result.ID()),
-		PostRejectionReason: MarshalPostRejectionReasonToGraphQL(ctx, result.Reason()),
+func MarshalClubInfractionHistoryToGraphQL(ctx context.Context, result *club_infraction.ClubInfractionHistory) *ClubInfractionHistory {
+
+	var clubInfractionSource ClubInfractionHistorySource
+
+	if result.Source() == club_infraction.ClubInfractionHistorySourceManual {
+		clubInfractionSource = ClubInfractionHistorySourceManual
 	}
-}
 
-func MarshalPostReportReasonToGraphQL(ctx context.Context, result *report.PostReportReason) *PostReportReason {
-	return &PostReportReason{
-		ID:     relay.NewID(AccountInfractionHistory{}, result.ID()),
-		Reason: result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
+	if result.Source() == club_infraction.ClubInfractionHistorySourcePostManualRemoval {
+		clubInfractionSource = ClubInfractionHistorySourcePostManualRemoval
 	}
-}
 
-func MarshalPostReportReasonToGraphQLConnection(ctx context.Context, results []*report.PostReportReason, cursor *paging.Cursor) *PostReportReasonConnection {
+	if result.Source() == club_infraction.ClubInfractionHistorySourcePostModerationRejection {
+		clubInfractionSource = ClubInfractionHistorySourcePostModerationRejection
+	}
 
-	var reportReasons []*PostReportReasonEdge
-
-	conn := &PostReportReasonConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     nil,
-			EndCursor:       nil,
+	return &ClubInfractionHistory{
+		ID: relay.NewID(ClubInfractionHistory{}, result.ClubId(), result.ID()),
+		Club: &Club{
+			ID: relay.NewID(Club{}, result.ID()),
 		},
-		Edges: reportReasons,
+		IssuerAccount: &Account{
+			ID: relay.NewID(Account{}, result.IssuerAccountId()),
+		},
+		Rule: &Rule{
+			ID: relay.NewID(Rule{}, result.RuleId()),
+		},
+		Source:    clubInfractionSource,
+		IssuedAt:  result.IssuedAt(),
+		ExpiresAt: result.ExpiresAt(),
 	}
-
-	limit := cursor.GetLimit()
-
-	if len(results) == 0 {
-		return conn
-	}
-
-	if len(results) == limit {
-		conn.PageInfo.HasNextPage = cursor.First() != nil
-		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
-		results = results[:len(results)-1]
-	}
-
-	var nodeAt func(int) *report.PostReportReason
-
-	if cursor != nil && cursor.Last() != nil {
-		n := len(results) - 1
-		nodeAt = func(i int) *report.PostReportReason {
-			return results[n-i]
-		}
-	} else {
-		nodeAt = func(i int) *report.PostReportReason {
-			return results[i]
-		}
-	}
-
-	for i := range results {
-		node := nodeAt(i)
-		reportReasons = append(reportReasons, &PostReportReasonEdge{
-			Node:   MarshalPostReportReasonToGraphQL(ctx, node),
-			Cursor: node.Cursor(),
-		})
-	}
-
-	conn.Edges = reportReasons
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		conn.PageInfo.StartCursor = &res
-		res = results[len(results)-1].Cursor()
-		conn.PageInfo.EndCursor = &res
-	}
-
-	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, results []*infraction.AccountInfractionHistory, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
+func MarshalClubInfractionHistoryToGraphQLConnection(ctx context.Context, results []*club_infraction.ClubInfractionHistory, cursor *paging.Cursor) *ClubInfractionHistoryConnection {
 
-	var infractionHistory []*AccountInfractionHistoryEdge
+	var infractionHistory []*ClubInfractionHistoryEdge
 
-	conn := &AccountInfractionHistoryConnection{
+	conn := &ClubInfractionHistoryConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
@@ -269,23 +233,23 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, res
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.AccountInfractionHistory
+	var nodeAt func(int) *club_infraction.ClubInfractionHistory
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+		nodeAt = func(i int) *club_infraction.ClubInfractionHistory {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+		nodeAt = func(i int) *club_infraction.ClubInfractionHistory {
 			return results[i]
 		}
 	}
 
 	for i := range results {
 		node := nodeAt(i)
-		infractionHistory = append(infractionHistory, &AccountInfractionHistoryEdge{
-			Node:   MarshalAccountInfractionHistoryToGraphQL(ctx, node),
+		infractionHistory = append(infractionHistory, &ClubInfractionHistoryEdge{
+			Node:   MarshalClubInfractionHistoryToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -316,26 +280,55 @@ func MarshalModeratorSettingsToGraphQL(result *moderator.Moderator) *ModeratorSe
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *infraction.PostRejectionReason) *PostRejectionReason {
-	return &PostRejectionReason{
-		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
-		Reason:     result.Reason().Translate(passport.FromContext(ctx).Language(), result.ID()),
-		Infraction: result.Infraction(),
+func MarshalRuleToGraphQL(ctx context.Context, result *rule.Rule) *Rule {
+
+	var titleTranslations []*Translation
+
+	for _, val := range result.Title().Translations() {
+		titleTranslations = append(titleTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
+	var descriptionTranslations []*Translation
+
+	for _, val := range result.Description().Translations() {
+		descriptionTranslations = append(descriptionTranslations, &Translation{
+			Language: &Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
+	return &Rule{
+		ID:                      relay.NewID(Rule{}, result.ID()),
+		Title:                   result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
+		TitleTranslations:       titleTranslations,
+		Description:             result.Description().Translate(passport.FromContext(ctx).Language(), result.ID()),
+		DescriptionTranslations: descriptionTranslations,
+		Deprecated:              result.Deprecated(),
+		Infraction:              result.Infraction(),
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results []*infraction.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
+func MarshalRuleToGraphQLConnection(ctx context.Context, results []*rule.Rule, cursor *paging.Cursor) *RuleConnection {
 
-	var rejectionReasons []*PostRejectionReasonEdge
+	var rules []*RuleEdge
 
-	conn := &PostRejectionReasonConnection{
+	conn := &RuleConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
 			StartCursor:     nil,
 			EndCursor:       nil,
 		},
-		Edges: rejectionReasons,
+		Edges: rules,
 	}
 
 	limit := cursor.GetLimit()
@@ -350,28 +343,28 @@ func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results 
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *infraction.PostRejectionReason
+	var nodeAt func(int) *rule.Rule
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *infraction.PostRejectionReason {
+		nodeAt = func(i int) *rule.Rule {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *infraction.PostRejectionReason {
+		nodeAt = func(i int) *rule.Rule {
 			return results[i]
 		}
 	}
 
 	for i := range results {
 		node := nodeAt(i)
-		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
-			Node:   MarshalPostRejectionReasonToGraphQL(ctx, node),
+		rules = append(rules, &RuleEdge{
+			Node:   MarshalRuleToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
 
-	conn.Edges = rejectionReasons
+	conn.Edges = rules
 
 	if len(results) > 0 {
 		res := results[0].Cursor()

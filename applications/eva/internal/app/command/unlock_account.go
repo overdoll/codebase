@@ -8,8 +8,8 @@ import (
 )
 
 type UnlockAccount struct {
-	// the account that is making this request
 	Principal *principal.Principal
+	AccountId string
 }
 
 type UnlockAccountHandler struct {
@@ -22,8 +22,8 @@ func NewUnlockUserHandler(ur account.Repository) UnlockAccountHandler {
 
 func (h UnlockAccountHandler) Handle(ctx context.Context, cmd UnlockAccount) (*account.Account, error) {
 
-	usr, err := h.ur.UpdateAccount(ctx, cmd.Principal.AccountId(), func(u *account.Account) error {
-		return u.Unlock()
+	usr, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
+		return u.Unlock(cmd.Principal)
 	})
 
 	if err != nil {

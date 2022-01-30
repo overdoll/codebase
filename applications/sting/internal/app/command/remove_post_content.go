@@ -14,13 +14,12 @@ type RemovePostContent struct {
 }
 
 type RemovePostContentHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	loader LoaderService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewRemovePostContentHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) RemovePostContentHandler {
-	return RemovePostContentHandler{pr: pr, pi: pi, loader: loader}
+func NewRemovePostContentHandler(pr post.Repository, pi post.IndexRepository) RemovePostContentHandler {
+	return RemovePostContentHandler{pr: pr, pi: pi}
 }
 
 func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostContent) (*post.Post, error) {

@@ -11,7 +11,7 @@ declare global {
 
 const router = express.Router()
 
-if (process.env.APP_DEBUG != null) {
+if (process.env.APP_DEBUG === 'true') {
   router.get('/__coverage__', (req, res) => res.json({
     coverage: global.__coverage__ ?? null
   }))

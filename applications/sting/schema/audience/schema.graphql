@@ -6,10 +6,16 @@ type Audience implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A title for this audience."""
   title: String!
+
+  """If this audience is standard or not."""
+  standard: Boolean!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -74,5 +80,101 @@ extend type Query {
 
 extend type Post {
   """Represents the audience that this post belongs to"""
+  audience: Audience @goField(forceResolver: true)
+}
+
+"""Create a new audience."""
+input CreateAudienceInput {
+  """The chosen slug for the audience."""
+  slug: String!
+
+  """The chosen title for the audience."""
+  title: String!
+
+  """If the audience is standard or not."""
+  standard: Boolean!
+}
+
+"""Payload for a new audience"""
+type CreateAudiencePayload {
+  """The audience after creation"""
   audience: Audience
+
+  """Validation for creating a new audience"""
+  validation: CreateAudienceValidation
+}
+
+"""Validation for creating a new audience"""
+enum CreateAudienceValidation {
+  SLUG_TAKEN
+}
+
+"""Update audience."""
+input UpdateAudienceTitleInput {
+  """The audience to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update audience."""
+input UpdateAudienceThumbnailInput {
+  """The audience to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Update audience."""
+input UpdateAudienceIsStandardInput {
+  """The audience to update"""
+  id: ID!
+
+  """Standard"""
+  standard: Boolean!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceTitlePayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceIsStandardPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+extend type Mutation {
+  """
+  Create a new audience
+  """
+  createAudience(input: CreateAudienceInput!): CreateAudiencePayload
+
+  """
+  Update audience title
+  """
+  updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
+
+  """
+  Update audience thumbnail
+  """
+  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """
+  Update audience standard
+  """
+  updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
 }

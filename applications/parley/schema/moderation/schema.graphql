@@ -3,8 +3,8 @@ input RejectPostInput {
   """Pending post to take action against"""
   postId: ID!
 
-  """Required to enter a rejection reason ID"""
-  postRejectionReasonId: ID!
+  """Required to enter a rule ID."""
+  ruleId: ID!
 
   """Any extra notes for the moderator"""
   notes: String
@@ -15,8 +15,8 @@ input RemovePostInput {
   """Pending post to take action against"""
   postId: ID!
 
-  """Required to enter a rejection reason ID"""
-  postRejectionReasonId: ID!
+  """Required to enter a rule ID."""
+  ruleId: ID!
 
   """Any extra notes for the staff member"""
   notes: String

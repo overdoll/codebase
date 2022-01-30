@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD
 /* @relayHash c2cf5746513b1f70789f79056917896f */
+=======
+/* @relayHash 2ea2d0faa7553510dc60ffb9cb294f63 */
+>>>>>>> master
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -70,14 +74,14 @@ fragment LanguageManagerFragment on Account {
 }
 
 fragment LockedAccountBannerFragment on Account {
-  lock {
-    ...LockedAccountModalFragment
-  }
+  ...LockedAccountModalFragment
 }
 
-fragment LockedAccountModalFragment on AccountLock {
-  reason
-  expires
+fragment LockedAccountModalFragment on Account {
+  ...UnlockAccountFormFragment
+  lock {
+    expires
+  }
 }
 
 fragment QuickAccessButtonProfileFragment on Account {
@@ -100,6 +104,10 @@ fragment ResourceItemFragment on Resource {
 
 fragment UniversalNavigatorFragment on Account {
   ...AlternativeMenuFragment
+}
+
+fragment UnlockAccountFormFragment on Account {
+  id
 }
 
 fragment VideoSnippetFragment on Resource {
@@ -207,13 +215,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "reason",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "expires",
                 "storageKey": null
               }
@@ -294,7 +295,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "c2cf5746513b1f70789f79056917896f",
+=======
+    "id": "2ea2d0faa7553510dc60ffb9cb294f63",
+>>>>>>> master
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

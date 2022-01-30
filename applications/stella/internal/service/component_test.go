@@ -90,7 +90,7 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	session := bootstrap.InitializeDatabaseSession()
 
 	adapter := adapters.NewClubCassandraRepository(session)
-	err := adapter.CreateClub(context.Background(), newPrincipal(t, accountId), pst)
+	err := adapter.CreateClub(context.Background(), pst)
 	require.NoError(t, err)
 	return pst
 }

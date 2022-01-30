@@ -13,6 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+<<<<<<< HEAD
 #: src/client/domain/Help/Help.tsx:20
 msgid "Help"
 msgstr ""
@@ -30,5 +31,24 @@ msgid "View our Privacy Policy"
 msgstr ""
 
 #: src/client/domain/Help/Help.tsx:33
+=======
+#: src/client/domain/Help/Help.tsx:21
+msgid "Help"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:42
+msgid "Privacy Policy"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:31
+msgid "Terms of Service"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:45
+msgid "View our Privacy Policy"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:34
+>>>>>>> master
 msgid "View our Terms of Service"
 msgstr ""

@@ -2,7 +2,6 @@ package queries
 
 import (
 	"context"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
@@ -16,7 +15,7 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostReportReasonConnection, error) {
+func (r QueryResolver) PostReports(ctx context.Context, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -28,23 +27,22 @@ func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, bef
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.PostReportReasons.Handle(ctx, query.PostsReportReasons{
-		Principal: principal.FromContext(ctx),
+	logs, err := r.App.Queries.SearchPostReports.Handle(ctx, query.SearchPostReports{
 		Cursor:    cursor,
+		PostId:    nil,
+		Principal: principal.FromContext(ctx),
+		From:      dateRange.From,
+		To:        dateRange.To,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostReportReasonToGraphQLConnection(ctx, results, cursor), nil
+	return types.MarshalPostReportToGraphQLConnection(ctx, logs, cursor), nil
 }
 
-func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
+func (r QueryResolver) Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -52,14 +50,14 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, query.PostsRejectionReasons{
-		Principal: principal.FromContext(ctx),
-		Cursor:    cursor,
+	results, err := r.App.Queries.Rules.Handle(ctx, query.Rules{
+		Cursor:     cursor,
+		Deprecated: deprecated,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostRejectionReasonToGraphQLConnection(ctx, results, cursor), nil
+	return types.MarshalRuleToGraphQLConnection(ctx, results, cursor), nil
 }

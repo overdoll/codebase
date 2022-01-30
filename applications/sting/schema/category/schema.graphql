@@ -6,10 +6,13 @@ type Category implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A title for this category."""
   title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -74,5 +77,78 @@ extend type Query {
 
 extend type Post {
   """Categories that belong to this post"""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
+}
+
+"""Create a new category."""
+input CreateCategoryInput {
+  """The chosen slug for the category."""
+  slug: String!
+
+  """The chosen title for the category."""
+  title: String!
+}
+
+"""Payload for a new category"""
+type CreateCategoryPayload {
+  """The category after creation"""
+  category: Category
+
+  """Validation for creating a new category"""
+  validation: CreateCategoryValidation
+}
+
+"""Validation for creating a new category"""
+enum CreateCategoryValidation {
+  SLUG_TAKEN
+}
+
+"""Update category."""
+input UpdateCategoryTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update category."""
+input UpdateCategoryThumbnailInput {
+  """The category to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type UpdateCategoryThumbnailPayload {
+  """The category after update"""
+  category: Category
+}
+
+extend type Mutation {
+  """
+  Create a new category
+  """
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload
+
+  """
+  Update category title
+  """
+  updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
+
+  """
+  Update category thumbnail
+  """
+  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
 }

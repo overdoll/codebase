@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"overdoll/libraries/localization"
+	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -18,7 +19,7 @@ var seriesTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail_resource_ids",
+		"thumbnail_resource_id",
 		"total_likes",
 		"total_posts",
 	},
@@ -63,14 +64,13 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
 
-	querySeriesSlug := r.session.
-		Query(seriesSlugTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(seriesSlug{Slug: slug})
-
 	var b seriesSlug
 
-	if err := querySeriesSlug.Get(&b); err != nil {
+	if err := r.session.
+		Query(seriesSlugTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(seriesSlug{Slug: strings.ToLower(slug)}).
+		Get(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrSeriesNotFound
@@ -80,6 +80,34 @@ func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester
 	}
 
 	return &b, nil
+}
+
+func (r PostsCassandraRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
+
+	var seriesSlugResults []seriesSlug
+
+	var lowercaseSlugs []string
+
+	for _, s := range seriesIds {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
+	if err := qb.Select(seriesSlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
+		Consistency(gocql.One).
+		Bind(lowercaseSlugs).
+		Select(&seriesSlugResults); err != nil {
+		return nil, fmt.Errorf("failed to get series slugs: %v", err)
+	}
+
+	var ids []string
+
+	for _, i := range seriesSlugResults {
+		ids = append(ids, i.SeriesId)
+	}
+
+	return ids, nil
 }
 
 func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
@@ -99,14 +127,13 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 
 func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
-	queryMedia := r.session.
-		Query(seriesTable.Get()).
-		Consistency(gocql.One).
-		BindStruct(series{Id: seriesId})
-
 	var med series
 
-	if err := queryMedia.Get(&med); err != nil {
+	if err := r.session.
+		Query(seriesTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(series{Id: seriesId}).
+		Get(&med); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrSeriesNotFound
@@ -125,7 +152,7 @@ func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, serie
 	), nil
 }
 
-func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []string) ([]*post.Series, error) {
+func (r PostsCassandraRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
 
 	var medias []*post.Series
 
@@ -134,15 +161,14 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 		return medias, nil
 	}
 
-	queryMedia := qb.Select(seriesTable.Name()).
+	var mediaModels []*series
+
+	if err := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		Bind(medi)
-
-	var mediaModels []*series
-
-	if err := queryMedia.Select(&mediaModels); err != nil {
+		Bind(medi).
+		Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
@@ -158,6 +184,58 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 	}
 
 	return medias, nil
+}
+
+func (r PostsCassandraRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
+
+	ser, err := marshalSeriesToDatabase(series)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := seriesSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(seriesSlug{Slug: strings.ToLower(ser.Slug), SeriesId: ser.Id}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique character slug: %v", err)
+	}
+
+	if !applied {
+		return post.ErrSeriesSlugNotUnique
+	}
+
+	if err := r.session.
+		Query(seriesTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(ser).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+}
+
+func (r PostsCassandraRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"title"})
+}
+
+func (r PostsCassandraRepository) UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"total_posts"})
+}
+
+func (r PostsCassandraRepository) UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"total_likes"})
 }
 
 func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, updateFn func(series *post.Series) error, columns []string) (*post.Series, error) {
@@ -180,24 +258,15 @@ func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, u
 		return nil, err
 	}
 
-	updateSeriesTable := r.session.
+	if err := r.session.
 		Query(seriesTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst)
-
-	if err := updateSeriesTable.ExecRelease(); err != nil {
+		BindStruct(pst).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update series: %v", err)
 	}
 
 	return series, nil
-}
-
-func (r PostsCassandraRepository) UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"total_posts"})
-}
-
-func (r PostsCassandraRepository) UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"total_likes"})
 }

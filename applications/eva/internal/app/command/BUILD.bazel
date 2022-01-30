@@ -43,5 +43,6 @@ go_library(
         "//libraries/passport",
         "//libraries/principal",
         "//libraries/uuid",
+        "@com_github_pkg_errors//:errors",
     ],
 )

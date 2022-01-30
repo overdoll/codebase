@@ -19,9 +19,9 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 	// the UpdatePostLikes operator will also update likes for each character, category, etc...
 	// so we re-index them as well
-	for _, cat := range pendingPost.Categories() {
+	for _, cat := range pendingPost.CategoryIds() {
 
-		newCat, err := h.pr.UpdateCategoryTotalLikesOperator(ctx, cat.ID(), func(category *post.Category) error {
+		newCat, err := h.pr.UpdateCategoryTotalLikesOperator(ctx, cat, func(category *post.Category) error {
 			totalLikes, err := h.pi.GetTotalLikesForCategoryOperator(ctx, category)
 
 			if err != nil {
@@ -42,9 +42,9 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 	var updatedSeries map[string]bool
 
-	for _, char := range pendingPost.Characters() {
+	for _, char := range pendingPost.CharacterIds() {
 
-		newChar, err := h.pr.UpdateCharacterTotalLikesOperator(ctx, char.ID(), func(character *post.Character) error {
+		newChar, err := h.pr.UpdateCharacterTotalLikesOperator(ctx, char, func(character *post.Character) error {
 
 			totalLikes, err := h.pi.GetTotalLikesForCharacterOperator(ctx, character)
 
@@ -63,9 +63,9 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 			return err
 		}
 
-		if _, ok := updatedSeries[char.Series().ID()]; !ok {
+		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
-			newSeries, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, char.Series().ID(), func(series *post.Series) error {
+			newSeries, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
 				totalLikes, err := h.pi.GetTotalLikesForSeriesOperator(ctx, series)
 
@@ -84,11 +84,11 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 				return err
 			}
 
-			updatedSeries[char.Series().ID()] = true
+			updatedSeries[newChar.Series().ID()] = true
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalLikesOperator(ctx, pendingPost.Audience().ID(), func(audience *post.Audience) error {
+	newAud, err := h.pr.UpdateAudienceTotalLikesOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
 
 		totalLikes, err := h.pi.GetTotalLikesForAudienceOperator(ctx, audience)
 

@@ -1,8 +1,5 @@
 load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
-load("ext://helm_remote", "helm_remote")
 load("ext://restart_process", "custom_build_with_restart")
-
-k8s_yaml("./development/traefik/ingress.yaml")
 
 applications = {
     "eva": {
@@ -15,7 +12,6 @@ applications = {
         "container_workdir": "/app/applications/eva/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/eva/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/eva/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/eva/.env",
             "applications/eva/config.toml",
@@ -42,7 +38,6 @@ applications = {
             "applications/sting/config.toml",
             "applications/sting/database",
         ],
-        "disable_resource": False,
         "live_update": [
             sync("applications/sting/.env", "/app/applications/sting/internal/local-image.binary.runfiles/overdoll/applications/sting/.env"),
             sync("applications/sting/config.toml", "/app/applications/sting/internal/local-image.binary.runfiles/overdoll/applications/sting/config.toml"),
@@ -59,7 +54,6 @@ applications = {
         "container_workdir": "/app/applications/carrier/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/carrier/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/carrier/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/carrier/.env",
         ],
@@ -77,7 +71,6 @@ applications = {
         "container_workdir": "/app/applications/parley/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/parley/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/parley/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/parley/.env",
             "applications/parley/config.toml",
@@ -99,7 +92,6 @@ applications = {
         "container_workdir": "/app/applications/puppy/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/puppy/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/puppy/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/puppy/.env",
         ],
@@ -117,7 +109,6 @@ applications = {
         "container_workdir": "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/stella/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/stella/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/stella/.env",
             "applications/stella/config.toml",
@@ -139,7 +130,6 @@ applications = {
         "container_workdir": "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/",
         "container_binary": "applications/loader/internal/local-image.binary_/local-image.binary",
         "bazel_image": "bazel/applications/loader/internal:local-image",
-        "disable_resource": False,
         "dependencies": [
             "applications/loader/.env",
             "applications/loader/config.toml",
@@ -155,13 +145,3 @@ applications = {
 
 # Build applications with our helper function
 build_applications(applications, [])
-
-# Caddy, to serve error middleware
-docker_build(
-    'caddy-web',
-    context='.',
-    dockerfile='./development/caddy/caddy.dockerfile',
-    only=['./development/caddy/'],
-)
-
-k8s_yaml('development/caddy/deploy.yaml')

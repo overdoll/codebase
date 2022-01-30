@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
+	"strings"
 	"testing"
 )
 
@@ -37,26 +38,29 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
 	grpcClient := getGrpcClient(t)
-	resourceIds := []string{imageFileId, videoFileId}
 
 	// start processing of files by calling grpc endpoint
-	_, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
+	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
-		ResourceIds: resourceIds,
+		ResourceIds: []string{imageFileId, videoFileId},
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
+	resourceIds := res.AllResourceIds
+	videoFileId = strings.Split(videoFileId, "+")[0]
+	imageFileId = strings.Split(imageFileId, "+")[0]
+
 	// get resources and see that they are not processed yet (we did not run the workflow)
 	resources, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId},
+		ResourceIds: resourceIds,
 	})
 
 	require.NoError(t, err, "no error getting resources")
 
 	// should have 2 elements
-	require.Len(t, resources.Resources, 2, "should have 2 elements")
+	require.Len(t, resources.Resources, 2, "should have 2 elements in res")
 
 	var imageResource *loader.Resource
 	var videoResource *loader.Resource
@@ -118,10 +122,10 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	}
 
 	// expected image resource
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+imageFileId+".png", string(newImageResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+imageFileId, string(newImageResource.Urls[0].URL))
 
 	// expected video resource
-	require.Equal(t, os.Getenv("APP_URL")+"/api/upload/"+videoFileId+".mp4", string(newVideoResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+videoFileId, string(newVideoResource.Urls[0].URL))
 
 	// finally, run the processing workflow. we will query our resources one more time to check that the proper formats and URLs are now available
 	env := getWorkflowEnvironment(t)
@@ -187,14 +191,14 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	// expect 2 urls for image
 	require.Len(t, newImageResource.Urls, 2)
 	// expected first image to be webp
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
 	// expected second image to be a png
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
 
 	// expect 1 url for video
 	require.Len(t, newVideoResource.Urls, 1)
 	// expected video resource
-	require.Equal(t, os.Getenv("STATIC_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
 
 	// should not have gotten an error for trying to upload the same resources
 	_, err = grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{

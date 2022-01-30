@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/principal"
 )
@@ -25,13 +26,13 @@ func NewUpdateClubThumbnailHandler(cr club.Repository, ci club.IndexRepository, 
 
 func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubThumbnail) (*club.Club, error) {
 
-	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.Principal, cmd.ClubId, func(clb *club.Club) error {
+	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.ClubId, func(clb *club.Club) error {
 
 		// create resources from content
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail})
 
 		if err != nil {
-			return err
+			return errors.Wrap(err, "failed to create processed resources from uploads")
 		}
 
 		return clb.UpdateThumbnail(cmd.Principal, resourceIds[0])

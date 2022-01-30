@@ -8,7 +8,6 @@ services:
     depends_on:
       - temporal
       - elasticsearch
-      - minio
     ports:
       - 3240:8000
       - 3250:8080

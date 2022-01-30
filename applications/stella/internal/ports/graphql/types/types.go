@@ -73,6 +73,8 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// Whether or not this club is suspended.
+	Suspension *ClubSuspension `json:"suspension"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.
@@ -124,6 +126,11 @@ type ClubSlugAlias struct {
 	Slug string `json:"slug"`
 }
 
+type ClubSuspension struct {
+	// When the suspension expires. Can call UnSuspendClub when time = now.
+	Expires time.Time `json:"expires"`
+}
+
 // Create club.
 type CreateClubInput struct {
 	// The chosen slug for the club.
@@ -138,6 +145,13 @@ type CreateClubPayload struct {
 	Club *Club `json:"club"`
 	// Validation for creating a new club
 	Validation *CreateClubValidation `json:"validation"`
+}
+
+type Language struct {
+	// BCP47 locale
+	Locale string `json:"locale"`
+	// Fully qualified name
+	Name string `json:"name"`
 }
 
 // Update alias slug to default.
@@ -173,6 +187,39 @@ type Resource struct {
 }
 
 func (Resource) IsEntity() {}
+
+// Suspend the club.
+type SuspendClubInput struct {
+	// The club to suspend.
+	ClubID relay.ID `json:"clubId"`
+	// When the suspension should end.
+	EndTime time.Time `json:"endTime"`
+}
+
+// Suspend club payload.
+type SuspendClubPayload struct {
+	// The new club after it's suspended.
+	Club *Club `json:"club"`
+}
+
+type Translation struct {
+	// The language linked to this translation.
+	Language *Language `json:"language"`
+	// The translation text.
+	Text string `json:"text"`
+}
+
+// Un-Suspend the club.
+type UnSuspendClubInput struct {
+	// The club to un-suspend.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Un suspend club payload.
+type UnSuspendClubPayload struct {
+	// The new club after it's not suspended anymore.
+	Club *Club `json:"club"`
+}
 
 // Update club name.
 type UpdateClubNameInput struct {
@@ -258,7 +305,7 @@ func (e AddClubSlugAliasValidation) MarshalGQL(w io.Writer) {
 type ClubMembersSort string
 
 const (
-	// By newest members
+	// By oldest members
 	ClubMembersSortNewest ClubMembersSort = "NEWEST"
 )
 

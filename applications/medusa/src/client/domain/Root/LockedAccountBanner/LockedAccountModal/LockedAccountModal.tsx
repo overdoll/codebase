@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import CommunityGuidelines from '../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from 'date-fns'
 import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
 import { useEffect, useState } from 'react'
@@ -29,9 +29,11 @@ interface Props {
 }
 
 const LockedAccountModalGQL = graphql`
-  fragment LockedAccountModalFragment on AccountLock {
-    reason
-    expires
+  fragment LockedAccountModalFragment on Account {
+    ...UnlockAccountFormFragment
+    lock {
+      expires
+    }
   }
 `
 
@@ -47,11 +49,11 @@ export default function LockedAccountModal ({
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
 
-  const reasons = {
-    POST_INFRACTION: i18n._(t`The contents of a post you uploaded are not allowed on our platform.`)
-  }
+  // const reasons = {
+  //   POST_INFRACTION: i18n._(t`The contents of a post you uploaded are not allowed on our platform.`)
+  // }
 
-  const expires = new Date(data.expires as Date)
+  const expires = new Date(data?.lock?.expires as Date)
 
   const calculateRemainingTime = (): Duration => {
     return intervalToDuration({
@@ -113,7 +115,7 @@ export default function LockedAccountModal ({
               status='warning'
             >
               <AlertDescription>
-                {reasons[data.reason] ?? <Trans>No reason was found</Trans>}
+                <Trans>No reason was found</Trans>
               </AlertDescription>
             </Alert>
             <Box>
@@ -126,22 +128,28 @@ export default function LockedAccountModal ({
             </Box>
             <Text>
               {canBeUnlocked
-                ? <Trans>
-                  You may unlock your account after agreeing to the community guidelines.
-                </Trans>
-                : <Trans>
-                  Your account has been locked and you'll have the ability to unlock it after
-                </Trans>}
+                ? (
+                  <Trans>
+                    You may unlock your account after agreeing to the community guidelines.
+                  </Trans>
+                  )
+                : (
+                  <Trans>
+                    Your account has been locked and you'll have the ability to unlock it after
+                  </Trans>
+                  )}
             </Text>
             {canBeUnlocked
-              ? <UnlockAccountForm />
-              : <SmallBackgroundBox bg='green.50'>
-                <Text textAlign='center' color='green.500'>
-                  <Trans>
-                    {duration}
-                  </Trans>
-                </Text>
-              </SmallBackgroundBox>}
+              ? <UnlockAccountForm queryRef={data} />
+              : (
+                <SmallBackgroundBox bg='green.50'>
+                  <Text textAlign='center' color='green.500'>
+                    <Trans>
+                      {duration}
+                    </Trans>
+                  </Text>
+                </SmallBackgroundBox>
+                )}
           </Stack>
         </ModalBody>
       </ModalContent>

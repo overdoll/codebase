@@ -1,0 +1,149 @@
+type Series implements Node @key(fields: "id") {
+  """An ID pointing to this series."""
+  id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """A title for this series."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
+}
+
+type SeriesEdge {
+  cursor: String!
+  node: Series!
+}
+
+type SeriesConnection {
+  edges: [SeriesEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Properties by which series connections can be sorted."""
+enum SeriesSort {
+  """Series by newest first"""
+  NEW
+
+  """Series by top likes"""
+  TOP
+
+  """Series by most posts"""
+  POPULAR
+}
+
+extend type Query {
+  """Get or search all series"""
+  series(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the series."""
+    title: String
+
+    """Sorting options for series."""
+    sortBy: SeriesSort! = POPULAR
+  ): SeriesConnection!
+
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
+}
+
+"""Create a new series."""
+input CreateSeriesInput {
+  """The chosen slug for the series."""
+  slug: String!
+
+  """The chosen title for the series."""
+  title: String!
+}
+
+"""Payload for a new series"""
+type CreateSeriesPayload {
+  """The series after creation"""
+  series: Series
+
+  """Validation for creating a new series"""
+  validation: CreateSeriesValidation
+}
+
+"""Validation for creating a new series"""
+enum CreateSeriesValidation {
+  SLUG_TAKEN
+}
+
+"""Update series."""
+input UpdateSeriesTitleInput {
+  """The series to update"""
+  id: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update series."""
+input UpdateSeriesThumbnailInput {
+  """The series to update"""
+  id: ID!
+
+  """The thumbnail"""
+  thumbnail: String!
+}
+
+"""Payload for updating series"""
+type UpdateSeriesTitlePayload {
+  """The series after update"""
+  series: Series
+}
+
+"""Payload for updating series"""
+type UpdateSeriesThumbnailPayload {
+  """The category after update"""
+  series: Series
+}
+
+extend type Mutation {
+  """
+  Create a new series
+  """
+  createSeries(input: CreateSeriesInput!): CreateSeriesPayload
+
+  """
+  Update series title
+  """
+  updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
+
+  """
+  Update series thumbnail
+  """
+  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
+}

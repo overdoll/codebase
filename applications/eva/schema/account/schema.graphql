@@ -6,7 +6,7 @@ type Account implements Node @key(fields: "id") {
   reference: String!
 
   """A URL pointing to the account's public avatar."""
-  avatar(size: Int): Resource
+  avatar: Resource
 
   """The username of the account."""
   username: String!
@@ -33,23 +33,34 @@ type AccountConnection {
   pageInfo: PageInfo!
 }
 
-enum AccountLockReason {
-  POST_INFRACTION
-}
-
 type AccountLock {
   expires: Time!
-  reason: AccountLockReason!
+}
+
+"""Input for locking an account."""
+input LockAccountInput {
+  """The account to lock."""
+  accountID: ID!
+
+  """When the lock should end."""
+  endTime: Time!
 }
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
+  """The account to unlock."""
   accountID: ID!
 }
 
 """Payload for the unlocked account"""
 type UnlockAccountPayload {
   """Account that was unlocked"""
+  account: Account
+}
+
+"""Payload for the locked account"""
+type LockAccountPayload {
+  """Account that was locked"""
   account: Account
 }
 
@@ -61,9 +72,16 @@ enum AccountsSort {
 
 extend type Mutation {
   """
-  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
+
+  Can be unlocked by staff+ regardless if time is past.
   """
-  unlockAccount: UnlockAccountPayload
+  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """
+  Lock an account for a specific duration.
+  """
+  lockAccount(input: LockAccountInput!): LockAccountPayload
 }
 
 extend type Query {

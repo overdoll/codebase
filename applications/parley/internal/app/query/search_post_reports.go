@@ -13,7 +13,7 @@ type SearchPostReports struct {
 	Principal *principal.Principal
 
 	Cursor *paging.Cursor
-	PostId string
+	PostId *string
 
 	From time.Time
 	To   time.Time

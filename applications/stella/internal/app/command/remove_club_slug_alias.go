@@ -25,7 +25,7 @@ func NewRemoveClubSlugAliasHandler(cr club.Repository, ci club.IndexRepository) 
 
 func (h RemoveClubSlugAliasHandler) Handle(ctx context.Context, cmd RemoveClubSlugAlias) (*club.Club, error) {
 
-	clb, err := h.cr.UpdateClubSlugAliases(ctx, cmd.Principal, cmd.ClubId, func(club *club.Club) error {
+	clb, err := h.cr.UpdateClubSlugAliases(ctx, cmd.ClubId, func(club *club.Club) error {
 		return club.RemoveSlugAlias(cmd.Principal, cmd.Slug)
 	})
 

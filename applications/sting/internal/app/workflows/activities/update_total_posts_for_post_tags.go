@@ -17,9 +17,9 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 		return err
 	}
 
-	for _, cat := range pendingPost.Categories() {
+	for _, cat := range pendingPost.CategoryIds() {
 
-		newCat, err := h.pr.UpdateCategoryTotalPostsOperator(ctx, cat.ID(), func(category *post.Category) error {
+		newCat, err := h.pr.UpdateCategoryTotalPostsOperator(ctx, cat, func(category *post.Category) error {
 			totalPosts, err := h.pi.GetTotalPostsForCategoryOperator(ctx, category)
 
 			if err != nil {
@@ -40,9 +40,9 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 
 	updatedSeries := make(map[string]bool)
 
-	for _, char := range pendingPost.Characters() {
+	for _, char := range pendingPost.CharacterIds() {
 
-		newChar, err := h.pr.UpdateCharacterTotalPostsOperator(ctx, char.ID(), func(character *post.Character) error {
+		newChar, err := h.pr.UpdateCharacterTotalPostsOperator(ctx, char, func(character *post.Character) error {
 
 			totalPosts, err := h.pi.GetTotalPostsForCharacterOperator(ctx, character)
 
@@ -61,9 +61,9 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 			return err
 		}
 
-		if _, ok := updatedSeries[char.Series().ID()]; !ok {
+		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
-			newSeries, err := h.pr.UpdateSeriesTotalPostsOperator(ctx, char.Series().ID(), func(series *post.Series) error {
+			newSeries, err := h.pr.UpdateSeriesTotalPostsOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
 				totalPosts, err := h.pi.GetTotalPostsForSeriesOperator(ctx, series)
 
@@ -86,7 +86,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId str
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalPostsOperator(ctx, pendingPost.Audience().ID(), func(audience *post.Audience) error {
+	newAud, err := h.pr.UpdateAudienceTotalPostsOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
 
 		totalPosts, err := h.pi.GetTotalPostsForAudienceOperator(ctx, audience)
 

@@ -40,27 +40,24 @@ export default function Arrange ({
   useEffect(() => {
     if (state.files.length < 1 && Object.keys(state.urls).length < 1) {
       uppy.cancelAll()
-      data.content.forEach(async file => {
+      data.content.forEach(file => {
         const resource = file.urls[0]
-        const tempUrl = resource.url
-        await fetch(tempUrl)
-          .then(async (response) => await response.blob()) // returns a Blob
-          .then((blob) => {
-            const uppyFileId = uppy.addFile({
-              id: file.id,
-              name: file.id,
-              type: blob.type,
-              data: blob,
-              source: 'already-uploaded'
-            })
-            const fileFromUppy = uppy.getFile(uppyFileId)
-            uppy.emit('upload-started', fileFromUppy)
-            uppy.emit('upload-progress', fileFromUppy, {
-              bytesUploaded: blob.size,
-              bytesTotal: blob.size
-            })
-            uppy.emit('upload-success', fileFromUppy, 'success')
-          })
+
+        const uppyFileId = uppy.addFile({
+          id: file.id,
+          name: file.id,
+          type: resource.mimeType,
+          data: new Blob(),
+          source: 'already-uploaded'
+        })
+
+        const fileFromUppy = uppy.getFile(uppyFileId)
+        uppy.emit('upload-started', fileFromUppy)
+        uppy.emit('upload-progress', fileFromUppy, {
+          bytesUploaded: 1,
+          bytesTotal: 1
+        })
+        uppy.emit('upload-success', fileFromUppy, 'success')
       })
     }
   }, [data.content])

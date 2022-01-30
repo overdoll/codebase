@@ -55,6 +55,10 @@ func NewModerator(requester *principal.Principal, accountId string) (*Moderator,
 		}
 	}
 
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
 	return &Moderator{
 		accountId:    accountId,
 		lastSelected: time.Now(),

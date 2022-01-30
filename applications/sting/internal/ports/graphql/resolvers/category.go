@@ -6,28 +6,13 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"strconv"
 	"strings"
 )
 
 type CategoryResolver struct {
 	App *app.Application
-}
-
-func (r CategoryResolver) Thumbnail(ctx context.Context, obj *types.Category, size *int) (*types.Resource, error) {
-
-	if obj.Thumbnail == nil {
-		return nil, nil
-	}
-
-	if size != nil {
-		return &types.Resource{ID: relay.NewID(types.Resource{}, strconv.Itoa(*size), obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
-	}
-
-	return &types.Resource{ID: relay.NewID(types.Resource{}, obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 }
 
 func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
@@ -46,14 +31,15 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:         cursor,
-		AudienceSlugs:  audienceSlugs,
-		CharacterSlugs: characterSlugs,
-		SeriesSlugs:    seriesSlugs,
-		State:          stateModified,
-		CategorySlugs:  []string{obj.Slug},
-		Principal:      principal.FromContext(ctx),
-		SortBy:         strings.ToLower(sortBy.String()),
+		Cursor:             cursor,
+		AudienceSlugs:      audienceSlugs,
+		CharacterSlugs:     characterSlugs,
+		SeriesSlugs:        seriesSlugs,
+		State:              stateModified,
+		CategorySlugs:      []string{obj.Slug},
+		Principal:          principal.FromContext(ctx),
+		SortBy:             strings.ToLower(sortBy.String()),
+		ShowSuspendedClubs: false,
 	})
 
 	if err != nil {

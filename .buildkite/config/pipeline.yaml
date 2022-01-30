@@ -3,10 +3,6 @@ steps:
   integration_test:
     setup:
       env:
-        AWS_ACCESS_KEY_LOADER: overdoll123
-        AWS_ACCESS_SECRET_LOADER: overdoll123
-        AWS_ENDPOINT_LOADER: http://minio:9000
-        AWS_REGION_LOADER: us-east-1
         DB_HOST: scylla
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233
@@ -14,6 +10,8 @@ steps:
         GIN_MODE: debug
         APP_DEBUG: "true"
         EVA_SERVICE: eva:8080
+        RESOURCES_BUCKET: sandbox-overdoll-resources
+        UPLOADS_BUCKET: sandbox-overdoll-uploads
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
         CARRIER_SERVICE: carrier:8080
@@ -32,3 +30,5 @@ steps:
         EMAIL_FROM_NAME: overdoll
         EMAIL_FROM_ADDRESS: please-dont-reply@overdoll.com
         EMAIL_DOMAIN_WHITELIST: inbox.testmail.app
+        RESOURCES_URL: https://sandbox-overdoll-resources.s3.amazonaws.com
+        UPLOADS_URL: https://sandbox-overdoll-uploads.s3.amazonaws.com

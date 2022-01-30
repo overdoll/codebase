@@ -270,6 +270,12 @@ const server = new ApolloServer({
 // custom playground that will add a CSRF token
 // uses the same playground as apollo, we just needed to make these changes to support CSRF
 const renderPlayground = (req, res, next): void => {
+  // disable playground if no debug
+  if (process.env.APP_DEBUG !== 'true') {
+    next()
+    return
+  }
+
   if (req.method !== 'GET') {
     next()
     return

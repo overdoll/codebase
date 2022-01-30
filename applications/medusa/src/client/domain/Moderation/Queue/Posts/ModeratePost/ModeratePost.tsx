@@ -98,7 +98,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       variables: {
         input: {
           postId: data.id,
-          postRejectionReasonId: formData.rejectionId,
+          ruleId: formData.rejectionId,
           notes: formData.note
         },
         connections: [props.connectionID]

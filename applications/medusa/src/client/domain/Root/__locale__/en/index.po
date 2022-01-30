@@ -107,6 +107,7 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:33
 msgid "Load More"
 msgstr ""
@@ -123,6 +124,8 @@ msgstr ""
 msgid "Load More Series"
 msgstr ""
 
+=======
+>>>>>>> master
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:126
 msgid "Log Out"
 msgstr ""

@@ -16,9 +16,14 @@ type Like struct {
 	likedAt   time.Time
 }
 
-func NewLike(acc *principal.Principal, post *Post) (*Like, error) {
+func NewLike(requester *principal.Principal, post *Post) (*Like, error) {
+
+	if requester.IsLocked() {
+		return nil, principal.ErrLocked
+	}
+
 	return &Like{
-		accountId: acc.AccountId(),
+		accountId: requester.AccountId(),
 		postId:    post.ID(),
 		likedAt:   time.Now(),
 	}, nil
@@ -45,6 +50,11 @@ func (m *Like) LikedAt() time.Time {
 }
 
 func (m *Like) CanRemove(requester *principal.Principal) error {
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
+
 	return requester.BelongsToAccount(m.AccountId())
 }
 

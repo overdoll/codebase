@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "rule",
+    srcs = [
+        "repository.go",
+        "rule.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/domain/rule",
+    visibility = ["//applications/parley:__subpackages__"],
+    deps = [
+        "//libraries/localization",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/uuid",
+    ],
+)

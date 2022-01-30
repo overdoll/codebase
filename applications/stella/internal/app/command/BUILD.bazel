@@ -10,6 +10,9 @@ go_library(
         "promote_club_slug_alias_to_default.go",
         "remove_club_slug_alias.go",
         "services.go",
+        "suspend_club.go",
+        "suspend_club_operator.go",
+        "un_suspend_club.go",
         "update_club_name.go",
         "update_club_thumbnail.go",
         "withdraw_club_membership.go",
@@ -19,5 +22,6 @@ go_library(
     deps = [
         "//applications/stella/internal/domain/club",
         "//libraries/principal",
+        "@com_github_pkg_errors//:errors",
     ],
 )

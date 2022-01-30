@@ -1,0 +1,106 @@
+enum ClubInfractionHistorySource {
+  MANUAL
+  POST_MODERATION_REJECTION
+  POST_MANUAL_REMOVAL
+}
+
+"""Infraction history belonging to a club"""
+type ClubInfractionHistory implements Node @key(fields: "id") {
+  """ID of the infraction history"""
+  id: ID!
+
+  """The club belonging to this history object."""
+  club: Club!
+
+  """The account that issued this infraction."""
+  issuerAccount: Account!
+
+  """The rule cited for this infraction."""
+  rule: Rule! @goField(forceResolver: true)
+
+  """The source for this infraction."""
+  source: ClubInfractionHistorySource!
+
+  """When this infraction was issued."""
+  issuedAt: Time!
+
+  """When this infraction expires (no longer considered when issuing future infractions)."""
+  expiresAt: Time!
+}
+
+"""Edge of the infraction history"""
+type ClubInfractionHistoryEdge {
+  node: ClubInfractionHistory!
+  cursor: String!
+}
+
+"""Connection of the infraction history"""
+type ClubInfractionHistoryConnection {
+  edges: [ClubInfractionHistoryEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """
+  Infraction history for this club
+
+  Viewable by the currently authenticated account or staff+
+  """
+  infractionHistory(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubInfractionHistoryConnection! @goField(forceResolver: true)
+}
+
+"""Issue a club infraction."""
+input IssueClubInfractionInput {
+  """The club to issue the infraction to."""
+  clubId: ID!
+
+  """The rule to cite."""
+  ruleId: ID!
+
+  """Pass a custom end time. If none is passed, will use sliding scale based on previous infractions."""
+  customEndTime: Time
+}
+
+"""Remove a club infraction."""
+input RemoveClubInfractionHistoryInput {
+  """The history item to remove."""
+  clubInfractionHistoryId: ID!
+}
+
+"""Issue a new club infraction payload."""
+type IssueClubInfractionPayload {
+  """The new club infraction history item."""
+  clubInfractionHistory: ClubInfractionHistory
+}
+
+"""Remove club infraction history."""
+type RemoveClubInfractionHistoryPayload {
+  """The removed infraction history Id."""
+  clubInfractionHistoryId: ID!
+}
+
+extend type Mutation {
+  """
+  Issue a club infraction.
+  """
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+
+  """
+  In case of a false infraction, you can remove it from the club's history.
+
+  Staff+ only.
+  """
+  removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
+}

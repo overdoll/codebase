@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "post_audit_log",
+    srcs = [
+        "post_audit_log.go",
+        "post_audit_log_filters.go",
+        "post_audit_log_status.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/domain/post_audit_log",
+    visibility = ["//applications/parley:__subpackages__"],
+    deps = [
+        "//applications/parley/internal/domain/rule",
+        "//libraries/paging",
+        "//libraries/principal",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)

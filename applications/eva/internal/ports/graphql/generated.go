@@ -52,7 +52,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Avatar                    func(childComplexity int, size *int) int
+		Avatar                    func(childComplexity int) int
 		CanDisableMultiFactor     func(childComplexity int) int
 		Emails                    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		EmailsLimit               func(childComplexity int) int
@@ -100,7 +100,6 @@ type ComplexityRoot struct {
 
 	AccountLock struct {
 		Expires func(childComplexity int) int
-		Reason  func(childComplexity int) int
 	}
 
 	AccountMultiFactorRecoveryCode struct {
@@ -231,6 +230,10 @@ type ComplexityRoot struct {
 		Subdivision func(childComplexity int) int
 	}
 
+	LockAccountPayload struct {
+		Account func(childComplexity int) int
+	}
+
 	MultiFactor struct {
 		Totp func(childComplexity int) int
 	}
@@ -256,12 +259,13 @@ type ComplexityRoot struct {
 		GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode func(childComplexity int, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput) int
 		GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp         func(childComplexity int, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput) int
 		GrantAuthenticationToken                                            func(childComplexity int, input types.GrantAuthenticationTokenInput) int
+		LockAccount                                                         func(childComplexity int, input types.LockAccountInput) int
 		RevokeAccountAccess                                                 func(childComplexity int) int
 		RevokeAccountModeratorRole                                          func(childComplexity int, input types.RevokeAccountModeratorRole) int
 		RevokeAccountSession                                                func(childComplexity int, input types.RevokeAccountSessionInput) int
 		RevokeAccountStaffRole                                              func(childComplexity int, input types.RevokeAccountStaffRole) int
 		RevokeAuthenticationToken                                           func(childComplexity int, input types.RevokeAuthenticationTokenInput) int
-		UnlockAccount                                                       func(childComplexity int) int
+		UnlockAccount                                                       func(childComplexity int, input types.UnlockAccountInput) int
 		UpdateAccountEmailStatusToPrimary                                   func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountLanguage                                               func(childComplexity int, input types.UpdateAccountLanguageInput) int
 		UpdateAccountUsername                                               func(childComplexity int, input types.UpdateAccountUsernameInput) int
@@ -309,6 +313,11 @@ type ComplexityRoot struct {
 
 	RevokeAuthenticationTokenPayload struct {
 		RevokedAuthenticationTokenID func(childComplexity int) int
+	}
+
+	Translation struct {
+		Language func(childComplexity int) int
+		Text     func(childComplexity int) int
 	}
 
 	UnlockAccountPayload struct {
@@ -374,7 +383,8 @@ type MutationResolver interface {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload, error)
 	VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error)
 	RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error)
-	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
+	UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error)
+	LockAccount(ctx context.Context, input types.LockAccountInput) (*types.LockAccountPayload, error)
 	UpdateLanguage(ctx context.Context, input types.UpdateLanguageInput) (*types.UpdateLanguagePayload, error)
 	UpdateAccountLanguage(ctx context.Context, input types.UpdateAccountLanguageInput) (*types.UpdateAccountLanguagePayload, error)
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
@@ -421,12 +431,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Account_avatar_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Avatar(childComplexity, args["size"].(*int)), true
+		return e.complexity.Account.Avatar(childComplexity), true
 
 	case "Account.canDisableMultiFactor":
 		if e.complexity.Account.CanDisableMultiFactor == nil {
@@ -640,13 +645,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountLock.Expires(childComplexity), true
-
-	case "AccountLock.reason":
-		if e.complexity.AccountLock.Reason == nil {
-			break
-		}
-
-		return e.complexity.AccountLock.Reason(childComplexity), true
 
 	case "AccountMultiFactorRecoveryCode.code":
 		if e.complexity.AccountMultiFactorRecoveryCode.Code == nil {
@@ -1076,6 +1074,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Location.Subdivision(childComplexity), true
 
+	case "LockAccountPayload.account":
+		if e.complexity.LockAccountPayload.Account == nil {
+			break
+		}
+
+		return e.complexity.LockAccountPayload.Account(childComplexity), true
+
 	case "MultiFactor.totp":
 		if e.complexity.MultiFactor.Totp == nil {
 			break
@@ -1257,6 +1262,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.GrantAuthenticationToken(childComplexity, args["input"].(types.GrantAuthenticationTokenInput)), true
 
+	case "Mutation.lockAccount":
+		if e.complexity.Mutation.LockAccount == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_lockAccount_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LockAccount(childComplexity, args["input"].(types.LockAccountInput)), true
+
 	case "Mutation.revokeAccountAccess":
 		if e.complexity.Mutation.RevokeAccountAccess == nil {
 			break
@@ -1317,7 +1334,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Mutation.UnlockAccount(childComplexity), true
+		args, err := ec.field_Mutation_unlockAccount_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UnlockAccount(childComplexity, args["input"].(types.UnlockAccountInput)), true
 
 	case "Mutation.updateAccountEmailStatusToPrimary":
 		if e.complexity.Mutation.UpdateAccountEmailStatusToPrimary == nil {
@@ -1525,6 +1547,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RevokeAuthenticationTokenPayload.RevokedAuthenticationTokenID(childComplexity), true
 
+	case "Translation.language":
+		if e.complexity.Translation.Language == nil {
+			break
+		}
+
+		return e.complexity.Translation.Language(childComplexity), true
+
+	case "Translation.text":
+		if e.complexity.Translation.Text == nil {
+			break
+		}
+
+		return e.complexity.Translation.Text(childComplexity), true
+
 	case "UnlockAccountPayload.account":
 		if e.complexity.UnlockAccountPayload.Account == nil {
 			break
@@ -1674,7 +1710,7 @@ var sources = []*ast.Source{
   reference: String!
 
   """A URL pointing to the account's public avatar."""
-  avatar(size: Int): Resource
+  avatar: Resource
 
   """The username of the account."""
   username: String!
@@ -1701,23 +1737,34 @@ type AccountConnection {
   pageInfo: PageInfo!
 }
 
-enum AccountLockReason {
-  POST_INFRACTION
-}
-
 type AccountLock {
   expires: Time!
-  reason: AccountLockReason!
+}
+
+"""Input for locking an account."""
+input LockAccountInput {
+  """The account to lock."""
+  accountID: ID!
+
+  """When the lock should end."""
+  endTime: Time!
 }
 
 """Input for unlocking an account"""
 input UnlockAccountInput {
+  """The account to unlock."""
   accountID: ID!
 }
 
 """Payload for the unlocked account"""
 type UnlockAccountPayload {
   """Account that was unlocked"""
+  account: Account
+}
+
+"""Payload for the locked account"""
+type LockAccountPayload {
+  """Account that was locked"""
   account: Account
 }
 
@@ -1729,9 +1776,16 @@ enum AccountsSort {
 
 extend type Mutation {
   """
-  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
+
+  Can be unlocked by staff+ regardless if time is past.
   """
-  unlockAccount: UnlockAccountPayload
+  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """
+  Lock an account for a specific duration.
+  """
+  lockAccount(input: LockAccountInput!): LockAccountPayload
 }
 
 extend type Query {
@@ -1769,22 +1823,7 @@ extend type Query {
   ): AccountConnection!
 }
 `, BuiltIn: false},
-	{Name: "schema/language/schema.graphql", Input: `# Localization formatted in BCP47
-scalar BCP47
-
-type Language {
-  """
-  BCP47 locale
-  """
-  locale: BCP47!
-
-  """
-  Fully qualified name
-  """
-  name: String!
-}
-
-extend type Account {
+	{Name: "schema/language/schema.graphql", Input: `extend type Account {
   """
   The language of the account.
 
@@ -2644,6 +2683,29 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -2705,21 +2767,6 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 		}
 	}
 	args["multi"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_avatar_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
 	return args, nil
 }
 
@@ -3017,6 +3064,21 @@ func (ec *executionContext) field_Mutation_grantAuthenticationToken_args(ctx con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_lockAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.LockAccountInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNLockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_revokeAccountModeratorRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3069,6 +3131,21 @@ func (ec *executionContext) field_Mutation_revokeAuthenticationToken_args(ctx co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRevokeAuthenticationTokenInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAuthenticationTokenInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_unlockAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UnlockAccountInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUnlockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnlockAccountInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3405,13 +3482,6 @@ func (ec *executionContext) _Account_avatar(ctx context.Context, field graphql.C
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_avatar_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Avatar, nil
@@ -4379,41 +4449,6 @@ func (ec *executionContext) _AccountLock_expires(ctx context.Context, field grap
 	res := resTmp.(time.Time)
 	fc.Result = res
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountLock",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Reason, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(types.AccountLockReason)
-	fc.Result = res
-	return ec.marshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountMultiFactorRecoveryCode_code(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorRecoveryCode) (ret graphql.Marshaler) {
@@ -6436,6 +6471,38 @@ func (ec *executionContext) _Location_longitude(ctx context.Context, field graph
 	return ec.marshalNFloat2float64(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _LockAccountPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.LockAccountPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LockAccountPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _MultiFactor_totp(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactor) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6897,9 +6964,16 @@ func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field g
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_unlockAccount_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlockAccount(rctx)
+		return ec.resolvers.Mutation().UnlockAccount(rctx, args["input"].(types.UnlockAccountInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6911,6 +6985,45 @@ func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field g
 	res := resTmp.(*types.UnlockAccountPayload)
 	fc.Result = res
 	return ec.marshalOUnlockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnlockAccountPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_lockAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_lockAccount_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().LockAccount(rctx, args["input"].(types.LockAccountInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.LockAccountPayload)
+	fc.Result = res
+	return ec.marshalOLockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateLanguage(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8222,6 +8335,76 @@ func (ec *executionContext) _RevokeAuthenticationTokenPayload_revokedAuthenticat
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Translation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Translation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Text, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UnlockAccountPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.UnlockAccountPayload) (ret graphql.Marshaler) {
@@ -9991,6 +10174,37 @@ func (ec *executionContext) unmarshalInputGrantAuthenticationTokenInput(ctx cont
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputLockAccountInput(ctx context.Context, obj interface{}) (types.LockAccountInput, error) {
+	var it types.LockAccountInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountID"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "endTime":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("endTime"))
+			it.EndTime, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context.Context, obj interface{}) (types.RevokeAccountModeratorRole, error) {
 	var it types.RevokeAccountModeratorRole
 	asMap := map[string]interface{}{}
@@ -10842,16 +11056,6 @@ func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionS
 		case "expires":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AccountLock_expires(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "reason":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountLock_reason(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11925,6 +12129,34 @@ func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var lockAccountPayloadImplementors = []string{"LockAccountPayload"}
+
+func (ec *executionContext) _LockAccountPayload(ctx context.Context, sel ast.SelectionSet, obj *types.LockAccountPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, lockAccountPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LockAccountPayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._LockAccountPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var multiFactorImplementors = []string{"MultiFactor"}
 
 func (ec *executionContext) _MultiFactor(ctx context.Context, sel ast.SelectionSet, obj *types.MultiFactor) graphql.Marshaler {
@@ -12085,6 +12317,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "unlockAccount":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_unlockAccount(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "lockAccount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_lockAccount(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -12648,6 +12887,47 @@ func (ec *executionContext) _RevokeAuthenticationTokenPayload(ctx context.Contex
 		case "revokedAuthenticationTokenId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._RevokeAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var translationImplementors = []string{"Translation"}
+
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Translation")
+		case "language":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Translation_language(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "text":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Translation_text(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13473,16 +13753,6 @@ func (ec *executionContext) marshalNAccountEmailStatus2overdollᚋapplications�
 	return v
 }
 
-func (ec *executionContext) unmarshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx context.Context, v interface{}) (types.AccountLockReason, error) {
-	var res types.AccountLockReason
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx context.Context, sel ast.SelectionSet, v types.AccountLockReason) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountMultiFactorRecoveryCode) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -13822,6 +14092,11 @@ func (ec *executionContext) marshalNLocation2ᚖoverdollᚋapplicationsᚋevaᚋ
 	return ec._Location(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNLockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountInput(ctx context.Context, v interface{}) (types.LockAccountInput, error) {
+	res, err := ec.unmarshalInputLockAccountInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -13901,6 +14176,11 @@ func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUnlockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnlockAccountInput(ctx context.Context, v interface{}) (types.UnlockAccountInput, error) {
+	res, err := ec.unmarshalInputUnlockAccountInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateAccountEmailStatusToPrimaryInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryInput(ctx context.Context, v interface{}) (types.UpdateAccountEmailStatusToPrimaryInput, error) {
@@ -14599,6 +14879,13 @@ func (ec *executionContext) marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋ
 		return graphql.Null
 	}
 	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOLockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountPayload(ctx context.Context, sel ast.SelectionSet, v *types.LockAccountPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._LockAccountPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactor) graphql.Marshaler {

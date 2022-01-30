@@ -28,7 +28,6 @@ var accountTable = table.New(table.Metadata{
 		"locked",
 		"locked_until",
 		"language",
-		"locked_reason",
 		"last_username_edit",
 		"multi_factor_enabled",
 	},
@@ -37,18 +36,17 @@ var accountTable = table.New(table.Metadata{
 })
 
 type accounts struct {
-	Id                 string    `db:"id"`
-	Username           string    `db:"username"`
-	Email              string    `db:"email"`
-	Roles              []string  `db:"roles"`
-	Verified           bool      `db:"verified"`
-	AvatarResourceId   string    `db:"avatar_resource_id"`
-	Language           string    `db:"language"`
-	Locked             bool      `db:"locked"`
-	LockedUntil        int       `db:"locked_until"`
-	LockedReason       string    `db:"locked_reason"`
-	LastUsernameEdit   time.Time `db:"last_username_edit"`
-	MultiFactorEnabled bool      `db:"multi_factor_enabled"`
+	Id                 string     `db:"id"`
+	Username           string     `db:"username"`
+	Email              string     `db:"email"`
+	Roles              []string   `db:"roles"`
+	Verified           bool       `db:"verified"`
+	AvatarResourceId   string     `db:"avatar_resource_id"`
+	Language           string     `db:"language"`
+	Locked             bool       `db:"locked"`
+	LockedUntil        *time.Time `db:"locked_until"`
+	LastUsernameEdit   time.Time  `db:"last_username_edit"`
+	MultiFactorEnabled bool       `db:"multi_factor_enabled"`
 }
 
 var accountUsernameTable = table.New(table.Metadata{
@@ -117,7 +115,6 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
 		Language:           usr.Language().Locale(),
-		LockedReason:       usr.LockedReason().String(),
 		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
 }
@@ -127,14 +124,13 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 
 	var accountInstance accounts
 
-	queryUser := r.session.
+	if err := r.session.
 		Query(accountTable.Get()).
 		Consistency(gocql.LocalOne).
 		BindStruct(&accounts{
 			Id: id,
-		})
-
-	if err := queryUser.Get(&accountInstance); err != nil {
+		}).
+		Get(&accountInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -153,7 +149,6 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.Language,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
-		accountInstance.LockedReason,
 		accountInstance.MultiFactorEnabled,
 		accountInstance.LastUsernameEdit,
 	), nil
@@ -164,14 +159,13 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 
 	var accountInstances []accounts
 
-	queryUser := qb.
+	if err := qb.
 		Select(accountTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalOne).
-		Bind(ids)
-
-	if err := queryUser.Select(&accountInstances); err != nil {
+		Bind(ids).
+		Select(&accountInstances); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -193,7 +187,6 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.Language,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
-			accountInstance.LockedReason,
 			accountInstance.MultiFactorEnabled,
 			accountInstance.LastUsernameEdit,
 		))
@@ -208,14 +201,13 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 	// get authentication cookie with this ID
 	var accEmail accountEmail
 
-	queryEmail := r.session.
+	if err := r.session.
 		Query(accountEmailTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountEmail{
 			Email: strings.ToLower(email),
-		})
-
-	if err := queryEmail.Get(&accEmail); err != nil {
+		}).
+		Get(&accEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -238,19 +230,18 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
 
-	accountUsernames := accountUsernameTable.
+	applied, err := accountUsernameTable.
 		InsertBuilder().
 		Unique().
 		Query(r.session).
-		SerialConsistency(gocql.Serial).
+		SerialConsistency(gocql.LocalSerial).
 		BindStruct(AccountUsername{
 			AccountId: instance.ID(),
 			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
 			// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 			Username: strings.ToLower(username),
-		})
-
-	applied, err := accountUsernames.ExecCAS()
+		}).
+		ExecCAS()
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
@@ -267,15 +258,22 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId, username string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	applied, err := accountUsernameTable.
+		DeleteBuilder().
+		Existing().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(AccountUsername{
+			Username: strings.TrimSpace(strings.ToLower(username)),
+		}).
+		ExecCAS()
 
-	// delete from other table
-	stmt, _ := accountUsernameTable.Delete()
+	if err != nil {
+		return fmt.Errorf("failed to delete unique username: %v", err)
+	}
 
-	batch.Query(stmt, strings.ToLower(username))
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account username: %v", err)
+	if !applied {
+		return fmt.Errorf("could not delete unique username: %v", err)
 	}
 
 	return nil
@@ -283,7 +281,7 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, accountId,
 
 func (r AccountRepository) createUniqueAccountEmail(ctx context.Context, accountId string, email string) error {
 
-	insertAccountEmail := accountEmailTable.
+	applied, err := accountEmailTable.
 		InsertBuilder().
 		Unique().
 		Query(r.session).
@@ -291,9 +289,8 @@ func (r AccountRepository) createUniqueAccountEmail(ctx context.Context, account
 		BindStruct(accountEmail{
 			Email:     strings.ToLower(email),
 			AccountId: accountId,
-		})
-
-	applied, err := insertAccountEmail.ExecCAS()
+		}).
+		ExecCAS()
 
 	if err != nil {
 		return fmt.Errorf("failed to create unique email: %v", err)
@@ -315,12 +312,25 @@ func (r AccountRepository) deleteAccountEmail(ctx context.Context, accountId, em
 
 	batch.Query(stmt, accountId, email)
 
-	// delete from other table
-	stmt, _ = accountEmailTable.Delete()
-
-	batch.Query(stmt, strings.ToLower(email))
-
 	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete account email: %v", err)
+	}
+
+	applied, err := accountEmailTable.
+		DeleteBuilder().
+		Existing().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountEmail{
+			Email: strings.ToLower(email),
+		}).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to delete account email: %v", err)
+	}
+
+	if !applied {
 		return fmt.Errorf("failed to delete account email: %v", err)
 	}
 
@@ -373,7 +383,6 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		instance.IsLocked(),
 		instance.LockedUntil(),
 		instance.Language().Locale(),
-		instance.LockedReason().String(),
 		instance.LastUsernameEdit(),
 		instance.MultiFactorEnabled(),
 	)
@@ -412,26 +421,23 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 		return nil, err
 	}
 
-	updateUser :=
-		r.session.
-			Query(
-				accountTable.Update(
-					"username",
-					"email",
-					"roles",
-					"verified",
-					"locked_until",
-					"language",
-					"locked",
-					"locked_reason",
-					"avatar_resource_id",
-					"multi_factor_enabled",
-				),
-			).
-			Consistency(gocql.LocalQuorum).
-			BindStruct(marshalUserToDatabase(currentUser))
-
-	if err := updateUser.ExecRelease(); err != nil {
+	if err := r.session.
+		Query(
+			accountTable.Update(
+				"username",
+				"email",
+				"roles",
+				"verified",
+				"locked_until",
+				"language",
+				"locked",
+				"avatar_resource_id",
+				"multi_factor_enabled",
+			),
+		).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalUserToDatabase(currentUser)).
+		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update account: %v", err)
 	}
 
@@ -470,20 +476,26 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester 
 		}
 
 		if strings.ToLower(oldUsername) != strings.ToLower(instance.Username()) {
-			// only a casings change - don't create unqiue username
+			// only a casings change - don't create unique username
+
 			if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
+				return nil, err
+			}
+
+			if err := r.deleteAccountUsername(ctx, instance.ID(), strings.ToLower(oldUsername)); err != nil {
+
+				if err := r.createUniqueAccountUsername(ctx, instance, strings.ToLower(oldUsername)); err != nil {
+					return nil, err
+				}
+
 				return nil, err
 			}
 		}
 
 		batch := r.session.NewBatch(gocql.LoggedBatch)
 
-		// delete old username
-		stmt, _ := accountUsernameTable.Delete()
-		batch.Query(stmt, strings.ToLower(oldUsername))
-
 		// finally, update account
-		stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
+		stmt, _ := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
 		batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
@@ -509,14 +521,13 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 	var accountUsername AccountUsername
 
 	// check if email is in use
-	queryEmail := r.session.
+	if err := r.session.
 		Query(accountUsernameTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&AccountUsername{
 			Username: strings.ToLower(username),
-		})
-
-	if err := queryEmail.Get(&accountUsername); err != nil {
+		}).
+		Get(&accountUsername); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -541,15 +552,14 @@ func (r AccountRepository) GetAccountEmail(ctx context.Context, requester *princ
 	var accountEmail emailByAccount
 
 	// get account emails and status
-	queryEmails := r.session.
+	if err := r.session.
 		Query(emailByAccountTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
 			Email:     email,
-		})
-
-	if err := queryEmails.Get(&accountEmail); err != nil {
+		}).
+		Get(&accountEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -588,11 +598,10 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, requester *prin
 		}
 	}
 
-	queryEmails := builder.Query(r.session).
+	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(data)
-
-	if err := queryEmails.Select(&accountEmails); err != nil {
+		BindStruct(data).
+		Select(&accountEmails); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -713,16 +722,15 @@ func (r AccountRepository) CreateAccountEmail(ctx context.Context, requester *pr
 		return err
 	}
 
-	insertEmailByAccount := r.session.
+	if err := r.session.
 		Query(emailByAccountTable.Insert()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(emailByAccount{
 			Email:     email.Email(),
 			AccountId: email.AccountId(),
 			Status:    1,
-		})
-
-	if err := insertEmailByAccount.ExecRelease(); err != nil {
+		}).
+		ExecRelease(); err != nil {
 		_ = r.deleteAccountEmail(ctx, email.AccountId(), email.Email())
 		return fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}

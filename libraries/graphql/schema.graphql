@@ -7,3 +7,26 @@ directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
 
 directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
