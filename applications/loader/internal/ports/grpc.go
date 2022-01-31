@@ -35,21 +35,21 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		return nil, err
 	}
 
+	var newResourceIds []string
+
+	for _, r := range resources {
+		newResourceIds = append(newResourceIds, r.ID())
+	}
+
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "ProcessResourcesForUpload" + uuid.New().String(),
 	}
 
-	_, err = s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, request.ResourceIds)
+	_, err = s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, newResourceIds)
 
 	if err != nil {
 		return nil, err
-	}
-
-	var newResourceIds []string
-
-	for _, r := range resources {
-		newResourceIds = append(newResourceIds, r.ID())
 	}
 
 	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: newResourceIds}, nil
