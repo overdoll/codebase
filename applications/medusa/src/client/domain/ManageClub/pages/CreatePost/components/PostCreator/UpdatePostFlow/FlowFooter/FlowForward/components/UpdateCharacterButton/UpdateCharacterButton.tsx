@@ -59,7 +59,7 @@ export default function UpdateCharacterButton ({
 
   const notify = useToast()
 
-  const buttonDisabled = (Object.keys(state.characters)).length < 1
+  const buttonDisabled = (Object.keys(state.characters)).length < 1 || state.isProcessing
 
   const hasUpdate = (): boolean => {
     const currentCharacters = data?.characters.map((item) => item.id)
@@ -71,7 +71,7 @@ export default function UpdateCharacterButton ({
   const goNext = (): void => {
     dispatch({
       type: EVENTS.STEP,
-      value: STEPS.PROCESS
+      value: STEPS.REVIEW
     })
   }
 
@@ -101,6 +101,7 @@ export default function UpdateCharacterButton ({
   if (hasUpdate() && Object.keys(state.characters).length > 0) {
     return (
       <Button
+        w='100%'
         colorScheme='green'
         size='lg'
         isDisabled={buttonDisabled}
@@ -115,6 +116,7 @@ export default function UpdateCharacterButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={buttonDisabled}

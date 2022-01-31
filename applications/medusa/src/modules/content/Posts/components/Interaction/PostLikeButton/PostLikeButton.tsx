@@ -11,6 +11,7 @@ import { abbreviateNumber } from '../../../../../support'
 
 interface Props {
   query: PostLikeButtonFragment$key | null
+  size?: string
 }
 
 const Fragment = graphql`
@@ -46,7 +47,8 @@ const UndoMutation = graphql`
 `
 
 export default function PostLikeButton ({
-  query
+  query,
+  size = 'md'
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -101,13 +103,34 @@ export default function PostLikeButton ({
 
   const likes = abbreviateNumber(data?.likes ?? 0, 2)
 
+  const getIconSize = (): number => {
+    switch (size) {
+      case 'sm':
+        return 6
+      default:
+        return 8
+    }
+  }
+
+  const getFontSize = (): string => {
+    switch (size) {
+      case 'sm':
+        return 'xl'
+      default:
+        return '2xl'
+    }
+  }
+
+  const iconSize = getIconSize()
+  const fontSize = getFontSize()
+
   if (data?.viewerLiked != null) {
     return (
       <Flex align='center'>
         <ClickableBox mr={1} bg='transparent' borderRadius='xl' onClick={onUndoLike} p={1}>
-          <Icon icon={HeartFull} fill='primary.400' h={8} w={8} />
+          <Icon icon={HeartFull} fill='primary.400' h={iconSize} w={iconSize} />
         </ClickableBox>
-        <Heading color='primary.400' fontSize='2xl'>
+        <Heading color='primary.400' fontSize={fontSize}>
           {likes}
         </Heading>
       </Flex>
@@ -117,9 +140,9 @@ export default function PostLikeButton ({
   return (
     <Flex align='center'>
       <ClickableBox mr={1} bg='transparent' borderRadius='xl' onClick={onLikePost} p={1}>
-        <Icon icon={HeartOutline} fill='gray.200' h={8} w={8} />
+        <Icon icon={HeartOutline} fill='gray.200' h={iconSize} w={iconSize} />
       </ClickableBox>
-      <Heading color='gray.200' fontSize='2xl'>
+      <Heading color='gray.200' fontSize={fontSize}>
         {likes}
       </Heading>
     </Flex>

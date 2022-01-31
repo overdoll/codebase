@@ -14,9 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:103
-msgid "Load More"
-msgstr ""
+#~ msgid "Load More"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:69
+#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:65
 msgid "No members found"
 msgstr ""

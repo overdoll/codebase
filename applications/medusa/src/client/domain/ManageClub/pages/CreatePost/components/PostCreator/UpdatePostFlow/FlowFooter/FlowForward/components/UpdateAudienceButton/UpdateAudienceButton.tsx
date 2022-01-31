@@ -84,6 +84,7 @@ export default function UpdateAudienceButton ({
   if (hasUpdate) {
     return (
       <Button
+        w='100%'
         colorScheme='green'
         size='lg'
         isDisabled={isDisabled}
@@ -99,6 +100,7 @@ export default function UpdateAudienceButton ({
 
   return (
     <Button
+      w='100%'
       colorScheme='gray'
       size='lg'
       isDisabled={isDisabled}

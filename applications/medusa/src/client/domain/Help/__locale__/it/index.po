@@ -13,22 +13,71 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Help/Help.tsx:21
-msgid "Help"
+#: src/client/domain/Help/Help.tsx:76
+msgid "18 U.S.C. § 2257"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:42
+#: src/client/domain/Help/Help.tsx:79
+msgid "18 U.S.C. § 2257 statement"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:43
+msgid "Billing"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:90
+msgid "Come say hello!"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:87
+msgid "Contact Us"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:65
+msgid "DMCA and Copyright"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:68
+msgid "DMCA claims information"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:22
+msgid "General Help"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:33
+#: src/client/domain/Help/Help.tsx:21
+#~ msgid "Help"
+#~ msgstr ""
+
+#: src/client/domain/Help/Help.tsx:46
+msgid "Help and information"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:57
+msgid "How we protect you"
+msgstr ""
+
+#: src/client/domain/Help/Help.tsx:54
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:31
-msgid "Terms of Service"
+#: src/client/domain/Help/Help.tsx:32
+msgid "Terms and Conditions"
 msgstr ""
+
+#: src/client/domain/Help/Help.tsx:31
+#~ msgid "Terms of Service"
+#~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:45
-msgid "View our Privacy Policy"
-msgstr ""
+#~ msgid "View our Privacy Policy"
+#~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:34
-msgid "View our Terms of Service"
+#~ msgid "View our Terms of Service"
+#~ msgstr ""
+
+#: src/client/domain/Help/Help.tsx:35
+msgid "What you should know"
 msgstr ""

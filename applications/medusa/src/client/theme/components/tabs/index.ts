@@ -177,8 +177,8 @@ const variantSoftRounded: PartsStyleFunction<typeof parts> = (props) => {
       mx: 1,
       color: 'gray.200',
       _selected: {
-        color: getColor(theme, `${c}.100`),
-        bg: getColor(theme, `${c}.800`)
+        color: getColor(theme, 'gray.00'),
+        bg: getColor(theme, `${c}.500`)
       }
     }
   }
@@ -192,8 +192,8 @@ const variantSolidRounded: PartsStyleFunction<typeof parts> = (props) => {
       fontWeight: 'semibold',
       color: mode('gray.600', 'inherit')(props),
       _selected: {
-        color: mode('#fff', 'gray.800')(props),
-        bg: mode(`${c}.600`, `${c}.300`)(props)
+        color: mode('#fff', `${c}.900`)(props),
+        bg: mode(`${c}.600`, `${c}.400`)(props)
       }
     }
   }

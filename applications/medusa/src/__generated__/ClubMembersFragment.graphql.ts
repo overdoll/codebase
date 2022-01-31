@@ -10,10 +10,7 @@ export type ClubMembersFragment = {
             readonly node: {
                 readonly id: string;
                 readonly account: {
-                    readonly username: string;
-                    readonly avatar: {
-                        readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-                    } | null;
+                    readonly " $fragmentRefs": FragmentRefs<"AccountTileOverlayFragment">;
                 };
             };
         }>;
@@ -115,27 +112,9 @@ return {
                   "plural": false,
                   "selections": [
                     {
-                      "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
-                      "name": "username",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Resource",
-                      "kind": "LinkedField",
-                      "name": "avatar",
-                      "plural": false,
-                      "selections": [
-                        {
-                          "args": null,
-                          "kind": "FragmentSpread",
-                          "name": "ResourceIconFragment"
-                        }
-                      ],
-                      "storageKey": null
+                      "kind": "FragmentSpread",
+                      "name": "AccountTileOverlayFragment"
                     }
                   ],
                   "storageKey": null
@@ -194,5 +173,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '5acfdb67b153241147b4a0e556c623df';
+(node as any).hash = 'f7105a5a40e51637b712f4af01545393';
 export default node;

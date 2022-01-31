@@ -4,7 +4,6 @@ import { Fragment, useEffect, useState } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { format } from 'date-fns'
 import ModeratePost from './ModeratePost/ModeratePost'
-import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
 import { ArrowButtonLeft, ArrowButtonRight } from '@//:assets/icons/navigation'
 import PostPreview from './PostPreview/PostPreview'
@@ -17,6 +16,8 @@ import { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
+import { PostVideoManagerProvider } from '@//:modules/content/Posts'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
 
 interface Props {
   query: PreloadedQuery<PostsQuery>
@@ -45,7 +46,6 @@ const PostsGQL = graphql`
       edges {
         node {
           id
-          ...PostHeaderFragment
           ...PostPreviewFragment
           ...ModeratePostFragment
           postedAt
@@ -180,10 +180,11 @@ export default function Posts (props: Props): JSX.Element {
             key={index}
             position='relative'
           >
-            <Stack spacing={2}>
-              <PostHeader query={item.node} />
-              <PostPreview query={item.node} />
-            </Stack>
+            <ObserverManagerProvider>
+              <PostVideoManagerProvider>
+                <PostPreview query={item.node} />
+              </PostVideoManagerProvider>
+            </ObserverManagerProvider>
             <Flex justify='flex-end' mt={4}>
               <ModeratePost
                 connectionID={postsConnection}

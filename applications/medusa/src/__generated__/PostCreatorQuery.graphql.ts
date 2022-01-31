@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7e7ddb74d9e2b8d671217b4bc1a14d72 */
+/* @relayHash 00279dd31a63376a305c940545282aeb */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -109,6 +109,10 @@ fragment CharacterFragment on Post {
   }
 }
 
+fragment ControlledVideoFragment on Resource {
+  ...RenderVideoFragment
+}
+
 fragment DraggableContentFragment on Resource {
   id
   type
@@ -129,11 +133,11 @@ fragment FlowForwardButtonFragment on Post {
   ...UpdateCategoryButtonFragment
   ...UpdateCharacterButtonFragment
   ...UpdateContentButtonFragment
-  ...ProcessButtonFragment
 }
 
 fragment FlowHeaderFragment on Post {
   ...checkPostRequirementsFragment
+  ...ProcessContentFragment
 }
 
 fragment FlowStepsFragment on Post {
@@ -142,7 +146,6 @@ fragment FlowStepsFragment on Post {
   ...CategoryFragment
   ...CharacterFragment
   ...ReviewFragment
-  ...ProcessFragment
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -152,11 +155,41 @@ fragment ImageSnippetFragment on Resource {
   }
 }
 
-fragment PostGalleryContentFragment on Post {
+fragment PostClickableCategoriesFragment on Post {
+  categories {
+    slug
+    title
+    thumbnail {
+      ...ResourceIconFragment
+      id
+    }
+    id
+  }
+}
+
+fragment PostClickableCharactersFragment on Post {
+  characters {
+    name
+    slug
+    series {
+      title
+      id
+    }
+    thumbnail {
+      ...ResourceIconFragment
+      id
+    }
+    id
+  }
+}
+
+fragment PostGalleryPublicDetailedFragment on Post {
+  id
+  reference
   content {
     type
     ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ControlledVideoFragment
     id
   }
 }
@@ -173,16 +206,20 @@ fragment PostHeaderClubFragment on Post {
   }
 }
 
-fragment ProcessButtonFragment on Post {
-  id
-  content {
-    id
-    processed
-  }
+fragment PostReviewFragment on Post {
+  reference
+  ...PostGalleryPublicDetailedFragment
+  ...PostHeaderClubFragment
+  ...PostClickableCharactersFragment
+  ...PostClickableCategoriesFragment
 }
 
-fragment ProcessFragment on Post {
-  ...RootProcessContentFragment
+fragment ProcessContentFragment on Post {
+  reference
+  content {
+    processed
+    id
+  }
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -193,6 +230,13 @@ fragment ProcessUploadsFragment on Post {
     urls {
       url
     }
+  }
+}
+
+fragment RenderVideoFragment on Resource {
+  urls {
+    url
+    mimeType
   }
 }
 
@@ -207,28 +251,7 @@ fragment ResourceItemFragment on Resource {
 }
 
 fragment ReviewFragment on Post {
-  id
-  content {
-    urls {
-      url
-      mimeType
-    }
-    id
-  }
-  ...PostGalleryContentFragment
-  ...PostHeaderClubFragment
-  club {
-    name
-    id
-  }
-}
-
-fragment RootProcessContentFragment on Post {
-  reference
-  content {
-    processed
-    id
-  }
+  ...PostReviewFragment
 }
 
 fragment SubmitPostButtonFragment on Post {
@@ -496,14 +519,14 @@ return {
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "processed",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -609,7 +632,7 @@ return {
     ]
   },
   "params": {
-    "id": "7e7ddb74d9e2b8d671217b4bc1a14d72",
+    "id": "00279dd31a63376a305c940545282aeb",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

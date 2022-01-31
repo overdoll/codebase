@@ -6,6 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type PostClickableCategoriesFragment = {
     readonly categories: ReadonlyArray<{
+        readonly slug: string;
         readonly title: string;
         readonly thumbnail: {
             readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
@@ -39,6 +40,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "title",
           "storageKey": null
         },
@@ -65,5 +73,5 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '67396ee9cbf35dc7f20976ec2f3282ff';
+(node as any).hash = '7d4d5bfce5aea6dd570f62c362a0f373';
 export default node;

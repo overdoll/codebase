@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 929115fe47756a77c0e448e53baeacb3 */
+/* @relayHash db411e46fb5294e43db99919f6806ad5 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -35,17 +35,22 @@ query ClubMembersPaginationQuery(
   }
 }
 
+fragment AccountTileOverlayFragment on Account {
+  avatar {
+    ...ResourceIconFragment
+    ...ResourceItemFragment
+    id
+  }
+  username
+}
+
 fragment ClubMembersFragment_2HEEH6 on Club {
   members(first: $first, after: $after) {
     edges {
       node {
         id
         account {
-          username
-          avatar {
-            ...ResourceIconFragment
-            id
-          }
+          ...AccountTileOverlayFragment
           id
         }
         __typename
@@ -218,13 +223,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "username",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "Resource",
                                 "kind": "LinkedField",
                                 "name": "avatar",
@@ -264,6 +262,13 @@ return {
                                   },
                                   (v4/*: any*/)
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "username",
                                 "storageKey": null
                               },
                               (v4/*: any*/)
@@ -331,7 +336,7 @@ return {
     ]
   },
   "params": {
-    "id": "929115fe47756a77c0e448e53baeacb3",
+    "id": "db411e46fb5294e43db99919f6806ad5",
     "metadata": {},
     "name": "ClubMembersPaginationQuery",
     "operationKind": "query",
@@ -339,5 +344,5 @@ return {
   }
 };
 })();
-(node as any).hash = '5acfdb67b153241147b4a0e556c623df';
+(node as any).hash = 'f7105a5a40e51637b712f4af01545393';
 export default node;

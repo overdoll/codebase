@@ -79,7 +79,8 @@ describe('Settings - Configure Two-Factor', () => {
           if (element != null) {
             cy.get(element).type(token as string)
             cy.findByRole('button', { name: /Submit Code/iu }).click()
-            cy.url().should('include', '/profile')
+            cy.findByText(/Welcome back! Thanks for using two-factor to log in!/iu).should('exist')
+            cy.url().should('include', '/')
           }
         })
       })
@@ -97,7 +98,8 @@ describe('Settings - Configure Two-Factor', () => {
       cy.findByRole('button', { name: /I lost access/iu }).click()
       cy.findByText(/Enter a recovery code/iu).should('be.visible').parent().findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)
       cy.findByRole('button', { name: 'Submit' }).click()
-      cy.url().should('include', '/profile')
+      cy.findByText(/A recovery code was successfully used up to log you in/iu).should('exist')
+      cy.url().should('include', '/')
     })
 
     // Disable two factor

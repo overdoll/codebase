@@ -11,7 +11,7 @@ export type PostsFragment = {
             readonly node: {
                 readonly id: string;
                 readonly postedAt: unknown | null;
-                readonly " $fragmentRefs": FragmentRefs<"PostHeaderFragment" | "PostPreviewFragment" | "ModeratePostFragment">;
+                readonly " $fragmentRefs": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
             };
         }>;
     };
@@ -121,11 +121,6 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "PostHeaderFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
                   "name": "PostPreviewFragment"
                 },
                 {
@@ -197,5 +192,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'eac501d4218f19c33aa4b9339da6c7e7';
+(node as any).hash = '4a36f5398b846432a905467a7dad4b91';
 export default node;

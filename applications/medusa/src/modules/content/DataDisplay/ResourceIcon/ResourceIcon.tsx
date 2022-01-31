@@ -1,10 +1,10 @@
 import { Box, Flex, HTMLChakraProps } from '@chakra-ui/react'
-import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
 
 import ResourceItem from '../ResourceItem/ResourceItem'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
+import RandomIcon from '../RandomIcon/RandomIcon'
 
 interface Props extends HTMLChakraProps<any> {
   query: ResourceIconFragment$key | null | undefined
@@ -26,11 +26,17 @@ export default function ResourceIcon ({
 
   const data = useFragment(Fragment, query)
 
-  if (data == null) return <Box bg='gray.500' w={8} h={8} borderRadius='25%' {...rest} />
+  if (data == null) {
+    return (
+      <Box bg='gray.500' w={8} h={8} borderRadius='25%' {...rest}>
+        <RandomIcon />
+      </Box>
+    )
+  }
 
   return (
     <Flex align='center' justify='center' borderRadius='25%' overflow='hidden' w={8} h={8} {...rest}>
-      <ResourceItem query={data as ResourceItemFragment$key} />
+      <ResourceItem h='100%' query={data} />
     </Flex>
   )
 }

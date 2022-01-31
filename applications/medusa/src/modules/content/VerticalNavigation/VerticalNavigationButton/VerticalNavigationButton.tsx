@@ -55,7 +55,7 @@ export default function VerticalNavigationButton ({
                 borderRadius='base'
                 align='center'
                 p={1}
-                mr={3}
+                mr={2}
                 ml={1}
               >
                 <Icon

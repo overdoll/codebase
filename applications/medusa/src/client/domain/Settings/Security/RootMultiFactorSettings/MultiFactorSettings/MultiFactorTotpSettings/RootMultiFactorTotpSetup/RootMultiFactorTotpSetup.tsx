@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async'
 import { Flex } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type {

@@ -8,11 +8,11 @@ interface Props {
 
 export default function PageSectionTitle ({
   children,
-  colorScheme = 'gray'
+  colorScheme
 }: Props): JSX.Element {
   return (
-    <Flex my={1} h={7} align='center'>
-      <Box h='100%' bg={`${colorScheme}.300`} mr={2} borderRadius='sm' w={2} />
+    <Flex my={1} h={6} align='center'>
+      <Box h='100%' bg={colorScheme == null ? 'gray.100' : `${colorScheme}.300`} mr={2} borderRadius='sm' w={2} />
       <Heading
         whiteSpace='nowrap'
         overflow='hidden'

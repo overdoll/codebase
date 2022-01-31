@@ -5,7 +5,6 @@ interface steps {
   AUDIENCE: Step
   CATEGORY: Step
   CHARACTER: Step
-  PROCESS: Step
   REVIEW: Step
   SUBMIT: Step
 }
@@ -15,7 +14,6 @@ const STEPS: steps = {
   AUDIENCE: 'AUDIENCE',
   CATEGORY: 'CATEGORY',
   CHARACTER: 'CHARACTER',
-  PROCESS: 'PROCESS',
   REVIEW: 'REVIEW',
   SUBMIT: 'SUBMIT'
 }
@@ -31,6 +29,7 @@ interface events {
   CATEGORIES: Event
   CLEANUP: Event
   IN_REVIEW: Event
+  IS_PROCESSING: Event
 }
 
 const EVENTS: events = {
@@ -43,7 +42,8 @@ const EVENTS: events = {
   CHARACTERS: 'characters',
   CATEGORIES: 'categories',
   CLEANUP: 'cleanup',
-  IN_REVIEW: 'isInReview'
+  IN_REVIEW: 'isInReview',
+  IS_PROCESSING: 'isProcessing'
 }
 
 const INITIAL_STATE: State = {
@@ -57,7 +57,8 @@ const INITIAL_STATE: State = {
   categories: {},
   cleanup: () => {
   },
-  isInReview: false
+  isInReview: false,
+  isProcessing: false
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

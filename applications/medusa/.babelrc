@@ -48,22 +48,6 @@
         "runtime": "automatic"
       }
     ],
-    "@loadable/babel-plugin",
-    [
-      "babel-plugin-inline-react-svg",
-      {
-        "svgo": {
-          "plugins": [
-            {
-              "name": "removeAttrs",
-              "params": {
-                "attrs": "(data-name)"
-              }
-            },
-            "cleanupIDs"
-          ]
-        }
-      }
-    ]
+    "@loadable/babel-plugin"
   ]
 }

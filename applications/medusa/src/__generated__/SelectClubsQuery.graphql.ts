@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 663295553216ba688f99e94c52153f47 */
+/* @relayHash 20957d7224cb258d8c11825cd663b1b1 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -46,7 +46,7 @@ fragment ClubListSelectorFragment on Account {
     edges {
       node {
         slug
-        ...ClubPreviewFragment
+        ...ClubTileOverlayFragment
         id
         __typename
       }
@@ -66,6 +66,25 @@ fragment ClubPreviewFragment on Club {
   thumbnail {
     ...ResourceIconFragment
     id
+  }
+}
+
+fragment ClubTileOverlayFragment on Club {
+  name
+  thumbnail {
+    ...ResourceIconFragment
+    id
+  }
+  posts(first: 1) {
+    edges {
+      node {
+        content {
+          ...ResourceItemFragment
+          id
+        }
+        id
+      }
+    }
   }
 }
 
@@ -137,51 +156,52 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "urls",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "url",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v5/*: any*/)
+],
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "mimeType",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    (v5/*: any*/)
-  ],
+  "selections": (v6/*: any*/),
   "storageKey": null
 },
-v7 = [
+v8 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -249,7 +269,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v4/*: any*/),
-          (v6/*: any*/),
+          (v7/*: any*/),
           (v5/*: any*/)
         ],
         "storageKey": null
@@ -265,7 +285,7 @@ return {
           (v3/*: any*/),
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v8/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
@@ -289,7 +309,57 @@ return {
                     "selections": [
                       (v2/*: any*/),
                       (v4/*: any*/),
-                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      {
+                        "alias": null,
+                        "args": [
+                          {
+                            "kind": "Literal",
+                            "name": "first",
+                            "value": 1
+                          }
+                        ],
+                        "concreteType": "PostConnection",
+                        "kind": "LinkedField",
+                        "name": "posts",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "PostEdge",
+                            "kind": "LinkedField",
+                            "name": "edges",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Post",
+                                "kind": "LinkedField",
+                                "name": "node",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "content",
+                                    "plural": true,
+                                    "selections": (v6/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v5/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": "posts(first:1)"
+                      },
                       (v5/*: any*/),
                       {
                         "alias": null,
@@ -341,7 +411,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v8/*: any*/),
             "filters": [
               "name"
             ],
@@ -357,7 +427,7 @@ return {
     ]
   },
   "params": {
-    "id": "663295553216ba688f99e94c52153f47",
+    "id": "20957d7224cb258d8c11825cd663b1b1",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

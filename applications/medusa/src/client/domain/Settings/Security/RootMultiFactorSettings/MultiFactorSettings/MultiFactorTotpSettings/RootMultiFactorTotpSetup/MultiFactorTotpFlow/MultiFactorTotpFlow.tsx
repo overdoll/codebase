@@ -23,7 +23,7 @@ import { Barcode, MobilePhone } from '@//:assets/icons/interface'
 
 import TotpActivationForm from './TotpActivationForm/TotpActivationForm'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
+import ErrorFallback from '@//:modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback'
 import { Trans } from '@lingui/macro'
 
 const MultiFactorTotpFlowMutationGQL = graphql`

@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { ClubPostsQuery as ClubPostsQueryType } from '@//:artifacts/ClubPostsQuery.graphql'
@@ -13,6 +12,7 @@ import { Box, Select, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { useQueryParam } from 'use-query-params'
 import { PostState } from '@//:artifacts/ClubPostsFragment.graphql'
+import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
 
 interface Props {
   prepared: {
@@ -72,7 +72,7 @@ export default function RootClubPosts (props: Props): JSX.Element {
             </Select>
           </Box>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
-            <Suspense fallback={<SkeletonStack />}>
+            <Suspense fallback={<SkeletonRectangleGrid />}>
               <ClubPosts query={queryRef as PreloadedQuery<ClubPostsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>

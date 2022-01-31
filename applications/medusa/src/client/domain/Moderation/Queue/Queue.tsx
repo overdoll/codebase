@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import type { PostsQuery as PostsQueryType } from '@//:artifacts/PostsQuery.graphql'
 import PostsQuery from '@//:artifacts/PostsQuery.graphql'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import Posts from './Posts/Posts'
@@ -10,6 +10,7 @@ import CommunityGuidelines from '../../../components/ContentHints/CommunityGuide
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   prepared: {
@@ -43,9 +44,11 @@ export default function Queue (props: Props): JSX.Element | null {
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
-            <Posts
-              query={queryRef as PreloadedQuery<PostsQueryType>}
-            />
+            <GlobalVideoManagerProvider>
+              <Posts
+                query={queryRef as PreloadedQuery<PostsQueryType>}
+              />
+            </GlobalVideoManagerProvider>
           </Suspense>
         </QueryErrorBoundary>
       </PageWrapper>

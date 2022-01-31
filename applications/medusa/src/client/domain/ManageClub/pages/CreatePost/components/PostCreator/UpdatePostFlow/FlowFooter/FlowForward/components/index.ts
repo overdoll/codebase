@@ -3,4 +3,3 @@ export { default as UpdateAudienceButton } from './UpdateAudienceButton/UpdateAu
 export { default as UpdateCategoryButton } from './UpdateCategoryButton/UpdateCategoryButton'
 export { default as UpdateCharacterButton } from './UpdateCharacterButton/UpdateCharacterButton'
 export { default as UpdateContentButton } from './UpdateContentButton/UpdateContentButton'
-export { default as ProcessButton } from './ProcessButton/ProcessButton'

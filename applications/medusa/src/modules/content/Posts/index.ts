@@ -1,6 +1,6 @@
 export {
-  default as PostGallerySimpleContent
-} from './components/Content/PostGallerySimpleContent/PostGallerySimpleContent'
+  default as PostGalleryPublicSimple
+} from './components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple'
 export { default as PostHeaderClub } from './components/Content/PostHeaderClub/PostHeaderClub'
 export { default as PostHeaderContributor } from './components/Content/PostHeaderContributor/PostHeaderContributor'
 export { default as PostPreviewContent } from './components/Content/PostPreviewContent/PostPreviewContent'
@@ -18,5 +18,5 @@ export { default as PostIndexer } from './components/Interaction/PostIndexer/Pos
 export { default as PostLikeButton } from './components/Interaction/PostLikeButton/PostLikeButton'
 export { default as PostMenu } from './components/Interaction/PostMenu/PostMenu'
 
-export * from './helpers/PostManager/PostManager'
-export * from './helpers/VideoManager/VideoManager'
+export * from './helpers/PostVideoManager/PostVideoManager'
+export * from './helpers/GlobalVideoManager/GlobalVideoManager'

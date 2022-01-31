@@ -24,3 +24,4 @@ export { default as ArrowButtonUp } from './normal-bold/arrows/arrows-button-up.
 export { default as NavigationMenuHorizontal } from './normal-bold/navigation-menu-horizontal.svg'
 export { default as ClubPeopleGroup } from './normal-bold/club-people-group.svg'
 export { default as SafetyFloat } from './normal-bold/safety-float.svg'
+export { default as SearchBar } from './normal-bold/search-bar.svg'

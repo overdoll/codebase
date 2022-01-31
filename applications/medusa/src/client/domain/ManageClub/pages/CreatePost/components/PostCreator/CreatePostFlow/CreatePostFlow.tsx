@@ -10,7 +10,6 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../context'
-import { useParams } from '@//:modules/routing/useParams'
 
 interface Props {
   clubId: string | undefined
@@ -53,18 +52,24 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
     })
   }
 
+  // TODO write this better. seems super hacky.
+
   // add a state to uppy to keep track of the club that's selected
   useEffect(() => {
-    uppy.setMeta({ club: clubId })
+    uppy.setMeta({
+      club: clubId
+    })
   }, [clubId])
 
   useEffect(() => {
     // @ts-expect-error
     // it's in their documentation but doesn't exist as a type...
     uppy.once('file-added', file => {
-      const club = uppy.getState().meta.club
-      if (club != null) {
-        onCreatePost(club)
+      if (file.source !== 'already-uploaded') {
+        const club = uppy.getState().meta.club
+        if (club != null) {
+          onCreatePost(club)
+        }
       }
     })
   }, [uppy])
@@ -96,7 +101,7 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
             </Heading>
             <Text color='gray.200'>
               <Trans>
-                Upload one or more files by dragging and dropping them or by clicking here
+                Upload one or more files by dragging and dropping them or by tapping here
               </Trans>
             </Text>
           </Box>

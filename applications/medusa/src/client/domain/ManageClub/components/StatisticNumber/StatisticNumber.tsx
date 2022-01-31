@@ -1,27 +1,48 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack } from '@chakra-ui/react'
+import { Icon } from '@//:modules/content'
+import { FunctionComponent } from 'react'
+import { TileOverlay } from '@//:modules/content/ContentSelection'
 
 interface Props {
   value: string
   text: string
   colorScheme?: string
+  icon?: FunctionComponent<any>
 }
 
 export default function StatisticNumber ({
   value,
   text,
-  colorScheme = 'orange'
+  colorScheme,
+  icon
 }: Props): JSX.Element {
+  const colors = [
+    'purple',
+    'orange',
+    'teal',
+    'green',
+    'primary'
+  ]
+
+  const randomColor = colors[Math.floor(Math.random() * 5)]
+
+  const currentColor = colorScheme == null ? randomColor : colorScheme
+
   return (
-    <Box>
-      <Flex align='center' h={6} mb={1}>
-        <Box h='100%' bg={`${colorScheme}.300`} mr={2} borderRadius='sm' w={2} />
-        <Text fontSize='lg' color='gray.00'>
-          {text}
-        </Text>
+    <TileOverlay background={<Box bg='gray.800' h={150} />}>
+      <Flex direction='column' align='center'>
+        <HStack spacing={3}>
+          {icon != null && <Icon icon={icon} w={5} h={5} fill='gray.00' />}
+          <Heading fontSize='2xl' color='gray.00'>
+            {text}
+          </Heading>
+        </HStack>
+        <Flex align='center'>
+          <Heading lineHeight={1} color={`${currentColor}.300`} fontSize='7xl'>
+            {value}
+          </Heading>
+        </Flex>
       </Flex>
-      <Text lineHeight={1} color={`${colorScheme}.100`} fontSize='7xl' fontWeight='bold'>
-        {value}
-      </Text>
-    </Box>
+    </TileOverlay>
   )
 }

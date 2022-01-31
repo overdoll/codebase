@@ -2,7 +2,6 @@ import { STEPS } from '../../../../../constants/constants'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import {
-  ProcessButton,
   SubmitPostButton,
   UpdateAudienceButton,
   UpdateCategoryButton,
@@ -24,7 +23,6 @@ const FlowForwardButtonFragmentGQL = graphql`
     ...UpdateCategoryButtonFragment
     ...UpdateCharacterButtonFragment
     ...UpdateContentButtonFragment
-    ...ProcessButtonFragment
   }
 `
 
@@ -57,12 +55,6 @@ export default function FlowForward ({
     case STEPS.CHARACTER:
       return (
         <UpdateCharacterButton
-          query={data}
-        />
-      )
-    case STEPS.PROCESS:
-      return (
-        <ProcessButton
           query={data}
         />
       )

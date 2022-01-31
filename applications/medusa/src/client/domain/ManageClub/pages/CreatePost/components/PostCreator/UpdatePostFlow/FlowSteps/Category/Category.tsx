@@ -3,12 +3,14 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:m
 import { useFragment } from 'react-relay'
 import type { CategoryFragment$key } from '@//:artifacts/CategoryFragment.graphql'
 import { graphql } from 'react-relay/hooks'
-import { Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
+import { Wrap, WrapItem } from '@chakra-ui/react'
 import { EVENTS } from '../../../../../constants/constants'
 import SearchInput from '../../../SearchInput/SearchInput'
 import RootSearchCategories from './RootSearchCategories/RootSearchCategories'
 import { t, Trans } from '@lingui/macro'
 import { DispatchContext, StateContext } from '../../../../../context'
+import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: CategoryFragment$key
@@ -35,6 +37,8 @@ export default function Category ({
   query
 }: Props): JSX.Element {
   const data = useFragment(CategoryFragmentGQL, query)
+
+  const { i18n } = useLingui()
 
   const state = useContext(StateContext)
   const dispatch = useContext(DispatchContext)
@@ -93,21 +97,17 @@ export default function Category ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput placeholder={t`Search for a category`}>
+      <SearchInput placeholder={i18n._(t`Search for a category`)}>
         {({ searchInput }) =>
           <>
             <Wrap>
               {Object.values(state.categories).map((item, index) =>
                 <WrapItem key={index}>
-                  <Tag borderRadius='full' size='lg'>
-                    <TagLabel>{item.title}</TagLabel>
-                    <TagCloseButton
-                      color='gray.00'
-                      opacity={1}
-                      bg='orange.400'
-                      onClick={() => removeSelection(item.id)}
-                    />
-                  </Tag>
+                  <RemovableTag
+                    onRemove={removeSelection}
+                    id={item.id}
+                    title={item.title}
+                  />
                 </WrapItem>
               )}
             </Wrap>

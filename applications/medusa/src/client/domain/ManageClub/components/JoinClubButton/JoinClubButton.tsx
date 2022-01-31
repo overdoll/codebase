@@ -10,15 +10,13 @@ import {
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
-import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
-import Icon from '../../../../../modules/content/PageLayout/Flair/Icon/Icon'
-import { AddPlus, WarningTriangle } from '@//:assets/icons/interface'
 import { useToast } from '@chakra-ui/react'
 
 interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null
   viewerQuery: JoinClubButtonViewerFragment$key | null
   size?: string
+  w?: string | number | undefined
 }
 
 const ClubFragment = graphql`
@@ -68,6 +66,7 @@ const LeaveClubMutation = graphql`
 export default function JoinClubButton ({
   clubQuery,
   viewerQuery,
+  w = 'auto',
   size = 'lg'
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
@@ -141,16 +140,9 @@ export default function JoinClubButton ({
     return (
       <Link to='/join'>
         <Button
+          w={w}
           size={size}
           colorScheme='primary'
-          leftIcon={
-            <Icon
-              icon={AddPlus}
-              w={4}
-              h={4}
-              fill='primary.900'
-            />
-          }
         >
           <Trans>
             Join
@@ -163,14 +155,7 @@ export default function JoinClubButton ({
   if (isClubMember) {
     return (
       <Button
-        leftIcon={
-          <Icon
-            icon={SafetyExitDoorLeft}
-            w={4}
-            h={4}
-            fill='gray.100'
-          />
-        }
+        w={w}
         onClick={onWithdrawMembership}
         isLoading={isWithdrawingMembership}
         size={size}
@@ -186,16 +171,11 @@ export default function JoinClubButton ({
   if (canJoinClub) {
     return (
       <Button
+        w={w}
         onClick={onBecomeMember}
         isLoading={isBecomingMember}
         size={size}
         colorScheme='primary'
-        leftIcon={<Icon
-          icon={AddPlus}
-          w={4}
-          h={4}
-          fill='primary.900'
-                  />}
       >
         <Trans>
           Join
@@ -206,14 +186,7 @@ export default function JoinClubButton ({
 
   return (
     <Button
-      leftIcon={
-        <Icon
-          icon={WarningTriangle}
-          w={4}
-          h={4}
-          fill='primary.900'
-        />
-      }
+      w={w}
       size={size}
       colorScheme='primary'
       onClick={onJoinWhenLimited}

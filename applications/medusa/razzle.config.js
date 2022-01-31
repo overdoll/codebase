@@ -5,7 +5,8 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 const path = require('path')
 const fs = require('fs')
 const webpack = require('webpack')
-
+const WebpackConfigHelpers = require('razzle-dev-utils/WebpackConfigHelpers')
+const Helpers = new WebpackConfigHelpers(process.cwd())
 const supportedLocales = require('./locales.config')
 const unlikelyToChangeChunk = ['react', 'react-dom', 'react-relay', 'relay-runtime', '@lingui', 'make-plural', 'history', '@casl', 'axios']
 
@@ -61,6 +62,49 @@ module.exports = {
   },
   modifyWebpackConfig (opts) {
     const config = opts.webpackConfig
+
+    // Exclude from file-loader
+    config.module.rules[
+      config.module.rules.findIndex(Helpers.makeLoaderFinder('file-loader'))
+    ].exclude.push(/\.(svg)$/)
+
+    config.module.rules = [
+      ...config.module.rules,
+      {
+        test: /url\.svg$/,
+        use: [
+          {
+            loader: require.resolve('@svgr/webpack'),
+            options: {
+              svgoConfig: {
+                plugins: [
+                  { removeViewBox: false },
+                  { mergePaths: false },
+                  { removeTitle: false }
+                ]
+              }
+            }
+          },
+          'url-loader']
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: require.resolve('@svgr/webpack'),
+            options: {
+              svgoConfig: {
+                plugins: [
+                  { removeViewBox: false },
+                  { mergePaths: false },
+                  { removeTitle: false }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
 
     // config.module.rules = config.module.rules.reduce((rules, rule) => {
     //   if (rule.exclude && rule.loader.indexOf('file-loader') !== -1) {

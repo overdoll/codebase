@@ -100,7 +100,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
           isClosable: true,
           title: t`A recovery code was successfully used up to log you in`
         })
-        history.push('/profile')
+        history.push('/')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')

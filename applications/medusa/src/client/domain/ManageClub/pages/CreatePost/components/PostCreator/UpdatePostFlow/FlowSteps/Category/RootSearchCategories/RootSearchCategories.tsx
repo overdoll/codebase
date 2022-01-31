@@ -1,8 +1,8 @@
-import { Suspense, useCallback, useEffect, useState } from 'react'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
+import { Suspense, useEffect } from 'react'
 import SearchCategories from './SearchCategories/SearchCategories'
-import CenteredSpinner from '@//:modules/content/Skeleton/Loading/CenteredSpinner/CenteredSpinner'
+import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import { useSearchQueryArguments } from '@//:modules/hooks'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   search?: string
@@ -15,44 +15,17 @@ export default function RootSearchCategories ({
   onSelect,
   selected
 }: Props): JSX.Element {
-  const [queryArgs, setQueryArgs] = useState({
-    options: { fetchKey: 0 },
-    variables: {
-      title: null
-    }
-  })
-
-  const refetch = useCallback(search => {
-    // Trigger a re-render of useLazyLoadQuery with new variables,
-    // *and* an updated fetchKey.
-    // The new fetchKey will ensure that the query is fully
-    // re-evaluated and refetched.
-    setQueryArgs(prev => ({
-      options: {
-        fetchKey: (prev?.options?.fetchKey ?? 0) + 1
-      },
-      variables: {
-        title: search != null && search !== '' ? search : null
-      }
-    }))
-  }, [])
+  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
 
   useEffect(() => {
-    refetch(search)
+    setQueryArgs({ title: search })
   }, [search])
 
   return (
-    <Suspense fallback={<CenteredSpinner />}>
-      <ErrorBoundary
-        fallback={({
-          error,
-          reset
-        }) => (
-          <ErrorFallback error={error} reset={reset} refetch={refetch as () => void} />
-        )}
-      >
+    <QueryErrorBoundary loadQuery={() => setQueryArgs({ title: null })}>
+      <Suspense fallback={<SkeletonRectangleGrid />}>
         <SearchCategories selected={selected} onSelect={onSelect} queryArgs={queryArgs} />
-      </ErrorBoundary>
-    </Suspense>
+      </Suspense>
+    </QueryErrorBoundary>
   )
 }

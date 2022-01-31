@@ -75,7 +75,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
 
         removeCookie('token')
-        history.push('/profile')
+        history.push('/')
 
         notify({
           status: 'success',

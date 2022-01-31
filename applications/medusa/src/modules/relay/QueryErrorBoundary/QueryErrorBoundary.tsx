@@ -1,6 +1,6 @@
 import ErrorBoundary from '../../operations/ErrorBoundary'
 import { ReactNode } from 'react'
-import ErrorFallback from '../../content/Skeleton/Fallback/ErrorFallback/ErrorFallback'
+import ErrorFallback from '../../content/Placeholder/Fallback/ErrorFallback/ErrorFallback'
 
 interface Props {
   children: ReactNode

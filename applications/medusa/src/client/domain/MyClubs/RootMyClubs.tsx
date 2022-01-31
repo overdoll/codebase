@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/Skeleton/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import type { MyClubsQuery as MyClubsQueryType } from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {
@@ -23,9 +23,9 @@ export default function RootHome (props: Props): JSX.Element {
   return (
     <>
       <Helmet title='my clubs' />
-      <PageWrapper>
+      <PageWrapper fillPage>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonStack />}>
+          <Suspense fallback={<SkeletonPost />}>
             <MyClubs query={queryRef as PreloadedQuery<MyClubsQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

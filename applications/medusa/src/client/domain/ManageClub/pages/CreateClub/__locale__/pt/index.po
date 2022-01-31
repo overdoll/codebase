@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:182
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:183
 msgid "A unique link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:108
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:109
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:194
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:195
 msgid "Create Club"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Create a Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:121
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:122
 msgid "Error creating club {0}"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 #~ msgid "Please enter a name for your club"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:159
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:160
 msgid "The best name you can come up with"
 msgstr ""
 
@@ -69,11 +69,11 @@ msgstr ""
 #~ msgid "The name must be at least 3 characters"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:160
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:161
 msgid "This is the name everyone will see"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:183
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:184
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
@@ -81,14 +81,14 @@ msgstr ""
 msgid "You can only create a maximum of {0} clubs"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:149
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:150
 msgid "Your Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:165
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:166
 msgid "Your Unique Club Link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:172
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:173
 msgid "overdoll.com/"
 msgstr ""

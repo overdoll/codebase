@@ -7,10 +7,9 @@ import { FragmentRefs } from "relay-runtime";
 export type HomeFragment = {
     readonly posts: {
         readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"HomePostFragment">;
-            };
+            readonly __typename: string;
         }>;
+        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
     };
     readonly " $refType": "HomeFragment";
 };
@@ -25,7 +24,14 @@ export type HomeFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -34,7 +40,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 10,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -66,7 +72,13 @@ return {
   "selections": [
     {
       "alias": "posts",
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "TOP"
+        }
+      ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
       "name": "__HomePosts_posts_connection",
@@ -80,6 +92,14 @@ return {
           "name": "edges",
           "plural": true,
           "selections": [
+            (v1/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -88,26 +108,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "HomePostFragment"
-                }
+                (v1/*: any*/)
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
               "storageKey": null
             }
           ],
@@ -137,14 +139,19 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostsInfiniteScrollFragment"
         }
       ],
-      "storageKey": null
+      "storageKey": "__HomePosts_posts_connection(sortBy:\"TOP\")"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'dcdf712dcaf7525cea162b1635f9a3e0';
+(node as any).hash = '63c4df90fd370bffb939bd5b6c4ee01d';
 export default node;

@@ -11,12 +11,12 @@ export default function PageWrapper ({
   fillPage = false
 }: Props): JSX.Element {
   return (
-    <Center mt={8}>
+    <Center mt={fillPage ? 0 : 8}>
       <Box
         w={fillPage ? ['full', 'lg'] : ['full', 'sm', 'md', 'lg']}
         pl={[1, 0]}
         pr={[1, 0]}
-        mb={6}
+        mb={fillPage ? 0 : 6}
         h='100%'
       >
         {children}

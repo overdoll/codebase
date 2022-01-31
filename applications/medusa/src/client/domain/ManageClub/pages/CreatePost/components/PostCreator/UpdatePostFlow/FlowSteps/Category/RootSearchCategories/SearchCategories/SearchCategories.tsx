@@ -1,23 +1,23 @@
 import { usePaginationFragment } from 'react-relay'
-import type { QueryArgs as QueryArgsType } from '@//:types/upload'
+import { QueryArguments } from '@//:types/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Flex, Text } from '@chakra-ui/react'
 import {
+  GridTile,
   GridWrap,
-  Selector,
-  SelectorTextOverlay,
-  SmallGridItem
-} from '../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
+  LoadMoreGridTile,
+  Selector
+} from '../../../../../../../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
-import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import CategoryTileOverlay
+  from '../../../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
 
 interface Props {
   selected: string[]
   onSelect: (category: any) => void
-  queryArgs: QueryArgsType
+  queryArgs: QueryArguments
 }
 
 const SearchCategoriesQueryGQL = graphql`
@@ -45,15 +45,7 @@ const SearchCategoriesFragmentGQL = graphql`
         node {
           id
           title
-          slug
-          thumbnail {
-            ...ResourceItemFragment
-            type
-            urls {
-              mimeType
-              url
-            }
-          }
+          ...CategoryTileOverlayFragment
         }
       }
     }
@@ -104,39 +96,22 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {categories.map((item, index) => (
-          <SmallGridItem key={index}>
+          <GridTile key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
-              <SelectorTextOverlay label={item.title}>
-                <ResourceItem
-                  query={item.thumbnail}
-                />
-              </SelectorTextOverlay>
+              <CategoryTileOverlay query={item} />
             </Selector>
-          </SmallGridItem>
+          </GridTile>
         )
         )}
-        {hasNext &&
-          <SmallGridItem h='inherit'>
-            <ClickableBox
-              h='100%'
-              w='100%'
-              align='center'
-              justify='center'
-              onClick={() => loadNext(5)}
-              isLoading={isLoadingNext}
-              whiteSpace='normal'
-            >
-              <Text textAlign='center' color='gray.00'>
-                <Trans>
-                  Load More Categories
-                </Trans>
-              </Text>
-            </ClickableBox>
-          </SmallGridItem>}
+        <LoadMoreGridTile
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(5)}
+          isLoadingNext={isLoadingNext}
+        />
       </GridWrap>
     </>
   )

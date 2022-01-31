@@ -4,13 +4,12 @@ import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
 import { Flex, Text } from '@chakra-ui/react'
 import {
+  CharacterTileOverlay,
+  GridTile,
   GridWrap,
-  LargeGridItem,
-  Selector,
-  SelectorTextOverlay
-} from '../../../../../../../../../../../components/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+  LoadMoreGridTile,
+  Selector
+} from '../../../../../../../../../../../../modules/content/ContentSelection'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { Trans } from '@lingui/macro'
 
@@ -45,13 +44,7 @@ const SearchCharactersFragmentGQL = graphql`
         node {
           id
           name
-          series {
-            title
-          }
-          slug
-          thumbnail {
-            ...ResourceItemFragment
-          }
+          ...CharacterTileOverlayFragment
         }
       }
     }
@@ -103,39 +96,22 @@ export default function SearchCategories ({
     <>
       <GridWrap justify='center'>
         {characters.map((item, index) => (
-          <LargeGridItem key={index}>
+          <GridTile key={index}>
             <Selector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
-              <SelectorTextOverlay label={item.name} description={item.series.title}>
-                <ResourceItem
-                  query={item.thumbnail}
-                />
-              </SelectorTextOverlay>
+              <CharacterTileOverlay query={item} />
             </Selector>
-          </LargeGridItem>
+          </GridTile>
         )
         )}
-        {hasNext &&
-          <LargeGridItem height='inherit'>
-            <ClickableBox
-              w='100%'
-              h='100%'
-              onClick={() => loadNext(5)}
-              isLoading={isLoadingNext}
-              whiteSpace='normal'
-              align='center'
-              justify='center'
-            >
-              <Text textAlign='center' color='gray.00'>
-                <Trans>
-                  Load More Characters
-                </Trans>
-              </Text>
-            </ClickableBox>
-          </LargeGridItem>}
+        <LoadMoreGridTile
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(5)}
+          isLoadingNext={isLoadingNext}
+        />
       </GridWrap>
     </>
   )

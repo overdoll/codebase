@@ -15,13 +15,13 @@ import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuB
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
 import LanguageManager from './LanguageManager/LanguageManager'
-import { Box, MenuDivider } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
 import SkeletonDropdownMenuButton
-  from '@//:modules/content/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
+  from '@//:modules/content/Placeholder/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -140,7 +140,6 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           </Suspense>
         </RenderOnMobile>
         <RenderOnDesktop>
-          <MenuDivider mb={1} borderColor='gray.500' borderWidth={2} />
           <Suspense fallback={
             <SkeletonDropdownMenuButton />
           }

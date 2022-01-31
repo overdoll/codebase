@@ -2,7 +2,9 @@ import { Flex, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostClickableCategoriesFragment$key } from '@//:artifacts/PostClickableCategoriesFragment.graphql'
 import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
-import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
+import { ArrayParam, encodeQueryParams, StringParam } from 'serialize-query-params'
+import { stringify } from 'query-string'
+import { useHistory } from '../../../../../routing'
 
 interface Props {
   query: PostClickableCategoriesFragment$key | null
@@ -11,6 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCategoriesFragment on Post {
     categories {
+      slug
       title
       thumbnail {
         ...ResourceIconFragment
@@ -22,13 +25,27 @@ const Fragment = graphql`
 export default function PostClickableCategories ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const history = useHistory()
+
+  const onClick = (node): void => {
+    const encodedQuery = encodeQueryParams({
+      categories: ArrayParam,
+      sort: StringParam
+    }, {
+      categories: node.slug,
+      sort: 'TOP'
+    })
+
+    history.push(`/search?${stringify(encodedQuery)}`)
+  }
+
   return (
     <Wrap>
       {data?.categories.map((item, index) =>
         <WrapItem key={index}>
-          <ClickableBox variant='ghost' bg='transparent' borderRadius='xl' p={0}>
+          <ClickableBox onClick={() => onClick(item)} variant='ghost' bg='transparent' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={2} py={2}>
-              <ResourceIcon mr={2} query={item.thumbnail as ResourceIconFragment$key} />
+              <ResourceIcon mr={2} query={item.thumbnail} />
               <Text fontWeight='semibold' color='gray.00' fontSize='xl'>{item.title}</Text>
             </Flex>
           </ClickableBox>

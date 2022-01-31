@@ -1,6 +1,6 @@
-import { Flex, HStack, Link as ChakraLink } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import Icon from '../../../PageLayout/Flair/Icon/Icon'
-import { Link } from '../../../../routing'
+import { ExternalLink, Link } from '../../../../routing'
 import { ArrowButtonRight } from '@//:assets/icons/navigation'
 import { ClickableBox } from '../../../PageLayout'
 import { ReactNode } from 'react'
@@ -45,9 +45,9 @@ export default function PagePanelWrap ({
 
   if (isExternal) {
     return (
-      <ChakraLink href={path} isExternal>
+      <ExternalLink to={`https://${path}`}>
         <BoxComponent />
-      </ChakraLink>
+      </ExternalLink>
     )
   }
 

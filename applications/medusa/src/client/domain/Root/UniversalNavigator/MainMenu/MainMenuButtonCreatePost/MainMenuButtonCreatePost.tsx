@@ -9,6 +9,7 @@ import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/Horiz
 const Query = graphql`
   query MainMenuButtonCreatePostQuery {
     viewer {
+      clubsCount
       clubs(first: 1) {
         edges {
           node {
@@ -23,7 +24,7 @@ const Query = graphql`
 export default function MainMenuButtonCreatePost (): JSX.Element {
   const data = useLazyLoadQuery<MainMenuButtonCreatePostQuery>(Query, {})
 
-  if (data.viewer?.clubs?.edges == null || data?.viewer?.clubs?.edges.length < 1) {
+  if (data.viewer == null || data.viewer.clubsCount < 1) {
     return (
       <HorizontalNavigation.Button
         exact

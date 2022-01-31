@@ -108,6 +108,7 @@ export type Event =
   | 'categories'
   | 'cleanup'
   | 'isInReview'
+  | 'isProcessing'
 
 export interface State {
   files: UppyFile[]
@@ -120,6 +121,7 @@ export interface State {
   categories: Categories
   isInReview: boolean
   cleanup: () => void
+  isProcessing: boolean
 }
 
 export interface Action {

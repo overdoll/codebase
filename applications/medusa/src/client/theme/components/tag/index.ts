@@ -73,6 +73,23 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
       borderRadius: 'md',
       px: 3
     }
+  },
+  xl: {
+    container: {
+      minH: 10,
+      minW: 10,
+
+      borderRadius: 'md',
+      px: 3
+    },
+    label: {
+      fontSize: 'lg',
+      fontWeight: 'semibold',
+      color: 'gray.00'
+    },
+    closeButton: {
+      marginStart: 3
+    }
   }
 }
 

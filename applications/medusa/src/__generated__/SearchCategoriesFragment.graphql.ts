@@ -4,22 +4,13 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type SearchCategoriesFragment = {
     readonly categories: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
                 readonly title: string;
-                readonly slug: string;
-                readonly thumbnail: {
-                    readonly type: ResourceType;
-                    readonly urls: ReadonlyArray<{
-                        readonly mimeType: string;
-                        readonly url: string;
-                    }>;
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                } | null;
+                readonly " $fragmentRefs": FragmentRefs<"CategoryTileOverlayFragment">;
             };
         }>;
     };
@@ -128,63 +119,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "slug",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "type",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "ResourceUrl",
-                      "kind": "LinkedField",
-                      "name": "urls",
-                      "plural": true,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "mimeType",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "url",
-                          "storageKey": null
-                        }
-                      ],
-                      "storageKey": null
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceItemFragment"
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CategoryTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -232,5 +173,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'c61dfb7b802db19dbbe3ed7a39623a8c';
+(node as any).hash = '820591d8df74cc47f6fe5704e3841869';
 export default node;

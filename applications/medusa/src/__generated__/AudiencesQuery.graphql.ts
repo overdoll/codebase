@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash a7eb51177d6e389fb48fbe7274b18199 */
+/* @relayHash 353c52a51e6ae6464e7ba9147608f9e0 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -12,9 +12,7 @@ export type AudiencesQueryResponse = {
             readonly node: {
                 readonly id: string;
                 readonly title: string;
-                readonly thumbnail: {
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                } | null;
+                readonly " $fragmentRefs": FragmentRefs<"AudienceTileOverlayFragment">;
             };
         }>;
     };
@@ -33,12 +31,17 @@ query AudiencesQuery {
       node {
         id
         title
-        thumbnail {
-          ...ResourceItemFragment
-          id
-        }
+        ...AudienceTileOverlayFragment
       }
     }
+  }
+}
+
+fragment AudienceTileOverlayFragment on Audience {
+  title
+  thumbnail {
+    ...ResourceItemFragment
+    id
   }
 }
 
@@ -112,20 +115,9 @@ return {
                   (v0/*: any*/),
                   (v1/*: any*/),
                   {
-                    "alias": null,
                     "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "thumbnail",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "args": null,
-                        "kind": "FragmentSpread",
-                        "name": "ResourceItemFragment"
-                      }
-                    ],
-                    "storageKey": null
+                    "kind": "FragmentSpread",
+                    "name": "AudienceTileOverlayFragment"
                   }
                 ],
                 "storageKey": null
@@ -228,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "a7eb51177d6e389fb48fbe7274b18199",
+    "id": "353c52a51e6ae6464e7ba9147608f9e0",
     "metadata": {},
     "name": "AudiencesQuery",
     "operationKind": "query",
@@ -236,5 +228,5 @@ return {
   }
 };
 })();
-(node as any).hash = '553f9dd9781dc27ce6add8e1c6a4815c';
+(node as any).hash = '81a8d3ff43d094e4672ca3a0c9128ce7';
 export default node;

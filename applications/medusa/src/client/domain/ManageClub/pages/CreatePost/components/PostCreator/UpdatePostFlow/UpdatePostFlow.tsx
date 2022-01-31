@@ -34,12 +34,12 @@ export default function UpdatePostFlow ({
         <Box>
           <FlowHeader query={data} />
         </Box>}
-      <Stack spacing={2}>
-        <FlowSteps query={data} />
-      </Stack>
       <Flex justify='center'>
         <FlowFooter query={data} />
       </Flex>
+      <Stack spacing={2}>
+        <FlowSteps query={data} />
+      </Stack>
     </Stack>
   )
 }
