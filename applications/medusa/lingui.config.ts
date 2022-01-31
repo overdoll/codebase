@@ -65,6 +65,10 @@ export default {
       include: ['src/client/domain/Settings/ConfirmEmail']
     },
     {
+      path: 'src/client/domain/Settings/Preferences/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Preferences']
+    },
+    {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',
       include: ['src/client/domain/Moderation/Moderation.tsx']
     },

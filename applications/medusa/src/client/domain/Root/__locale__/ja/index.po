@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ja\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:98
 msgid "Account Locked"
@@ -137,11 +143,11 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:128
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:132
 msgid "No more content available"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:77
 msgid "No posts found"
 msgstr ""
 

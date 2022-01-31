@@ -31,8 +31,8 @@ const Fragment = graphql`
     @connection (key: "ClubMembers_members") {
       edges {
         node {
-          id
           account {
+            username
             ...AccountTileOverlayFragment
           }
         }
@@ -73,7 +73,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
     <GridWrap justify='flex-start'>
       {data.members.edges.map((item, index) =>
         <GridTile key={index}>
-          <Link to={`/u/${item.node.id as string}`}>
+          <Link to={`/u/${item.node.account.username as string}`}>
             <ClickableTile>
               <AccountTileOverlay query={item.node.account} />
             </ClickableTile>

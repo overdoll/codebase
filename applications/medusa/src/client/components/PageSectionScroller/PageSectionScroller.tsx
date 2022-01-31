@@ -3,6 +3,7 @@ import { ReactNode, useState } from 'react'
 import { Box, Flex, Tab, TabList, Tabs } from '@chakra-ui/react'
 import SwiperCore from 'swiper'
 import { useUpdateEffect } from 'usehooks-ts'
+import PageSectionChildrenWrapper from './PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
   children: ReactNode
@@ -100,17 +101,17 @@ export default function PageSectionScroller ({
                 {pageInfiniteScroll}
               </SwiperSlide>
               <SwiperSlide>
-                <Box mx={1} mt={6} mb={28}>
+                <PageSectionChildrenWrapper>
                   {children}
-                </Box>
+                </PageSectionChildrenWrapper>
               </SwiperSlide>
 
             </>
             : <>
               <SwiperSlide>
-                <Box mx={1} mt={6} mb={16}>
+                <PageSectionChildrenWrapper>
                   {children}
-                </Box>
+                </PageSectionChildrenWrapper>
               </SwiperSlide>
               <SwiperSlide>
                 {pageInfiniteScroll}

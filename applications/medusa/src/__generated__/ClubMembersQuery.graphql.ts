@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c4f49218ff617ace3b9a824696aa5d77 */
+/* @relayHash d4d683f02db9a99095a60e56afdf5eba */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -43,11 +43,12 @@ fragment ClubMembersFragment on Club {
   members(first: 20) {
     edges {
       node {
-        id
         account {
+          username
           ...AccountTileOverlayFragment
           id
         }
+        id
         __typename
       }
       cursor
@@ -179,7 +180,6 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -188,6 +188,13 @@ return {
                         "name": "account",
                         "plural": false,
                         "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "username",
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -232,17 +239,11 @@ return {
                             ],
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "username",
-                            "storageKey": null
-                          },
                           (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -307,7 +308,7 @@ return {
     ]
   },
   "params": {
-    "id": "c4f49218ff617ace3b9a824696aa5d77",
+    "id": "d4d683f02db9a99095a60e56afdf5eba",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

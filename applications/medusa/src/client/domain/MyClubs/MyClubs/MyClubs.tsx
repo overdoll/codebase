@@ -5,6 +5,8 @@ import { Trans } from '@lingui/macro'
 import SuggestedClubs from './SuggestedClubs/SuggestedClubs'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
 import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
+import PageSectionChildrenWrapper
+  from '../../../components/PageSectionScroller/PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>
@@ -28,8 +30,12 @@ export default function MyClubs (props: Props): JSX.Element {
     props.query
   )
 
-  if (queryData.viewer == null) {
-    return <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
+  if (queryData.viewer == null || queryData?.viewer?.clubMembershipsCount < 1) {
+    return (
+      <PageSectionChildrenWrapper>
+        <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
+      </PageSectionChildrenWrapper>
+    )
   }
 
   return (

@@ -5,6 +5,7 @@ import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalN
 import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
+import { CategoryIdentifier } from '@//:assets/icons/interface'
 
 interface Props {
   children: ReactNode
@@ -40,6 +41,16 @@ export default function Settings ({ children }: Props): JSX.Element {
             </Trans>
           }
           icon={SecurityShield}
+        />
+        <VerticalNavigation.Button
+          to='/settings/preferences'
+          colorScheme='green'
+          title={
+            <Trans>
+              Preferences
+            </Trans>
+          }
+          icon={CategoryIdentifier}
         />
         <Can I='moderate' a='Post'>
           <VerticalNavigation.Button

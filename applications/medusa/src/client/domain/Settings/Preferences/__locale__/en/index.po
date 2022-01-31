@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-01-31 15:46-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/CurationSettings/CurationSettings.tsx:37
+msgid "Complete Curation Profile"
+msgstr ""
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/RootCurationSettings.tsx:26
+msgid "Content Curation"
+msgstr ""
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/CurationSettings/RootCurationProfileSetup/RootCurationProfileSetup.tsx:53
+msgid "Go back to settings"
+msgstr ""
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/CurationSettings/RootCurationProfileSetup/RootCurationProfileSetup.tsx:35
+msgid "Set up curation profile"
+msgstr ""
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/CurationSettings/CurationSettings.tsx:40
+msgid "Set up your curation profile"
+msgstr ""
+
+#: src/client/domain/Settings/Preferences/RootCurationSettings/CurationSettings/RootCurationProfileSetup/RootCurationProfileSetup.tsx:40
+msgid "Tell us the type of content you want to see"
+msgstr ""

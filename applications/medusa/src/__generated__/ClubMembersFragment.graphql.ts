@@ -8,8 +8,8 @@ export type ClubMembersFragment = {
     readonly members: {
         readonly edges: ReadonlyArray<{
             readonly node: {
-                readonly id: string;
                 readonly account: {
+                    readonly username: string;
                     readonly " $fragmentRefs": FragmentRefs<"AccountTileOverlayFragment">;
                 };
             };
@@ -29,14 +29,7 @@ export type ClubMembersFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "members"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -102,7 +95,6 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -111,6 +103,13 @@ return {
                   "name": "account",
                   "plural": false,
                   "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "username",
+                      "storageKey": null
+                    },
                     {
                       "args": null,
                       "kind": "FragmentSpread",
@@ -167,11 +166,17 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f7105a5a40e51637b712f4af01545393';
+(node as any).hash = '7622691bee99e7d5157d6230324c3c06';
 export default node;
