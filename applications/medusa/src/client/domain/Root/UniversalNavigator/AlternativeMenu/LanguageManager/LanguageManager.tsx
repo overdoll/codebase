@@ -70,7 +70,7 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
   // if account language does not match up with the current language, change the language
   useEffect(() => {
     if (data != null) {
-      if (data.language.locale !== query.language.locale) {
+      if (data?.language?.locale !== query?.language?.locale) {
         notify({
           status: 'warning',
           title: t`Changing to your preferred language...`
@@ -129,7 +129,7 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
       minW={150}
       h='50px'
       isDisabled={isUpdatingBrowserLanguage || isUpdatingAccountLanguage}
-      defaultValue={query.language.locale}
+      defaultValue={query?.language?.locale}
       onChange={onChange}
     >
       {query.languages.map(lang => (
