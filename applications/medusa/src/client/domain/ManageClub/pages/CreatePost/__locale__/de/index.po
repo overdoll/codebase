@@ -6,12 +6,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: de\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
 msgid "Add categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
 msgid "Add characters"
 msgstr ""
 
@@ -19,7 +25,7 @@ msgstr ""
 msgid "Add some categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:75
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:72
 msgid "Add, arrange, or remove the files you're uploading."
 msgstr ""
 
@@ -27,7 +33,7 @@ msgstr ""
 msgid "All characters must be of legal age"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:129
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:132
 msgid "Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any time."
 msgstr ""
 
@@ -39,7 +45,7 @@ msgstr ""
 msgid "As a reminder of the guidelines"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowBackwardButton/FlowBackwardButton.tsx:59
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowBackwardButton/FlowBackwardButton.tsx:53
 msgid "Back"
 msgstr ""
 
@@ -55,12 +61,12 @@ msgstr ""
 msgid "Enter a search term"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:123
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:126
 msgid "Exit Post Creator"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:97
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:136
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:139
 msgid "Go back"
 msgstr ""
 
@@ -68,11 +74,10 @@ msgstr ""
 msgid "Go to my posts"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:33
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:34
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/ProcessButton/ProcessButton.tsx:50
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:109
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:125
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:124
@@ -92,7 +97,11 @@ msgstr ""
 msgid "Nothing extremely offensive or shocking"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Process/RootProcessContent/ProcessContent/ProcessContent.tsx:61
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowFooter.tsx:43
+msgid "Please wait for your post content to finish processing before continuing."
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
 msgid "Post Content Processed"
 msgstr ""
 
@@ -104,15 +113,15 @@ msgstr ""
 msgid "Post again"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:72
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:69
 msgid "Posting {0} media"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
-msgid "Process post"
-msgstr ""
+#~ msgid "Process post"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Process/RootProcessContent/ProcessContent/ProcessContent.tsx:47
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:59
 msgid "Processing Post Content"
 msgstr ""
 
@@ -120,7 +129,11 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:28
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
+msgid "Review post"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:29
 msgid "Review your selections"
 msgstr ""
 
@@ -139,7 +152,7 @@ msgstr ""
 msgid "Search for a character by name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:79
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
 msgid "Select an audience"
 msgstr ""
 
@@ -159,25 +172,25 @@ msgstr ""
 msgid "Step 1"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:79
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
 msgid "Step 2"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
 msgid "Step 3"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
 msgid "Step 4"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
 msgid "Step 5"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
-msgid "Step 6"
-msgstr ""
+#~ msgid "Step 6"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:91
 msgid "Submit"
@@ -237,12 +250,12 @@ msgid "Upstanding netizens will read all the rules before posting"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
-msgid "Wait for processing"
-msgstr ""
+#~ msgid "Wait for processing"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Process/Process.tsx:33
-msgid "When your post is done processing, you can review and submit it."
-msgstr ""
+#~ msgid "When your post is done processing, you can review and submit it."
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:93
 msgid "Who is in your post?"
@@ -252,12 +265,12 @@ msgstr ""
 msgid "Who is the target audience?"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:23
-#: src/client/domain/ManageClub/pages/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:27
+#: src/client/domain/ManageClub/pages/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:24
+#: src/client/domain/ManageClub/pages/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:30
 msgid "Why is this required"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:141
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:144
 msgid "Yes, exit"
 msgstr ""
 
@@ -274,8 +287,8 @@ msgid "Your post is now visible to the public"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Process/Process.tsx:28
-msgid "Your post is processing"
-msgstr ""
+#~ msgid "Your post is processing"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:31
 msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."

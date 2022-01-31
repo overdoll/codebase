@@ -25,19 +25,19 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:40
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:52
 msgid "Audience"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Queue.tsx:37
+#: src/client/domain/Moderation/Queue/Queue.tsx:38
 msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:56
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:68
 msgid "Categories"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:48
+#: src/client/domain/Moderation/Queue/Posts/PostPreview/PostPreview.tsx:60
 msgid "Characters"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Moderation Paused"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Queue.tsx:32
+#: src/client/domain/Moderation/Queue/Queue.tsx:33
 msgid "Moderation Queue"
 msgstr ""
 

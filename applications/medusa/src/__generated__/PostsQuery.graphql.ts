@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash 8ec655cbf9c39e12613d9ec1d68f0046 */
-=======
-/* @relayHash 2afaf28843c67f2abec807fd2237e6f1 */
->>>>>>> master
+/* @relayHash 020e04c9592776e222cbec34cf831619 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -186,24 +182,25 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v3 = [
+  (v2/*: any*/),
   (v1/*: any*/)
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -237,20 +234,6 @@ v4 = [
     "storageKey": null
   },
   (v1/*: any*/)
-<<<<<<< HEAD
-=======
-],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v5 = [
-  (v4/*: any*/),
-  (v1/*: any*/)
->>>>>>> master
 ];
 return {
   "fragment": {
@@ -348,11 +331,7 @@ return {
                         "kind": "LinkedField",
                         "name": "audience",
                         "plural": false,
-<<<<<<< HEAD
-                        "selections": (v2/*: any*/),
-=======
-                        "selections": (v5/*: any*/),
->>>>>>> master
+                        "selections": (v3/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -363,7 +342,7 @@ return {
                         "name": "characters",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -371,11 +350,7 @@ return {
                             "kind": "LinkedField",
                             "name": "series",
                             "plural": false,
-<<<<<<< HEAD
-                            "selections": (v2/*: any*/),
-=======
-                            "selections": (v5/*: any*/),
->>>>>>> master
+                            "selections": (v3/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -389,8 +364,7 @@ return {
                         "kind": "LinkedField",
                         "name": "categories",
                         "plural": true,
-<<<<<<< HEAD
-                        "selections": (v2/*: any*/),
+                        "selections": (v3/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -398,9 +372,6 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "reference",
-=======
-                        "selections": (v5/*: any*/),
->>>>>>> master
                         "storageKey": null
                       },
                       {
@@ -410,7 +381,7 @@ return {
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
-                        "selections": (v4/*: any*/),
+                        "selections": (v5/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -421,7 +392,7 @@ return {
                         "name": "club",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -436,7 +407,7 @@ return {
                             "kind": "LinkedField",
                             "name": "thumbnail",
                             "plural": false,
-                            "selections": (v4/*: any*/),
+                            "selections": (v5/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -548,7 +519,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v4/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -568,11 +539,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "8ec655cbf9c39e12613d9ec1d68f0046",
-=======
-    "id": "2afaf28843c67f2abec807fd2237e6f1",
->>>>>>> master
+    "id": "020e04c9592776e222cbec34cf831619",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

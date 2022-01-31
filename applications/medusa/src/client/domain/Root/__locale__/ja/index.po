@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:96
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:98
 msgid "Account Locked"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 #~ msgid "Alternative Menu"
 #~ msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:97
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:99
 msgid "Banned for {remainingTime}"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:106
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:108
 msgid "Here's the reason..."
 msgstr ""
 
@@ -98,16 +98,15 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:104
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:120
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:71
 msgid "Join"
-msgstr ""
+msgstr "<<<<<<< HEAD"
 
-<<<<<<< HEAD
 #: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:33
 msgid "Load More"
 msgstr ""
@@ -122,15 +121,13 @@ msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesGeneral/SearchSeriesGeneral.tsx:91
 msgid "Load More Series"
-msgstr ""
+msgstr "=======>>>>>>> master"
 
-=======
->>>>>>> master
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:126
 msgid "Log Out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:100
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:102
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -178,7 +175,7 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:116
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:118
 msgid "No reason was found"
 msgstr ""
 
@@ -219,7 +216,7 @@ msgstr ""
 msgid "Please enter an email"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:121
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:123
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
@@ -273,8 +270,8 @@ msgid "The code must be 6 digits long"
 msgstr ""
 
 #: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:51
-msgid "The contents of a post you uploaded are not allowed on our platform."
-msgstr ""
+#~ msgid "The contents of a post you uploaded are not allowed on our platform."
+#~ msgstr ""
 
 #: src/modules/validation/translateValidation.ts:7
 msgid "The login link you used is either invalid or has expired"
@@ -288,7 +285,7 @@ msgstr ""
 msgid "The name must be at least 3 characters"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:74
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:90
 msgid "There was an error unlocking your account"
 msgstr ""
 
@@ -305,7 +302,7 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:121
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:137
 msgid "Unlock Account"
 msgstr ""
 
@@ -321,7 +318,7 @@ msgstr ""
 msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:60
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:58
 msgid "View Details"
 msgstr ""
 
@@ -329,23 +326,23 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:129
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:132
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:42
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:54
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:132
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:137
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:67
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:83
 msgid "Your account has been unlocked"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:49
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:47
 msgid "Your account is currently locked"
 msgstr ""
 
@@ -361,6 +358,6 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:140
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:147
 msgid "{duration}"
 msgstr ""

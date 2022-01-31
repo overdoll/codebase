@@ -1,11 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash c2cf5746513b1f70789f79056917896f */
-=======
-/* @relayHash 2ea2d0faa7553510dc60ffb9cb294f63 */
->>>>>>> master
+/* @relayHash 2b950920388027493e8a2b84540ff4db */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -295,11 +291,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "c2cf5746513b1f70789f79056917896f",
-=======
-    "id": "2ea2d0faa7553510dc60ffb9cb294f63",
->>>>>>> master
+    "id": "2b950920388027493e8a2b84540ff4db",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
