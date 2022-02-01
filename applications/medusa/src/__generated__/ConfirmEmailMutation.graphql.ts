@@ -1,46 +1,40 @@
+/**
+ * @generated SignedSource<<32a394a6067897a33397e50bd0e74e86>>
+ * @relayHash 1f650479820cf72957f1588bc01645a4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1f650479820cf72957f1588bc01645a4 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+// @relayRequestID 1f650479820cf72957f1588bc01645a4
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
 export type ConfirmAccountEmailInput = {
-    id: string;
-    secret: string;
+  id: string;
+  secret: string;
 };
-export type ConfirmEmailMutationVariables = {
-    input: ConfirmAccountEmailInput;
+export type ConfirmEmailMutation$variables = {
+  input: ConfirmAccountEmailInput;
 };
-export type ConfirmEmailMutationResponse = {
-    readonly confirmAccountEmail: {
-        readonly accountEmail: {
-            readonly id: string;
-            readonly email: string;
-            readonly status: AccountEmailStatus;
-        } | null;
+export type ConfirmEmailMutationVariables = ConfirmEmailMutation$variables;
+export type ConfirmEmailMutation$data = {
+  readonly confirmAccountEmail: {
+    readonly accountEmail: {
+      readonly id: string;
+      readonly email: string;
+      readonly status: AccountEmailStatus;
     } | null;
+  } | null;
 };
+export type ConfirmEmailMutationResponse = ConfirmEmailMutation$data;
 export type ConfirmEmailMutation = {
-    readonly response: ConfirmEmailMutationResponse;
-    readonly variables: ConfirmEmailMutationVariables;
+  variables: ConfirmEmailMutationVariables;
+  response: ConfirmEmailMutation$data;
 };
-
-
-
-/*
-mutation ConfirmEmailMutation(
-  $input: ConfirmAccountEmailInput!
-) {
-  confirmAccountEmail(input: $input) {
-    accountEmail {
-      id
-      email
-      status
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -127,5 +121,7 @@ return {
   }
 };
 })();
-(node as any).hash = '16b339e960c3dc5e49b65409a9b20a66';
+
+(node as any).hash = "16b339e960c3dc5e49b65409a9b20a66";
+
 export default node;

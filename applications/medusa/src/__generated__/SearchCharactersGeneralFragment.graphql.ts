@@ -1,29 +1,33 @@
+/**
+ * @generated SignedSource<<11e1440451827c677f8e0bdb377df27d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCharactersGeneralFragment = {
-    readonly characters: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly slug: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"CharacterTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "SearchCharactersGeneralFragment";
+export type SearchCharactersGeneralFragment$data = {
+  readonly characters: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly slug: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SearchCharactersGeneralFragment";
 };
-export type SearchCharactersGeneralFragment$data = SearchCharactersGeneralFragment;
+export type SearchCharactersGeneralFragment = SearchCharactersGeneralFragment$data;
 export type SearchCharactersGeneralFragment$key = {
-    readonly " $data"?: SearchCharactersGeneralFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SearchCharactersGeneralFragment">;
+  readonly " $data"?: SearchCharactersGeneralFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersGeneralFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -51,10 +55,6 @@ return {
     {
       "defaultValue": null,
       "kind": "LocalArgument",
-      "name": "name"
-    },
-    {
-      "kind": "RootArgument",
       "name": "search"
     }
   ],
@@ -78,7 +78,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchCharactersGeneralPaginationFragment.graphql.ts')
+      "operation": require('./SearchCharactersGeneralPaginationFragment.graphql')
     }
   },
   "name": "SearchCharactersGeneralFragment",
@@ -145,16 +145,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CharacterTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CharacterTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -202,5 +202,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '2ef655808968ca4511715bdd08285062';
+
+(node as any).hash = "85664c3446f09f73d3ce3e6c9d7eedb0";
+
 export default node;

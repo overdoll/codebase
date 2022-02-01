@@ -1,67 +1,50 @@
+/**
+ * @generated SignedSource<<87bb5eb3d757ce6c7a686f46c77baf42>>
+ * @relayHash 5ad5fb0fd15f89acb4a7f9867a3f7a74
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5ad5fb0fd15f89acb4a7f9867a3f7a74 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 5ad5fb0fd15f89acb4a7f9867a3f7a74
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostCategoriesInput = {
-    id: string;
-    categoryIds: Array<string>;
+  id: string;
+  categoryIds: ReadonlyArray<string>;
 };
-export type UpdateCategoryButtonMutationVariables = {
-    input: UpdatePostCategoriesInput;
+export type UpdateCategoryButtonMutation$variables = {
+  input: UpdatePostCategoriesInput;
 };
-export type UpdateCategoryButtonMutationResponse = {
-    readonly updatePostCategories: {
-        readonly post: {
-            readonly id: string;
-            readonly categories: ReadonlyArray<{
-                readonly id: string;
-                readonly title: string;
-                readonly slug: string;
-                readonly thumbnail: {
-                    readonly type: ResourceType;
-                    readonly urls: ReadonlyArray<{
-                        readonly mimeType: string;
-                        readonly url: string;
-                    }>;
-                } | null;
-            }>;
+export type UpdateCategoryButtonMutationVariables = UpdateCategoryButtonMutation$variables;
+export type UpdateCategoryButtonMutation$data = {
+  readonly updatePostCategories: {
+    readonly post: {
+      readonly id: string;
+      readonly categories: ReadonlyArray<{
+        readonly id: string;
+        readonly title: string;
+        readonly slug: string;
+        readonly thumbnail: {
+          readonly type: ResourceType;
+          readonly urls: ReadonlyArray<{
+            readonly mimeType: string;
+            readonly url: string;
+          }>;
         } | null;
+      }>;
     } | null;
+  } | null;
 };
+export type UpdateCategoryButtonMutationResponse = UpdateCategoryButtonMutation$data;
 export type UpdateCategoryButtonMutation = {
-    readonly response: UpdateCategoryButtonMutationResponse;
-    readonly variables: UpdateCategoryButtonMutationVariables;
+  variables: UpdateCategoryButtonMutationVariables;
+  response: UpdateCategoryButtonMutation$data;
 };
-
-
-
-/*
-mutation UpdateCategoryButtonMutation(
-  $input: UpdatePostCategoriesInput!
-) {
-  updatePostCategories(input: $input) {
-    post {
-      id
-      categories {
-        id
-        title
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
-          id
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -260,5 +243,7 @@ return {
   }
 };
 })();
-(node as any).hash = '465c37370b5643dc645a71dbce126c0c';
+
+(node as any).hash = "465c37370b5643dc645a71dbce126c0c";
+
 export default node;

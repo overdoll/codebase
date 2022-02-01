@@ -1,42 +1,37 @@
+/**
+ * @generated SignedSource<<d0be424873759437e6fba9a0d9a09b0d>>
+ * @relayHash 5b2d56ffbe947ffa06998e8d42a5770f
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5b2d56ffbe947ffa06998e8d42a5770f */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 5b2d56ffbe947ffa06998e8d42a5770f
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateAccountLanguageInput = {
-    locale: string;
+  locale: string;
 };
-export type LanguageManagerAccountMutationVariables = {
-    input: UpdateAccountLanguageInput;
+export type LanguageManagerAccountMutation$variables = {
+  input: UpdateAccountLanguageInput;
 };
-export type LanguageManagerAccountMutationResponse = {
-    readonly updateAccountLanguage: {
-        readonly language: {
-            readonly locale: string;
-            readonly name: string;
-        } | null;
+export type LanguageManagerAccountMutationVariables = LanguageManagerAccountMutation$variables;
+export type LanguageManagerAccountMutation$data = {
+  readonly updateAccountLanguage: {
+    readonly language: {
+      readonly locale: string;
+      readonly name: string;
     } | null;
+  } | null;
 };
+export type LanguageManagerAccountMutationResponse = LanguageManagerAccountMutation$data;
 export type LanguageManagerAccountMutation = {
-    readonly response: LanguageManagerAccountMutationResponse;
-    readonly variables: LanguageManagerAccountMutationVariables;
+  variables: LanguageManagerAccountMutationVariables;
+  response: LanguageManagerAccountMutation$data;
 };
-
-
-
-/*
-mutation LanguageManagerAccountMutation(
-  $input: UpdateAccountLanguageInput!
-) {
-  updateAccountLanguage(input: $input) {
-    language {
-      locale
-      name
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -116,5 +111,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'eb48534c7ecb10176221ca1670030adf';
+
+(node as any).hash = "eb48534c7ecb10176221ca1670030adf";
+
 export default node;

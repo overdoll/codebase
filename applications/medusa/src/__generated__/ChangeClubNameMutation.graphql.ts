@@ -1,41 +1,35 @@
+/**
+ * @generated SignedSource<<672753f81fbac6a68eb50b14f066acf8>>
+ * @relayHash fa46b33d00292f22e9607b295f9ddab6
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash fa46b33d00292f22e9607b295f9ddab6 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type ChangeClubNameMutationVariables = {
-    id: string;
-    name: string;
+// @relayRequestID fa46b33d00292f22e9607b295f9ddab6
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type ChangeClubNameMutation$variables = {
+  id: string;
+  name: string;
 };
-export type ChangeClubNameMutationResponse = {
-    readonly updateClubName: {
-        readonly club: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
+export type ChangeClubNameMutationVariables = ChangeClubNameMutation$variables;
+export type ChangeClubNameMutation$data = {
+  readonly updateClubName: {
+    readonly club: {
+      readonly id: string;
+      readonly name: string;
     } | null;
+  } | null;
 };
+export type ChangeClubNameMutationResponse = ChangeClubNameMutation$data;
 export type ChangeClubNameMutation = {
-    readonly response: ChangeClubNameMutationResponse;
-    readonly variables: ChangeClubNameMutationVariables;
+  variables: ChangeClubNameMutationVariables;
+  response: ChangeClubNameMutation$data;
 };
-
-
-
-/*
-mutation ChangeClubNameMutation(
-  $id: ID!
-  $name: String!
-) {
-  updateClubName(input: {id: $id, name: $name}) {
-    club {
-      id
-      name
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -131,5 +125,7 @@ return {
   }
 };
 })();
-(node as any).hash = '87cd26fdc027eaae39a95369fcedd075';
+
+(node as any).hash = "87cd26fdc027eaae39a95369fcedd075";
+
 export default node;

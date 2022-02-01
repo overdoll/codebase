@@ -1,38 +1,30 @@
+/**
+ * @generated SignedSource<<10e531f81abbdee6096036e3f1434785>>
+ * @relayHash b362964b720ce01b03d1ca29b8bb9e55
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b362964b720ce01b03d1ca29b8bb9e55 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID b362964b720ce01b03d1ca29b8bb9e55
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type QueueSettingsQueryVariables = {};
-export type QueueSettingsQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"QueueSettingsFragment">;
-    } | null;
+export type QueueSettingsQuery$variables = {};
+export type QueueSettingsQueryVariables = QueueSettingsQuery$variables;
+export type QueueSettingsQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"QueueSettingsFragment">;
+  } | null;
 };
+export type QueueSettingsQueryResponse = QueueSettingsQuery$data;
 export type QueueSettingsQuery = {
-    readonly response: QueueSettingsQueryResponse;
-    readonly variables: QueueSettingsQueryVariables;
+  variables: QueueSettingsQueryVariables;
+  response: QueueSettingsQuery$data;
 };
-
-
-
-/*
-query QueueSettingsQuery {
-  viewer {
-    ...QueueSettingsFragment
-    id
-  }
-}
-
-fragment QueueSettingsFragment on Account {
-  id
-  moderatorSettings {
-    isInModeratorQueue
-  }
-}
-*/
 
 const node: ConcreteRequest = {
   "fragment": {
@@ -113,5 +105,7 @@ const node: ConcreteRequest = {
     "text": null
   }
 };
-(node as any).hash = '87666487e59d3d0b0ad33448974d6d75';
+
+(node as any).hash = "87666487e59d3d0b0ad33448974d6d75";
+
 export default node;

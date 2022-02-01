@@ -1,26 +1,30 @@
+/**
+ * @generated SignedSource<<f32db45d968d3b902aec295030ab5f6c>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPostsFeedFragment = {
-    readonly clubMembersPostsFeed: {
-        readonly edges: ReadonlyArray<{
-            readonly __typename: string;
-        }>;
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
-    };
-    readonly id: string;
-    readonly " $refType": "ClubPostsFeedFragment";
+export type ClubPostsFeedFragment$data = {
+  readonly clubMembersPostsFeed: {
+    readonly edges: ReadonlyArray<{
+      readonly __typename: string;
+    }>;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "ClubPostsFeedFragment";
 };
-export type ClubPostsFeedFragment$data = ClubPostsFeedFragment;
+export type ClubPostsFeedFragment = ClubPostsFeedFragment$data;
 export type ClubPostsFeedFragment$key = {
-    readonly " $data"?: ClubPostsFeedFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubPostsFeedFragment">;
+  readonly " $data"?: ClubPostsFeedFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -68,7 +72,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ClubPostsFeedPaginationQuery.graphql.ts'),
+      "operation": require('./ClubPostsFeedPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -114,6 +118,11 @@ return {
           "storageKey": null
         },
         {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostsInfiniteScrollFragment"
+        },
+        {
           "alias": null,
           "args": null,
           "concreteType": "PageInfo",
@@ -137,11 +146,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostsInfiniteScrollFragment"
         }
       ],
       "storageKey": null
@@ -158,5 +162,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '9c1c247799d47361c3b6aca9566bbf18';
+
+(node as any).hash = "9c1c247799d47361c3b6aca9566bbf18";
+
 export default node;

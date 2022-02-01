@@ -1,32 +1,36 @@
+/**
+ * @generated SignedSource<<75d71926405e0eed45de02a08016a03c>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubTileOverlayFragment = {
-    readonly name: string;
-    readonly thumbnail: {
-        readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly posts: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly content: ReadonlyArray<{
-                    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                }>;
-            };
+export type ClubTileOverlayFragment$data = {
+  readonly name: string;
+  readonly thumbnail: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+  } | null;
+  readonly posts: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly content: ReadonlyArray<{
+          readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
         }>;
-    };
-    readonly " $refType": "ClubTileOverlayFragment";
+      };
+    }>;
+  };
+  readonly " $fragmentType": "ClubTileOverlayFragment";
 };
-export type ClubTileOverlayFragment$data = ClubTileOverlayFragment;
+export type ClubTileOverlayFragment = ClubTileOverlayFragment$data;
 export type ClubTileOverlayFragment$key = {
-    readonly " $data"?: ClubTileOverlayFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubTileOverlayFragment">;
+  readonly " $data"?: ClubTileOverlayFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -116,5 +120,7 @@ const node: ReaderFragment = {
   "type": "Club",
   "abstractKey": null
 };
-(node as any).hash = '1293800741068de04adaf409b99de94c';
+
+(node as any).hash = "1293800741068de04adaf409b99de94c";
+
 export default node;

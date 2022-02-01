@@ -1,76 +1,30 @@
+/**
+ * @generated SignedSource<<bb58fca9037ce789b5162d613c5bdfa1>>
+ * @relayHash 5bfe0f800f9ec5354fd7797aa24086d8
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5bfe0f800f9ec5354fd7797aa24086d8 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 5bfe0f800f9ec5354fd7797aa24086d8
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCategoriesQueryVariables = {
-    title?: string | null | undefined;
+export type SearchCategoriesQuery$variables = {
+  title?: string | null;
 };
-export type SearchCategoriesQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesFragment">;
+export type SearchCategoriesQueryVariables = SearchCategoriesQuery$variables;
+export type SearchCategoriesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
 };
+export type SearchCategoriesQueryResponse = SearchCategoriesQuery$data;
 export type SearchCategoriesQuery = {
-    readonly response: SearchCategoriesQueryResponse;
-    readonly variables: SearchCategoriesQueryVariables;
+  variables: SearchCategoriesQueryVariables;
+  response: SearchCategoriesQuery$data;
 };
-
-
-
-/*
-query SearchCategoriesQuery(
-  $title: String
-) {
-  ...SearchCategoriesFragment_3FzUSU
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCategoriesFragment_3FzUSU on Query {
-  categories(first: 5, title: $title) {
-    edges {
-      node {
-        id
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -270,5 +224,7 @@ return {
   }
 };
 })();
-(node as any).hash = '4f48576e48f3ef7919d14cf7d1dc2763';
+
+(node as any).hash = "4f48576e48f3ef7919d14cf7d1dc2763";
+
 export default node;

@@ -1,29 +1,33 @@
+/**
+ * @generated SignedSource<<96cd08299421fc3acc0fd7f45a9386d8>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCategoriesGeneralFragment = {
-    readonly categories: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly slug: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"CategoryTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "SearchCategoriesGeneralFragment";
+export type SearchCategoriesGeneralFragment$data = {
+  readonly categories: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly slug: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SearchCategoriesGeneralFragment";
 };
-export type SearchCategoriesGeneralFragment$data = SearchCategoriesGeneralFragment;
+export type SearchCategoriesGeneralFragment = SearchCategoriesGeneralFragment$data;
 export type SearchCategoriesGeneralFragment$key = {
-    readonly " $data"?: SearchCategoriesGeneralFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesGeneralFragment">;
+  readonly " $data"?: SearchCategoriesGeneralFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesGeneralFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -45,13 +49,9 @@ return {
       "name": "first"
     },
     {
-      "kind": "RootArgument",
-      "name": "search"
-    },
-    {
       "defaultValue": null,
       "kind": "LocalArgument",
-      "name": "title"
+      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -74,7 +74,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchCategoriesGeneralPaginationFragment.graphql.ts')
+      "operation": require('./SearchCategoriesGeneralPaginationFragment.graphql')
     }
   },
   "name": "SearchCategoriesGeneralFragment",
@@ -136,16 +136,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CategoryTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CategoryTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -193,5 +193,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '520ed291d34c115ada1b7b76f65b3029';
+
+(node as any).hash = "142203410a7562eadf2e96742a0f7efa";
+
 export default node;

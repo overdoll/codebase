@@ -1,46 +1,39 @@
+/**
+ * @generated SignedSource<<9f97c27c4fd94469df45d6eaf068fd34>>
+ * @relayHash 71108957416e586f80f5ed3a2bb99e82
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 71108957416e586f80f5ed3a2bb99e82 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 71108957416e586f80f5ed3a2bb99e82
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveModeratorFromPostQueueInput = {
-    accountId: string;
+  accountId: string;
 };
-export type QueueSettingsRemoveMutationVariables = {
-    input: RemoveModeratorFromPostQueueInput;
+export type QueueSettingsRemoveMutation$variables = {
+  input: RemoveModeratorFromPostQueueInput;
 };
-export type QueueSettingsRemoveMutationResponse = {
-    readonly removeModeratorFromPostQueue: {
-        readonly account: {
-            readonly id: string;
-            readonly moderatorSettings: {
-                readonly isInModeratorQueue: boolean;
-            };
-        } | null;
+export type QueueSettingsRemoveMutationVariables = QueueSettingsRemoveMutation$variables;
+export type QueueSettingsRemoveMutation$data = {
+  readonly removeModeratorFromPostQueue: {
+    readonly account: {
+      readonly id: string;
+      readonly moderatorSettings: {
+        readonly isInModeratorQueue: boolean;
+      };
     } | null;
+  } | null;
 };
+export type QueueSettingsRemoveMutationResponse = QueueSettingsRemoveMutation$data;
 export type QueueSettingsRemoveMutation = {
-    readonly response: QueueSettingsRemoveMutationResponse;
-    readonly variables: QueueSettingsRemoveMutationVariables;
+  variables: QueueSettingsRemoveMutationVariables;
+  response: QueueSettingsRemoveMutation$data;
 };
-
-
-
-/*
-mutation QueueSettingsRemoveMutation(
-  $input: RemoveModeratorFromPostQueueInput!
-) {
-  removeModeratorFromPostQueue(input: $input) {
-    account {
-      id
-      moderatorSettings {
-        isInModeratorQueue
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -131,5 +124,7 @@ return {
   }
 };
 })();
-(node as any).hash = '5bdf28e5f0ed7a17baa59ac345d1f352';
+
+(node as any).hash = "5bdf28e5f0ed7a17baa59ac345d1f352";
+
 export default node;

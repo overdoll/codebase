@@ -1,26 +1,30 @@
+/**
+ * @generated SignedSource<<bf252281a17b9161e3ddcc8c87dfd72b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UpdateContentButtonFragment = {
+export type UpdateContentButtonFragment$data = {
+  readonly id: string;
+  readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly content: ReadonlyArray<{
-        readonly id: string;
-        readonly urls: ReadonlyArray<{
-            readonly url: string;
-        }>;
+    readonly urls: ReadonlyArray<{
+      readonly url: string;
     }>;
-    readonly " $refType": "UpdateContentButtonFragment";
+  }>;
+  readonly " $fragmentType": "UpdateContentButtonFragment";
 };
-export type UpdateContentButtonFragment$data = UpdateContentButtonFragment;
+export type UpdateContentButtonFragment = UpdateContentButtonFragment$data;
 export type UpdateContentButtonFragment$key = {
-    readonly " $data"?: UpdateContentButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UpdateContentButtonFragment">;
+  readonly " $data"?: UpdateContentButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateContentButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -72,5 +76,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '202c11cf1f81e94e02bd2fe477bbeed6';
+
+(node as any).hash = "202c11cf1f81e94e02bd2fe477bbeed6";
+
 export default node;

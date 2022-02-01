@@ -1,25 +1,29 @@
+/**
+ * @generated SignedSource<<76121cb2773526774560612c6b69b73d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type MultiFactorFragment = {
-    readonly accountStatus: {
-        readonly multiFactor: {
-            readonly totp: boolean;
-        } | null;
+export type MultiFactorFragment$data = {
+  readonly accountStatus: {
+    readonly multiFactor: {
+      readonly totp: boolean;
     } | null;
-    readonly " $fragmentRefs": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment">;
-    readonly " $refType": "MultiFactorFragment";
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment">;
+  readonly " $fragmentType": "MultiFactorFragment";
 };
-export type MultiFactorFragment$data = MultiFactorFragment;
+export type MultiFactorFragment = MultiFactorFragment$data;
 export type MultiFactorFragment$key = {
-    readonly " $data"?: MultiFactorFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"MultiFactorFragment">;
+  readonly " $data"?: MultiFactorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"MultiFactorFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -70,5 +74,7 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = '9044bb2fe2f16fafb720f468de2c0c71';
+
+(node as any).hash = "9044bb2fe2f16fafb720f468de2c0c71";
+
 export default node;

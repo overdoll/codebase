@@ -1,80 +1,32 @@
+/**
+ * @generated SignedSource<<596d97a4bc46114d00762be08bb87640>>
+ * @relayHash 0addcedc432e975c4470cc890fda6fd4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0addcedc432e975c4470cc890fda6fd4 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 0addcedc432e975c4470cc890fda6fd4
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCategoriesPaginationFragmentVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    title?: string | null | undefined;
+export type SearchCategoriesPaginationFragment$variables = {
+  after?: string | null;
+  first?: number | null;
+  title?: string | null;
 };
-export type SearchCategoriesPaginationFragmentResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesFragment">;
+export type SearchCategoriesPaginationFragmentVariables = SearchCategoriesPaginationFragment$variables;
+export type SearchCategoriesPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
 };
+export type SearchCategoriesPaginationFragmentResponse = SearchCategoriesPaginationFragment$data;
 export type SearchCategoriesPaginationFragment = {
-    readonly response: SearchCategoriesPaginationFragmentResponse;
-    readonly variables: SearchCategoriesPaginationFragmentVariables;
+  variables: SearchCategoriesPaginationFragmentVariables;
+  response: SearchCategoriesPaginationFragment$data;
 };
-
-
-
-/*
-query SearchCategoriesPaginationFragment(
-  $after: String
-  $first: Int = 5
-  $title: String
-) {
-  ...SearchCategoriesFragment_2PG6LC
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCategoriesFragment_2PG6LC on Query {
-  categories(first: $first, after: $after, title: $title) {
-    edges {
-      node {
-        id
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -286,5 +238,7 @@ return {
   }
 };
 })();
-(node as any).hash = '820591d8df74cc47f6fe5704e3841869';
+
+(node as any).hash = "820591d8df74cc47f6fe5704e3841869";
+
 export default node;

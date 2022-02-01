@@ -1,147 +1,34 @@
+/**
+ * @generated SignedSource<<fda4af6a30819af5efd0f0ed2fe60a32>>
+ * @relayHash c18e5575fbcc65ea0baaa4f8c64af278
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f014e2ac6d74512e38b8ec708733d22e */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID c18e5575fbcc65ea0baaa4f8c64af278
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type GeneralSearchQueryVariables = {
-    search?: string | null | undefined;
-    first?: number | null | undefined;
-    seriesSlugs?: Array<string> | null | undefined;
-    charactersSlugs?: Array<string> | null | undefined;
-    categoriesSlugs?: Array<string> | null | undefined;
-    charactersSeriesSlug?: string | null | undefined;
+export type GeneralSearchQuery$variables = {
+  first?: number | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
+  charactersSlugs?: ReadonlyArray<string> | null;
+  categoriesSlugs?: ReadonlyArray<string> | null;
+  charactersSeriesSlug?: string | null;
 };
-export type GeneralSearchQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesGeneralFragment" | "SearchCharactersGeneralFragment" | "SearchSeriesGeneralFragment">;
+export type GeneralSearchQueryVariables = GeneralSearchQuery$variables;
+export type GeneralSearchQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesGeneralFragment" | "SearchCharactersGeneralFragment" | "SearchSeriesGeneralFragment">;
 };
+export type GeneralSearchQueryResponse = GeneralSearchQuery$data;
 export type GeneralSearchQuery = {
-    readonly response: GeneralSearchQueryResponse;
-    readonly variables: GeneralSearchQueryVariables;
+  variables: GeneralSearchQueryVariables;
+  response: GeneralSearchQuery$data;
 };
-
-
-
-/*
-query GeneralSearchQuery(
-  $search: String
-  $first: Int
-  $seriesSlugs: [String!]
-  $charactersSlugs: [String!]
-  $categoriesSlugs: [String!]
-  $charactersSeriesSlug: String
-) {
-  ...SearchCategoriesGeneralFragment
-  ...SearchCharactersGeneralFragment
-  ...SearchSeriesGeneralFragment
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment CharacterTileOverlayFragment on Character {
-  name
-  series {
-    title
-    id
-  }
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCategoriesGeneralFragment on Query {
-  categories(first: $first, title: $search, slugs: $categoriesSlugs) {
-    edges {
-      node {
-        id
-        slug
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment SearchCharactersGeneralFragment on Query {
-  characters(first: $first, name: $search, slugs: $charactersSlugs, seriesSlug: $charactersSeriesSlug) {
-    edges {
-      node {
-        id
-        slug
-        name
-        ...CharacterTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment SearchSeriesGeneralFragment on Query {
-  series(first: $first, title: $search, slugs: $seriesSlugs) {
-    edges {
-      node {
-        id
-        title
-        slug
-        ...SeriesTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment SeriesTileOverlayFragment on Series {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -167,54 +54,43 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "search"
-},
-v5 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "seriesSlugs"
 },
-v6 = {
+v5 = {
   "kind": "Variable",
   "name": "first",
   "variableName": "first"
 },
-v7 = {
-  "kind": "Variable",
-  "name": "title",
-  "variableName": "search"
-},
-v8 = [
-  (v6/*: any*/),
+v6 = [
+  (v5/*: any*/),
   {
     "kind": "Variable",
     "name": "slugs",
     "variableName": "categoriesSlugs"
-  },
-  (v7/*: any*/)
+  }
 ],
-v9 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v10 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v11 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v12 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -254,25 +130,25 @@ v12 = {
       ],
       "storageKey": null
     },
-    (v9/*: any*/)
+    (v7/*: any*/)
   ],
   "storageKey": null
 },
-v13 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v14 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v15 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -297,17 +173,12 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = [
+v14 = [
   "title",
   "slugs"
 ],
-v17 = [
-  (v6/*: any*/),
-  {
-    "kind": "Variable",
-    "name": "name",
-    "variableName": "search"
-  },
+v15 = [
+  (v5/*: any*/),
   {
     "kind": "Variable",
     "name": "seriesSlug",
@@ -319,14 +190,13 @@ v17 = [
     "variableName": "charactersSlugs"
   }
 ],
-v18 = [
-  (v6/*: any*/),
+v16 = [
+  (v5/*: any*/),
   {
     "kind": "Variable",
     "name": "slugs",
     "variableName": "seriesSlugs"
-  },
-  (v7/*: any*/)
+  }
 ];
 return {
   "fragment": {
@@ -335,8 +205,7 @@ return {
       (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/)
+      (v4/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -364,9 +233,8 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v4/*: any*/),
       (v3/*: any*/),
-      (v5/*: any*/),
+      (v4/*: any*/),
       (v2/*: any*/),
       (v0/*: any*/),
       (v1/*: any*/)
@@ -376,7 +244,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v8/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -398,26 +266,26 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v7/*: any*/),
+                  (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
-                  (v11/*: any*/),
-                  (v12/*: any*/),
-                  (v13/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v14/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v15/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
-        "filters": (v16/*: any*/),
+        "args": (v6/*: any*/),
+        "filters": (v14/*: any*/),
         "handle": "connection",
         "key": "SearchCategoriesGeneral_categories",
         "kind": "LinkedHandle",
@@ -425,7 +293,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v15/*: any*/),
         "concreteType": "CharacterConnection",
         "kind": "LinkedField",
         "name": "characters",
@@ -447,8 +315,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
-                  (v10/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -464,27 +332,27 @@ return {
                     "name": "series",
                     "plural": false,
                     "selections": [
-                      (v11/*: any*/),
-                      (v9/*: any*/)
+                      (v9/*: any*/),
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v12/*: any*/),
-                  (v13/*: any*/)
+                  (v10/*: any*/),
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v14/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v15/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v15/*: any*/),
         "filters": [
           "name",
           "slugs",
@@ -497,7 +365,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v18/*: any*/),
+        "args": (v16/*: any*/),
         "concreteType": "SeriesConnection",
         "kind": "LinkedField",
         "name": "series",
@@ -519,26 +387,26 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v7/*: any*/),
                   (v9/*: any*/),
-                  (v11/*: any*/),
+                  (v8/*: any*/),
                   (v10/*: any*/),
-                  (v12/*: any*/),
-                  (v13/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v14/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v15/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v18/*: any*/),
-        "filters": (v16/*: any*/),
+        "args": (v16/*: any*/),
+        "filters": (v14/*: any*/),
         "handle": "connection",
         "key": "SearchSeriesGeneral_series",
         "kind": "LinkedHandle",
@@ -547,7 +415,7 @@ return {
     ]
   },
   "params": {
-    "id": "f014e2ac6d74512e38b8ec708733d22e",
+    "id": "c18e5575fbcc65ea0baaa4f8c64af278",
     "metadata": {},
     "name": "GeneralSearchQuery",
     "operationKind": "query",
@@ -555,5 +423,7 @@ return {
   }
 };
 })();
-(node as any).hash = '44d4f6f43e5b91dfc1d813ff9face834';
+
+(node as any).hash = "d2e881aad281de75b32d174b3825168b";
+
 export default node;

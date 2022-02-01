@@ -1,27 +1,31 @@
+/**
+ * @generated SignedSource<<ef23826821554829f666b1fae7f6389d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type PostGalleryPublicSimpleFragment = {
-    readonly id: string;
-    readonly reference: string;
-    readonly content: ReadonlyArray<{
-        readonly type: ResourceType;
-        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
-    readonly " $refType": "PostGalleryPublicSimpleFragment";
+import { FragmentRefs } from "relay-runtime";
+export type PostGalleryPublicSimpleFragment$data = {
+  readonly id: string;
+  readonly reference: string;
+  readonly content: ReadonlyArray<{
+    readonly type: ResourceType;
+    readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
+  readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
 };
-export type PostGalleryPublicSimpleFragment$data = PostGalleryPublicSimpleFragment;
+export type PostGalleryPublicSimpleFragment = PostGalleryPublicSimpleFragment$data;
 export type PostGalleryPublicSimpleFragment$key = {
-    readonly " $data"?: PostGalleryPublicSimpleFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostGalleryPublicSimpleFragment">;
+  readonly " $data"?: PostGalleryPublicSimpleFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -85,5 +89,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'ae9654200c536b806e42fdbbac504807';
+
+(node as any).hash = "ae9654200c536b806e42fdbbac504807";
+
 export default node;

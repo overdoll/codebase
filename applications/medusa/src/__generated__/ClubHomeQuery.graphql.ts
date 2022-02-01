@@ -1,69 +1,33 @@
+/**
+ * @generated SignedSource<<fe2d032ccb5ddf495f7d926ba8b6e46d>>
+ * @relayHash 0aefab520747be1f8be91e3cdf899b53
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0aefab520747be1f8be91e3cdf899b53 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 0aefab520747be1f8be91e3cdf899b53
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubHomeQueryVariables = {
-    slug: string;
+export type ClubHomeQuery$variables = {
+  slug: string;
 };
-export type ClubHomeQueryResponse = {
-    readonly club: {
-        readonly membersCount: number;
-        readonly " $fragmentRefs": FragmentRefs<"LargeClubHeaderFragment">;
-    } | null;
+export type ClubHomeQueryVariables = ClubHomeQuery$variables;
+export type ClubHomeQuery$data = {
+  readonly club: {
+    readonly membersCount: number;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
+  } | null;
 };
+export type ClubHomeQueryResponse = ClubHomeQuery$data;
 export type ClubHomeQuery = {
-    readonly response: ClubHomeQueryResponse;
-    readonly variables: ClubHomeQueryVariables;
+  variables: ClubHomeQueryVariables;
+  response: ClubHomeQuery$data;
 };
-
-
-
-/*
-query ClubHomeQuery(
-  $slug: String!
-) {
-  club(slug: $slug) {
-    membersCount
-    ...LargeClubHeaderFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment LargeClubHeaderFragment on Club {
-  name
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -203,5 +167,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a6c85a9956f7543bd21b2b4da4c5831d';
+
+(node as any).hash = "a6c85a9956f7543bd21b2b4da4c5831d";
+
 export default node;

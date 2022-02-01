@@ -1,38 +1,33 @@
+/**
+ * @generated SignedSource<<836252691cdd164258258e9ade0cdc6d>>
+ * @relayHash 4507276f7be03af7c8648e69f1b14017
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4507276f7be03af7c8648e69f1b14017 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CreatePostFlowMutationVariables = {
-    clubId: string;
+// @relayRequestID 4507276f7be03af7c8648e69f1b14017
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type CreatePostFlowMutation$variables = {
+  clubId: string;
 };
-export type CreatePostFlowMutationResponse = {
-    readonly createPost: {
-        readonly post: {
-            readonly reference: string;
-        } | null;
+export type CreatePostFlowMutationVariables = CreatePostFlowMutation$variables;
+export type CreatePostFlowMutation$data = {
+  readonly createPost: {
+    readonly post: {
+      readonly reference: string;
     } | null;
+  } | null;
 };
+export type CreatePostFlowMutationResponse = CreatePostFlowMutation$data;
 export type CreatePostFlowMutation = {
-    readonly response: CreatePostFlowMutationResponse;
-    readonly variables: CreatePostFlowMutationVariables;
+  variables: CreatePostFlowMutationVariables;
+  response: CreatePostFlowMutation$data;
 };
-
-
-
-/*
-mutation CreatePostFlowMutation(
-  $clubId: ID!
-) {
-  createPost(input: {clubId: $clubId}) {
-    post {
-      reference
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -143,5 +138,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a6db6645e4e8be71575635c46dcde872';
+
+(node as any).hash = "a6db6645e4e8be71575635c46dcde872";
+
 export default node;

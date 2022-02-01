@@ -1,40 +1,37 @@
+/**
+ * @generated SignedSource<<a6b3151bd7d5e2d579ee41c65e50db5b>>
+ * @relayHash 2aa94deb9b52ae0f585815d12adfac43
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2aa94deb9b52ae0f585815d12adfac43 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 2aa94deb9b52ae0f585815d12adfac43
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type EnrollAccountMultiFactorTotpValidation = "INVALID_CODE" | "%future added value";
 export type EnrollAccountMultiFactorTotpInput = {
-    id: string;
-    code: string;
+  id: string;
+  code: string;
 };
-export type TotpActivationFormMutationVariables = {
-    input: EnrollAccountMultiFactorTotpInput;
+export type TotpActivationFormMutation$variables = {
+  input: EnrollAccountMultiFactorTotpInput;
 };
-export type TotpActivationFormMutationResponse = {
-    readonly enrollAccountMultiFactorTotp: {
-        readonly validation: EnrollAccountMultiFactorTotpValidation | null;
-        readonly accountMultiFactorTotpEnabled: boolean | null;
-    } | null;
+export type TotpActivationFormMutationVariables = TotpActivationFormMutation$variables;
+export type TotpActivationFormMutation$data = {
+  readonly enrollAccountMultiFactorTotp: {
+    readonly validation: EnrollAccountMultiFactorTotpValidation | null;
+    readonly accountMultiFactorTotpEnabled: boolean | null;
+  } | null;
 };
+export type TotpActivationFormMutationResponse = TotpActivationFormMutation$data;
 export type TotpActivationFormMutation = {
-    readonly response: TotpActivationFormMutationResponse;
-    readonly variables: TotpActivationFormMutationVariables;
+  variables: TotpActivationFormMutationVariables;
+  response: TotpActivationFormMutation$data;
 };
-
-
-
-/*
-mutation TotpActivationFormMutation(
-  $input: EnrollAccountMultiFactorTotpInput!
-) {
-  enrollAccountMultiFactorTotp(input: $input) {
-    validation
-    accountMultiFactorTotpEnabled
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -103,5 +100,7 @@ return {
   }
 };
 })();
-(node as any).hash = '3998ef08a40e0cabc4f4966d8e9c8623';
+
+(node as any).hash = "3998ef08a40e0cabc4f4966d8e9c8623";
+
 export default node;

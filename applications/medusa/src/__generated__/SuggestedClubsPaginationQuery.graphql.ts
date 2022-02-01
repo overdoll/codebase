@@ -1,103 +1,31 @@
+/**
+ * @generated SignedSource<<d5a1bae99fd8b93ea0b4db19eaf69cdc>>
+ * @relayHash d44fdede4814ad885f1e4a9e8855722b
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d44fdede4814ad885f1e4a9e8855722b */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID d44fdede4814ad885f1e4a9e8855722b
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SuggestedClubsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
+export type SuggestedClubsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
 };
-export type SuggestedClubsPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsFragment">;
+export type SuggestedClubsPaginationQueryVariables = SuggestedClubsPaginationQuery$variables;
+export type SuggestedClubsPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
+export type SuggestedClubsPaginationQueryResponse = SuggestedClubsPaginationQuery$data;
 export type SuggestedClubsPaginationQuery = {
-    readonly response: SuggestedClubsPaginationQueryResponse;
-    readonly variables: SuggestedClubsPaginationQueryVariables;
+  variables: SuggestedClubsPaginationQueryVariables;
+  response: SuggestedClubsPaginationQuery$data;
 };
-
-
-
-/*
-query SuggestedClubsPaginationQuery(
-  $after: String
-  $first: Int = 7
-) {
-  ...SuggestedClubsFragment_2HEEH6
-}
-
-fragment ClubTileOverlayFragment on Club {
-  name
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-  posts(first: 1) {
-    edges {
-      node {
-        content {
-          ...ResourceItemFragment
-          id
-        }
-        id
-      }
-    }
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SuggestedClubsFragment_2HEEH6 on Query {
-  clubs(first: $first, after: $after) {
-    edges {
-      node {
-        slug
-        ...JoinClubButtonClubFragment
-        ...ClubTileOverlayFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -369,5 +297,7 @@ return {
   }
 };
 })();
-(node as any).hash = '3005950f7f75e61df8c2fe462ba5203b';
+
+(node as any).hash = "3005950f7f75e61df8c2fe462ba5203b";
+
 export default node;

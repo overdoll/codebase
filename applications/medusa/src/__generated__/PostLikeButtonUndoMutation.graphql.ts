@@ -1,33 +1,31 @@
+/**
+ * @generated SignedSource<<5ac1301426354cfb641ed208249d7f79>>
+ * @relayHash 4babf55feb150e59ac42b0e02d92241d
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4babf55feb150e59ac42b0e02d92241d */
 
-import { ConcreteRequest } from "relay-runtime";
-export type PostLikeButtonUndoMutationVariables = {
-    postId: string;
+// @relayRequestID 4babf55feb150e59ac42b0e02d92241d
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type PostLikeButtonUndoMutation$variables = {
+  postId: string;
 };
-export type PostLikeButtonUndoMutationResponse = {
-    readonly undoLikePost: {
-        readonly postLikeId: string | null;
-    } | null;
+export type PostLikeButtonUndoMutationVariables = PostLikeButtonUndoMutation$variables;
+export type PostLikeButtonUndoMutation$data = {
+  readonly undoLikePost: {
+    readonly postLikeId: string | null;
+  } | null;
 };
+export type PostLikeButtonUndoMutationResponse = PostLikeButtonUndoMutation$data;
 export type PostLikeButtonUndoMutation = {
-    readonly response: PostLikeButtonUndoMutationResponse;
-    readonly variables: PostLikeButtonUndoMutationVariables;
+  variables: PostLikeButtonUndoMutationVariables;
+  response: PostLikeButtonUndoMutation$data;
 };
-
-
-
-/*
-mutation PostLikeButtonUndoMutation(
-  $postId: ID!
-) {
-  undoLikePost(input: {postId: $postId}) {
-    postLikeId
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -95,5 +93,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a18fec8f59444e652aa13e9b62d8abe6';
+
+(node as any).hash = "a18fec8f59444e652aa13e9b62d8abe6";
+
 export default node;

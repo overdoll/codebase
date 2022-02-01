@@ -1,62 +1,48 @@
+/**
+ * @generated SignedSource<<ee338e7ce2bf1c979da8eb74085ea949>>
+ * @relayHash 9ea7c23d5abd5d3f17baf09a2087db58
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9ea7c23d5abd5d3f17baf09a2087db58 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 9ea7c23d5abd5d3f17baf09a2087db58
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type AddPostContentInput = {
-    id: string;
-    content: Array<string>;
+  id: string;
+  content: ReadonlyArray<string>;
 };
-export type ProcessUploadsMutationVariables = {
-    input: AddPostContentInput;
+export type ProcessUploadsMutation$variables = {
+  input: AddPostContentInput;
 };
-export type ProcessUploadsMutationResponse = {
-    readonly addPostContent: {
-        readonly post: {
-            readonly id: string;
-            readonly reference: string;
-            readonly content: ReadonlyArray<{
-                readonly id: string;
-                readonly type: ResourceType;
-                readonly processed: boolean;
-                readonly urls: ReadonlyArray<{
-                    readonly url: string;
-                    readonly mimeType: string;
-                }>;
-            }>;
-        } | null;
+export type ProcessUploadsMutationVariables = ProcessUploadsMutation$variables;
+export type ProcessUploadsMutation$data = {
+  readonly addPostContent: {
+    readonly post: {
+      readonly id: string;
+      readonly reference: string;
+      readonly content: ReadonlyArray<{
+        readonly id: string;
+        readonly type: ResourceType;
+        readonly processed: boolean;
+        readonly urls: ReadonlyArray<{
+          readonly url: string;
+          readonly mimeType: string;
+        }>;
+      }>;
     } | null;
+  } | null;
 };
+export type ProcessUploadsMutationResponse = ProcessUploadsMutation$data;
 export type ProcessUploadsMutation = {
-    readonly response: ProcessUploadsMutationResponse;
-    readonly variables: ProcessUploadsMutationVariables;
+  variables: ProcessUploadsMutationVariables;
+  response: ProcessUploadsMutation$data;
 };
-
-
-
-/*
-mutation ProcessUploadsMutation(
-  $input: AddPostContentInput!
-) {
-  addPostContent(input: $input) {
-    post {
-      id
-      reference
-      content {
-        id
-        type
-        processed
-        urls {
-          url
-          mimeType
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -188,5 +174,7 @@ return {
   }
 };
 })();
-(node as any).hash = '619ecedb8295f38f93bcb20c88a6530c';
+
+(node as any).hash = "619ecedb8295f38f93bcb20c88a6530c";
+
 export default node;

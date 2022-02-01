@@ -1,37 +1,33 @@
+/**
+ * @generated SignedSource<<74fcf7ed009266fb13465d0c0e566cda>>
+ * @relayHash 8ff037e504b055ff04061393c42088d1
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8ff037e504b055ff04061393c42088d1 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type MultiFactorTotpFlowMutationVariables = {};
-export type MultiFactorTotpFlowMutationResponse = {
-    readonly generateAccountMultiFactorTotp: {
-        readonly multiFactorTotp: {
-            readonly id: string;
-            readonly secret: string;
-            readonly imageSrc: string;
-        } | null;
+// @relayRequestID 8ff037e504b055ff04061393c42088d1
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type MultiFactorTotpFlowMutation$variables = {};
+export type MultiFactorTotpFlowMutationVariables = MultiFactorTotpFlowMutation$variables;
+export type MultiFactorTotpFlowMutation$data = {
+  readonly generateAccountMultiFactorTotp: {
+    readonly multiFactorTotp: {
+      readonly id: string;
+      readonly secret: string;
+      readonly imageSrc: string;
     } | null;
+  } | null;
 };
+export type MultiFactorTotpFlowMutationResponse = MultiFactorTotpFlowMutation$data;
 export type MultiFactorTotpFlowMutation = {
-    readonly response: MultiFactorTotpFlowMutationResponse;
-    readonly variables: MultiFactorTotpFlowMutationVariables;
+  variables: MultiFactorTotpFlowMutationVariables;
+  response: MultiFactorTotpFlowMutation$data;
 };
-
-
-
-/*
-mutation MultiFactorTotpFlowMutation {
-  generateAccountMultiFactorTotp {
-    multiFactorTotp {
-      id
-      secret
-      imageSrc
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -105,5 +101,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e3553fc0ce0d27b96991a0298cfb97af';
+
+(node as any).hash = "e3553fc0ce0d27b96991a0298cfb97af";
+
 export default node;

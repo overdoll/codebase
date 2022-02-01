@@ -1,32 +1,36 @@
+/**
+ * @generated SignedSource<<0b190a652b15c2e1955da76361088a85>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type CategoryFragment = {
-    readonly categories: ReadonlyArray<{
-        readonly id: string;
-        readonly title: string;
-        readonly slug: string;
-        readonly thumbnail: {
-            readonly type: ResourceType;
-            readonly urls: ReadonlyArray<{
-                readonly mimeType: string;
-                readonly url: string;
-            }>;
-        } | null;
-    }>;
-    readonly " $refType": "CategoryFragment";
+import { FragmentRefs } from "relay-runtime";
+export type CategoryFragment$data = {
+  readonly categories: ReadonlyArray<{
+    readonly id: string;
+    readonly title: string;
+    readonly slug: string;
+    readonly thumbnail: {
+      readonly type: ResourceType;
+      readonly urls: ReadonlyArray<{
+        readonly mimeType: string;
+        readonly url: string;
+      }>;
+    } | null;
+  }>;
+  readonly " $fragmentType": "CategoryFragment";
 };
-export type CategoryFragment$data = CategoryFragment;
+export type CategoryFragment = CategoryFragment$data;
 export type CategoryFragment$key = {
-    readonly " $data"?: CategoryFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"CategoryFragment">;
+  readonly " $data"?: CategoryFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CategoryFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -113,5 +117,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'c6320b23d3ae53ed890d41ef56a3d811';
+
+(node as any).hash = "c6320b23d3ae53ed890d41ef56a3d811";
+
 export default node;

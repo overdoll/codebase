@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<9f850cbb0a3bb668d30fd83dcf907484>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCategoriesFragment = {
-    readonly categories: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"CategoryTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "SearchCategoriesFragment";
+export type SearchCategoriesFragment$data = {
+  readonly categories: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SearchCategoriesFragment";
 };
-export type SearchCategoriesFragment$data = SearchCategoriesFragment;
+export type SearchCategoriesFragment = SearchCategoriesFragment$data;
 export type SearchCategoriesFragment$key = {
-    readonly " $data"?: SearchCategoriesFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesFragment">;
+  readonly " $data"?: SearchCategoriesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +70,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchCategoriesPaginationFragment.graphql.ts')
+      "operation": require('./SearchCategoriesPaginationFragment.graphql')
     }
   },
   "name": "SearchCategoriesFragment",
@@ -116,16 +120,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CategoryTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CategoryTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -173,5 +177,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '820591d8df74cc47f6fe5704e3841869';
+
+(node as any).hash = "820591d8df74cc47f6fe5704e3841869";
+
 export default node;

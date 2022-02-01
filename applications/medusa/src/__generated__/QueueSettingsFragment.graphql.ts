@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<57bffa5e6c3b688e3f629cbc4555864f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type QueueSettingsFragment = {
-    readonly id: string;
-    readonly moderatorSettings: {
-        readonly isInModeratorQueue: boolean;
-    };
-    readonly " $refType": "QueueSettingsFragment";
+export type QueueSettingsFragment$data = {
+  readonly id: string;
+  readonly moderatorSettings: {
+    readonly isInModeratorQueue: boolean;
+  };
+  readonly " $fragmentType": "QueueSettingsFragment";
 };
-export type QueueSettingsFragment$data = QueueSettingsFragment;
+export type QueueSettingsFragment = QueueSettingsFragment$data;
 export type QueueSettingsFragment$key = {
-    readonly " $data"?: QueueSettingsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"QueueSettingsFragment">;
+  readonly " $data"?: QueueSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"QueueSettingsFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -54,5 +58,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'd3c67b9890964a2024059300c14fb725';
+
+(node as any).hash = "d3c67b9890964a2024059300c14fb725";
+
 export default node;

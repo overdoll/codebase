@@ -1,183 +1,31 @@
+/**
+ * @generated SignedSource<<6b33e7fd82ef944bffdd62873f3726e8>>
+ * @relayHash 057836d014859d764fe00484a63c053d
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 057836d014859d764fe00484a63c053d */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 057836d014859d764fe00484a63c053d
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type HomePostsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
+export type HomePostsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
 };
-export type HomePostsPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
+export type HomePostsPaginationQueryVariables = HomePostsPaginationQuery$variables;
+export type HomePostsPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
+export type HomePostsPaginationQueryResponse = HomePostsPaginationQuery$data;
 export type HomePostsPaginationQuery = {
-    readonly response: HomePostsPaginationQueryResponse;
-    readonly variables: HomePostsPaginationQueryVariables;
+  variables: HomePostsPaginationQueryVariables;
+  response: HomePostsPaginationQuery$data;
 };
-
-
-
-/*
-query HomePostsPaginationQuery(
-  $after: String
-  $first: Int = 5
-) {
-  ...HomeFragment_2HEEH6
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment HomeFragment_2HEEH6 on Query {
-  posts(first: $first, after: $after, sortBy: TOP) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -512,5 +360,7 @@ return {
   }
 };
 })();
-(node as any).hash = '63c4df90fd370bffb939bd5b6c4ee01d';
+
+(node as any).hash = "63c4df90fd370bffb939bd5b6c4ee01d";
+
 export default node;

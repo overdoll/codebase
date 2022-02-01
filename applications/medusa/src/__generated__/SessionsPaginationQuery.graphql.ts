@@ -1,76 +1,34 @@
+/**
+ * @generated SignedSource<<b6a8489f3b7e3c73e1a919b985ef8e1a>>
+ * @relayHash 2bb290ef65cd5cfd11ab206521b492be
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2bb290ef65cd5cfd11ab206521b492be */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 2bb290ef65cd5cfd11ab206521b492be
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SessionsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type SessionsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type SessionsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"SessionsSettingsFragment">;
-    } | null;
+export type SessionsPaginationQueryVariables = SessionsPaginationQuery$variables;
+export type SessionsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"SessionsSettingsFragment">;
+  } | null;
 };
+export type SessionsPaginationQueryResponse = SessionsPaginationQuery$data;
 export type SessionsPaginationQuery = {
-    readonly response: SessionsPaginationQueryResponse;
-    readonly variables: SessionsPaginationQueryVariables;
+  variables: SessionsPaginationQueryVariables;
+  response: SessionsPaginationQuery$data;
 };
-
-
-
-/*
-query SessionsPaginationQuery(
-  $after: String
-  $first: Int = 3
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...SessionsSettingsFragment_2HEEH6
-    id
-  }
-}
-
-fragment RevokeSessionFragment on AccountSession {
-  id
-}
-
-fragment SessionCardFragment on AccountSession {
-  device
-  ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
-  created
-  ...RevokeSessionFragment
-}
-
-fragment SessionsSettingsFragment_2HEEH6 on Account {
-  sessions(first: $first, after: $after) {
-    edges {
-      node {
-        ...SessionCardFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -342,5 +300,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'c996e8b92e2b1c5330aaffb0e2caa5b7';
+
+(node as any).hash = "c996e8b92e2b1c5330aaffb0e2caa5b7";
+
 export default node;

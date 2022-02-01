@@ -1,118 +1,33 @@
+/**
+ * @generated SignedSource<<0292ca2e0e45d3e3261b3b994eda2865>>
+ * @relayHash 2b950920388027493e8a2b84540ff4db
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2b950920388027493e8a2b84540ff4db */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 2b950920388027493e8a2b84540ff4db
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RootQueryVariables = {};
-export type RootQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
-    } | null;
-    readonly language: {
-        readonly locale: string;
-    };
+export type RootQuery$variables = {};
+export type RootQueryVariables = RootQuery$variables;
+export type RootQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
+  } | null;
+  readonly language: {
+    readonly locale: string;
+  };
 };
+export type RootQueryResponse = RootQuery$data;
 export type RootQuery = {
-    readonly response: RootQueryResponse;
-    readonly variables: RootQueryVariables;
+  variables: RootQueryVariables;
+  response: RootQuery$data;
 };
-
-
-
-/*
-query RootQuery {
-  viewer {
-    ...AccountAuthorizerFragment
-    ...UniversalNavigatorFragment
-    ...LockedAccountBannerFragment
-    id
-  }
-  language {
-    locale
-  }
-}
-
-fragment AccountAuthorizerFragment on Account {
-  lock {
-    __typename
-  }
-  isModerator
-  isStaff
-}
-
-fragment AlternativeMenuFragment on Account {
-  ...DropdownMenuButtonProfileFragment
-  ...QuickAccessButtonProfileFragment
-  ...LanguageManagerFragment
-}
-
-fragment DropdownMenuButtonProfileFragment on Account {
-  username
-  avatar {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment LanguageManagerFragment on Account {
-  language {
-    locale
-  }
-}
-
-fragment LockedAccountBannerFragment on Account {
-  ...LockedAccountModalFragment
-}
-
-fragment LockedAccountModalFragment on Account {
-  ...UnlockAccountFormFragment
-  lock {
-    expires
-  }
-}
-
-fragment QuickAccessButtonProfileFragment on Account {
-  username
-  avatar {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment UniversalNavigatorFragment on Account {
-  ...AlternativeMenuFragment
-}
-
-fragment UnlockAccountFormFragment on Account {
-  id
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -299,5 +214,7 @@ return {
   }
 };
 })();
-(node as any).hash = '4a182eb0eb5dbeddf86cde10eadc74b2';
+
+(node as any).hash = "4a182eb0eb5dbeddf86cde10eadc74b2";
+
 export default node;

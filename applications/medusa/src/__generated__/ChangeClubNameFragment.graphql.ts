@@ -1,21 +1,25 @@
+/**
+ * @generated SignedSource<<5a5dc43f233df740aac6c3af044211f0>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeClubNameFragment = {
-    readonly id: string;
-    readonly name: string;
-    readonly " $refType": "ChangeClubNameFragment";
+export type ChangeClubNameFragment$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly " $fragmentType": "ChangeClubNameFragment";
 };
-export type ChangeClubNameFragment$data = ChangeClubNameFragment;
+export type ChangeClubNameFragment = ChangeClubNameFragment$data;
 export type ChangeClubNameFragment$key = {
-    readonly " $data"?: ChangeClubNameFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeClubNameFragment">;
+  readonly " $data"?: ChangeClubNameFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeClubNameFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -41,5 +45,7 @@ const node: ReaderFragment = {
   "type": "Club",
   "abstractKey": null
 };
-(node as any).hash = '22ce3582ceda61667ec32a526546429f';
+
+(node as any).hash = "22ce3582ceda61667ec32a526546429f";
+
 export default node;

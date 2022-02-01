@@ -1,44 +1,39 @@
+/**
+ * @generated SignedSource<<3bf483d6ac9008c6a491c5f6530b8ef7>>
+ * @relayHash a376f0c63f1f30bde5d56d40f0d03e3f
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash a376f0c63f1f30bde5d56d40f0d03e3f */
 
-import { ConcreteRequest } from "relay-runtime";
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "RECOVERY_CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
+// @relayRequestID a376f0c63f1f30bde5d56d40f0d03e3f
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "TOKEN_INVALID" | "RECOVERY_CODE_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput = {
-    token: string;
-    recoveryCode: string;
+  token: string;
+  recoveryCode: string;
 };
-export type RecoveryCodeMutationVariables = {
-    input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput;
+export type RecoveryCodeMutation$variables = {
+  input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput;
 };
-export type RecoveryCodeMutationResponse = {
-    readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: {
-        readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
-        readonly account: {
-            readonly id: string;
-        } | null;
+export type RecoveryCodeMutationVariables = RecoveryCodeMutation$variables;
+export type RecoveryCodeMutation$data = {
+  readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: {
+    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
+    readonly account: {
+      readonly id: string;
     } | null;
+  } | null;
 };
+export type RecoveryCodeMutationResponse = RecoveryCodeMutation$data;
 export type RecoveryCodeMutation = {
-    readonly response: RecoveryCodeMutationResponse;
-    readonly variables: RecoveryCodeMutationVariables;
+  variables: RecoveryCodeMutationVariables;
+  response: RecoveryCodeMutation$data;
 };
-
-
-
-/*
-mutation RecoveryCodeMutation(
-  $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!
-) {
-  grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
-    validation
-    account {
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -118,5 +113,7 @@ return {
   }
 };
 })();
-(node as any).hash = '588c613c78f3d1c6744e4aadffe805b8';
+
+(node as any).hash = "588c613c78f3d1c6744e4aadffe805b8";
+
 export default node;

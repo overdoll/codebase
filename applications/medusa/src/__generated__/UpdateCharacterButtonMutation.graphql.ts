@@ -1,74 +1,53 @@
+/**
+ * @generated SignedSource<<6fde62798fb76b445d867823c54b3c35>>
+ * @relayHash d78bdf6063db2073170144c745fd3aea
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d78bdf6063db2073170144c745fd3aea */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID d78bdf6063db2073170144c745fd3aea
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostCharactersInput = {
-    id: string;
-    characterIds: Array<string>;
+  id: string;
+  characterIds: ReadonlyArray<string>;
 };
-export type UpdateCharacterButtonMutationVariables = {
-    input: UpdatePostCharactersInput;
+export type UpdateCharacterButtonMutation$variables = {
+  input: UpdatePostCharactersInput;
 };
-export type UpdateCharacterButtonMutationResponse = {
-    readonly updatePostCharacters: {
-        readonly post: {
-            readonly id: string;
-            readonly characters: ReadonlyArray<{
-                readonly id: string;
-                readonly name: string;
-                readonly series: {
-                    readonly title: string;
-                };
-                readonly slug: string;
-                readonly thumbnail: {
-                    readonly type: ResourceType;
-                    readonly urls: ReadonlyArray<{
-                        readonly mimeType: string;
-                        readonly url: string;
-                    }>;
-                } | null;
-            }>;
+export type UpdateCharacterButtonMutationVariables = UpdateCharacterButtonMutation$variables;
+export type UpdateCharacterButtonMutation$data = {
+  readonly updatePostCharacters: {
+    readonly post: {
+      readonly id: string;
+      readonly characters: ReadonlyArray<{
+        readonly id: string;
+        readonly name: string;
+        readonly series: {
+          readonly title: string;
+        };
+        readonly slug: string;
+        readonly thumbnail: {
+          readonly type: ResourceType;
+          readonly urls: ReadonlyArray<{
+            readonly mimeType: string;
+            readonly url: string;
+          }>;
         } | null;
+      }>;
     } | null;
+  } | null;
 };
+export type UpdateCharacterButtonMutationResponse = UpdateCharacterButtonMutation$data;
 export type UpdateCharacterButtonMutation = {
-    readonly response: UpdateCharacterButtonMutationResponse;
-    readonly variables: UpdateCharacterButtonMutationVariables;
+  variables: UpdateCharacterButtonMutationVariables;
+  response: UpdateCharacterButtonMutation$data;
 };
-
-
-
-/*
-mutation UpdateCharacterButtonMutation(
-  $input: UpdatePostCharactersInput!
-) {
-  updatePostCharacters(input: $input) {
-    post {
-      id
-      characters {
-        id
-        name
-        series {
-          title
-          id
-        }
-        slug
-        thumbnail {
-          type
-          urls {
-            mimeType
-            url
-          }
-          id
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -299,5 +278,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b52af5884c305bbb6a6e50d99229e3e0';
+
+(node as any).hash = "b52af5884c305bbb6a6e50d99229e3e0";
+
 export default node;

@@ -1,208 +1,37 @@
+/**
+ * @generated SignedSource<<594043ebb4ab7c90f10765c9d7ff329a>>
+ * @relayHash 220277260d16f4f63cd98f94deef665d
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 220277260d16f4f63cd98f94deef665d */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 220277260d16f4f63cd98f94deef665d
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
-export type SearchQueryVariables = {
-    sortBy: PostsSort;
-    categorySlugs?: Array<string> | null | undefined;
-    seriesSlugs?: Array<string> | null | undefined;
-    characterSlugs?: Array<string> | null | undefined;
+export type SearchQuery$variables = {
+  sortBy: PostsSort;
+  categorySlugs?: ReadonlyArray<string> | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
+  characterSlugs?: ReadonlyArray<string> | null;
 };
-export type SearchQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"SearchFragment">;
+export type SearchQueryVariables = SearchQuery$variables;
+export type SearchQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;
 };
+export type SearchQueryResponse = SearchQuery$data;
 export type SearchQuery = {
-    readonly response: SearchQueryResponse;
-    readonly variables: SearchQueryVariables;
+  variables: SearchQueryVariables;
+  response: SearchQuery$data;
 };
-
-
-
-/*
-query SearchQuery(
-  $sortBy: PostsSort!
-  $categorySlugs: [String!]
-  $seriesSlugs: [String!]
-  $characterSlugs: [String!]
-) {
-  ...SearchFragment
-  viewer {
-    ...PostsInfiniteScrollViewerFragment
-    id
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment FullSimplePostViewerFragment on Account {
-  ...JoinClubButtonViewerFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment JoinClubButtonViewerFragment on Account {
-  clubMembershipsLimit
-  clubMembershipsCount
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment PostsInfiniteScrollViewerFragment on Account {
-  ...FullSimplePostViewerFragment
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchFragment on Query {
-  posts(first: 5, sortBy: $sortBy, categorySlugs: $categorySlugs, seriesSlugs: $seriesSlugs, characterSlugs: $characterSlugs) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -349,6 +178,11 @@ return {
     "name": "SearchQuery",
     "selections": [
       {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "SearchFragment"
+      },
+      {
         "alias": null,
         "args": null,
         "concreteType": "Account",
@@ -363,11 +197,6 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "SearchFragment"
       }
     ],
     "type": "Query",
@@ -605,5 +434,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'ead2664b4c72a4b2443836b94874accb';
+
+(node as any).hash = "ead2664b4c72a4b2443836b94874accb";
+
 export default node;

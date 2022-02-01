@@ -1,26 +1,30 @@
+/**
+ * @generated SignedSource<<3f69bdce6ed85f9a89adc5adfb0e75a3>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostHeaderClubFragment = {
-    readonly club: {
-        readonly name: string;
-        readonly slug: string;
-        readonly thumbnail: {
-            readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-        } | null;
-    };
-    readonly " $refType": "PostHeaderClubFragment";
+export type PostHeaderClubFragment$data = {
+  readonly club: {
+    readonly name: string;
+    readonly slug: string;
+    readonly thumbnail: {
+      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+    } | null;
+  };
+  readonly " $fragmentType": "PostHeaderClubFragment";
 };
-export type PostHeaderClubFragment$data = PostHeaderClubFragment;
+export type PostHeaderClubFragment = PostHeaderClubFragment$data;
 export type PostHeaderClubFragment$key = {
-    readonly " $data"?: PostHeaderClubFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostHeaderClubFragment">;
+  readonly " $data"?: PostHeaderClubFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -73,5 +77,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'aa0634ed2badb54cd8e3063538ccc6b2';
+
+(node as any).hash = "aa0634ed2badb54cd8e3063538ccc6b2";
+
 export default node;

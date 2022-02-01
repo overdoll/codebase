@@ -1,37 +1,35 @@
+/**
+ * @generated SignedSource<<5f1795fe8a69e62cdb7212cf1e4aa4e2>>
+ * @relayHash a1440aace9828c9d8a4b25dc64d80b80
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash a1440aace9828c9d8a4b25dc64d80b80 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID a1440aace9828c9d8a4b25dc64d80b80
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DeleteAccountEmailInput = {
-    accountEmailId: string;
+  accountEmailId: string;
 };
-export type DeleteEmailMutationVariables = {
-    input: DeleteAccountEmailInput;
-    connections: Array<string>;
+export type DeleteEmailMutation$variables = {
+  input: DeleteAccountEmailInput;
+  connections: ReadonlyArray<string>;
 };
-export type DeleteEmailMutationResponse = {
-    readonly deleteAccountEmail: {
-        readonly accountEmailId: string;
-    } | null;
+export type DeleteEmailMutationVariables = DeleteEmailMutation$variables;
+export type DeleteEmailMutation$data = {
+  readonly deleteAccountEmail: {
+    readonly accountEmailId: string;
+  } | null;
 };
+export type DeleteEmailMutationResponse = DeleteEmailMutation$data;
 export type DeleteEmailMutation = {
-    readonly response: DeleteEmailMutationResponse;
-    readonly variables: DeleteEmailMutationVariables;
+  variables: DeleteEmailMutationVariables;
+  response: DeleteEmailMutation$data;
 };
-
-
-
-/*
-mutation DeleteEmailMutation(
-  $input: DeleteAccountEmailInput!
-) {
-  deleteAccountEmail(input: $input) {
-    accountEmailId
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -132,5 +130,7 @@ return {
   }
 };
 })();
-(node as any).hash = '5bba266634b889a266f21018e702fdeb';
+
+(node as any).hash = "5bba266634b889a266f21018e702fdeb";
+
 export default node;

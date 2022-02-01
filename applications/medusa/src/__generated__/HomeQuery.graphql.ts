@@ -1,197 +1,31 @@
+/**
+ * @generated SignedSource<<1f46568d5f5d3a05ad3d9d46660a8968>>
+ * @relayHash ef6ff51473af2573cdc56211b43b619b
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ef6ff51473af2573cdc56211b43b619b */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID ef6ff51473af2573cdc56211b43b619b
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type HomeQueryVariables = {};
-export type HomeQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
+export type HomeQuery$variables = {};
+export type HomeQueryVariables = HomeQuery$variables;
+export type HomeQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
+export type HomeQueryResponse = HomeQuery$data;
 export type HomeQuery = {
-    readonly response: HomeQueryResponse;
-    readonly variables: HomeQueryVariables;
+  variables: HomeQueryVariables;
+  response: HomeQuery$data;
 };
-
-
-
-/*
-query HomeQuery {
-  ...HomeFragment
-  viewer {
-    ...PostsInfiniteScrollViewerFragment
-    id
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment FullSimplePostViewerFragment on Account {
-  ...JoinClubButtonViewerFragment
-}
-
-fragment HomeFragment on Query {
-  posts(first: 5, sortBy: TOP) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment JoinClubButtonViewerFragment on Account {
-  clubMembershipsLimit
-  clubMembershipsCount
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment PostsInfiniteScrollViewerFragment on Account {
-  ...FullSimplePostViewerFragment
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -298,6 +132,11 @@ return {
     "name": "HomeQuery",
     "selections": [
       {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "HomeFragment"
+      },
+      {
         "alias": null,
         "args": null,
         "concreteType": "Account",
@@ -312,11 +151,6 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "HomeFragment"
       }
     ],
     "type": "Query",
@@ -546,5 +380,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'bc0d7306b143fee34adb570120c166ec';
+
+(node as any).hash = "bc0d7306b143fee34adb570120c166ec";
+
 export default node;

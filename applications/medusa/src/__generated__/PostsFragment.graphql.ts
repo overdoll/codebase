@@ -1,31 +1,35 @@
+/**
+ * @generated SignedSource<<d2e902fe4d8f9ccbf4db2934da0b0fa5>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsFragment = {
-    readonly moderatorPostsQueue: {
-        readonly __id: string;
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly postedAt: unknown | null;
-                readonly " $fragmentRefs": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $fragmentRefs": FragmentRefs<"NoPostsPlaceholderFragment">;
-    readonly " $refType": "PostsFragment";
+export type PostsFragment$data = {
+  readonly moderatorPostsQueue: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly postedAt: any | null;
+        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentSpreads": FragmentRefs<"NoPostsPlaceholderFragment">;
+  readonly " $fragmentType": "PostsFragment";
 };
-export type PostsFragment$data = PostsFragment;
+export type PostsFragment = PostsFragment$data;
 export type PostsFragment$key = {
-    readonly " $data"?: PostsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostsFragment">;
+  readonly " $data"?: PostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -73,12 +77,17 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./PostsPaginationQuery.graphql.ts'),
+      "operation": require('./PostsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
   "name": "PostsFragment",
   "selections": [
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "NoPostsPlaceholderFragment"
+    },
     {
       "alias": "moderatorPostsQueue",
       "args": null,
@@ -105,6 +114,16 @@ return {
               "selections": [
                 (v1/*: any*/),
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PostPreviewFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ModeratePostFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -117,16 +136,6 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PostPreviewFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ModeratePostFragment"
                 }
               ],
               "storageKey": null
@@ -181,16 +190,13 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/),
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "NoPostsPlaceholderFragment"
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
-(node as any).hash = '4a36f5398b846432a905467a7dad4b91';
+
+(node as any).hash = "4a36f5398b846432a905467a7dad4b91";
+
 export default node;

@@ -1,201 +1,39 @@
+/**
+ * @generated SignedSource<<8a5810970d7cf15dba5b0273d948fbfd>>
+ * @relayHash 041fdbf3500309894b7fbc701b57916c
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 041fdbf3500309894b7fbc701b57916c */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 041fdbf3500309894b7fbc701b57916c
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
-export type ClubPublicPostsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    categorySlugs?: Array<string> | null | undefined;
-    characterSlugs?: Array<string> | null | undefined;
-    first?: number | null | undefined;
-    seriesSlugs?: Array<string> | null | undefined;
-    sortBy: PostsSort;
-    id: string;
+export type ClubPublicPostsPaginationQuery$variables = {
+  after?: string | null;
+  categorySlugs?: ReadonlyArray<string> | null;
+  characterSlugs?: ReadonlyArray<string> | null;
+  first?: number | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
+  sortBy: PostsSort;
+  id: string;
 };
-export type ClubPublicPostsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubPublicPostsFragment">;
-    } | null;
+export type ClubPublicPostsPaginationQueryVariables = ClubPublicPostsPaginationQuery$variables;
+export type ClubPublicPostsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPostsFragment">;
+  } | null;
 };
+export type ClubPublicPostsPaginationQueryResponse = ClubPublicPostsPaginationQuery$data;
 export type ClubPublicPostsPaginationQuery = {
-    readonly response: ClubPublicPostsPaginationQueryResponse;
-    readonly variables: ClubPublicPostsPaginationQueryVariables;
+  variables: ClubPublicPostsPaginationQueryVariables;
+  response: ClubPublicPostsPaginationQuery$data;
 };
-
-
-
-/*
-query ClubPublicPostsPaginationQuery(
-  $after: String
-  $categorySlugs: [String!]
-  $characterSlugs: [String!]
-  $first: Int = 5
-  $seriesSlugs: [String!]
-  $sortBy: PostsSort!
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...ClubPublicPostsFragment_2HEEH6
-    id
-  }
-}
-
-fragment ClubPublicPostsFragment_2HEEH6 on Club {
-  posts(first: $first, after: $after, sortBy: $sortBy, categorySlugs: $categorySlugs, seriesSlugs: $seriesSlugs, characterSlugs: $characterSlugs) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -625,5 +463,7 @@ return {
   }
 };
 })();
-(node as any).hash = '6fadd867d0021710afde5765a78c0309';
+
+(node as any).hash = "6fadd867d0021710afde5765a78c0309";
+
 export default node;

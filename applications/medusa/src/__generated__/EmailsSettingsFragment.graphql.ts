@@ -1,30 +1,34 @@
+/**
+ * @generated SignedSource<<75676f30c00748bcd85dd98f0385f46d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
-export type EmailsSettingsFragment = {
-    readonly emails: {
-        readonly __id: string;
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly status: AccountEmailStatus;
-                readonly " $fragmentRefs": FragmentRefs<"EmailCardFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "EmailsSettingsFragment";
+export type EmailsSettingsFragment$data = {
+  readonly emails: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly status: AccountEmailStatus;
+        readonly " $fragmentSpreads": FragmentRefs<"EmailCardFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "EmailsSettingsFragment";
 };
-export type EmailsSettingsFragment$data = EmailsSettingsFragment;
+export type EmailsSettingsFragment = EmailsSettingsFragment$data;
 export type EmailsSettingsFragment$key = {
-    readonly " $data"?: EmailsSettingsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EmailsSettingsFragment">;
+  readonly " $data"?: EmailsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EmailsSettingsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -65,7 +69,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./EmailsSettingsPaginationQuery.graphql.ts'),
+      "operation": require('./EmailsSettingsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -96,6 +100,11 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "EmailCardFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -108,11 +117,6 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "EmailCardFragment"
                 }
               ],
               "storageKey": null
@@ -179,5 +183,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '843d323c6ac7e20f102b80df9034e194';
+
+(node as any).hash = "843d323c6ac7e20f102b80df9034e194";
+
 export default node;

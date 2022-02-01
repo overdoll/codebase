@@ -1,90 +1,36 @@
+/**
+ * @generated SignedSource<<edba6150156cf3014aa70bf14fa67c66>>
+ * @relayHash 9426a2dd427ff24b7deaa83ea2122fe0
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9426a2dd427ff24b7deaa83ea2122fe0 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 9426a2dd427ff24b7deaa83ea2122fe0
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
-export type ClubPostsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    state?: PostState | null | undefined;
-    id: string;
+export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type ClubPostsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  state?: PostState | null;
+  id: string;
 };
-export type ClubPostsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubPostsFragment">;
-    } | null;
+export type ClubPostsPaginationQueryVariables = ClubPostsPaginationQuery$variables;
+export type ClubPostsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment">;
+  } | null;
 };
+export type ClubPostsPaginationQueryResponse = ClubPostsPaginationQuery$data;
 export type ClubPostsPaginationQuery = {
-    readonly response: ClubPostsPaginationQueryResponse;
-    readonly variables: ClubPostsPaginationQueryVariables;
+  variables: ClubPostsPaginationQueryVariables;
+  response: ClubPostsPaginationQuery$data;
 };
-
-
-
-/*
-query ClubPostsPaginationQuery(
-  $after: String
-  $first: Int = 3
-  $state: PostState
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...ClubPostsFragment_2HEEH6
-    id
-  }
-}
-
-fragment ClubPostsFragment_2HEEH6 on Account {
-  posts(first: $first, after: $after, state: $state) {
-    edges {
-      node {
-        reference
-        state
-        ...PostPreviewContentFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment PostPreviewContentFragment on Post {
-  content {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -360,5 +306,7 @@ return {
   }
 };
 })();
-(node as any).hash = '479505f60508280e718cac91f70dcbfe';
+
+(node as any).hash = "479505f60508280e718cac91f70dcbfe";
+
 export default node;

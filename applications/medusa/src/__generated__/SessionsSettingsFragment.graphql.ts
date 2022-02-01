@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<9845327de47833de9b6fc12e137a963c>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SessionsSettingsFragment = {
-    readonly sessions: {
-        readonly __id: string;
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"SessionCardFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "SessionsSettingsFragment";
+export type SessionsSettingsFragment$data = {
+  readonly sessions: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"SessionCardFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "SessionsSettingsFragment";
 };
-export type SessionsSettingsFragment$data = SessionsSettingsFragment;
+export type SessionsSettingsFragment = SessionsSettingsFragment$data;
 export type SessionsSettingsFragment$key = {
-    readonly " $data"?: SessionsSettingsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SessionsSettingsFragment">;
+  readonly " $data"?: SessionsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SessionsSettingsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -63,7 +67,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./SessionsPaginationQuery.graphql.ts'),
+      "operation": require('./SessionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -94,16 +98,16 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "SessionCardFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "SessionCardFragment"
                 }
               ],
               "storageKey": null
@@ -170,5 +174,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'c996e8b92e2b1c5330aaffb0e2caa5b7';
+
+(node as any).hash = "c996e8b92e2b1c5330aaffb0e2caa5b7";
+
 export default node;

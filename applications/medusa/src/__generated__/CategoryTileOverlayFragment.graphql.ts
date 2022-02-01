@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<4c5b3b712c3df5a230d998e7850a499f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CategoryTileOverlayFragment = {
-    readonly title: string;
-    readonly thumbnail: {
-        readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-    } | null;
-    readonly " $refType": "CategoryTileOverlayFragment";
+export type CategoryTileOverlayFragment$data = {
+  readonly title: string;
+  readonly thumbnail: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  } | null;
+  readonly " $fragmentType": "CategoryTileOverlayFragment";
 };
-export type CategoryTileOverlayFragment$data = CategoryTileOverlayFragment;
+export type CategoryTileOverlayFragment = CategoryTileOverlayFragment$data;
 export type CategoryTileOverlayFragment$key = {
-    readonly " $data"?: CategoryTileOverlayFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"CategoryTileOverlayFragment">;
+  readonly " $data"?: CategoryTileOverlayFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -52,5 +56,7 @@ const node: ReaderFragment = {
   "type": "Category",
   "abstractKey": null
 };
-(node as any).hash = '06c2c7611584165411bd477ed0bc0050';
+
+(node as any).hash = "06c2c7611584165411bd477ed0bc0050";
+
 export default node;

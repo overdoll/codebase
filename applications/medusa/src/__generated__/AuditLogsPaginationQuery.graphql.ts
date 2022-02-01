@@ -1,175 +1,36 @@
+/**
+ * @generated SignedSource<<88110157bd93c6618b4d29a2360bd9fd>>
+ * @relayHash a76001715c4b61555aca19c995322cd8
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash a76001715c4b61555aca19c995322cd8 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID a76001715c4b61555aca19c995322cd8
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AuditLogsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    from: unknown;
-    to: unknown;
-    id: string;
+export type AuditLogsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  from: any;
+  to: any;
+  id: string;
 };
-export type AuditLogsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"AuditLogsFragment">;
-    } | null;
+export type AuditLogsPaginationQueryVariables = AuditLogsPaginationQuery$variables;
+export type AuditLogsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"AuditLogsFragment">;
+  } | null;
 };
+export type AuditLogsPaginationQueryResponse = AuditLogsPaginationQuery$data;
 export type AuditLogsPaginationQuery = {
-    readonly response: AuditLogsPaginationQueryResponse;
-    readonly variables: AuditLogsPaginationQueryVariables;
+  variables: AuditLogsPaginationQueryVariables;
+  response: AuditLogsPaginationQuery$data;
 };
-
-
-
-/*
-query AuditLogsPaginationQuery(
-  $after: String
-  $first: Int = 5
-  $from: Time!
-  $to: Time!
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...AuditLogsFragment_2HEEH6
-    id
-  }
-}
-
-fragment AuditCardFragment on PostAuditLog {
-  post {
-    postedAt
-    club {
-      name
-      id
-    }
-    id
-  }
-  action
-  ...AuditInspectFragment
-}
-
-fragment AuditInspectFragment on PostAuditLog {
-  notes
-  action
-  post {
-    ...PostPreviewFragment
-    id
-  }
-}
-
-fragment AuditLogsFragment_2HEEH6 on Account {
-  postAuditLogs(first: $first, after: $after, dateRange: {from: $from, to: $to}) {
-    edges {
-      node {
-        ...AuditCardFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment PostGalleryPublicDetailedFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostPreviewFragment on Post {
-  ...PostStaticAudienceFragment
-  ...PostStaticCharactersFragment
-  ...PostStaticCategoriesFragment
-  ...PostGalleryPublicDetailedFragment
-  ...PostHeaderClubFragment
-}
-
-fragment PostStaticAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostStaticCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostStaticCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -580,5 +441,7 @@ return {
   }
 };
 })();
-(node as any).hash = '349f729a9bb99751140cc7dc2ce2c5d3';
+
+(node as any).hash = "349f729a9bb99751140cc7dc2ce2c5d3";
+
 export default node;

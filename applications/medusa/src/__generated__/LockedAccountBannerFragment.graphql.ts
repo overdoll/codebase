@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<7d03685ea1bdb2092b445279ab8c0c86>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LockedAccountBannerFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"LockedAccountModalFragment">;
-    readonly " $refType": "LockedAccountBannerFragment";
+export type LockedAccountBannerFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"LockedAccountModalFragment">;
+  readonly " $fragmentType": "LockedAccountBannerFragment";
 };
-export type LockedAccountBannerFragment$data = LockedAccountBannerFragment;
+export type LockedAccountBannerFragment = LockedAccountBannerFragment$data;
 export type LockedAccountBannerFragment$key = {
-    readonly " $data"?: LockedAccountBannerFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"LockedAccountBannerFragment">;
+  readonly " $data"?: LockedAccountBannerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"LockedAccountBannerFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -31,5 +35,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '25c3493b4bec50a62be404e742515768';
+
+(node as any).hash = "25c3493b4bec50a62be404e742515768";
+
 export default node;

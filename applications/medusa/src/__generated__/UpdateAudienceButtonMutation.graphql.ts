@@ -1,49 +1,41 @@
+/**
+ * @generated SignedSource<<58b5b8494ea6d93cc24a31f03c83cfec>>
+ * @relayHash 1dd96056a5d03145570b194e50e511a0
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1dd96056a5d03145570b194e50e511a0 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 1dd96056a5d03145570b194e50e511a0
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdatePostAudienceInput = {
-    id: string;
-    audienceId: string;
+  id: string;
+  audienceId: string;
 };
-export type UpdateAudienceButtonMutationVariables = {
-    input: UpdatePostAudienceInput;
+export type UpdateAudienceButtonMutation$variables = {
+  input: UpdatePostAudienceInput;
 };
-export type UpdateAudienceButtonMutationResponse = {
-    readonly updatePostAudience: {
-        readonly post: {
-            readonly id: string;
-            readonly audience: {
-                readonly id: string;
-                readonly title: string;
-            } | null;
-        } | null;
+export type UpdateAudienceButtonMutationVariables = UpdateAudienceButtonMutation$variables;
+export type UpdateAudienceButtonMutation$data = {
+  readonly updatePostAudience: {
+    readonly post: {
+      readonly id: string;
+      readonly audience: {
+        readonly id: string;
+        readonly title: string;
+      } | null;
     } | null;
+  } | null;
 };
+export type UpdateAudienceButtonMutationResponse = UpdateAudienceButtonMutation$data;
 export type UpdateAudienceButtonMutation = {
-    readonly response: UpdateAudienceButtonMutationResponse;
-    readonly variables: UpdateAudienceButtonMutationVariables;
+  variables: UpdateAudienceButtonMutationVariables;
+  response: UpdateAudienceButtonMutation$data;
 };
-
-
-
-/*
-mutation UpdateAudienceButtonMutation(
-  $input: UpdatePostAudienceInput!
-) {
-  updatePostAudience(input: $input) {
-    post {
-      id
-      audience {
-        id
-        title
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -136,5 +128,7 @@ return {
   }
 };
 })();
-(node as any).hash = '7aa5eb375b9ad79bd7726cd4f03697f4';
+
+(node as any).hash = "7aa5eb375b9ad79bd7726cd4f03697f4";
+
 export default node;

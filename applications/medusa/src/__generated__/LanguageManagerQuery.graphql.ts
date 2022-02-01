@@ -1,39 +1,34 @@
+/**
+ * @generated SignedSource<<4c875a04603c4092c56db513ae081e60>>
+ * @relayHash 0e88d71f29eae8e72f2dfcc17b595fd1
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0e88d71f29eae8e72f2dfcc17b595fd1 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type LanguageManagerQueryVariables = {};
-export type LanguageManagerQueryResponse = {
-    readonly languages: ReadonlyArray<{
-        readonly locale: string;
-        readonly name: string;
-    }>;
-    readonly language: {
-        readonly locale: string;
-        readonly name: string;
-    };
+// @relayRequestID 0e88d71f29eae8e72f2dfcc17b595fd1
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type LanguageManagerQuery$variables = {};
+export type LanguageManagerQueryVariables = LanguageManagerQuery$variables;
+export type LanguageManagerQuery$data = {
+  readonly languages: ReadonlyArray<{
+    readonly locale: string;
+    readonly name: string;
+  }>;
+  readonly language: {
+    readonly locale: string;
+    readonly name: string;
+  };
 };
+export type LanguageManagerQueryResponse = LanguageManagerQuery$data;
 export type LanguageManagerQuery = {
-    readonly response: LanguageManagerQueryResponse;
-    readonly variables: LanguageManagerQueryVariables;
+  variables: LanguageManagerQueryVariables;
+  response: LanguageManagerQuery$data;
 };
-
-
-
-/*
-query LanguageManagerQuery {
-  languages {
-    locale
-    name
-  }
-  language {
-    locale
-    name
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -100,5 +95,7 @@ return {
   }
 };
 })();
-(node as any).hash = '91823d0e436a1eaa66668f545785aa49';
+
+(node as any).hash = "91823d0e436a1eaa66668f545785aa49";
+
 export default node;

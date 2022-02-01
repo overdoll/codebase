@@ -1,27 +1,31 @@
+/**
+ * @generated SignedSource<<61e90180d35e01af58f16b1fcc776c23>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type DraggableContentFragment = {
-    readonly id: string;
-    readonly type: ResourceType;
-    readonly urls: ReadonlyArray<{
-        readonly url: string;
-        readonly mimeType: string;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-    readonly " $refType": "DraggableContentFragment";
+import { FragmentRefs } from "relay-runtime";
+export type DraggableContentFragment$data = {
+  readonly id: string;
+  readonly type: ResourceType;
+  readonly urls: ReadonlyArray<{
+    readonly url: string;
+    readonly mimeType: string;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  readonly " $fragmentType": "DraggableContentFragment";
 };
-export type DraggableContentFragment$data = DraggableContentFragment;
+export type DraggableContentFragment = DraggableContentFragment$data;
 export type DraggableContentFragment$key = {
-    readonly " $data"?: DraggableContentFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"DraggableContentFragment">;
+  readonly " $data"?: DraggableContentFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -77,5 +81,7 @@ const node: ReaderFragment = {
   "type": "Resource",
   "abstractKey": null
 };
-(node as any).hash = '3ec2210c98b7e5b443a31d689e9743b2';
+
+(node as any).hash = "3ec2210c98b7e5b443a31d689e9743b2";
+
 export default node;

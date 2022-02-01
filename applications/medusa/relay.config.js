@@ -2,12 +2,8 @@ const { resolve } = require('path')
 
 module.exports = {
   schema: resolve(__dirname, 'schema/schema.graphql'),
+  schemaExtensions: ['./src/client/schema'],
   src: resolve(__dirname, 'src'),
-  persistOutput: resolve(
-    __dirname,
-    'src/server/queries.json'
-  ),
-  watch: true,
   language: 'typescript',
   artifactDirectory: resolve(
     __dirname,
@@ -16,5 +12,9 @@ module.exports = {
   customScalars: {
     URI: 'string',
     BCP47: 'string'
+  },
+  persistConfig: {
+    url: 'http://localhost:2999',
+    params: {}
   }
 }

@@ -1,169 +1,57 @@
+/**
+ * @generated SignedSource<<1bf24c8962257686f4c9043ae48141f2>>
+ * @relayHash 6102d9dc63094c590c4bc90425c70c00
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6102d9dc63094c590c4bc90425c70c00 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 6102d9dc63094c590c4bc90425c70c00
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPublicPageQueryVariables = {
-    slug: string;
+export type ClubPublicPageQuery$variables = {
+  slug: string;
 };
-export type ClubPublicPageQueryResponse = {
-    readonly club: {
-        readonly slug: string;
-        readonly membersCount: number;
-        readonly members: {
-            readonly edges: ReadonlyArray<{
-                readonly node: {
-                    readonly account: {
-                        readonly avatar: {
-                            readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-                        } | null;
-                    };
-                };
-            }>;
+export type ClubPublicPageQueryVariables = ClubPublicPageQuery$variables;
+export type ClubPublicPageQuery$data = {
+  readonly club: {
+    readonly slug: string;
+    readonly membersCount: number;
+    readonly members: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly account: {
+            readonly avatar: {
+              readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+            } | null;
+          };
         };
-        readonly backgroundPost: {
-            readonly edges: ReadonlyArray<{
-                readonly node: {
-                    readonly content: ReadonlyArray<{
-                        readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-                    }>;
-                };
-            }>;
+      }>;
+    };
+    readonly backgroundPost: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly content: ReadonlyArray<{
+            readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+          }>;
         };
-        readonly " $fragmentRefs": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment">;
-    } | null;
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonViewerFragment">;
-    } | null;
+      }>;
+    };
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment">;
+  } | null;
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
+  } | null;
 };
+export type ClubPublicPageQueryResponse = ClubPublicPageQuery$data;
 export type ClubPublicPageQuery = {
-    readonly response: ClubPublicPageQueryResponse;
-    readonly variables: ClubPublicPageQueryVariables;
+  variables: ClubPublicPageQueryVariables;
+  response: ClubPublicPageQuery$data;
 };
-
-
-
-/*
-query ClubPublicPageQuery(
-  $slug: String!
-) {
-  club(slug: $slug) {
-    slug
-    membersCount
-    members(first: 4, sortBy: NEWEST) {
-      edges {
-        node {
-          account {
-            avatar {
-              ...ResourceIconFragment
-              id
-            }
-            id
-          }
-          id
-        }
-      }
-    }
-    backgroundPost: posts(first: 1) {
-      edges {
-        node {
-          content {
-            ...ResourceItemFragment
-            id
-          }
-          id
-        }
-      }
-    }
-    ...LargeClubHeaderFragment
-    ...JoinClubButtonClubFragment
-    ...ClubPublicPageNewPostsFragment
-    ...ClubPublicPageTopPostsFragment
-    id
-  }
-  viewer {
-    ...JoinClubButtonViewerFragment
-    id
-  }
-}
-
-fragment ClubPublicPageNewPostsFragment on Club {
-  newPosts: posts(first: 5, sortBy: NEW) {
-    ...PostsHorizontalPreviewFragment
-  }
-}
-
-fragment ClubPublicPageTopPostsFragment on Club {
-  topPosts: posts(first: 5, sortBy: TOP) {
-    ...PostsHorizontalPreviewFragment
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment JoinClubButtonViewerFragment on Account {
-  clubMembershipsLimit
-  clubMembershipsCount
-}
-
-fragment LargeClubHeaderFragment on Club {
-  name
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment PostPreviewContentFragment on Post {
-  content {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment PostsHorizontalPreviewFragment on PostConnection {
-  edges {
-    node {
-      reference
-      ...PostPreviewContentFragment
-      id
-    }
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -690,5 +578,7 @@ return {
   }
 };
 })();
-(node as any).hash = '2c065a0bd8cadd2e758112d7519a41e4';
+
+(node as any).hash = "2c065a0bd8cadd2e758112d7519a41e4";
+
 export default node;

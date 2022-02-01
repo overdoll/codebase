@@ -1,36 +1,33 @@
+/**
+ * @generated SignedSource<<fb6838cb228b0951b21106eb545db019>>
+ * @relayHash ea44164ff2f779fdbe860953ddf6fe6c
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ea44164ff2f779fdbe860953ddf6fe6c */
 
-import { ConcreteRequest } from "relay-runtime";
-export type RecoveryCodesSetupQueryVariables = {};
-export type RecoveryCodesSetupQueryResponse = {
-    readonly viewer: {
-        readonly id: string;
-        readonly recoveryCodes: ReadonlyArray<{
-            readonly __id: string;
-            readonly code: string;
-        }>;
-    } | null;
+// @relayRequestID ea44164ff2f779fdbe860953ddf6fe6c
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type RecoveryCodesSetupQuery$variables = {};
+export type RecoveryCodesSetupQueryVariables = RecoveryCodesSetupQuery$variables;
+export type RecoveryCodesSetupQuery$data = {
+  readonly viewer: {
+    readonly id: string;
+    readonly recoveryCodes: ReadonlyArray<{
+      readonly __id: string;
+      readonly code: string;
+    }>;
+  } | null;
 };
+export type RecoveryCodesSetupQueryResponse = RecoveryCodesSetupQuery$data;
 export type RecoveryCodesSetupQuery = {
-    readonly response: RecoveryCodesSetupQueryResponse;
-    readonly variables: RecoveryCodesSetupQueryVariables;
+  variables: RecoveryCodesSetupQueryVariables;
+  response: RecoveryCodesSetupQuery$data;
 };
-
-
-
-/*
-query RecoveryCodesSetupQuery {
-  viewer {
-    id
-    recoveryCodes {
-      code
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -109,5 +106,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'f3d97216bd7585c44241cf52bb7f079b';
+
+(node as any).hash = "f3d97216bd7585c44241cf52bb7f079b";
+
 export default node;

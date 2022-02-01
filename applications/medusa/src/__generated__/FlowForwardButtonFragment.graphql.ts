@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<7ecc03f551a7ebbaf8394748c2ee4e17>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type FlowForwardButtonFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "UpdateContentButtonFragment">;
-    readonly " $refType": "FlowForwardButtonFragment";
+export type FlowForwardButtonFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "UpdateContentButtonFragment">;
+  readonly " $fragmentType": "FlowForwardButtonFragment";
 };
-export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
+export type FlowForwardButtonFragment = FlowForwardButtonFragment$data;
 export type FlowForwardButtonFragment$key = {
-    readonly " $data"?: FlowForwardButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"FlowForwardButtonFragment">;
+  readonly " $data"?: FlowForwardButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"FlowForwardButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -51,5 +55,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '570586559fa6fc58fa445093415a1033';
+
+(node as any).hash = "570586559fa6fc58fa445093415a1033";
+
 export default node;

@@ -1,30 +1,34 @@
+/**
+ * @generated SignedSource<<4bd592c3524c6fa83338a26327aa0c7a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubMembersFragment = {
-    readonly members: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly account: {
-                    readonly " $fragmentRefs": FragmentRefs<"AccountTileOverlayFragment">;
-                };
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "ClubMembersFragment";
+export type ClubMembersFragment$data = {
+  readonly members: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly account: {
+          readonly " $fragmentSpreads": FragmentRefs<"AccountTileOverlayFragment">;
+        };
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "ClubMembersFragment";
 };
-export type ClubMembersFragment$data = ClubMembersFragment;
+export type ClubMembersFragment = ClubMembersFragment$data;
 export type ClubMembersFragment$key = {
-    readonly " $data"?: ClubMembersFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubMembersFragment">;
+  readonly " $data"?: ClubMembersFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubMembersFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -72,7 +76,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ClubMembersPaginationQuery.graphql.ts'),
+      "operation": require('./ClubMembersPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -173,5 +177,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f7105a5a40e51637b712f4af01545393';
+
+(node as any).hash = "f7105a5a40e51637b712f4af01545393";
+
 export default node;

@@ -1,32 +1,30 @@
+/**
+ * @generated SignedSource<<31e0ea5237ac8a3ff195217c70cc42ac>>
+ * @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc */
 
-import { ConcreteRequest } from "relay-runtime";
-export type MultiFactorTotpHeaderQueryVariables = {};
-export type MultiFactorTotpHeaderQueryResponse = {
-    readonly viewer: {
-        readonly multiFactorTotpConfigured: boolean;
-        readonly recoveryCodesGenerated: boolean;
-    } | null;
+// @relayRequestID 31b9f7c5cb488bf65b60500d8d4fd9dc
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type MultiFactorTotpHeaderQuery$variables = {};
+export type MultiFactorTotpHeaderQueryVariables = MultiFactorTotpHeaderQuery$variables;
+export type MultiFactorTotpHeaderQuery$data = {
+  readonly viewer: {
+    readonly multiFactorTotpConfigured: boolean;
+    readonly recoveryCodesGenerated: boolean;
+  } | null;
 };
+export type MultiFactorTotpHeaderQueryResponse = MultiFactorTotpHeaderQuery$data;
 export type MultiFactorTotpHeaderQuery = {
-    readonly response: MultiFactorTotpHeaderQueryResponse;
-    readonly variables: MultiFactorTotpHeaderQueryVariables;
+  variables: MultiFactorTotpHeaderQueryVariables;
+  response: MultiFactorTotpHeaderQuery$data;
 };
-
-
-
-/*
-query MultiFactorTotpHeaderQuery {
-  viewer {
-    multiFactorTotpConfigured
-    recoveryCodesGenerated
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -104,5 +102,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'd3ed57da4462d7d3e4fd9e29582d0bf6';
+
+(node as any).hash = "d3ed57da4462d7d3e4fd9e29582d0bf6";
+
 export default node;
