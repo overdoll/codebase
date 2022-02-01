@@ -41,7 +41,6 @@
     "history": "^4.10.1",
     "joi": "^17.4.0",
     "js-file-download": "^0.4.12",
-    "next": "^12.0.7",
     "numbro": "^2.3.2",
     "path-to-regexp": "1.7.0",
     "query-string": "^7.0.1",
@@ -52,7 +51,6 @@
     "react-dom": "^18.0.0-rc.0",
     "react-helmet-async": "^1.0.9",
     "react-hook-form": "^7.6.8",
-    "react-i18next": "^11.15.1",
     "react-markdown": "^7.1.2",
     "react-relay": "^13.0.2",
     "react-router": "^5.2.1",
@@ -97,11 +95,7 @@
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",
     "test:unit": "bazel coverage --test_output=all //applications/medusa:unit",
     "e2e:open": "cd ./applications/medusa && cypress open --config-file cypress.json",
-    "jest": "cd ./applications/medusa && jest src/ --coverage",
-    "medusa:static:dev": "next dev ./applications/medusa/src/static ",
-    "medusa:static:build": "next build ./applications/medusa/src/static",
-    "medusa:static:start": "next start ./applications/medusa/src/static",
-    "medusa:static:export": "next export ./applications/medusa/src/static"
+    "jest": "cd ./applications/medusa && jest src/ --coverage"
   },
   "browserslist": {
     "production": [
@@ -132,6 +126,7 @@
     "@babel/preset-flow": "^7.13.13",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-typescript": "^7.16.0",
+    "@babel/runtime": "^7.12.1",
     "@cypress/code-coverage": "^3.9.6",
     "@graphql-cli/codegen": "^1.17.17",
     "@graphql-codegen/schema-ast": "^1.18.1",
@@ -140,7 +135,7 @@
     "@lingui/babel-preset-react": "^2.9.2",
     "@lingui/cli": "^3.13.0",
     "@lingui/loader": "^3.13.0",
-    "@lingui/macro": "^3.13.0",
+    "@lingui/macro": "^3.13.2",
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",

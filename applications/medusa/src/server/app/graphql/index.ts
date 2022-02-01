@@ -1,7 +1,6 @@
 import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
 import services from '../../config/services'
-import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../../queries.json'
 import { defaultPlaygroundOptions, gql } from 'apollo-server'
 import { DocumentNode, graphqlSync, parse, visit } from 'graphql'
@@ -11,6 +10,7 @@ import { CompositionUpdate } from '@apollo/gateway/dist/config'
 import { GraphQLDataSource } from '@apollo/gateway/src/datasources/types'
 import { ServiceEndpointDefinition } from '@apollo/gateway/src/config'
 import { GraphQLResponse } from 'apollo-server-types'
+import bodyParser from 'body-parser'
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -300,9 +300,31 @@ const renderPlayground = (req, res, next): void => {
   res.end()
 }
 
+const jsonParser = bodyParser.json()
+
+function matchQueryMiddleware (req, res, next): any {
+  return jsonParser(req, res, () => {
+    const { queryId } = req.body
+    if (queryId != null) {
+      const query = queryMapJson[queryId]
+      if (query != null) {
+        req.body.query = query
+      } else {
+        throw new Error(`matchQueryMiddleware: can't find queryId: ${queryId as string}`)
+      }
+    } else {
+      if (process.env.BLACKLIST_UNKNOWN_QUERIES === 'true') {
+        res.status(400).send({ error: 'invalid query sent. only whitelisted queries are allowed.' })
+        return
+      }
+    }
+    next()
+  })
+}
+
 export default function graphql (index): void {
   server.applyMiddleware({
     path: '/api/graphql',
-    app: index.use('/api/graphql', renderPlayground, matchQueryMiddleware(queryMapJson))
+    app: index.use('/api/graphql', renderPlayground, matchQueryMiddleware)
   })
 }
