@@ -1,6 +1,4 @@
 import { Helmet } from 'react-helmet-async'
-import { Flex } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
@@ -10,9 +8,9 @@ import type {
 } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
-import Button from '@//:modules/form/Button/Button'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
+import ConfigureBackButton from '../../../../../../../components/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {
@@ -47,15 +45,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
             <MultiFactorTotpSetup query={queryRef as PreloadedQuery<MultiFactorTotpHeaderQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <Flex justify='center'>
-          <Link to='/settings/security'>
-            <Button mt={8} size='sm' variant='link'>
-              <Trans>
-                Go back to settings
-              </Trans>
-            </Button>
-          </Link>
-        </Flex>
+        <ConfigureBackButton to='/settings/security' />
       </PageWrapper>
     </>
   )

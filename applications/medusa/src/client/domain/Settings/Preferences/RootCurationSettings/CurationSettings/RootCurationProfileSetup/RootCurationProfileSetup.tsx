@@ -1,6 +1,4 @@
 import { Helmet } from 'react-helmet-async'
-import { Flex } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
@@ -9,10 +7,10 @@ import type {
 } from '@//:artifacts/CurationProfileSetupQuery.graphql'
 import CurationProfileSetupQuery from '@//:artifacts/CurationProfileSetupQuery.graphql'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
-import Button from '@//:modules/form/Button/Button'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import CurationProfileSetup from './CurationProfileSetup/CurationProfileSetup'
+import ConfigureBackButton from '../../../../../../components/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {
@@ -31,7 +29,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
       <Helmet title='curation profile setup' />
       <PageWrapper>
         <PageSectionWrap>
-          <PageSectionTitle colorScheme='green'>
+          <PageSectionTitle colorScheme='orange'>
             <Trans>
               Set up curation profile
             </Trans>
@@ -47,15 +45,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
             <CurationProfileSetup query={queryRef as PreloadedQuery<CurationProfileSetupQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <Flex justify='center'>
-          <Link to='/settings/preferences'>
-            <Button mt={8} size='sm' variant='link'>
-              <Trans>
-                Go back to settings
-              </Trans>
-            </Button>
-          </Link>
-        </Flex>
+        <ConfigureBackButton to='/settings/preferences' />
       </PageWrapper>
     </>
   )

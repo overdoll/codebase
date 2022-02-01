@@ -24,6 +24,7 @@ import popover from './popover'
 import modal from './modal'
 import accordion from './accordion'
 import checkbox from './checkbox'
+import numberinput from './number-input'
 
 export default {
   Menu: menu,
@@ -51,5 +52,6 @@ export default {
   Popover: popover,
   Modal: modal,
   Accordion: accordion,
-  Checkbox: checkbox
+  Checkbox: checkbox,
+  NumberInput: numberinput
 }

@@ -11,6 +11,7 @@ import {
 import { ReactNode } from 'react'
 import { Icon } from '../../content'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
+import { Trans } from '@lingui/macro'
 
 interface Props extends HTMLChakraProps<any> {
   register: any
@@ -18,7 +19,7 @@ interface Props extends HTMLChakraProps<any> {
   error: boolean
   placeholder: ReactNode
   errorMessage?: string
-  helperText?: string | undefined
+  helperText?: ReactNode | undefined
   size?: string
   variant?: string
   inputLeftAddon?: ReactNode
@@ -66,7 +67,9 @@ export default function StyledInput ({
     if (errorMessage == null && helperText != null) {
       return (
         <FormHelperText fontSize={determineTextSizing()}>
-          {helperText}
+          <Trans>
+            {helperText}
+          </Trans>
         </FormHelperText>
       )
     }
