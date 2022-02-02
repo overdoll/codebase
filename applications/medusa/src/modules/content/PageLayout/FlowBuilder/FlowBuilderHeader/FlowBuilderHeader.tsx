@@ -1,7 +1,7 @@
 import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { FunctionComponent, ReactNode, useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
-import { Icon } from '@//:modules/content'
+import Icon from '../../Flair/Icon/Icon'
 
 interface ChildrenCallable {
   currentTitle: ReactNode

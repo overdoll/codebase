@@ -12,8 +12,7 @@ import GeneralSearch from './components/GeneralSearch/GeneralSearch'
 import SaveSearchButton from './components/GeneralSearch/SaveSearchButton/SaveSearchButton'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
-import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Icon } from '@//:modules/content'
+import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SearchBar } from '@//:assets/icons/navigation'
 
 interface Props {

@@ -10,7 +10,7 @@ import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
-import ConfigureBackButton from '../../../../../../../components/ConfigureBackButton/ConfigureBackButton'
+import ConfigureBackButton from '../../../../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {

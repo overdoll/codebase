@@ -1,6 +1,6 @@
 import { MenuItem, Text } from '@chakra-ui/react'
-import { Icon } from '../../../index'
 import { FunctionComponent, ReactNode } from 'react'
+import { Icon } from '../../../PageLayout'
 
 interface Props {
   icon: FunctionComponent<any>

@@ -15,7 +15,7 @@ export { default as LargeBackgroundBox } from './BuildingBlocks/LargeBackgroundB
 export { default as RenderOnDesktop } from './BuildingBlocks/RenderOnDesktop/RenderOnDesktop'
 export { default as RenderOnMobile } from './BuildingBlocks/RenderOnMobile/RenderOnMobile'
 
-export { default as ListSpacer } from './BuildingBlocks/PageStacks/ListSpacer/ListSpacer'
+export { default as ListSpacer } from './BuildingBlocks/ListSpacer/ListSpacer'
 
 export { default as SmallMenuButton } from '../Interactables/Menus/SmallMenuButton/SmallMenuButton'
 export { default as SmallMenuItem } from '../Interactables/Menus/SmallMenuItem/SmallMenuItem'
@@ -23,3 +23,9 @@ export { default as SmallMenuItem } from '../Interactables/Menus/SmallMenuItem/S
 export { default as PostPlaceholder } from './Flair/PostPlaceholder/PostPlaceholder'
 
 export { default as ResourceIcon } from '../DataDisplay/ResourceIcon/ResourceIcon'
+export { default as Icon } from './Flair/Icon/Icon'
+
+export * from './FlowBuilder/index'
+
+export { default as HStackScroll } from './BuildingBlocks/HStackScroll/HStackScroll'
+export { default as ConfigureBackButton } from './BuildingBlocks/ConfigureBackButton/ConfigureBackButton'

@@ -10,7 +10,7 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
-import ConfigureBackButton from '../../../../../../../components/ConfigureBackButton/ConfigureBackButton'
+import ConfigureBackButton from '../../../../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {
@@ -32,7 +32,7 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>
-              Set up two-factor recovery codes
+              Set up recovery codes
             </Trans>
           </PageSectionTitle>
           <PageSectionDescription>

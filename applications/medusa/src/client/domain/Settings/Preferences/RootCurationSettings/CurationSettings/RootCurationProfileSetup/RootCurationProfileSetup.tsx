@@ -10,7 +10,7 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import CurationProfileSetup from './CurationProfileSetup/CurationProfileSetup'
-import ConfigureBackButton from '../../../../../../components/ConfigureBackButton/ConfigureBackButton'
+import ConfigureBackButton from '../../../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {

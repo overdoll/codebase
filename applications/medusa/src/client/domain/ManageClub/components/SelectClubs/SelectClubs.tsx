@@ -6,11 +6,10 @@ import { Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, Mo
 import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFragment.graphql'
 import ClubPreview from '../ClubPreview/ClubPreview'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'
-import { Icon } from '@//:modules/content'
 import { useParams } from '@//:modules/routing/useParams'
 import generatePath from '@//:modules/routing/generatePath'
 import { useHistoryDisclosure } from '@//:modules/hooks'
-import { ClickableBox } from '@//:modules/content/PageLayout'
+import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SwapCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 

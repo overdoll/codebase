@@ -1,6 +1,6 @@
 import { Box, HTMLChakraProps } from '@chakra-ui/react'
-import { Icon } from '../../../../../../index'
 import { ControlFullscreenEnable } from '@//:assets/icons/interface'
+import { Icon } from '../../../../../../PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   onClick: () => void

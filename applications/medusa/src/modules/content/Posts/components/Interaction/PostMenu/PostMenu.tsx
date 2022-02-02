@@ -1,10 +1,10 @@
 import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
-import { Icon } from '../../../../index'
 import { NavigationMenuHorizontal } from '@//:assets/icons/navigation'
 import { graphql } from 'react-relay'
 import { PostMenuFragment$key } from '@//:artifacts/PostMenuFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
+import { Icon } from '../../../../PageLayout'
 
 interface Props {
   query: PostMenuFragment$key | null

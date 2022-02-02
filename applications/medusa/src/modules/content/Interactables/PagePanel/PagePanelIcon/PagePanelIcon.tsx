@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 import { Flex } from '@chakra-ui/react'
-import { Icon } from '../../../index'
+import { Icon } from '../../../PageLayout'
 
 interface Props {
   icon: FunctionComponent<any>

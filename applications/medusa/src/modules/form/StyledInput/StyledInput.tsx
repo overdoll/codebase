@@ -9,9 +9,9 @@ import {
   Spinner
 } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { Icon } from '../../content'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
+import { Icon } from '../../content/PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   register: any

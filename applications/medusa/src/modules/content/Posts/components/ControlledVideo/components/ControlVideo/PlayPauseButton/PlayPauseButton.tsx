@@ -1,6 +1,6 @@
 import { Box, HTMLChakraProps } from '@chakra-ui/react'
-import { Icon } from '../../../../../../index'
 import { ControlPauseButton, ControlPlayButton } from '@//:assets/icons/interface'
+import { Icon } from '../../../../../../PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   isPaused: boolean

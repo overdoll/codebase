@@ -23,7 +23,7 @@ import {
   FlowBuilderFooter,
   FlowBuilderHeader,
   FlowBuilderProgress
-} from '../../../../../../../components/FlowBuilder'
+} from '../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import DateOfBirthCurationStep from './DateOfBirthCurationStep/DateOfBirthCurationStep'
 import { useHistoryDisclosure, useReducerBuilder } from '@//:modules/hooks'
 import { singleStringValueReducer } from '@//:modules/hooks/useReducerBuilder/options'

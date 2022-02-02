@@ -1,4 +1,4 @@
-import { FlowBuilderNextButton, FlowBuilderPreviousButton } from '../../../../../../../../components/FlowBuilder'
+import { FlowBuilderNextButton, FlowBuilderPreviousButton } from '../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import { Box, Flex } from '@chakra-ui/react'
 import CurationDateOfBirthNextButton from './CurationDateOfBirthNextButton/CurationDateOfBirthNextButton'
 import { graphql, useFragment } from 'react-relay/hooks'

@@ -3,14 +3,13 @@ import type { DateOfBirthCurationStepFragment$key } from '@//:artifacts/DateOfBi
 import { Box, HStack, Input, InputGroup, Stack, useNumberInput } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import IconButton from '@//:modules/form/IconButton/IconButton'
-import { Icon } from '@//:modules/content'
 import { useLingui } from '@lingui/react'
 import { AddPlus, SubtractMinus } from '@//:assets/icons/interface'
 import differenceInYears from 'date-fns/differenceInYears'
 import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import subYears from 'date-fns/subYears'
-import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Icon, PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: DateOfBirthCurationStepFragment$key | null

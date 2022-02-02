@@ -11,7 +11,7 @@ import type { CategoriesCurationStepFragment$key } from '@//:artifacts/Categorie
 import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector'
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
-import HStackScroll from '../../../../../../../../components/HStackScroll/HStackScroll'
+import HStackScroll from '../../../../../../../../../modules/content/PageLayout/BuildingBlocks/HStackScroll/HStackScroll'
 
 interface Props {
   query: CategoriesCurationStepFragment$key | null

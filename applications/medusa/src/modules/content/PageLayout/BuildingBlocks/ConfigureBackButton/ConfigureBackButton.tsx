@@ -1,9 +1,9 @@
-import Button from '@//:modules/form/Button/Button'
-import Link from '@//:modules/routing/Link'
+import Button from '../../../../form/Button/Button'
+import Link from '../../../../routing/Link'
 import { Box } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { Icon } from '@//:modules/content'
 import { ArrowButtonLeft } from '@//:assets/icons/navigation'
+import { Icon } from '../../index'
 
 interface Props {
   to: string

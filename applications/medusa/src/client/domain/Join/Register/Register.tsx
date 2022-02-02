@@ -11,6 +11,7 @@ import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphq
 import { useCookies } from 'react-cookie'
 import { t } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { useFlash } from '@//:modules/flash'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -47,6 +48,8 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const history = useHistory()
 
+  const { flash } = useFlash()
+
   const onSubmit = ({ username }): void => {
     commit({
       variables: {
@@ -73,7 +76,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         if (viewer !== null) {
           viewer.invalidateRecord()
         }
-
+        flash('new.account', '')
         removeCookie('token')
         history.push('/')
 

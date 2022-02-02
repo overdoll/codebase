@@ -1,6 +1,5 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { RefreshProcessContentQuery } from '@//:artifacts/RefreshProcessContentQuery.graphql'
-import { Icon } from '@//:modules/content'
 import { CheckMark } from '@//:assets/icons/interface'
 import { HStack, Spinner, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
@@ -8,6 +7,7 @@ import { QueryArguments } from '@//:types/hooks'
 import { DispatchContext } from '../../../../../../context'
 import { EVENTS } from '../../../../../../constants/constants'
 import { useContext, useEffect } from 'react'
+import { Icon } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryArgs: QueryArguments

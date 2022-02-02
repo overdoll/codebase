@@ -5,7 +5,7 @@ import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { HStack, useToast } from '@chakra-ui/react'
 import type { CurationAudienceNextButtonFragment$key } from '@//:artifacts/CurationAudienceNextButtonFragment.graphql'
-import { FlowBuilderNextButton } from '../../../../../../../../../components/FlowBuilder'
+import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import { compareTwoArrays } from '@//:modules/support'
 
 interface Props {

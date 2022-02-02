@@ -3,8 +3,8 @@ import {
   PlaceholderResourceRobot,
   PlaceholderResourceSkull
 } from '@//:assets/icons/interface'
-import { Icon } from '../../index'
 import { useConst } from '@chakra-ui/react'
+import { Icon } from '../../PageLayout'
 
 export default function RandomIcon (): JSX.Element {
   const icons = [

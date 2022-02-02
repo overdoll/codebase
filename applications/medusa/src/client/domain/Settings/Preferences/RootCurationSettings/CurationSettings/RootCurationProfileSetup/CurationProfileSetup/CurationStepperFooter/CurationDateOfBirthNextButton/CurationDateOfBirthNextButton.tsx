@@ -7,7 +7,7 @@ import { HStack, useToast } from '@chakra-ui/react'
 import type {
   CurationDateOfBirthNextButtonFragment$key
 } from '@//:artifacts/CurationDateOfBirthNextButtonFragment.graphql'
-import { FlowBuilderNextButton } from '../../../../../../../../../components/FlowBuilder'
+import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import differenceInYears from 'date-fns/differenceInYears'
 
 interface Props {

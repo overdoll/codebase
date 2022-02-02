@@ -1,6 +1,6 @@
 import { Box, HTMLChakraProps, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@chakra-ui/react'
-import { Icon } from '../../../../../../index'
 import { ControlVolumeHigh, ControlVolumeMissing, ControlVolumeMuted } from '@//:assets/icons/interface'
+import { Icon } from '../../../../../../PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   isMuted: boolean

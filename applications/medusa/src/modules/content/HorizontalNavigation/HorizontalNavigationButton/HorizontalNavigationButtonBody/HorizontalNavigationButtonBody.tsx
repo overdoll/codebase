@@ -1,6 +1,5 @@
 import { Box, Flex, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
-import { ClickableBox } from '../../../PageLayout'
-import { Icon } from '../../../index'
+import { ClickableBox, Icon } from '../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
 
 interface Props extends HTMLChakraProps<any> {

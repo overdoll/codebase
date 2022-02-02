@@ -1,20 +1,20 @@
 import { useContext } from 'react'
 import { FlowContext } from '../../FlowBuilder'
-import Button from '@//:modules/form/Button/Button'
+import Button from '../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
 
-export default function FlowBuilderPreviousButton (): JSX.Element {
-  const { previousStep } = useContext(FlowContext)
+export default function FlowBuilderNextButton (): JSX.Element {
+  const { nextStep } = useContext(FlowContext)
 
   return (
     <Button
-      onClick={previousStep}
+      onClick={nextStep}
       size='lg'
       colorScheme='gray'
       variant='solid'
     >
       <Trans>
-        Back
+        Next
       </Trans>
     </Button>
   )

@@ -1,6 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../PageLayout/Flair/Icon/Icon'
-import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../../../PageLayout'
+import { ClickableBox } from '../../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
 
 interface Props {
@@ -80,29 +80,30 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
       p={2}
       whiteSpace='break-spaces'
     >
-      <RenderOnDesktop>
-        <Flex
-          align='center'
-        >
-          <IconComponent />
-          <TextComponent />
-          {(icon == null) && children}
-        </Flex>
-      </RenderOnDesktop>
-      <RenderOnMobile>
-        <Flex
-          m={1}
-          w={24}
-          h={24}
-          align='center'
-          justify='center'
-          direction='column'
-        >
-          <IconComponent />
-          <TextComponent />
-          {(icon == null) && children}
-        </Flex>
-      </RenderOnMobile>
+      <Flex
+        m={1}
+        w={{
+          base: 24,
+          md: '100%'
+        }}
+        h={{
+          base: 24,
+          md: '100%'
+        }}
+        align='center'
+        justify={{
+          base: 'center',
+          md: 'flex-start'
+        }}
+        direction={{
+          base: 'column',
+          md: 'row'
+        }}
+      >
+        <IconComponent />
+        <TextComponent />
+        {(icon == null) && children}
+      </Flex>
     </ClickableBox>
   )
 }
