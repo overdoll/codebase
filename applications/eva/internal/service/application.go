@@ -41,8 +41,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	redis := bootstrap.InitializeRedisSession()
 
-	client := bootstrap.InitializeElasticSearchSession()
-
 	db, err := geoip2.Open(config.GetFilePath(os.Getenv("GEOIP_DATABASE_LOCATION")))
 
 	if err != nil {
@@ -53,7 +51,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session)
 	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
-	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
 
@@ -77,7 +74,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
-			IndexAllAccounts:                          command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
 
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
@@ -89,7 +85,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			RevokeAccountSessionOperator: command.NewRevokeAccountSessionOperatorHandler(sessionRepo),
 		},
 		Queries: app.Queries{
-			SearchAccounts:         query.NewSearchAccountsHandler(accountIndexRepo),
 			AccountById:            query.NewAccountByIdHandler(accountRepo),
 			AccountsByIds:          query.NewAccountsByIdsHandler(accountRepo),
 			AccountByEmail:         query.NewAccountByEmailHandler(accountRepo),

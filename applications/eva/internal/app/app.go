@@ -26,7 +26,6 @@ type Commands struct {
 	DisableAccountMultiFactor               command.DisableAccountMultiFactorHandler
 	DeleteAccountEmail                      command.DeleteAccountEmailHandler
 	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
-	IndexAllAccounts                        command.IndexAllAccountsHandler
 
 	UnlockAccount command.UnlockAccountHandler
 	LockAccount   command.LockAccountHandler

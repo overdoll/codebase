@@ -89,7 +89,7 @@
     "proxy:medusa:local": "telepresence --swap-deployment medusa --expose 8000 --run yarn run service:medusa:local",
     "proxy:medusa:remote": "telepresence --swap-deployment medusa --expose 8000 --run yarn run service:medusa:remote",
     "proxy:medusa:production": "telepresence --swap-deployment medusa --expose 8000 --run yarn run service:medusa:production",
-    "service:medusa:remote": "cd ./applications/medusa && REMOTE_DEV=true razzle start",
+    "service:medusa:remote": "cd ./applications/medusa && CLIENT_PUBLIC_PATH=/ REMOTE_DEV=true razzle start",
     "service:medusa:local": "cd ./applications/medusa && URL=https://localhost:3001 CLIENT_PUBLIC_PATH=https://localhost:3001/ razzle start",
     "service:medusa:production": "cd ./applications/medusa && node build/server.js",
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",

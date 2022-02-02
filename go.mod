@@ -42,8 +42,9 @@ require (
 	github.com/tidwall/gjson v1.12.1
 	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.6.0
+	github.com/u2takey/ffmpeg-go v0.4.0
 	github.com/vektah/gqlparser/v2 v2.2.0
-	github.com/yuin/goldmark v1.4.4 // indirect
+	github.com/yuin/goldmark v1.4.4
 	go.temporal.io/api v1.5.0
 	go.temporal.io/sdk v1.12.0
 	go.uber.org/zap v1.18.1

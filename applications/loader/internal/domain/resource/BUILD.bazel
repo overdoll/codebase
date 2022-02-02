@@ -16,5 +16,6 @@ go_library(
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_h2non_filetype//:filetype",
         "@com_github_tus_tusd//pkg/handler",
+        "@com_github_u2takey_ffmpeg_go//:ffmpeg-go",
     ],
 )

@@ -29,4 +29,16 @@ type Resource @key(fields: "id") {
 
   """URLs to access the resource."""
   urls: [ResourceUrl!]!
+
+  """The width."""
+  width: Int!
+
+  """The height."""
+  height: Int!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
 }
