@@ -61,18 +61,6 @@ type Account struct {
 func (Account) IsNode()   {}
 func (Account) IsEntity() {}
 
-// Connection of the account
-type AccountConnection struct {
-	Edges    []*AccountEdge  `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
-}
-
-// Edge of the account
-type AccountEdge struct {
-	Node   *Account `json:"node"`
-	Cursor string   `json:"cursor"`
-}
-
 // Email belonging to a specific account
 type AccountEmail struct {
 	// ID of the account email

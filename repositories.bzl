@@ -1688,8 +1688,8 @@ def go_repositories():
         name = "com_github_yuin_goldmark",
         build_file_proto_mode = "disable",
         importpath = "github.com/yuin/goldmark",
-        sum = "h1:/vn0k+RBvwlxEmP5E7SZMqNxPhfMVFEJiykr15/0XKM=",
-        version = "v1.4.1",
+        sum = "h1:zNWRjYUW32G9KirMXYHQHVNFkXvMI7LpgNW2AgYAoIs=",
+        version = "v1.4.4",
     )
     go_repository(
         name = "com_google_cloud_go",

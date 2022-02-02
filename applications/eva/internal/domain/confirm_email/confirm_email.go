@@ -2,6 +2,7 @@ package confirm_email
 
 import (
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/principal"
 	"strings"
@@ -35,6 +36,10 @@ func NewConfirmEmail(accountId, email string) (*ConfirmEmail, string, error) {
 	secret, err := crypt.Encrypt(email)
 
 	if err != nil {
+		return nil, "", err
+	}
+
+	if err := validateEmail(email); err != nil {
 		return nil, "", err
 	}
 
@@ -93,4 +98,14 @@ func (c *ConfirmEmail) AccountId() string {
 
 func (c *ConfirmEmail) Expires() time.Duration {
 	return c.expires
+}
+
+func validateEmail(email string) error {
+	err := validator.New().Var(email, "required,email")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

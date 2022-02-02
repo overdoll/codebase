@@ -15,7 +15,6 @@ go_library(
         "accounts_by_id.go",
         "are_account_multi_factor_recovery_codes_generated.go",
         "is_account_multi_factor_totp_enabled.go",
-        "search_accounts.go",
         "view_authentication_token.go",
     ],
     importpath = "overdoll/applications/eva/internal/app/query",

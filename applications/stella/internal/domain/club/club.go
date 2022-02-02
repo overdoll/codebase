@@ -2,6 +2,7 @@ package club
 
 import (
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -61,6 +62,14 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	lc, err := localization.NewDefaultTranslation(name)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := validateName(name); err != nil {
+		return nil, err
+	}
+
+	if err := validateSlug(slug); err != nil {
 		return nil, err
 	}
 
@@ -172,9 +181,12 @@ func (m *Club) AddSlugAlias(requester *principal.Principal, slug string) error {
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
-
 	if len(m.slugAliases) >= maxClubSlugLimit {
 		return ErrClubSlugMax
+	}
+
+	if err := validateSlug(slug); err != nil {
+		return err
 	}
 
 	m.slugAliases = append(m.slugAliases, slug)
@@ -251,6 +263,10 @@ func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail string)
 func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := validateName(name); err != nil {
 		return err
 	}
 
@@ -332,6 +348,28 @@ func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (in
 
 func CanViewAccountClubs(requester *principal.Principal, accountId string) error {
 	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func validateName(name string) error {
+
+	err := validator.New().Var(name, "required,max=25")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func validateSlug(slug string) error {
+
+	err := validator.New().Var(slug, "required,max=25,excludesall= ")
+
+	if err != nil {
 		return err
 	}
 
