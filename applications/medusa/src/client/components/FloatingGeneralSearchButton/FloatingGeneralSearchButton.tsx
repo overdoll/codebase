@@ -112,6 +112,7 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
         isOpen={isOpen}
         onClose={onClose}
         size='full'
+        motionPreset='none'
         initialFocusRef={inputRef}
         isCentered
         scrollBehavior='inside'

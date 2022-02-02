@@ -19,7 +19,8 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { DownloadArrow } from '@//:assets/icons/interface'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'
-import CopyToClipboardButton from '../../../../../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
+import CopyToClipboardButton
+  from '../../../../../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -120,19 +121,12 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
     return (
       <>
         <Flex direction='column' align='center'>
-          <Alert mb={3} status='info'>
-            <AlertIcon />
-            <AlertDescription>
-              <Trans>
-                No recovery codes were generated for this account yet
-              </Trans>
-            </AlertDescription>
-          </Alert>
           <Button
             isLoading={isGeneratingCodes}
             onClick={onGenerateCodes}
             colorScheme='teal'
-            size='md'
+            size='lg'
+            w='100%'
           >
             <Trans>
               Generate Recovery Codes
