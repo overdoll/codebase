@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f41489805ec8b95a96b90d94d603f530>>
+ * @generated SignedSource<<ab304089ee4b51459a92bfac27f9ef9e>>
  * @relayHash 3b6638f090dfe40224eaaa6e68a7779b
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,7 @@ export type UsernamesQueryVariables = UsernamesQuery$variables;
 export type UsernamesQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"UsernamesSettingsFragment">;
-  } | null;
+  };
 };
 export type UsernamesQueryResponse = UsernamesQuery$data;
 export type UsernamesQuery = {
@@ -34,20 +34,25 @@ const node: ConcreteRequest = {
     "name": "UsernamesQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "UsernamesSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "UsernamesSettingsFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -102,6 +107,6 @@ const node: ConcreteRequest = {
   }
 };
 
-(node as any).hash = "7c4f06712d73eab470e2b3ef98aacfd7";
+(node as any).hash = "97875444c847528989e63db004957584";
 
 export default node;

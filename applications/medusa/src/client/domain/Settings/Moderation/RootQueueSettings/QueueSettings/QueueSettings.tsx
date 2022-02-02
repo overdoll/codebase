@@ -13,7 +13,7 @@ interface Props {
 
 const PreparedQueueGQL = graphql`
   query QueueSettingsQuery {
-    viewer {
+    viewer @required(action: THROW) {
       ...QueueSettingsFragment
     }
   }
@@ -62,7 +62,7 @@ export default function QueueSettings (props: Props): JSX.Element {
 
   const data = useFragment<QueueSettingsFragment$key>(
     QueueSettingsFragmentGQL,
-    queryData?.viewer as unknown as QueueSettingsFragment$key
+    queryData.viewer
   )
 
   const [addToQueue, isAddingToQueue] = useMutation<QueueSettingsAddMutation>(
@@ -73,7 +73,7 @@ export default function QueueSettings (props: Props): JSX.Element {
     RemoveFromQueue
   )
 
-  const status = data?.moderatorSettings?.isInModeratorQueue
+  const status = data.moderatorSettings?.isInModeratorQueue
 
   const notify = useToast()
 
@@ -130,13 +130,15 @@ export default function QueueSettings (props: Props): JSX.Element {
     <>
       <Flex align='center' direction='row'>
         <Flex direction='column'>
-          <Heading color='gray.100' fontSize='lg'><Trans>
-            Toggle Queue Status
-          </Trans>
+          <Heading color='gray.100' fontSize='lg'>
+            <Trans>
+              Toggle Queue Status
+            </Trans>
           </Heading>
-          <Text color='gray.200' fontSize='sm'><Trans>
-            Change your status for receiving posts in your Moderation Queue
-          </Trans>
+          <Text color='gray.200' fontSize='sm'>
+            <Trans>
+              Change your status for receiving posts in your Moderation Queue
+            </Trans>
           </Text>
         </Flex>
         <Switch

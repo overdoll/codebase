@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10e531f81abbdee6096036e3f1434785>>
+ * @generated SignedSource<<df538ab99dc1a37b75fc8c6dba29c20d>>
  * @relayHash b362964b720ce01b03d1ca29b8bb9e55
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,7 @@ export type QueueSettingsQueryVariables = QueueSettingsQuery$variables;
 export type QueueSettingsQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"QueueSettingsFragment">;
-  } | null;
+  };
 };
 export type QueueSettingsQueryResponse = QueueSettingsQuery$data;
 export type QueueSettingsQuery = {
@@ -34,20 +34,25 @@ const node: ConcreteRequest = {
     "name": "QueueSettingsQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "QueueSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "QueueSettingsFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -106,6 +111,6 @@ const node: ConcreteRequest = {
   }
 };
 
-(node as any).hash = "87666487e59d3d0b0ad33448974d6d75";
+(node as any).hash = "7c379e6864f97bdee5f0522c04bc93cf";
 
 export default node;

@@ -35,14 +35,18 @@ export default function MyClubs (props: Props): JSX.Element {
   return (
     <PageSectionScroller
       reversed={queryData?.viewer?.clubMembershipsCount > 0}
-      childrenTitle={<Trans>
-        Popular Clubs
-      </Trans>}
+      childrenTitle={(
+        <Trans>
+          Popular Clubs
+        </Trans>
+      )}
       infiniteScrollTitle={<Trans>My Clubs</Trans>}
-      pageInfiniteScroll={<ClubPostsFeed
-        query={queryData.viewer}
-        viewerQuery={queryData.viewer}
-                          />}
+      pageInfiniteScroll={(
+        <ClubPostsFeed
+          query={queryData.viewer}
+          viewerQuery={queryData.viewer}
+        />
+      )}
     >
       <SuggestedClubs query={queryData} viewerQuery={queryData.viewer} />
     </PageSectionScroller>

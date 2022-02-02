@@ -77,7 +77,7 @@
   "scripts": {
     "start:tsc": "tsc -b -w --preserveWatchOutput",
     "check:tsc": "tsc -b",
-    "check:eslint": "eslint -c .eslintrc.json ./applications/medusa/src ./applications/medusa/cypress",
+    "check:eslint": "eslint --quiet -c .eslintrc.json ./applications/medusa/src ./applications/medusa/cypress",
     "docs": "docsify serve docs",
     "locale:extract": " cd ./applications/medusa && lingui extract",
     "locale:compile": "cd ./applications/medusa && lingui compile",

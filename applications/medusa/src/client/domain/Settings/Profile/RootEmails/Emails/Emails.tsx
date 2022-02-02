@@ -123,9 +123,10 @@ export default function Emails (props: Props): JSX.Element {
             isLoading={isLoadingNext}
             color='gray.200'
             variant='link'
-          ><Trans>
-            Load More
-          </Trans>
+          >
+            <Trans>
+              Load More
+            </Trans>
           </Button>
         </Flex>}
       <Button
@@ -133,9 +134,10 @@ export default function Emails (props: Props): JSX.Element {
         colorScheme='gray'
         onClick={onToggleForm}
         size='sm'
-      ><Trans>
-        Add Email
-      </Trans>
+      >
+        <Trans>
+          Add Email
+        </Trans>
       </Button>
       <Collapse in={isFormOpen} animateOpacity>
         <AddEmailForm isDisabled={disableEmailAdd} connectionID={emailsConnectionID} />
