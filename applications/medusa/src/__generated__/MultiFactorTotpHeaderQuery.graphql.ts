@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31e0ea5237ac8a3ff195217c70cc42ac>>
+ * @generated SignedSource<<7620201f8fdb536ad941f15e79af1a56>>
  * @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,7 @@ export type MultiFactorTotpHeaderQuery$data = {
   readonly viewer: {
     readonly multiFactorTotpConfigured: boolean;
     readonly recoveryCodesGenerated: boolean;
-  } | null;
+  };
 };
 export type MultiFactorTotpHeaderQueryResponse = MultiFactorTotpHeaderQuery$data;
 export type MultiFactorTotpHeaderQuery = {
@@ -49,17 +49,22 @@ return {
     "name": "MultiFactorTotpHeaderQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -103,6 +108,6 @@ return {
 };
 })();
 
-(node as any).hash = "d3ed57da4462d7d3e4fd9e29582d0bf6";
+(node as any).hash = "92fc4caa07bdf33682362b25781eb9e7";
 
 export default node;

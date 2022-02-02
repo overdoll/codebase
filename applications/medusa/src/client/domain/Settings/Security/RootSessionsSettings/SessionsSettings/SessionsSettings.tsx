@@ -27,7 +27,7 @@ const SessionsGQL = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "SessionsPaginationQuery" ) {
-    sessions (first: $first, after: $after)
+    sessions (first: $first, after: $after) @required(action: THROW)
     @connection(key: "SessionsSettingsFragment_sessions") {
       __id
       edges {
@@ -55,9 +55,9 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const sessions = data?.sessions.edges
+  const sessions = data.sessions.edges
 
-  const sessionsConnectionID = data?.sessions?.__id
+  const sessionsConnectionID = data.sessions.__id
 
   return (
     <>

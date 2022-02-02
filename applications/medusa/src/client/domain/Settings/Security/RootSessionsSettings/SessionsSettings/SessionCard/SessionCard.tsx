@@ -43,8 +43,8 @@ export default function SessionCard ({
   const locale = dateFnsLocaleFromI18n(i18n)
 
   const userAgent = UAParser(data.device)
-  const formattedDate = format(new Date(data?.lastSeen as Date), 'LLLL Lo, y', { locale })
-  const signedInDate = format(new Date(data?.created as Date), 'LLLL Lo, y', { locale })
+  const formattedDate = format(new Date(data.lastSeen as Date), 'LLLL Lo, y', { locale })
+  const signedInDate = format(new Date(data.created as Date), 'LLLL Lo, y', { locale })
 
   return (
     <AccordionItem>

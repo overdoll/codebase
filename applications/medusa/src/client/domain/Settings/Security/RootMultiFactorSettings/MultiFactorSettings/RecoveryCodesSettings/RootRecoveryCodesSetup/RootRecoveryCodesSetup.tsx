@@ -13,7 +13,6 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
-import PageContents from '../../../../../../Root/PageContents/PageContents'
 
 interface Props {
   prepared: {

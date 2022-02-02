@@ -310,10 +310,11 @@ function matchQueryMiddleware (req, res, next): any {
       if (query != null) {
         req.body.query = query
       } else {
-        throw new Error(`matchQueryMiddleware: can't find queryId: ${queryId as string}`)
+        res.status(400).send({ error: `cannot find queryId: ${queryId as string}` })
+        return
       }
     } else {
-      if (process.env.BLACKLIST_UNKNOWN_QUERIES === 'true') {
+      if (process.env.APP_DEBUG !== 'true') {
         res.status(400).send({ error: 'invalid query sent. only whitelisted queries are allowed.' })
         return
       }
