@@ -1,7 +1,12 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'react-relay/hooks'
 import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
-import { GridTile, GridWrap, LoadMoreGridTile, Selector } from '../../../../../../modules/content/ContentSelection'
+import {
+  GridTile,
+  GridWrap,
+  LoadMoreGridTile,
+  SingleSelector
+} from '../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesGeneralFragment$key } from '@//:artifacts/SearchCategoriesGeneralFragment.graphql'
 import { Trans } from '@lingui/macro'
@@ -78,7 +83,7 @@ export default function SearchCategoriesGeneral ({
       <GridWrap justify='center'>
         {categories.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
@@ -86,7 +91,7 @@ export default function SearchCategoriesGeneral ({
               <CategoryTileOverlay
                 query={item}
               />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

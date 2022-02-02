@@ -9,7 +9,7 @@ export default function FlowBuilderBody (): JSX.Element {
   } = useContext(FlowContext)
 
   return (
-    <Box>
+    <Box minH={300}>
       {stepsComponents[currentStep]}
     </Box>
   )

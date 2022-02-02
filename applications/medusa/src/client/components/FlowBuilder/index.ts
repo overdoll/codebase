@@ -7,3 +7,4 @@ export {
 } from './FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton'
 export { default as FlowBuilderHeader } from './FlowBuilderHeader/FlowBuilderHeader'
 export { default as FlowBuilderSkipper } from './FlowBuilderSkipper/FlowBuilderSkipper'
+export { default as FlowBuilderProgress } from './FlowBuilderProgress/FlowBuilderProgress'

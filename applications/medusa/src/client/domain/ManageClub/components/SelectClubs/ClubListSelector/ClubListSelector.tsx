@@ -4,7 +4,7 @@ import {
   GridTile,
   GridWrap,
   LoadMoreGridTile,
-  Selector,
+  SingleSelector,
   useSingleSelector
 } from '../../../../../../modules/content/ContentSelection'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
@@ -57,7 +57,7 @@ export default function ClubListSelector ({
     query
   )
 
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: initialSelection })
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ defaultValue: initialSelection })
 
   const onSelect = (id): void => {
     onChange(id)
@@ -69,13 +69,13 @@ export default function ClubListSelector ({
     <GridWrap>
       {data.clubs.edges.map((item, index) => (
         <GridTile key={index}>
-          <Selector
+          <SingleSelector
             onSelect={onSelect}
             selected={(currentSelection != null) ? [currentSelection] : []}
             id={item.node.slug}
           >
             <ClubTileOverlay query={item.node} />
-          </Selector>
+          </SingleSelector>
         </GridTile>
       )
       )}

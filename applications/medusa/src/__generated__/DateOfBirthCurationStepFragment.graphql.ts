@@ -4,18 +4,16 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type DateOfBirthStepFragment = {
+export type DateOfBirthCurationStepFragment = {
     readonly dateOfBirth: {
-        readonly skipped: boolean;
-        readonly completed: boolean;
         readonly dateOfBirth: unknown | null;
     };
-    readonly " $refType": "DateOfBirthStepFragment";
+    readonly " $refType": "DateOfBirthCurationStepFragment";
 };
-export type DateOfBirthStepFragment$data = DateOfBirthStepFragment;
-export type DateOfBirthStepFragment$key = {
-    readonly " $data"?: DateOfBirthStepFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"DateOfBirthStepFragment">;
+export type DateOfBirthCurationStepFragment$data = DateOfBirthCurationStepFragment;
+export type DateOfBirthCurationStepFragment$key = {
+    readonly " $data"?: DateOfBirthCurationStepFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"DateOfBirthCurationStepFragment">;
 };
 
 
@@ -24,7 +22,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "DateOfBirthStepFragment",
+  "name": "DateOfBirthCurationStepFragment",
   "selections": [
     {
       "alias": null,
@@ -34,20 +32,6 @@ const node: ReaderFragment = {
       "name": "dateOfBirth",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "skipped",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "completed",
-          "storageKey": null
-        },
         {
           "alias": null,
           "args": null,
@@ -62,5 +46,5 @@ const node: ReaderFragment = {
   "type": "CurationProfile",
   "abstractKey": null
 };
-(node as any).hash = 'fcde887653d794d2a730f30f098fbb5f';
+(node as any).hash = 'f2c66e21c9572afd0cba524e0d7b12e3';
 export default node;

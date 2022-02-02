@@ -1,6 +1,6 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { AudiencesQuery } from '@//:artifacts/AudiencesQuery.graphql'
-import { Selector, StackTile } from '../../../../../../../../../../../../modules/content/ContentSelection'
+import { SingleSelector, StackTile } from '../../../../../../../../../../../../modules/content/ContentSelection'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import AudienceTileOverlay
   from '../../../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
@@ -37,13 +37,13 @@ export default function Audiences ({
     <ListSpacer>
       {data.audiences.edges.map((item, index) => (
         <StackTile key={index}>
-          <Selector
+          <SingleSelector
             onSelect={onSelect}
             selected={(selected != null) ? [selected] : []}
             id={item.node.id}
           >
             <AudienceTileOverlay query={item.node} />
-          </Selector>
+          </SingleSelector>
         </StackTile>
       )
       )}

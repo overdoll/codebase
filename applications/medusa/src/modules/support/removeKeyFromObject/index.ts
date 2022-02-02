@@ -1,4 +1,4 @@
-export const removeKeyFromObject = (key, object): any => {
+export default function removeKeyFromObject (key, object): any {
   const {
     [key]: omit,
     ...rest

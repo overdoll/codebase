@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2b950920388027493e8a2b84540ff4db */
+/* @relayHash 6f502e2db75a94c63a502d025e203b9e */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -70,6 +70,9 @@ fragment LanguageManagerFragment on Account {
 }
 
 fragment LockedAccountBannerFragment on Account {
+  lock {
+    __typename
+  }
   ...LockedAccountModalFragment
 }
 
@@ -291,7 +294,7 @@ return {
     ]
   },
   "params": {
-    "id": "2b950920388027493e8a2b84540ff4db",
+    "id": "6f502e2db75a94c63a502d025e203b9e",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

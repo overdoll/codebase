@@ -6,7 +6,7 @@ import {
   GridTile,
   GridWrap,
   LoadMoreGridTile,
-  Selector
+  SingleSelector
 } from '../../../../../../../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchCategoriesQuery } from '@//:artifacts/SearchCategoriesQuery.graphql'
@@ -97,13 +97,13 @@ export default function SearchCategories ({
       <GridWrap justify='center'>
         {categories.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
               <CategoryTileOverlay query={item} />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

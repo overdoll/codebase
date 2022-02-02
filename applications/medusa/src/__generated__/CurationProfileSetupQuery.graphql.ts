@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c6cbdb6e23fc49e1572e646f4a2749c5 */
+/* @relayHash f5f6fbb4de171a235ace1b54222505ca */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -9,9 +9,8 @@ export type CurationProfileSetupQueryVariables = {};
 export type CurationProfileSetupQueryResponse = {
     readonly viewer: {
         readonly curationProfile: {
-            readonly id: string;
             readonly completed: boolean;
-            readonly " $fragmentRefs": FragmentRefs<"DateOfBirthStepFragment">;
+            readonly " $fragmentRefs": FragmentRefs<"DateOfBirthCurationStepFragment" | "AudiencesCurationStepFragment" | "CategoriesCurationStepFragment" | "CurationStepperFooterFragment">;
         };
     } | null;
 };
@@ -26,18 +25,65 @@ export type CurationProfileSetupQuery = {
 query CurationProfileSetupQuery {
   viewer {
     curationProfile {
-      id
       completed
-      ...DateOfBirthStepFragment
+      ...DateOfBirthCurationStepFragment
+      ...AudiencesCurationStepFragment
+      ...CategoriesCurationStepFragment
+      ...CurationStepperFooterFragment
+      id
     }
     id
   }
 }
 
-fragment DateOfBirthStepFragment on CurationProfile {
+fragment AudiencesCurationStepFragment on CurationProfile {
+  audience {
+    audiences {
+      id
+      title
+    }
+  }
+}
+
+fragment CategoriesCurationStepFragment on CurationProfile {
+  category {
+    categories {
+      id
+      title
+    }
+  }
+}
+
+fragment CurationAudienceNextButtonFragment on AudienceCurationProfile {
+  audiences {
+    id
+  }
+}
+
+fragment CurationCategoryNextButtonFragment on CategoryCurationProfile {
+  categories {
+    id
+  }
+}
+
+fragment CurationDateOfBirthNextButtonFragment on DateOfBirthCurationProfile {
+  dateOfBirth
+}
+
+fragment CurationStepperFooterFragment on CurationProfile {
   dateOfBirth {
-    skipped
-    completed
+    ...CurationDateOfBirthNextButtonFragment
+  }
+  audience {
+    ...CurationAudienceNextButtonFragment
+  }
+  category {
+    ...CurationCategoryNextButtonFragment
+  }
+}
+
+fragment DateOfBirthCurationStepFragment on CurationProfile {
+  dateOfBirth {
     dateOfBirth
   }
 }
@@ -48,16 +94,26 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "completed",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "completed",
+  "name": "id",
   "storageKey": null
-};
+},
+v2 = [
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "title",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -82,11 +138,25 @@ return {
             "plural": false,
             "selections": [
               (v0/*: any*/),
-              (v1/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "DateOfBirthStepFragment"
+                "name": "DateOfBirthCurationStepFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "AudiencesCurationStepFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "CategoriesCurationStepFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "CurationStepperFooterFragment"
               }
             ],
             "storageKey": null
@@ -121,7 +191,6 @@ return {
             "plural": false,
             "selections": [
               (v0/*: any*/),
-              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -134,31 +203,66 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "skipped",
-                    "storageKey": null
-                  },
-                  (v1/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "dateOfBirth",
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
-              }
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AudienceCurationProfile",
+                "kind": "LinkedField",
+                "name": "audience",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Audience",
+                    "kind": "LinkedField",
+                    "name": "audiences",
+                    "plural": true,
+                    "selections": (v2/*: any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CategoryCurationProfile",
+                "kind": "LinkedField",
+                "name": "category",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "categories",
+                    "plural": true,
+                    "selections": (v2/*: any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
-          (v0/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "c6cbdb6e23fc49e1572e646f4a2749c5",
+    "id": "f5f6fbb4de171a235ace1b54222505ca",
     "metadata": {},
     "name": "CurationProfileSetupQuery",
     "operationKind": "query",
@@ -166,5 +270,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'fc324ab027b5d26f40b08df88d4943cf';
+(node as any).hash = 'e9ddcc866716e5fcb75541e896091d9a';
 export default node;

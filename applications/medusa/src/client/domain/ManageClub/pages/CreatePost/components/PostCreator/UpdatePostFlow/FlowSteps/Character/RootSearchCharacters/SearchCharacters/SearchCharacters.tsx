@@ -8,7 +8,7 @@ import {
   GridTile,
   GridWrap,
   LoadMoreGridTile,
-  Selector
+  SingleSelector
 } from '../../../../../../../../../../../../modules/content/ContentSelection'
 import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { Trans } from '@lingui/macro'
@@ -97,13 +97,13 @@ export default function SearchCategories ({
       <GridWrap justify='center'>
         {characters.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
               <CharacterTileOverlay query={item} />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

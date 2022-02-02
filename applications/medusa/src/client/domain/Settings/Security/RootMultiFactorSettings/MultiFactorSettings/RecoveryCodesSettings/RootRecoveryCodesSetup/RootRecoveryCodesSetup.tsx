@@ -28,6 +28,7 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
     <>
       <Helmet title='recovery setup' />
       <PageWrapper>
+        <ConfigureBackButton to='/settings/security' />
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>
@@ -46,7 +47,6 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
             <RecoveryCodesSetup query={queryRef as PreloadedQuery<RecoveryCodesSetupQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <ConfigureBackButton to='/settings/security' />
       </PageWrapper>
     </>
   )

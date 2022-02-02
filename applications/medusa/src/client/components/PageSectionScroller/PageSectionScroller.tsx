@@ -20,7 +20,7 @@ export default function PageSectionScroller ({
   childrenTitle,
   infiniteScrollTitle,
   reversed = false,
-  watchChange = null
+  watchChange = null,
 }: Props): JSX.Element {
   const [swiper, setSwiper] = useState<SwiperCore | null>(null)
 
@@ -87,7 +87,7 @@ export default function PageSectionScroller ({
           onSwiper={(swiper) => setSwiper(swiper)}
           onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
           style={{
-            height: '100%'
+            height: '100%',
           }}
           spaceBetween={20}
           simulateTouch={false}

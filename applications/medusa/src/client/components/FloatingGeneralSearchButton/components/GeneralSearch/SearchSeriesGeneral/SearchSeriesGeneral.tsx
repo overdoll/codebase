@@ -1,7 +1,13 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'react-relay/hooks'
 import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
-import { GridTile, GridWrap, LoadMoreGridTile, Selector, SeriesTileOverlay } from '../../../../../../modules/content/ContentSelection'
+import {
+  GridTile,
+  GridWrap,
+  LoadMoreGridTile,
+  SeriesTileOverlay,
+  SingleSelector
+} from '../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchSeriesGeneralFragment$key } from '@//:artifacts/SearchSeriesGeneralFragment.graphql'
 import { Trans } from '@lingui/macro'
@@ -77,13 +83,13 @@ export default function SearchSeriesGeneral ({
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
               <SeriesTileOverlay query={item} />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

@@ -1,25 +1,30 @@
 import { ReactNode } from 'react'
 import { Box } from '@chakra-ui/react'
 import ClickableTile from '../ClickableTile/ClickableTile'
+import { MultiSelectedValue, MultiSelectedValueFunction } from '../../hooks/useMultiSelector'
 
 interface Props {
   id: string
-  selected: string[]
-  onSelect: (id: string) => void
+  selected: MultiSelectedValue
+  name: string
+  type?: string | undefined
+  onSelect: MultiSelectedValueFunction
   children: ReactNode
 }
 
-export default function Selector ({
+export default function SingleSelector ({
   id,
   selected,
   onSelect,
+  name,
+  type,
   children
 }: Props): JSX.Element {
   const onClick = (): void => {
-    onSelect(id)
+    onSelect(id, name, type)
   }
 
-  const isSelected = selected.includes(id)
+  const isSelected = Object.keys(selected).includes(id)
 
   return (
     <Box

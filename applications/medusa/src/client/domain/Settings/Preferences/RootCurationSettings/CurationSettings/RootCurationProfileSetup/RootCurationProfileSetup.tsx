@@ -28,6 +28,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
     <>
       <Helmet title='curation profile setup' />
       <PageWrapper>
+        <ConfigureBackButton to='/settings/preferences' />
         <PageSectionWrap>
           <PageSectionTitle colorScheme='orange'>
             <Trans>
@@ -45,7 +46,6 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
             <CurationProfileSetup query={queryRef as PreloadedQuery<CurationProfileSetupQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <ConfigureBackButton to='/settings/preferences' />
       </PageWrapper>
     </>
   )

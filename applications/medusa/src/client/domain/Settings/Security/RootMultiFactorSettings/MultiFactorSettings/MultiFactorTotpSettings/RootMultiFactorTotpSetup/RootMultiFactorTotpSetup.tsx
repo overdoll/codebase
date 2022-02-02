@@ -28,6 +28,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
     <>
       <Helmet title='authenticator setup' />
       <PageWrapper>
+        <ConfigureBackButton to='/settings/security' />
         <PageSectionWrap>
           <PageSectionTitle colorScheme='green'>
             <Trans>
@@ -45,7 +46,6 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
             <MultiFactorTotpSetup query={queryRef as PreloadedQuery<MultiFactorTotpHeaderQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <ConfigureBackButton to='/settings/security' />
       </PageWrapper>
     </>
   )

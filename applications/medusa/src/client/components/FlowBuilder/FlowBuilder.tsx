@@ -11,6 +11,7 @@ interface BuilderProps {
 
 interface ComponentProps extends BuilderProps {
   children: ReactNode
+  onFinish?: () => void
 }
 
 interface ContextProps extends BuilderProps {
@@ -54,7 +55,8 @@ export default function FlowBuilder ({
   children,
   stepsComponents,
   stepsHeaders,
-  colorScheme = 'primary'
+  colorScheme = 'primary',
+  onFinish
 }: ComponentProps): JSX.Element {
   const [currentStep, setCurrentStep] = useState(defaultStep != null ? defaultStep : stepsArray[0])
 
@@ -63,6 +65,7 @@ export default function FlowBuilder ({
 
     if (currentIndex + 1 >= stepsArray.length) {
       setCurrentStep(stepsArray[0])
+      onFinish?.()
       return
     }
     setCurrentStep(stepsArray[currentIndex + 1])
@@ -71,7 +74,7 @@ export default function FlowBuilder ({
   const previousStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
     if (currentIndex - 1 < 0) {
-      setCurrentStep(stepsArray[-1])
+      setCurrentStep(stepsArray[stepsArray.length - 1])
       return
     }
     setCurrentStep(stepsArray[currentIndex - 1])

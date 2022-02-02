@@ -31,7 +31,7 @@ export default function Audience ({
 
   const dispatch = useContext(DispatchContext)
 
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ initialSelection: data?.audience?.id as string })
+  const [currentSelection, setCurrentSelection] = useSingleSelector({ defaultValue: data?.audience?.id as string })
 
   useEffect(() => {
     dispatch({
