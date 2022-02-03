@@ -1,26 +1,30 @@
+/**
+ * @generated SignedSource<<00b698d95910b6ea191e760c9b48132f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CharacterTileOverlayFragment = {
-    readonly name: string;
-    readonly series: {
-        readonly title: string;
-    };
-    readonly thumbnail: {
-        readonly " $fragmentRefs": FragmentRefs<"ResourceItemFragment">;
-    } | null;
-    readonly " $refType": "CharacterTileOverlayFragment";
+export type CharacterTileOverlayFragment$data = {
+  readonly name: string;
+  readonly series: {
+    readonly title: string;
+  };
+  readonly thumbnail: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  } | null;
+  readonly " $fragmentType": "CharacterTileOverlayFragment";
 };
-export type CharacterTileOverlayFragment$data = CharacterTileOverlayFragment;
+export type CharacterTileOverlayFragment = CharacterTileOverlayFragment$data;
 export type CharacterTileOverlayFragment$key = {
-    readonly " $data"?: CharacterTileOverlayFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"CharacterTileOverlayFragment">;
+  readonly " $data"?: CharacterTileOverlayFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -73,5 +77,7 @@ const node: ReaderFragment = {
   "type": "Character",
   "abstractKey": null
 };
-(node as any).hash = 'a23a84f7796e8c4fa7cef030907dc816';
+
+(node as any).hash = "a23a84f7796e8c4fa7cef030907dc816";
+
 export default node;

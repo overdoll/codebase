@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<efcd3faa0840acd2a5cb8154ff5cfe12>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type VideoSnippetFragment = {
-    readonly urls: ReadonlyArray<{
-        readonly url: string;
-        readonly mimeType: string;
-    }>;
-    readonly " $refType": "VideoSnippetFragment";
+export type VideoSnippetFragment$data = {
+  readonly urls: ReadonlyArray<{
+    readonly url: string;
+    readonly mimeType: string;
+  }>;
+  readonly " $fragmentType": "VideoSnippetFragment";
 };
-export type VideoSnippetFragment$data = VideoSnippetFragment;
+export type VideoSnippetFragment = VideoSnippetFragment$data;
 export type VideoSnippetFragment$key = {
-    readonly " $data"?: VideoSnippetFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"VideoSnippetFragment">;
+  readonly " $data"?: VideoSnippetFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"VideoSnippetFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -54,5 +58,7 @@ const node: ReaderFragment = {
   "type": "Resource",
   "abstractKey": null
 };
-(node as any).hash = 'f06fc0d78c395c187860ec35dbc60445';
+
+(node as any).hash = "f06fc0d78c395c187860ec35dbc60445";
+
 export default node;

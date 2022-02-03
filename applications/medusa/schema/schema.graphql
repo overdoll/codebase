@@ -1,41 +1,12 @@
 type Account implements Node {
-  """ID representing the account"""
-  id: ID!
-
-  """The ID that the account can be referenced by"""
-  reference: String!
-
   """A URL pointing to the account's public avatar."""
   avatar: Resource
 
-  """The username of the account."""
-  username: String!
+  """Privileged users cannot disable MFA (moderators, staff)"""
+  canDisableMultiFactor: Boolean!
 
-  """Whether or not this account is a staff member"""
-  isStaff: Boolean!
-
-  """Whether or not this account is part of the moderation team"""
-  isModerator: Boolean!
-
-  """The details of the account lock"""
-  lock: AccountLock
-
-  """
-  The language of the account.
-  
-  Note: this is the language that will be used to determine which emails should be sent where.
-  
-  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
-  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
-  """
-  language: Language!
-
-  """
-  Sessions linked to this account
-  
-  Only queryable if the currently logged-in account belongs to the requested account
-  """
-  sessions(
+  """Posts feed for the clubs that the account currently is a member of."""
+  clubMembersPostsFeed(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -49,13 +20,70 @@ type Account implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountSessionConnection!
+  ): PostConnection!
 
-  """The next time the username is available to be changed"""
-  usernameEditAvailableAt: Time!
+  """Represents the club memberships that the account has."""
+  clubMemberships(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
 
-  """Maximum amount of emails that this account can create"""
-  emailsLimit: Int!
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
+  ): ClubMemberConnection!
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int!
+
+  """Maximum amount of clubs that you can join as an account."""
+  clubMembershipsLimit: Int!
+
+  """Represents the clubs that the account has created."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
+  ): ClubConnection!
+
+  """Current count of the amount of clubs that the account has created."""
+  clubsCount: Int!
+
+  """Maximum amount of clubs that you can create."""
+  clubsLimit: Int!
+
+  """The curation profile linked to this account."""
+  curationProfile: CurationProfile!
 
   """
   Emails for account (multiple emails per account)
@@ -78,67 +106,43 @@ type Account implements Node {
     last: Int
   ): AccountEmailConnection!
 
-  """
-  Have recovery codes been generated? Required in order to configure TOTP
-  """
-  recoveryCodesGenerated: Boolean!
+  """Maximum amount of emails that this account can create"""
+  emailsLimit: Int!
 
-  """Is multi factor enabled - can be toggled off if they want to"""
-  multiFactorEnabled: Boolean!
+  """ID representing the account"""
+  id: ID!
 
-  """Privileged users cannot disable MFA (moderators, staff)"""
-  canDisableMultiFactor: Boolean!
+  """Whether or not this account is part of the moderation team"""
+  isModerator: Boolean!
 
-  """
-  Has TOTP been configured? Recovery codes must be generated before configuring
-  """
-  multiFactorTotpConfigured: Boolean!
+  """Whether or not this account is a staff member"""
+  isStaff: Boolean!
 
   """
-  MFA Recovery codes belonging to this account
+  The language of the account.
   
-  Only queryable if the currently logged-in account belongs to the requested account
+  Note: this is the language that will be used to determine which emails should be sent where.
+  
+  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
   """
-  recoveryCodes: [AccountMultiFactorRecoveryCode!]!
+  language: Language!
 
-  """The curation profile linked to this account."""
-  curationProfile: CurationProfile!
-
-  """Posts feed for the clubs that the account currently is a member of."""
-  clubMembersPostsFeed(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection!
+  """The details of the account lock"""
+  lock: AccountLock
 
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
     """
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
 
     """Search by category slugs."""
     categorySlugs: [String!]
@@ -146,50 +150,36 @@ type Account implements Node {
     """Search by character slugs."""
     characterSlugs: [String!]
 
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
     """Search by series slugs."""
     seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = REVIEW
 
     """Sorting options for posts."""
     sortBy: PostsSort! = NEW
-  ): PostConnection!
-
-  """Contributions specific to this account"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
 
     """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
+    state: PostState = REVIEW
   ): PostConnection!
+
+  """
+  Moderator settings and status for this account
+  
+  Viewable by the currently authenticated account or staff+
+  """
+  moderatorSettings: ModeratorSettings!
+
+  """Is multi factor enabled - can be toggled off if they want to"""
+  multiFactorEnabled: Boolean!
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean!
 
   """
   Post Audit Logs linked to this account
@@ -205,31 +195,72 @@ type Account implements Node {
     """
     before: String
 
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
     """The date range for audit logs. Required."""
     dateRange: PostAuditLogDateRange!
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
   ): PostAuditLogConnection!
 
+  """Contributions specific to this account"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+  ): PostConnection!
+
   """
-  Moderator settings and status for this account
+  MFA Recovery codes belonging to this account
   
-  Viewable by the currently authenticated account or staff+
+  Only queryable if the currently logged-in account belongs to the requested account
   """
-  moderatorSettings: ModeratorSettings!
+  recoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
-  """Maximum amount of clubs that you can create."""
-  clubsLimit: Int!
+  """
+  Have recovery codes been generated? Required in order to configure TOTP
+  """
+  recoveryCodesGenerated: Boolean!
 
-  """Current count of the amount of clubs that the account has created."""
-  clubsCount: Int!
+  """The ID that the account can be referenced by"""
+  reference: String!
 
-  """Represents the clubs that the account has created."""
-  clubs(
+  """
+  Sessions linked to this account
+  
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -243,81 +274,38 @@ type Account implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+  ): AccountSessionConnection!
 
-    """Search by club slugs."""
-    slugs: [String!]
+  """The username of the account."""
+  username: String!
 
-    """Filter by the name of the club."""
-    name: String
-
-    """Sorting options for clubs."""
-    sortBy: ClubsSort! = POPULAR
-  ): ClubConnection!
-
-  """Maximum amount of clubs that you can join as an account."""
-  clubMembershipsLimit: Int!
-
-  """
-  Current count of club memberships. Should be compared against the limit before joining a club.
-  """
-  clubMembershipsCount: Int!
-
-  """Represents the club memberships that the account has."""
-  clubMemberships(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """sorting options for club members."""
-    sortBy: ClubMembersSort! = NEWEST
-  ): ClubMemberConnection!
-}
-
-"""Connection of the account"""
-type AccountConnection {
-  edges: [AccountEdge!]!
-  pageInfo: PageInfo!
-}
-
-"""Edge of the account"""
-type AccountEdge {
-  node: Account!
-  cursor: String!
+  """The next time the username is available to be changed"""
+  usernameEditAvailableAt: Time!
 }
 
 """Email belonging to a specific account"""
 type AccountEmail implements Node {
-  """ID of the account email"""
-  id: ID!
-
-  """The account email"""
-  email: String!
-
-  """The current status of the account email"""
-  status: AccountEmailStatus!
-
   """
   The account that this email belongs to
   
   May be null because unconfirmed emails are not yet actually attached to the account
   """
   account: Account
+
+  """The account email"""
+  email: String!
+
+  """ID of the account email"""
+  id: ID!
+
+  """The current status of the account email"""
+  status: AccountEmailStatus!
 }
 
 """Connection of the account email"""
 type AccountEmailConnection {
-  pageInfo: PageInfo!
   edges: [AccountEmailEdge!]!
+  pageInfo: PageInfo!
 }
 
 """Edge of the account email"""
@@ -328,8 +316,8 @@ type AccountEmailEdge {
 
 enum AccountEmailStatus {
   CONFIRMED
-  UNCONFIRMED
   PRIMARY
+  UNCONFIRMED
 }
 
 type AccountLock {
@@ -344,35 +332,34 @@ type AccountMultiFactorRecoveryCode {
 
 """Session belonging to a specific account"""
 type AccountSession implements Node {
-  """ID of the session"""
-  id: ID!
+  """When the session was created"""
+  created: Time!
+
+  """
+  If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
+  """
+  current: Boolean!
 
   """The originating user agent device"""
   device: String!
 
+  """ID of the session"""
+  id: ID!
+
   """The original IP"""
   ip: String!
-
-  """Where the session was originally created"""
-  location: Location!
-
-  """When the session was created"""
-  created: Time!
 
   """When the session was last seen (last API call)"""
   lastSeen: Time!
 
-  """
-  If the session belongs to the currently authenticated account. This means that
-  the session cannot be revoked (or else we get weird stuff)
-  """
-  current: Boolean!
+  """Where the session was originally created"""
+  location: Location!
 }
 
 """Edge of the account session"""
 type AccountSessionConnection {
-  pageInfo: PageInfo!
   edges: [AccountSessionEdge!]!
+  pageInfo: PageInfo!
 }
 
 """Edge of the account session"""
@@ -444,11 +431,11 @@ type AddModeratorToPostQueuePayload {
 
 """Add post content."""
 input AddPostContentInput {
-  """The post to update"""
-  id: ID!
-
   """Image IDs for the content"""
   content: [String!]!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -497,27 +484,6 @@ type Audience implements Node {
   """An ID pointing to this audience."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching."""
-  slug: String!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
-
-  """A title for this audience."""
-  title: String!
-
-  """If this audience is standard or not."""
-  standard: Boolean!
-
-  """All translations for this title."""
-  titleTranslations: [Translation!]!
-
-  """Total amount of likes."""
-  totalLikes: Int!
-
-  """Total amount of posts."""
-  totalPosts: Int!
-
   """Posts belonging to this audience"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -528,27 +494,48 @@ type Audience implements Node {
     """
     before: String
 
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
     """Search by category slugs."""
     categorySlugs: [String!]
 
     """Search by character slugs."""
     characterSlugs: [String!]
 
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
     """Search by series slugs."""
     seriesSlugs: [String!]
 
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
   ): PostConnection!
+
+  """A url-friendly ID. Should be used when searching."""
+  slug: String!
+
+  """If this audience is standard or not."""
+  standard: Boolean!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """A title for this audience."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type AudienceConnection {
@@ -557,14 +544,14 @@ type AudienceConnection {
 }
 
 type AudienceCurationProfile {
+  """Audiences selected for this section."""
+  audiences: [Audience!]!
+
   """Whether or not the audience section was completed."""
   completed: Boolean!
 
   """Whether or not the audience section was skipped."""
   skipped: Boolean!
-
-  """Audiences selected for this section."""
-  audiences: [Audience!]!
 }
 
 type AudienceEdge {
@@ -577,32 +564,28 @@ enum AudiencesSort {
   """Audience by newest first"""
   NEW
 
-  """Audience by top likes"""
-  TOP
-
   """Audience by most posts"""
   POPULAR
+
+  """Audience by top likes"""
+  TOP
 }
 
 """Authentication token. Used for logging in."""
 type AuthenticationToken {
+  """Once the token is verified, you can see the status of the account."""
+  accountStatus: AuthenticationTokenAccountStatus
+
   """Unique ID of the token"""
   id: ID!
 
-  """Token belong to this authentication token"""
-  token: String!
+  """The location where this token was created at."""
+  location: Location!
 
   """
-  When the token is viewed with the correct ID, whether or not the devices match
-  (you cannot use the token unless the device is the same).
+  When the token is viewed with the correct ID, whether or not the devices match (you cannot use the token unless the device is the same).
   """
   sameDevice: Boolean!
-
-  """
-  Whether or not the token is verified (required in order to see account status,
-  and to use it for completing the auth flow).
-  """
-  verified: Boolean!
 
   """
   Whether or not this token is "secure"
@@ -612,24 +595,26 @@ type AuthenticationToken {
   """
   secure: Boolean!
 
+  """Token belong to this authentication token"""
+  token: String!
+
   """The userAgent this token was created from."""
   userAgent: String!
 
-  """The location where this token was created at."""
-  location: Location!
-
-  """Once the token is verified, you can see the status of the account."""
-  accountStatus: AuthenticationTokenAccountStatus
+  """
+  Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow).
+  """
+  verified: Boolean!
 }
 
 type AuthenticationTokenAccountStatus {
+  """If multi-factor is enabled for this account"""
+  multiFactor: MultiFactor
+
   """
   When verified, whether or not there is an account belonging to this token.
   """
   registered: Boolean!
-
-  """If multi-factor is enabled for this account"""
-  multiFactor: MultiFactor
 }
 
 """Localization formatted in BCP47."""
@@ -652,16 +637,48 @@ enum CategoriesSort {
   """Categories by newest first"""
   NEW
 
-  """Categories by top likes"""
-  TOP
-
   """Categories by most posts"""
   POPULAR
+
+  """Categories by top likes"""
+  TOP
 }
 
 type Category implements Node {
   """An ID pointing to this category."""
   id: ID!
+
+  """Posts belonging to this category"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+  ): PostConnection!
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
@@ -680,38 +697,6 @@ type Category implements Node {
 
   """Total amount of posts."""
   totalPosts: Int!
-
-  """Posts belonging to this category"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
-  ): PostConnection!
 }
 
 type CategoryConnection {
@@ -720,14 +705,14 @@ type CategoryConnection {
 }
 
 type CategoryCurationProfile {
+  """Categories selected for this section."""
+  categories: [Category!]!
+
   """Whether or not the category section was completed."""
   completed: Boolean!
 
   """Whether or not the category section was skipped."""
   skipped: Boolean!
-
-  """Categories selected for this section."""
-  categories: [Category!]!
 }
 
 type CategoryEdge {
@@ -739,36 +724,27 @@ type Character implements Node {
   """An ID pointing to this character."""
   id: ID!
 
-  """A url-friendly ID. Should be used when searching"""
-  slug: String!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
-
   """A name for this character."""
   name: String!
 
   """All translations for this name."""
   nameTranslations: [Translation!]!
 
-  """Total amount of likes."""
-  totalLikes: Int!
-
-  """Total amount of posts."""
-  totalPosts: Int!
-
-  """The series linked to this character."""
-  series: Series!
-
   """Posts belonging to this character"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
     """
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
 
     """Returns the first _n_ elements from the list."""
     first: Int
@@ -776,18 +752,27 @@ type Character implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
 
     """Search by a post state."""
     state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
   ): PostConnection!
+
+  """The series linked to this character."""
+  series: Series!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """Total amount of likes."""
+  totalLikes: Int!
+
+  """Total amount of posts."""
+  totalPosts: Int!
 }
 
 type CharacterConnection {
@@ -805,104 +790,16 @@ enum CharactersSort {
   """Characters by newest first"""
   NEW
 
-  """Characters by top likes"""
-  TOP
-
   """Characters by most posts"""
   POPULAR
+
+  """Characters by top likes"""
+  TOP
 }
 
 type Club implements Node {
   """An ID pointing to this club."""
   id: ID!
-
-  """An internal reference, uniquely identifying the club."""
-  reference: String!
-
-  """A url-friendly ID. Should be used when searching"""
-  slug: String!
-
-  """Maximum amount of slug aliases that can be created for this club."""
-  slugAliasesLimit: Int!
-
-  """
-  An alias list of slugs. These are valid, as in, you can find the club using
-  the slug. However, it should always be replaced by the default slug.
-  """
-  slugAliases: [ClubSlugAlias!]!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
-
-  """A name for this club."""
-  name: String!
-
-  """The account that owns this club."""
-  owner: Account!
-
-  """Whether or not this club is suspended."""
-  suspension: ClubSuspension
-
-  """Whether or not the viewer is a member of this club."""
-  viewerMember: ClubMember
-
-  """The total amount of members in this club."""
-  membersCount: Int!
-
-  """Club members."""
-  members(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """sorting options for club members."""
-    sortBy: ClubMembersSort! = NEWEST
-  ): ClubMemberConnection!
-
-  """Posts belonging to this club"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
-  ): PostConnection!
 
   """
   Infraction history for this club
@@ -924,6 +821,93 @@ type Club implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): ClubInfractionHistoryConnection!
+
+  """Club members."""
+  members(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
+  ): ClubMemberConnection!
+
+  """The total amount of members in this club."""
+  membersCount: Int!
+
+  """A name for this club."""
+  name: String!
+
+  """The account that owns this club."""
+  owner: Account!
+
+  """Posts belonging to this club"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+  ): PostConnection!
+
+  """An internal reference, uniquely identifying the club."""
+  reference: String!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """
+  An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
+  """
+  slugAliases: [ClubSlugAlias!]!
+
+  """Maximum amount of slug aliases that can be created for this club."""
+  slugAliasesLimit: Int!
+
+  """Whether or not this club is suspended."""
+  suspension: ClubSuspension
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(size: Int): Resource
+
+  """Whether or not the viewer is a member of this club."""
+  viewerMember: ClubMember
 }
 
 type ClubConnection {
@@ -938,11 +922,19 @@ type ClubEdge {
 
 """Infraction history belonging to a club"""
 type ClubInfractionHistory implements Node {
+  """The club belonging to this history object."""
+  club: Club!
+
+  """
+  When this infraction expires (no longer considered when issuing future infractions).
+  """
+  expiresAt: Time!
+
   """ID of the infraction history"""
   id: ID!
 
-  """The club belonging to this history object."""
-  club: Club!
+  """When this infraction was issued."""
+  issuedAt: Time!
 
   """The account that issued this infraction."""
   issuerAccount: Account!
@@ -952,14 +944,6 @@ type ClubInfractionHistory implements Node {
 
   """The source for this infraction."""
   source: ClubInfractionHistorySource!
-
-  """When this infraction was issued."""
-  issuedAt: Time!
-
-  """
-  When this infraction expires (no longer considered when issuing future infractions).
-  """
-  expiresAt: Time!
 }
 
 """Connection of the infraction history"""
@@ -970,28 +954,28 @@ type ClubInfractionHistoryConnection {
 
 """Edge of the infraction history"""
 type ClubInfractionHistoryEdge {
-  node: ClubInfractionHistory!
   cursor: String!
+  node: ClubInfractionHistory!
 }
 
 enum ClubInfractionHistorySource {
   MANUAL
-  POST_MODERATION_REJECTION
   POST_MANUAL_REMOVAL
+  POST_MODERATION_REJECTION
 }
 
 type ClubMember implements Node {
+  """The account that belongs to this membership."""
+  account: Account!
+
+  """The club that this membership belongs to."""
+  club: Club!
+
   """An ID pointing to this club member."""
   id: ID!
 
   """When the membership was created (when the account originally joined)."""
   joinedAt: Time!
-
-  """The club that this membership belongs to."""
-  club: Club!
-
-  """The account that belongs to this membership."""
-  account: Account!
 }
 
 type ClubMemberConnection {
@@ -1038,17 +1022,17 @@ input ConfirmAccountEmailInput {
 
 """Payload for confirming the account email"""
 type ConfirmAccountEmailPayload {
-  """Validation for confirming account email"""
-  validation: ConfirmAccountEmailValidation
-
   """The account email that was confirmed"""
   accountEmail: AccountEmail
+
+  """Validation for confirming account email"""
+  validation: ConfirmAccountEmailValidation
 }
 
 """Validation for confirming account email"""
 enum ConfirmAccountEmailValidation {
-  TOKEN_EXPIRED
   EMAIL_TAKEN
+  TOKEN_EXPIRED
 }
 
 """Payload for creating an account with authentication token"""
@@ -1062,21 +1046,21 @@ input CreateAccountWithAuthenticationTokenInput {
 
 """Payload for creating an account"""
 type CreateAccountWithAuthenticationTokenPayload {
-  """Validation for creating an account"""
-  validation: CreateAccountWithAuthenticationTokenValidation
-
   """The account that was created"""
   account: Account
 
   """A token is revoked once an account is created, this represents it"""
   revokedAuthenticationTokenId: ID!
+
+  """Validation for creating an account"""
+  validation: CreateAccountWithAuthenticationTokenValidation
 }
 
 """Validation for creating an account with an authentication token"""
 enum CreateAccountWithAuthenticationTokenValidation {
   EMAIL_TAKEN
-  USERNAME_TAKEN
   TOKEN_INVALID
+  USERNAME_TAKEN
 }
 
 """Create a new audience."""
@@ -1084,11 +1068,11 @@ input CreateAudienceInput {
   """The chosen slug for the audience."""
   slug: String!
 
-  """The chosen title for the audience."""
-  title: String!
-
   """If the audience is standard or not."""
   standard: Boolean!
+
+  """The chosen title for the audience."""
+  title: String!
 }
 
 """Payload for a new audience"""
@@ -1130,14 +1114,14 @@ enum CreateCategoryValidation {
 
 """Create a new character."""
 input CreateCharacterInput {
+  """The chosen name for the character."""
+  name: String!
+
   """The chosen series for the character."""
   seriesId: ID!
 
   """The chosen slug for the character."""
   slug: String!
-
-  """The chosen name for the character."""
-  name: String!
 }
 
 """Payload for a new character"""
@@ -1156,11 +1140,11 @@ enum CreateCharacterValidation {
 
 """Create club."""
 input CreateClubInput {
-  """The chosen slug for the club."""
-  slug: String!
-
   """The chosen name for the club."""
   name: String!
+
+  """The chosen slug for the club."""
+  slug: String!
 }
 
 """Payload for a new club"""
@@ -1191,14 +1175,14 @@ type CreatePostPayload {
 
 """Create a new rule input."""
 input CreateRuleInput {
-  """The title."""
-  title: String!
-
   """The description."""
   description: String!
 
   """If breaking this rule would cause an infraction."""
   infraction: Boolean!
+
+  """The title."""
+  title: String!
 }
 
 """Updated rule."""
@@ -1231,8 +1215,11 @@ enum CreateSeriesValidation {
 }
 
 type CurationProfile {
-  """An ID uniquely identifying this profile."""
-  id: ID!
+  """The audience profile."""
+  audience: AudienceCurationProfile!
+
+  """The category profile."""
+  category: CategoryCurationProfile!
 
   """If the whole profile was completed or not."""
   completed: Boolean!
@@ -1240,22 +1227,19 @@ type CurationProfile {
   """The date of birth profile."""
   dateOfBirth: DateOfBirthCurationProfile!
 
-  """The audience profile."""
-  audience: AudienceCurationProfile!
-
-  """The category profile."""
-  category: CategoryCurationProfile!
+  """An ID uniquely identifying this profile."""
+  id: ID!
 }
 
 type DateOfBirthCurationProfile {
-  """Whether or not the date of birth section was skipped."""
-  skipped: Boolean!
-
   """Whether or not the date of birth section was completed."""
   completed: Boolean!
 
   """The date of birth set."""
   dateOfBirth: Time
+
+  """Whether or not the date of birth section was skipped."""
+  skipped: Boolean!
 }
 
 """Input for removing an email from an account"""
@@ -1278,20 +1262,20 @@ type DisableAccountMultiFactorPayload {
 
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
-  """The TOTP ID, sent initially"""
-  id: String!
-
   """The code that the TOTP expects"""
   code: String!
+
+  """The TOTP ID, sent initially"""
+  id: String!
 }
 
 """Payload of the enrolled totp payload"""
 type EnrollAccountMultiFactorTotpPayload {
-  """Validation for enrolling TOTP"""
-  validation: EnrollAccountMultiFactorTotpValidation
-
   """TOTP that belongs to this account now"""
   accountMultiFactorTotpEnabled: Boolean
+
+  """Validation for enrolling TOTP"""
+  validation: EnrollAccountMultiFactorTotpValidation
 }
 
 """Validation for enrolling in TOTP"""
@@ -1315,20 +1299,17 @@ type GenerateAccountMultiFactorTotpPayload {
 Payload for granting access to an account using the token and the recovery code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
-  """The original token"""
-  token: String!
-
   """Recovery code"""
   recoveryCode: String!
+
+  """The original token"""
+  token: String!
 }
 
 """
 Payload for granting access to an account using the authentication token and Recovery Code
 """
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload {
-  """Validation options"""
-  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
-
   """The account that granted access to"""
   account: Account
 
@@ -1336,32 +1317,32 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload 
   A token is revoked once the account access is granted, this represents it
   """
   revokedAuthenticationTokenId: ID!
+
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
-  TOKEN_INVALID
   RECOVERY_CODE_INVALID
+  TOKEN_INVALID
 }
 
 """
 Payload for granting access to an account using the token and the totp code
 """
 input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
-  """The original token"""
-  token: String!
-
   """TOTP code"""
   code: String!
+
+  """The original token"""
+  token: String!
 }
 
 """
 Payload for granting access to an account using the authentication token and TOTP code
 """
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
-  """Validation options"""
-  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
-
   """The account that granted access to"""
   account: Account
 
@@ -1369,12 +1350,15 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
   A token is revoked once the account access is granted, this represents it
   """
   revokedAuthenticationTokenId: ID!
+
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
 }
 
 """Validation for granting account access with multi factor"""
 enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
-  TOKEN_INVALID
   CODE_INVALID
+  TOKEN_INVALID
 }
 
 """
@@ -1386,9 +1370,6 @@ input GrantAccountAccessWithAuthenticationTokenInput {
 }
 
 type GrantAccountAccessWithAuthenticationTokenPayload {
-  """Validation options"""
-  validation: GrantAccountAccessWithAuthenticationTokenValidation
-
   """The account that granted access to"""
   account: Account
 
@@ -1396,6 +1377,9 @@ type GrantAccountAccessWithAuthenticationTokenPayload {
   A token is revoked once the account access is granted, this represents it
   """
   revokedAuthenticationTokenId: ID!
+
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenValidation
 }
 
 enum GrantAccountAccessWithAuthenticationTokenValidation {
@@ -1427,13 +1411,13 @@ input IssueClubInfractionInput {
   """The club to issue the infraction to."""
   clubId: ID!
 
-  """The rule to cite."""
-  ruleId: ID!
-
   """
   Pass a custom end time. If none is passed, will use sliding scale based on previous infractions.
   """
   customEndTime: Time
+
+  """The rule to cite."""
+  ruleId: ID!
 }
 
 """Issue a new club infraction payload."""
@@ -1470,17 +1454,17 @@ type Location {
   """Country"""
   country: String!
 
-  """Postal Code"""
-  postalCode: String!
-
-  """Subdivision"""
-  subdivision: String!
-
   """Latitude"""
   latitude: Float!
 
   """Longitude"""
   longitude: Float!
+
+  """Postal Code"""
+  postalCode: String!
+
+  """Subdivision"""
+  subdivision: String!
 }
 
 """Input for locking an account."""
@@ -1519,42 +1503,66 @@ type MultiFactorTotp {
   """The TOTP ID. Should be sent back when creating the TOTP"""
   id: String!
 
-  """The TOTP secret"""
-  secret: String!
-
   """
   Always html image compatible. Just set SRC tag to this and it will work!
   """
   imageSrc: String!
+
+  """The TOTP secret"""
+  secret: String!
 }
 
 type Mutation {
-  """
-  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
-  
-  Can be unlocked by staff+ regardless if time is past.
-  """
-  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
-
-  """Lock an account for a specific duration."""
-  lockAccount(input: LockAccountInput!): LockAccountPayload
-
-  """Update the current language."""
-  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
-
-  """
-  Update the language of the account.
-  
-  Note: that this is only a value, and in order to see anything in the browser,
-  you should use the "UpdateLanguage" mutation.
-  """
-  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
-
-  """Revoke a session for this account"""
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
-
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
+
+  """Add an alternative slug to the club"""
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
+
+  """Add moderator to posts queue"""
+  addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
+
+  """Update a post in draft status - add content"""
+  addPostContent(input: AddPostContentInput!): AddPostContentPayload
+
+  """Approve a specific post"""
+  approvePost(input: ApprovePostInput!): ApprovePostPayload
+
+  """Assign a moderator role to the account"""
+  assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload
+
+  """Assign a staff role to the account"""
+  assignAccountStaffRole(input: AssignAccountStaffRole!): AssignAccountStaffRolePayload
+
+  """Become a member of a club"""
+  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
+
+  """Confirm account email, so it may be used"""
+  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
+
+  """Create an account using the current authentication token"""
+  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
+
+  """Create a new audience"""
+  createAudience(input: CreateAudienceInput!): CreateAudiencePayload
+
+  """Create a new category"""
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload
+
+  """Create a new character"""
+  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
+
+  """Create a new club"""
+  createClub(input: CreateClubInput!): CreateClubPayload
+
+  """Create a new post"""
+  createPost(input: CreatePostInput!): CreatePostPayload
+
+  """Create a new rule."""
+  createRule(input: CreateRuleInput!): CreateRulePayload
+
+  """Create a new series"""
+  createSeries(input: CreateSeriesInput!): CreateSeriesPayload
 
   """
   Delete account email - email must belong to account and cannot be the primary email
@@ -1562,18 +1570,21 @@ type Mutation {
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
   """
-  Update the account username
+  Disable account multi factor
   
-  Will retain the old username
+  Will delete all multi factor settings (if TOTP is set up, etc...)
+  
+  Priv. users cannot disable multi factor
   """
-  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
+  disableAccountMultiFactor: DisableAccountMultiFactorPayload
 
   """
-  Update the account email status to primary
+  Enroll into TOTP.
   
-  Cannot update if the email is not confirmed
+  Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
+  generate a valid secret
   """
-  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
+  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
@@ -1586,56 +1597,6 @@ type Mutation {
   generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload
 
   """
-  Enroll into TOTP.
-  
-  Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
-  generate a valid secret
-  """
-  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
-
-  """
-  Disable account multi factor
-  
-  Will delete all multi factor settings (if TOTP is set up, etc...)
-  
-  Priv. users cannot disable multi factor
-  """
-  disableAccountMultiFactor: DisableAccountMultiFactorPayload
-
-  """Confirm account email, so it may be used"""
-  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
-
-  """Assign a moderator role to the account"""
-  assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload
-
-  """Assign a staff role to the account"""
-  assignAccountStaffRole(input: AssignAccountStaffRole!): AssignAccountStaffRolePayload
-
-  """Revoke the moderator role from the account"""
-  revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload
-
-  """Revoke the staff role from the account"""
-  revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
-
-  """
-  Grant authentication token
-  
-  Authentication token can be used to login into a specific account, provided the token's value is first redeemed
-  with the query
-  """
-  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
-
-  """
-  Revoke authentication token
-  
-  Creating accounts and completing authentication flows will not be possible once it's revoked
-  """
-  revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
-
-  """Create an account using the current authentication token"""
-  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
-
-  """
   Grant account access with authentication token
   
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
@@ -1646,109 +1607,41 @@ type Mutation {
   """
   Grant account access using an authentication token and a multi factor option
   
-  Set "code" when authenticating with a TOTP code
-  """
-  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
-
-  """
-  Grant account access using an authentication token and a multi factor option
-  
   Set "recoveryCode" when authenticating with a recovery code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
-  Will verify the authentication token. Requires the secret (sent in an email)
+  Grant account access using an authentication token and a multi factor option
+  
+  Set "code" when authenticating with a TOTP code
   """
-  verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
-  """Logout the current account"""
-  revokeAccountAccess: RevokeAccountAccessPayload
+  """
+  Grant authentication token
+  
+  Authentication token can be used to login into a specific account, provided the token's value is first redeemed
+  with the query
+  """
+  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
-  """Create a new audience"""
-  createAudience(input: CreateAudienceInput!): CreateAudiencePayload
-
-  """Update audience title"""
-  updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
-
-  """Update audience thumbnail"""
-  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
-
-  """Update audience standard"""
-  updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
-
-  """Create a new category"""
-  createCategory(input: CreateCategoryInput!): CreateCategoryPayload
-
-  """Update category title"""
-  updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
-
-  """Update category thumbnail"""
-  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
-
-  """Create a new character"""
-  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
-
-  """Update character title"""
-  updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
-
-  """Update character thumbnail"""
-  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
-
-  """Update the audience for the curation profile"""
-  updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
-
-  """Update the category for the curation profile"""
-  updateCurationProfileCategory(input: UpdateCurationProfileCategoryInput!): UpdateCurationProfileCategoryPayload
-
-  """Update the date of birth for the curation profile"""
-  updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
+  """Issue a club infraction."""
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
 
   """Like a post"""
   likePost(input: LikePostInput!): LikePostPayload
 
-  """Undo a like on a post"""
-  undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
-
-  """Create a new post"""
-  createPost(input: CreatePostInput!): CreatePostPayload
-
-  """Update a post in draft status - audience"""
-  updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
-
-  """Update a post in draft status - add content"""
-  addPostContent(input: AddPostContentInput!): AddPostContentPayload
-
-  """Update a post in draft status - remove content"""
-  removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
+  """Lock an account for a specific duration."""
+  lockAccount(input: LockAccountInput!): LockAccountPayload
 
   """
-  Update a post in draft status - update post content order - need to send exact same IDs
+  Make the alias slug the default, swapping out the old slug into the alias list.
   """
-  updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
 
-  """Update a post in draft status - characters"""
-  updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
-
-  """Update a post in draft status - categories"""
-  updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
-
-  """
-  Submit a post. Will be either in review or instantly move to publishing if the account is verified
-  """
-  submitPost(input: SubmitPostInput!): SubmitPostPayload
-
-  """Create a new series"""
-  createSeries(input: CreateSeriesInput!): CreateSeriesPayload
-
-  """Update series title"""
-  updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
-
-  """Update series thumbnail"""
-  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
-
-  """Issue a club infraction."""
-  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+  """Reject a specific post"""
+  rejectPost(input: RejectPostInput!): RejectPostPayload
 
   """
   In case of a false infraction, you can remove it from the club's history.
@@ -1757,64 +1650,44 @@ type Mutation {
   """
   removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
 
-  """Reject a specific post"""
-  rejectPost(input: RejectPostInput!): RejectPostPayload
-
-  """Remove a specific post, after a post has already been moderated"""
-  removePost(input: RemovePostInput!): RemovePostPayload
-
-  """Approve a specific post"""
-  approvePost(input: ApprovePostInput!): ApprovePostPayload
-
-  """Add moderator to posts queue"""
-  addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
+  """Remove an alternative slug from the club"""
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
 
   """Remove moderator from posts queue"""
   removeModeratorFromPostQueue(input: RemoveModeratorFromPostQueueInput!): RemoveModeratorFromPostQueuePayload
 
+  """Remove a specific post, after a post has already been moderated"""
+  removePost(input: RemovePostInput!): RemovePostPayload
+
+  """Update a post in draft status - remove content"""
+  removePostContent(input: RemovePostContentInput!): RemovePostContentPayload
+
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
 
-  """Create a new rule."""
-  createRule(input: CreateRuleInput!): CreateRulePayload
+  """Logout the current account"""
+  revokeAccountAccess: RevokeAccountAccessPayload
 
-  """Update a rule title."""
-  updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
+  """Revoke the moderator role from the account"""
+  revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload
 
-  """Update a rule description."""
-  updateRuleDescription(input: UpdateRuleDescriptionInput!): UpdateRuleDescriptionPayload
+  """Revoke a session for this account"""
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
-  """Update a rule infraction."""
-  updateRuleInfraction(input: UpdateRuleInfractionInput!): UpdateRuleInfractionPayload
-
-  """Update a rule deprecation."""
-  updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
-
-  """Become a member of a club"""
-  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
-
-  """Withdraw membership from a club"""
-  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
-
-  """Create a new club"""
-  createClub(input: CreateClubInput!): CreateClubPayload
-
-  """Add an alternative slug to the club"""
-  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
-
-  """Remove an alternative slug from the club"""
-  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
+  """Revoke the staff role from the account"""
+  revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
 
   """
-  Make the alias slug the default, swapping out the old slug into the alias list.
+  Revoke authentication token
+  
+  Creating accounts and completing authentication flows will not be possible once it's revoked
   """
-  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
+  revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
 
-  """Update the club's name (english-only for now)"""
-  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
-
-  """Update the club thumbnail"""
-  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+  """
+  Submit a post. Will be either in review or instantly move to publishing if the account is verified
+  """
+  submitPost(input: SubmitPostInput!): SubmitPostPayload
 
   """
   Suspend the club.
@@ -1829,6 +1702,116 @@ type Mutation {
   Staff+ may un-suspend even if suspension hasn't expired yet.
   """
   unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
+
+  """Undo a like on a post"""
+  undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
+
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
+  
+  Can be unlocked by staff+ regardless if time is past.
+  """
+  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """
+  Update the account email status to primary
+  
+  Cannot update if the email is not confirmed
+  """
+  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
+
+  """
+  Update the language of the account.
+  
+  Note: that this is only a value, and in order to see anything in the browser, you should use the "UpdateLanguage" mutation.
+  """
+  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
+
+  """
+  Update the account username
+  
+  Will retain the old username
+  """
+  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
+
+  """Update audience standard"""
+  updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
+
+  """Update audience thumbnail"""
+  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """Update audience title"""
+  updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
+
+  """Update category thumbnail"""
+  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+
+  """Update category title"""
+  updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
+
+  """Update character title"""
+  updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
+
+  """Update character thumbnail"""
+  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
+
+  """Update the club's name (english-only for now)"""
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """Update the club thumbnail"""
+  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """Update the audience for the curation profile"""
+  updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload
+
+  """Update the category for the curation profile"""
+  updateCurationProfileCategory(input: UpdateCurationProfileCategoryInput!): UpdateCurationProfileCategoryPayload
+
+  """Update the date of birth for the curation profile"""
+  updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
+
+  """Update the current language."""
+  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
+
+  """Update a post in draft status - audience"""
+  updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
+
+  """Update a post in draft status - categories"""
+  updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
+
+  """Update a post in draft status - characters"""
+  updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """
+  Update a post in draft status - update post content order - need to send exact same IDs
+  """
+  updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+
+  """Update a rule deprecation."""
+  updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
+
+  """Update a rule description."""
+  updateRuleDescription(input: UpdateRuleDescriptionInput!): UpdateRuleDescriptionPayload
+
+  """Update a rule infraction."""
+  updateRuleInfraction(input: UpdateRuleInfractionInput!): UpdateRuleInfractionPayload
+
+  """Update a rule title."""
+  updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
+
+  """Update series thumbnail"""
+  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
+
+  """Update series title"""
+  updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
+
+  """
+  Will verify the authentication token. Requires the secret (sent in an email)
+  """
+  verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+
+  """Withdraw membership from a club"""
+  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
 }
 
 """
@@ -1840,75 +1823,15 @@ interface Node {
 }
 
 type PageInfo {
+  endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
-  endCursor: String
 }
 
 type Post implements Node {
-  id: ID!
-
-  """
-  The reference of this post. Should always be used to reference this post.
-  """
-  reference: String!
-
-  """The state of the post"""
-  state: PostState!
-
-  """The moderator to whom this pending post was assigned"""
-  moderator: Account
-
-  """The contributor who contributed this post"""
-  contributor: Account!
-
-  """The club belonging to the post"""
-  club: Club!
-
-  """Content belonging to this post"""
-  content: [Resource!]!
-
-  """The date and time of when this post was created"""
-  createdAt: Time!
-
-  """The date and time of when this post was posted"""
-  postedAt: Time
-
-  """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time
-
-  """Suggested posts for this post."""
-  suggestedPosts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection!
-
   """Represents the audience that this post belongs to"""
   audience: Audience
-
-  """Categories that belong to this post"""
-  categories: [Category!]!
-
-  """Characters that belong to this post"""
-  characters: [Character!]!
-
-  """The amount of likes on this post."""
-  likes: Int!
-
-  """Whether or not the viewer liked this post."""
-  viewerLiked: PostLike
 
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -1927,11 +1850,67 @@ type Post implements Node {
     last: Int
   ): PostAuditLogConnection!
 
-  """Whether or not the post was reported by the viewer."""
-  viewerReport: PostReport
+  """Categories that belong to this post"""
+  categories: [Category!]!
+
+  """Characters that belong to this post"""
+  characters: [Character!]!
+
+  """The club belonging to the post"""
+  club: Club!
+
+  """Content belonging to this post"""
+  content: [Resource!]!
+
+  """The contributor who contributed this post"""
+  contributor: Account!
+
+  """The date and time of when this post was created"""
+  createdAt: Time!
+  id: ID!
+
+  """The amount of likes on this post."""
+  likes: Int!
+
+  """The moderator to whom this pending post was assigned"""
+  moderator: Account
+
+  """The date and time of when this post was posted"""
+  postedAt: Time
+
+  """The date at which this pending post will be reassigned"""
+  reassignmentAt: Time
+
+  """
+  The reference of this post. Should always be used to reference this post.
+  """
+  reference: String!
 
   """Reports belonging to a post"""
   reports(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """The date range for post reports. Required."""
+    dateRange: PostReportDateRange!
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostReportConnection!
+
+  """The state of the post"""
+  state: PostState!
+
+  """Suggested posts for this post."""
+  suggestedPosts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1945,10 +1924,13 @@ type Post implements Node {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+  ): PostConnection!
 
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
-  ): PostReportConnection!
+  """Whether or not the viewer liked this post."""
+  viewerLiked: PostLike
+
+  """Whether or not the post was reported by the viewer."""
+  viewerReport: PostReport
 }
 
 """
@@ -1957,23 +1939,23 @@ Post audit log
 Audit log is created when a moderator takes an action against a pending post
 """
 type PostAuditLog implements Node {
+  """The status or the action that was taken against the pending post"""
+  action: PostAuditLogAction!
+
   """ID of the audit log"""
   id: ID!
 
   """The moderator that this log belongs to"""
   moderator: Account!
 
-  """The status or the action that was taken against the pending post"""
-  action: PostAuditLogAction!
-
-  """If a post was removed or rejected, this is the rule that was cited."""
-  rule: Rule
-
   """Additional notes by the moderator"""
   notes: String
 
   """The post linked to this audit log"""
   post: Post!
+
+  """If a post was removed or rejected, this is the rule that was cited."""
+  rule: Rule
 }
 
 enum PostAuditLogAction {
@@ -1996,8 +1978,8 @@ input PostAuditLogDateRange {
 
 """Edge of the audit log"""
 type PostAuditLogEdge {
-  node: PostAuditLog!
   cursor: String!
+  node: PostAuditLog!
 }
 
 type PostConnection {
@@ -2011,6 +1993,9 @@ type PostEdge {
 }
 
 type PostLike implements Node {
+  """The account this like belongs to"""
+  account: Account!
+
   """An ID uniquely identifying this like."""
   id: ID!
 
@@ -2019,18 +2004,15 @@ type PostLike implements Node {
 
   """The post this like belongs to."""
   post: Post!
-
-  """The account this like belongs to"""
-  account: Account!
 }
 
 """Post report"""
 type PostReport implements Node {
-  """ID of the report"""
-  id: ID!
-
   """The account that initiated this report"""
   account: Account!
+
+  """ID of the report"""
+  id: ID!
 
   """The rule that was cited for this report."""
   rule: Rule!
@@ -2053,8 +2035,8 @@ input PostReportDateRange {
 
 """Edge of the post report"""
 type PostReportEdge {
-  node: PostReport!
   cursor: String!
+  node: PostReport!
 }
 
 """Properties by which posts connections can be sorted."""
@@ -2067,16 +2049,16 @@ enum PostsSort {
 }
 
 enum PostState {
-  DRAFT
-  PUBLISHING
-  REVIEW
-  PUBLISHED
-  DISCARDING
   DISCARDED
-  REJECTED
+  DISCARDING
+  DRAFT
   PROCESSING
-  REMOVING
+  PUBLISHED
+  PUBLISHING
+  REJECTED
   REMOVED
+  REMOVING
+  REVIEW
 }
 
 """Update alias slug to default."""
@@ -2095,57 +2077,17 @@ type PromoteClubSlugAliasToDefaultPayload {
 }
 
 type Query {
-  """Get the currently-authenticated account"""
-  viewer: Account
-
   """Look up a single account"""
   account(
     """Look up a post by a username"""
     username: String!
   ): Account
 
-  """Look up or search multiple accounts"""
-  accounts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Filter by the account username."""
-    username: String
-
-    """Sorting options for accounts."""
-    sortBy: AccountsSort! = NEW
-  ): AccountConnection!
-
-  """List of all available languages"""
-  languages: [Language!]!
-
-  """
-  The current language that is set
-  
-  Note: this is only temporary, per-browser language
-  
-  For a permanent language on an account level, see "Language" as part of viewer
-  """
-  language: Language!
-
-  """
-  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
-  
-  Note: you can only view the authentication token if you're the originating
-  device or you have entered a valid secret (not from same device)
-  """
-  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
+  """Get a single audience."""
+  audience(
+    """Search by slug of the audience."""
+    slug: String!
+  ): Audience
 
   """Search all audiences."""
   audiences(
@@ -2166,18 +2108,12 @@ type Query {
     """Search by audience slugs."""
     slugs: [String!]
 
-    """Search by title of the audience."""
-    title: String
-
     """Sorting options for audiences."""
     sortBy: AudiencesSort! = POPULAR
-  ): AudienceConnection!
 
-  """Get a single audience."""
-  audience(
-    """Search by slug of the audience."""
-    slug: String!
-  ): Audience
+    """Search by title of the audience."""
+    title: String
+  ): AudienceConnection!
 
   """Search all categories."""
   categories(
@@ -2198,11 +2134,11 @@ type Query {
     """Search by category slugs."""
     slugs: [String!]
 
-    """Filter by the title of the category."""
-    title: String
-
     """Sorting options for categories."""
     sortBy: CategoriesSort! = POPULAR
+
+    """Filter by the title of the category."""
+    title: String
   ): CategoryConnection!
 
   """Get a single category."""
@@ -2210,6 +2146,15 @@ type Query {
     """Search by slug of the category."""
     slug: String!
   ): Category
+
+  """Get a single character."""
+  character(
+    """A series slug is required since character slugs are unique-per-series."""
+    seriesSlug: String!
+
+    """Search by slug of the character."""
+    slug: String!
+  ): Character
 
   """Get or search all characters"""
   characters(
@@ -2227,8 +2172,8 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by character slugs."""
-    slugs: [String!]
+    """Filter by the name of the character."""
+    name: String
 
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
@@ -2237,21 +2182,118 @@ type Query {
     """
     seriesSlug: String
 
-    """Filter by the name of the character."""
-    name: String
+    """Search by character slugs."""
+    slugs: [String!]
 
     """Sorting options for characters."""
     sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
 
-  """Get a single character."""
-  character(
-    """Search by slug of the character."""
+  """Get a single club."""
+  club(
+    """Search by slug of the club."""
     slug: String!
+  ): Club
 
-    """A series slug is required since character slugs are unique-per-series."""
-    seriesSlug: String!
-  ): Character
+  """Search multiple clubs."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
+  ): ClubConnection!
+
+  """
+  The current language that is set
+  
+  Note: this is only temporary, per-browser language
+  
+  For a permanent language on an account level, see "Language" as part of viewer
+  """
+  language: Language!
+
+  """List of all available languages"""
+  languages: [Language!]!
+  node(id: ID!): Node
+
+  """Look up a single post"""
+  post(
+    """Look up a post by a reference #"""
+    reference: String!
+  ): Post
+
+  """All post reports."""
+  postReports(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """The date range for post reports. Required."""
+    dateRange: PostReportDateRange!
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostReportConnection!
+
+  """Search multiple posts"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+  ): PostConnection!
 
   """Posts feed. The default."""
   postsFeed(
@@ -2270,14 +2312,8 @@ type Query {
     last: Int
   ): PostConnection!
 
-  """Look up a single post"""
-  post(
-    """Look up a post by a reference #"""
-    reference: String!
-  ): Post
-
-  """Search multiple posts"""
-  posts(
+  """Get all rules for the site."""
+  rules(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -2286,30 +2322,21 @@ type Query {
     """
     before: String
 
+    """Whether or not to show deprecated rules."""
+    deprecated: Boolean! = false
+
     """Returns the first _n_ elements from the list."""
     first: Int
 
     """Returns the last _n_ elements from the list."""
     last: Int
+  ): RuleConnection!
 
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
-  ): PostConnection!
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
 
   """Get or search all series"""
   series(
@@ -2330,103 +2357,34 @@ type Query {
     """Search by series slugs."""
     slugs: [String!]
 
-    """Filter by the title of the series."""
-    title: String
-
     """Sorting options for series."""
     sortBy: SeriesSort! = POPULAR
+
+    """Filter by the title of the series."""
+    title: String
   ): SeriesConnection!
 
-  """Get a single serial."""
-  serial(
-    """Search by slug of the serial."""
-    slug: String!
-  ): Series
+  """
+  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+  
+  Note: you can only view the authentication token if you're the originating device or you have entered a valid secret (not from same device)
+  """
+  viewAuthenticationToken(secret: String, token: String!): AuthenticationToken
 
-  """All post reports."""
-  postReports(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
-  ): PostReportConnection!
-
-  """Get all rules for the site."""
-  rules(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Whether or not to show deprecated rules."""
-    deprecated: Boolean! = false
-  ): RuleConnection!
-
-  """Search multiple clubs."""
-  clubs(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by club slugs."""
-    slugs: [String!]
-
-    """Filter by the name of the club."""
-    name: String
-
-    """Sorting options for clubs."""
-    sortBy: ClubsSort! = POPULAR
-  ): ClubConnection!
-
-  """Get a single club."""
-  club(
-    """Search by slug of the club."""
-    slug: String!
-  ): Club
-  node(id: ID!): Node
+  """Get the currently-authenticated account"""
+  viewer: Account
 }
 
 """Moderate the pending post input"""
 input RejectPostInput {
+  """Any extra notes for the moderator"""
+  notes: String
+
   """Pending post to take action against"""
   postId: ID!
 
   """Required to enter a rule ID."""
   ruleId: ID!
-
-  """Any extra notes for the moderator"""
-  notes: String
 }
 
 """Reject the pending post payload"""
@@ -2476,11 +2434,11 @@ type RemoveModeratorFromPostQueuePayload {
 
 """Remove post content."""
 input RemovePostContentInput {
-  """The post to update"""
-  id: ID!
-
   """Content IDs for the content"""
   contentIds: [ID!]!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -2491,14 +2449,14 @@ type RemovePostContentPayload {
 
 """Moderate the pending post input"""
 input RemovePostInput {
+  """Any extra notes for the staff member"""
+  notes: String
+
   """Pending post to take action against"""
   postId: ID!
 
   """Required to enter a rule ID."""
   ruleId: ID!
-
-  """Any extra notes for the staff member"""
-  notes: String
 }
 
 """Remove the pending post payload"""
@@ -2528,20 +2486,32 @@ and urls to access the resources. We have many urls in order to provide a fallba
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-type Resource implements Node {
+type Resource {
+  """The height."""
+  height: Int!
+
   """An ID uniquely identifying this resource."""
   id: ID!
-
-  """The type of resource - either an image or a video."""
-  type: ResourceType!
 
   """
   Whether or not the resource is processed. Can be used for additional permission checks.
   """
   processed: Boolean!
 
+  """The type of resource - either an image or a video."""
+  type: ResourceType!
+
   """URLs to access the resource."""
   urls: [ResourceUrl!]!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
+
+  """The width."""
+  width: Int!
 }
 
 """Identifies the type of resource"""
@@ -2552,8 +2522,8 @@ enum ResourceType {
 
 """A type representing a url to the resource and the mimetype"""
 type ResourceUrl {
-  url: URI!
   mimeType: String!
+  url: URI!
 }
 
 """Payload for revoking the current viewer"""
@@ -2600,13 +2570,13 @@ type RevokeAccountStaffRolePayload {
 
 """Input for revoking an authentication token"""
 input RevokeAuthenticationTokenInput {
-  """The token to revoke"""
-  token: String!
-
   """
   The secret associated with this token. Required if revoking the token not on the same device that created it.
   """
   secret: String
+
+  """The token to revoke"""
+  token: String!
 }
 
 """Payload for revoking the authentication token"""
@@ -2617,14 +2587,8 @@ type RevokeAuthenticationTokenPayload {
 
 """Rule."""
 type Rule implements Node {
-  """ID of the rule."""
-  id: ID!
-
-  """The title for this rule."""
-  title: String!
-
-  """All translations for this title."""
-  titleTranslations: [Translation!]!
+  """If this rule is deprecated."""
+  deprecated: Boolean!
 
   """The description for this rule."""
   description: String!
@@ -2632,13 +2596,19 @@ type Rule implements Node {
   """All translations for this description."""
   descriptionTranslations: [Translation!]!
 
-  """If this rule is deprecated."""
-  deprecated: Boolean!
+  """ID of the rule."""
+  id: ID!
 
   """
   If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied.
   """
   infraction: Boolean!
+
+  """The title for this rule."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
 }
 
 """Connection of the rule"""
@@ -2649,13 +2619,45 @@ type RuleConnection {
 
 """Edge of the rule"""
 type RuleEdge {
-  node: Rule!
   cursor: String!
+  node: Rule!
 }
 
 type Series implements Node {
   """An ID pointing to this series."""
   id: ID!
+
+  """Posts belonging to this series"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Sorting options for posts."""
+    sortBy: PostsSort! = TOP
+
+    """Search by a post state."""
+    state: PostState = PUBLISHED
+  ): PostConnection!
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
@@ -2674,38 +2676,6 @@ type Series implements Node {
 
   """Total amount of posts."""
   totalPosts: Int!
-
-  """Posts belonging to this series"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = PUBLISHED
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = TOP
-  ): PostConnection!
 }
 
 type SeriesConnection {
@@ -2723,11 +2693,11 @@ enum SeriesSort {
   """Series by newest first"""
   NEW
 
-  """Series by top likes"""
-  TOP
-
   """Series by most posts"""
   POPULAR
+
+  """Series by top likes"""
+  TOP
 }
 
 """Publish post."""
@@ -2738,11 +2708,11 @@ input SubmitPostInput {
 
 """Payload for submitting a post"""
 type SubmitPostPayload {
-  """The post after being submitted"""
-  post: Post
-
   """Whether or not the submitted post is going in review"""
   inReview: Boolean
+
+  """The post after being submitted"""
+  post: Post
 }
 
 """Suspend the club."""
@@ -2829,11 +2799,11 @@ input UpdateAccountLanguageInput {
 
 """Payload of the account language update"""
 type UpdateAccountLanguagePayload {
-  """The new language that is now set"""
-  language: Language
-
   """The account that has the updated language"""
   Account: Account
+
+  """The new language that is now set"""
+  language: Language
 }
 
 """Input for updating an account's username"""
@@ -2844,11 +2814,11 @@ input UpdateAccountUsernameInput {
 
 """Payload of the updated username"""
 type UpdateAccountUsernamePayload {
-  """Validation for taking an account username"""
-  validation: UpdateAccountUsernameValidation
-
   """The account that was modified"""
   account: Account
+
+  """Validation for taking an account username"""
+  validation: UpdateAccountUsernameValidation
 }
 
 """Validation message for updating account username"""
@@ -2891,11 +2861,11 @@ input UpdateAudienceTitleInput {
   """The audience to update"""
   id: ID!
 
-  """The title to update"""
-  title: String!
-
   """The localization for this title"""
   locale: BCP47!
+
+  """The title to update"""
+  title: String!
 }
 
 """Payload for updating audience"""
@@ -2924,11 +2894,11 @@ input UpdateCategoryTitleInput {
   """The category to update"""
   id: ID!
 
-  """The title to update"""
-  title: String!
-
   """The localization for this title"""
   locale: BCP47!
+
+  """The title to update"""
+  title: String!
 }
 
 """Payload for updating category"""
@@ -2942,11 +2912,11 @@ input UpdateCharacterNameInput {
   """The character to update"""
   id: ID!
 
-  """The name to update"""
-  name: String!
-
   """The localization for this name"""
   locale: BCP47!
+
+  """The name to update"""
+  name: String!
 }
 
 """Payload for updating character"""
@@ -3059,11 +3029,11 @@ type UpdateLanguagePayload {
 
 """Update post audience."""
 input UpdatePostAudienceInput {
-  """The post to update"""
-  id: ID!
-
   """The audience that this post belongs to"""
   audienceId: ID!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -3074,11 +3044,11 @@ type UpdatePostAudiencePayload {
 
 """Update post audience."""
 input UpdatePostCategoriesInput {
-  """The post to update"""
-  id: ID!
-
   """Category IDs for this post"""
   categoryIds: [ID!]!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -3089,11 +3059,11 @@ type UpdatePostCategoriesPayload {
 
 """Update post characters."""
 input UpdatePostCharactersInput {
-  """The post to update"""
-  id: ID!
-
   """Ids for all the characters"""
   characterIds: [ID!]!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -3110,11 +3080,11 @@ type UpdatePostClubPayload {
 
 """Update post content order."""
 input UpdatePostContentOrderInput {
-  """The post to update"""
-  id: ID!
-
   """Content IDs for the content"""
   contentIds: [ID!]!
+
+  """The post to update"""
+  id: ID!
 }
 
 """Payload for updating a post"""
@@ -3125,11 +3095,11 @@ type UpdatePostContentOrderPayload {
 
 """Update post report reason."""
 input UpdateRuleDeprecatedInput {
-  """The rule to update."""
-  ruleId: ID!
-
   """The deprecated status."""
   deprecated: Boolean!
+
+  """The rule to update."""
+  ruleId: ID!
 }
 
 """Updated rule."""
@@ -3140,14 +3110,14 @@ type UpdateRuleDeprecatedPayload {
 
 """Update rule."""
 input UpdateRuleDescriptionInput {
-  """The rule to update."""
-  ruleId: ID!
-
   """The description to update"""
   description: String!
 
   """The localization for this description."""
   locale: BCP47!
+
+  """The rule to update."""
+  ruleId: ID!
 }
 
 """Updated rule."""
@@ -3158,11 +3128,11 @@ type UpdateRuleDescriptionPayload {
 
 """Update post report reason."""
 input UpdateRuleInfractionInput {
-  """The rule to update."""
-  ruleId: ID!
-
   """The infraction status."""
   infraction: Boolean!
+
+  """The rule to update."""
+  ruleId: ID!
 }
 
 """Updated rule."""
@@ -3173,14 +3143,14 @@ type UpdateRuleInfractionPayload {
 
 """Update rule."""
 input UpdateRuleTitleInput {
+  """The localization for this title."""
+  locale: BCP47!
+
   """The rule to update."""
   ruleId: ID!
 
   """The title to update"""
   title: String!
-
-  """The localization for this title."""
-  locale: BCP47!
 }
 
 """Updated rule."""
@@ -3209,11 +3179,11 @@ input UpdateSeriesTitleInput {
   """The series to update"""
   id: ID!
 
-  """The title to update"""
-  title: String!
-
   """The localization for this title"""
   locale: BCP47!
+
+  """The title to update"""
+  title: String!
 }
 
 """Payload for updating series"""
@@ -3227,20 +3197,20 @@ scalar URI
 
 """Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
-  """The original token"""
-  token: String!
-
   """Secret (get it from the email)"""
   secret: String!
+
+  """The original token"""
+  token: String!
 }
 
 """Payload for verifying the authentication token"""
 type VerifyAuthenticationTokenPayload {
-  """Validation options"""
-  validation: VerifyAuthenticationTokenValidation
-
   """The authentication token"""
   authenticationToken: AuthenticationToken
+
+  """Validation options"""
+  validation: VerifyAuthenticationTokenValidation
 }
 
 """Validation for granting account access"""

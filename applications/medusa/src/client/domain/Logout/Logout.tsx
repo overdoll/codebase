@@ -14,7 +14,7 @@ const LogoutButtonGQL = graphql`
 `
 
 export default function Logout (): JSX.Element {
-  const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
+  const [logout] = useMutation(LogoutButtonGQL)
 
   const history = useHistory()
 

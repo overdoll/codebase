@@ -2,6 +2,7 @@ package post
 
 import (
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -38,6 +39,10 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 	lc, err := localization.NewDefaultTranslation(title)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := validateCategoryTitle(title); err != nil {
 		return nil, err
 	}
 
@@ -91,6 +96,10 @@ func (c *Category) UpdateTitle(requester *principal.Principal, title, locale str
 		return err
 	}
 
+	if err := validateCategoryTitle(title); err != nil {
+		return err
+	}
+
 	if err := c.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
@@ -131,4 +140,15 @@ func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thu
 		totalLikes:          totalLikes,
 		totalPosts:          totalPosts,
 	}
+}
+
+func validateCategoryTitle(name string) error {
+
+	err := validator.New().Var(name, "required,max=25")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

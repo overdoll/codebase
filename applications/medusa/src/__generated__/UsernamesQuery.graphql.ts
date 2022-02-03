@@ -1,36 +1,30 @@
+/**
+ * @generated SignedSource<<ab304089ee4b51459a92bfac27f9ef9e>>
+ * @relayHash 3b6638f090dfe40224eaaa6e68a7779b
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3b6638f090dfe40224eaaa6e68a7779b */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 3b6638f090dfe40224eaaa6e68a7779b
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UsernamesQueryVariables = {};
-export type UsernamesQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"UsernamesSettingsFragment">;
-    } | null;
+export type UsernamesQuery$variables = {};
+export type UsernamesQueryVariables = UsernamesQuery$variables;
+export type UsernamesQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"UsernamesSettingsFragment">;
+  };
 };
+export type UsernamesQueryResponse = UsernamesQuery$data;
 export type UsernamesQuery = {
-    readonly response: UsernamesQueryResponse;
-    readonly variables: UsernamesQueryVariables;
+  variables: UsernamesQueryVariables;
+  response: UsernamesQuery$data;
 };
-
-
-
-/*
-query UsernamesQuery {
-  viewer {
-    ...UsernamesSettingsFragment
-    id
-  }
-}
-
-fragment UsernamesSettingsFragment on Account {
-  username
-  usernameEditAvailableAt
-}
-*/
 
 const node: ConcreteRequest = {
   "fragment": {
@@ -40,20 +34,25 @@ const node: ConcreteRequest = {
     "name": "UsernamesQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "UsernamesSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "UsernamesSettingsFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -107,5 +106,7 @@ const node: ConcreteRequest = {
     "text": null
   }
 };
-(node as any).hash = '7c4f06712d73eab470e2b3ef98aacfd7';
+
+(node as any).hash = "97875444c847528989e63db004957584";
+
 export default node;

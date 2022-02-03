@@ -26,7 +26,17 @@ func validateEmail(email string) (string, error) {
 	if domainWhitelist != "" {
 		components := strings.Split(email, "@")
 		domain := components[1]
-		if domain != domainWhitelist {
+
+		foundAllowedDomain := false
+
+		for _, allowedDomain := range strings.Split(domainWhitelist, ",") {
+			if allowedDomain == domain {
+				foundAllowedDomain = true
+				break
+			}
+		}
+
+		if !foundAllowedDomain {
 			return "", ErrInvalidEmail
 		}
 	}

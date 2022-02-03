@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<c87dcf14323d9b3ee7b901d4413485ae>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RecoveryCodeFragment = {
-    readonly token: string;
-    readonly " $refType": "RecoveryCodeFragment";
+export type RecoveryCodeFragment$data = {
+  readonly token: string;
+  readonly " $fragmentType": "RecoveryCodeFragment";
 };
-export type RecoveryCodeFragment$data = RecoveryCodeFragment;
+export type RecoveryCodeFragment = RecoveryCodeFragment$data;
 export type RecoveryCodeFragment$key = {
-    readonly " $data"?: RecoveryCodeFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"RecoveryCodeFragment">;
+  readonly " $data"?: RecoveryCodeFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"RecoveryCodeFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = 'dfc6ed9d107afb9db8080d00e8ca0d8d';
+
+(node as any).hash = "dfc6ed9d107afb9db8080d00e8ca0d8d";
+
 export default node;

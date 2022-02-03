@@ -1,166 +1,34 @@
+/**
+ * @generated SignedSource<<a4bede5296da51930f50a4d6472f6769>>
+ * @relayHash a4c2105c9e2c8f492f29518c5c4f40c6
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash a4c2105c9e2c8f492f29518c5c4f40c6 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID a4c2105c9e2c8f492f29518c5c4f40c6
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type PostsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type PostsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsFragment">;
-    } | null;
+export type PostsPaginationQueryVariables = PostsPaginationQuery$variables;
+export type PostsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsFragment">;
+  } | null;
 };
+export type PostsPaginationQueryResponse = PostsPaginationQuery$data;
 export type PostsPaginationQuery = {
-    readonly response: PostsPaginationQueryResponse;
-    readonly variables: PostsPaginationQueryVariables;
+  variables: PostsPaginationQueryVariables;
+  response: PostsPaginationQuery$data;
 };
-
-
-
-/*
-query PostsPaginationQuery(
-  $after: String
-  $first: Int = 1
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...PostsFragment_2HEEH6
-    id
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ModeratePostFragment on Post {
-  id
-  club {
-    name
-    id
-  }
-}
-
-fragment NoPostsPlaceholderFragment on Account {
-  moderatorSettings {
-    isInModeratorQueue
-  }
-}
-
-fragment PostGalleryPublicDetailedFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostPreviewFragment on Post {
-  ...PostStaticAudienceFragment
-  ...PostStaticCharactersFragment
-  ...PostStaticCategoriesFragment
-  ...PostGalleryPublicDetailedFragment
-  ...PostHeaderClubFragment
-}
-
-fragment PostStaticAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostStaticCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostStaticCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
-fragment PostsFragment_2HEEH6 on Account {
-  ...NoPostsPlaceholderFragment
-  moderatorPostsQueue(first: $first, after: $after) {
-    edges {
-      node {
-        id
-        ...PostPreviewFragment
-        ...ModeratePostFragment
-        postedAt
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -532,5 +400,7 @@ return {
   }
 };
 })();
-(node as any).hash = '4a36f5398b846432a905467a7dad4b91';
+
+(node as any).hash = "4a36f5398b846432a905467a7dad4b91";
+
 export default node;

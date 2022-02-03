@@ -1,43 +1,38 @@
+/**
+ * @generated SignedSource<<0bdb42c9e74996d146334b6ad41c4643>>
+ * @relayHash e0eab03a9eb7bac4d8f18fc3b7cd5baf
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e0eab03a9eb7bac4d8f18fc3b7cd5baf */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID e0eab03a9eb7bac4d8f18fc3b7cd5baf
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenInput = {
-    token: string;
+  token: string;
 };
-export type GrantMutationVariables = {
-    input: GrantAccountAccessWithAuthenticationTokenInput;
+export type GrantMutation$variables = {
+  input: GrantAccountAccessWithAuthenticationTokenInput;
 };
-export type GrantMutationResponse = {
-    readonly grantAccountAccessWithAuthenticationToken: {
-        readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
-        readonly account: {
-            readonly id: string;
-        } | null;
+export type GrantMutationVariables = GrantMutation$variables;
+export type GrantMutation$data = {
+  readonly grantAccountAccessWithAuthenticationToken: {
+    readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
+    readonly account: {
+      readonly id: string;
     } | null;
+  } | null;
 };
+export type GrantMutationResponse = GrantMutation$data;
 export type GrantMutation = {
-    readonly response: GrantMutationResponse;
-    readonly variables: GrantMutationVariables;
+  variables: GrantMutationVariables;
+  response: GrantMutation$data;
 };
-
-
-
-/*
-mutation GrantMutation(
-  $input: GrantAccountAccessWithAuthenticationTokenInput!
-) {
-  grantAccountAccessWithAuthenticationToken(input: $input) {
-    validation
-    account {
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -117,5 +112,7 @@ return {
   }
 };
 })();
-(node as any).hash = '6b2c028444331b480f4d1f2434620388';
+
+(node as any).hash = "6b2c028444331b480f4d1f2434620388";
+
 export default node;

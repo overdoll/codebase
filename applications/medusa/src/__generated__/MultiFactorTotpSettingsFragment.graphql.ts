@@ -1,21 +1,25 @@
+/**
+ * @generated SignedSource<<58682b7888aaeb91409867ff23047a77>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type MultiFactorTotpSettingsFragment = {
-    readonly multiFactorTotpConfigured: boolean;
-    readonly recoveryCodesGenerated: boolean;
-    readonly " $refType": "MultiFactorTotpSettingsFragment";
+export type MultiFactorTotpSettingsFragment$data = {
+  readonly multiFactorTotpConfigured: boolean;
+  readonly recoveryCodesGenerated: boolean;
+  readonly " $fragmentType": "MultiFactorTotpSettingsFragment";
 };
-export type MultiFactorTotpSettingsFragment$data = MultiFactorTotpSettingsFragment;
+export type MultiFactorTotpSettingsFragment = MultiFactorTotpSettingsFragment$data;
 export type MultiFactorTotpSettingsFragment$key = {
-    readonly " $data"?: MultiFactorTotpSettingsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"MultiFactorTotpSettingsFragment">;
+  readonly " $data"?: MultiFactorTotpSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"MultiFactorTotpSettingsFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -41,5 +45,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '1a9a4b29fcc9de59dd83cf2db38b7086';
+
+(node as any).hash = "1a9a4b29fcc9de59dd83cf2db38b7086";
+
 export default node;

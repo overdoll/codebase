@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<65969a669a11d8f2a0d8dfa9e03707a2>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UpdateCharacterButtonFragment = {
+export type UpdateCharacterButtonFragment$data = {
+  readonly id: string;
+  readonly characters: ReadonlyArray<{
     readonly id: string;
-    readonly characters: ReadonlyArray<{
-        readonly id: string;
-    }>;
-    readonly " $refType": "UpdateCharacterButtonFragment";
+  }>;
+  readonly " $fragmentType": "UpdateCharacterButtonFragment";
 };
-export type UpdateCharacterButtonFragment$data = UpdateCharacterButtonFragment;
+export type UpdateCharacterButtonFragment = UpdateCharacterButtonFragment$data;
 export type UpdateCharacterButtonFragment$key = {
-    readonly " $data"?: UpdateCharacterButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UpdateCharacterButtonFragment">;
+  readonly " $data"?: UpdateCharacterButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateCharacterButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -51,5 +55,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '1660c4ad3a45b27c61077ff7107034b8';
+
+(node as any).hash = "1660c4ad3a45b27c61077ff7107034b8";
+
 export default node;

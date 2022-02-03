@@ -60,19 +60,23 @@ export default function AuditLogs (props: Props): JSX.Element {
     <>
       <Accordion allowToggle>
         {auditLogs.length > 0
-          ? <ListSpacer>
-            {auditLogs.map((item, index) =>
-              <AuditCard
-                key={index}
-                auditLog={auditLogs[index]?.node}
-              />
+          ? (
+            <ListSpacer>
+              {auditLogs.map((item, index) =>
+                <AuditCard
+                  key={index}
+                  auditLog={auditLogs[index]?.node}
+                />
+              )}
+            </ListSpacer>
+            )
+          : (
+            <SmallBackgroundBox align='center'>
+              <Trans>
+                No audit logs were found
+              </Trans>
+            </SmallBackgroundBox>
             )}
-          </ListSpacer>
-          : <SmallBackgroundBox align='center'>
-            <Trans>
-              No audit logs were found
-            </Trans>
-          </SmallBackgroundBox>}
       </Accordion>
       <Flex justify='center'>
         {hasNext
@@ -86,13 +90,15 @@ export default function AuditLogs (props: Props): JSX.Element {
               <Trans>
                 Load More
               </Trans>
-            </Button>)
+            </Button>
+            )
           : (
             <Text fontSize='sm' color='gray.200'>
               <Trans>
                 Only the last 7 days of logs are available
               </Trans>
-            </Text>)}
+            </Text>
+            )}
       </Flex>
     </>
   )

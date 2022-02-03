@@ -1,192 +1,34 @@
+/**
+ * @generated SignedSource<<72958cefe239788ad0ab7bace8a0a729>>
+ * @relayHash c5fe878372f840bcb96b309b71c1c51f
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c5fe878372f840bcb96b309b71c1c51f */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID c5fe878372f840bcb96b309b71c1c51f
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPostsFeedPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type ClubPostsFeedPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type ClubPostsFeedPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubPostsFeedFragment">;
-    } | null;
+export type ClubPostsFeedPaginationQueryVariables = ClubPostsFeedPaginationQuery$variables;
+export type ClubPostsFeedPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment">;
+  } | null;
 };
+export type ClubPostsFeedPaginationQueryResponse = ClubPostsFeedPaginationQuery$data;
 export type ClubPostsFeedPaginationQuery = {
-    readonly response: ClubPostsFeedPaginationQueryResponse;
-    readonly variables: ClubPostsFeedPaginationQueryVariables;
+  variables: ClubPostsFeedPaginationQueryVariables;
+  response: ClubPostsFeedPaginationQuery$data;
 };
-
-
-
-/*
-query ClubPostsFeedPaginationQuery(
-  $after: String
-  $first: Int = 10
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...ClubPostsFeedFragment_2HEEH6
-    id
-  }
-}
-
-fragment ClubPostsFeedFragment_2HEEH6 on Account {
-  clubMembersPostsFeed(first: $first, after: $after) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -552,5 +394,7 @@ return {
   }
 };
 })();
-(node as any).hash = '9c1c247799d47361c3b6aca9566bbf18';
+
+(node as any).hash = "9c1c247799d47361c3b6aca9566bbf18";
+
 export default node;

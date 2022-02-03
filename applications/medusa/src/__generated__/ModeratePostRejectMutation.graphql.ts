@@ -1,49 +1,42 @@
+/**
+ * @generated SignedSource<<4638f0d135e307804f0efd1c694ac9fe>>
+ * @relayHash 89f44bcb143b2ddf9c77f21bdbde4406
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 89f44bcb143b2ddf9c77f21bdbde4406 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 89f44bcb143b2ddf9c77f21bdbde4406
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RejectPostInput = {
-    postId: string;
-    ruleId: string;
-    notes?: string | null | undefined;
+  postId: string;
+  ruleId: string;
+  notes?: string | null;
 };
-export type ModeratePostRejectMutationVariables = {
-    input: RejectPostInput;
-    connections: Array<string>;
+export type ModeratePostRejectMutation$variables = {
+  input: RejectPostInput;
+  connections: ReadonlyArray<string>;
 };
-export type ModeratePostRejectMutationResponse = {
-    readonly rejectPost: {
-        readonly postAuditLog: {
-            readonly id: string;
-            readonly post: {
-                readonly id: string;
-            };
-        } | null;
+export type ModeratePostRejectMutationVariables = ModeratePostRejectMutation$variables;
+export type ModeratePostRejectMutation$data = {
+  readonly rejectPost: {
+    readonly postAuditLog: {
+      readonly id: string;
+      readonly post: {
+        readonly id: string;
+      };
     } | null;
+  } | null;
 };
+export type ModeratePostRejectMutationResponse = ModeratePostRejectMutation$data;
 export type ModeratePostRejectMutation = {
-    readonly response: ModeratePostRejectMutationResponse;
-    readonly variables: ModeratePostRejectMutationVariables;
+  variables: ModeratePostRejectMutationVariables;
+  response: ModeratePostRejectMutation$data;
 };
-
-
-
-/*
-mutation ModeratePostRejectMutation(
-  $input: RejectPostInput!
-) {
-  rejectPost(input: $input) {
-    postAuditLog {
-      id
-      post {
-        id
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -190,5 +183,7 @@ return {
   }
 };
 })();
-(node as any).hash = '43c3f00a14f96a925f1ccec977fabbb9';
+
+(node as any).hash = "43c3f00a14f96a925f1ccec977fabbb9";
+
 export default node;

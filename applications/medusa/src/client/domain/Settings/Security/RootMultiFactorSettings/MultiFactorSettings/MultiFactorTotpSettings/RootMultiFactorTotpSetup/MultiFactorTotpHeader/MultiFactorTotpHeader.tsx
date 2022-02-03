@@ -12,7 +12,7 @@ interface Props {
 
 const MultiFactorTotpHeaderQueryGQL = graphql`
   query MultiFactorTotpHeaderQuery {
-    viewer {
+    viewer @required(action: THROW) {
       multiFactorTotpConfigured
       recoveryCodesGenerated
     }
@@ -25,9 +25,7 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
     props.query
   )
 
-  if (queryData?.viewer == null) return null
-
-  if (queryData.viewer?.recoveryCodesGenerated === false) {
+  if (!queryData.viewer.recoveryCodesGenerated) {
     return (
       <Flex direction='column' align='center'>
         <Alert mb={3} status='warning'>
@@ -54,7 +52,7 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
 
   return (
     <>
-      {queryData?.viewer.multiFactorTotpConfigured === true &&
+      {queryData.viewer.multiFactorTotpConfigured &&
         <Flex mb={3} direction='column' align='center'>
           <Alert status='warning'>
             <AlertIcon />

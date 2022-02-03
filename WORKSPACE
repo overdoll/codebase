@@ -116,8 +116,8 @@ container_pull(
 )
 
 container_pull(
-    name = "traefik_base_image",
+    name = "go_ffmpeg_image",
     registry = "docker.io",
-    repository = "traefik",
-    tag = "2.5",
+    repository = "jrottenberg/ffmpeg",
+    tag = "3.4.9-ubuntu1804",
 )

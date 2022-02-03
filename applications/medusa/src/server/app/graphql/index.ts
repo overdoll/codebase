@@ -1,16 +1,17 @@
 import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
 import services from '../../config/services'
-import { matchQueryMiddleware } from 'relay-compiler-plus'
-import queryMapJson from '../../queries.json'
-import { defaultPlaygroundOptions, gql } from 'apollo-server'
+import queryMapJson from '../../../queries.json'
+import { gql } from 'apollo-server'
 import { DocumentNode, graphqlSync, parse, visit } from 'graphql'
 import { buildFederatedSchema } from '@apollo/federation'
-import { renderPlaygroundPage } from '@apollographql/graphql-playground-html'
+import { renderPlaygroundPage } from 'graphql-playground-html'
 import { CompositionUpdate } from '@apollo/gateway/dist/config'
 import { GraphQLDataSource } from '@apollo/gateway/src/datasources/types'
 import { ServiceEndpointDefinition } from '@apollo/gateway/src/config'
 import { GraphQLResponse } from 'apollo-server-types'
+import bodyParser from 'body-parser'
+import { CursorShape, Theme } from '@apollographql/graphql-playground-html/dist/render-playground-page'
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -204,14 +205,10 @@ interface PassportDataResponse extends GraphQLResponse {
 // Ensures passport is forwarded from downstream services
 class PassportDataSource extends RemoteGraphQLDataSource {
   // Process passport from response
-  async process ({
-    request,
-    context
-  }): Promise<GraphQLResponse> {
-    const response: PassportDataResponse = await super.process({
-      request,
-      context
-    })
+  async process (options): Promise<GraphQLResponse> {
+    const response: PassportDataResponse = await super.process(options)
+
+    const { context } = options
 
     // make sure passport is forwarded back in the response as well
     if (response.passport != null) {
@@ -255,43 +252,33 @@ const gateway = new NodeGateway({
 // GraphQL Server
 const server = new ApolloServer({
   gateway,
-  subscriptions: false,
   context: ({
     req,
     res
   }) => ({
     req,
     res
-  }),
-  // disable playground, add middleware for a custom playground
-  playground: false
+  })
 })
 
 // custom playground that will add a CSRF token
 // uses the same playground as apollo, we just needed to make these changes to support CSRF
 const renderPlayground = (req, res, next): void => {
-  // disable playground if no debug
-  if (process.env.APP_DEBUG !== 'true') {
-    next()
-    return
-  }
-
-  if (req.method !== 'GET') {
-    next()
-    return
-  }
-
   res.setHeader('Content-Type', 'text/html')
   res.write(renderPlaygroundPage({
     endpoint: req.originalUrl,
-    ...defaultPlaygroundOptions,
     settings: {
-      ...defaultPlaygroundOptions.settings,
+      'general.betaUpdates': false,
+      'editor.theme': 'dark' as Theme,
+      'editor.cursorShape': 'line' as CursorShape,
+      'editor.reuseHeaders': true,
+      'tracing.hideTracingResponse': true,
+      'editor.fontSize': 14,
+      'editor.fontFamily': '\'Source Code Pro\', \'Consolas\', \'Inconsolata\', \'Droid Sans Mono\', \'Monaco\', monospace',
       'request.credentials': 'same-origin',
       'schema.polling.enable': false,
       'schema.polling.endpointFilter': '',
       'schema.polling.interval': 0,
-      // @ts-expect-error
       'request.globalHeaders': {
         'X-CSRF-TOKEN': req.csrfToken()
       }
@@ -300,9 +287,37 @@ const renderPlayground = (req, res, next): void => {
   res.end()
 }
 
-export default function graphql (index): void {
+const jsonParser = bodyParser.json()
+
+function matchQueryMiddleware (req, res, next): any {
+  return jsonParser(req, res, () => {
+    const { queryId } = req.body
+    if (queryId != null) {
+      const query = queryMapJson[queryId]
+      if (query != null) {
+        req.body.query = query
+      } else {
+        res.status(400).send({ error: `cannot find queryId: ${queryId as string}` })
+        return
+      }
+    } else {
+      if (process.env.APP_DEBUG !== 'true') {
+        res.status(400).send({ error: 'invalid query sent. only whitelisted queries are allowed.' })
+        return
+      }
+    }
+    next()
+  })
+}
+
+export default async function graphql (index): Promise<void> {
+  if (process.env.APP_DEBUG === 'true') {
+    index.get('/api/graphql', renderPlayground)
+  }
+
+  await server.start()
   server.applyMiddleware({
     path: '/api/graphql',
-    app: index.use('/api/graphql', renderPlayground, matchQueryMiddleware(queryMapJson))
+    app: index.use('/api/graphql', matchQueryMiddleware)
   })
 }

@@ -10,6 +10,7 @@ import (
 func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
 
 	var urls []*ResourceURL
+	var videoUrl *ResourceURL
 
 	for _, url := range res.FullUrls() {
 		urls = append(urls, &ResourceURL{
@@ -26,12 +27,25 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 
 	if res.IsVideo() {
 		tp = ResourceTypeVideo
+		url := res.VideoThumbnailFullUrl()
+
+		if url != nil {
+			videoUrl = &ResourceURL{
+				URL:      graphql.URI(url.GetFullUrl()),
+				MimeType: url.GetMimeType(),
+			}
+		}
+
 	}
 
 	return &Resource{
-		ID:        relay.NewID(Resource{}, res.ItemId(), res.ID()),
-		Processed: res.IsProcessed(),
-		Type:      tp,
-		Urls:      urls,
+		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
+		Processed:      res.IsProcessed(),
+		Type:           tp,
+		Urls:           urls,
+		Width:          res.Width(),
+		Height:         res.Height(),
+		VideoDuration:  res.VideoDuration(),
+		VideoThumbnail: videoUrl,
 	}
 }

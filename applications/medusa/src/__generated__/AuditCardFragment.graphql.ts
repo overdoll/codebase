@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<ed5fb1889c99f34ba202535eda06dcf1>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
-export type AuditCardFragment = {
-    readonly post: {
-        readonly postedAt: unknown | null;
-        readonly club: {
-            readonly name: string;
-        };
+import { FragmentRefs } from "relay-runtime";
+export type AuditCardFragment$data = {
+  readonly post: {
+    readonly postedAt: any | null;
+    readonly club: {
+      readonly name: string;
     };
-    readonly action: PostAuditLogAction;
-    readonly " $fragmentRefs": FragmentRefs<"AuditInspectFragment">;
-    readonly " $refType": "AuditCardFragment";
+  };
+  readonly action: PostAuditLogAction;
+  readonly " $fragmentSpreads": FragmentRefs<"AuditInspectFragment">;
+  readonly " $fragmentType": "AuditCardFragment";
 };
-export type AuditCardFragment$data = AuditCardFragment;
+export type AuditCardFragment = AuditCardFragment$data;
 export type AuditCardFragment$key = {
-    readonly " $data"?: AuditCardFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"AuditCardFragment">;
+  readonly " $data"?: AuditCardFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AuditCardFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -82,5 +86,7 @@ const node: ReaderFragment = {
   "type": "PostAuditLog",
   "abstractKey": null
 };
-(node as any).hash = 'cb47292dd216d712c7c127e8b3c0674e';
+
+(node as any).hash = "cb47292dd216d712c7c127e8b3c0674e";
+
 export default node;

@@ -1,86 +1,58 @@
+/**
+ * @generated SignedSource<<72260a70025e20de9fbd12a237e1f746>>
+ * @relayHash b55431f6d68288647d467b239967f7d5
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b55431f6d68288647d467b239967f7d5 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID b55431f6d68288647d467b239967f7d5
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateClubValidation = "SLUG_TAKEN" | "%future added value";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type CreateClubFormMutationVariables = {
-    name: string;
-    slug: string;
+export type CreateClubFormMutation$variables = {
+  name: string;
+  slug: string;
 };
-export type CreateClubFormMutationResponse = {
-    readonly createClub: {
-        readonly club: {
-            readonly id: string;
-            readonly slug: string;
-            readonly owner: {
-                readonly id: string;
-                readonly clubs: {
-                    readonly edges: ReadonlyArray<{
-                        readonly node: {
-                            readonly id: string;
-                            readonly slug: string;
-                            readonly name: string;
-                            readonly thumbnail: {
-                                readonly type: ResourceType;
-                                readonly urls: ReadonlyArray<{
-                                    readonly url: string;
-                                    readonly mimeType: string;
-                                }>;
-                            } | null;
-                        };
-                    }>;
-                };
-                readonly clubsCount: number;
+export type CreateClubFormMutationVariables = CreateClubFormMutation$variables;
+export type CreateClubFormMutation$data = {
+  readonly createClub: {
+    readonly club: {
+      readonly id: string;
+      readonly slug: string;
+      readonly owner: {
+        readonly id: string;
+        readonly clubs: {
+          readonly edges: ReadonlyArray<{
+            readonly node: {
+              readonly id: string;
+              readonly slug: string;
+              readonly name: string;
+              readonly thumbnail: {
+                readonly type: ResourceType;
+                readonly urls: ReadonlyArray<{
+                  readonly url: string;
+                  readonly mimeType: string;
+                }>;
+              } | null;
             };
-        } | null;
-        readonly validation: CreateClubValidation | null;
+          }>;
+        };
+        readonly clubsCount: number;
+      };
     } | null;
+    readonly validation: CreateClubValidation | null;
+  } | null;
 };
+export type CreateClubFormMutationResponse = CreateClubFormMutation$data;
 export type CreateClubFormMutation = {
-    readonly response: CreateClubFormMutationResponse;
-    readonly variables: CreateClubFormMutationVariables;
+  variables: CreateClubFormMutationVariables;
+  response: CreateClubFormMutation$data;
 };
-
-
-
-/*
-mutation CreateClubFormMutation(
-  $name: String!
-  $slug: String!
-) {
-  createClub(input: {name: $name, slug: $slug}) {
-    club {
-      id
-      slug
-      owner {
-        id
-        clubs(first: 1) {
-          edges {
-            node {
-              id
-              slug
-              name
-              thumbnail {
-                type
-                urls {
-                  url
-                  mimeType
-                }
-                id
-              }
-            }
-          }
-        }
-        clubsCount
-      }
-    }
-    validation
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -390,5 +362,7 @@ return {
   }
 };
 })();
-(node as any).hash = '0cac304fec041e9ab4ae8527c89bf23c';
+
+(node as any).hash = "0cac304fec041e9ab4ae8527c89bf23c";
+
 export default node;

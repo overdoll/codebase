@@ -1,46 +1,40 @@
+/**
+ * @generated SignedSource<<823917160d64f6948aae47e846c44fa9>>
+ * @relayHash 783f87ee699c44d613ebcdc34d94128e
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 783f87ee699c44d613ebcdc34d94128e */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 783f87ee699c44d613ebcdc34d94128e
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type VerifyAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
 export type VerifyAuthenticationTokenInput = {
-    token: string;
-    secret: string;
+  token: string;
+  secret: string;
 };
-export type VerifyTokenMutationVariables = {
-    input: VerifyAuthenticationTokenInput;
+export type VerifyTokenMutation$variables = {
+  input: VerifyAuthenticationTokenInput;
 };
-export type VerifyTokenMutationResponse = {
-    readonly verifyAuthenticationToken: {
-        readonly validation: VerifyAuthenticationTokenValidation | null;
-        readonly authenticationToken: {
-            readonly id: string;
-            readonly verified: boolean;
-        } | null;
+export type VerifyTokenMutationVariables = VerifyTokenMutation$variables;
+export type VerifyTokenMutation$data = {
+  readonly verifyAuthenticationToken: {
+    readonly validation: VerifyAuthenticationTokenValidation | null;
+    readonly authenticationToken: {
+      readonly id: string;
+      readonly verified: boolean;
     } | null;
+  } | null;
 };
+export type VerifyTokenMutationResponse = VerifyTokenMutation$data;
 export type VerifyTokenMutation = {
-    readonly response: VerifyTokenMutationResponse;
-    readonly variables: VerifyTokenMutationVariables;
+  variables: VerifyTokenMutationVariables;
+  response: VerifyTokenMutation$data;
 };
-
-
-
-/*
-mutation VerifyTokenMutation(
-  $input: VerifyAuthenticationTokenInput!
-) {
-  verifyAuthenticationToken(input: $input) {
-    validation
-    authenticationToken {
-      id
-      verified
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -127,5 +121,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'bfce37f014436b55ebd382bf991455ba';
+
+(node as any).hash = "bfce37f014436b55ebd382bf991455ba";
+
 export default node;

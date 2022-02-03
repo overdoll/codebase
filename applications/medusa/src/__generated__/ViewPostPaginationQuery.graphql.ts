@@ -1,192 +1,34 @@
+/**
+ * @generated SignedSource<<e2293198694b33a2cb0b4b210dcbd589>>
+ * @relayHash 721b9b3e6520c764a9dc353d3c8ffabf
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 721b9b3e6520c764a9dc353d3c8ffabf */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 721b9b3e6520c764a9dc353d3c8ffabf
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ViewPostPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type ViewPostPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type ViewPostPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"PublicPostFragment">;
-    } | null;
+export type ViewPostPaginationQueryVariables = ViewPostPaginationQuery$variables;
+export type ViewPostPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"PublicPostFragment">;
+  } | null;
 };
+export type ViewPostPaginationQueryResponse = ViewPostPaginationQuery$data;
 export type ViewPostPaginationQuery = {
-    readonly response: ViewPostPaginationQueryResponse;
-    readonly variables: ViewPostPaginationQueryVariables;
+  variables: ViewPostPaginationQueryVariables;
+  response: ViewPostPaginationQuery$data;
 };
-
-
-
-/*
-query ViewPostPaginationQuery(
-  $after: String
-  $first: Int = 10
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...PublicPostFragment_2HEEH6
-    id
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment PublicPostFragment_2HEEH6 on Post {
-  suggestedPosts(first: $first, after: $after) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -552,5 +394,7 @@ return {
   }
 };
 })();
-(node as any).hash = '2637b02c8a7f2f31d1cde9a992e6f847';
+
+(node as any).hash = "2637b02c8a7f2f31d1cde9a992e6f847";
+
 export default node;

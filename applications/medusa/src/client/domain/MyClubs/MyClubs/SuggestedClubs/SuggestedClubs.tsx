@@ -66,7 +66,7 @@ export default function SuggestedClubs ({
   const ClubItem = ({ node }: ClubProps): JSX.Element => {
     return (
       <>
-        <Link to={`/${node.slug as string}`}>
+        <Link to={`/${node.slug}`}>
           <ClickableTile>
             <ClubTileOverlay query={node} />
           </ClickableTile>

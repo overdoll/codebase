@@ -1,27 +1,31 @@
+/**
+ * @generated SignedSource<<dae21cd9ee58da6b73580cb1ac43ffe6>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AuditLogsFragment = {
-    readonly postAuditLogs: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"AuditCardFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "AuditLogsFragment";
+export type AuditLogsFragment$data = {
+  readonly postAuditLogs: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"AuditCardFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "AuditLogsFragment";
 };
-export type AuditLogsFragment$data = AuditLogsFragment;
+export type AuditLogsFragment = AuditLogsFragment$data;
 export type AuditLogsFragment$key = {
-    readonly " $data"?: AuditLogsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"AuditLogsFragment">;
+  readonly " $data"?: AuditLogsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AuditLogsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -70,7 +74,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AuditLogsPaginationQuery.graphql.ts'),
+      "operation": require('./AuditLogsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -118,16 +122,16 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "AuditCardFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "AuditCardFragment"
                 }
               ],
               "storageKey": null
@@ -182,5 +186,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '349f729a9bb99751140cc7dc2ce2c5d3';
+
+(node as any).hash = "349f729a9bb99751140cc7dc2ce2c5d3";
+
 export default node;

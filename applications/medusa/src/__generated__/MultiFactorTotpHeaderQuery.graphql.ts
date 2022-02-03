@@ -1,32 +1,30 @@
+/**
+ * @generated SignedSource<<7620201f8fdb536ad941f15e79af1a56>>
+ * @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc */
 
-import { ConcreteRequest } from "relay-runtime";
-export type MultiFactorTotpHeaderQueryVariables = {};
-export type MultiFactorTotpHeaderQueryResponse = {
-    readonly viewer: {
-        readonly multiFactorTotpConfigured: boolean;
-        readonly recoveryCodesGenerated: boolean;
-    } | null;
+// @relayRequestID 31b9f7c5cb488bf65b60500d8d4fd9dc
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type MultiFactorTotpHeaderQuery$variables = {};
+export type MultiFactorTotpHeaderQueryVariables = MultiFactorTotpHeaderQuery$variables;
+export type MultiFactorTotpHeaderQuery$data = {
+  readonly viewer: {
+    readonly multiFactorTotpConfigured: boolean;
+    readonly recoveryCodesGenerated: boolean;
+  };
 };
+export type MultiFactorTotpHeaderQueryResponse = MultiFactorTotpHeaderQuery$data;
 export type MultiFactorTotpHeaderQuery = {
-    readonly response: MultiFactorTotpHeaderQueryResponse;
-    readonly variables: MultiFactorTotpHeaderQueryVariables;
+  variables: MultiFactorTotpHeaderQueryVariables;
+  response: MultiFactorTotpHeaderQuery$data;
 };
-
-
-
-/*
-query MultiFactorTotpHeaderQuery {
-  viewer {
-    multiFactorTotpConfigured
-    recoveryCodesGenerated
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -51,17 +49,22 @@ return {
     "name": "MultiFactorTotpHeaderQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -104,5 +107,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'd3ed57da4462d7d3e4fd9e29582d0bf6';
+
+(node as any).hash = "92fc4caa07bdf33682362b25781eb9e7";
+
 export default node;

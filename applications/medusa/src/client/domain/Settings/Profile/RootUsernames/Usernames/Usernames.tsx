@@ -12,7 +12,7 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery {
-    viewer {
+    viewer @required(action: THROW) {
       ...UsernamesSettingsFragment
     }
   }
@@ -35,7 +35,7 @@ export default function Usernames (props: Props): JSX.Element | null {
     props.query
   )
 
-  const data = useFragment<UsernamesSettingsFragment$key>(UsernameFragmentGQL, queryData?.viewer)
+  const data = useFragment<UsernamesSettingsFragment$key>(UsernameFragmentGQL, queryData.viewer)
 
   const {
     isOpen: isFormOpen,
@@ -73,14 +73,16 @@ export default function Usernames (props: Props): JSX.Element | null {
         </Button>
         <Collapse in={isFormOpen} animateOpacity>
           <Stack spacing={2}>
-            {!canEditUsername && <Alert status='warning'>
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>
-                  You have recently made a username edit. You may edit your username again in {remainingTime}.
-                </Trans>
-              </AlertDescription>
-            </Alert>}
+            {!canEditUsername && (
+              <Alert status='warning'>
+                <AlertIcon />
+                <AlertDescription>
+                  <Trans>
+                    You have recently made a username edit. You may edit your username again in {remainingTime}.
+                  </Trans>
+                </AlertDescription>
+              </Alert>
+            )}
             <ChangeUsernameForm isDisabled={!canEditUsername} />
           </Stack>
         </Collapse>

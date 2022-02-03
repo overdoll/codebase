@@ -1,27 +1,31 @@
+/**
+ * @generated SignedSource<<7139d6b4970f407f53b7ad852e6d9825>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ProcessUploadsFragment = {
+export type ProcessUploadsFragment$data = {
+  readonly id: string;
+  readonly reference: string;
+  readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly reference: string;
-    readonly content: ReadonlyArray<{
-        readonly id: string;
-        readonly urls: ReadonlyArray<{
-            readonly url: string;
-        }>;
+    readonly urls: ReadonlyArray<{
+      readonly url: string;
     }>;
-    readonly " $refType": "ProcessUploadsFragment";
+  }>;
+  readonly " $fragmentType": "ProcessUploadsFragment";
 };
-export type ProcessUploadsFragment$data = ProcessUploadsFragment;
+export type ProcessUploadsFragment = ProcessUploadsFragment$data;
 export type ProcessUploadsFragment$key = {
-    readonly " $data"?: ProcessUploadsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ProcessUploadsFragment">;
+  readonly " $data"?: ProcessUploadsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ProcessUploadsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -80,5 +84,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'aaf8633a0364568e9b846505fa42732b';
+
+(node as any).hash = "aaf8633a0364568e9b846505fa42732b";
+
 export default node;

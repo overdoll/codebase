@@ -1,24 +1,28 @@
+/**
+ * @generated SignedSource<<2db38456828d6f342227f557e916f198>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ManageClubSlugAliasesFragment = {
-    readonly id: string;
+export type ManageClubSlugAliasesFragment$data = {
+  readonly id: string;
+  readonly slug: string;
+  readonly slugAliases: ReadonlyArray<{
     readonly slug: string;
-    readonly slugAliases: ReadonlyArray<{
-        readonly slug: string;
-    }>;
-    readonly " $refType": "ManageClubSlugAliasesFragment";
+  }>;
+  readonly " $fragmentType": "ManageClubSlugAliasesFragment";
 };
-export type ManageClubSlugAliasesFragment$data = ManageClubSlugAliasesFragment;
+export type ManageClubSlugAliasesFragment = ManageClubSlugAliasesFragment$data;
 export type ManageClubSlugAliasesFragment$key = {
-    readonly " $data"?: ManageClubSlugAliasesFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ManageClubSlugAliasesFragment">;
+  readonly " $data"?: ManageClubSlugAliasesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ManageClubSlugAliasesFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -59,5 +63,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '9653bbe95b6a47d46fb35805caea7b12';
+
+(node as any).hash = "9653bbe95b6a47d46fb35805caea7b12";
+
 export default node;

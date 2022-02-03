@@ -1198,7 +1198,7 @@ type SuspendClubPayload {
   club: Club
 }
 
-extend type Mutation {
+type Mutation {
   """
   Become a member of a club
   """
@@ -1254,7 +1254,7 @@ extend type Mutation {
   unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
 }
 
-extend type Query {
+type Query {
   """Search multiple clubs."""
   clubs(
     """Returns the elements in the list that come after the specified cursor."""

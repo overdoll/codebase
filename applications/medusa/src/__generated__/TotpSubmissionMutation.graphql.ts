@@ -1,44 +1,39 @@
+/**
+ * @generated SignedSource<<85a993b42655803f6762bc43fbcfc509>>
+ * @relayHash 58034fa7073cc309429438b94b4c630d
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 58034fa7073cc309429438b94b4c630d */
 
-import { ConcreteRequest } from "relay-runtime";
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
+// @relayRequestID 58034fa7073cc309429438b94b4c630d
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "TOKEN_INVALID" | "CODE_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput = {
-    token: string;
-    code: string;
+  token: string;
+  code: string;
 };
-export type TotpSubmissionMutationVariables = {
-    input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput;
+export type TotpSubmissionMutation$variables = {
+  input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput;
 };
-export type TotpSubmissionMutationResponse = {
-    readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: {
-        readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
-        readonly account: {
-            readonly id: string;
-        } | null;
+export type TotpSubmissionMutationVariables = TotpSubmissionMutation$variables;
+export type TotpSubmissionMutation$data = {
+  readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: {
+    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
+    readonly account: {
+      readonly id: string;
     } | null;
+  } | null;
 };
+export type TotpSubmissionMutationResponse = TotpSubmissionMutation$data;
 export type TotpSubmissionMutation = {
-    readonly response: TotpSubmissionMutationResponse;
-    readonly variables: TotpSubmissionMutationVariables;
+  variables: TotpSubmissionMutationVariables;
+  response: TotpSubmissionMutation$data;
 };
-
-
-
-/*
-mutation TotpSubmissionMutation(
-  $input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!
-) {
-  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
-    validation
-    account {
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -118,5 +113,7 @@ return {
   }
 };
 })();
-(node as any).hash = '2669e660cadc249a8cef4a11d5ee9a1b';
+
+(node as any).hash = "2669e660cadc249a8cef4a11d5ee9a1b";
+
 export default node;

@@ -1,32 +1,30 @@
+/**
+ * @generated SignedSource<<c45459b68fe9dda038f459a27975080c>>
+ * @relayHash 804fe907fb28b2a3a8486ac387e04dd1
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 804fe907fb28b2a3a8486ac387e04dd1 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CreateClubQueryVariables = {};
-export type CreateClubQueryResponse = {
-    readonly viewer: {
-        readonly clubsLimit: number;
-        readonly clubsCount: number;
-    } | null;
+// @relayRequestID 804fe907fb28b2a3a8486ac387e04dd1
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type CreateClubQuery$variables = {};
+export type CreateClubQueryVariables = CreateClubQuery$variables;
+export type CreateClubQuery$data = {
+  readonly viewer: {
+    readonly clubsLimit: number;
+    readonly clubsCount: number;
+  } | null;
 };
+export type CreateClubQueryResponse = CreateClubQuery$data;
 export type CreateClubQuery = {
-    readonly response: CreateClubQueryResponse;
-    readonly variables: CreateClubQueryVariables;
+  variables: CreateClubQueryVariables;
+  response: CreateClubQuery$data;
 };
-
-
-
-/*
-query CreateClubQuery {
-  viewer {
-    clubsLimit
-    clubsCount
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -104,5 +102,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e90a49fd67094a9cabdc5840f44733c3';
+
+(node as any).hash = "e90a49fd67094a9cabdc5840f44733c3";
+
 export default node;

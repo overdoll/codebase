@@ -98,7 +98,7 @@ it('should reset error when pressed', async () => {
   // error thrown by our component
   await waitFor(() => expect(button).toBeVisible())
 
-  await waitFor(() => userEvent.click(button))
+  await waitFor(async () => await userEvent.click(button))
 
   // fallback will be visible, but this time the other state will be visible to indicate
   // that the reset actually occurred

@@ -1,26 +1,30 @@
+/**
+ * @generated SignedSource<<a2884afc33f8ebfb689c2280069b3c99>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type PostGalleryPublicDetailedFragment = {
-    readonly id: string;
-    readonly reference: string;
-    readonly content: ReadonlyArray<{
-        readonly type: ResourceType;
-        readonly " $fragmentRefs": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
-    }>;
-    readonly " $refType": "PostGalleryPublicDetailedFragment";
+import { FragmentRefs } from "relay-runtime";
+export type PostGalleryPublicDetailedFragment$data = {
+  readonly id: string;
+  readonly reference: string;
+  readonly content: ReadonlyArray<{
+    readonly type: ResourceType;
+    readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+  }>;
+  readonly " $fragmentType": "PostGalleryPublicDetailedFragment";
 };
-export type PostGalleryPublicDetailedFragment$data = PostGalleryPublicDetailedFragment;
+export type PostGalleryPublicDetailedFragment = PostGalleryPublicDetailedFragment$data;
 export type PostGalleryPublicDetailedFragment$key = {
-    readonly " $data"?: PostGalleryPublicDetailedFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostGalleryPublicDetailedFragment">;
+  readonly " $data"?: PostGalleryPublicDetailedFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -74,5 +78,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = '9f83a11c72f72e429cfce0fc9b4c8d2d';
+
+(node as any).hash = "9f83a11c72f72e429cfce0fc9b4c8d2d";
+
 export default node;

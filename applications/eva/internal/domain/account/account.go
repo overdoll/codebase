@@ -260,7 +260,7 @@ func (a *Account) UpdateEmail(emails []*Email, email string) error {
 }
 
 func validateUsername(username string) error {
-	err := validator.New().Var(username, "required,alphanum")
+	err := validator.New().Var(username, "required,alphanum,max=25,excludesall= ")
 
 	if err != nil {
 		return err

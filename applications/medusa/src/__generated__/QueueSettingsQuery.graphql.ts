@@ -1,38 +1,30 @@
+/**
+ * @generated SignedSource<<df538ab99dc1a37b75fc8c6dba29c20d>>
+ * @relayHash b362964b720ce01b03d1ca29b8bb9e55
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b362964b720ce01b03d1ca29b8bb9e55 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID b362964b720ce01b03d1ca29b8bb9e55
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type QueueSettingsQueryVariables = {};
-export type QueueSettingsQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"QueueSettingsFragment">;
-    } | null;
+export type QueueSettingsQuery$variables = {};
+export type QueueSettingsQueryVariables = QueueSettingsQuery$variables;
+export type QueueSettingsQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"QueueSettingsFragment">;
+  };
 };
+export type QueueSettingsQueryResponse = QueueSettingsQuery$data;
 export type QueueSettingsQuery = {
-    readonly response: QueueSettingsQueryResponse;
-    readonly variables: QueueSettingsQueryVariables;
+  variables: QueueSettingsQueryVariables;
+  response: QueueSettingsQuery$data;
 };
-
-
-
-/*
-query QueueSettingsQuery {
-  viewer {
-    ...QueueSettingsFragment
-    id
-  }
-}
-
-fragment QueueSettingsFragment on Account {
-  id
-  moderatorSettings {
-    isInModeratorQueue
-  }
-}
-*/
 
 const node: ConcreteRequest = {
   "fragment": {
@@ -42,20 +34,25 @@ const node: ConcreteRequest = {
     "name": "QueueSettingsQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "QueueSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "QueueSettingsFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -113,5 +110,7 @@ const node: ConcreteRequest = {
     "text": null
   }
 };
-(node as any).hash = '87666487e59d3d0b0ad33448974d6d75';
+
+(node as any).hash = "7c379e6864f97bdee5f0522c04bc93cf";
+
 export default node;

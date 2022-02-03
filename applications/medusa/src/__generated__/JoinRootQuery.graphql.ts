@@ -1,88 +1,41 @@
+/**
+ * @generated SignedSource<<2c2c833514baa31217d94cd073845e45>>
+ * @relayHash b9a9f9a603e985afc8ffb99a6f646732
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b9a9f9a603e985afc8ffb99a6f646732 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID b9a9f9a603e985afc8ffb99a6f646732
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type JoinRootQueryVariables = {
-    token: string;
+export type JoinRootQuery$variables = {
+  token: string;
 };
-export type JoinRootQueryResponse = {
-    readonly viewAuthenticationToken: {
-        readonly verified: boolean;
-        readonly token: string;
-        readonly sameDevice: boolean;
-        readonly accountStatus: {
-            readonly registered: boolean;
-            readonly multiFactor: {
-                readonly totp: boolean;
-            } | null;
-        } | null;
-        readonly " $fragmentRefs": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment">;
+export type JoinRootQueryVariables = JoinRootQuery$variables;
+export type JoinRootQuery$data = {
+  readonly viewAuthenticationToken: {
+    readonly verified: boolean;
+    readonly token: string;
+    readonly sameDevice: boolean;
+    readonly accountStatus: {
+      readonly registered: boolean;
+      readonly multiFactor: {
+        readonly totp: boolean;
+      } | null;
     } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment">;
+  } | null;
 };
+export type JoinRootQueryResponse = JoinRootQuery$data;
 export type JoinRootQuery = {
-    readonly response: JoinRootQueryResponse;
-    readonly variables: JoinRootQueryVariables;
+  variables: JoinRootQueryVariables;
+  response: JoinRootQuery$data;
 };
-
-
-
-/*
-query JoinRootQuery(
-  $token: String!
-) {
-  viewAuthenticationToken(token: $token) {
-    ...LobbyFragment
-    ...RegisterFragment
-    ...MultiFactorFragment
-    ...GrantFragment
-    verified
-    token
-    sameDevice
-    accountStatus {
-      registered
-      multiFactor {
-        totp
-      }
-    }
-    id
-  }
-}
-
-fragment GrantFragment on AuthenticationToken {
-  id
-  token
-}
-
-fragment LobbyFragment on AuthenticationToken {
-  id
-}
-
-fragment MultiFactorFragment on AuthenticationToken {
-  accountStatus {
-    multiFactor {
-      totp
-    }
-  }
-  ...TotpSubmissionFragment
-  ...RecoveryCodeFragment
-}
-
-fragment RecoveryCodeFragment on AuthenticationToken {
-  token
-}
-
-fragment RegisterFragment on AuthenticationToken {
-  id
-  token
-}
-
-fragment TotpSubmissionFragment on AuthenticationToken {
-  token
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -160,22 +113,6 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AuthenticationTokenAccountStatus",
-            "kind": "LinkedField",
-            "name": "accountStatus",
-            "plural": false,
-            "selections": [
-              (v5/*: any*/),
-              (v6/*: any*/)
-            ],
-            "storageKey": null
-          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -200,6 +137,22 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "GrantFragment"
+          },
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              (v6/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -229,6 +182,18 @@ return {
             "name": "id",
             "storageKey": null
           },
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "email",
+                "storageKey": null
+              }
+            ]
+          },
           (v3/*: any*/),
           {
             "alias": null,
@@ -244,19 +209,7 @@ return {
             "storageKey": null
           },
           (v2/*: any*/),
-          (v4/*: any*/),
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              }
-            ]
-          }
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -271,5 +224,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b6ab2a575167d026647e2fa71de653c0';
+
+(node as any).hash = "b6ab2a575167d026647e2fa71de653c0";
+
 export default node;

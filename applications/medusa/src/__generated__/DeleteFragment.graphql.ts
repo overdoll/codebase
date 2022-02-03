@@ -1,21 +1,25 @@
+/**
+ * @generated SignedSource<<4c8e5cecc13c58b853262140b52c4c2d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type DeleteFragment = {
-    readonly id: string;
-    readonly email: string;
-    readonly " $refType": "DeleteFragment";
+export type DeleteFragment$data = {
+  readonly id: string;
+  readonly email: string;
+  readonly " $fragmentType": "DeleteFragment";
 };
-export type DeleteFragment$data = DeleteFragment;
+export type DeleteFragment = DeleteFragment$data;
 export type DeleteFragment$key = {
-    readonly " $data"?: DeleteFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"DeleteFragment">;
+  readonly " $data"?: DeleteFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DeleteFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -41,5 +45,7 @@ const node: ReaderFragment = {
   "type": "AccountEmail",
   "abstractKey": null
 };
-(node as any).hash = '1e70daac2f5bdbfb6f7895bda5c4b14b';
+
+(node as any).hash = "1e70daac2f5bdbfb6f7895bda5c4b14b";
+
 export default node;

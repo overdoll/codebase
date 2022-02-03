@@ -1,94 +1,34 @@
+/**
+ * @generated SignedSource<<247011b43d4cc7cf19105423dc52d3a5>>
+ * @relayHash db411e46fb5294e43db99919f6806ad5
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash db411e46fb5294e43db99919f6806ad5 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID db411e46fb5294e43db99919f6806ad5
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubMembersPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type ClubMembersPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type ClubMembersPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubMembersFragment">;
-    } | null;
+export type ClubMembersPaginationQueryVariables = ClubMembersPaginationQuery$variables;
+export type ClubMembersPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubMembersFragment">;
+  } | null;
 };
+export type ClubMembersPaginationQueryResponse = ClubMembersPaginationQuery$data;
 export type ClubMembersPaginationQuery = {
-    readonly response: ClubMembersPaginationQueryResponse;
-    readonly variables: ClubMembersPaginationQueryVariables;
+  variables: ClubMembersPaginationQueryVariables;
+  response: ClubMembersPaginationQuery$data;
 };
-
-
-
-/*
-query ClubMembersPaginationQuery(
-  $after: String
-  $first: Int = 20
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...ClubMembersFragment_2HEEH6
-    id
-  }
-}
-
-fragment AccountTileOverlayFragment on Account {
-  avatar {
-    ...ResourceIconFragment
-    ...ResourceItemFragment
-    id
-  }
-  username
-}
-
-fragment ClubMembersFragment_2HEEH6 on Club {
-  members(first: $first, after: $after) {
-    edges {
-      node {
-        id
-        account {
-          ...AccountTileOverlayFragment
-          id
-        }
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -344,5 +284,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'f7105a5a40e51637b712f4af01545393';
+
+(node as any).hash = "f7105a5a40e51637b712f4af01545393";
+
 export default node;

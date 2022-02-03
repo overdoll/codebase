@@ -1,46 +1,39 @@
+/**
+ * @generated SignedSource<<a9abad1d1b12ea16476608ae3832ff94>>
+ * @relayHash cd4a8c78de6041cba5003e98bef1b054
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash cd4a8c78de6041cba5003e98bef1b054 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID cd4a8c78de6041cba5003e98bef1b054
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AddModeratorToPostQueueInput = {
-    accountId: string;
+  accountId: string;
 };
-export type QueueSettingsAddMutationVariables = {
-    input: AddModeratorToPostQueueInput;
+export type QueueSettingsAddMutation$variables = {
+  input: AddModeratorToPostQueueInput;
 };
-export type QueueSettingsAddMutationResponse = {
-    readonly addModeratorToPostQueue: {
-        readonly account: {
-            readonly id: string;
-            readonly moderatorSettings: {
-                readonly isInModeratorQueue: boolean;
-            };
-        } | null;
+export type QueueSettingsAddMutationVariables = QueueSettingsAddMutation$variables;
+export type QueueSettingsAddMutation$data = {
+  readonly addModeratorToPostQueue: {
+    readonly account: {
+      readonly id: string;
+      readonly moderatorSettings: {
+        readonly isInModeratorQueue: boolean;
+      };
     } | null;
+  } | null;
 };
+export type QueueSettingsAddMutationResponse = QueueSettingsAddMutation$data;
 export type QueueSettingsAddMutation = {
-    readonly response: QueueSettingsAddMutationResponse;
-    readonly variables: QueueSettingsAddMutationVariables;
+  variables: QueueSettingsAddMutationVariables;
+  response: QueueSettingsAddMutation$data;
 };
-
-
-
-/*
-mutation QueueSettingsAddMutation(
-  $input: AddModeratorToPostQueueInput!
-) {
-  addModeratorToPostQueue(input: $input) {
-    account {
-      id
-      moderatorSettings {
-        isInModeratorQueue
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -131,5 +124,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a0c9565811a173e4ebb37ff9f73643b3';
+
+(node as any).hash = "a0c9565811a173e4ebb37ff9f73643b3";
+
 export default node;

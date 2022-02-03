@@ -2,7 +2,13 @@ import { graphql } from 'react-relay/hooks'
 import type { SearchCharactersQuery } from '@//:artifacts/SearchCharactersQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
-import { CharacterTileOverlay, GridTile, GridWrap, LoadMoreGridTile, Selector } from '../../../../../../modules/content/ContentSelection'
+import {
+  CharacterTileOverlay,
+  GridTile,
+  GridWrap,
+  LoadMoreGridTile,
+  Selector
+} from '../../../../../../modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import { SearchCharactersGeneralFragment$key } from '@//:artifacts/SearchCharactersGeneralFragment.graphql'
 import { useEffect } from 'react'
@@ -18,7 +24,7 @@ const SearchCharactersFragmentGQL = graphql`
   fragment SearchCharactersGeneralFragment on Query
   @argumentDefinitions(
     after: {type: String},
-    name: {type: String}
+    search: {type: String}
   )
   @refetchable(queryName: "SearchCharactersGeneralPaginationFragment" )
   {
@@ -30,6 +36,7 @@ const SearchCharactersFragmentGQL = graphql`
       seriesSlug: $charactersSeriesSlug
     ) @connection(key: "SearchCharactersGeneral_characters")
     {
+
       edges {
         node {
           id

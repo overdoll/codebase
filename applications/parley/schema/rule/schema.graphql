@@ -33,7 +33,7 @@ type RuleConnection {
   edges: [RuleEdge!]!
   pageInfo: PageInfo!
 }
-extend type Query {
+type Query {
   """
   Get all rules for the site.
   """

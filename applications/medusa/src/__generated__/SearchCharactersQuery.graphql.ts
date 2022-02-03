@@ -1,80 +1,30 @@
+/**
+ * @generated SignedSource<<2eee371ffdbcae903ab85629f52f98d9>>
+ * @relayHash f2bf5e69d2c4096d1aa9b5bb0eb3ab27
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f2bf5e69d2c4096d1aa9b5bb0eb3ab27 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID f2bf5e69d2c4096d1aa9b5bb0eb3ab27
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCharactersQueryVariables = {
-    name?: string | null | undefined;
+export type SearchCharactersQuery$variables = {
+  name?: string | null;
 };
-export type SearchCharactersQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCharactersFragment">;
+export type SearchCharactersQueryVariables = SearchCharactersQuery$variables;
+export type SearchCharactersQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersFragment">;
 };
+export type SearchCharactersQueryResponse = SearchCharactersQuery$data;
 export type SearchCharactersQuery = {
-    readonly response: SearchCharactersQueryResponse;
-    readonly variables: SearchCharactersQueryVariables;
+  variables: SearchCharactersQueryVariables;
+  response: SearchCharactersQuery$data;
 };
-
-
-
-/*
-query SearchCharactersQuery(
-  $name: String
-) {
-  ...SearchCharactersFragment_2aiVTE
-}
-
-fragment CharacterTileOverlayFragment on Character {
-  name
-  series {
-    title
-    id
-  }
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCharactersFragment_2aiVTE on Query {
-  characters(first: 3, name: $name) {
-    edges {
-      node {
-        id
-        name
-        ...CharacterTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -293,5 +243,7 @@ return {
   }
 };
 })();
-(node as any).hash = '7e0729de03e5cec1277e9e9bb5555859';
+
+(node as any).hash = "7e0729de03e5cec1277e9e9bb5555859";
+
 export default node;

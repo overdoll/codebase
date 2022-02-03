@@ -1,84 +1,33 @@
+/**
+ * @generated SignedSource<<6329897e8baa646b762926553eaf7b27>>
+ * @relayHash 9f76f0ccf849995cc8dd7eef9b4a6130
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash bffd9e46bea4c56848592e76c73fadd9 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 9f76f0ccf849995cc8dd7eef9b4a6130
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCategoriesGeneralPaginationFragmentVariables = {
-    after?: string | null | undefined;
-    categoriesSlugs?: Array<string> | null | undefined;
-    first?: number | null | undefined;
-    search?: string | null | undefined;
-    title?: string | null | undefined;
+export type SearchCategoriesGeneralPaginationFragment$variables = {
+  after?: string | null;
+  categoriesSlugs?: ReadonlyArray<string> | null;
+  first?: number | null;
+  search?: string | null;
 };
-export type SearchCategoriesGeneralPaginationFragmentResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCategoriesGeneralFragment">;
+export type SearchCategoriesGeneralPaginationFragmentVariables = SearchCategoriesGeneralPaginationFragment$variables;
+export type SearchCategoriesGeneralPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesGeneralFragment">;
 };
+export type SearchCategoriesGeneralPaginationFragmentResponse = SearchCategoriesGeneralPaginationFragment$data;
 export type SearchCategoriesGeneralPaginationFragment = {
-    readonly response: SearchCategoriesGeneralPaginationFragmentResponse;
-    readonly variables: SearchCategoriesGeneralPaginationFragmentVariables;
+  variables: SearchCategoriesGeneralPaginationFragmentVariables;
+  response: SearchCategoriesGeneralPaginationFragment$data;
 };
-
-
-
-/*
-query SearchCategoriesGeneralPaginationFragment(
-  $after: String
-  $categoriesSlugs: [String!]
-  $first: Int
-  $search: String
-) {
-  ...SearchCategoriesGeneralFragment_2fTRgi
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCategoriesGeneralFragment_2fTRgi on Query {
-  categories(first: $first, after: $after, title: $search, slugs: $categoriesSlugs) {
-    edges {
-      node {
-        id
-        slug
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -101,11 +50,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "search"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "title"
   }
 ],
 v1 = {
@@ -150,8 +94,8 @@ return {
           (v1/*: any*/),
           {
             "kind": "Variable",
-            "name": "title",
-            "variableName": "title"
+            "name": "search",
+            "variableName": "search"
           }
         ],
         "kind": "FragmentSpread",
@@ -313,7 +257,7 @@ return {
     ]
   },
   "params": {
-    "id": "bffd9e46bea4c56848592e76c73fadd9",
+    "id": "9f76f0ccf849995cc8dd7eef9b4a6130",
     "metadata": {},
     "name": "SearchCategoriesGeneralPaginationFragment",
     "operationKind": "query",
@@ -321,5 +265,7 @@ return {
   }
 };
 })();
-(node as any).hash = '520ed291d34c115ada1b7b76f65b3029';
+
+(node as any).hash = "142203410a7562eadf2e96742a0f7efa";
+
 export default node;

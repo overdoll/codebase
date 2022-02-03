@@ -12,7 +12,7 @@ interface Props {
 
 const MultiFactorQueryGQL = graphql`
   query MultiFactorSettingsQuery {
-    viewer {
+    viewer @required(action: THROW) {
       multiFactorTotpConfigured
       ...DisableMultiFactorFragment
       ...MultiFactorTotpSettingsFragment
@@ -27,17 +27,12 @@ export default function MultiFactorSettings (props: Props): JSX.Element | null {
     props.query
   )
 
-  // Fix an error that happens if a user logs out from the multi factor page
-  if (data?.viewer == null) {
-    return null
-  }
-
   return (
     <Stack spacing={2}>
-      <RecoveryCodesSettings data={data?.viewer} />
-      <MultiFactorTotpSettings data={data?.viewer} />
-      {data?.viewer?.multiFactorTotpConfigured &&
-        <DisableMultiFactor data={data?.viewer} />}
+      <RecoveryCodesSettings data={data.viewer} />
+      <MultiFactorTotpSettings data={data.viewer} />
+      {data.viewer.multiFactorTotpConfigured &&
+        <DisableMultiFactor data={data.viewer} />}
     </Stack>
   )
 }

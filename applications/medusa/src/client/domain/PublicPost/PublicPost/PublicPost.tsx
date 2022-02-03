@@ -72,13 +72,15 @@ export default function PublicPost (props: Props): JSX.Element {
         watchChange={queryData?.post?.reference}
         childrenTitle={<Trans>View Post</Trans>}
         infiniteScrollTitle={<Trans>Suggested Posts</Trans>}
-        pageInfiniteScroll={<PostsInfiniteScroll
-          query={data.suggestedPosts}
-          viewerQuery={queryData.viewer}
-          hasNext={hasNext}
-          loadNext={loadNext}
-          isLoadingNext={isLoadingNext}
-                            />}
+        pageInfiniteScroll={(
+          <PostsInfiniteScroll
+            query={data.suggestedPosts}
+            viewerQuery={queryData.viewer}
+            hasNext={hasNext}
+            loadNext={loadNext}
+            isLoadingNext={isLoadingNext}
+          />
+        )}
       >
         <ObserverManagerProvider>
           <PostVideoManagerProvider>

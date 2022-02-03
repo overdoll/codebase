@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<5ef7edc0e05a91aa3f55697b87fe4855>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RejectionReasonsFragment = {
-    readonly rules: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly infraction: boolean;
-            };
-        }>;
-    };
-    readonly " $refType": "RejectionReasonsFragment";
+export type RejectionReasonsFragment$data = {
+  readonly rules: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly infraction: boolean;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "RejectionReasonsFragment";
 };
-export type RejectionReasonsFragment$data = RejectionReasonsFragment;
+export type RejectionReasonsFragment = RejectionReasonsFragment$data;
 export type RejectionReasonsFragment$key = {
-    readonly " $data"?: RejectionReasonsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"RejectionReasonsFragment">;
+  readonly " $data"?: RejectionReasonsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"RejectionReasonsFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -88,5 +92,7 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
-(node as any).hash = '119c98a1df163dd7aebae6f0e69c3f67';
+
+(node as any).hash = "119c98a1df163dd7aebae6f0e69c3f67";
+
 export default node;

@@ -1,104 +1,35 @@
+/**
+ * @generated SignedSource<<ee8f7847b2e41771eea5add5d161c6eb>>
+ * @relayHash 1bda8b6b0e0cfa63bdd32fe25338fd14
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1bda8b6b0e0cfa63bdd32fe25338fd14 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 1bda8b6b0e0cfa63bdd32fe25338fd14
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubListSelectorPaginationFragmentVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    name?: string | null | undefined;
-    id: string;
+export type ClubListSelectorPaginationFragment$variables = {
+  after?: string | null;
+  first?: number | null;
+  name?: string | null;
+  id: string;
 };
-export type ClubListSelectorPaginationFragmentResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubListSelectorFragment">;
-    } | null;
+export type ClubListSelectorPaginationFragmentVariables = ClubListSelectorPaginationFragment$variables;
+export type ClubListSelectorPaginationFragment$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubListSelectorFragment">;
+  } | null;
 };
+export type ClubListSelectorPaginationFragmentResponse = ClubListSelectorPaginationFragment$data;
 export type ClubListSelectorPaginationFragment = {
-    readonly response: ClubListSelectorPaginationFragmentResponse;
-    readonly variables: ClubListSelectorPaginationFragmentVariables;
+  variables: ClubListSelectorPaginationFragmentVariables;
+  response: ClubListSelectorPaginationFragment$data;
 };
-
-
-
-/*
-query ClubListSelectorPaginationFragment(
-  $after: String
-  $first: Int = 3
-  $name: String
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...ClubListSelectorFragment_3cTRis
-    id
-  }
-}
-
-fragment ClubListSelectorFragment_3cTRis on Account {
-  clubs(first: $first, after: $after, name: $name) {
-    edges {
-      node {
-        slug
-        ...ClubTileOverlayFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ClubTileOverlayFragment on Club {
-  name
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-  posts(first: 1) {
-    edges {
-      node {
-        content {
-          ...ResourceItemFragment
-          id
-        }
-        id
-      }
-    }
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -420,5 +351,7 @@ return {
   }
 };
 })();
-(node as any).hash = '895ae34790f2e7dece66f96eb0659eda';
+
+(node as any).hash = "895ae34790f2e7dece66f96eb0659eda";
+
 export default node;

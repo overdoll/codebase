@@ -24,7 +24,6 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/eva")
 
-	rootCmd.AddCommand(ports.Cli)
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "grpc",

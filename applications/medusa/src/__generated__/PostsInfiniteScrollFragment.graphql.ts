@@ -1,24 +1,28 @@
+/**
+ * @generated SignedSource<<fed467ba944487be7557ca8d6002c097>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsInfiniteScrollFragment = {
-    readonly edges: ReadonlyArray<{
-        readonly node: {
-            readonly " $fragmentRefs": FragmentRefs<"FullSimplePostFragment">;
-        };
-    }>;
-    readonly " $refType": "PostsInfiniteScrollFragment";
+export type PostsInfiniteScrollFragment$data = {
+  readonly edges: ReadonlyArray<{
+    readonly node: {
+      readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+    };
+  }>;
+  readonly " $fragmentType": "PostsInfiniteScrollFragment";
 };
-export type PostsInfiniteScrollFragment$data = PostsInfiniteScrollFragment;
+export type PostsInfiniteScrollFragment = PostsInfiniteScrollFragment$data;
 export type PostsInfiniteScrollFragment$key = {
-    readonly " $data"?: PostsInfiniteScrollFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
+  readonly " $data"?: PostsInfiniteScrollFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -57,5 +61,7 @@ const node: ReaderFragment = {
   "type": "PostConnection",
   "abstractKey": null
 };
-(node as any).hash = '6ab729e8d0bfe7ee57af78790616434a';
+
+(node as any).hash = "6ab729e8d0bfe7ee57af78790616434a";
+
 export default node;

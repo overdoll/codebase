@@ -1,45 +1,39 @@
+/**
+ * @generated SignedSource<<e18df3a892429af69fe38be8e90400d5>>
+ * @relayHash c49b64df64e1f7fc65b3512b5927b2f4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash c49b64df64e1f7fc65b3512b5927b2f4 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
+// @relayRequestID c49b64df64e1f7fc65b3512b5927b2f4
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
 export type SubmitPostInput = {
-    id: string;
+  id: string;
 };
-export type SubmitPostButtonMutationVariables = {
-    input: SubmitPostInput;
+export type SubmitPostButtonMutation$variables = {
+  input: SubmitPostInput;
 };
-export type SubmitPostButtonMutationResponse = {
-    readonly submitPost: {
-        readonly post: {
-            readonly id: string;
-            readonly state: PostState;
-        } | null;
-        readonly inReview: boolean | null;
+export type SubmitPostButtonMutationVariables = SubmitPostButtonMutation$variables;
+export type SubmitPostButtonMutation$data = {
+  readonly submitPost: {
+    readonly post: {
+      readonly id: string;
+      readonly state: PostState;
     } | null;
+    readonly inReview: boolean | null;
+  } | null;
 };
+export type SubmitPostButtonMutationResponse = SubmitPostButtonMutation$data;
 export type SubmitPostButtonMutation = {
-    readonly response: SubmitPostButtonMutationResponse;
-    readonly variables: SubmitPostButtonMutationVariables;
+  variables: SubmitPostButtonMutationVariables;
+  response: SubmitPostButtonMutation$data;
 };
-
-
-
-/*
-mutation SubmitPostButtonMutation(
-  $input: SubmitPostInput!
-) {
-  submitPost(input: $input) {
-    post {
-      id
-      state
-    }
-    inReview
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -126,5 +120,7 @@ return {
   }
 };
 })();
-(node as any).hash = '9c0fe6b3a76981a02f9ddc4226799997';
+
+(node as any).hash = "9c0fe6b3a76981a02f9ddc4226799997";
+
 export default node;

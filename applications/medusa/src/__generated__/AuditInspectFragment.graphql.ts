@@ -1,25 +1,29 @@
+/**
+ * @generated SignedSource<<115fdb2fb4ec5b3117f3c83dd2cd1267>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
-export type AuditInspectFragment = {
-    readonly notes: string | null;
-    readonly action: PostAuditLogAction;
-    readonly post: {
-        readonly " $fragmentRefs": FragmentRefs<"PostPreviewFragment">;
-    };
-    readonly " $refType": "AuditInspectFragment";
+import { FragmentRefs } from "relay-runtime";
+export type AuditInspectFragment$data = {
+  readonly notes: string | null;
+  readonly action: PostAuditLogAction;
+  readonly post: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment">;
+  };
+  readonly " $fragmentType": "AuditInspectFragment";
 };
-export type AuditInspectFragment$data = AuditInspectFragment;
+export type AuditInspectFragment = AuditInspectFragment$data;
 export type AuditInspectFragment$key = {
-    readonly " $data"?: AuditInspectFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"AuditInspectFragment">;
+  readonly " $data"?: AuditInspectFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AuditInspectFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -61,5 +65,7 @@ const node: ReaderFragment = {
   "type": "PostAuditLog",
   "abstractKey": null
 };
-(node as any).hash = 'bdc736086cbea427c12e1dd87088f018';
+
+(node as any).hash = "bdc736086cbea427c12e1dd87088f018";
+
 export default node;

@@ -1,57 +1,43 @@
+/**
+ * @generated SignedSource<<bf1d9536bf28788800f5999505da2deb>>
+ * @relayHash 69bfd7f2a4245402cf60d66094adf319
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 69bfd7f2a4245402cf60d66094adf319 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 69bfd7f2a4245402cf60d66094adf319
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type ChangeClubThumbnailMutationVariables = {
-    id: string;
-    thumbnail: string;
+export type ChangeClubThumbnailMutation$variables = {
+  id: string;
+  thumbnail: string;
 };
-export type ChangeClubThumbnailMutationResponse = {
-    readonly updateClubThumbnail: {
-        readonly club: {
-            readonly id: string;
-            readonly name: string;
-            readonly thumbnail: {
-                readonly type: ResourceType;
-                readonly urls: ReadonlyArray<{
-                    readonly url: string;
-                    readonly mimeType: string;
-                }>;
-            } | null;
-        } | null;
+export type ChangeClubThumbnailMutationVariables = ChangeClubThumbnailMutation$variables;
+export type ChangeClubThumbnailMutation$data = {
+  readonly updateClubThumbnail: {
+    readonly club: {
+      readonly id: string;
+      readonly name: string;
+      readonly thumbnail: {
+        readonly type: ResourceType;
+        readonly urls: ReadonlyArray<{
+          readonly url: string;
+          readonly mimeType: string;
+        }>;
+      } | null;
     } | null;
+  } | null;
 };
+export type ChangeClubThumbnailMutationResponse = ChangeClubThumbnailMutation$data;
 export type ChangeClubThumbnailMutation = {
-    readonly response: ChangeClubThumbnailMutationResponse;
-    readonly variables: ChangeClubThumbnailMutationVariables;
+  variables: ChangeClubThumbnailMutationVariables;
+  response: ChangeClubThumbnailMutation$data;
 };
-
-
-
-/*
-mutation ChangeClubThumbnailMutation(
-  $id: ID!
-  $thumbnail: String!
-) {
-  updateClubThumbnail(input: {id: $id, thumbnail: $thumbnail}) {
-    club {
-      id
-      name
-      thumbnail {
-        type
-        urls {
-          url
-          mimeType
-        }
-        id
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -233,5 +219,7 @@ return {
   }
 };
 })();
-(node as any).hash = '2b0f438e8b304946a1e85db946277c48';
+
+(node as any).hash = "2b0f438e8b304946a1e85db946277c48";
+
 export default node;

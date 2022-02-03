@@ -39,7 +39,7 @@ go_image(
 
 go_image(
     name = "image",
-    base = "@go_base_image//image",
+    base = "@go_ffmpeg_image//image",
     data = DEPENDENCIES,
     embed = [":internal_lib"],
     importpath = "overdoll/applications/loader",

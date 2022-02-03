@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/nacl/secretbox"
 	"io"
 	"overdoll/applications/eva/internal/domain/location"
@@ -56,6 +57,10 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 	}
 
 	properEmail := strings.ToLower(email)
+
+	if err := validateEmail(email); err != nil {
+		return nil, nil, err
+	}
 
 	// seal the email related to this authentication token, if one exists
 	// the secret is saved in the state and will be discarded once GetSecretAndDispose is called
@@ -228,4 +233,14 @@ func decryptBox(content, secret string) (string, error) {
 	}
 
 	return string(decrypted), nil
+}
+
+func validateEmail(email string) error {
+	err := validator.New().Var(email, "required,email")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

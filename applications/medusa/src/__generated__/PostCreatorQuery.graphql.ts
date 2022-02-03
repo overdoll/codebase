@@ -1,326 +1,39 @@
+/**
+ * @generated SignedSource<<4de4c0c7ae2eab942696ec8936d14b95>>
+ * @relayHash 00279dd31a63376a305c940545282aeb
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 00279dd31a63376a305c940545282aeb */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 00279dd31a63376a305c940545282aeb
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
-export type PostCreatorQueryVariables = {
-    reference: string;
-    slug: string;
+export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type PostCreatorQuery$variables = {
+  reference: string;
+  slug: string;
 };
-export type PostCreatorQueryResponse = {
-    readonly post: {
-        readonly __typename: string;
-        readonly state: PostState;
-        readonly " $fragmentRefs": FragmentRefs<"UpdatePostFlowFragment">;
-    } | null;
-    readonly club: {
-        readonly id: string;
-    } | null;
+export type PostCreatorQueryVariables = PostCreatorQuery$variables;
+export type PostCreatorQuery$data = {
+  readonly post: {
+    readonly __typename: string;
+    readonly state: PostState;
+    readonly " $fragmentSpreads": FragmentRefs<"UpdatePostFlowFragment">;
+  } | null;
+  readonly club: {
+    readonly id: string;
+  } | null;
 };
+export type PostCreatorQueryResponse = PostCreatorQuery$data;
 export type PostCreatorQuery = {
-    readonly response: PostCreatorQueryResponse;
-    readonly variables: PostCreatorQueryVariables;
+  variables: PostCreatorQueryVariables;
+  response: PostCreatorQuery$data;
 };
-
-
-
-/*
-query PostCreatorQuery(
-  $reference: String!
-  $slug: String!
-) {
-  post(reference: $reference) {
-    __typename
-    state
-    ...UpdatePostFlowFragment
-    id
-  }
-  club(slug: $slug) {
-    id
-  }
-}
-
-fragment ArrangeFragment on Post {
-  content {
-    id
-    urls {
-      url
-      mimeType
-    }
-  }
-  ...ArrangeUploadsFragment
-  ...ProcessUploadsFragment
-}
-
-fragment ArrangeUploadsFragment on Post {
-  id
-  content {
-    id
-    urls {
-      url
-    }
-    ...DraggableContentFragment
-  }
-}
-
-fragment AudienceFragment on Post {
-  audience {
-    id
-    title
-  }
-}
-
-fragment CategoryFragment on Post {
-  categories {
-    id
-    title
-    slug
-    thumbnail {
-      type
-      urls {
-        mimeType
-        url
-      }
-      id
-    }
-  }
-}
-
-fragment CharacterFragment on Post {
-  characters {
-    id
-    name
-    series {
-      title
-      id
-    }
-    slug
-    thumbnail {
-      type
-      urls {
-        mimeType
-        url
-      }
-      id
-    }
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment DraggableContentFragment on Resource {
-  id
-  type
-  urls {
-    url
-    mimeType
-  }
-  ...ResourceItemFragment
-}
-
-fragment FlowFooterFragment on Post {
-  ...FlowForwardButtonFragment
-}
-
-fragment FlowForwardButtonFragment on Post {
-  ...SubmitPostButtonFragment
-  ...UpdateAudienceButton
-  ...UpdateCategoryButtonFragment
-  ...UpdateCharacterButtonFragment
-  ...UpdateContentButtonFragment
-}
-
-fragment FlowHeaderFragment on Post {
-  ...checkPostRequirementsFragment
-  ...ProcessContentFragment
-}
-
-fragment FlowStepsFragment on Post {
-  ...ArrangeFragment
-  ...AudienceFragment
-  ...CategoryFragment
-  ...CharacterFragment
-  ...ReviewFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicDetailedFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostReviewFragment on Post {
-  reference
-  ...PostGalleryPublicDetailedFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-}
-
-fragment ProcessContentFragment on Post {
-  reference
-  content {
-    processed
-    id
-  }
-}
-
-fragment ProcessUploadsFragment on Post {
-  id
-  reference
-  content {
-    id
-    urls {
-      url
-    }
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment ReviewFragment on Post {
-  ...PostReviewFragment
-}
-
-fragment SubmitPostButtonFragment on Post {
-  id
-}
-
-fragment UpdateAudienceButton on Post {
-  id
-  audience {
-    id
-  }
-}
-
-fragment UpdateCategoryButtonFragment on Post {
-  id
-  categories {
-    id
-  }
-}
-
-fragment UpdateCharacterButtonFragment on Post {
-  id
-  characters {
-    id
-  }
-}
-
-fragment UpdateContentButtonFragment on Post {
-  id
-  content {
-    id
-    urls {
-      url
-    }
-  }
-}
-
-fragment UpdatePostFlowFragment on Post {
-  ...FlowStepsFragment
-  ...FlowFooterFragment
-  ...FlowHeaderFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment checkPostRequirementsFragment on Post {
-  content {
-    __typename
-    id
-  }
-  audience {
-    __typename
-    id
-  }
-  categories {
-    __typename
-    id
-  }
-  characters {
-    __typename
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -640,5 +353,7 @@ return {
   }
 };
 })();
-(node as any).hash = '78e74a2b9feb0530dc8af91b86005ae6';
+
+(node as any).hash = "78e74a2b9feb0530dc8af91b86005ae6";
+
 export default node;

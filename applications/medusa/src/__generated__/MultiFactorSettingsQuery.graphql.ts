@@ -1,48 +1,31 @@
+/**
+ * @generated SignedSource<<1c90b5defe8b20b1e1a46cd49ea56e19>>
+ * @relayHash 3b37a40cd2479f9a397a7b797d879b57
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3b37a40cd2479f9a397a7b797d879b57 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 3b37a40cd2479f9a397a7b797d879b57
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type MultiFactorSettingsQueryVariables = {};
-export type MultiFactorSettingsQueryResponse = {
-    readonly viewer: {
-        readonly multiFactorTotpConfigured: boolean;
-        readonly " $fragmentRefs": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
-    } | null;
+export type MultiFactorSettingsQuery$variables = {};
+export type MultiFactorSettingsQueryVariables = MultiFactorSettingsQuery$variables;
+export type MultiFactorSettingsQuery$data = {
+  readonly viewer: {
+    readonly multiFactorTotpConfigured: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
+  };
 };
+export type MultiFactorSettingsQueryResponse = MultiFactorSettingsQuery$data;
 export type MultiFactorSettingsQuery = {
-    readonly response: MultiFactorSettingsQueryResponse;
-    readonly variables: MultiFactorSettingsQueryVariables;
+  variables: MultiFactorSettingsQueryVariables;
+  response: MultiFactorSettingsQuery$data;
 };
-
-
-
-/*
-query MultiFactorSettingsQuery {
-  viewer {
-    multiFactorTotpConfigured
-    ...DisableMultiFactorFragment
-    ...MultiFactorTotpSettingsFragment
-    ...RecoveryCodesSettingsFragment
-    id
-  }
-}
-
-fragment DisableMultiFactorFragment on Account {
-  canDisableMultiFactor
-}
-
-fragment MultiFactorTotpSettingsFragment on Account {
-  multiFactorTotpConfigured
-  recoveryCodesGenerated
-}
-
-fragment RecoveryCodesSettingsFragment on Account {
-  recoveryCodesGenerated
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -60,31 +43,36 @@ return {
     "name": "MultiFactorSettingsQuery",
     "selections": [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "DisableMultiFactorFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "MultiFactorTotpSettingsFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "RecoveryCodesSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "DisableMultiFactorFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "MultiFactorTotpSettingsFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "RecoveryCodesSettingsFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -140,5 +128,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'f91c3ae32558e806a50a3b2821b9c0ee';
+
+(node as any).hash = "7ba479eb10e2ed8556b91f341f6a3b02";
+
 export default node;

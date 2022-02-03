@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<05e73483fa1ec9db749167f7c1079be5>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCharactersFragment = {
-    readonly characters: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"CharacterTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "SearchCharactersFragment";
+export type SearchCharactersFragment$data = {
+  readonly characters: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SearchCharactersFragment";
 };
-export type SearchCharactersFragment$data = SearchCharactersFragment;
+export type SearchCharactersFragment = SearchCharactersFragment$data;
 export type SearchCharactersFragment$key = {
-    readonly " $data"?: SearchCharactersFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SearchCharactersFragment">;
+  readonly " $data"?: SearchCharactersFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +70,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchCharactersPaginationFragment.graphql.ts')
+      "operation": require('./SearchCharactersPaginationFragment.graphql')
     }
   },
   "name": "SearchCharactersFragment",
@@ -116,16 +120,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CharacterTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CharacterTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -173,5 +177,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'ccffac4ef48b0e0365b2f9ab9e150404';
+
+(node as any).hash = "ccffac4ef48b0e0365b2f9ab9e150404";
+
 export default node;

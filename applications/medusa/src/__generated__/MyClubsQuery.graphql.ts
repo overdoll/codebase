@@ -1,249 +1,32 @@
+/**
+ * @generated SignedSource<<62ace3d7390576ef031ecb3236f882d1>>
+ * @relayHash 2ebf68a4a7cb00eefba3151628e11715
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2ebf68a4a7cb00eefba3151628e11715 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 2ebf68a4a7cb00eefba3151628e11715
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type MyClubsQueryVariables = {};
-export type MyClubsQueryResponse = {
-    readonly viewer: {
-        readonly clubMembershipsCount: number;
-        readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsViewerFragment" | "ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment">;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsFragment">;
+export type MyClubsQuery$variables = {};
+export type MyClubsQueryVariables = MyClubsQuery$variables;
+export type MyClubsQuery$data = {
+  readonly viewer: {
+    readonly clubMembershipsCount: number;
+    readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsViewerFragment" | "ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment">;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
+export type MyClubsQueryResponse = MyClubsQuery$data;
 export type MyClubsQuery = {
-    readonly response: MyClubsQueryResponse;
-    readonly variables: MyClubsQueryVariables;
+  variables: MyClubsQueryVariables;
+  response: MyClubsQuery$data;
 };
-
-
-
-/*
-query MyClubsQuery {
-  ...SuggestedClubsFragment
-  viewer {
-    ...SuggestedClubsViewerFragment
-    ...ClubPostsFeedFragment
-    ...ClubPostsFeedViewerFragment
-    clubMembershipsCount
-    id
-  }
-}
-
-fragment ClubPostsFeedFragment on Account {
-  clubMembersPostsFeed(first: 10) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ClubPostsFeedViewerFragment on Account {
-  ...PostsInfiniteScrollViewerFragment
-}
-
-fragment ClubTileOverlayFragment on Club {
-  name
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-  posts(first: 1) {
-    edges {
-      node {
-        content {
-          ...ResourceItemFragment
-          id
-        }
-        id
-      }
-    }
-  }
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment FullSimplePostViewerFragment on Account {
-  ...JoinClubButtonViewerFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment JoinClubButtonViewerFragment on Account {
-  clubMembershipsLimit
-  clubMembershipsCount
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment PostsInfiniteScrollViewerFragment on Account {
-  ...FullSimplePostViewerFragment
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SuggestedClubsFragment on Query {
-  clubs(first: 7) {
-    edges {
-      node {
-        slug
-        ...JoinClubButtonClubFragment
-        ...ClubTileOverlayFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment SuggestedClubsViewerFragment on Account {
-  ...JoinClubButtonViewerFragment
-  clubMembershipsCount
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -411,6 +194,11 @@ return {
     "name": "MyClubsQuery",
     "selections": [
       {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "SuggestedClubsFragment"
+      },
+      {
         "alias": null,
         "args": null,
         "concreteType": "Account",
@@ -418,7 +206,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -433,14 +220,10 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPostsFeedViewerFragment"
-          }
+          },
+          (v0/*: any*/)
         ],
         "storageKey": null
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "SuggestedClubsFragment"
       }
     ],
     "type": "Query",
@@ -705,5 +488,7 @@ return {
   }
 };
 })();
-(node as any).hash = '424aa03d1afe2a586b73290cc851b045';
+
+(node as any).hash = "424aa03d1afe2a586b73290cc851b045";
+
 export default node;

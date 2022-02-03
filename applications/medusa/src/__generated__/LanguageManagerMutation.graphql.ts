@@ -1,42 +1,37 @@
+/**
+ * @generated SignedSource<<b05cd2757dd95b5f5d89440dca8273b1>>
+ * @relayHash 5ab0ca5bf23747e497108aa121673c50
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5ab0ca5bf23747e497108aa121673c50 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 5ab0ca5bf23747e497108aa121673c50
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateLanguageInput = {
-    locale: string;
+  locale: string;
 };
-export type LanguageManagerMutationVariables = {
-    input: UpdateLanguageInput;
+export type LanguageManagerMutation$variables = {
+  input: UpdateLanguageInput;
 };
-export type LanguageManagerMutationResponse = {
-    readonly updateLanguage: {
-        readonly language: {
-            readonly locale: string;
-            readonly name: string;
-        } | null;
+export type LanguageManagerMutationVariables = LanguageManagerMutation$variables;
+export type LanguageManagerMutation$data = {
+  readonly updateLanguage: {
+    readonly language: {
+      readonly locale: string;
+      readonly name: string;
     } | null;
+  } | null;
 };
+export type LanguageManagerMutationResponse = LanguageManagerMutation$data;
 export type LanguageManagerMutation = {
-    readonly response: LanguageManagerMutationResponse;
-    readonly variables: LanguageManagerMutationVariables;
+  variables: LanguageManagerMutationVariables;
+  response: LanguageManagerMutation$data;
 };
-
-
-
-/*
-mutation LanguageManagerMutation(
-  $input: UpdateLanguageInput!
-) {
-  updateLanguage(input: $input) {
-    language {
-      locale
-      name
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -116,5 +111,7 @@ return {
   }
 };
 })();
-(node as any).hash = '79a9cd6891411bd53f506f89dafe3206';
+
+(node as any).hash = "79a9cd6891411bd53f506f89dafe3206";
+
 export default node;

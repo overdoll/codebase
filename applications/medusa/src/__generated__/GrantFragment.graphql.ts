@@ -1,21 +1,25 @@
+/**
+ * @generated SignedSource<<4fe1bf2f3a36686e1cb503978cefeb42>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type GrantFragment = {
-    readonly id: string;
-    readonly token: string;
-    readonly " $refType": "GrantFragment";
+export type GrantFragment$data = {
+  readonly id: string;
+  readonly token: string;
+  readonly " $fragmentType": "GrantFragment";
 };
-export type GrantFragment$data = GrantFragment;
+export type GrantFragment = GrantFragment$data;
 export type GrantFragment$key = {
-    readonly " $data"?: GrantFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"GrantFragment">;
+  readonly " $data"?: GrantFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"GrantFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -41,5 +45,7 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = 'd1a48d67102c1579634eb6658fa56d91';
+
+(node as any).hash = "d1a48d67102c1579634eb6658fa56d91";
+
 export default node;

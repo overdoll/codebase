@@ -24,8 +24,8 @@ export function LocationProvider ({ children }: Props): JSX.Element {
 
   useEffect(() => {
     // update location once history is updated
-    router.history.listen(location => {
-      setLocation(location)
+    router.history.listen(newLocation => {
+      setLocation(newLocation)
     })
   }, [])
 

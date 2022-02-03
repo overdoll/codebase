@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<cf88b1f9c872dc158b626a650c8fa334>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type QuickAccessButtonProfileFragment = {
-    readonly username: string;
-    readonly avatar: {
-        readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly " $refType": "QuickAccessButtonProfileFragment";
+export type QuickAccessButtonProfileFragment$data = {
+  readonly username: string;
+  readonly avatar: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+  } | null;
+  readonly " $fragmentType": "QuickAccessButtonProfileFragment";
 };
-export type QuickAccessButtonProfileFragment$data = QuickAccessButtonProfileFragment;
+export type QuickAccessButtonProfileFragment = QuickAccessButtonProfileFragment$data;
 export type QuickAccessButtonProfileFragment$key = {
-    readonly " $data"?: QuickAccessButtonProfileFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"QuickAccessButtonProfileFragment">;
+  readonly " $data"?: QuickAccessButtonProfileFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"QuickAccessButtonProfileFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -52,5 +56,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '65af5247a5dcb73fd68149cacc5d7b82';
+
+(node as any).hash = "65af5247a5dcb73fd68149cacc5d7b82";
+
 export default node;

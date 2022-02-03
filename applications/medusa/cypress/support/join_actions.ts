@@ -4,6 +4,8 @@ export const logout = (): void => {
   cy.findByRole('button', { name: /Menu/iu })
     .click()
 
+  cy.waitUntil(() => cy.findByRole('button', { name: /Log Out/iu }).should('exist'))
+
   cy.findByRole('button', { name: /Log Out/iu })
     .click()
 

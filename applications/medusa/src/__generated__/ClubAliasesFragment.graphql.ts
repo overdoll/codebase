@@ -1,24 +1,28 @@
+/**
+ * @generated SignedSource<<caa4b7f24b42c6422c3676e19e4bef6a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubAliasesFragment = {
+export type ClubAliasesFragment$data = {
+  readonly slug: string;
+  readonly slugAliases: ReadonlyArray<{
     readonly slug: string;
-    readonly slugAliases: ReadonlyArray<{
-        readonly slug: string;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"AddClubSlugAliasFragment" | "ManageClubSlugAliasesFragment">;
-    readonly " $refType": "ClubAliasesFragment";
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment" | "ManageClubSlugAliasesFragment">;
+  readonly " $fragmentType": "ClubAliasesFragment";
 };
-export type ClubAliasesFragment$data = ClubAliasesFragment;
+export type ClubAliasesFragment = ClubAliasesFragment$data;
 export type ClubAliasesFragment$key = {
-    readonly " $data"?: ClubAliasesFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubAliasesFragment">;
+  readonly " $data"?: ClubAliasesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubAliasesFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -36,6 +40,16 @@ return {
   "selections": [
     (v0/*: any*/),
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AddClubSlugAliasFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ManageClubSlugAliasesFragment"
+    },
+    {
       "alias": null,
       "args": null,
       "concreteType": "ClubSlugAlias",
@@ -46,21 +60,13 @@ return {
         (v0/*: any*/)
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "AddClubSlugAliasFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ManageClubSlugAliasesFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
-(node as any).hash = '25c9e53a5c52d724475f9db85cf228ce';
+
+(node as any).hash = "25c9e53a5c52d724475f9db85cf228ce";
+
 export default node;

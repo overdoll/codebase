@@ -1,60 +1,47 @@
+/**
+ * @generated SignedSource<<ae707828b29d1e9473706dd4d0ecba00>>
+ * @relayHash df51bbbed92255556ab2c5e699f05295
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash df51bbbed92255556ab2c5e699f05295 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID df51bbbed92255556ab2c5e699f05295
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostContentOrderInput = {
-    id: string;
-    contentIds: Array<string>;
+  id: string;
+  contentIds: ReadonlyArray<string>;
 };
-export type UpdateContentButtonMutationVariables = {
-    input: UpdatePostContentOrderInput;
+export type UpdateContentButtonMutation$variables = {
+  input: UpdatePostContentOrderInput;
 };
-export type UpdateContentButtonMutationResponse = {
-    readonly updatePostContentOrder: {
-        readonly post: {
-            readonly id: string;
-            readonly content: ReadonlyArray<{
-                readonly id: string;
-                readonly type: ResourceType;
-                readonly processed: boolean;
-                readonly urls: ReadonlyArray<{
-                    readonly url: string;
-                    readonly mimeType: string;
-                }>;
-            }>;
-        } | null;
+export type UpdateContentButtonMutationVariables = UpdateContentButtonMutation$variables;
+export type UpdateContentButtonMutation$data = {
+  readonly updatePostContentOrder: {
+    readonly post: {
+      readonly id: string;
+      readonly content: ReadonlyArray<{
+        readonly id: string;
+        readonly type: ResourceType;
+        readonly processed: boolean;
+        readonly urls: ReadonlyArray<{
+          readonly url: string;
+          readonly mimeType: string;
+        }>;
+      }>;
     } | null;
+  } | null;
 };
+export type UpdateContentButtonMutationResponse = UpdateContentButtonMutation$data;
 export type UpdateContentButtonMutation = {
-    readonly response: UpdateContentButtonMutationResponse;
-    readonly variables: UpdateContentButtonMutationVariables;
+  variables: UpdateContentButtonMutationVariables;
+  response: UpdateContentButtonMutation$data;
 };
-
-
-
-/*
-mutation UpdateContentButtonMutation(
-  $input: UpdatePostContentOrderInput!
-) {
-  updatePostContentOrder(input: $input) {
-    post {
-      id
-      content {
-        id
-        type
-        processed
-        urls {
-          url
-          mimeType
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -179,5 +166,7 @@ return {
   }
 };
 })();
-(node as any).hash = '306bc32c87a2f82fcfa83513852288ad';
+
+(node as any).hash = "306bc32c87a2f82fcfa83513852288ad";
+
 export default node;

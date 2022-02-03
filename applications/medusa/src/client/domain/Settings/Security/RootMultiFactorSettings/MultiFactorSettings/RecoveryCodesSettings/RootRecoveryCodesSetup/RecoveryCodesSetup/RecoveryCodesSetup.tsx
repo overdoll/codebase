@@ -19,7 +19,8 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { DownloadArrow } from '@//:assets/icons/interface'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'
-import CopyToClipboardButton from '../../../../../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
+import CopyToClipboardButton
+  from '../../../../../../../../components/ContentHints/CopyToClipboardButton/CopyToClipboardButton'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -30,7 +31,7 @@ interface Props {
 
 const RecoveryCodesSetupQueryGQL = graphql`
   query RecoveryCodesSetupQuery {
-    viewer {
+    viewer @required(action: THROW) {
       id
       recoveryCodes {
         __id
@@ -64,9 +65,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
   const notify = useToast()
   const { i18n } = useLingui()
 
-  const recoveryCodes = data?.viewer?.recoveryCodes
-
-  if (recoveryCodes == null) return null
+  const recoveryCodes = data.viewer.recoveryCodes
 
   const plainRecoveryCodes = recoveryCodes.map((item) => {
     return `${item.code}\r\n`

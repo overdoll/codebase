@@ -1,70 +1,36 @@
+/**
+ * @generated SignedSource<<8b2d00066dafec1d0bf89cec4377a17f>>
+ * @relayHash 353c52a51e6ae6464e7ba9147608f9e0
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 353c52a51e6ae6464e7ba9147608f9e0 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 353c52a51e6ae6464e7ba9147608f9e0
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AudiencesQueryVariables = {};
-export type AudiencesQueryResponse = {
-    readonly audiences: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"AudienceTileOverlayFragment">;
-            };
-        }>;
-    };
+export type AudiencesQuery$variables = {};
+export type AudiencesQueryVariables = AudiencesQuery$variables;
+export type AudiencesQuery$data = {
+  readonly audiences: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AudienceTileOverlayFragment">;
+      };
+    }>;
+  };
 };
+export type AudiencesQueryResponse = AudiencesQuery$data;
 export type AudiencesQuery = {
-    readonly response: AudiencesQueryResponse;
-    readonly variables: AudiencesQueryVariables;
+  variables: AudiencesQueryVariables;
+  response: AudiencesQuery$data;
 };
-
-
-
-/*
-query AudiencesQuery {
-  audiences {
-    edges {
-      node {
-        id
-        title
-        ...AudienceTileOverlayFragment
-      }
-    }
-  }
-}
-
-fragment AudienceTileOverlayFragment on Audience {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -228,5 +194,7 @@ return {
   }
 };
 })();
-(node as any).hash = '81a8d3ff43d094e4672ca3a0c9128ce7';
+
+(node as any).hash = "81a8d3ff43d094e4672ca3a0c9128ce7";
+
 export default node;

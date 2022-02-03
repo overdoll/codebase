@@ -1,48 +1,37 @@
+/**
+ * @generated SignedSource<<8991f04764e4cf351e2caa13318e19e4>>
+ * @relayHash 32ef6c89e51bdd9e9468d166ffbcf213
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 32ef6c89e51bdd9e9468d166ffbcf213 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type PostLikeButtonLikeMutationVariables = {
-    postId: string;
+// @relayRequestID 32ef6c89e51bdd9e9468d166ffbcf213
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type PostLikeButtonLikeMutation$variables = {
+  postId: string;
 };
-export type PostLikeButtonLikeMutationResponse = {
-    readonly likePost: {
-        readonly postLike: {
-            readonly post: {
-                readonly viewerLiked: {
-                    readonly __typename: string;
-                } | null;
-            };
+export type PostLikeButtonLikeMutationVariables = PostLikeButtonLikeMutation$variables;
+export type PostLikeButtonLikeMutation$data = {
+  readonly likePost: {
+    readonly postLike: {
+      readonly post: {
+        readonly viewerLiked: {
+          readonly __typename: string;
         } | null;
+      };
     } | null;
+  } | null;
 };
+export type PostLikeButtonLikeMutationResponse = PostLikeButtonLikeMutation$data;
 export type PostLikeButtonLikeMutation = {
-    readonly response: PostLikeButtonLikeMutationResponse;
-    readonly variables: PostLikeButtonLikeMutationVariables;
+  variables: PostLikeButtonLikeMutationVariables;
+  response: PostLikeButtonLikeMutation$data;
 };
-
-
-
-/*
-mutation PostLikeButtonLikeMutation(
-  $postId: ID!
-) {
-  likePost(input: {postId: $postId}) {
-    postLike {
-      post {
-        viewerLiked {
-          __typename
-          id
-        }
-        id
-      }
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -200,5 +189,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'c4114beef5cf5ea9d3d6665730958bc9';
+
+(node as any).hash = "c4114beef5cf5ea9d3d6665730958bc9";
+
 export default node;

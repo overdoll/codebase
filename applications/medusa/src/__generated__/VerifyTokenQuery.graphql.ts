@@ -1,52 +1,40 @@
+/**
+ * @generated SignedSource<<79cef4d49603369a7462c14e8fcdf855>>
+ * @relayHash e9039055b45a00ad887447d612a44778
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e9039055b45a00ad887447d612a44778 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type VerifyTokenQueryVariables = {
-    token: string;
-    secret?: string | null | undefined;
+// @relayRequestID e9039055b45a00ad887447d612a44778
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type VerifyTokenQuery$variables = {
+  token: string;
+  secret?: string | null;
 };
-export type VerifyTokenQueryResponse = {
-    readonly viewAuthenticationToken: {
-        readonly verified: boolean;
-        readonly sameDevice: boolean;
-        readonly location: {
-            readonly city: string;
-            readonly subdivision: string;
-            readonly country: string;
-        };
-        readonly userAgent: string;
-        readonly secure: boolean;
-    } | null;
+export type VerifyTokenQueryVariables = VerifyTokenQuery$variables;
+export type VerifyTokenQuery$data = {
+  readonly viewAuthenticationToken: {
+    readonly verified: boolean;
+    readonly sameDevice: boolean;
+    readonly location: {
+      readonly city: string;
+      readonly subdivision: string;
+      readonly country: string;
+    };
+    readonly userAgent: string;
+    readonly secure: boolean;
+  } | null;
 };
+export type VerifyTokenQueryResponse = VerifyTokenQuery$data;
 export type VerifyTokenQuery = {
-    readonly response: VerifyTokenQueryResponse;
-    readonly variables: VerifyTokenQueryVariables;
+  variables: VerifyTokenQueryVariables;
+  response: VerifyTokenQuery$data;
 };
-
-
-
-/*
-query VerifyTokenQuery(
-  $token: String!
-  $secret: String
-) {
-  viewAuthenticationToken(token: $token, secret: $secret) {
-    verified
-    sameDevice
-    location {
-      city
-      subdivision
-      country
-    }
-    userAgent
-    secure
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -204,5 +192,7 @@ return {
   }
 };
 })();
-(node as any).hash = '25d879576cbd9b2b1c79757e070b1848';
+
+(node as any).hash = "25d879576cbd9b2b1c79757e070b1848";
+
 export default node;

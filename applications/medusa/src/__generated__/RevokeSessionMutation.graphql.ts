@@ -1,37 +1,35 @@
+/**
+ * @generated SignedSource<<b1b089f47b65d54b499a112c82b6e9c2>>
+ * @relayHash f382fa8bed99e804fe2978fed4aa9a5c
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f382fa8bed99e804fe2978fed4aa9a5c */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID f382fa8bed99e804fe2978fed4aa9a5c
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RevokeAccountSessionInput = {
-    accountSessionId: string;
+  accountSessionId: string;
 };
-export type RevokeSessionMutationVariables = {
-    input: RevokeAccountSessionInput;
-    connections: Array<string>;
+export type RevokeSessionMutation$variables = {
+  input: RevokeAccountSessionInput;
+  connections: ReadonlyArray<string>;
 };
-export type RevokeSessionMutationResponse = {
-    readonly revokeAccountSession: {
-        readonly accountSessionId: string;
-    } | null;
+export type RevokeSessionMutationVariables = RevokeSessionMutation$variables;
+export type RevokeSessionMutation$data = {
+  readonly revokeAccountSession: {
+    readonly accountSessionId: string;
+  } | null;
 };
+export type RevokeSessionMutationResponse = RevokeSessionMutation$data;
 export type RevokeSessionMutation = {
-    readonly response: RevokeSessionMutationResponse;
-    readonly variables: RevokeSessionMutationVariables;
+  variables: RevokeSessionMutationVariables;
+  response: RevokeSessionMutation$data;
 };
-
-
-
-/*
-mutation RevokeSessionMutation(
-  $input: RevokeAccountSessionInput!
-) {
-  revokeAccountSession(input: $input) {
-    accountSessionId
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -132,5 +130,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e569a79a114bc3360d54d2e74686e4c7';
+
+(node as any).hash = "e569a79a114bc3360d54d2e74686e4c7";
+
 export default node;

@@ -1,100 +1,32 @@
+/**
+ * @generated SignedSource<<295030e6b2f7503809b10ee403f8961d>>
+ * @relayHash 29dc5c8193d39b8522485bfb7c6bab9b
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 29dc5c8193d39b8522485bfb7c6bab9b */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 29dc5c8193d39b8522485bfb7c6bab9b
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubSettingsQueryVariables = {
-    slug: string;
+export type ClubSettingsQuery$variables = {
+  slug: string;
 };
-export type ClubSettingsQueryResponse = {
-    readonly club: {
-        readonly " $fragmentRefs": FragmentRefs<"ChangeClubNameFragment" | "ClubAliasesFragment" | "ChangeClubThumbnailFragment">;
-    } | null;
+export type ClubSettingsQueryVariables = ClubSettingsQuery$variables;
+export type ClubSettingsQuery$data = {
+  readonly club: {
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubNameFragment" | "ClubAliasesFragment" | "ChangeClubThumbnailFragment">;
+  } | null;
 };
+export type ClubSettingsQueryResponse = ClubSettingsQuery$data;
 export type ClubSettingsQuery = {
-    readonly response: ClubSettingsQueryResponse;
-    readonly variables: ClubSettingsQueryVariables;
+  variables: ClubSettingsQueryVariables;
+  response: ClubSettingsQuery$data;
 };
-
-
-
-/*
-query ClubSettingsQuery(
-  $slug: String!
-) {
-  club(slug: $slug) {
-    ...ChangeClubNameFragment
-    ...ClubAliasesFragment
-    ...ChangeClubThumbnailFragment
-    id
-  }
-}
-
-fragment AddClubSlugAliasFragment on Club {
-  id
-  slug
-  slugAliases {
-    __typename
-  }
-  slugAliasesLimit
-}
-
-fragment ChangeClubNameFragment on Club {
-  id
-  name
-}
-
-fragment ChangeClubThumbnailFragment on Club {
-  id
-  thumbnail {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ClubAliasesFragment on Club {
-  slug
-  ...AddClubSlugAliasFragment
-  ...ManageClubSlugAliasesFragment
-  slugAliases {
-    slug
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ManageClubSlugAliasesFragment on Club {
-  id
-  slug
-  slugAliases {
-    slug
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -269,5 +201,7 @@ return {
   }
 };
 })();
-(node as any).hash = '3db3490ed344be83a47a730a1ef9ba1d';
+
+(node as any).hash = "3db3490ed344be83a47a730a1ef9ba1d";
+
 export default node;

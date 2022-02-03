@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<b1065e1d5e2a801a3e0c720a043fd04f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPostsFeedViewerFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
-    readonly " $refType": "ClubPostsFeedViewerFragment";
+export type ClubPostsFeedViewerFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+  readonly " $fragmentType": "ClubPostsFeedViewerFragment";
 };
-export type ClubPostsFeedViewerFragment$data = ClubPostsFeedViewerFragment;
+export type ClubPostsFeedViewerFragment = ClubPostsFeedViewerFragment$data;
 export type ClubPostsFeedViewerFragment$key = {
-    readonly " $data"?: ClubPostsFeedViewerFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubPostsFeedViewerFragment">;
+  readonly " $data"?: ClubPostsFeedViewerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedViewerFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -31,5 +35,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '69bfc04d2f406b4830a0e9b56d8a21f1';
+
+(node as any).hash = "69bfc04d2f406b4830a0e9b56d8a21f1";
+
 export default node;

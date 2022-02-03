@@ -21,18 +21,6 @@ type Account implements Node @key(fields: "id") {
   lock: AccountLock @goField(forceResolver: true)
 }
 
-"""Edge of the account"""
-type AccountEdge {
-  node: Account!
-  cursor: String!
-}
-
-"""Connection of the account"""
-type AccountConnection {
-  edges: [AccountEdge!]!
-  pageInfo: PageInfo!
-}
-
 type AccountLock {
   expires: Time!
 }
@@ -96,25 +84,4 @@ extend type Query {
     """Look up a post by a username"""
     username: String!
   ): Account
-
-  """Look up or search multiple accounts"""
-  accounts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """Filter by the account username."""
-    username: String
-
-    """Sorting options for accounts."""
-    sortBy: AccountsSort! = NEW
-  ): AccountConnection!
 }

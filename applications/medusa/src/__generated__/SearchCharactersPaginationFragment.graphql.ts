@@ -1,84 +1,32 @@
+/**
+ * @generated SignedSource<<ce55cc2188b3b9f6b498561437627f80>>
+ * @relayHash ed26bce4074ffd60249bab8dcbe5d01b
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ed26bce4074ffd60249bab8dcbe5d01b */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID ed26bce4074ffd60249bab8dcbe5d01b
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchCharactersPaginationFragmentVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    name?: string | null | undefined;
+export type SearchCharactersPaginationFragment$variables = {
+  after?: string | null;
+  first?: number | null;
+  name?: string | null;
 };
-export type SearchCharactersPaginationFragmentResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SearchCharactersFragment">;
+export type SearchCharactersPaginationFragmentVariables = SearchCharactersPaginationFragment$variables;
+export type SearchCharactersPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersFragment">;
 };
+export type SearchCharactersPaginationFragmentResponse = SearchCharactersPaginationFragment$data;
 export type SearchCharactersPaginationFragment = {
-    readonly response: SearchCharactersPaginationFragmentResponse;
-    readonly variables: SearchCharactersPaginationFragmentVariables;
+  variables: SearchCharactersPaginationFragmentVariables;
+  response: SearchCharactersPaginationFragment$data;
 };
-
-
-
-/*
-query SearchCharactersPaginationFragment(
-  $after: String
-  $first: Int = 3
-  $name: String
-) {
-  ...SearchCharactersFragment_3cTRis
-}
-
-fragment CharacterTileOverlayFragment on Character {
-  name
-  series {
-    title
-    id
-  }
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment SearchCharactersFragment_3cTRis on Query {
-  characters(first: $first, after: $after, name: $name) {
-    edges {
-      node {
-        id
-        name
-        ...CharacterTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -309,5 +257,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'ccffac4ef48b0e0365b2f9ab9e150404';
+
+(node as any).hash = "ccffac4ef48b0e0365b2f9ab9e150404";
+
 export default node;

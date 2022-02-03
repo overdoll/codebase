@@ -1,29 +1,29 @@
+/**
+ * @generated SignedSource<<713cb5e38c450bd70f98177ebd050138>>
+ * @relayHash 295afab893be13dad8b4d59ba21b9133
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 295afab893be13dad8b4d59ba21b9133 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type DisableMultiFactorMutationVariables = {};
-export type DisableMultiFactorMutationResponse = {
-    readonly disableAccountMultiFactor: {
-        readonly accountMultiFactorTotpEnabled: boolean | null;
-    } | null;
+// @relayRequestID 295afab893be13dad8b4d59ba21b9133
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type DisableMultiFactorMutation$variables = {};
+export type DisableMultiFactorMutationVariables = DisableMultiFactorMutation$variables;
+export type DisableMultiFactorMutation$data = {
+  readonly disableAccountMultiFactor: {
+    readonly accountMultiFactorTotpEnabled: boolean | null;
+  } | null;
 };
+export type DisableMultiFactorMutationResponse = DisableMultiFactorMutation$data;
 export type DisableMultiFactorMutation = {
-    readonly response: DisableMultiFactorMutationResponse;
-    readonly variables: DisableMultiFactorMutationVariables;
+  variables: DisableMultiFactorMutationVariables;
+  response: DisableMultiFactorMutation$data;
 };
-
-
-
-/*
-mutation DisableMultiFactorMutation {
-  disableAccountMultiFactor {
-    accountMultiFactorTotpEnabled
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -72,5 +72,7 @@ return {
   }
 };
 })();
-(node as any).hash = '4f0a20523c07a69a21529ae78274f51a';
+
+(node as any).hash = "4f0a20523c07a69a21529ae78274f51a";
+
 export default node;

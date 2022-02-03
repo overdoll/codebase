@@ -1,9 +1,10 @@
 steps:
   build:
     commands:
-      # compile localization files
       - bazel build //applications/medusa:packages
       - npm run locale:compile
+      - npm run check:tsc
+      #- npm run check:eslint
     targets:
       - //applications/medusa:bundle
 

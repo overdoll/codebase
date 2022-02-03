@@ -1,25 +1,29 @@
+/**
+ * @generated SignedSource<<1336155e1c0b3b158dcdfe3b96d7a7d3>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type HomeFragment = {
-    readonly posts: {
-        readonly edges: ReadonlyArray<{
-            readonly __typename: string;
-        }>;
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
-    };
-    readonly " $refType": "HomeFragment";
+export type HomeFragment$data = {
+  readonly posts: {
+    readonly edges: ReadonlyArray<{
+      readonly __typename: string;
+    }>;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
+  };
+  readonly " $fragmentType": "HomeFragment";
 };
-export type HomeFragment$data = HomeFragment;
+export type HomeFragment = HomeFragment$data;
 export type HomeFragment$key = {
-    readonly " $data"?: HomeFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"HomeFragment">;
+  readonly " $data"?: HomeFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -65,7 +69,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./HomePostsPaginationQuery.graphql.ts')
+      "operation": require('./HomePostsPaginationQuery.graphql')
     }
   },
   "name": "HomeFragment",
@@ -116,6 +120,11 @@ return {
           "storageKey": null
         },
         {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostsInfiniteScrollFragment"
+        },
+        {
           "alias": null,
           "args": null,
           "concreteType": "PageInfo",
@@ -139,11 +148,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostsInfiniteScrollFragment"
         }
       ],
       "storageKey": "__HomePosts_posts_connection(sortBy:\"TOP\")"
@@ -153,5 +157,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '63c4df90fd370bffb939bd5b6c4ee01d';
+
+(node as any).hash = "63c4df90fd370bffb939bd5b6c4ee01d";
+
 export default node;
