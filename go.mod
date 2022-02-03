@@ -47,14 +47,13 @@ require (
 	github.com/yuin/goldmark v1.4.4
 	go.temporal.io/api v1.5.0
 	go.temporal.io/sdk v1.12.0
-	go.uber.org/zap v1.18.1
+	go.uber.org/zap v1.20.0
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.8 // indirect
 	google.golang.org/grpc v1.40.0
-	google.golang.org/protobuf v1.27.1
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
