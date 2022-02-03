@@ -142,7 +142,7 @@ module.exports = {
 
     if (opts.env.target === 'node') {
       if (!opts.env.dev) {
-        config.externals = {}
+        //  config.externals = {}
       }
     }
 
