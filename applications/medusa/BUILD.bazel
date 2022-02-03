@@ -57,7 +57,6 @@ _RUNTIME_DEPS = [
     "@npm//url-loader",
     "@npm//babel-plugin-relay",
     "@npm//@pmmmwh/react-refresh-webpack-plugin",
-    "@npm//relay-compiler-webpack-plugin",
     "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
     "@npm//razzle",
