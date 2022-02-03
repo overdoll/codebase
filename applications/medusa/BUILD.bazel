@@ -187,7 +187,7 @@ razzle(
         "build/server.js",
     ],
     args = [
-        "--node_options=--require=./$(location chdir.js)",
+        "--node_options=--require=./$(location chdir.js),--max_old_space_size=8096",
         "build",
         "--noninteractive",
     ],
@@ -208,7 +208,7 @@ nodejs_binary(
     ]) + _SERVER_DEPS,
     entry_point = "build/server.js",
     templated_args = [
-        "--node_options=--require=./$(rootpath chdir.js),--max_old_space_size=8096",
+        "--node_options=--require=./$(rootpath chdir.js)",
     ],
 )
 
