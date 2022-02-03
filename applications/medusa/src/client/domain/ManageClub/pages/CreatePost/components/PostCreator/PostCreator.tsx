@@ -3,7 +3,6 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import type { PostCreatorQuery } from '@//:artifacts/PostCreatorQuery.graphql'
-import { STEPS } from '../../constants/constants'
 import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import Button from '@//:modules/form/Button/Button'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
@@ -13,7 +12,8 @@ import { PauseCircle } from '@//:assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { StateContext } from '../../context'
+import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import PostSubmitted from './PostSubmitted/PostSubmitted'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -44,8 +44,12 @@ export default function PostCreator ({ query }: Props): JSX.Element {
 
   const postData = data.post
 
+  if (state.isSubmitted.value === true) {
+    return <PostSubmitted />
+  }
+
   // If there is no post found from the URL parameter, show create post initiator
-  if (postData == null && (state.step !== STEPS.SUBMIT)) {
+  if (postData == null) {
     return (
       <Stack spacing={4}>
         <CreatePostFlow clubId={data?.club?.id} />
@@ -72,7 +76,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
   }
 
   // If the post was already submitted
-  if (postData?.state !== 'DRAFT' && state.step !== STEPS.SUBMIT) {
+  if (postData?.state !== 'DRAFT') {
     return (
       <PostPlaceholder>
         <Stack spacing={4} align='center'>

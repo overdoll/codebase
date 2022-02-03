@@ -1,5 +1,5 @@
 interface State {
-  value: string | number | Date | null
+  value: string | number | Date | boolean | null
 }
 
 interface Action {
@@ -9,16 +9,16 @@ interface Action {
 
 interface SingleStringValueProps {
   dispatchType: string
-  initialValue?: State
+  defaultValue?: State
 }
 
 export type SingleStringValueReturn = [(state: State, action: Action) => State, State]
 
 export default function singleStringValueReducer ({
   dispatchType,
-  initialValue
+  defaultValue
 }: SingleStringValueProps): SingleStringValueReturn {
-  const initialState: State = initialValue != null ? initialValue : { value: null }
+  const initialState: State = defaultValue != null ? defaultValue : { value: null }
 
   const reducer = (state: State, action: Action): State => {
     switch (action.type) {

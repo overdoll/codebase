@@ -1,12 +1,11 @@
-import Button from '@//:modules/form/Button/Button'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { HStack, useToast } from '@chakra-ui/react'
 import type { CurationAudienceNextButtonFragment$key } from '@//:artifacts/CurationAudienceNextButtonFragment.graphql'
-import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import { compareTwoArrays } from '@//:modules/support'
+import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 
 interface Props {
   nextStep: () => void
@@ -103,16 +102,10 @@ export default function CurationAudienceNextButton ({
   const NextButton = (): JSX.Element => {
     if (saveCondition) {
       return (
-        <Button
-          onClick={onUpdateAudience}
-          colorScheme='green'
+        <FlowBuilderSaveButton
           isLoading={isUpdatingAudience}
-          size='lg'
-        >
-          <Trans>
-            Save
-          </Trans>
-        </Button>
+          onClick={onUpdateAudience}
+        />
       )
     }
     return <FlowBuilderNextButton />
@@ -120,17 +113,10 @@ export default function CurationAudienceNextButton ({
 
   return (
     <HStack spacing={2}>
-      <Button
-        onClick={onSkipAudience}
-        variant='ghost'
-        colorScheme='gray'
+      <FlowBuilderSkipButton
         isLoading={isUpdatingAudience}
-        size='lg'
-      >
-        <Trans>
-          Skip
-        </Trans>
-      </Button>
+        onClick={onSkipAudience}
+      />
       <NextButton />
     </HStack>
   )

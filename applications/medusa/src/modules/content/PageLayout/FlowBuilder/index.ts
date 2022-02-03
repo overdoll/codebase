@@ -8,3 +8,8 @@ export {
 export { default as FlowBuilderHeader } from './FlowBuilderHeader/FlowBuilderHeader'
 export { default as FlowBuilderSkipper } from './FlowBuilderSkipper/FlowBuilderSkipper'
 export { default as FlowBuilderProgress } from './FlowBuilderProgress/FlowBuilderProgress'
+export { default as FlowBuilderSkipButton } from './FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton'
+export { default as FlowBuilderSaveButton } from './FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton'
+export {
+  default as FlowBuilderScrollableContainer
+} from './FlowBuilderBody/FlowBuilderScrollableContainer/FlowBuilderScrollableContainer'

@@ -1,9 +1,11 @@
 import { Dispatch, Reducer, useReducer } from 'react'
 import { SingleStringValueReturn } from './options/singleStringValueReducer'
 import { ObjectCategoryValueReturn } from './options/objectCategoryValueReducer'
+import { ArrayValueReturn } from './options/arrayValueReducer'
+import { UploadObjectsReturn } from './options/uploadObjectsReducer'
 
 interface Props {
-  [key: string]: SingleStringValueReturn | ObjectCategoryValueReturn
+  [key: string]: SingleStringValueReturn | ObjectCategoryValueReturn | ArrayValueReturn | UploadObjectsReturn
 }
 
 export interface State {
@@ -17,6 +19,7 @@ export type DispatchFunction = Dispatch<Action>
 interface Action {
   type: string
   value: any | null
+  remove?: boolean
 }
 
 export default function useReducerBuilder (reducers: Props): [State, DispatchFunction] {
@@ -37,8 +40,16 @@ export default function useReducerBuilder (reducers: Props): [State, DispatchFun
       state
     )
 
+  const rootReducer = (state, action): State => {
+    if (action.type === 'initial_state') {
+      return globalState
+    }
+
+    return combinedReducers(state, action)
+  }
+
   const [state, dispatch] = useReducer<Reducer<State, Action>>(
-    combinedReducers,
+    rootReducer,
     globalState,
     undefined
   )

@@ -1,5 +1,4 @@
-import Button from '@//:modules/form/Button/Button'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
@@ -7,6 +6,7 @@ import { HStack, useToast } from '@chakra-ui/react'
 import type { CurationCategoryNextButtonFragment$key } from '@//:artifacts/CurationCategoryNextButtonFragment.graphql'
 import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import { compareTwoArrays } from '@//:modules/support'
+import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 
 interface Props {
   nextStep: () => void
@@ -102,16 +102,10 @@ export default function CurationCategoryNextButton ({
   const NextButton = (): JSX.Element => {
     if (saveCondition) {
       return (
-        <Button
+        <FlowBuilderSaveButton
           onClick={onUpdateCategory}
-          colorScheme='green'
           isLoading={isUpdatingCategory}
-          size='lg'
-        >
-          <Trans>
-            Save
-          </Trans>
-        </Button>
+        />
       )
     }
     return <FlowBuilderNextButton />
@@ -119,17 +113,10 @@ export default function CurationCategoryNextButton ({
 
   return (
     <HStack spacing={2}>
-      <Button
+      <FlowBuilderSkipButton
         onClick={onSkipCategory}
-        variant='ghost'
-        colorScheme='gray'
         isLoading={isUpdatingCategory}
-        size='lg'
-      >
-        <Trans>
-          Skip
-        </Trans>
-      </Button>
+      />
       <NextButton />
     </HStack>
   )

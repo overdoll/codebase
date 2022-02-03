@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 00279dd31a63376a305c940545282aeb */
+/* @relayHash 7474114de940c48e48331f15f73ae380 */
 
 import { ConcreteRequest } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
@@ -43,18 +43,6 @@ query PostCreatorQuery(
   }
 }
 
-fragment ArrangeFragment on Post {
-  content {
-    id
-    urls {
-      url
-      mimeType
-    }
-  }
-  ...ArrangeUploadsFragment
-  ...ProcessUploadsFragment
-}
-
 fragment ArrangeUploadsFragment on Post {
   id
   content {
@@ -63,49 +51,6 @@ fragment ArrangeUploadsFragment on Post {
       url
     }
     ...DraggableContentFragment
-  }
-}
-
-fragment AudienceFragment on Post {
-  audience {
-    id
-    title
-  }
-}
-
-fragment CategoryFragment on Post {
-  categories {
-    id
-    title
-    slug
-    thumbnail {
-      type
-      urls {
-        mimeType
-        url
-      }
-      id
-    }
-  }
-}
-
-fragment CharacterFragment on Post {
-  characters {
-    id
-    name
-    series {
-      title
-      id
-    }
-    slug
-    thumbnail {
-      type
-      urls {
-        mimeType
-        url
-      }
-      id
-    }
   }
 }
 
@@ -121,31 +66,6 @@ fragment DraggableContentFragment on Resource {
     mimeType
   }
   ...ResourceItemFragment
-}
-
-fragment FlowFooterFragment on Post {
-  ...FlowForwardButtonFragment
-}
-
-fragment FlowForwardButtonFragment on Post {
-  ...SubmitPostButtonFragment
-  ...UpdateAudienceButton
-  ...UpdateCategoryButtonFragment
-  ...UpdateCharacterButtonFragment
-  ...UpdateContentButtonFragment
-}
-
-fragment FlowHeaderFragment on Post {
-  ...checkPostRequirementsFragment
-  ...ProcessContentFragment
-}
-
-fragment FlowStepsFragment on Post {
-  ...ArrangeFragment
-  ...AudienceFragment
-  ...CategoryFragment
-  ...CharacterFragment
-  ...ReviewFragment
 }
 
 fragment ImageSnippetFragment on Resource {
@@ -250,10 +170,6 @@ fragment ResourceItemFragment on Resource {
   ...VideoSnippetFragment
 }
 
-fragment ReviewFragment on Post {
-  ...PostReviewFragment
-}
-
 fragment SubmitPostButtonFragment on Post {
   id
 }
@@ -290,34 +206,90 @@ fragment UpdateContentButtonFragment on Post {
 }
 
 fragment UpdatePostFlowFragment on Post {
-  ...FlowStepsFragment
-  ...FlowFooterFragment
-  ...FlowHeaderFragment
+  ...UploadFlowHeaderFragment
+  ...UploadFlowFooterFragment
+  ...UploadCategoryStepFragment
+  ...UploadAudienceStepFragment
+  ...UploadReviewStepFragment
+  ...UploadCharacterStepFragment
+  ...UploadArrangeStepFragment
+}
+
+fragment UploadArrangeStepFragment on Post {
+  content {
+    id
+    urls {
+      url
+      mimeType
+    }
+  }
+  ...ArrangeUploadsFragment
+  ...ProcessUploadsFragment
+}
+
+fragment UploadAudienceStepFragment on Post {
+  audience {
+    id
+    title
+  }
+}
+
+fragment UploadCategoryStepFragment on Post {
+  categories {
+    id
+    title
+    slug
+    thumbnail {
+      type
+      urls {
+        mimeType
+        url
+      }
+      id
+    }
+  }
+}
+
+fragment UploadCharacterStepFragment on Post {
+  characters {
+    id
+    name
+    series {
+      title
+      id
+    }
+    slug
+    thumbnail {
+      type
+      urls {
+        mimeType
+        url
+      }
+      id
+    }
+  }
+}
+
+fragment UploadFlowFooterFragment on Post {
+  ...UpdateContentButtonFragment
+  ...UpdateAudienceButton
+  ...UpdateCategoryButtonFragment
+  ...UpdateCharacterButtonFragment
+  ...SubmitPostButtonFragment
+}
+
+fragment UploadFlowHeaderFragment on Post {
+  ...ProcessContentFragment
+}
+
+fragment UploadReviewStepFragment on Post {
+  ...PostReviewFragment
 }
 
 fragment VideoSnippetFragment on Resource {
   urls {
     url
     mimeType
-  }
-}
-
-fragment checkPostRequirementsFragment on Post {
-  content {
-    __typename
-    id
-  }
-  audience {
-    __typename
-    id
-  }
-  categories {
-    __typename
-    id
-  }
-  characters {
-    __typename
-    id
   }
 }
 */
@@ -432,34 +404,22 @@ v11 = {
 v12 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
   "selections": [
     (v9/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
-      "selections": [
-        (v7/*: any*/),
-        (v6/*: any*/)
-      ],
-      "storageKey": null
-    },
+    (v8/*: any*/),
     (v4/*: any*/)
   ],
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
   "storageKey": null
 };
 return {
@@ -511,33 +471,32 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Resource",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
-              (v8/*: any*/),
-              (v9/*: any*/),
-              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "processed",
                 "storageKey": null
-              }
+              },
+              (v4/*: any*/),
+              (v8/*: any*/),
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
           (v4/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "reference",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -547,8 +506,7 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v10/*: any*/),
-              (v2/*: any*/)
+              (v10/*: any*/)
             ],
             "storageKey": null
           },
@@ -563,8 +521,32 @@ return {
               (v4/*: any*/),
               (v10/*: any*/),
               (v11/*: any*/),
-              (v12/*: any*/),
-              (v2/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": [
+                  (v9/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceUrl",
+                    "kind": "LinkedField",
+                    "name": "urls",
+                    "plural": true,
+                    "selections": [
+                      (v7/*: any*/),
+                      (v6/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v4/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -577,7 +559,8 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v13/*: any*/),
+              (v12/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -591,9 +574,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/),
-              (v12/*: any*/),
-              (v2/*: any*/)
+              (v13/*: any*/)
             ],
             "storageKey": null
           },
@@ -605,22 +586,9 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
-              (v13/*: any*/),
+              (v12/*: any*/),
               (v11/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
-                "selections": [
-                  (v9/*: any*/),
-                  (v8/*: any*/),
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              },
+              (v13/*: any*/),
               (v4/*: any*/)
             ],
             "storageKey": null
@@ -632,7 +600,7 @@ return {
     ]
   },
   "params": {
-    "id": "00279dd31a63376a305c940545282aeb",
+    "id": "7474114de940c48e48331f15f73ae380",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

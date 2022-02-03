@@ -11,16 +11,16 @@ interface Action {
 
 interface ObjectCategoryValueProps {
   dispatchType: string
-  initialValue?: ObjectCategoryState
+  defaultValue?: ObjectCategoryState
 }
 
 export type ObjectCategoryValueReturn = [(state: ObjectCategoryState, action: Action) => ObjectCategoryState, ObjectCategoryState]
 
 export default function objectCategoryValueReducer ({
   dispatchType,
-  initialValue
+  defaultValue
 }: ObjectCategoryValueProps): ObjectCategoryValueReturn {
-  const initialState: ObjectCategoryState = initialValue != null ? initialValue : { value: {} }
+  const initialState: ObjectCategoryState = defaultValue != null ? defaultValue : { value: {} }
 
   const reducer = (state: ObjectCategoryState, action: Action): ObjectCategoryState => {
     switch (action.type) {

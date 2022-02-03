@@ -1,5 +1,0 @@
-export { default as SubmitPostButton } from './SubmitPostButton/SubmitPostButton'
-export { default as UpdateAudienceButton } from './UpdateAudienceButton/UpdateAudienceButton'
-export { default as UpdateCategoryButton } from './UpdateCategoryButton/UpdateCategoryButton'
-export { default as UpdateCharacterButton } from './UpdateCharacterButton/UpdateCharacterButton'
-export { default as UpdateContentButton } from './UpdateContentButton/UpdateContentButton'
