@@ -4,10 +4,9 @@
 set -eu
 
 # a hack to install the yaml package, if it's not available
-if ! python -c "import yaml" &> /dev/null; then
-    apt install python3-yaml
+if ! python -c "import yaml" &>/dev/null; then
+  apt install python3-yaml
+  apt install ffmpeg
 fi
-
-apt install ffmpeg
 
 python3 ./.buildkite/lib/main.py "$@"
