@@ -1,23 +1,38 @@
+/**
+ * @generated SignedSource<<1d0f071effaf02bc6b984ed3742d80d8>>
+ * @relayHash c4f49218ff617ace3b9a824696aa5d77
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD
 /* @relayHash d4d683f02db9a99095a60e56afdf5eba */
+=======
+>>>>>>> master
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID c4f49218ff617ace3b9a824696aa5d77
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubMembersQueryVariables = {
-    slug: string;
+export type ClubMembersQuery$variables = {
+  slug: string;
 };
-export type ClubMembersQueryResponse = {
-    readonly club: {
-        readonly " $fragmentRefs": FragmentRefs<"ClubMembersFragment">;
-    } | null;
+export type ClubMembersQueryVariables = ClubMembersQuery$variables;
+export type ClubMembersQuery$data = {
+  readonly club: {
+    readonly " $fragmentSpreads": FragmentRefs<"ClubMembersFragment">;
+  } | null;
 };
+export type ClubMembersQueryResponse = ClubMembersQuery$data;
 export type ClubMembersQuery = {
-    readonly response: ClubMembersQueryResponse;
-    readonly variables: ClubMembersQueryVariables;
+  variables: ClubMembersQueryVariables;
+  response: ClubMembersQuery$data;
 };
 
+<<<<<<< HEAD
 
 
 /*
@@ -86,6 +101,8 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+>>>>>>> master
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -316,5 +333,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'd9d655947c04025c53518180bc3fec64';
+
+(node as any).hash = "d9d655947c04025c53518180bc3fec64";
+
 export default node;

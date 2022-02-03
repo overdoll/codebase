@@ -1,25 +1,29 @@
+/**
+ * @generated SignedSource<<d67dd5b35e3bb4f5b3b7e0b00f7f0796>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SearchFragment = {
-    readonly posts: {
-        readonly edges: ReadonlyArray<{
-            readonly __typename: string;
-        }>;
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollFragment">;
-    };
-    readonly " $refType": "SearchFragment";
+export type SearchFragment$data = {
+  readonly posts: {
+    readonly edges: ReadonlyArray<{
+      readonly __typename: string;
+    }>;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
+  };
+  readonly " $fragmentType": "SearchFragment";
 };
-export type SearchFragment$data = SearchFragment;
+export type SearchFragment = SearchFragment$data;
 export type SearchFragment$key = {
-    readonly " $data"?: SearchFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SearchFragment">;
+  readonly " $data"?: SearchFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -81,7 +85,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SearchPostsPaginationQuery.graphql.ts')
+      "operation": require('./SearchPostsPaginationQuery.graphql')
     }
   },
   "name": "SearchFragment",
@@ -147,6 +151,11 @@ return {
           "storageKey": null
         },
         {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostsInfiniteScrollFragment"
+        },
+        {
           "alias": null,
           "args": null,
           "concreteType": "PageInfo",
@@ -170,11 +179,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostsInfiniteScrollFragment"
         }
       ],
       "storageKey": null
@@ -184,5 +188,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '09b983dda235e9d50334928d33c6d5b0';
+
+(node as any).hash = "09b983dda235e9d50334928d33c6d5b0";
+
 export default node;

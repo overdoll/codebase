@@ -1,45 +1,39 @@
+/**
+ * @generated SignedSource<<d5c6ebaa55ef3efed56fc9278c21095f>>
+ * @relayHash 0d258f26ce3e9ebb86453f51934cda7f
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0d258f26ce3e9ebb86453f51934cda7f */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 0d258f26ce3e9ebb86453f51934cda7f
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type GrantAuthenticationTokenInput = {
-    email: string;
+  email: string;
 };
-export type JoinMutationVariables = {
-    input: GrantAuthenticationTokenInput;
+export type JoinMutation$variables = {
+  input: GrantAuthenticationTokenInput;
 };
-export type JoinMutationResponse = {
-    readonly grantAuthenticationToken: {
-        readonly authenticationToken: {
-            readonly id: string;
-            readonly email: string;
-            readonly token: string;
-            readonly sameDevice: boolean;
-        } | null;
+export type JoinMutationVariables = JoinMutation$variables;
+export type JoinMutation$data = {
+  readonly grantAuthenticationToken: {
+    readonly authenticationToken: {
+      readonly id: string;
+      readonly email: string;
+      readonly token: string;
+      readonly sameDevice: boolean;
     } | null;
+  } | null;
 };
+export type JoinMutationResponse = JoinMutation$data;
 export type JoinMutation = {
-    readonly response: JoinMutationResponse;
-    readonly variables: JoinMutationVariables;
+  variables: JoinMutationVariables;
+  response: JoinMutation$data;
 };
-
-
-
-/*
-mutation JoinMutation(
-  $input: GrantAuthenticationTokenInput!
-) {
-  grantAuthenticationToken(input: $input) {
-    authenticationToken {
-      id
-      token
-      sameDevice
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -138,5 +132,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'dfbb9dcad2c34353462472c64a19af2b';
+
+(node as any).hash = "dfbb9dcad2c34353462472c64a19af2b";
+
 export default node;

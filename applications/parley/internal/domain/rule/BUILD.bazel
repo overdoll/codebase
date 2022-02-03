@@ -13,5 +13,7 @@ go_library(
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/uuid",
+        "@com_github_go_playground_validator_v10//:validator",
+        "@com_github_yuin_goldmark//:goldmark",
     ],
 )

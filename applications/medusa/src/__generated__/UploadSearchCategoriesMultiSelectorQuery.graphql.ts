@@ -1,10 +1,23 @@
+/**
+ * @generated SignedSource<<bb58fca9037ce789b5162d613c5bdfa1>>
+ * @relayHash 5bfe0f800f9ec5354fd7797aa24086d8
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
 /* @relayHash ca2923da6221b4474dfe0fdb2ad2daae */
+=======
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 5bfe0f800f9ec5354fd7797aa24086d8
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
 export type UploadSearchCategoriesMultiSelectorQueryVariables = {
     title?: string | null | undefined;
 };
@@ -72,6 +85,21 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+export type SearchCategoriesQuery$variables = {
+  title?: string | null;
+};
+export type SearchCategoriesQueryVariables = SearchCategoriesQuery$variables;
+export type SearchCategoriesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
+};
+export type SearchCategoriesQueryResponse = SearchCategoriesQuery$data;
+export type SearchCategoriesQuery = {
+  variables: SearchCategoriesQueryVariables;
+  response: SearchCategoriesQuery$data;
+};
+
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -270,5 +298,11 @@ return {
   }
 };
 })();
+<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
 (node as any).hash = '2c2c7335c9466f6faa6288581e3d06cd';
+=======
+
+(node as any).hash = "4f48576e48f3ef7919d14cf7d1dc2763";
+
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 export default node;

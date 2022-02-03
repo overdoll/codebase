@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<b3252b11a58ac478070ca41ef2c912ae>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SessionsSettingsFragment = {
-    readonly sessions: {
-        readonly __id: string;
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"SessionCardFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "SessionsSettingsFragment";
+export type SessionsSettingsFragment$data = {
+  readonly sessions: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"SessionCardFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "SessionsSettingsFragment";
 };
-export type SessionsSettingsFragment$data = SessionsSettingsFragment;
+export type SessionsSettingsFragment = SessionsSettingsFragment$data;
 export type SessionsSettingsFragment$key = {
-    readonly " $data"?: SessionsSettingsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SessionsSettingsFragment">;
+  readonly " $data"?: SessionsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SessionsSettingsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -63,100 +67,105 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./SessionsPaginationQuery.graphql.ts'),
+      "operation": require('./SessionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
   "name": "SessionsSettingsFragment",
   "selections": [
     {
-      "alias": "sessions",
-      "args": null,
-      "concreteType": "AccountSessionConnection",
-      "kind": "LinkedField",
-      "name": "__SessionsSettingsFragment_sessions_connection",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "AccountSessionEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "AccountSession",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "SessionCardFragment"
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
-        }
-      ],
-      "storageKey": null
+      "kind": "RequiredField",
+      "field": {
+        "alias": "sessions",
+        "args": null,
+        "concreteType": "AccountSessionConnection",
+        "kind": "LinkedField",
+        "name": "__SessionsSettingsFragment_sessions_connection",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountSessionEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountSession",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "SessionCardFragment"
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
+              }
+            ]
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "sessions"
     },
     {
       "alias": null,
@@ -170,5 +179,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'c996e8b92e2b1c5330aaffb0e2caa5b7';
+
+(node as any).hash = "304a5b299912e468605c31103179d698";
+
 export default node;

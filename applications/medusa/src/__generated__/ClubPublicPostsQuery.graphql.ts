@@ -1,218 +1,41 @@
+/**
+ * @generated SignedSource<<ed6c3cae82773cf7c30c72886d1a6a58>>
+ * @relayHash 061c65fbad775a3073747af0773c402e
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 061c65fbad775a3073747af0773c402e */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 061c65fbad775a3073747af0773c402e
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
-export type ClubPublicPostsQueryVariables = {
-    slug: string;
-    sortBy: PostsSort;
-    categorySlugs?: Array<string> | null | undefined;
-    seriesSlugs?: Array<string> | null | undefined;
-    characterSlugs?: Array<string> | null | undefined;
+export type ClubPublicPostsQuery$variables = {
+  slug: string;
+  sortBy: PostsSort;
+  categorySlugs?: ReadonlyArray<string> | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
+  characterSlugs?: ReadonlyArray<string> | null;
 };
-export type ClubPublicPostsQueryResponse = {
-    readonly club: {
-        readonly slug: string;
-        readonly " $fragmentRefs": FragmentRefs<"ClubPublicPostsFragment">;
-    } | null;
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
-    } | null;
+export type ClubPublicPostsQueryVariables = ClubPublicPostsQuery$variables;
+export type ClubPublicPostsQuery$data = {
+  readonly club: {
+    readonly slug: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPostsFragment">;
+  } | null;
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+  } | null;
 };
+export type ClubPublicPostsQueryResponse = ClubPublicPostsQuery$data;
 export type ClubPublicPostsQuery = {
-    readonly response: ClubPublicPostsQueryResponse;
-    readonly variables: ClubPublicPostsQueryVariables;
+  variables: ClubPublicPostsQueryVariables;
+  response: ClubPublicPostsQuery$data;
 };
-
-
-
-/*
-query ClubPublicPostsQuery(
-  $slug: String!
-  $sortBy: PostsSort!
-  $categorySlugs: [String!]
-  $seriesSlugs: [String!]
-  $characterSlugs: [String!]
-) {
-  club(slug: $slug) {
-    slug
-    ...ClubPublicPostsFragment
-    id
-  }
-  viewer {
-    ...PostsInfiniteScrollViewerFragment
-    id
-  }
-}
-
-fragment ClubPublicPostsFragment on Club {
-  posts(first: 5, sortBy: $sortBy, categorySlugs: $categorySlugs, seriesSlugs: $seriesSlugs, characterSlugs: $characterSlugs) {
-    edges {
-      __typename
-      cursor
-      node {
-        __typename
-        id
-      }
-    }
-    ...PostsInfiniteScrollFragment
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment FullSimplePostFragment on Post {
-  id
-  ...PostGalleryPublicSimpleFragment
-  ...PostMenuFragment
-  ...PostLikeButtonFragment
-  ...PostHeaderClubFragment
-  ...PostClickableCharactersFragment
-  ...PostClickableCategoriesFragment
-  club {
-    ...JoinClubButtonClubFragment
-    id
-  }
-}
-
-fragment FullSimplePostViewerFragment on Account {
-  ...JoinClubButtonViewerFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment JoinClubButtonClubFragment on Club {
-  id
-  name
-  viewerMember {
-    __typename
-    id
-  }
-}
-
-fragment JoinClubButtonViewerFragment on Account {
-  clubMembershipsLimit
-  clubMembershipsCount
-}
-
-fragment PostClickableCategoriesFragment on Post {
-  categories {
-    slug
-    title
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostClickableCharactersFragment on Post {
-  characters {
-    name
-    slug
-    series {
-      title
-      id
-    }
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostGalleryPublicSimpleFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-  ...PostClickableCategoriesFragment
-  ...PostClickableCharactersFragment
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostLikeButtonFragment on Post {
-  id
-  viewerLiked {
-    __typename
-    id
-  }
-  likes
-}
-
-fragment PostMenuFragment on Post {
-  id
-}
-
-fragment PostsInfiniteScrollFragment on PostConnection {
-  edges {
-    node {
-      ...FullSimplePostFragment
-      id
-    }
-  }
-}
-
-fragment PostsInfiniteScrollViewerFragment on Account {
-  ...FullSimplePostViewerFragment
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -654,5 +477,7 @@ return {
   }
 };
 })();
-(node as any).hash = '528a371a3c272263dd5abcc8550d1ea1';
+
+(node as any).hash = "528a371a3c272263dd5abcc8550d1ea1";
+
 export default node;

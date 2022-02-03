@@ -1,27 +1,31 @@
+/**
+ * @generated SignedSource<<92a40fa3166a7488a4b2216b72a6531a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SuggestedClubsFragment = {
-    readonly clubs: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly slug: string;
-                readonly " $fragmentRefs": FragmentRefs<"JoinClubButtonClubFragment" | "ClubTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "SuggestedClubsFragment";
+export type SuggestedClubsFragment$data = {
+  readonly clubs: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly slug: string;
+        readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment" | "ClubTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SuggestedClubsFragment";
 };
-export type SuggestedClubsFragment$data = SuggestedClubsFragment;
+export type SuggestedClubsFragment = SuggestedClubsFragment$data;
 export type SuggestedClubsFragment$key = {
-    readonly " $data"?: SuggestedClubsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SuggestedClubsFragment">;
+  readonly " $data"?: SuggestedClubsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -60,7 +64,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SuggestedClubsPaginationQuery.graphql.ts')
+      "operation": require('./SuggestedClubsPaginationQuery.graphql')
     }
   },
   "name": "SuggestedClubsFragment",
@@ -97,13 +101,6 @@ return {
                   "storageKey": null
                 },
                 {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                },
-                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "JoinClubButtonClubFragment"
@@ -112,6 +109,13 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "ClubTileOverlayFragment"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -159,5 +163,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '3005950f7f75e61df8c2fe462ba5203b';
+
+(node as any).hash = "3005950f7f75e61df8c2fe462ba5203b";
+
 export default node;

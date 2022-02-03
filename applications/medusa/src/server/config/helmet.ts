@@ -8,13 +8,13 @@ const options: HelmetOptions = {
       'default-src': ['\'self\''],
       'script-src': [
         '\'self\'',
-        'https://cdn.jsdelivr.net/npm/@apollographql/'
+        'https://cdn.jsdelivr.net/npm/graphql-playground-react/'
       ],
       'style-src': [
         '\'self\'',
         '\'unsafe-inline\'',
         'https://fonts.googleapis.com',
-        'https://cdn.jsdelivr.net/npm/@apollographql/'
+        'https://cdn.jsdelivr.net/npm/graphql-playground-react/'
       ],
       'font-src': ['data:', '*'],
       'base-uri': ['\'self\''],

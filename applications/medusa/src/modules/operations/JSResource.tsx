@@ -193,7 +193,7 @@ class ClientResource {
   }
 }
 
-const resolveConstructor = (ctor) => {
+const resolveConstructor = (ctor): any => {
   if (typeof ctor === 'function') {
     return {
       requireAsync: ctor,

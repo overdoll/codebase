@@ -1,24 +1,39 @@
+/**
+ * @generated SignedSource<<7f0d149f3f8d6262c2b19cda66ee4ac6>>
+ * @relayHash 493163bb1dd3d0832dafca60fe03c9f0
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD
 /* @relayHash 6f502e2db75a94c63a502d025e203b9e */
+=======
+>>>>>>> master
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 493163bb1dd3d0832dafca60fe03c9f0
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RootQueryVariables = {};
-export type RootQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
-    } | null;
-    readonly language: {
-        readonly locale: string;
-    };
+export type RootQuery$variables = {};
+export type RootQueryVariables = RootQuery$variables;
+export type RootQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
+  } | null;
+  readonly language: {
+    readonly locale: string;
+  };
 };
+export type RootQueryResponse = RootQuery$data;
 export type RootQuery = {
-    readonly response: RootQueryResponse;
-    readonly variables: RootQueryVariables;
+  variables: RootQueryVariables;
+  response: RootQuery$data;
 };
 
+<<<<<<< HEAD
 
 
 /*
@@ -117,6 +132,8 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+>>>>>>> master
 const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
@@ -294,7 +311,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "6f502e2db75a94c63a502d025e203b9e",
+=======
+    "id": "493163bb1dd3d0832dafca60fe03c9f0",
+>>>>>>> master
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -302,5 +323,7 @@ return {
   }
 };
 })();
-(node as any).hash = '4a182eb0eb5dbeddf86cde10eadc74b2';
+
+(node as any).hash = "4a182eb0eb5dbeddf86cde10eadc74b2";
+
 export default node;

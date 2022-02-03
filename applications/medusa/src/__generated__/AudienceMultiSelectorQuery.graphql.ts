@@ -1,10 +1,23 @@
+/**
+ * @generated SignedSource<<8b2d00066dafec1d0bf89cec4377a17f>>
+ * @relayHash 353c52a51e6ae6464e7ba9147608f9e0
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
 /* @relayHash c419aff5d729ae86133b5da187285e24 */
+=======
+>>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 353c52a51e6ae6464e7ba9147608f9e0
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
 export type AudienceMultiSelectorQueryVariables = {};
 export type AudienceMultiSelectorQueryResponse = {
     readonly audiences: {
@@ -66,6 +79,27 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+export type AudiencesQuery$variables = {};
+export type AudiencesQueryVariables = AudiencesQuery$variables;
+export type AudiencesQuery$data = {
+  readonly audiences: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AudienceTileOverlayFragment">;
+      };
+    }>;
+  };
+};
+export type AudiencesQueryResponse = AudiencesQuery$data;
+export type AudiencesQuery = {
+  variables: AudiencesQueryVariables;
+  response: AudiencesQuery$data;
+};
+
+>>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
@@ -228,5 +262,11 @@ return {
   }
 };
 })();
+<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
 (node as any).hash = 'df5243268b0bf531c2745a3c5d4027d6';
+=======
+
+(node as any).hash = "81a8d3ff43d094e4672ca3a0c9128ce7";
+
+>>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 export default node;

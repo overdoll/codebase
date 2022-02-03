@@ -1,43 +1,36 @@
+/**
+ * @generated SignedSource<<77e0611545a4a298cddadfd9306ac5c8>>
+ * @relayHash 1f7c979d17ba068ea6a12b8c216ec8df
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1f7c979d17ba068ea6a12b8c216ec8df */
 
-import { ConcreteRequest } from "relay-runtime";
-export type RefreshProcessContentQueryVariables = {
-    reference: string;
+// @relayRequestID 1f7c979d17ba068ea6a12b8c216ec8df
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type RefreshProcessContentQuery$variables = {
+  reference: string;
 };
-export type RefreshProcessContentQueryResponse = {
-    readonly post: {
-        readonly id: string;
-        readonly reference: string;
-        readonly content: ReadonlyArray<{
-            readonly id: string;
-            readonly processed: boolean;
-        }>;
-    } | null;
+export type RefreshProcessContentQueryVariables = RefreshProcessContentQuery$variables;
+export type RefreshProcessContentQuery$data = {
+  readonly post: {
+    readonly id: string;
+    readonly reference: string;
+    readonly content: ReadonlyArray<{
+      readonly id: string;
+      readonly processed: boolean;
+    }>;
+  } | null;
 };
+export type RefreshProcessContentQueryResponse = RefreshProcessContentQuery$data;
 export type RefreshProcessContentQuery = {
-    readonly response: RefreshProcessContentQueryResponse;
-    readonly variables: RefreshProcessContentQueryVariables;
+  variables: RefreshProcessContentQueryVariables;
+  response: RefreshProcessContentQuery$data;
 };
-
-
-
-/*
-query RefreshProcessContentQuery(
-  $reference: String!
-) {
-  post(reference: $reference) {
-    id
-    reference
-    content {
-      id
-      processed
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -126,5 +119,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a0e5a1df244f026dfd280f1d95b2eb4a';
+
+(node as any).hash = "a0e5a1df244f026dfd280f1d95b2eb4a";
+
 export default node;

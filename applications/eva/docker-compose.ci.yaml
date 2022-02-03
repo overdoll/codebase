@@ -3,7 +3,7 @@ services:
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/eva/internal/image.binary db migrate keyspace && /app/applications/eva/internal/image.binary db seed && /app/applications/eva/internal/image.binary index all && /app/applications/eva/internal/image.binary"
+    command: /bin/sh -c "/app/applications/eva/internal/image.binary db migrate keyspace && /app/applications/eva/internal/image.binary db seed && /app/applications/eva/internal/image.binary"
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - temporal

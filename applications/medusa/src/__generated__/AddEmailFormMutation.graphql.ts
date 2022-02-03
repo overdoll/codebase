@@ -1,46 +1,40 @@
+/**
+ * @generated SignedSource<<713763590da6700af753168eceba92bc>>
+ * @relayHash 11225120e6fd1210cdd23abd0729955a
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 11225120e6fd1210cdd23abd0729955a */
 
-import { ConcreteRequest } from "relay-runtime";
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+// @relayRequestID 11225120e6fd1210cdd23abd0729955a
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
 export type AddAccountEmailInput = {
-    email: string;
+  email: string;
 };
-export type AddEmailFormMutationVariables = {
-    input: AddAccountEmailInput;
-    connections: Array<string>;
+export type AddEmailFormMutation$variables = {
+  input: AddAccountEmailInput;
+  connections: ReadonlyArray<string>;
 };
-export type AddEmailFormMutationResponse = {
-    readonly addAccountEmail: {
-        readonly accountEmail: {
-            readonly id: string;
-            readonly email: string;
-            readonly status: AccountEmailStatus;
-        } | null;
+export type AddEmailFormMutationVariables = AddEmailFormMutation$variables;
+export type AddEmailFormMutation$data = {
+  readonly addAccountEmail: {
+    readonly accountEmail: {
+      readonly id: string;
+      readonly email: string;
+      readonly status: AccountEmailStatus;
     } | null;
+  } | null;
 };
+export type AddEmailFormMutationResponse = AddEmailFormMutation$data;
 export type AddEmailFormMutation = {
-    readonly response: AddEmailFormMutationResponse;
-    readonly variables: AddEmailFormMutationVariables;
+  variables: AddEmailFormMutationVariables;
+  response: AddEmailFormMutation$data;
 };
-
-
-
-/*
-mutation AddEmailFormMutation(
-  $input: AddAccountEmailInput!
-) {
-  addAccountEmail(input: $input) {
-    accountEmail {
-      id
-      email
-      status
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -171,5 +165,7 @@ return {
   }
 };
 })();
-(node as any).hash = '6f834357fde2d17150f8079d8054e0c2';
+
+(node as any).hash = "6f834357fde2d17150f8079d8054e0c2";
+
 export default node;

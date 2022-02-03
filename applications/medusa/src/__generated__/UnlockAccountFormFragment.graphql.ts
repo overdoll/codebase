@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<fce107e149e1f1f48297d85dacded060>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UnlockAccountFormFragment = {
-    readonly id: string;
-    readonly " $refType": "UnlockAccountFormFragment";
+export type UnlockAccountFormFragment$data = {
+  readonly id: string;
+  readonly " $fragmentType": "UnlockAccountFormFragment";
 };
-export type UnlockAccountFormFragment$data = UnlockAccountFormFragment;
+export type UnlockAccountFormFragment = UnlockAccountFormFragment$data;
 export type UnlockAccountFormFragment$key = {
-    readonly " $data"?: UnlockAccountFormFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UnlockAccountFormFragment">;
+  readonly " $data"?: UnlockAccountFormFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UnlockAccountFormFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'e762dc0a9488c0e1299b0599f938d00f';
+
+(node as any).hash = "e762dc0a9488c0e1299b0599f938d00f";
+
 export default node;

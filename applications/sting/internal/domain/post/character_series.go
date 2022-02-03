@@ -2,6 +2,7 @@ package post
 
 import (
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -39,6 +40,10 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 	lc, err := localization.NewDefaultTranslation(title)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := validateSeriesTitle(title); err != nil {
 		return nil, err
 	}
 
@@ -92,6 +97,10 @@ func (m *Series) UpdateTitle(requester *principal.Principal, title, locale strin
 		return err
 	}
 
+	if err := validateSeriesTitle(title); err != nil {
+		return err
+	}
+
 	if err := m.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
@@ -132,4 +141,15 @@ func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumb
 		totalLikes:          totalLikes,
 		totalPosts:          totalPosts,
 	}
+}
+
+func validateSeriesTitle(title string) error {
+
+	err := validator.New().Var(title, "required,max=25")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

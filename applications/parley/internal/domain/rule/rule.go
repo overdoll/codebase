@@ -1,7 +1,10 @@
 package rule
 
 import (
+	"bytes"
 	"errors"
+	"github.com/go-playground/validator/v10"
+	"github.com/yuin/goldmark"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -44,6 +47,14 @@ func NewRule(requester *principal.Principal, title, description string, infracti
 		return nil, err
 	}
 
+	if err := validateTitle(title); err != nil {
+		return nil, err
+	}
+
+	if err := validateDescription(description); err != nil {
+		return nil, err
+	}
+
 	return &Rule{
 		id:          uuid.New().String(),
 		title:       titleT,
@@ -62,7 +73,7 @@ func (m *Rule) Title() *localization.Translation {
 }
 
 func (m *Rule) Description() *localization.Translation {
-	return m.title
+	return m.description
 }
 
 func (m *Rule) Deprecated() bool {
@@ -79,6 +90,10 @@ func (m *Rule) UpdateTitle(requester *principal.Principal, title, locale string)
 		return err
 	}
 
+	if err := validateTitle(title); err != nil {
+		return err
+	}
+
 	if err := m.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
@@ -89,6 +104,10 @@ func (m *Rule) UpdateTitle(requester *principal.Principal, title, locale string)
 func (m *Rule) UpdateDescription(requester *principal.Principal, description, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := validateDescription(description); err != nil {
 		return err
 	}
 
@@ -127,6 +146,32 @@ func (m *Rule) canUpdate(requester *principal.Principal) error {
 
 	if requester.IsLocked() {
 		return principal.ErrLocked
+	}
+
+	return nil
+}
+
+func validateTitle(title string) error {
+
+	err := validator.New().Var(title, "required,max=25")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func validateDescription(description string) error {
+
+	if description == "" {
+		return nil
+	}
+
+	// attempt markdown conversion
+	var buf bytes.Buffer
+	if err := goldmark.Convert([]byte(description), &buf); err != nil {
+		return err
 	}
 
 	return nil

@@ -1,62 +1,48 @@
+/**
+ * @generated SignedSource<<cd96604bd83b2d3c372d8952e52c0e53>>
+ * @relayHash f45286610b48af3f6bdc4652b7a753e4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f45286610b48af3f6bdc4652b7a753e4 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID f45286610b48af3f6bdc4652b7a753e4
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type RemovePostContentInput = {
-    id: string;
-    contentIds: Array<string>;
+  id: string;
+  contentIds: ReadonlyArray<string>;
 };
-export type ArrangeUploadsMutationVariables = {
-    input: RemovePostContentInput;
+export type ArrangeUploadsMutation$variables = {
+  input: RemovePostContentInput;
 };
-export type ArrangeUploadsMutationResponse = {
-    readonly removePostContent: {
-        readonly post: {
-            readonly id: string;
-            readonly reference: string;
-            readonly content: ReadonlyArray<{
-                readonly id: string;
-                readonly type: ResourceType;
-                readonly processed: boolean;
-                readonly urls: ReadonlyArray<{
-                    readonly url: string;
-                    readonly mimeType: string;
-                }>;
-            }>;
-        } | null;
+export type ArrangeUploadsMutationVariables = ArrangeUploadsMutation$variables;
+export type ArrangeUploadsMutation$data = {
+  readonly removePostContent: {
+    readonly post: {
+      readonly id: string;
+      readonly reference: string;
+      readonly content: ReadonlyArray<{
+        readonly id: string;
+        readonly type: ResourceType;
+        readonly processed: boolean;
+        readonly urls: ReadonlyArray<{
+          readonly url: string;
+          readonly mimeType: string;
+        }>;
+      }>;
     } | null;
+  } | null;
 };
+export type ArrangeUploadsMutationResponse = ArrangeUploadsMutation$data;
 export type ArrangeUploadsMutation = {
-    readonly response: ArrangeUploadsMutationResponse;
-    readonly variables: ArrangeUploadsMutationVariables;
+  variables: ArrangeUploadsMutationVariables;
+  response: ArrangeUploadsMutation$data;
 };
-
-
-
-/*
-mutation ArrangeUploadsMutation(
-  $input: RemovePostContentInput!
-) {
-  removePostContent(input: $input) {
-    post {
-      id
-      reference
-      content {
-        id
-        type
-        processed
-        urls {
-          url
-          mimeType
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -188,5 +174,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'bc4a217a6059cd12c2a8d4f4610e9e75';
+
+(node as any).hash = "bc4a217a6059cd12c2a8d4f4610e9e75";
+
 export default node;

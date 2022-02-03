@@ -1,47 +1,38 @@
+/**
+ * @generated SignedSource<<732998cd56811a866af4c9e4429fd4bb>>
+ * @relayHash ce7c88a1aded1e560f92299ae6186fe3
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash ce7c88a1aded1e560f92299ae6186fe3 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type ManageClubSlugAliasesPromoteMutationVariables = {
-    id: string;
-    slug: string;
+// @relayRequestID ce7c88a1aded1e560f92299ae6186fe3
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type ManageClubSlugAliasesPromoteMutation$variables = {
+  id: string;
+  slug: string;
 };
-export type ManageClubSlugAliasesPromoteMutationResponse = {
-    readonly promoteClubSlugAliasToDefault: {
-        readonly club: {
-            readonly id: string;
-            readonly slug: string;
-            readonly slugAliases: ReadonlyArray<{
-                readonly slug: string;
-            }>;
-        } | null;
+export type ManageClubSlugAliasesPromoteMutationVariables = ManageClubSlugAliasesPromoteMutation$variables;
+export type ManageClubSlugAliasesPromoteMutation$data = {
+  readonly promoteClubSlugAliasToDefault: {
+    readonly club: {
+      readonly id: string;
+      readonly slug: string;
+      readonly slugAliases: ReadonlyArray<{
+        readonly slug: string;
+      }>;
     } | null;
+  } | null;
 };
+export type ManageClubSlugAliasesPromoteMutationResponse = ManageClubSlugAliasesPromoteMutation$data;
 export type ManageClubSlugAliasesPromoteMutation = {
-    readonly response: ManageClubSlugAliasesPromoteMutationResponse;
-    readonly variables: ManageClubSlugAliasesPromoteMutationVariables;
+  variables: ManageClubSlugAliasesPromoteMutationVariables;
+  response: ManageClubSlugAliasesPromoteMutation$data;
 };
-
-
-
-/*
-mutation ManageClubSlugAliasesPromoteMutation(
-  $id: ID!
-  $slug: String!
-) {
-  promoteClubSlugAliasToDefault(input: {id: $id, slug: $slug}) {
-    club {
-      id
-      slug
-      slugAliases {
-        slug
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -150,5 +141,7 @@ return {
   }
 };
 })();
-(node as any).hash = '30974501e54fc16b0d0d6c74907ab424';
+
+(node as any).hash = "30974501e54fc16b0d0d6c74907ab424";
+
 export default node;

@@ -1,55 +1,44 @@
+/**
+ * @generated SignedSource<<314f85075dd664b680c445aae823f75f>>
+ * @relayHash 06a6bef9081d887fba03239a6c25e315
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 06a6bef9081d887fba03239a6c25e315 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+// @relayRequestID 06a6bef9081d887fba03239a6c25e315
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
 export type UpdateAccountEmailStatusToPrimaryInput = {
-    accountEmailId: string;
+  accountEmailId: string;
 };
-export type MakePrimaryOptionMutationVariables = {
-    input: UpdateAccountEmailStatusToPrimaryInput;
+export type MakePrimaryOptionMutation$variables = {
+  input: UpdateAccountEmailStatusToPrimaryInput;
 };
-export type MakePrimaryOptionMutationResponse = {
-    readonly updateAccountEmailStatusToPrimary: {
-        readonly primaryAccountEmail: {
-            readonly id: string;
-            readonly email: string;
-            readonly status: AccountEmailStatus;
-        } | null;
-        readonly updatedAccountEmail: {
-            readonly id: string;
-            readonly email: string;
-            readonly status: AccountEmailStatus;
-        } | null;
+export type MakePrimaryOptionMutationVariables = MakePrimaryOptionMutation$variables;
+export type MakePrimaryOptionMutation$data = {
+  readonly updateAccountEmailStatusToPrimary: {
+    readonly primaryAccountEmail: {
+      readonly id: string;
+      readonly email: string;
+      readonly status: AccountEmailStatus;
     } | null;
+    readonly updatedAccountEmail: {
+      readonly id: string;
+      readonly email: string;
+      readonly status: AccountEmailStatus;
+    } | null;
+  } | null;
 };
+export type MakePrimaryOptionMutationResponse = MakePrimaryOptionMutation$data;
 export type MakePrimaryOptionMutation = {
-    readonly response: MakePrimaryOptionMutationResponse;
-    readonly variables: MakePrimaryOptionMutationVariables;
+  variables: MakePrimaryOptionMutationVariables;
+  response: MakePrimaryOptionMutation$data;
 };
-
-
-
-/*
-mutation MakePrimaryOptionMutation(
-  $input: UpdateAccountEmailStatusToPrimaryInput!
-) {
-  updateAccountEmailStatusToPrimary(input: $input) {
-    primaryAccountEmail {
-      id
-      email
-      status
-    }
-    updatedAccountEmail {
-      id
-      email
-      status
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -147,5 +136,7 @@ return {
   }
 };
 })();
-(node as any).hash = '327834a60836a375a6732b56496bcd46';
+
+(node as any).hash = "327834a60836a375a6732b56496bcd46";
+
 export default node;

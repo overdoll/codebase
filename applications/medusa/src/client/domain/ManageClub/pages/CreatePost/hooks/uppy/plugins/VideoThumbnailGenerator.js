@@ -33,26 +33,27 @@ function VideoThumbnails (opts) {
   }
 
   /**
-     * Current options
-     * @type {Object}
-     */
+   * Current options
+   * @type {Object}
+   */
   this.opts = {}
 
   /**
-     * Current options
-     * @type {Object}
-     */
+   * Current options
+   * @type {Object}
+   */
   this.opts = VideoThumbnails.extend({}, this.defaults, opts || {})
 }
 
 VideoThumbnails.prototype = {
   /**
-     * Register events
-     * @param  {name}       event    Function to hook onto
-     * @param  {Function}   callback What to call
-     */
+   * Register events
+   * @param  {name}       event    Function to hook onto
+   * @param  {Function}   callback What to call
+   */
   on (event, callback) {
     event = event.toLowerCase()
+    // eslint-disable-next-line no-prototype-builtins
     if (!this.events.hasOwnProperty(event)) {
       this.events[event] = []
     }
@@ -60,15 +61,16 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Remove event callback
-     * @function
-     * @param {string} [event] removes all events if not specified
-     * @param {Function} [fn] removes all callbacks of event if not specified
-     */
+   * Remove event callback
+   * @function
+   * @param {string} [event] removes all events if not specified
+   * @param {Function} [fn] removes all callbacks of event if not specified
+   */
   off (event, fn) {
     if (event !== undefined) {
       event = event.toLowerCase()
       if (fn !== undefined) {
+        // eslint-disable-next-line no-prototype-builtins
         if (this.events.hasOwnProperty(event)) {
           arrayRemove(this.events[event], fn)
         }
@@ -81,24 +83,25 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Fire an event
-     * @function
-     * @param {string} event event name
-     * @param {...} args arguments of a callback
-     * @return {bool} value is false if at least one of the event handlers which handled this event
-     * returned false. Otherwise it returns true.
-     */
+   * Fire an event
+   * @function
+   * @param {string} event event name
+   * @param {...} args arguments of a callback
+   * @return {bool} value is false if at least one of the event handlers which handled this event
+   * returned false. Otherwise it returns true.
+   */
   fire (event, args) {
     // `arguments` is an object, not array, in FF, so:
     args = Array.prototype.slice.call(arguments)
     event = event.toLowerCase()
     let preventDefault = false
+    // eslint-disable-next-line no-prototype-builtins
     if (this.events.hasOwnProperty(event)) {
       each(
         this.events[event],
         function (callback) {
           preventDefault =
-              callback.apply(this, args.slice(1)) === false || preventDefault
+            callback.apply(this, args.slice(1)) === false || preventDefault
         },
         this
       )
@@ -106,15 +109,15 @@ VideoThumbnails.prototype = {
     if (event !== 'catchall') {
       args.unshift('catchAll')
       preventDefault =
-          this.fire.apply(this, args) === false || preventDefault
+        this.fire.apply(this, args) === false || preventDefault
     }
     return !preventDefault
   },
 
   /**
-     * Start capturing
-     * @param  {file} file   The local filename to work with
-     */
+   * Start capturing
+   * @param  {file} file   The local filename to work with
+   */
   capture (file) {
     // Need this in the events
     const thisClass = this
@@ -173,8 +176,8 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Setup the screenshot
-     */
+   * Setup the screenshot
+   */
   initScreenshot () {
     this.thumbWidth = this.video.videoWidth
     this.thumbHeight = this.video.videoHeight
@@ -209,16 +212,16 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * This will work out what the next shot is, and move the video to that point (doesn't take the shot)
-     * Doesn't return anything. The video seek will capture the shot
-     */
+   * This will work out what the next shot is, and move the video to that point (doesn't take the shot)
+   * Doesn't return anything. The video seek will capture the shot
+   */
   prepareScreenshot () {
     this.currentShot++
 
     const newTime = Math.floor(
       this.videoStart +
-        this.currentShot * this.videoInterval -
-        this.videoInterval
+      this.currentShot * this.videoInterval -
+      this.videoInterval
     )
     const statTime = this.getTime()
 
@@ -235,8 +238,8 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Capture the shot by using a canvas element
-     */
+   * Capture the shot by using a canvas element
+   */
   captureScreenShot () {
     const canvas = document.createElement('canvas')
     canvas.width = this.thumbWidth
@@ -250,9 +253,9 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Save the captire
-     * @param  {canvas} canvas The captured thumb
-     */
+   * Save the captire
+   * @param  {canvas} canvas The captured thumb
+   */
   save (canvas) {
     const dataURItoBlob = require('@uppy/utils/lib/dataURItoBlob')
     // Get the shot
@@ -263,9 +266,9 @@ VideoThumbnails.prototype = {
   },
 
   /**
-     * Complete the
-     * @param  {image} image   The image captured
-     */
+   * Complete the
+   * @param  {image} image   The image captured
+   */
   grabComplete (image) {
     this.completed += 1
 
@@ -304,8 +307,8 @@ VideoThumbnails.prototype = {
     }
   },
   /**
-     * Clean up our files etc. Gets expensive on the CPU if it's all still running
-     */
+   * Clean up our files etc. Gets expensive on the CPU if it's all still running
+   */
   cleanUp () {
     this.video = null
     delete this.video
@@ -314,8 +317,8 @@ VideoThumbnails.prototype = {
     delete this.videoHtml
   },
   /**
-     * Force and abort of the capture
-     */
+   * Force and abort of the capture
+   */
   abort () {
     // already finished
     if (this.completed >= this.opts.count) {
@@ -331,9 +334,9 @@ VideoThumbnails.prototype = {
     this.fire('aborted', this.captures)
   },
   /**
-     * time tracking for our inner stats geek
-     * @return {array} The stats
-     */
+   * time tracking for our inner stats geek
+   * @return {array} The stats
+   */
   getTime () {
     const thisTime = new Date().getTime()
     const diff = thisTime - this.lastTime
@@ -348,10 +351,10 @@ VideoThumbnails.prototype = {
 }
 
 /**
-   * Useful function for remove something from and array
-   * @param  {array} array    array object to modify
-   * @param  {string} value   value to find
-   */
+ * Useful function for remove something from and array
+ * @param  {array} array    array object to modify
+ * @param  {string} value   value to find
+ */
 function arrayRemove (array, value) {
   const index = array.indexOf(value)
   if (index > -1) {
@@ -360,11 +363,11 @@ function arrayRemove (array, value) {
 }
 
 /**
-   * If option is a function, evaluate it with given params
-   * @param {*} data
-   * @param {...} args arguments of a callback
-   * @returns {*}
-   */
+ * If option is a function, evaluate it with given params
+ * @param {*} data
+ * @param {...} args arguments of a callback
+ * @returns {*}
+ */
 function evalOpts (data, args) {
   if (typeof data === 'function') {
     // `arguments` is an object, not array, in FF, so:
@@ -377,13 +380,13 @@ function evalOpts (data, args) {
 VideoThumbnails.evalOpts = evalOpts
 
 /**
-   * Extends the destination object `dst` by copying all of the properties from
-   * the `src` object(s) to `dst`. You can specify multiple `src` objects.
-   * @function
-   * @param {Object} dst Destination object.
-   * @param {...Object} src Source object(s).
-   * @returns {Object} Reference to `dst`.
-   */
+ * Extends the destination object `dst` by copying all of the properties from
+ * the `src` object(s) to `dst`. You can specify multiple `src` objects.
+ * @function
+ * @param {Object} dst Destination object.
+ * @param {...Object} src Source object(s).
+ * @returns {Object} Reference to `dst`.
+ */
 function extend (dst, src) {
   each(arguments, obj => {
     if (obj !== dst) {
@@ -398,12 +401,12 @@ function extend (dst, src) {
 VideoThumbnails.extend = extend
 
 /**
-   * Iterate each element of an object
-   * @function
-   * @param {Array|Object} obj object or an array to iterate
-   * @param {Function} callback first argument is a value and second is a key.
-   * @param {Object=} context Object to become context (`this`) for the iterator function.
-   */
+ * Iterate each element of an object
+ * @function
+ * @param {Array|Object} obj object or an array to iterate
+ * @param {Function} callback first argument is a value and second is a key.
+ * @param {Object=} context Object to become context (`this`) for the iterator function.
+ */
 function each (obj, callback, context) {
   if (!obj) {
     return
@@ -420,7 +423,7 @@ function each (obj, callback, context) {
     for (key in obj) {
       if (
         Object.prototype.hasOwnProperty.call(obj, key) &&
-          callback.call(context, obj[key], key) === false
+        callback.call(context, obj[key], key) === false
       ) {
         return
       }
@@ -432,8 +435,8 @@ VideoThumbnails.each = each
 
 if (
   typeof module === 'object' &&
-    module &&
-    typeof module.exports === 'object'
+  module &&
+  typeof module.exports === 'object'
 ) {
   // Expose as module.exports in loaders that implement the Node
   // module pattern (including browserify). Do not create the global, since

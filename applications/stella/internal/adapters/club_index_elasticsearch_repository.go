@@ -186,7 +186,7 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 	if filter.OwnerAccountId() != nil {
 		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))
 	} else {
-		if !requester.IsStaff() {
+		if requester == nil || (requester != nil && !requester.IsStaff()) {
 			query.Filter(elastic.NewTermQuery("suspended", filter.Suspended()))
 		}
 	}

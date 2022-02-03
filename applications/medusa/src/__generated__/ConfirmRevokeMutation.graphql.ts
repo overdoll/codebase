@@ -1,37 +1,35 @@
+/**
+ * @generated SignedSource<<32c639c5eb12869572b6a8d5f5173c25>>
+ * @relayHash 66447af1fee23a4edaee4700871549be
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 66447af1fee23a4edaee4700871549be */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 66447af1fee23a4edaee4700871549be
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RevokeAuthenticationTokenInput = {
-    token: string;
-    secret?: string | null | undefined;
+  token: string;
+  secret?: string | null;
 };
-export type ConfirmRevokeMutationVariables = {
-    input: RevokeAuthenticationTokenInput;
+export type ConfirmRevokeMutation$variables = {
+  input: RevokeAuthenticationTokenInput;
 };
-export type ConfirmRevokeMutationResponse = {
-    readonly revokeAuthenticationToken: {
-        readonly revokedAuthenticationTokenId: string;
-    } | null;
+export type ConfirmRevokeMutationVariables = ConfirmRevokeMutation$variables;
+export type ConfirmRevokeMutation$data = {
+  readonly revokeAuthenticationToken: {
+    readonly revokedAuthenticationTokenId: string;
+  } | null;
 };
+export type ConfirmRevokeMutationResponse = ConfirmRevokeMutation$data;
 export type ConfirmRevokeMutation = {
-    readonly response: ConfirmRevokeMutationResponse;
-    readonly variables: ConfirmRevokeMutationVariables;
+  variables: ConfirmRevokeMutationVariables;
+  response: ConfirmRevokeMutation$data;
 };
-
-
-
-/*
-mutation ConfirmRevokeMutation(
-  $input: RevokeAuthenticationTokenInput!
-) {
-  revokeAuthenticationToken(input: $input) {
-    revokedAuthenticationTokenId
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -93,5 +91,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e5406e58e44e3c174d71eccac9d38e61';
+
+(node as any).hash = "e5406e58e44e3c174d71eccac9d38e61";
+
 export default node;

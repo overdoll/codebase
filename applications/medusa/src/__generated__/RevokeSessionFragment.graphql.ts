@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<97981c2939d96d436fb9b58d5ed883b7>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RevokeSessionFragment = {
-    readonly id: string;
-    readonly " $refType": "RevokeSessionFragment";
+export type RevokeSessionFragment$data = {
+  readonly id: string;
+  readonly " $fragmentType": "RevokeSessionFragment";
 };
-export type RevokeSessionFragment$data = RevokeSessionFragment;
+export type RevokeSessionFragment = RevokeSessionFragment$data;
 export type RevokeSessionFragment$key = {
-    readonly " $data"?: RevokeSessionFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"RevokeSessionFragment">;
+  readonly " $data"?: RevokeSessionFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"RevokeSessionFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "AccountSession",
   "abstractKey": null
 };
-(node as any).hash = 'a9c954e8aff1aab33a851f19553e0eca';
+
+(node as any).hash = "a9c954e8aff1aab33a851f19553e0eca";
+
 export default node;

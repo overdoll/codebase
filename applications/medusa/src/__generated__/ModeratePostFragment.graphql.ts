@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<2f076a1dcc2b8fb5564c9bbae7bad82f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ModeratePostFragment = {
-    readonly id: string;
-    readonly club: {
-        readonly name: string;
-    };
-    readonly " $refType": "ModeratePostFragment";
+export type ModeratePostFragment$data = {
+  readonly id: string;
+  readonly club: {
+    readonly name: string;
+  };
+  readonly " $fragmentType": "ModeratePostFragment";
 };
-export type ModeratePostFragment$data = ModeratePostFragment;
+export type ModeratePostFragment = ModeratePostFragment$data;
 export type ModeratePostFragment$key = {
-    readonly " $data"?: ModeratePostFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ModeratePostFragment">;
+  readonly " $data"?: ModeratePostFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ModeratePostFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -54,5 +58,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'a4e30de4c2f8f821ce71cea9dbcd4239';
+
+(node as any).hash = "a4e30de4c2f8f821ce71cea9dbcd4239";
+
 export default node;

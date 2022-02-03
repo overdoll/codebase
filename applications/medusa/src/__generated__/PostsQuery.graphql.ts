@@ -1,171 +1,31 @@
+/**
+ * @generated SignedSource<<1a6afa43a59e88cc38134ccf825856fc>>
+ * @relayHash 020e04c9592776e222cbec34cf831619
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 020e04c9592776e222cbec34cf831619 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 020e04c9592776e222cbec34cf831619
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsQueryVariables = {};
-export type PostsQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsFragment">;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"RejectionReasonsFragment">;
+export type PostsQuery$variables = {};
+export type PostsQueryVariables = PostsQuery$variables;
+export type PostsQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsFragment">;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"RejectionReasonsFragment">;
 };
+export type PostsQueryResponse = PostsQuery$data;
 export type PostsQuery = {
-    readonly response: PostsQueryResponse;
-    readonly variables: PostsQueryVariables;
+  variables: PostsQueryVariables;
+  response: PostsQuery$data;
 };
-
-
-
-/*
-query PostsQuery {
-  viewer {
-    ...PostsFragment
-    id
-  }
-  ...RejectionReasonsFragment
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ModeratePostFragment on Post {
-  id
-  club {
-    name
-    id
-  }
-}
-
-fragment NoPostsPlaceholderFragment on Account {
-  moderatorSettings {
-    isInModeratorQueue
-  }
-}
-
-fragment PostGalleryPublicDetailedFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostPreviewFragment on Post {
-  ...PostStaticAudienceFragment
-  ...PostStaticCharactersFragment
-  ...PostStaticCategoriesFragment
-  ...PostGalleryPublicDetailedFragment
-  ...PostHeaderClubFragment
-}
-
-fragment PostStaticAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostStaticCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostStaticCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
-fragment PostsFragment on Account {
-  ...NoPostsPlaceholderFragment
-  moderatorPostsQueue(first: 1) {
-    edges {
-      node {
-        id
-        ...PostPreviewFragment
-        ...ModeratePostFragment
-        postedAt
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment RejectionReasonsFragment on Query {
-  rules {
-    edges {
-      node {
-        id
-        title
-        infraction
-      }
-    }
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -547,5 +407,7 @@ return {
   }
 };
 })();
-(node as any).hash = '329b3e5e9bad3e651d1cdbdce2be12bc';
+
+(node as any).hash = "329b3e5e9bad3e651d1cdbdce2be12bc";
+
 export default node;

@@ -81,7 +81,7 @@ func TestCreateRule_and_update(t *testing.T) {
 	require.NotNil(t, foundRule, "found the newly created rule")
 
 	newFake := TestRule{}
-	err = faker.FakeData(&fake)
+	err = faker.FakeData(&newFake)
 	require.NoError(t, err, "no error generating new fake rule")
 
 	var updateRuleTitle UpdateRuleTitle

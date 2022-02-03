@@ -108,9 +108,10 @@ export default function DragOverFileInput ({
         {hasText &&
           <>
             <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
-            <Heading ml={16} mr={16} color='green.500' fontSize='sm' align='center'><Trans>Drop your files to upload
-              them
-            </Trans>
+            <Heading ml={16} mr={16} color='green.500' fontSize='sm' align='center'>
+              <Trans>
+                Drop your files to upload them
+              </Trans>
             </Heading>
           </>}
       </Flex>

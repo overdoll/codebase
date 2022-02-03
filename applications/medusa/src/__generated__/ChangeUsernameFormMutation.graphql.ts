@@ -1,45 +1,39 @@
+/**
+ * @generated SignedSource<<eabf420586ec4a92c8c54bd47f75df76>>
+ * @relayHash 89ac26f06f90d11edac8563669fc1603
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 89ac26f06f90d11edac8563669fc1603 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 89ac26f06f90d11edac8563669fc1603
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateAccountUsernameValidation = "USERNAME_TAKEN" | "%future added value";
 export type UpdateAccountUsernameInput = {
-    username: string;
+  username: string;
 };
-export type ChangeUsernameFormMutationVariables = {
-    input: UpdateAccountUsernameInput;
+export type ChangeUsernameFormMutation$variables = {
+  input: UpdateAccountUsernameInput;
 };
-export type ChangeUsernameFormMutationResponse = {
-    readonly updateAccountUsername: {
-        readonly validation: UpdateAccountUsernameValidation | null;
-        readonly account: {
-            readonly id: string;
-            readonly username: string;
-        } | null;
+export type ChangeUsernameFormMutationVariables = ChangeUsernameFormMutation$variables;
+export type ChangeUsernameFormMutation$data = {
+  readonly updateAccountUsername: {
+    readonly validation: UpdateAccountUsernameValidation | null;
+    readonly account: {
+      readonly id: string;
+      readonly username: string;
     } | null;
+  } | null;
 };
+export type ChangeUsernameFormMutationResponse = ChangeUsernameFormMutation$data;
 export type ChangeUsernameFormMutation = {
-    readonly response: ChangeUsernameFormMutationResponse;
-    readonly variables: ChangeUsernameFormMutationVariables;
+  variables: ChangeUsernameFormMutationVariables;
+  response: ChangeUsernameFormMutation$data;
 };
-
-
-
-/*
-mutation ChangeUsernameFormMutation(
-  $input: UpdateAccountUsernameInput!
-) {
-  updateAccountUsername(input: $input) {
-    validation
-    account {
-      id
-      username
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -126,5 +120,7 @@ return {
   }
 };
 })();
-(node as any).hash = '39f8a280199ca1dd27b9ede397eab53b';
+
+(node as any).hash = "39f8a280199ca1dd27b9ede397eab53b";
+
 export default node;

@@ -1,30 +1,34 @@
+/**
+ * @generated SignedSource<<16d7b3c989576aca482e63a30edba0db>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
-export type ClubPostsFragment = {
-    readonly posts: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly reference: string;
-                readonly state: PostState;
-                readonly " $fragmentRefs": FragmentRefs<"PostPreviewContentFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "ClubPostsFragment";
+export type ClubPostsFragment$data = {
+  readonly posts: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly reference: string;
+        readonly state: PostState;
+        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "ClubPostsFragment";
 };
-export type ClubPostsFragment$data = ClubPostsFragment;
+export type ClubPostsFragment = ClubPostsFragment$data;
 export type ClubPostsFragment$key = {
-    readonly " $data"?: ClubPostsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubPostsFragment">;
+  readonly " $data"?: ClubPostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -69,7 +73,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ClubPostsPaginationQuery.graphql.ts'),
+      "operation": require('./ClubPostsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -120,16 +124,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PostPreviewContentFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PostPreviewContentFragment"
                 }
               ],
               "storageKey": null
@@ -184,5 +188,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '479505f60508280e718cac91f70dcbfe';
+
+(node as any).hash = "479505f60508280e718cac91f70dcbfe";
+
 export default node;

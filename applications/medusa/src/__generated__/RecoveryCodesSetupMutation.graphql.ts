@@ -1,34 +1,32 @@
+/**
+ * @generated SignedSource<<6c80d47fcfe7b72abd286417c6420aad>>
+ * @relayHash f949eac0bb807076baf26b8240cba212
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f949eac0bb807076baf26b8240cba212 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type RecoveryCodesSetupMutationVariables = {};
-export type RecoveryCodesSetupMutationResponse = {
-    readonly generateAccountMultiFactorRecoveryCodes: {
-        readonly accountMultiFactorRecoveryCodes: ReadonlyArray<{
-            readonly __id: string;
-            readonly code: string;
-        }>;
-    } | null;
+// @relayRequestID f949eac0bb807076baf26b8240cba212
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type RecoveryCodesSetupMutation$variables = {};
+export type RecoveryCodesSetupMutationVariables = RecoveryCodesSetupMutation$variables;
+export type RecoveryCodesSetupMutation$data = {
+  readonly generateAccountMultiFactorRecoveryCodes: {
+    readonly accountMultiFactorRecoveryCodes: ReadonlyArray<{
+      readonly __id: string;
+      readonly code: string;
+    }>;
+  } | null;
 };
+export type RecoveryCodesSetupMutationResponse = RecoveryCodesSetupMutation$data;
 export type RecoveryCodesSetupMutation = {
-    readonly response: RecoveryCodesSetupMutationResponse;
-    readonly variables: RecoveryCodesSetupMutationVariables;
+  variables: RecoveryCodesSetupMutationVariables;
+  response: RecoveryCodesSetupMutation$data;
 };
-
-
-
-/*
-mutation RecoveryCodesSetupMutation {
-  generateAccountMultiFactorRecoveryCodes {
-    accountMultiFactorRecoveryCodes {
-      code
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -100,5 +98,7 @@ return {
   }
 };
 })();
-(node as any).hash = '567a08fbc1bb394289fb0530d4cccabe';
+
+(node as any).hash = "567a08fbc1bb394289fb0530d4cccabe";
+
 export default node;

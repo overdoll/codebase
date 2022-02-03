@@ -1,168 +1,33 @@
+/**
+ * @generated SignedSource<<7dc9b078fa52ca38f1ab6b551443f9b3>>
+ * @relayHash bf7348e6536d84e61441bc7a664683e7
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash bf7348e6536d84e61441bc7a664683e7 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID bf7348e6536d84e61441bc7a664683e7
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AuditLogsQueryVariables = {
-    from: unknown;
-    to: unknown;
+export type AuditLogsQuery$variables = {
+  from: any;
+  to: any;
 };
-export type AuditLogsQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"AuditLogsFragment">;
-    } | null;
+export type AuditLogsQueryVariables = AuditLogsQuery$variables;
+export type AuditLogsQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"AuditLogsFragment">;
+  } | null;
 };
+export type AuditLogsQueryResponse = AuditLogsQuery$data;
 export type AuditLogsQuery = {
-    readonly response: AuditLogsQueryResponse;
-    readonly variables: AuditLogsQueryVariables;
+  variables: AuditLogsQueryVariables;
+  response: AuditLogsQuery$data;
 };
-
-
-
-/*
-query AuditLogsQuery(
-  $from: Time!
-  $to: Time!
-) {
-  viewer {
-    ...AuditLogsFragment
-    id
-  }
-}
-
-fragment AuditCardFragment on PostAuditLog {
-  post {
-    postedAt
-    club {
-      name
-      id
-    }
-    id
-  }
-  action
-  ...AuditInspectFragment
-}
-
-fragment AuditInspectFragment on PostAuditLog {
-  notes
-  action
-  post {
-    ...PostPreviewFragment
-    id
-  }
-}
-
-fragment AuditLogsFragment on Account {
-  postAuditLogs(first: 5, dateRange: {from: $from, to: $to}) {
-    edges {
-      node {
-        ...AuditCardFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ControlledVideoFragment on Resource {
-  ...RenderVideoFragment
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment PostGalleryPublicDetailedFragment on Post {
-  id
-  reference
-  content {
-    type
-    ...ImageSnippetFragment
-    ...ControlledVideoFragment
-    id
-  }
-}
-
-fragment PostHeaderClubFragment on Post {
-  club {
-    name
-    slug
-    thumbnail {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment PostPreviewFragment on Post {
-  ...PostStaticAudienceFragment
-  ...PostStaticCharactersFragment
-  ...PostStaticCategoriesFragment
-  ...PostGalleryPublicDetailedFragment
-  ...PostHeaderClubFragment
-}
-
-fragment PostStaticAudienceFragment on Post {
-  audience {
-    title
-    id
-  }
-}
-
-fragment PostStaticCategoriesFragment on Post {
-  categories {
-    title
-    id
-  }
-}
-
-fragment PostStaticCharactersFragment on Post {
-  characters {
-    name
-    series {
-      title
-      id
-    }
-    id
-  }
-}
-
-fragment RenderVideoFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -522,5 +387,7 @@ return {
   }
 };
 })();
-(node as any).hash = '1de298e271d59f231bb8e9f60082640d';
+
+(node as any).hash = "1de298e271d59f231bb8e9f60082640d";
+
 export default node;

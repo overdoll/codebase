@@ -1,47 +1,40 @@
+/**
+ * @generated SignedSource<<688b134cc6fd13b2caea41f5e75bce59>>
+ * @relayHash 926d9b8b79922d67b1acd809afbd3dca
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 926d9b8b79922d67b1acd809afbd3dca */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 926d9b8b79922d67b1acd809afbd3dca
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ApprovePostInput = {
-    postId: string;
+  postId: string;
 };
-export type ModeratePostApproveMutationVariables = {
-    input: ApprovePostInput;
-    connections: Array<string>;
+export type ModeratePostApproveMutation$variables = {
+  input: ApprovePostInput;
+  connections: ReadonlyArray<string>;
 };
-export type ModeratePostApproveMutationResponse = {
-    readonly approvePost: {
-        readonly postAuditLog: {
-            readonly id: string;
-            readonly post: {
-                readonly id: string;
-            };
-        } | null;
+export type ModeratePostApproveMutationVariables = ModeratePostApproveMutation$variables;
+export type ModeratePostApproveMutation$data = {
+  readonly approvePost: {
+    readonly postAuditLog: {
+      readonly id: string;
+      readonly post: {
+        readonly id: string;
+      };
     } | null;
+  } | null;
 };
+export type ModeratePostApproveMutationResponse = ModeratePostApproveMutation$data;
 export type ModeratePostApproveMutation = {
-    readonly response: ModeratePostApproveMutationResponse;
-    readonly variables: ModeratePostApproveMutationVariables;
+  variables: ModeratePostApproveMutationVariables;
+  response: ModeratePostApproveMutation$data;
 };
-
-
-
-/*
-mutation ModeratePostApproveMutation(
-  $input: ApprovePostInput!
-) {
-  approvePost(input: $input) {
-    postAuditLog {
-      id
-      post {
-        id
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -188,5 +181,7 @@ return {
   }
 };
 })();
-(node as any).hash = '2272be8d7f1cfd8f551e6e19d792a904';
+
+(node as any).hash = "2272be8d7f1cfd8f551e6e19d792a904";
+
 export default node;

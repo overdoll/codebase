@@ -1,76 +1,34 @@
+/**
+ * @generated SignedSource<<18c8cd492ce730c6a54b85d53e5f908c>>
+ * @relayHash b035cbf5136da4ce6febf760ba02ab55
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b035cbf5136da4ce6febf760ba02ab55 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID b035cbf5136da4ce6febf760ba02ab55
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EmailsSettingsPaginationQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    id: string;
+export type EmailsSettingsPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
+  id: string;
 };
-export type EmailsSettingsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"EmailsSettingsFragment">;
-    } | null;
+export type EmailsSettingsPaginationQueryVariables = EmailsSettingsPaginationQuery$variables;
+export type EmailsSettingsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"EmailsSettingsFragment">;
+  } | null;
 };
+export type EmailsSettingsPaginationQueryResponse = EmailsSettingsPaginationQuery$data;
 export type EmailsSettingsPaginationQuery = {
-    readonly response: EmailsSettingsPaginationQueryResponse;
-    readonly variables: EmailsSettingsPaginationQueryVariables;
+  variables: EmailsSettingsPaginationQueryVariables;
+  response: EmailsSettingsPaginationQuery$data;
 };
-
-
-
-/*
-query EmailsSettingsPaginationQuery(
-  $after: String
-  $first: Int = 3
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...EmailsSettingsFragment_2HEEH6
-    id
-  }
-}
-
-fragment DeleteFragment on AccountEmail {
-  id
-  email
-}
-
-fragment EmailCardFragment on AccountEmail {
-  ...DeleteFragment
-  ...MakePrimaryFragment
-  email
-  status
-}
-
-fragment EmailsSettingsFragment_2HEEH6 on Account {
-  emails(first: $first, after: $after) {
-    edges {
-      node {
-        ...EmailCardFragment
-        status
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment MakePrimaryFragment on AccountEmail {
-  id
-  email
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -289,5 +247,7 @@ return {
   }
 };
 })();
-(node as any).hash = '843d323c6ac7e20f102b80df9034e194';
+
+(node as any).hash = "843d323c6ac7e20f102b80df9034e194";
+
 export default node;

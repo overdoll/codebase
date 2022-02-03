@@ -195,10 +195,24 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	// expected second image to be a png
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
 
+	// correct dimensions
+	require.Equal(t, 532, newImageResource.Height, "should be the correct height")
+	require.Equal(t, 656, newImageResource.Width, "should be the correct width")
+
 	// expect 1 url for video
 	require.Len(t, newVideoResource.Urls, 1)
 	// expected video resource
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
+
+	// correct thumbnail
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/t-"+videoResource.ProcessedId+".png", string(newVideoResource.VideoThumbnail.URL))
+
+	// correct dimensions
+	require.Equal(t, 360, newVideoResource.Height, "should be the correct height")
+	require.Equal(t, 640, newVideoResource.Width, "should be the correct width")
+
+	// correct duration
+	require.Equal(t, 13347, newVideoResource.VideoDuration, "should be the correct duration")
 
 	// should not have gotten an error for trying to upload the same resources
 	_, err = grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{

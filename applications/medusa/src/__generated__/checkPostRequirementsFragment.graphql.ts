@@ -1,31 +1,35 @@
+/**
+ * @generated SignedSource<<568aeea6272f97f6171b3be47c4a31ef>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type checkPostRequirementsFragment = {
-    readonly content: ReadonlyArray<{
-        readonly __typename: string;
-    }>;
-    readonly audience: {
-        readonly __typename: string;
-    } | null;
-    readonly categories: ReadonlyArray<{
-        readonly __typename: string;
-    }>;
-    readonly characters: ReadonlyArray<{
-        readonly __typename: string;
-    }>;
-    readonly " $refType": "checkPostRequirementsFragment";
+export type checkPostRequirementsFragment$data = {
+  readonly content: ReadonlyArray<{
+    readonly __typename: string;
+  }>;
+  readonly audience: {
+    readonly __typename: string;
+  } | null;
+  readonly categories: ReadonlyArray<{
+    readonly __typename: string;
+  }>;
+  readonly characters: ReadonlyArray<{
+    readonly __typename: string;
+  }>;
+  readonly " $fragmentType": "checkPostRequirementsFragment";
 };
-export type checkPostRequirementsFragment$data = checkPostRequirementsFragment;
+export type checkPostRequirementsFragment = checkPostRequirementsFragment$data;
 export type checkPostRequirementsFragment$key = {
-    readonly " $data"?: checkPostRequirementsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"checkPostRequirementsFragment">;
+  readonly " $data"?: checkPostRequirementsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"checkPostRequirementsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -88,5 +92,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '7afa0771be015a72bbc20dbefde6104e';
+
+(node as any).hash = "7afa0771be015a72bbc20dbefde6104e";
+
 export default node;

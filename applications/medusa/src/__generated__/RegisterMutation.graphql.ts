@@ -1,44 +1,39 @@
+/**
+ * @generated SignedSource<<9cf0e83a8e6d24046248e154e1ff7940>>
+ * @relayHash 633d6abdc12ec3db601c9c1bb6b1a230
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 633d6abdc12ec3db601c9c1bb6b1a230 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "TOKEN_INVALID" | "USERNAME_TAKEN" | "%future added value";
+// @relayRequestID 633d6abdc12ec3db601c9c1bb6b1a230
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "USERNAME_TAKEN" | "TOKEN_INVALID" | "%future added value";
 export type CreateAccountWithAuthenticationTokenInput = {
-    token: string;
-    username: string;
+  token: string;
+  username: string;
 };
-export type RegisterMutationVariables = {
-    input: CreateAccountWithAuthenticationTokenInput;
+export type RegisterMutation$variables = {
+  input: CreateAccountWithAuthenticationTokenInput;
 };
-export type RegisterMutationResponse = {
-    readonly createAccountWithAuthenticationToken: {
-        readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
-        readonly account: {
-            readonly id: string;
-        } | null;
+export type RegisterMutationVariables = RegisterMutation$variables;
+export type RegisterMutation$data = {
+  readonly createAccountWithAuthenticationToken: {
+    readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
+    readonly account: {
+      readonly id: string;
     } | null;
+  } | null;
 };
+export type RegisterMutationResponse = RegisterMutation$data;
 export type RegisterMutation = {
-    readonly response: RegisterMutationResponse;
-    readonly variables: RegisterMutationVariables;
+  variables: RegisterMutationVariables;
+  response: RegisterMutation$data;
 };
-
-
-
-/*
-mutation RegisterMutation(
-  $input: CreateAccountWithAuthenticationTokenInput!
-) {
-  createAccountWithAuthenticationToken(input: $input) {
-    validation
-    account {
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -118,5 +113,7 @@ return {
   }
 };
 })();
-(node as any).hash = '1182c2f6d5e474677da815c79ca3308b';
+
+(node as any).hash = "1182c2f6d5e474677da815c79ca3308b";
+
 export default node;

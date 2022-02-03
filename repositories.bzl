@@ -329,6 +329,20 @@ def go_repositories():
         sum = "h1:fRzb/w+pyskVMQ+UbP35JkH8yB7MYb4q/qhBarqZE6g=",
         version = "v0.0.0-20200323201526-dd97f9abfb48",
     )
+    go_repository(
+        name = "com_github_disintegration_imaging",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/disintegration/imaging",
+        sum = "h1:w1LecBlG2Lnp8B3jk5zSuNqd7b4DXhcjwek1ei82L+c=",
+        version = "v1.6.2",
+    )
+    go_repository(
+        name = "com_github_docker_distribution",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/docker/distribution",
+        sum = "h1:a5mlkVzth6W5A4fOsS3D2EO5BUmsJpcB+cRlLU7cSug=",
+        version = "v2.7.1+incompatible",
+    )
 
     go_repository(
         name = "com_github_dsnet_compress",
@@ -450,6 +464,13 @@ def go_repositories():
         importpath = "github.com/go-logfmt/logfmt",
         sum = "h1:MP4Eh7ZCb31lleYCFuwm0oe4/YGak+5l1vA2NOE80nA=",
         version = "v0.4.0",
+    )
+    go_repository(
+        name = "com_github_go_logr_logr",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/go-logr/logr",
+        sum = "h1:M1Tv3VzNlEHg6uyACnRdtrploV2P7wZqH8BoQMtz0cg=",
+        version = "v0.1.0",
     )
 
     go_repository(
@@ -646,6 +667,7 @@ def go_repositories():
         sum = "h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=",
         version = "v1.4.2",
     )
+
     go_repository(
         name = "com_github_graph_gophers_dataloader",
         build_file_proto_mode = "disable",
@@ -1211,6 +1233,20 @@ def go_repositories():
         sum = "h1:7n6FEkpFmfCoo2t+YYqXH0evK+a9ICQz0xcAy9dYcaQ=",
         version = "v1.10.5",
     )
+    go_repository(
+        name = "com_github_opencontainers_go_digest",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/opencontainers/go-digest",
+        sum = "h1:WzifXhOVOEOuFYOJAW6aQqW0TooG2iki3E3Ii+WN7gQ=",
+        version = "v1.0.0-rc1",
+    )
+    go_repository(
+        name = "com_github_opencontainers_selinux",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/opencontainers/selinux",
+        sum = "h1:F6DgIsjgBIcDksLW4D5RG9bXok6oqZ3nvMwj4ZoFu/Q=",
+        version = "v1.5.2",
+    )
 
     go_repository(
         name = "com_github_opentracing_opentracing_go",
@@ -1622,6 +1658,20 @@ def go_repositories():
         sum = "h1:IU9Z2Z5FZfHIap6NPFbPItyx/eU6aN87z4ya/mPzS4g=",
         version = "v1.6.0",
     )
+    go_repository(
+        name = "com_github_u2takey_ffmpeg_go",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/u2takey/ffmpeg-go",
+        sum = "h1:fiDzfer3IJkfGO9YcPg3tp1yMyfzh6zXw0TwjMROL7c=",
+        version = "v0.4.0",
+    )
+    go_repository(
+        name = "com_github_u2takey_go_utils",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/u2takey/go-utils",
+        sum = "h1:PT7mE8HJE1mwaSazrOdSeByJ1FoV33/fHUZrBB+zwVU=",
+        version = "v0.0.0-20200713025200-4704d09fc2c7",
+    )
 
     go_repository(
         name = "com_github_ugorji_go",
@@ -1688,8 +1738,8 @@ def go_repositories():
         name = "com_github_yuin_goldmark",
         build_file_proto_mode = "disable",
         importpath = "github.com/yuin/goldmark",
-        sum = "h1:/vn0k+RBvwlxEmP5E7SZMqNxPhfMVFEJiykr15/0XKM=",
-        version = "v1.4.1",
+        sum = "h1:zNWRjYUW32G9KirMXYHQHVNFkXvMI7LpgNW2AgYAoIs=",
+        version = "v1.4.4",
     )
     go_repository(
         name = "com_google_cloud_go",
@@ -1838,6 +1888,20 @@ def go_repositories():
         importpath = "go.etcd.io/bbolt",
         sum = "h1:Z/90sZLPOeCy2PwprqkFa25PdkusRzaj9P8zm/KNyvk=",
         version = "v1.3.2",
+    )
+    go_repository(
+        name = "io_gocv_x_gocv",
+        build_file_proto_mode = "disable",
+        importpath = "gocv.io/x/gocv",
+        sum = "h1:vM50jL3v9OEqWSi+urelX5M1ptZeFWA/VhGPvdTqsJU=",
+        version = "v0.25.0",
+    )
+    go_repository(
+        name = "io_k8s_sigs_yaml",
+        build_file_proto_mode = "disable",
+        importpath = "sigs.k8s.io/yaml",
+        sum = "h1:kr/MCeFWJWTwyaHoR9c8EjH9OumOmoF9YGiZd7lFm/Q=",
+        version = "v1.2.0",
     )
 
     go_repository(

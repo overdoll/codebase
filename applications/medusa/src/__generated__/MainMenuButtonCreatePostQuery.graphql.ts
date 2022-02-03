@@ -1,45 +1,36 @@
+/**
+ * @generated SignedSource<<f929b831cb0827053b4fb3c76f0cda01>>
+ * @relayHash 5eeb31bcbc0c237c25997ac4519aa21a
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 5eeb31bcbc0c237c25997ac4519aa21a */
 
-import { ConcreteRequest } from "relay-runtime";
-export type MainMenuButtonCreatePostQueryVariables = {};
-export type MainMenuButtonCreatePostQueryResponse = {
-    readonly viewer: {
-        readonly clubsCount: number;
-        readonly clubs: {
-            readonly edges: ReadonlyArray<{
-                readonly node: {
-                    readonly slug: string;
-                };
-            }>;
+// @relayRequestID 5eeb31bcbc0c237c25997ac4519aa21a
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type MainMenuButtonCreatePostQuery$variables = {};
+export type MainMenuButtonCreatePostQueryVariables = MainMenuButtonCreatePostQuery$variables;
+export type MainMenuButtonCreatePostQuery$data = {
+  readonly viewer: {
+    readonly clubsCount: number;
+    readonly clubs: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly slug: string;
         };
-    } | null;
+      }>;
+    };
+  } | null;
 };
+export type MainMenuButtonCreatePostQueryResponse = MainMenuButtonCreatePostQuery$data;
 export type MainMenuButtonCreatePostQuery = {
-    readonly response: MainMenuButtonCreatePostQueryResponse;
-    readonly variables: MainMenuButtonCreatePostQueryVariables;
+  variables: MainMenuButtonCreatePostQueryVariables;
+  response: MainMenuButtonCreatePostQuery$data;
 };
-
-
-
-/*
-query MainMenuButtonCreatePostQuery {
-  viewer {
-    clubsCount
-    clubs(first: 1) {
-      edges {
-        node {
-          slug
-          id
-        }
-      }
-    }
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -192,5 +183,7 @@ return {
   }
 };
 })();
-(node as any).hash = '48b514c81c819c326bd3cf18ca33564c';
+
+(node as any).hash = "48b514c81c819c326bd3cf18ca33564c";
+
 export default node;

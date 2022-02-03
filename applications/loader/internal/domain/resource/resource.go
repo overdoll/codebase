@@ -1,16 +1,19 @@
 package resource
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
+	"github.com/h2non/filetype"
+	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"image"
 	_ "image/png"
 	"io"
+	"math"
 	"os"
-
-	"github.com/h2non/filetype"
 	"overdoll/libraries/uuid"
+	"strconv"
 )
 
 var (
@@ -52,6 +55,14 @@ type Resource struct {
 	processed   bool
 	processedId string
 
+	videoThumbnail         string
+	videoThumbnailMimeType string
+
+	width  int
+	height int
+
+	videoDuration int
+
 	mimeTypes    []string
 	sizes        []int
 	resourceType Type
@@ -79,31 +90,32 @@ func NewResource(itemId, id, mimeType string) (*Resource, error) {
 	}
 
 	return &Resource{
-		id:           id,
-		itemId:       itemId,
-		mimeTypes:    []string{mimeType},
-		sizes:        []int{},
-		resourceType: rType,
-		processed:    false,
+		id:            id,
+		itemId:        itemId,
+		mimeTypes:     []string{mimeType},
+		sizes:         []int{},
+		resourceType:  rType,
+		processed:     false,
+		height:        0,
+		width:         0,
+		videoDuration: 0,
 	}, nil
 }
 
 // ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
 // must pass the file that needs to be processed (usually the current file, gotten from Url())
 func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
-
 	var mimeTypes []string
 	var moveTargets []*Move
 
-	head := make([]byte, 261)
-	_, err := file.Read(head)
-
+	headBuffer := make([]byte, 261)
+	_, err := file.Read(headBuffer)
 	if err != nil {
 		return nil, err
 	}
 
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
-	kind, _ := filetype.Match(head)
+	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
 		return nil, fmt.Errorf("uknown file type: %s", kind)
 	}
@@ -115,9 +127,10 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	// seek file so we can read it again (first time we only grab a few bytes)
 	_, _ = file.Seek(0, io.SeekStart)
 
+	fileName := uuid.New().String()
+
 	if kind.MIME.Value == "image/png" {
 		// image is in an accepted format - convert to webp
-
 		src, _, err := image.Decode(file)
 
 		if err != nil {
@@ -146,17 +159,78 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		mimeTypes = append(mimeTypes, "image/png")
 		r.resourceType = Image
 
+		// get config
+		_, _ = file.Seek(0, io.SeekStart)
+		cfgSrc, _, err := image.DecodeConfig(file)
+		if err != nil {
+			return nil, err
+		}
+
+		r.height = cfgSrc.Height
+		r.width = cfgSrc.Width
+
 	} else if kind.MIME.Value == "video/mp4" {
-		// TODO: video processing pipeline??
 		mimeTypes = append(mimeTypes, "video/mp4")
 
+		thumbnailFileName := "t-" + fileName + "." + ".png"
+
+		fileThumbnail, err := os.Create(thumbnailFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := ffmpeg_go.Input(file.Name()).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
+			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
+			WithOutput(fileThumbnail).
+			Run(); err != nil {
+			return nil, err
+		}
+
+		videoThumb := "t-" + fileName
+
+		moveTargets = append(moveTargets, &Move{
+			osFileLocation:  thumbnailFileName,
+			remoteUrlTarget: r.itemId + "/" + videoThumb + ".png",
+		})
+
+		str, err := ffmpeg_go.Probe(file.Name())
+
+		if err != nil {
+			return nil, err
+		}
+
+		type ffmpegProbeRes struct {
+			Streams []struct {
+				Width    int    `json:"width"`
+				Height   int    `json:"height"`
+				Duration string `json:"duration"`
+			} `json:"streams"`
+		}
+
+		var probeResult *ffmpegProbeRes
+
+		if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
+			return nil, err
+		}
+
+		s, err := strconv.ParseFloat(probeResult.Streams[0].Duration, 32)
+		if err != nil {
+			return nil, err
+		}
+
+		r.width = probeResult.Streams[0].Width
+		r.height = probeResult.Streams[0].Height
+		r.videoDuration = int(math.Round(s * 1000))
+
+		r.videoThumbnailMimeType = "image/png"
+		r.videoThumbnail = videoThumb
 		r.resourceType = Video
 
 	} else {
 		return nil, fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
 	}
 
-	fileName := uuid.New().String()
 	fileKey := r.itemId + "/" + fileName
 
 	// the second file we need to move - a file that was existing already
@@ -223,12 +297,45 @@ func (r *Resource) ProcessedId() string {
 	return r.processedId
 }
 
+func (r *Resource) Width() int {
+	return r.width
+}
+
+func (r *Resource) Height() int {
+	return r.height
+}
+
+func (r *Resource) VideoDuration() int {
+	return r.videoDuration
+}
+
 func (r *Resource) IsImage() bool {
 	return r.resourceType == Image
 }
 
 func (r *Resource) IsVideo() bool {
 	return r.resourceType == Video
+}
+
+func (r *Resource) VideoThumbnailMimeType() string {
+	return r.videoThumbnailMimeType
+}
+
+func (r *Resource) VideoThumbnail() string {
+	return r.videoThumbnail
+}
+
+func (r *Resource) VideoThumbnailFullUrl() *Url {
+
+	if r.processed {
+		format, _ := extensionByType(r.videoThumbnailMimeType)
+		return &Url{
+			fullUrl:  os.Getenv("RESOURCES_URL") + "/" + r.itemId + "/" + r.videoThumbnail + format,
+			mimeType: r.videoThumbnailMimeType,
+		}
+	}
+
+	return nil
 }
 
 func (r *Resource) FullUrls() []*Url {
@@ -261,16 +368,21 @@ func (r *Resource) FullUrls() []*Url {
 	return generatedContent
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
 	return &Resource{
-		id:           resourceId,
-		itemId:       itemId,
-		processedId:  processedId,
-		mimeTypes:    mimeTypes,
-		resourceType: typ,
-		processed:    processed,
+		id:                     resourceId,
+		itemId:                 itemId,
+		videoDuration:          videoDuration,
+		videoThumbnail:         videoThumbnail,
+		videoThumbnailMimeType: videoThumbnailMimeType,
+		width:                  width,
+		height:                 height,
+		processedId:            processedId,
+		mimeTypes:              mimeTypes,
+		resourceType:           typ,
+		processed:              processed,
 	}
 }

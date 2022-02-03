@@ -1,66 +1,35 @@
+/**
+ * @generated SignedSource<<d3f50231ce0233884ae704c58c2d1e88>>
+ * @relayHash 981e731224211b846846b46ca64e7b11
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 981e731224211b846846b46ca64e7b11 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 981e731224211b846846b46ca64e7b11
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ProfileQueryVariables = {
-    username: string;
+export type ProfileQuery$variables = {
+  username: string;
 };
-export type ProfileQueryResponse = {
-    readonly account: {
-        readonly username: string;
-        readonly avatar: {
-            readonly " $fragmentRefs": FragmentRefs<"ResourceIconFragment">;
-        } | null;
+export type ProfileQueryVariables = ProfileQuery$variables;
+export type ProfileQuery$data = {
+  readonly account: {
+    readonly username: string;
+    readonly avatar: {
+      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+  } | null;
 };
+export type ProfileQueryResponse = ProfileQuery$data;
 export type ProfileQuery = {
-    readonly response: ProfileQueryResponse;
-    readonly variables: ProfileQueryVariables;
+  variables: ProfileQueryVariables;
+  response: ProfileQuery$data;
 };
-
-
-
-/*
-query ProfileQuery(
-  $username: String!
-) {
-  account(username: $username) {
-    username
-    avatar {
-      ...ResourceIconFragment
-      id
-    }
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -204,5 +173,7 @@ return {
   }
 };
 })();
-(node as any).hash = '91bfc273d715f29c7c87fd2f9611478e';
+
+(node as any).hash = "91bfc273d715f29c7c87fd2f9611478e";
+
 export default node;

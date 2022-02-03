@@ -1,24 +1,28 @@
+/**
+ * @generated SignedSource<<9b2cb6fca15b390c33668b532a041488>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AccountAuthorizerFragment = {
-    readonly lock: {
-        readonly __typename: string;
-    } | null;
-    readonly isModerator: boolean;
-    readonly isStaff: boolean;
-    readonly " $refType": "AccountAuthorizerFragment";
+export type AccountAuthorizerFragment$data = {
+  readonly lock: {
+    readonly __typename: string;
+  } | null;
+  readonly isModerator: boolean;
+  readonly isStaff: boolean;
+  readonly " $fragmentType": "AccountAuthorizerFragment";
 };
-export type AccountAuthorizerFragment$data = AccountAuthorizerFragment;
+export type AccountAuthorizerFragment = AccountAuthorizerFragment$data;
 export type AccountAuthorizerFragment$key = {
-    readonly " $data"?: AccountAuthorizerFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"AccountAuthorizerFragment">;
+  readonly " $data"?: AccountAuthorizerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -62,5 +66,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'ca7c8a6fbbaee601868f43208836444a';
+
+(node as any).hash = "ca7c8a6fbbaee601868f43208836444a";
+
 export default node;

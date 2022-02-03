@@ -25,7 +25,7 @@ const Fragment = graphql`
   fragment SearchCategoriesGeneralFragment on Query
   @argumentDefinitions(
     after: {type: String},
-    title: {type: String}
+    search: {type: String}
   )
   @refetchable(queryName: "SearchCategoriesGeneralPaginationFragment" )
   {

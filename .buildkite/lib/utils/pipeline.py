@@ -1,6 +1,6 @@
 from . import format
 
-DEFAULT_IMAGE = "gcr.io/bazel-public/ubuntu1804-java11@sha256:54af0180aaa595b2a10edce51e3ec71923b2e21c3964ffc0938c6f599f0b35e3"
+DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci:v1"
 
 
 def create_step(label, commands, platform, configs=None, artifacts=None, cache=True, additional_env_vars=None, shards=1,

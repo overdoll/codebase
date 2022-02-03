@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<8ab930ab3a877d696f34e291844652d2>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type JoinFragment = {
-    readonly email: string;
-    readonly " $refType": "JoinFragment";
+export type JoinFragment$data = {
+  readonly email: string;
+  readonly " $fragmentType": "JoinFragment";
 };
-export type JoinFragment$data = JoinFragment;
+export type JoinFragment = JoinFragment$data;
 export type JoinFragment$key = {
-    readonly " $data"?: JoinFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"JoinFragment">;
+  readonly " $data"?: JoinFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"JoinFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -38,5 +42,7 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = '34fd654e87ce3db60aaa5ce15530aa6a';
+
+(node as any).hash = "34fd654e87ce3db60aaa5ce15530aa6a";
+
 export default node;

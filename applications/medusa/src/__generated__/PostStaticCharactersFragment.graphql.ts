@@ -1,25 +1,29 @@
+/**
+ * @generated SignedSource<<84b3e6dc30f7055dc0223bcf0878014d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostStaticCharactersFragment = {
-    readonly characters: ReadonlyArray<{
-        readonly name: string;
-        readonly series: {
-            readonly title: string;
-        };
-    }>;
-    readonly " $refType": "PostStaticCharactersFragment";
+export type PostStaticCharactersFragment$data = {
+  readonly characters: ReadonlyArray<{
+    readonly name: string;
+    readonly series: {
+      readonly title: string;
+    };
+  }>;
+  readonly " $fragmentType": "PostStaticCharactersFragment";
 };
-export type PostStaticCharactersFragment$data = PostStaticCharactersFragment;
+export type PostStaticCharactersFragment = PostStaticCharactersFragment$data;
 export type PostStaticCharactersFragment$key = {
-    readonly " $data"?: PostStaticCharactersFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PostStaticCharactersFragment">;
+  readonly " $data"?: PostStaticCharactersFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostStaticCharactersFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -67,5 +71,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'b34c37c164429df344982ff458d06b4e';
+
+(node as any).hash = "b34c37c164429df344982ff458d06b4e";
+
 export default node;

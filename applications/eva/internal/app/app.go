@@ -26,7 +26,6 @@ type Commands struct {
 	DisableAccountMultiFactor               command.DisableAccountMultiFactorHandler
 	DeleteAccountEmail                      command.DeleteAccountEmailHandler
 	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
-	IndexAllAccounts                        command.IndexAllAccountsHandler
 
 	UnlockAccount command.UnlockAccountHandler
 	LockAccount   command.LockAccountHandler
@@ -45,7 +44,6 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchAccounts                              query.SearchAccountsHandler
 	AccountById                                 query.AccountByIdHandler
 	AccountsByIds                               query.AccountsByIdsHandler
 	AccountByEmail                              query.AccountByEmailHandler

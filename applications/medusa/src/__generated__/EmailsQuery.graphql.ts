@@ -1,69 +1,31 @@
+/**
+ * @generated SignedSource<<08f2adb206bd528ed7459a31bb27ee43>>
+ * @relayHash d0df5f1dd500225e479d66b1e3a8b3e6
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash d0df5f1dd500225e479d66b1e3a8b3e6 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID d0df5f1dd500225e479d66b1e3a8b3e6
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EmailsQueryVariables = {};
-export type EmailsQueryResponse = {
-    readonly viewer: {
-        readonly emailsLimit: number;
-        readonly " $fragmentRefs": FragmentRefs<"EmailsSettingsFragment">;
-    } | null;
+export type EmailsQuery$variables = {};
+export type EmailsQueryVariables = EmailsQuery$variables;
+export type EmailsQuery$data = {
+  readonly viewer: {
+    readonly emailsLimit: number;
+    readonly " $fragmentSpreads": FragmentRefs<"EmailsSettingsFragment">;
+  } | null;
 };
+export type EmailsQueryResponse = EmailsQuery$data;
 export type EmailsQuery = {
-    readonly response: EmailsQueryResponse;
-    readonly variables: EmailsQueryVariables;
+  variables: EmailsQueryVariables;
+  response: EmailsQuery$data;
 };
-
-
-
-/*
-query EmailsQuery {
-  viewer {
-    ...EmailsSettingsFragment
-    emailsLimit
-    id
-  }
-}
-
-fragment DeleteFragment on AccountEmail {
-  id
-  email
-}
-
-fragment EmailCardFragment on AccountEmail {
-  ...DeleteFragment
-  ...MakePrimaryFragment
-  email
-  status
-}
-
-fragment EmailsSettingsFragment on Account {
-  emails(first: 3) {
-    edges {
-      node {
-        ...EmailCardFragment
-        status
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment MakePrimaryFragment on AccountEmail {
-  id
-  email
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -102,12 +64,12 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
             "name": "EmailsSettingsFragment"
-          }
+          },
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
@@ -253,5 +215,7 @@ return {
   }
 };
 })();
-(node as any).hash = '54c667dc8800618fc0ee75cf884ffa56';
+
+(node as any).hash = "54c667dc8800618fc0ee75cf884ffa56";
+
 export default node;

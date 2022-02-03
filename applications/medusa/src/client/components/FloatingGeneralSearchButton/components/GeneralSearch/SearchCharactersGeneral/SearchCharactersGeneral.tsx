@@ -24,7 +24,7 @@ const SearchCharactersFragmentGQL = graphql`
   fragment SearchCharactersGeneralFragment on Query
   @argumentDefinitions(
     after: {type: String},
-    name: {type: String}
+    search: {type: String}
   )
   @refetchable(queryName: "SearchCharactersGeneralPaginationFragment" )
   {
@@ -36,6 +36,7 @@ const SearchCharactersFragmentGQL = graphql`
       seriesSlug: $charactersSeriesSlug
     ) @connection(key: "SearchCharactersGeneral_characters")
     {
+
       edges {
         node {
           id

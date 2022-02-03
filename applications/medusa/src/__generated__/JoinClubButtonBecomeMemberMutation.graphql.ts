@@ -1,55 +1,42 @@
+/**
+ * @generated SignedSource<<aa7aa777462b48b1f2306779ef7a23b1>>
+ * @relayHash e1ea829a799e377aa54cc8f769264456
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash e1ea829a799e377aa54cc8f769264456 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type JoinClubButtonBecomeMemberMutationVariables = {
-    clubId: string;
+// @relayRequestID e1ea829a799e377aa54cc8f769264456
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type JoinClubButtonBecomeMemberMutation$variables = {
+  clubId: string;
 };
-export type JoinClubButtonBecomeMemberMutationResponse = {
-    readonly becomeClubMember: {
-        readonly clubMember: {
-            readonly id: string;
-            readonly club: {
-                readonly id: string;
-                readonly viewerMember: {
-                    readonly id: string;
-                } | null;
-            };
-            readonly account: {
-                readonly id: string;
-            };
+export type JoinClubButtonBecomeMemberMutationVariables = JoinClubButtonBecomeMemberMutation$variables;
+export type JoinClubButtonBecomeMemberMutation$data = {
+  readonly becomeClubMember: {
+    readonly clubMember: {
+      readonly id: string;
+      readonly club: {
+        readonly id: string;
+        readonly viewerMember: {
+          readonly id: string;
         } | null;
+      };
+      readonly account: {
+        readonly id: string;
+      };
     } | null;
+  } | null;
 };
+export type JoinClubButtonBecomeMemberMutationResponse = JoinClubButtonBecomeMemberMutation$data;
 export type JoinClubButtonBecomeMemberMutation = {
-    readonly response: JoinClubButtonBecomeMemberMutationResponse;
-    readonly variables: JoinClubButtonBecomeMemberMutationVariables;
+  variables: JoinClubButtonBecomeMemberMutationVariables;
+  response: JoinClubButtonBecomeMemberMutation$data;
 };
-
-
-
-/*
-mutation JoinClubButtonBecomeMemberMutation(
-  $clubId: ID!
-) {
-  becomeClubMember(input: {clubId: $clubId}) {
-    clubMember {
-      id
-      club {
-        id
-        viewerMember {
-          id
-        }
-      }
-      account {
-        id
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -164,5 +151,7 @@ return {
   }
 };
 })();
-(node as any).hash = '03c0e73247a4e31f4ac05278aead190a';
+
+(node as any).hash = "03c0e73247a4e31f4ac05278aead190a";
+
 export default node;

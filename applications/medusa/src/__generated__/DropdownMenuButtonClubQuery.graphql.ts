@@ -1,45 +1,36 @@
+/**
+ * @generated SignedSource<<3d1a99ac0a117becd8c718c1fafa25c0>>
+ * @relayHash 6de2dd83725cb0b53995e46f89a3bb02
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6de2dd83725cb0b53995e46f89a3bb02 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type DropdownMenuButtonClubQueryVariables = {};
-export type DropdownMenuButtonClubQueryResponse = {
-    readonly viewer: {
-        readonly clubs: {
-            readonly edges: ReadonlyArray<{
-                readonly node: {
-                    readonly name: string;
-                    readonly slug: string;
-                };
-            }>;
+// @relayRequestID 6de2dd83725cb0b53995e46f89a3bb02
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type DropdownMenuButtonClubQuery$variables = {};
+export type DropdownMenuButtonClubQueryVariables = DropdownMenuButtonClubQuery$variables;
+export type DropdownMenuButtonClubQuery$data = {
+  readonly viewer: {
+    readonly clubs: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly name: string;
+          readonly slug: string;
         };
-    } | null;
+      }>;
+    };
+  } | null;
 };
+export type DropdownMenuButtonClubQueryResponse = DropdownMenuButtonClubQuery$data;
 export type DropdownMenuButtonClubQuery = {
-    readonly response: DropdownMenuButtonClubQueryResponse;
-    readonly variables: DropdownMenuButtonClubQueryVariables;
+  variables: DropdownMenuButtonClubQueryVariables;
+  response: DropdownMenuButtonClubQuery$data;
 };
-
-
-
-/*
-query DropdownMenuButtonClubQuery {
-  viewer {
-    clubs(first: 1) {
-      edges {
-        node {
-          name
-          slug
-          id
-        }
-      }
-    }
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -192,5 +183,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b102acde679f886bf34cc0a044c25bd0';
+
+(node as any).hash = "b102acde679f886bf34cc0a044c25bd0";
+
 export default node;

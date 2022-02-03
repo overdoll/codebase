@@ -17,7 +17,6 @@ go_library(
         "get_and_refresh_account_session_operator.go",
         "grant_account_access_with_authentication_token.go",
         "grant_authentication_token.go",
-        "index_all_accounts.go",
         "lock_account.go",
         "revoke_account_moderator_role.go",
         "revoke_account_session.go",

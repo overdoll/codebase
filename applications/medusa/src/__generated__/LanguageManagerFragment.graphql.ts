@@ -1,22 +1,26 @@
+/**
+ * @generated SignedSource<<6b08b87415b2c76f0dc87b4960e0f90f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LanguageManagerFragment = {
-    readonly language: {
-        readonly locale: string;
-    };
-    readonly " $refType": "LanguageManagerFragment";
+export type LanguageManagerFragment$data = {
+  readonly language: {
+    readonly locale: string;
+  };
+  readonly " $fragmentType": "LanguageManagerFragment";
 };
-export type LanguageManagerFragment$data = LanguageManagerFragment;
+export type LanguageManagerFragment = LanguageManagerFragment$data;
 export type LanguageManagerFragment$key = {
-    readonly " $data"?: LanguageManagerFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"LanguageManagerFragment">;
+  readonly " $data"?: LanguageManagerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"LanguageManagerFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -46,5 +50,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = 'ec164ed8df7ae18f5a0db7a52d709ade';
+
+(node as any).hash = "ec164ed8df7ae18f5a0db7a52d709ade";
+
 export default node;

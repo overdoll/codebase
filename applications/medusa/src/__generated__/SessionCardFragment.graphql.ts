@@ -1,30 +1,34 @@
+/**
+ * @generated SignedSource<<b1da51fbe68eac8c15ea54010bf55059>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SessionCardFragment = {
-    readonly device: string;
-    readonly ip: string;
-    readonly location: {
-        readonly city: string;
-        readonly country: string;
-        readonly subdivision: string;
-    };
-    readonly lastSeen: unknown;
-    readonly current: boolean;
-    readonly created: unknown;
-    readonly " $fragmentRefs": FragmentRefs<"RevokeSessionFragment">;
-    readonly " $refType": "SessionCardFragment";
+export type SessionCardFragment$data = {
+  readonly device: string;
+  readonly ip: string;
+  readonly location: {
+    readonly city: string;
+    readonly country: string;
+    readonly subdivision: string;
+  };
+  readonly lastSeen: any;
+  readonly current: boolean;
+  readonly created: any;
+  readonly " $fragmentSpreads": FragmentRefs<"RevokeSessionFragment">;
+  readonly " $fragmentType": "SessionCardFragment";
 };
-export type SessionCardFragment$data = SessionCardFragment;
+export type SessionCardFragment = SessionCardFragment$data;
 export type SessionCardFragment$key = {
-    readonly " $data"?: SessionCardFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SessionCardFragment">;
+  readonly " $data"?: SessionCardFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SessionCardFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -108,5 +112,7 @@ const node: ReaderFragment = {
   "type": "AccountSession",
   "abstractKey": null
 };
-(node as any).hash = '0c5220989bd012b501615188f435b406';
+
+(node as any).hash = "0c5220989bd012b501615188f435b406";
+
 export default node;

@@ -1,21 +1,25 @@
+/**
+ * @generated SignedSource<<75635d4e4f207ab9e8d9251a6381c92a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LobbyFragment = {
-    readonly id: string;
-    readonly email: string;
-    readonly " $refType": "LobbyFragment";
+export type LobbyFragment$data = {
+  readonly id: string;
+  readonly email: string;
+  readonly " $fragmentType": "LobbyFragment";
 };
-export type LobbyFragment$data = LobbyFragment;
+export type LobbyFragment = LobbyFragment$data;
 export type LobbyFragment$key = {
-    readonly " $data"?: LobbyFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"LobbyFragment">;
+  readonly " $data"?: LobbyFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -46,5 +50,7 @@ const node: ReaderFragment = {
   "type": "AuthenticationToken",
   "abstractKey": null
 };
-(node as any).hash = '68ca6dfa74f40fbaee95e8fa127113ff';
+
+(node as any).hash = "68ca6dfa74f40fbaee95e8fa127113ff";
+
 export default node;

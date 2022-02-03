@@ -1,10 +1,23 @@
+/**
+ * @generated SignedSource<<596d97a4bc46114d00762be08bb87640>>
+ * @relayHash 0addcedc432e975c4470cc890fda6fd4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorPaginationFragment.graphql.ts
 /* @relayHash 467e9600e442ab4c08cbef88fedde076 */
+=======
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesPaginationFragment.graphql.ts
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 0addcedc432e975c4470cc890fda6fd4
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorPaginationFragment.graphql.ts
 export type CategoryMultiSelectorPaginationFragmentVariables = {
     after?: string | null | undefined;
     first?: number | null | undefined;
@@ -76,6 +89,23 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+export type SearchCategoriesPaginationFragment$variables = {
+  after?: string | null;
+  first?: number | null;
+  title?: string | null;
+};
+export type SearchCategoriesPaginationFragmentVariables = SearchCategoriesPaginationFragment$variables;
+export type SearchCategoriesPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
+};
+export type SearchCategoriesPaginationFragmentResponse = SearchCategoriesPaginationFragment$data;
+export type SearchCategoriesPaginationFragment = {
+  variables: SearchCategoriesPaginationFragmentVariables;
+  response: SearchCategoriesPaginationFragment$data;
+};
+
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesPaginationFragment.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -286,5 +316,11 @@ return {
   }
 };
 })();
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorPaginationFragment.graphql.ts
 (node as any).hash = 'ddee49fe0340cf7db8034ff6297714de';
+=======
+
+(node as any).hash = "820591d8df74cc47f6fe5704e3841869";
+
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesPaginationFragment.graphql.ts
 export default node;

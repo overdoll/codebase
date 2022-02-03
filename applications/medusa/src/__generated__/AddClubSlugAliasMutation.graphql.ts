@@ -1,50 +1,40 @@
+/**
+ * @generated SignedSource<<3e5afe11ae13c6026de384ab961298b5>>
+ * @relayHash 2691930cf470e487a3900088c53d85d8
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 2691930cf470e487a3900088c53d85d8 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 2691930cf470e487a3900088c53d85d8
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AddClubSlugAliasValidation = "SLUG_TAKEN" | "%future added value";
-export type AddClubSlugAliasMutationVariables = {
-    id: string;
-    slug: string;
+export type AddClubSlugAliasMutation$variables = {
+  id: string;
+  slug: string;
 };
-export type AddClubSlugAliasMutationResponse = {
-    readonly addClubSlugAlias: {
-        readonly club: {
-            readonly id: string;
-            readonly slug: string;
-            readonly slugAliases: ReadonlyArray<{
-                readonly slug: string;
-            }>;
-        } | null;
-        readonly validation: AddClubSlugAliasValidation | null;
+export type AddClubSlugAliasMutationVariables = AddClubSlugAliasMutation$variables;
+export type AddClubSlugAliasMutation$data = {
+  readonly addClubSlugAlias: {
+    readonly club: {
+      readonly id: string;
+      readonly slug: string;
+      readonly slugAliases: ReadonlyArray<{
+        readonly slug: string;
+      }>;
     } | null;
+    readonly validation: AddClubSlugAliasValidation | null;
+  } | null;
 };
+export type AddClubSlugAliasMutationResponse = AddClubSlugAliasMutation$data;
 export type AddClubSlugAliasMutation = {
-    readonly response: AddClubSlugAliasMutationResponse;
-    readonly variables: AddClubSlugAliasMutationVariables;
+  variables: AddClubSlugAliasMutationVariables;
+  response: AddClubSlugAliasMutation$data;
 };
-
-
-
-/*
-mutation AddClubSlugAliasMutation(
-  $id: ID!
-  $slug: String!
-) {
-  addClubSlugAlias(input: {id: $id, slug: $slug}) {
-    club {
-      id
-      slug
-      slugAliases {
-        slug
-      }
-    }
-    validation
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -160,5 +150,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b1cf49c95d432ed8840ae76a91c66b4f';
+
+(node as any).hash = "b1cf49c95d432ed8840ae76a91c66b4f";
+
 export default node;

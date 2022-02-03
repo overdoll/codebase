@@ -63,7 +63,7 @@ it('clicking on the link directs to the route', async () => {
 
   const link = screen.getByRole('link')
 
-  userEvent.click(link)
+  await waitFor(async () => await userEvent.click(link))
 
   await waitFor(() =>
     expect(screen.getByText('rendering component')).toBeInTheDocument()
@@ -111,7 +111,7 @@ it('hovering over the link will preload the component', async () => {
 
   const link = screen.getByRole('link')
 
-  userEvent.hover(link)
+  await waitFor(async () => await userEvent.click(link))
 
   await waitFor(() => expect(func).toHaveBeenCalled())
 })
@@ -171,7 +171,7 @@ it('mouse down on the link will load code and data', async () => {
 
   const link = screen.getByRole('link')
 
-  await waitFor(() => userEvent.click(link))
+  await waitFor(async () => await userEvent.click(link))
 
   await waitFor(() => expect(func).toHaveBeenCalled())
 

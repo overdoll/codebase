@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<efc9d49ebd44cbc93b07bc01386370c2>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type DisableMultiFactorFragment = {
-    readonly canDisableMultiFactor: boolean;
-    readonly " $refType": "DisableMultiFactorFragment";
+export type DisableMultiFactorFragment$data = {
+  readonly canDisableMultiFactor: boolean;
+  readonly " $fragmentType": "DisableMultiFactorFragment";
 };
-export type DisableMultiFactorFragment$data = DisableMultiFactorFragment;
+export type DisableMultiFactorFragment = DisableMultiFactorFragment$data;
 export type DisableMultiFactorFragment$key = {
-    readonly " $data"?: DisableMultiFactorFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"DisableMultiFactorFragment">;
+  readonly " $data"?: DisableMultiFactorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '1be25ed3f5abc735c8b6b12b21aa719c';
+
+(node as any).hash = "1be25ed3f5abc735c8b6b12b21aa719c";
+
 export default node;

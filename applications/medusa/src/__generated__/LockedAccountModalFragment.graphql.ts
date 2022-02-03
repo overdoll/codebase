@@ -1,23 +1,27 @@
+/**
+ * @generated SignedSource<<464ce6ce34441486049cd65b55cb6ec4>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LockedAccountModalFragment = {
-    readonly lock: {
-        readonly expires: unknown;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"UnlockAccountFormFragment">;
-    readonly " $refType": "LockedAccountModalFragment";
+export type LockedAccountModalFragment$data = {
+  readonly lock: {
+    readonly expires: any;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"UnlockAccountFormFragment">;
+  readonly " $fragmentType": "LockedAccountModalFragment";
 };
-export type LockedAccountModalFragment$data = LockedAccountModalFragment;
+export type LockedAccountModalFragment = LockedAccountModalFragment$data;
 export type LockedAccountModalFragment$key = {
-    readonly " $data"?: LockedAccountModalFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"LockedAccountModalFragment">;
+  readonly " $data"?: LockedAccountModalFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"LockedAccountModalFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -25,6 +29,11 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "LockedAccountModalFragment",
   "selections": [
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UnlockAccountFormFragment"
+    },
     {
       "alias": null,
       "args": null,
@@ -42,15 +51,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UnlockAccountFormFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-(node as any).hash = '8139d92350ad572a882dd19c7c557183';
+
+(node as any).hash = "8139d92350ad572a882dd19c7c557183";
+
 export default node;

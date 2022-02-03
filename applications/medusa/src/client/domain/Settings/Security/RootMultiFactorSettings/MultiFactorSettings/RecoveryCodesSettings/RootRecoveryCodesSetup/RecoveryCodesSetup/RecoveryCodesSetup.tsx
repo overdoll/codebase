@@ -28,7 +28,7 @@ interface Props {
 
 const RecoveryCodesSetupQueryGQL = graphql`
   query RecoveryCodesSetupQuery {
-    viewer {
+    viewer @required(action: THROW) {
       id
       recoveryCodes {
         __id
@@ -61,9 +61,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
 
   const notify = useToast()
 
-  const recoveryCodes = data?.viewer?.recoveryCodes
-
-  if (recoveryCodes == null) return null
+  const recoveryCodes = data.viewer.recoveryCodes
 
   const plainRecoveryCodes = recoveryCodes.map((item) => {
     return `${item.code}\r\n`

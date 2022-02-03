@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<6800ac3d5094cfad4b312865c2d7bac1>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SubmitPostButtonFragment = {
-    readonly id: string;
-    readonly " $refType": "SubmitPostButtonFragment";
+export type SubmitPostButtonFragment$data = {
+  readonly id: string;
+  readonly " $fragmentType": "SubmitPostButtonFragment";
 };
-export type SubmitPostButtonFragment$data = SubmitPostButtonFragment;
+export type SubmitPostButtonFragment = SubmitPostButtonFragment$data;
 export type SubmitPostButtonFragment$key = {
-    readonly " $data"?: SubmitPostButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SubmitPostButtonFragment">;
+  readonly " $data"?: SubmitPostButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SubmitPostButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-(node as any).hash = 'd2ed74d380b83af3fcdf503c1030600f';
+
+(node as any).hash = "d2ed74d380b83af3fcdf503c1030600f";
+
 export default node;

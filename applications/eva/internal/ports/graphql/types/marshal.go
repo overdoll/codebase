@@ -26,12 +26,18 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		return nil
 	}
 
-	return &Account{
-		ID:        relay.NewID(Account{}, result.ID()),
-		Reference: result.ID(),
-		Avatar: &Resource{
+	var accountAvatar *Resource
+
+	if result.AvatarResourceId() != "" {
+		accountAvatar = &Resource{
 			ID: relay.NewID(Resource{}, result.ID(), result.AvatarResourceId()),
-		},
+		}
+	}
+
+	return &Account{
+		ID:                      relay.NewID(Account{}, result.ID()),
+		Reference:               result.ID(),
+		Avatar:                  accountAvatar,
 		Username:                result.Username(),
 		Language:                MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:                 result.IsStaff(),
@@ -52,65 +58,6 @@ func MarshalLocationToGraphQL(result *location.Location) *Location {
 		Latitude:    result.Latitude(),
 		Longitude:   result.Longitude(),
 	}
-}
-
-func MarshalAccountToGraphQLConnection(results []*account.Account, cursor *paging.Cursor) *AccountConnection {
-
-	var accEdges []*AccountEdge
-
-	conn := &AccountConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-		Edges: accEdges,
-	}
-
-	limit := cursor.GetLimit()
-
-	if len(results) == 0 {
-		return conn
-	}
-
-	if len(results) == limit {
-		conn.PageInfo.HasNextPage = cursor.First() != nil
-		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
-		results = results[:len(results)-1]
-	}
-
-	var nodeAt func(int) *account.Account
-
-	if cursor != nil && cursor.Last() != nil {
-		n := len(results) - 1
-		nodeAt = func(i int) *account.Account {
-			return results[n-i]
-		}
-	} else {
-		nodeAt = func(i int) *account.Account {
-			return results[i]
-		}
-	}
-
-	for i := range results {
-		node := nodeAt(i)
-		accEdges = append(accEdges, &AccountEdge{
-			Node:   MarshalAccountToGraphQL(node),
-			Cursor: node.Cursor(),
-		})
-	}
-
-	conn.Edges = accEdges
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		conn.PageInfo.StartCursor = &res
-		res = results[len(results)-1].Cursor()
-		conn.PageInfo.EndCursor = &res
-	}
-
-	return conn
 }
 
 func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {

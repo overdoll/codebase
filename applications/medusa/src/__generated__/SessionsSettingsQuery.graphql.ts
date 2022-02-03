@@ -1,67 +1,30 @@
+/**
+ * @generated SignedSource<<0fc6df665370e225c712f83c5cf4633b>>
+ * @relayHash 7eb32d13551783b6fbbc538470ba7944
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7eb32d13551783b6fbbc538470ba7944 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 7eb32d13551783b6fbbc538470ba7944
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SessionsSettingsQueryVariables = {};
-export type SessionsSettingsQueryResponse = {
-    readonly viewer: {
-        readonly " $fragmentRefs": FragmentRefs<"SessionsSettingsFragment">;
-    } | null;
+export type SessionsSettingsQuery$variables = {};
+export type SessionsSettingsQueryVariables = SessionsSettingsQuery$variables;
+export type SessionsSettingsQuery$data = {
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"SessionsSettingsFragment">;
+  } | null;
 };
+export type SessionsSettingsQueryResponse = SessionsSettingsQuery$data;
 export type SessionsSettingsQuery = {
-    readonly response: SessionsSettingsQueryResponse;
-    readonly variables: SessionsSettingsQueryVariables;
+  variables: SessionsSettingsQueryVariables;
+  response: SessionsSettingsQuery$data;
 };
-
-
-
-/*
-query SessionsSettingsQuery {
-  viewer {
-    ...SessionsSettingsFragment
-    id
-  }
-}
-
-fragment RevokeSessionFragment on AccountSession {
-  id
-}
-
-fragment SessionCardFragment on AccountSession {
-  device
-  ip
-  location {
-    city
-    country
-    subdivision
-  }
-  lastSeen
-  current
-  created
-  ...RevokeSessionFragment
-}
-
-fragment SessionsSettingsFragment on Account {
-  sessions(first: 3) {
-    edges {
-      node {
-        ...SessionCardFragment
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -295,5 +258,7 @@ return {
   }
 };
 })();
-(node as any).hash = '5ba60886ffad0b59dc351fa5c1f3756e';
+
+(node as any).hash = "5ba60886ffad0b59dc351fa5c1f3756e";
+
 export default node;

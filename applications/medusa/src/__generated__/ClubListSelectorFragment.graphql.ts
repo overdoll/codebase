@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<827e6251e8f5af2814d3935096ed291e>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubListSelectorFragment = {
-    readonly clubs: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly slug: string;
-                readonly " $fragmentRefs": FragmentRefs<"ClubTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "ClubListSelectorFragment";
+export type ClubListSelectorFragment$data = {
+  readonly clubs: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly slug: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly id: string;
+  readonly " $fragmentType": "ClubListSelectorFragment";
 };
-export type ClubListSelectorFragment$data = ClubListSelectorFragment;
+export type ClubListSelectorFragment = ClubListSelectorFragment$data;
 export type ClubListSelectorFragment$key = {
-    readonly " $data"?: ClubListSelectorFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubListSelectorFragment">;
+  readonly " $data"?: ClubListSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubListSelectorFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -68,7 +72,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ClubListSelectorPaginationFragment.graphql.ts'),
+      "operation": require('./ClubListSelectorPaginationFragment.graphql'),
       "identifierField": "id"
     }
   },
@@ -112,16 +116,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ClubTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ClubTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -176,5 +180,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '895ae34790f2e7dece66f96eb0659eda';
+
+(node as any).hash = "895ae34790f2e7dece66f96eb0659eda";
+
 export default node;

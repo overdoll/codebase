@@ -91,7 +91,7 @@ type RemoveClubInfractionHistoryPayload {
   clubInfractionHistoryId: ID!
 }
 
-extend type Mutation {
+type Mutation {
   """
   Issue a club infraction.
   """

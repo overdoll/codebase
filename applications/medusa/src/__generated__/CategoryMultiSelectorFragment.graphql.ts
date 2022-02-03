@@ -1,9 +1,16 @@
+/**
+ * @generated SignedSource<<9f850cbb0a3bb668d30fd83dcf907484>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorFragment.graphql.ts
 export type CategoryMultiSelectorFragment = {
     readonly categories: {
         readonly edges: ReadonlyArray<{
@@ -20,9 +27,25 @@ export type CategoryMultiSelectorFragment$data = CategoryMultiSelectorFragment;
 export type CategoryMultiSelectorFragment$key = {
     readonly " $data"?: CategoryMultiSelectorFragment$data | undefined;
     readonly " $fragmentRefs": FragmentRefs<"CategoryMultiSelectorFragment">;
+=======
+export type SearchCategoriesFragment$data = {
+  readonly categories: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "SearchCategoriesFragment";
 };
-
-
+export type SearchCategoriesFragment = SearchCategoriesFragment$data;
+export type SearchCategoriesFragment$key = {
+  readonly " $data"?: SearchCategoriesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesFragment.graphql.ts
+};
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +89,11 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorFragment.graphql.ts
       "operation": require('./CategoryMultiSelectorPaginationFragment.graphql.ts')
+=======
+      "operation": require('./SearchCategoriesPaginationFragment.graphql')
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesFragment.graphql.ts
     }
   },
   "name": "CategoryMultiSelectorFragment",
@@ -116,16 +143,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CategoryTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CategoryTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -173,5 +200,11 @@ return {
   "abstractKey": null
 };
 })();
+<<<<<<< HEAD:applications/medusa/src/__generated__/CategoryMultiSelectorFragment.graphql.ts
 (node as any).hash = 'ddee49fe0340cf7db8034ff6297714de';
+=======
+
+(node as any).hash = "820591d8df74cc47f6fe5704e3841869";
+
+>>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesFragment.graphql.ts
 export default node;

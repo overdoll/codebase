@@ -1,30 +1,45 @@
+/**
+ * @generated SignedSource<<4de4c0c7ae2eab942696ec8936d14b95>>
+ * @relayHash 00279dd31a63376a305c940545282aeb
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+<<<<<<< HEAD
 /* @relayHash 7474114de940c48e48331f15f73ae380 */
+=======
+>>>>>>> master
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 00279dd31a63376a305c940545282aeb
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
-export type PostCreatorQueryVariables = {
-    reference: string;
-    slug: string;
+export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type PostCreatorQuery$variables = {
+  reference: string;
+  slug: string;
 };
-export type PostCreatorQueryResponse = {
-    readonly post: {
-        readonly __typename: string;
-        readonly state: PostState;
-        readonly " $fragmentRefs": FragmentRefs<"UpdatePostFlowFragment">;
-    } | null;
-    readonly club: {
-        readonly id: string;
-    } | null;
+export type PostCreatorQueryVariables = PostCreatorQuery$variables;
+export type PostCreatorQuery$data = {
+  readonly post: {
+    readonly __typename: string;
+    readonly state: PostState;
+    readonly " $fragmentSpreads": FragmentRefs<"UpdatePostFlowFragment">;
+  } | null;
+  readonly club: {
+    readonly id: string;
+  } | null;
 };
+export type PostCreatorQueryResponse = PostCreatorQuery$data;
 export type PostCreatorQuery = {
-    readonly response: PostCreatorQueryResponse;
-    readonly variables: PostCreatorQueryVariables;
+  variables: PostCreatorQueryVariables;
+  response: PostCreatorQuery$data;
 };
 
+<<<<<<< HEAD
 
 
 /*
@@ -294,6 +309,8 @@ fragment VideoSnippetFragment on Resource {
 }
 */
 
+=======
+>>>>>>> master
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -608,5 +625,7 @@ return {
   }
 };
 })();
-(node as any).hash = '78e74a2b9feb0530dc8af91b86005ae6';
+
+(node as any).hash = "78e74a2b9feb0530dc8af91b86005ae6";
+
 export default node;

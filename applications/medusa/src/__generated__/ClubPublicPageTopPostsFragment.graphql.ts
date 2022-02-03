@@ -1,22 +1,26 @@
+/**
+ * @generated SignedSource<<ebed0e27c5ab441581b0b0ded19ec2e0>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPublicPageTopPostsFragment = {
-    readonly topPosts: {
-        readonly " $fragmentRefs": FragmentRefs<"PostsHorizontalPreviewFragment">;
-    };
-    readonly " $refType": "ClubPublicPageTopPostsFragment";
+export type ClubPublicPageTopPostsFragment$data = {
+  readonly topPosts: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostsHorizontalPreviewFragment">;
+  };
+  readonly " $fragmentType": "ClubPublicPageTopPostsFragment";
 };
-export type ClubPublicPageTopPostsFragment$data = ClubPublicPageTopPostsFragment;
+export type ClubPublicPageTopPostsFragment = ClubPublicPageTopPostsFragment$data;
 export type ClubPublicPageTopPostsFragment$key = {
-    readonly " $data"?: ClubPublicPageTopPostsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ClubPublicPageTopPostsFragment">;
+  readonly " $data"?: ClubPublicPageTopPostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPageTopPostsFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -55,5 +59,7 @@ const node: ReaderFragment = {
   "type": "Club",
   "abstractKey": null
 };
-(node as any).hash = '6ae6607b0dda5845bccb4ad8d76882c9';
+
+(node as any).hash = "6ae6607b0dda5845bccb4ad8d76882c9";
+
 export default node;

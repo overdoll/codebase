@@ -16,6 +16,9 @@ const LockedAccountBannerGQL = graphql`
       __typename
     }
     ...LockedAccountModalFragment
+    lock {
+      __typename
+    }
   }
 `
 
@@ -28,9 +31,7 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
     onClose
   } = useHistoryDisclosure()
 
-  if (data?.lock == null) {
-    return null
-  }
+  if (data?.lock == null) return null
 
   return (
     <Box zIndex='docked' h={12} top={0} color='gray.900'>

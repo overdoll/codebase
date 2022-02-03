@@ -68,41 +68,38 @@ module.exports = {
       config.module.rules.findIndex(Helpers.makeLoaderFinder('file-loader'))
     ].exclude.push(/\.(svg)$/)
 
+    config.module.unsafeCache = true
+
     config.module.rules = [
       ...config.module.rules,
       {
-        test: /url\.svg$/,
-        use: [
-          {
-            loader: require.resolve('@svgr/webpack'),
-            options: {
-              svgoConfig: {
-                plugins: [
-                  { removeViewBox: false },
-                  { mergePaths: false },
-                  { removeTitle: false }
-                ]
-              }
-            }
-          },
-          'url-loader']
+        type: 'asset',
+        resourceQuery: /url/ // *.svg?url
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: require.resolve('@svgr/webpack'),
-            options: {
-              svgoConfig: {
-                plugins: [
-                  { removeViewBox: false },
-                  { mergePaths: false },
-                  { removeTitle: false }
-                ]
-              }
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: {
+          loader: require.resolve('@svgr/webpack'),
+          options: {
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'removeViewBox',
+                  active: false
+                },
+                {
+                  name: 'mergePaths',
+                  active: false
+                },
+                {
+                  name: 'removeTitle',
+                  active: false
+                }
+              ]
             }
           }
-        ]
+        }
       }
     ]
 
@@ -136,16 +133,16 @@ module.exports = {
       '@//:types': path.resolve(__dirname, 'src/types')
     }
 
-    if (!opts.env.dev) {
-      config.cache = {
-        type: 'filesystem',
-        store: 'pack'
-      }
-    }
+    // if (!opts.env.dev) {
+    //   config.cache = {
+    //     type: 'filesystem',
+    //     store: 'pack'
+    //   }
+    // }
 
     if (opts.env.target === 'node') {
       if (!opts.env.dev) {
-        config.externals = {}
+        //  config.externals = {}
       }
     }
 
@@ -194,10 +191,9 @@ module.exports = {
         }
       } else {
         config.optimization = {
-          // TODO: when switching to webpack 5, change to deterministic
           // cannot switch because hot reload becomes 10x slower?
-          moduleIds: 'hashed',
-          chunkIds: 'size',
+          moduleIds: 'deterministic',
+          chunkIds: 'deterministic',
           runtimeChunk: 'single',
           splitChunks: {
             chunks: 'all',
