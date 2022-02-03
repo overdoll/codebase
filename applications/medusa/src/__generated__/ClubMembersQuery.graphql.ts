@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d0f071effaf02bc6b984ed3742d80d8>>
- * @relayHash c4f49218ff617ace3b9a824696aa5d77
+ * @generated SignedSource<<cacffcccf33c87e8e8b64dd25a46998a>>
+ * @relayHash d4d683f02db9a99095a60e56afdf5eba
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,12 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash d4d683f02db9a99095a60e56afdf5eba */
-=======
->>>>>>> master
 
-// @relayRequestID c4f49218ff617ace3b9a824696aa5d77
+// @relayRequestID d4d683f02db9a99095a60e56afdf5eba
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -32,77 +28,6 @@ export type ClubMembersQuery = {
   response: ClubMembersQuery$data;
 };
 
-<<<<<<< HEAD
-
-
-/*
-query ClubMembersQuery(
-  $slug: String!
-) {
-  club(slug: $slug) {
-    ...ClubMembersFragment
-    id
-  }
-}
-
-fragment AccountTileOverlayFragment on Account {
-  avatar {
-    ...ResourceIconFragment
-    ...ResourceItemFragment
-    id
-  }
-  username
-}
-
-fragment ClubMembersFragment on Club {
-  members(first: 20) {
-    edges {
-      node {
-        account {
-          username
-          ...AccountTileOverlayFragment
-          id
-        }
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
-
-=======
->>>>>>> master
 const node: ConcreteRequest = (function(){
 var v0 = [
   {

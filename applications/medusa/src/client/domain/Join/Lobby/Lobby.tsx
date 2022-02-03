@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { useEffect, useMemo } from 'react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
@@ -51,43 +51,42 @@ export default function Lobby ({
 
   return (
     <PageWrapper>
-      <Icon
-        icon={BadgeCircle}
-        w={100}
-        h={100}
-        fill='purple.300'
-        ml='auto'
-        mr='auto'
-        mb={8}
-      />
-      <Heading
-        mb={8}
-        align='center'
-        size='md'
-        color='gray.00'
-      >
-        <Trans>
-          Click on the link you received in your email to continue
-        </Trans>
-      </Heading>
-      <Flex
-        justify='center'
-        wordBreak='break-all'
-        mb={8}
-        pt={3}
-        pb={3}
-        pr={2}
-        borderRadius={5}
-        bg='gray.800'
-        w='100%'
-      >
-        <Text
-          fontSize='lg'
-          color='purple.300'
+      <Stack spacing={8}>
+        <Icon
+          icon={BadgeCircle}
+          w={100}
+          h={100}
+          fill='purple.300'
+          ml='auto'
+          mr='auto'
+        />
+        <Heading
+          align='center'
+          size='md'
+          color='gray.00'
         >
-          {email ?? data.email}
-        </Text>
-      </Flex>
+          <Trans>
+            Click on the link you received in your email to continue
+          </Trans>
+        </Heading>
+        <Flex
+          justify='center'
+          wordBreak='break-all'
+          pt={3}
+          pb={3}
+          pr={2}
+          borderRadius={5}
+          bg='gray.800'
+          w='100%'
+        >
+          <Text
+            fontSize='lg'
+            color='purple.300'
+          >
+            {email ?? data.email}
+          </Text>
+        </Flex>
+      </Stack>
     </PageWrapper>
   )
 }

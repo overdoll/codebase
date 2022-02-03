@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8b2d00066dafec1d0bf89cec4377a17f>>
- * @relayHash 353c52a51e6ae6464e7ba9147608f9e0
+ * @generated SignedSource<<7e8cece80499654263c221a305193c18>>
+ * @relayHash c419aff5d729ae86133b5da187285e24
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,81 +8,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
-/* @relayHash c419aff5d729ae86133b5da187285e24 */
-=======
->>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 
-// @relayRequestID 353c52a51e6ae6464e7ba9147608f9e0
+// @relayRequestID c419aff5d729ae86133b5da187285e24
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
-export type AudienceMultiSelectorQueryVariables = {};
-export type AudienceMultiSelectorQueryResponse = {
-    readonly audiences: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"AudienceTileOverlayFragment">;
-            };
-        }>;
-    };
-};
-export type AudienceMultiSelectorQuery = {
-    readonly response: AudienceMultiSelectorQueryResponse;
-    readonly variables: AudienceMultiSelectorQueryVariables;
-};
-
-
-
-/*
-query AudienceMultiSelectorQuery {
-  audiences {
-    edges {
-      node {
-        id
-        title
-        ...AudienceTileOverlayFragment
-      }
-    }
-  }
-}
-
-fragment AudienceTileOverlayFragment on Audience {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
-
-=======
-export type AudiencesQuery$variables = {};
-export type AudiencesQueryVariables = AudiencesQuery$variables;
-export type AudiencesQuery$data = {
+export type AudienceMultiSelectorQuery$variables = {};
+export type AudienceMultiSelectorQueryVariables = AudienceMultiSelectorQuery$variables;
+export type AudienceMultiSelectorQuery$data = {
   readonly audiences: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -93,13 +26,12 @@ export type AudiencesQuery$data = {
     }>;
   };
 };
-export type AudiencesQueryResponse = AudiencesQuery$data;
-export type AudiencesQuery = {
-  variables: AudiencesQueryVariables;
-  response: AudiencesQuery$data;
+export type AudienceMultiSelectorQueryResponse = AudienceMultiSelectorQuery$data;
+export type AudienceMultiSelectorQuery = {
+  variables: AudienceMultiSelectorQueryVariables;
+  response: AudienceMultiSelectorQuery$data;
 };
 
->>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
@@ -262,11 +194,7 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/AudienceMultiSelectorQuery.graphql.ts
-(node as any).hash = 'df5243268b0bf531c2745a3c5d4027d6';
-=======
 
-(node as any).hash = "81a8d3ff43d094e4672ca3a0c9128ce7";
+(node as any).hash = "df5243268b0bf531c2745a3c5d4027d6";
 
->>>>>>> master:applications/medusa/src/__generated__/AudiencesQuery.graphql.ts
 export default node;

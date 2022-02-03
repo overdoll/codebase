@@ -1,28 +1,32 @@
+/**
+ * @generated SignedSource<<56a6dbbaaa319a5b3a08908b2a9b025e>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCategoriesMultiSelectorFragment = {
-    readonly categories: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"CategoryTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "UploadSearchCategoriesMultiSelectorFragment";
+export type UploadSearchCategoriesMultiSelectorFragment$data = {
+  readonly categories: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+      };
+    }>;
+  };
+  readonly " $fragmentType": "UploadSearchCategoriesMultiSelectorFragment";
 };
-export type UploadSearchCategoriesMultiSelectorFragment$data = UploadSearchCategoriesMultiSelectorFragment;
+export type UploadSearchCategoriesMultiSelectorFragment = UploadSearchCategoriesMultiSelectorFragment$data;
 export type UploadSearchCategoriesMultiSelectorFragment$key = {
-    readonly " $data"?: UploadSearchCategoriesMultiSelectorFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
+  readonly " $data"?: UploadSearchCategoriesMultiSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +70,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./UploadSearchCategoriesMultiSelectorPaginationFragment.graphql.ts')
+      "operation": require('./UploadSearchCategoriesMultiSelectorPaginationFragment.graphql')
     }
   },
   "name": "UploadSearchCategoriesMultiSelectorFragment",
@@ -116,16 +120,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CategoryTileOverlayFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "CategoryTileOverlayFragment"
                 }
               ],
               "storageKey": null
@@ -173,5 +177,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'd1e1166386f5f63bb0495e9a00f551d5';
+
+(node as any).hash = "d1e1166386f5f63bb0495e9a00f551d5";
+
 export default node;

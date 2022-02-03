@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bb58fca9037ce789b5162d613c5bdfa1>>
- * @relayHash 5bfe0f800f9ec5354fd7797aa24086d8
+ * @generated SignedSource<<94e0eb003baf41c1df0109967cce7012>>
+ * @relayHash ca2923da6221b4474dfe0fdb2ad2daae
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,98 +8,24 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
-/* @relayHash ca2923da6221b4474dfe0fdb2ad2daae */
-=======
->>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 
-// @relayRequestID 5bfe0f800f9ec5354fd7797aa24086d8
+// @relayRequestID ca2923da6221b4474dfe0fdb2ad2daae
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
-export type UploadSearchCategoriesMultiSelectorQueryVariables = {
-    title?: string | null | undefined;
-};
-export type UploadSearchCategoriesMultiSelectorQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
-};
-export type UploadSearchCategoriesMultiSelectorQuery = {
-    readonly response: UploadSearchCategoriesMultiSelectorQueryResponse;
-    readonly variables: UploadSearchCategoriesMultiSelectorQueryVariables;
-};
-
-
-
-/*
-query UploadSearchCategoriesMultiSelectorQuery(
-  $title: String
-) {
-  ...UploadSearchCategoriesMultiSelectorFragment_3FzUSU
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment UploadSearchCategoriesMultiSelectorFragment_3FzUSU on Query {
-  categories(first: 5, title: $title) {
-    edges {
-      node {
-        id
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
-
-=======
-export type SearchCategoriesQuery$variables = {
+export type UploadSearchCategoriesMultiSelectorQuery$variables = {
   title?: string | null;
 };
-export type SearchCategoriesQueryVariables = SearchCategoriesQuery$variables;
-export type SearchCategoriesQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoriesFragment">;
+export type UploadSearchCategoriesMultiSelectorQueryVariables = UploadSearchCategoriesMultiSelectorQuery$variables;
+export type UploadSearchCategoriesMultiSelectorQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
 };
-export type SearchCategoriesQueryResponse = SearchCategoriesQuery$data;
-export type SearchCategoriesQuery = {
-  variables: SearchCategoriesQueryVariables;
-  response: SearchCategoriesQuery$data;
+export type UploadSearchCategoriesMultiSelectorQueryResponse = UploadSearchCategoriesMultiSelectorQuery$data;
+export type UploadSearchCategoriesMultiSelectorQuery = {
+  variables: UploadSearchCategoriesMultiSelectorQueryVariables;
+  response: UploadSearchCategoriesMultiSelectorQuery$data;
 };
 
->>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -298,11 +224,7 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCategoriesMultiSelectorQuery.graphql.ts
-(node as any).hash = '2c2c7335c9466f6faa6288581e3d06cd';
-=======
 
-(node as any).hash = "4f48576e48f3ef7919d14cf7d1dc2763";
+(node as any).hash = "2c2c7335c9466f6faa6288581e3d06cd";
 
->>>>>>> master:applications/medusa/src/__generated__/SearchCategoriesQuery.graphql.ts
 export default node;

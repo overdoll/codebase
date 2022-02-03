@@ -1,51 +1,40 @@
+/**
+ * @generated SignedSource<<d01c574b1385bb2f154fd5f801c7b574>>
+ * @relayHash 13c95462e8e0b48f0ab896e5853fe65d
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 13c95462e8e0b48f0ab896e5853fe65d */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CurationDateOfBirthNextButtonMutationVariables = {
-    dateOfBirth?: unknown | null | undefined;
-    skipped: boolean;
+// @relayRequestID 13c95462e8e0b48f0ab896e5853fe65d
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type CurationDateOfBirthNextButtonMutation$variables = {
+  dateOfBirth?: any | null;
+  skipped: boolean;
 };
-export type CurationDateOfBirthNextButtonMutationResponse = {
-    readonly updateCurationProfileDateOfBirth: {
-        readonly curationProfile: {
-            readonly id: string;
-            readonly completed: boolean;
-            readonly dateOfBirth: {
-                readonly skipped: boolean;
-                readonly completed: boolean;
-                readonly dateOfBirth: unknown | null;
-            };
-        } | null;
+export type CurationDateOfBirthNextButtonMutationVariables = CurationDateOfBirthNextButtonMutation$variables;
+export type CurationDateOfBirthNextButtonMutation$data = {
+  readonly updateCurationProfileDateOfBirth: {
+    readonly curationProfile: {
+      readonly id: string;
+      readonly completed: boolean;
+      readonly dateOfBirth: {
+        readonly skipped: boolean;
+        readonly completed: boolean;
+        readonly dateOfBirth: any | null;
+      };
     } | null;
+  } | null;
 };
+export type CurationDateOfBirthNextButtonMutationResponse = CurationDateOfBirthNextButtonMutation$data;
 export type CurationDateOfBirthNextButtonMutation = {
-    readonly response: CurationDateOfBirthNextButtonMutationResponse;
-    readonly variables: CurationDateOfBirthNextButtonMutationVariables;
+  variables: CurationDateOfBirthNextButtonMutationVariables;
+  response: CurationDateOfBirthNextButtonMutation$data;
 };
-
-
-
-/*
-mutation CurationDateOfBirthNextButtonMutation(
-  $dateOfBirth: Time
-  $skipped: Boolean!
-) {
-  updateCurationProfileDateOfBirth(input: {dateOfBirth: $dateOfBirth, skipped: $skipped}) {
-    curationProfile {
-      id
-      completed
-      dateOfBirth {
-        skipped
-        completed
-        dateOfBirth
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -168,5 +157,7 @@ return {
   }
 };
 })();
-(node as any).hash = '3e2a811260655f25ab98d4417469f772';
+
+(node as any).hash = "3e2a811260655f25ab98d4417469f772";
+
 export default node;

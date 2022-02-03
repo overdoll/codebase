@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4bd592c3524c6fa83338a26327aa0c7a>>
+ * @generated SignedSource<<e462cf922171fce9333773ea3c5e0c3d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,27 +10,12 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD
-export type ClubMembersFragment = {
-    readonly members: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly account: {
-                    readonly username: string;
-                    readonly " $fragmentRefs": FragmentRefs<"AccountTileOverlayFragment">;
-                };
-            };
-        }>;
-    };
-    readonly id: string;
-    readonly " $refType": "ClubMembersFragment";
-=======
 export type ClubMembersFragment$data = {
   readonly members: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly id: string;
         readonly account: {
+          readonly username: string;
           readonly " $fragmentSpreads": FragmentRefs<"AccountTileOverlayFragment">;
         };
       };
@@ -38,7 +23,6 @@ export type ClubMembersFragment$data = {
   };
   readonly id: string;
   readonly " $fragmentType": "ClubMembersFragment";
->>>>>>> master
 };
 export type ClubMembersFragment = ClubMembersFragment$data;
 export type ClubMembersFragment$key = {
@@ -198,11 +182,7 @@ return {
   "abstractKey": null
 };
 })();
-<<<<<<< HEAD
-(node as any).hash = '7622691bee99e7d5157d6230324c3c06';
-=======
 
-(node as any).hash = "f7105a5a40e51637b712f4af01545393";
+(node as any).hash = "7622691bee99e7d5157d6230324c3c06";
 
->>>>>>> master
 export default node;

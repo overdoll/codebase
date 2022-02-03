@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3bf483d6ac9008c6a491c5f6530b8ef7>>
+ * @generated SignedSource<<6e329a934487f828b0a64b912d4e57be>>
  * @relayHash a376f0c63f1f30bde5d56d40f0d03e3f
  * @lightSyntaxTransform
  * @nogrep
@@ -12,10 +12,10 @@
 // @relayRequestID a376f0c63f1f30bde5d56d40f0d03e3f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "TOKEN_INVALID" | "RECOVERY_CODE_INVALID" | "%future added value";
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "RECOVERY_CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput = {
-  token: string;
   recoveryCode: string;
+  token: string;
 };
 export type RecoveryCodeMutation$variables = {
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput;

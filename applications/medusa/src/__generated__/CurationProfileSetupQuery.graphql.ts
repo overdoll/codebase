@@ -1,93 +1,33 @@
+/**
+ * @generated SignedSource<<8a2d4266b124a1251dbc03bfa41c822e>>
+ * @relayHash f5f6fbb4de171a235ace1b54222505ca
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash f5f6fbb4de171a235ace1b54222505ca */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID f5f6fbb4de171a235ace1b54222505ca
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CurationProfileSetupQueryVariables = {};
-export type CurationProfileSetupQueryResponse = {
-    readonly viewer: {
-        readonly curationProfile: {
-            readonly completed: boolean;
-            readonly " $fragmentRefs": FragmentRefs<"DateOfBirthCurationStepFragment" | "AudiencesCurationStepFragment" | "CategoriesCurationStepFragment" | "CurationStepperFooterFragment">;
-        };
-    } | null;
+export type CurationProfileSetupQuery$variables = {};
+export type CurationProfileSetupQueryVariables = CurationProfileSetupQuery$variables;
+export type CurationProfileSetupQuery$data = {
+  readonly viewer: {
+    readonly curationProfile: {
+      readonly completed: boolean;
+      readonly " $fragmentSpreads": FragmentRefs<"DateOfBirthCurationStepFragment" | "AudiencesCurationStepFragment" | "CategoriesCurationStepFragment" | "CurationStepperFooterFragment">;
+    };
+  } | null;
 };
+export type CurationProfileSetupQueryResponse = CurationProfileSetupQuery$data;
 export type CurationProfileSetupQuery = {
-    readonly response: CurationProfileSetupQueryResponse;
-    readonly variables: CurationProfileSetupQueryVariables;
+  variables: CurationProfileSetupQueryVariables;
+  response: CurationProfileSetupQuery$data;
 };
-
-
-
-/*
-query CurationProfileSetupQuery {
-  viewer {
-    curationProfile {
-      completed
-      ...DateOfBirthCurationStepFragment
-      ...AudiencesCurationStepFragment
-      ...CategoriesCurationStepFragment
-      ...CurationStepperFooterFragment
-      id
-    }
-    id
-  }
-}
-
-fragment AudiencesCurationStepFragment on CurationProfile {
-  audience {
-    audiences {
-      id
-      title
-    }
-  }
-}
-
-fragment CategoriesCurationStepFragment on CurationProfile {
-  category {
-    categories {
-      id
-      title
-    }
-  }
-}
-
-fragment CurationAudienceNextButtonFragment on AudienceCurationProfile {
-  audiences {
-    id
-  }
-}
-
-fragment CurationCategoryNextButtonFragment on CategoryCurationProfile {
-  categories {
-    id
-  }
-}
-
-fragment CurationDateOfBirthNextButtonFragment on DateOfBirthCurationProfile {
-  dateOfBirth
-}
-
-fragment CurationStepperFooterFragment on CurationProfile {
-  dateOfBirth {
-    ...CurationDateOfBirthNextButtonFragment
-  }
-  audience {
-    ...CurationAudienceNextButtonFragment
-  }
-  category {
-    ...CurationCategoryNextButtonFragment
-  }
-}
-
-fragment DateOfBirthCurationStepFragment on CurationProfile {
-  dateOfBirth {
-    dateOfBirth
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -270,5 +210,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e9ddcc866716e5fcb75541e896091d9a';
+
+(node as any).hash = "e9ddcc866716e5fcb75541e896091d9a";
+
 export default node;

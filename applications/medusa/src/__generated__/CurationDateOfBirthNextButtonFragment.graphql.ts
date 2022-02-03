@@ -1,20 +1,24 @@
+/**
+ * @generated SignedSource<<215459edb8ece2675563b02c0b2a152b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CurationDateOfBirthNextButtonFragment = {
-    readonly dateOfBirth: unknown | null;
-    readonly " $refType": "CurationDateOfBirthNextButtonFragment";
+export type CurationDateOfBirthNextButtonFragment$data = {
+  readonly dateOfBirth: any | null;
+  readonly " $fragmentType": "CurationDateOfBirthNextButtonFragment";
 };
-export type CurationDateOfBirthNextButtonFragment$data = CurationDateOfBirthNextButtonFragment;
+export type CurationDateOfBirthNextButtonFragment = CurationDateOfBirthNextButtonFragment$data;
 export type CurationDateOfBirthNextButtonFragment$key = {
-    readonly " $data"?: CurationDateOfBirthNextButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"CurationDateOfBirthNextButtonFragment">;
+  readonly " $data"?: CurationDateOfBirthNextButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CurationDateOfBirthNextButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -33,5 +37,7 @@ const node: ReaderFragment = {
   "type": "DateOfBirthCurationProfile",
   "abstractKey": null
 };
-(node as any).hash = '6c414651fdc1697117a032809b3970c5';
+
+(node as any).hash = "6c414651fdc1697117a032809b3970c5";
+
 export default node;

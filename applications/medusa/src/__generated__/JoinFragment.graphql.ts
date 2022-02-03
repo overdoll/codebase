@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ab930ab3a877d696f34e291844652d2>>
+ * @generated SignedSource<<420f83b6de9a8cfb6ef8e3bedcc6b4f3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type JoinFragment$data = {
-  readonly email: string;
+  readonly email: string | null;
   readonly " $fragmentType": "JoinFragment";
 };
 export type JoinFragment = JoinFragment$data;

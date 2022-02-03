@@ -49,16 +49,20 @@ export default function RootManageClub (props: Props): JSX.Element {
   return (
     <VerticalNavigation>
       <VerticalNavigation.Content
-        title={<Trans>
-          Manage Club
-        </Trans>}
-        outsideElements={<Box h={16}>
-          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
-            <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
-              <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
-            </Suspense>
-          </QueryErrorBoundary>
-        </Box>}
+        title={
+          <Trans>
+            Manage Club
+          </Trans>
+        }
+        outsideElements={
+          <Box h={16}>
+            <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
+              <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
+                <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
+              </Suspense>
+            </QueryErrorBoundary>
+          </Box>
+        }
       >
         <VerticalNavigation.Button
           to={`${basePath}/create-post`}

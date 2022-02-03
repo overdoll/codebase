@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75635d4e4f207ab9e8d9251a6381c92a>>
+ * @generated SignedSource<<166d122d25d5ca24c1fec688d714310f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LobbyFragment$data = {
   readonly id: string;
-  readonly email: string;
+  readonly email: string | null;
   readonly " $fragmentType": "LobbyFragment";
 };
 export type LobbyFragment = LobbyFragment$data;

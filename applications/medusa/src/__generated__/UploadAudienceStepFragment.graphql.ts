@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8caacb15fe18c69a479a082ebd44b7f2>>
+ * @generated SignedSource<<5b85fcc367f716c7e4177469d4d55a51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,31 +10,17 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadAudienceStepFragment.graphql.ts
-export type UploadAudienceStepFragment = {
-    readonly audience: {
-        readonly id: string;
-        readonly title: string;
-    } | null;
-    readonly " $refType": "UploadAudienceStepFragment";
-};
-export type UploadAudienceStepFragment$data = UploadAudienceStepFragment;
-export type UploadAudienceStepFragment$key = {
-    readonly " $data"?: UploadAudienceStepFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UploadAudienceStepFragment">;
-=======
-export type AudienceFragment$data = {
+export type UploadAudienceStepFragment$data = {
   readonly audience: {
     readonly id: string;
     readonly title: string;
   } | null;
-  readonly " $fragmentType": "AudienceFragment";
+  readonly " $fragmentType": "UploadAudienceStepFragment";
 };
-export type AudienceFragment = AudienceFragment$data;
-export type AudienceFragment$key = {
-  readonly " $data"?: AudienceFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AudienceFragment">;
->>>>>>> master:applications/medusa/src/__generated__/AudienceFragment.graphql.ts
+export type UploadAudienceStepFragment = UploadAudienceStepFragment$data;
+export type UploadAudienceStepFragment$key = {
+  readonly " $data"?: UploadAudienceStepFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadAudienceStepFragment">;
 };
 
 const node: ReaderFragment = {
@@ -72,11 +58,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadAudienceStepFragment.graphql.ts
-(node as any).hash = 'dfac6fa315865e3772487bc1fceb85f6';
-=======
 
-(node as any).hash = "126deb9c50d61d0ae365103c12492081";
+(node as any).hash = "dfac6fa315865e3772487bc1fceb85f6";
 
->>>>>>> master:applications/medusa/src/__generated__/AudienceFragment.graphql.ts
 export default node;

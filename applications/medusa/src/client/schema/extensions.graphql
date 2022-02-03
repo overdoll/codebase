@@ -1,3 +1,11 @@
 extend type AuthenticationToken {
-  email: String!
+  email: String
+}
+
+type Count {
+  categories: Int!
+}
+
+extend type Query {
+  counts: Count
 }

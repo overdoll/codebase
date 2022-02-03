@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2eee371ffdbcae903ab85629f52f98d9>>
- * @relayHash f2bf5e69d2c4096d1aa9b5bb0eb3ab27
+ * @generated SignedSource<<0a0fe0238f28dc91de7fd04694cd9f21>>
+ * @relayHash 810907b28009e7b7f66ce50f85c0c657
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,102 +8,24 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorQuery.graphql.ts
-/* @relayHash 810907b28009e7b7f66ce50f85c0c657 */
-=======
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersQuery.graphql.ts
 
-// @relayRequestID f2bf5e69d2c4096d1aa9b5bb0eb3ab27
+// @relayRequestID 810907b28009e7b7f66ce50f85c0c657
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorQuery.graphql.ts
-export type UploadSearchCharactersMultiSelectorQueryVariables = {
-    name?: string | null | undefined;
-};
-export type UploadSearchCharactersMultiSelectorQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
-};
-export type UploadSearchCharactersMultiSelectorQuery = {
-    readonly response: UploadSearchCharactersMultiSelectorQueryResponse;
-    readonly variables: UploadSearchCharactersMultiSelectorQueryVariables;
-};
-
-
-
-/*
-query UploadSearchCharactersMultiSelectorQuery(
-  $name: String
-) {
-  ...UploadSearchCharactersMultiSelectorFragment_2aiVTE
-}
-
-fragment CharacterTileOverlayFragment on Character {
-  name
-  series {
-    title
-    id
-  }
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment UploadSearchCharactersMultiSelectorFragment_2aiVTE on Query {
-  characters(first: 3, name: $name) {
-    edges {
-      node {
-        id
-        name
-        ...CharacterTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
-
-=======
-export type SearchCharactersQuery$variables = {
+export type UploadSearchCharactersMultiSelectorQuery$variables = {
   name?: string | null;
 };
-export type SearchCharactersQueryVariables = SearchCharactersQuery$variables;
-export type SearchCharactersQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersFragment">;
+export type UploadSearchCharactersMultiSelectorQueryVariables = UploadSearchCharactersMultiSelectorQuery$variables;
+export type UploadSearchCharactersMultiSelectorQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
 };
-export type SearchCharactersQueryResponse = SearchCharactersQuery$data;
-export type SearchCharactersQuery = {
-  variables: SearchCharactersQueryVariables;
-  response: SearchCharactersQuery$data;
+export type UploadSearchCharactersMultiSelectorQueryResponse = UploadSearchCharactersMultiSelectorQuery$data;
+export type UploadSearchCharactersMultiSelectorQuery = {
+  variables: UploadSearchCharactersMultiSelectorQueryVariables;
+  response: UploadSearchCharactersMultiSelectorQuery$data;
 };
 
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersQuery.graphql.ts
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
@@ -321,11 +243,7 @@ return {
   }
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorQuery.graphql.ts
-(node as any).hash = '5deeba0856161292365ad950f891dcbb';
-=======
 
-(node as any).hash = "7e0729de03e5cec1277e9e9bb5555859";
+(node as any).hash = "5deeba0856161292365ad950f891dcbb";
 
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersQuery.graphql.ts
 export default node;

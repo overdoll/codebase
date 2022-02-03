@@ -1,36 +1,32 @@
+/**
+ * @generated SignedSource<<2c400e9c16c6d76d177fb23641dcb2cc>>
+ * @relayHash 878fba8266f5f67b58ddbfa3335fd6d7
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 878fba8266f5f67b58ddbfa3335fd6d7 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CurationSettingsQueryVariables = {};
-export type CurationSettingsQueryResponse = {
-    readonly viewer: {
-        readonly curationProfile: {
-            readonly id: string;
-            readonly completed: boolean;
-        };
-    } | null;
+// @relayRequestID 878fba8266f5f67b58ddbfa3335fd6d7
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type CurationSettingsQuery$variables = {};
+export type CurationSettingsQueryVariables = CurationSettingsQuery$variables;
+export type CurationSettingsQuery$data = {
+  readonly viewer: {
+    readonly curationProfile: {
+      readonly id: string;
+      readonly completed: boolean;
+    };
+  } | null;
 };
+export type CurationSettingsQueryResponse = CurationSettingsQuery$data;
 export type CurationSettingsQuery = {
-    readonly response: CurationSettingsQueryResponse;
-    readonly variables: CurationSettingsQueryVariables;
+  variables: CurationSettingsQueryVariables;
+  response: CurationSettingsQuery$data;
 };
-
-
-
-/*
-query CurationSettingsQuery {
-  viewer {
-    curationProfile {
-      id
-      completed
-    }
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -112,5 +108,7 @@ return {
   }
 };
 })();
-(node as any).hash = '9807e3b02dab84b1feb7c1513aacb9bc';
+
+(node as any).hash = "9807e3b02dab84b1feb7c1513aacb9bc";
+
 export default node;

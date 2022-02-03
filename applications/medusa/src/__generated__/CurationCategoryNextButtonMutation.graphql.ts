@@ -1,55 +1,42 @@
+/**
+ * @generated SignedSource<<5b58e034d43ee0221e5dab63029cea5b>>
+ * @relayHash 7e091e78c7282108b0e47a12adb65a08
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7e091e78c7282108b0e47a12adb65a08 */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CurationCategoryNextButtonMutationVariables = {
-    categoryIds: Array<string>;
-    skipped: boolean;
+// @relayRequestID 7e091e78c7282108b0e47a12adb65a08
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type CurationCategoryNextButtonMutation$variables = {
+  categoryIds: ReadonlyArray<string>;
+  skipped: boolean;
 };
-export type CurationCategoryNextButtonMutationResponse = {
-    readonly updateCurationProfileCategory: {
-        readonly curationProfile: {
-            readonly id: string;
-            readonly completed: boolean;
-            readonly category: {
-                readonly skipped: boolean;
-                readonly completed: boolean;
-                readonly categories: ReadonlyArray<{
-                    readonly id: string;
-                }>;
-            };
-        } | null;
+export type CurationCategoryNextButtonMutationVariables = CurationCategoryNextButtonMutation$variables;
+export type CurationCategoryNextButtonMutation$data = {
+  readonly updateCurationProfileCategory: {
+    readonly curationProfile: {
+      readonly id: string;
+      readonly completed: boolean;
+      readonly category: {
+        readonly skipped: boolean;
+        readonly completed: boolean;
+        readonly categories: ReadonlyArray<{
+          readonly id: string;
+        }>;
+      };
     } | null;
+  } | null;
 };
+export type CurationCategoryNextButtonMutationResponse = CurationCategoryNextButtonMutation$data;
 export type CurationCategoryNextButtonMutation = {
-    readonly response: CurationCategoryNextButtonMutationResponse;
-    readonly variables: CurationCategoryNextButtonMutationVariables;
+  variables: CurationCategoryNextButtonMutationVariables;
+  response: CurationCategoryNextButtonMutation$data;
 };
-
-
-
-/*
-mutation CurationCategoryNextButtonMutation(
-  $categoryIds: [ID!]!
-  $skipped: Boolean!
-) {
-  updateCurationProfileCategory(input: {categoryIds: $categoryIds, skipped: $skipped}) {
-    curationProfile {
-      id
-      completed
-      category {
-        skipped
-        completed
-        categories {
-          id
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -178,5 +165,7 @@ return {
   }
 };
 })();
-(node as any).hash = '73b54aa9bc3d9ccbcf273794f2449096';
+
+(node as any).hash = "73b54aa9bc3d9ccbcf273794f2449096";
+
 export default node;

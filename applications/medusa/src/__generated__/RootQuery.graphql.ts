@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7f0d149f3f8d6262c2b19cda66ee4ac6>>
- * @relayHash 493163bb1dd3d0832dafca60fe03c9f0
+ * @generated SignedSource<<0151810f68424387215cc8d3f22747ea>>
+ * @relayHash 6f502e2db75a94c63a502d025e203b9e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,12 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-<<<<<<< HEAD
-/* @relayHash 6f502e2db75a94c63a502d025e203b9e */
-=======
->>>>>>> master
 
-// @relayRequestID 493163bb1dd3d0832dafca60fe03c9f0
+// @relayRequestID 6f502e2db75a94c63a502d025e203b9e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,107 +29,6 @@ export type RootQuery = {
   response: RootQuery$data;
 };
 
-<<<<<<< HEAD
-
-
-/*
-query RootQuery {
-  viewer {
-    ...AccountAuthorizerFragment
-    ...UniversalNavigatorFragment
-    ...LockedAccountBannerFragment
-    id
-  }
-  language {
-    locale
-  }
-}
-
-fragment AccountAuthorizerFragment on Account {
-  lock {
-    __typename
-  }
-  isModerator
-  isStaff
-}
-
-fragment AlternativeMenuFragment on Account {
-  ...DropdownMenuButtonProfileFragment
-  ...QuickAccessButtonProfileFragment
-  ...LanguageManagerFragment
-}
-
-fragment DropdownMenuButtonProfileFragment on Account {
-  username
-  avatar {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment LanguageManagerFragment on Account {
-  language {
-    locale
-  }
-}
-
-fragment LockedAccountBannerFragment on Account {
-  lock {
-    __typename
-  }
-  ...LockedAccountModalFragment
-}
-
-fragment LockedAccountModalFragment on Account {
-  ...UnlockAccountFormFragment
-  lock {
-    expires
-  }
-}
-
-fragment QuickAccessButtonProfileFragment on Account {
-  username
-  avatar {
-    ...ResourceIconFragment
-    id
-  }
-}
-
-fragment ResourceIconFragment on Resource {
-  ...ResourceItemFragment
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment UniversalNavigatorFragment on Account {
-  ...AlternativeMenuFragment
-}
-
-fragment UnlockAccountFormFragment on Account {
-  id
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
-
-=======
->>>>>>> master
 const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
@@ -311,11 +206,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
     "id": "6f502e2db75a94c63a502d025e203b9e",
-=======
-    "id": "493163bb1dd3d0832dafca60fe03c9f0",
->>>>>>> master
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

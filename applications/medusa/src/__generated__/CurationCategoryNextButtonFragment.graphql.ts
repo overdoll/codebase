@@ -1,22 +1,26 @@
+/**
+ * @generated SignedSource<<c284eb74ba7e2d56a53998f7f2ecae8a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CurationCategoryNextButtonFragment = {
-    readonly categories: ReadonlyArray<{
-        readonly id: string;
-    }>;
-    readonly " $refType": "CurationCategoryNextButtonFragment";
+export type CurationCategoryNextButtonFragment$data = {
+  readonly categories: ReadonlyArray<{
+    readonly id: string;
+  }>;
+  readonly " $fragmentType": "CurationCategoryNextButtonFragment";
 };
-export type CurationCategoryNextButtonFragment$data = CurationCategoryNextButtonFragment;
+export type CurationCategoryNextButtonFragment = CurationCategoryNextButtonFragment$data;
 export type CurationCategoryNextButtonFragment$key = {
-    readonly " $data"?: CurationCategoryNextButtonFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"CurationCategoryNextButtonFragment">;
+  readonly " $data"?: CurationCategoryNextButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CurationCategoryNextButtonFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -46,5 +50,7 @@ const node: ReaderFragment = {
   "type": "CategoryCurationProfile",
   "abstractKey": null
 };
-(node as any).hash = '0c0d628b3427ae172b53c388f7eb5ef2';
+
+(node as any).hash = "0c0d628b3427ae172b53c388f7eb5ef2";
+
 export default node;

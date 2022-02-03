@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9dabc1569e61c19f372ee54bb94102c3>>
+ * @generated SignedSource<<858a048874bd1a501bcc1019c15a2dcb>>
  * @relayHash 0b29a28237698dac8c0dbe932f7dbadc
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 export type ClubPostsQuery$variables = {
   slug: string;
   state?: PostState | null;

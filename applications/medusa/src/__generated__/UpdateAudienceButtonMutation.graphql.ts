@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58b5b8494ea6d93cc24a31f03c83cfec>>
+ * @generated SignedSource<<77602887ffd3aa143a1f0ebe7944a5d2>>
  * @relayHash 1dd96056a5d03145570b194e50e511a0
  * @lightSyntaxTransform
  * @nogrep
@@ -13,8 +13,8 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdatePostAudienceInput = {
-  id: string;
   audienceId: string;
+  id: string;
 };
 export type UpdateAudienceButtonMutation$variables = {
   input: UpdatePostAudienceInput;

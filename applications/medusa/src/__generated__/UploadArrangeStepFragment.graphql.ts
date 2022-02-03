@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d56483e65f09667f7c480f4c33d9829>>
+ * @generated SignedSource<<bdc83af99130e0770325b027e925046e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadArrangeStepFragment.graphql.ts
-export type UploadArrangeStepFragment = {
-    readonly content: ReadonlyArray<{
-        readonly id: string;
-        readonly urls: ReadonlyArray<{
-            readonly url: string;
-            readonly mimeType: string;
-        }>;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"ArrangeUploadsFragment" | "ProcessUploadsFragment">;
-    readonly " $refType": "UploadArrangeStepFragment";
-};
-export type UploadArrangeStepFragment$data = UploadArrangeStepFragment;
-export type UploadArrangeStepFragment$key = {
-    readonly " $data"?: UploadArrangeStepFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UploadArrangeStepFragment">;
-=======
-export type ArrangeFragment$data = {
+export type UploadArrangeStepFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
     readonly urls: ReadonlyArray<{
@@ -36,13 +19,12 @@ export type ArrangeFragment$data = {
     }>;
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"ArrangeUploadsFragment" | "ProcessUploadsFragment">;
-  readonly " $fragmentType": "ArrangeFragment";
+  readonly " $fragmentType": "UploadArrangeStepFragment";
 };
-export type ArrangeFragment = ArrangeFragment$data;
-export type ArrangeFragment$key = {
-  readonly " $data"?: ArrangeFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ArrangeFragment">;
->>>>>>> master:applications/medusa/src/__generated__/ArrangeFragment.graphql.ts
+export type UploadArrangeStepFragment = UploadArrangeStepFragment$data;
+export type UploadArrangeStepFragment$key = {
+  readonly " $data"?: UploadArrangeStepFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment">;
 };
 
 const node: ReaderFragment = {
@@ -108,11 +90,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadArrangeStepFragment.graphql.ts
-(node as any).hash = 'c52a3e480ee0ab99ed3ab735ad53a5d5';
-=======
 
-(node as any).hash = "f7c9d2ccddaea75be9ba69d8d6b6363d";
+(node as any).hash = "c52a3e480ee0ab99ed3ab735ad53a5d5";
 
->>>>>>> master:applications/medusa/src/__generated__/ArrangeFragment.graphql.ts
 export default node;

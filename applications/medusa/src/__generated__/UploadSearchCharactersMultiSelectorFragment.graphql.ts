@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05e73483fa1ec9db749167f7c1079be5>>
+ * @generated SignedSource<<aaec4ef6408ebf7be4f41769134e9bd0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,25 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorFragment.graphql.ts
-export type UploadSearchCharactersMultiSelectorFragment = {
-    readonly characters: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"CharacterTileOverlayFragment">;
-            };
-        }>;
-    };
-    readonly " $refType": "UploadSearchCharactersMultiSelectorFragment";
-};
-export type UploadSearchCharactersMultiSelectorFragment$data = UploadSearchCharactersMultiSelectorFragment;
-export type UploadSearchCharactersMultiSelectorFragment$key = {
-    readonly " $data"?: UploadSearchCharactersMultiSelectorFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
-=======
-export type SearchCharactersFragment$data = {
+export type UploadSearchCharactersMultiSelectorFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -38,13 +20,12 @@ export type SearchCharactersFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "SearchCharactersFragment";
+  readonly " $fragmentType": "UploadSearchCharactersMultiSelectorFragment";
 };
-export type SearchCharactersFragment = SearchCharactersFragment$data;
-export type SearchCharactersFragment$key = {
-  readonly " $data"?: SearchCharactersFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCharactersFragment">;
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersFragment.graphql.ts
+export type UploadSearchCharactersMultiSelectorFragment = UploadSearchCharactersMultiSelectorFragment$data;
+export type UploadSearchCharactersMultiSelectorFragment$key = {
+  readonly " $data"?: UploadSearchCharactersMultiSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -89,11 +70,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorFragment.graphql.ts
-      "operation": require('./UploadSearchCharactersMultiSelectorPaginationFragment.graphql.ts')
-=======
-      "operation": require('./SearchCharactersPaginationFragment.graphql')
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersFragment.graphql.ts
+      "operation": require('./UploadSearchCharactersMultiSelectorPaginationFragment.graphql')
     }
   },
   "name": "UploadSearchCharactersMultiSelectorFragment",
@@ -200,11 +177,7 @@ return {
   "abstractKey": null
 };
 })();
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadSearchCharactersMultiSelectorFragment.graphql.ts
-(node as any).hash = 'a2d028077c4fcfd29b0f786eb066d549';
-=======
 
-(node as any).hash = "ccffac4ef48b0e0365b2f9ab9e150404";
+(node as any).hash = "a2d028077c4fcfd29b0f786eb066d549";
 
->>>>>>> master:applications/medusa/src/__generated__/SearchCharactersFragment.graphql.ts
 export default node;

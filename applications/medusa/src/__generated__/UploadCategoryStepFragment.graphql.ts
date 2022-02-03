@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b190a652b15c2e1955da76361088a85>>
+ * @generated SignedSource<<15996da991a2ab58a793bba79f61213f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,29 +10,8 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadCategoryStepFragment.graphql.ts
-export type UploadCategoryStepFragment = {
-    readonly categories: ReadonlyArray<{
-        readonly id: string;
-        readonly title: string;
-        readonly slug: string;
-        readonly thumbnail: {
-            readonly type: ResourceType;
-            readonly urls: ReadonlyArray<{
-                readonly mimeType: string;
-                readonly url: string;
-            }>;
-        } | null;
-    }>;
-    readonly " $refType": "UploadCategoryStepFragment";
-};
-export type UploadCategoryStepFragment$data = UploadCategoryStepFragment;
-export type UploadCategoryStepFragment$key = {
-    readonly " $data"?: UploadCategoryStepFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"UploadCategoryStepFragment">;
-=======
 import { FragmentRefs } from "relay-runtime";
-export type CategoryFragment$data = {
+export type UploadCategoryStepFragment$data = {
   readonly categories: ReadonlyArray<{
     readonly id: string;
     readonly title: string;
@@ -45,13 +24,12 @@ export type CategoryFragment$data = {
       }>;
     } | null;
   }>;
-  readonly " $fragmentType": "CategoryFragment";
+  readonly " $fragmentType": "UploadCategoryStepFragment";
 };
-export type CategoryFragment = CategoryFragment$data;
-export type CategoryFragment$key = {
-  readonly " $data"?: CategoryFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"CategoryFragment">;
->>>>>>> master:applications/medusa/src/__generated__/CategoryFragment.graphql.ts
+export type UploadCategoryStepFragment = UploadCategoryStepFragment$data;
+export type UploadCategoryStepFragment$key = {
+  readonly " $data"?: UploadCategoryStepFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment">;
 };
 
 const node: ReaderFragment = {
@@ -139,11 +117,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-<<<<<<< HEAD:applications/medusa/src/__generated__/UploadCategoryStepFragment.graphql.ts
-(node as any).hash = 'c4c78ea4d048c88be1864218bc854652';
-=======
 
-(node as any).hash = "c6320b23d3ae53ed890d41ef56a3d811";
+(node as any).hash = "c4c78ea4d048c88be1864218bc854652";
 
->>>>>>> master:applications/medusa/src/__generated__/CategoryFragment.graphql.ts
 export default node;

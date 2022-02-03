@@ -1,72 +1,28 @@
+/**
+ * @generated SignedSource<<02ef119071ff6934e011706a24cbca1e>>
+ * @relayHash 3acc1549259fd98c49b09fabb3890275
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 3acc1549259fd98c49b09fabb3890275 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 3acc1549259fd98c49b09fabb3890275
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CategoryMultiSelectorQueryVariables = {};
-export type CategoryMultiSelectorQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"CategoryMultiSelectorFragment">;
+export type CategoryMultiSelectorQuery$variables = {};
+export type CategoryMultiSelectorQueryVariables = CategoryMultiSelectorQuery$variables;
+export type CategoryMultiSelectorQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"CategoryMultiSelectorFragment">;
 };
+export type CategoryMultiSelectorQueryResponse = CategoryMultiSelectorQuery$data;
 export type CategoryMultiSelectorQuery = {
-    readonly response: CategoryMultiSelectorQueryResponse;
-    readonly variables: CategoryMultiSelectorQueryVariables;
+  variables: CategoryMultiSelectorQueryVariables;
+  response: CategoryMultiSelectorQuery$data;
 };
-
-
-
-/*
-query CategoryMultiSelectorQuery {
-  ...CategoryMultiSelectorFragment
-}
-
-fragment CategoryMultiSelectorFragment on Query {
-  categories(first: 5) {
-    edges {
-      node {
-        id
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -251,5 +207,7 @@ return {
   }
 };
 })();
-(node as any).hash = '610492142876739da82fde7029015a3c';
+
+(node as any).hash = "610492142876739da82fde7029015a3c";
+
 export default node;

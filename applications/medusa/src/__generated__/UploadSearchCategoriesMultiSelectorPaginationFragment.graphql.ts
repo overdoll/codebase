@@ -1,80 +1,32 @@
+/**
+ * @generated SignedSource<<d056a3d80b9ae6b7fda99d552958ccfb>>
+ * @relayHash aca602cc48c1f76ddf7766ec0cc0d82f
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash aca602cc48c1f76ddf7766ec0cc0d82f */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID aca602cc48c1f76ddf7766ec0cc0d82f
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCategoriesMultiSelectorPaginationFragmentVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
-    title?: string | null | undefined;
+export type UploadSearchCategoriesMultiSelectorPaginationFragment$variables = {
+  after?: string | null;
+  first?: number | null;
+  title?: string | null;
 };
-export type UploadSearchCategoriesMultiSelectorPaginationFragmentResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
+export type UploadSearchCategoriesMultiSelectorPaginationFragmentVariables = UploadSearchCategoriesMultiSelectorPaginationFragment$variables;
+export type UploadSearchCategoriesMultiSelectorPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
 };
+export type UploadSearchCategoriesMultiSelectorPaginationFragmentResponse = UploadSearchCategoriesMultiSelectorPaginationFragment$data;
 export type UploadSearchCategoriesMultiSelectorPaginationFragment = {
-    readonly response: UploadSearchCategoriesMultiSelectorPaginationFragmentResponse;
-    readonly variables: UploadSearchCategoriesMultiSelectorPaginationFragmentVariables;
+  variables: UploadSearchCategoriesMultiSelectorPaginationFragmentVariables;
+  response: UploadSearchCategoriesMultiSelectorPaginationFragment$data;
 };
-
-
-
-/*
-query UploadSearchCategoriesMultiSelectorPaginationFragment(
-  $after: String
-  $first: Int = 5
-  $title: String
-) {
-  ...UploadSearchCategoriesMultiSelectorFragment_2PG6LC
-}
-
-fragment CategoryTileOverlayFragment on Category {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment UploadSearchCategoriesMultiSelectorFragment_2PG6LC on Query {
-  categories(first: $first, after: $after, title: $title) {
-    edges {
-      node {
-        id
-        title
-        ...CategoryTileOverlayFragment
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -286,5 +238,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'd1e1166386f5f63bb0495e9a00f551d5';
+
+(node as any).hash = "d1e1166386f5f63bb0495e9a00f551d5";
+
 export default node;

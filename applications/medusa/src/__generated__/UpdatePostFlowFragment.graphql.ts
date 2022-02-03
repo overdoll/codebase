@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d6f62b690350ec4a275eb6c30c2440ce>>
+ * @generated SignedSource<<9ba48cac1ba8154b2cf2b4af8b2e8922>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,15 +10,9 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD
-export type UpdatePostFlowFragment = {
-    readonly " $fragmentRefs": FragmentRefs<"UploadFlowHeaderFragment" | "UploadFlowFooterFragment" | "UploadCategoryStepFragment" | "UploadAudienceStepFragment" | "UploadReviewStepFragment" | "UploadCharacterStepFragment" | "UploadArrangeStepFragment">;
-    readonly " $refType": "UpdatePostFlowFragment";
-=======
 export type UpdatePostFlowFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"FlowStepsFragment" | "FlowFooterFragment" | "FlowHeaderFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadFlowHeaderFragment" | "UploadFlowFooterFragment" | "UploadCategoryStepFragment" | "UploadAudienceStepFragment" | "UploadReviewStepFragment" | "UploadCharacterStepFragment" | "UploadArrangeStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
->>>>>>> master
 };
 export type UpdatePostFlowFragment = UpdatePostFlowFragment$data;
 export type UpdatePostFlowFragment$key = {
@@ -71,11 +65,7 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
-<<<<<<< HEAD
-(node as any).hash = '83f6d344dcf43cf03a9ae5ff9e5caaaa';
-=======
 
-(node as any).hash = "9a9942426050ce53867f5f2b7013ea2b";
+(node as any).hash = "83f6d344dcf43cf03a9ae5ff9e5caaaa";
 
->>>>>>> master
 export default node;

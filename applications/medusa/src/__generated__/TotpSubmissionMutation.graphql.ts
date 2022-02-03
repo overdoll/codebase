@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85a993b42655803f6762bc43fbcfc509>>
+ * @generated SignedSource<<07b32bc2f5c1c3bc3fceb29379b742a7>>
  * @relayHash 58034fa7073cc309429438b94b4c630d
  * @lightSyntaxTransform
  * @nogrep
@@ -12,10 +12,10 @@
 // @relayRequestID 58034fa7073cc309429438b94b4c630d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "TOKEN_INVALID" | "CODE_INVALID" | "%future added value";
+export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput = {
-  token: string;
   code: string;
+  token: string;
 };
 export type TotpSubmissionMutation$variables = {
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput;

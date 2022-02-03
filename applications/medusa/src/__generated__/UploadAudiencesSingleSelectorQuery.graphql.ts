@@ -1,70 +1,36 @@
+/**
+ * @generated SignedSource<<2b595a258933233f0dc1348f0e685505>>
+ * @relayHash 4a6db7ae5ca758e214c59dc452d550d4
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4a6db7ae5ca758e214c59dc452d550d4 */
 
-import { ConcreteRequest } from "relay-runtime";
+// @relayRequestID 4a6db7ae5ca758e214c59dc452d550d4
+
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadAudiencesSingleSelectorQueryVariables = {};
-export type UploadAudiencesSingleSelectorQueryResponse = {
-    readonly audiences: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly title: string;
-                readonly " $fragmentRefs": FragmentRefs<"AudienceTileOverlayFragment">;
-            };
-        }>;
-    };
+export type UploadAudiencesSingleSelectorQuery$variables = {};
+export type UploadAudiencesSingleSelectorQueryVariables = UploadAudiencesSingleSelectorQuery$variables;
+export type UploadAudiencesSingleSelectorQuery$data = {
+  readonly audiences: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly title: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AudienceTileOverlayFragment">;
+      };
+    }>;
+  };
 };
+export type UploadAudiencesSingleSelectorQueryResponse = UploadAudiencesSingleSelectorQuery$data;
 export type UploadAudiencesSingleSelectorQuery = {
-    readonly response: UploadAudiencesSingleSelectorQueryResponse;
-    readonly variables: UploadAudiencesSingleSelectorQueryVariables;
+  variables: UploadAudiencesSingleSelectorQueryVariables;
+  response: UploadAudiencesSingleSelectorQuery$data;
 };
-
-
-
-/*
-query UploadAudiencesSingleSelectorQuery {
-  audiences {
-    edges {
-      node {
-        id
-        title
-        ...AudienceTileOverlayFragment
-      }
-    }
-  }
-}
-
-fragment AudienceTileOverlayFragment on Audience {
-  title
-  thumbnail {
-    ...ResourceItemFragment
-    id
-  }
-}
-
-fragment ImageSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-
-fragment ResourceItemFragment on Resource {
-  type
-  ...ImageSnippetFragment
-  ...VideoSnippetFragment
-}
-
-fragment VideoSnippetFragment on Resource {
-  urls {
-    url
-    mimeType
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -228,5 +194,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a1b026bb07acabe80f003f9e8aa859af';
+
+(node as any).hash = "a1b026bb07acabe80f003f9e8aa859af";
+
 export default node;

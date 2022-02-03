@@ -1,55 +1,42 @@
+/**
+ * @generated SignedSource<<0b68311e800837ccd3bf8cf78b7f2e45>>
+ * @relayHash cf774420a10bf5d7b6ab60ad70f0ebcd
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash cf774420a10bf5d7b6ab60ad70f0ebcd */
 
-import { ConcreteRequest } from "relay-runtime";
-export type CurationAudienceNextButtonMutationVariables = {
-    audienceIds: Array<string>;
-    skipped: boolean;
+// @relayRequestID cf774420a10bf5d7b6ab60ad70f0ebcd
+
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type CurationAudienceNextButtonMutation$variables = {
+  audienceIds: ReadonlyArray<string>;
+  skipped: boolean;
 };
-export type CurationAudienceNextButtonMutationResponse = {
-    readonly updateCurationProfileAudience: {
-        readonly curationProfile: {
-            readonly id: string;
-            readonly completed: boolean;
-            readonly audience: {
-                readonly skipped: boolean;
-                readonly completed: boolean;
-                readonly audiences: ReadonlyArray<{
-                    readonly id: string;
-                }>;
-            };
-        } | null;
+export type CurationAudienceNextButtonMutationVariables = CurationAudienceNextButtonMutation$variables;
+export type CurationAudienceNextButtonMutation$data = {
+  readonly updateCurationProfileAudience: {
+    readonly curationProfile: {
+      readonly id: string;
+      readonly completed: boolean;
+      readonly audience: {
+        readonly skipped: boolean;
+        readonly completed: boolean;
+        readonly audiences: ReadonlyArray<{
+          readonly id: string;
+        }>;
+      };
     } | null;
+  } | null;
 };
+export type CurationAudienceNextButtonMutationResponse = CurationAudienceNextButtonMutation$data;
 export type CurationAudienceNextButtonMutation = {
-    readonly response: CurationAudienceNextButtonMutationResponse;
-    readonly variables: CurationAudienceNextButtonMutationVariables;
+  variables: CurationAudienceNextButtonMutationVariables;
+  response: CurationAudienceNextButtonMutation$data;
 };
-
-
-
-/*
-mutation CurationAudienceNextButtonMutation(
-  $audienceIds: [ID!]!
-  $skipped: Boolean!
-) {
-  updateCurationProfileAudience(input: {audienceIds: $audienceIds, skipped: $skipped}) {
-    curationProfile {
-      id
-      completed
-      audience {
-        skipped
-        completed
-        audiences {
-          id
-        }
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -178,5 +165,7 @@ return {
   }
 };
 })();
-(node as any).hash = '8d26970b91d67f351c4b21d9e3dc61b0';
+
+(node as any).hash = "8d26970b91d67f351c4b21d9e3dc61b0";
+
 export default node;

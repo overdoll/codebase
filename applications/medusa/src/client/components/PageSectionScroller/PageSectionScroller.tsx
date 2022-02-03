@@ -20,7 +20,7 @@ export default function PageSectionScroller ({
   childrenTitle,
   infiniteScrollTitle,
   reversed = false,
-  watchChange = null,
+  watchChange = null
 }: Props): JSX.Element {
   const [swiper, setSwiper] = useState<SwiperCore | null>(null)
 
@@ -60,14 +60,18 @@ export default function PageSectionScroller ({
           >
             <TabList>
               {reversed
-                ? <>
-                  <ScrollTab />
-                  <ChildTab />
-                </>
-                : <>
-                  <ChildTab />
-                  <ScrollTab />
-                </>}
+                ? (
+                  <>
+                    <ScrollTab />
+                    <ChildTab />
+                  </>
+                  )
+                : (
+                  <>
+                    <ChildTab />
+                    <ScrollTab />
+                  </>
+                  )}
             </TabList>
           </Tabs>
         </Box>
@@ -87,7 +91,7 @@ export default function PageSectionScroller ({
           onSwiper={(swiper) => setSwiper(swiper)}
           onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
           style={{
-            height: '100%',
+            height: '100%'
           }}
           spaceBetween={20}
           simulateTouch={false}
@@ -96,27 +100,30 @@ export default function PageSectionScroller ({
           resistanceRatio={0}
         >
           {reversed
-            ? <>
-              <SwiperSlide>
-                {pageInfiniteScroll}
-              </SwiperSlide>
-              <SwiperSlide>
-                <PageSectionChildrenWrapper>
-                  {children}
-                </PageSectionChildrenWrapper>
-              </SwiperSlide>
-
-            </>
-            : <>
-              <SwiperSlide>
-                <PageSectionChildrenWrapper>
-                  {children}
-                </PageSectionChildrenWrapper>
-              </SwiperSlide>
-              <SwiperSlide>
-                {pageInfiniteScroll}
-              </SwiperSlide>
-            </>}
+            ? (
+              <>
+                <SwiperSlide>
+                  {pageInfiniteScroll}
+                </SwiperSlide>
+                <SwiperSlide>
+                  <PageSectionChildrenWrapper>
+                    {children}
+                  </PageSectionChildrenWrapper>
+                </SwiperSlide>
+              </>
+              )
+            : (
+              <>
+                <SwiperSlide>
+                  <PageSectionChildrenWrapper>
+                    {children}
+                  </PageSectionChildrenWrapper>
+                </SwiperSlide>
+                <SwiperSlide>
+                  {pageInfiniteScroll}
+                </SwiperSlide>
+              </>
+              )}
         </Swiper>
       </Box>
       <SwiperControl />

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28cd82f5b3f4e2a8f3007a9c49b9287a>>
+ * @generated SignedSource<<d7b9347c710067e34fa648f002636903>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,21 +10,12 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-<<<<<<< HEAD
-export type LockedAccountBannerFragment = {
-    readonly lock: {
-        readonly __typename: string;
-    } | null;
-    readonly " $fragmentRefs": FragmentRefs<"LockedAccountModalFragment">;
-    readonly " $refType": "LockedAccountBannerFragment";
-=======
 export type LockedAccountBannerFragment$data = {
   readonly lock: {
     readonly __typename: string;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"LockedAccountModalFragment">;
   readonly " $fragmentType": "LockedAccountBannerFragment";
->>>>>>> master
 };
 export type LockedAccountBannerFragment = LockedAccountBannerFragment$data;
 export type LockedAccountBannerFragment$key = {
@@ -60,34 +51,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "LockedAccountModalFragment"
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "AccountLock",
-      "kind": "LinkedField",
-      "name": "lock",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-<<<<<<< HEAD
-(node as any).hash = '4d5e588a2b0a4f17f88bc65c1b5e40b0';
-=======
 
-(node as any).hash = "3a9ad104398bc5c29b6282ac5ab5e79e";
+(node as any).hash = "8d8c401cccef1b27b2224477f620e7fe";
 
->>>>>>> master
 export default node;
