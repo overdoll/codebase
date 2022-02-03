@@ -25,15 +25,7 @@ _SRC = glob(
     "locales.config.js",
 ]
 
-_RUNTIME_DEPS = [
-    "@npm//react",
-    "@npm//react-dom",
-    "@npm//react-relay",
-    "@npm//relay-runtime",
-    "@npm//webpack",
-    "@npm//express",
-    "@npm//webpack-dev-middleware",
-    "@npm//webpack-hot-middleware",
+_BUILD_DEPS = [
     "@npm//@babel/polyfill",
     "@npm//babel-loader",
     "@npm//@babel/node",
@@ -47,6 +39,9 @@ _RUNTIME_DEPS = [
     "@npm//@babel/plugin-transform-modules-commonjs",
     "@npm//@babel/plugin-proposal-optional-chaining",
     "@npm//@babel/plugin-proposal-nullish-coalescing-operator",
+    "@npm//webpack-dev-middleware",
+    "@npm//webpack-hot-middleware",
+    "@npm//webpack",
     "@npm//css-loader",
     "@npm//dotenv-webpack",
     "@npm//html-loader",
@@ -61,12 +56,28 @@ _RUNTIME_DEPS = [
     "@npm//@babel/plugin-transform-react-jsx",
     "@npm//razzle",
     "@npm//@lingui/cli",
+    "@npm//@loadable/webpack-plugin",
+    "@npm//@loadable/babel-plugin",
+    "@npm//webpack-bundle-analyzer",
+    "@npm//babel-plugin-istanbul",
+    "@npm//babel-runtime",
+    "@npm//@babel/preset-typescript",
+    "@npm//babel-plugin-macros",
+    "@npm//@lingui/babel-preset-react",
+    "@npm//@lingui/macro",
+    "@npm//@svgr/webpack",
+]
+
+_RUNTIME_DEPS = [
+    "@npm//react",
+    "@npm//react-dom",
+    "@npm//react-relay",
+    "@npm//relay-runtime",
+    "@npm//express",
     "@npm//react-ssr-prepass",
     "@npm//axios",
     "@npm//serialize-javascript",
     "@npm//@loadable/server",
-    "@npm//@loadable/webpack-plugin",
-    "@npm//@loadable/babel-plugin",
     "@npm//@loadable/component",
     "@npm//helmet",
     "@npm//cookie-parser",
@@ -85,12 +96,9 @@ _RUNTIME_DEPS = [
     "@npm//react-beautiful-dnd",
     "@npm//use-query-params",
     "@npm//query-string",
-    "@npm//webpack-bundle-analyzer",
-    "@npm//babel-plugin-istanbul",
     "@npm//@chakra-ui/react",
     "@npm//@emotion/styled",
     "@npm//framer-motion",
-    "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
     "@npm//redis",
     "@npm//express-session",
@@ -109,21 +117,15 @@ _RUNTIME_DEPS = [
     "@npm//@casl/react",
     "@npm//apollo-server",
     "@npm//date-fns",
-    "@npm//babel-runtime",
     "@npm//js-file-download",
     "@npm//react-cookie",
     "@npm//universal-cookie",
-    "@npm//@babel/preset-typescript",
-    "@npm//babel-plugin-macros",
-    "@npm//@lingui/babel-preset-react",
-    "@npm//@lingui/macro",
     "@npm//path-to-regexp",
     "@npm//history",
     "@npm//@lingui/react",
     "@npm//graphql-playground-html",
     "@npm//url-slug",
     "@npm//usehooks-ts",
-    "@npm//@svgr/webpack",
 ]
 
 TEST_DEPS = [
@@ -136,7 +138,7 @@ TEST_DEPS = [
         ".*",
     ],
     exclude = _EXCLUDE,
-) + _RUNTIME_DEPS + [
+) + _BUILD_DEPS + _RUNTIME_DEPS + [
     "@npm//ts-jest",
     "@npm//@testing-library/react",
     "@npm//babel-jest",
@@ -146,18 +148,6 @@ TEST_DEPS = [
     "@npm//fake-indexeddb",
     "@npm//@testing-library/user-event",
     "@npm//identity-obj-proxy",
-]
-
-_SERVER_DEPS = [
-    "@npm//express",
-    "@npm//cookie-parser",
-    "@npm//csurf",
-    "@npm//express-handlebars",
-    "@npm//express-session",
-    "@npm//helmet",
-    "@npm//universal-cookie-express",
-    "@npm//@apollo/gateway",
-    "@npm//apollo-server"
 ]
 
 filegroup(
@@ -204,7 +194,7 @@ razzle(
     data = [
         "copy_static_files",
         "chdir.js",
-    ] + _RUNTIME_DEPS,
+    ] + _RUNTIME_DEPS + _BUILD_DEPS,
 )
 
 nodejs_binary(
@@ -215,7 +205,7 @@ nodejs_binary(
     ] + glob([
         "src/server/views/**",
         "public/**/*",
-    ]) + _SERVER_DEPS,
+    ]) + _RUNTIME_DEPS,
     entry_point = "build/server.js",
     templated_args = [
         "--bazel_patch_module_resolver",
