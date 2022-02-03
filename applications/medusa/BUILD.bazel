@@ -109,6 +109,7 @@ _RUNTIME_DEPS = [
     "@npm//@casl/react",
     "@npm//apollo-server",
     "@npm//date-fns",
+    "@npm//babel-runtime",
     "@npm//js-file-download",
     "@npm//react-cookie",
     "@npm//universal-cookie",
