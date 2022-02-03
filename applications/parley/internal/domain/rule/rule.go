@@ -73,7 +73,7 @@ func (m *Rule) Title() *localization.Translation {
 }
 
 func (m *Rule) Description() *localization.Translation {
-	return m.title
+	return m.description
 }
 
 func (m *Rule) Deprecated() bool {
