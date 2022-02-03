@@ -148,7 +148,17 @@ TEST_DEPS = [
     "@npm//identity-obj-proxy",
 ]
 
-_SERVER_DEPS = []
+_SERVER_DEPS = [
+    "@npm//express",
+    "@npm//cookie-parser",
+    "@npm//csurf",
+    "@npm//express-handlebars",
+    "@npm//express-session",
+    "@npm//helmet",
+    "@npm//universal-cookie-express",
+    "@npm//@apollo/gateway",
+    "@npm//apollo-server"
+]
 
 filegroup(
     name = "packages",
@@ -208,6 +218,7 @@ nodejs_binary(
     ]) + _SERVER_DEPS,
     entry_point = "build/server.js",
     templated_args = [
+        "--bazel_patch_module_resolver",
         "--node_options=--require=./$(rootpath chdir.js)",
     ],
 )
@@ -216,9 +227,11 @@ nodejs_image(
     name = "medusa-production-image",
     binary = ":medusa-production",
     env = {
-        "NODE_ENV": "production",
-        "PORT": "8080",
+        "NODE_ENV": "production"
     },
+    templated_args = [
+        "--bazel_patch_module_resolver",
+    ],
 )
 
 container_push(
