@@ -187,7 +187,7 @@ razzle(
         "build/server.js",
     ],
     args = [
-        "--node_options=--require=./$(location chdir.js),--max_old_space_size=8096",
+        "--node_options=--require=./$(location chdir.js) --max_old_space_size=8096",
         "build",
         "--noninteractive",
     ],
