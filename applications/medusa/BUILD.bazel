@@ -94,7 +94,6 @@ _RUNTIME_DEPS = [
     "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
     "@npm//redis",
-    "@npm//relay-compiler-plus",
     "@npm//express-session",
     "@npm//connect-redis",
     "@npm//apollo-server-express",
