@@ -26,12 +26,18 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		return nil
 	}
 
-	return &Account{
-		ID:        relay.NewID(Account{}, result.ID()),
-		Reference: result.ID(),
-		Avatar: &Resource{
+	var accountAvatar *Resource
+
+	if result.AvatarResourceId() != "" {
+		accountAvatar = &Resource{
 			ID: relay.NewID(Resource{}, result.ID(), result.AvatarResourceId()),
-		},
+		}
+	}
+
+	return &Account{
+		ID:                      relay.NewID(Account{}, result.ID()),
+		Reference:               result.ID(),
+		Avatar:                  accountAvatar,
 		Username:                result.Username(),
 		Language:                MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:                 result.IsStaff(),

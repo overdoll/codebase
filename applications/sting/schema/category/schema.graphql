@@ -43,7 +43,7 @@ enum CategoriesSort {
   POPULAR
 }
 
-extend type Query {
+type Query {
   """Search all categories."""
   categories(
     """Returns the elements in the list that come after the specified cursor."""
@@ -136,7 +136,7 @@ type UpdateCategoryThumbnailPayload {
   category: Category
 }
 
-extend type Mutation {
+type Mutation {
   """
   Create a new category
   """

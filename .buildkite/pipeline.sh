@@ -8,4 +8,6 @@ if ! python -c "import yaml" &> /dev/null; then
     apt install python3-yaml
 fi
 
+apt install ffmpeg
+
 python3 ./.buildkite/lib/main.py "$@"
