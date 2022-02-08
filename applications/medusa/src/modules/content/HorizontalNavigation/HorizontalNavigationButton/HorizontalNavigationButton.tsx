@@ -56,14 +56,17 @@ export default function HorizontalNavigationButton ({
     >
       {({
         isActiveBasePath,
-        isActive
+        isActive,
+        isPending
       }) => {
         const determineActive = exact ? isActive : isActiveBasePath
         return (
           <HorizontalNavigationButtonBody
+            isPending={isPending}
             isActive={determineActive}
             {...ButtonProps}
-          >{children}
+          >
+            {children}
           </HorizontalNavigationButtonBody>
         )
       }}

@@ -60,8 +60,8 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
       <RenderOnMobile>
         <Flex direction='column' align='center'>
           <ResourceIcon
-            w='34px'
-            h='34px'
+            w={8}
+            h={8}
             query={data?.avatar}
             mb={2}
           />

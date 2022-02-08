@@ -1,8 +1,14 @@
 import { useRoutingContext } from './RoutingContext'
-import { ReactNode, useCallback } from 'react'
+import { useCallback, useTransition } from 'react'
+import { MaybeRenderProp } from '@//:types/components'
+import { runIfFunction } from '../support'
+
+export interface ChildrenCallableLink {
+  isPending: boolean
+}
 
 interface Props {
-  children: ReactNode
+  children?: MaybeRenderProp<ChildrenCallableLink>
   disabled?: boolean
   to: string
 }
@@ -18,11 +24,18 @@ export default function Link ({
 }: Props): JSX.Element {
   const router = useRoutingContext()
 
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 10000
+  })
+
   // When the user clicks, change route
   const changeRoute = useCallback(
     event => {
-      event.preventDefault()
-      router.history.push(to)
+      startTransition(() => {
+        event.preventDefault()
+        router.history.push(to)
+      })
     },
     [to, router]
   )
@@ -56,7 +69,7 @@ export default function Link ({
       onMouseEnter={preloadRouteCode}
       onMouseDown={preloadRoute}
     >
-      {children}
+      {runIfFunction(children, { isPending })}
     </a>
   )
 }

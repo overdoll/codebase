@@ -4,6 +4,8 @@ import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
 import { defineMessage } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { MaybeRenderProp } from '@//:types/components'
+import { runIfFunction } from '../../../../support'
 
 interface ChildrenCallable {
   currentTitle: ReactNode
@@ -11,7 +13,7 @@ interface ChildrenCallable {
 }
 
 interface Props {
-  children?: (ChildrenCallable: ChildrenCallable) => ReactNode | null
+  children?: MaybeRenderProp<ChildrenCallable>
 }
 
 export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
@@ -63,7 +65,7 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
 
   return (
     <Flex>
-      {children?.({
+      {runIfFunction(children, {
         currentTitle: title,
         currentIcon: icon
       })}

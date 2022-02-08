@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, Spinner } from '@chakra-ui/react'
 import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox } from '../../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
@@ -12,6 +12,7 @@ interface Props {
   colorScheme?: string
   color?: string
   children?: ReactNode
+  isPending?: boolean | undefined
 }
 
 export default function HorizontalNavigationDropdownMenuButtonBody ({
@@ -21,8 +22,9 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
   color,
   label,
   isActive,
-  isDisabled,
-  onClick
+  isDisabled = false,
+  onClick,
+  isPending
 }: Props): JSX.Element {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 
@@ -45,6 +47,8 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
   const IconComponent = (): JSX.Element => {
     if (icon == null) return <></>
 
+    const fill = (color ?? (isActive ? 'gray.00' : 'gray.100'))
+
     return (
       <Flex
         borderRadius='md'
@@ -60,21 +64,29 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
         }}
         bg={isActive ? colorPalette : 'gray.500'}
       >
-        <Icon
-          icon={icon}
-          w='26px'
-          h='26px'
-          p={1}
-          fill={(color ?? (isActive ? 'gray.00' : 'gray.100'))}
-        />
+        {isPending === true
+          ? <Spinner
+              m={1}
+              w={4}
+              h={4}
+              color={fill}
+            />
+          : <Icon
+              icon={icon}
+              w={6}
+              h={6}
+              p={1}
+              fill={fill}
+            />}
       </Flex>
     )
   }
 
   return (
     <ClickableBox
+      ignoreTransition
       onClick={onClick}
-      isDisabled={isDisabled}
+      isDisabled={isDisabled || isPending}
       borderRadius='md'
       bg={isActive ? 'gray.900' : 'gray.800'}
       p={2}

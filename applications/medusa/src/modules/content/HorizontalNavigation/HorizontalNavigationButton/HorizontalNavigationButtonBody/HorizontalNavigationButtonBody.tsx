@@ -12,6 +12,7 @@ interface Props extends HTMLChakraProps<any> {
   children?: ReactNode
   isActive?: boolean
   as?: any
+  isPending?: boolean | undefined
 }
 
 export default function HorizontalNavigationButtonBody ({
@@ -21,7 +22,8 @@ export default function HorizontalNavigationButtonBody ({
   children,
   colorScheme = 'gray',
   isActive = false,
-  as
+  as,
+  isPending
 }: Props): JSX.Element {
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
@@ -36,7 +38,8 @@ export default function HorizontalNavigationButtonBody ({
       base: '58px',
       md: '48px'
     },
-    onClick: onClick
+    onClick: onClick,
+    isLoading: isPending
   }
 
   const ButtonWrapper = ({ children }: { children: ReactNode }): JSX.Element => {

@@ -77,9 +77,11 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
       {data.members.edges.map((item, index) =>
         <GridTile key={index}>
           <Link to={`/a/${item.node.account.username as string}`}>
-            <ClickableTile>
-              <AccountTileOverlay query={item.node.account} />
-            </ClickableTile>
+            {({ isPending }) => (
+              <ClickableTile isPending={isPending}>
+                <AccountTileOverlay query={item.node.account} />
+              </ClickableTile>
+            )}
           </Link>
         </GridTile>
       )}

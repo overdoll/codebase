@@ -5,6 +5,7 @@ import useSSRDisable from '../../hooks/useSSRDisable'
 interface Props extends ButtonProps {
   children?: ReactNode
   forwardRef?: ForwardedRef<any>
+  ignoreTransition?: boolean
 }
 
 const Button = forwardRef<any, Props>(({
@@ -13,6 +14,7 @@ const Button = forwardRef<any, Props>(({
   isDisabled,
   isLoading,
   onClick,
+  ignoreTransition = false,
   ...rest
 }: Props, forwardRef) => {
   // @ts-expect-error
@@ -21,6 +23,10 @@ const Button = forwardRef<any, Props>(({
   })
 
   const handleClick = (e): void => {
+    if (ignoreTransition) {
+      onClick?.(e)
+      return
+    }
     startTransition(() => {
       onClick?.(e)
     })

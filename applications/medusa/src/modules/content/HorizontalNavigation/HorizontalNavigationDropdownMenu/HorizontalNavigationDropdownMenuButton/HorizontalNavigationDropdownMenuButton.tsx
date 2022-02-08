@@ -59,8 +59,12 @@ export default function HorizontalNavigationDropdownMenuButton ({
 
   return (
     <NavLink to={to}>
-      {({ isActiveBasePath }) => (
+      {({
+        isActiveBasePath,
+        isPending
+      }) => (
         <HorizontalNavigationDropdownMenuButtonBody
+          isPending={isPending}
           isActive={isActiveBasePath}
           {...ButtonProps}
         >

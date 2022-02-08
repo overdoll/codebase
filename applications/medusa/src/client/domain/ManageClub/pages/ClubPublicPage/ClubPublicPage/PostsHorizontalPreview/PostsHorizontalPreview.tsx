@@ -56,9 +56,11 @@ export default function PostsHorizontalPreview ({
             <GridWrap>
               <GridTile m={1}>
                 <Link to={`/p/${item.node.reference}`}>
-                  <ClickableTile>
-                    <PostPreviewContent query={item.node} />
-                  </ClickableTile>
+                  {({ isPending }) => (
+                    <ClickableTile isPending={isPending}>
+                      <PostPreviewContent query={item.node} />
+                    </ClickableTile>
+                  )}
                 </Link>
               </GridTile>
             </GridWrap>
@@ -67,15 +69,17 @@ export default function PostsHorizontalPreview ({
           <GridWrap>
             <GridTile m={1}>
               <Link to={to}>
-                <ClickableTile>
-                  <Flex w='100%' align='center' justify='center'>
-                    <Heading fontSize='lg' color='gray.00'>
-                      <Trans>
-                        See All
-                      </Trans>
-                    </Heading>
-                  </Flex>
-                </ClickableTile>
+                {({ isPending }) => (
+                  <ClickableTile isPending={isPending}>
+                    <Flex w='100%' align='center' justify='center'>
+                      <Heading fontSize='lg' color='gray.00'>
+                        <Trans>
+                          See All
+                        </Trans>
+                      </Heading>
+                    </Flex>
+                  </ClickableTile>
+                )}
               </Link>
             </GridTile>
           </GridWrap>

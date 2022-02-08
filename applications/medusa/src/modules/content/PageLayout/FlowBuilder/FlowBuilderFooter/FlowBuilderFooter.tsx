@@ -1,8 +1,10 @@
 import { Flex } from '@chakra-ui/react'
-import { ReactNode, useContext } from 'react'
+import { useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import FlowBuilderPreviousButton from './FlowBuilderPreviousButton/FlowBuilderPreviousButton'
 import FlowBuilderNextButton from './FlowBuilderNextButton/FlowBuilderNextButton'
+import { MaybeRenderProp } from '@//:types/components'
+import { runIfFunction } from '../../../../support'
 
 interface ChildrenCallable {
   currentStep: string
@@ -13,7 +15,7 @@ interface ChildrenCallable {
 }
 
 interface Props {
-  children?: (ChildrenCallable: ChildrenCallable) => ReactNode | null
+  children?: MaybeRenderProp<ChildrenCallable>
 }
 
 export default function FlowBuilderFooter ({ children }: Props): JSX.Element {
@@ -57,7 +59,7 @@ export default function FlowBuilderFooter ({ children }: Props): JSX.Element {
 
   return (
     <Flex>
-      {children?.({
+      {runIfFunction(children, {
         currentStep: currentStep,
         nextStep: nextStep,
         previousStep: previousStep,

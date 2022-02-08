@@ -5,7 +5,7 @@ import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../..
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
-import { useHistory } from '@//:modules/routing'
+import { Link, useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
@@ -92,31 +92,29 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           })
         }
 
-        const onClick = (): void => {
-          switch (item.node.state) {
-            case 'DRAFT':
-              history.push(`${draftPostPath()}?post=${item.node.reference as string}`)
-              return
-            case 'PUBLISHED':
-              history.push(`/p/${item.node.reference as string}`)
-          }
-        }
-
         switch (item.node.state) {
           case 'DRAFT':
             return (
               <GridTile key={index}>
-                <ClickableTile onClick={onClick}>
-                  <PostPreviewContent query={item.node} />
-                </ClickableTile>
+                <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
+                  {({ isPending }) => (
+                    <ClickableTile isPending={isPending}>
+                      <PostPreviewContent query={item.node} />
+                    </ClickableTile>
+                  )}
+                </Link>
               </GridTile>
             )
           case 'PUBLISHED':
             return (
               <GridTile key={index}>
-                <ClickableTile onClick={onClick}>
-                  <PostPreviewContent query={item.node} />
-                </ClickableTile>
+                <Link to={`/p/${item.node.reference as string}`}>
+                  {({ isPending }) => (
+                    <ClickableTile isPending={isPending}>
+                      <PostPreviewContent query={item.node} />
+                    </ClickableTile>
+                  )}
+                </Link>
               </GridTile>
             )
           default:

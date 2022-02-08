@@ -62,7 +62,7 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
 
   if (queryData?.viewer !== null && queryData?.viewer?.clubsCount <= 1) {
     return (
-      <Flex h='100%' p={2} borderRadius='md' bg='gray.900' px={2} align='center' w='100%' justify='space-between'>
+      <Flex h='100%' p={2} borderRadius='md' bg='gray.900' px={3} align='center' w='100%' justify='space-between'>
         <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
       </Flex>
     )
