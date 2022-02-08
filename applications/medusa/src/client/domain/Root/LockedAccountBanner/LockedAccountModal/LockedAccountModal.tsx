@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -87,7 +88,10 @@ export default function LockedAccountModal ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalCloseButton />
+        <ModalCloseButton
+          size='lg'
+          as={CloseButton}
+        />
         <ModalBody>
           <Stack m={5} spacing={4}>
             <Heading

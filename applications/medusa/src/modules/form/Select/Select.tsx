@@ -28,7 +28,7 @@ export default function Select ({
     <ChakraSelect
       {...rest}
       icon={isPending
-        ? <Spinner />
+        ? <Spinner m={1} />
         : <Icon icon={ArrowButtonDown} fill='inherit' p={1} />}
       onChange={onStartChange}
       isDisabled={isPending}

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useTransition } from 'react'
 import { Box } from '@chakra-ui/react'
 import ClickableTile from '../ClickableTile/ClickableTile'
 import { SingleSelectedValue, SingleSelectedValueFunction } from '../../hooks/useSingleSelector'
@@ -16,8 +16,15 @@ export default function SingleSelector ({
   onSelect,
   children
 }: Props): JSX.Element {
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 10000
+  })
+
   const onClick = (): void => {
-    onSelect(id)
+    startTransition(() => {
+      onSelect(id)
+    })
   }
 
   const isSelected = selected.includes(id)
@@ -31,6 +38,7 @@ export default function SingleSelector ({
       overflow='hidden'
     >
       <ClickableTile
+        isPending={isPending}
         onClick={onClick}
       >
         {children}

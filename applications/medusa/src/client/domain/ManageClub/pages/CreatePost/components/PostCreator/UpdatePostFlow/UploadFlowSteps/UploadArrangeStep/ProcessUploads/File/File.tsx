@@ -1,9 +1,10 @@
 import { UppyFile } from '@uppy/core'
-import { CloseButton, HStack, Progress } from '@chakra-ui/react'
+import { HStack, Progress } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { useContext } from 'react'
 import { UppyContext } from '../../../../../../../context'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   file: UppyFile
@@ -74,7 +75,11 @@ export default function File ({
     <LargeBackgroundBox pl={4}>
       <HStack spacing={4}>
         <FileMessage />
-        <CloseButton isDisabled={disabled ?? url} onClick={() => onRemoveFile(file.id)} />
+        <CloseButton
+          size='md'
+          isDisabled={disabled ?? url}
+          onClick={() => onRemoveFile(file.id)}
+        />
       </HStack>
     </LargeBackgroundBox>
   )

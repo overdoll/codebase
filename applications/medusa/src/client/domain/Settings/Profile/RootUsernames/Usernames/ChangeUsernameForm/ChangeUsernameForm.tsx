@@ -27,6 +27,7 @@ import Username from '@//:modules/validation/Username'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface UsernameValues {
   username: string
@@ -178,7 +179,10 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
               Confirm Username Change
             </Trans>
           </AlertDialogHeader>
-          <AlertDialogCloseButton />
+          <AlertDialogCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <AlertDialogBody>
             <Stack spacing={2}>
               <Text>

@@ -1,7 +1,8 @@
 import { MutableRefObject, useEffect, useState, useTransition } from 'react'
-import { CloseButton, HTMLChakraProps, Input, InputGroup, InputRightElement, Spinner } from '@chakra-ui/react'
+import { HTMLChakraProps, Input, InputGroup, InputRightElement, Spinner } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props extends HTMLChakraProps<any> {
   children?: ({ searchInput: string }) => {}
@@ -60,7 +61,6 @@ export default function SearchInput ({
             : (
               <CloseButton
                 size='md'
-                my={1}
                 hidden={searchInput === ''}
                 onClick={clearSearch}
               />)}

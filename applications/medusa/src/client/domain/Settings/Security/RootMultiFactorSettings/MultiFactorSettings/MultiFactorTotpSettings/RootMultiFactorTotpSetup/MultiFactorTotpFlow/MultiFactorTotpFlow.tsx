@@ -29,6 +29,7 @@ import { Link } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
 import TotpAppDownloadStep from './TotpAppDownloadStep/TotpAppDownloadStep'
 import { Barcode, MobilePhone, QrCode } from '@//:assets/icons/interface'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
@@ -146,7 +147,10 @@ export default function MultiFactorTotpFlow (): JSX.Element {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
+          <ModalCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <ModalHeader>
             <Trans>
               Two-factor Setup Complete

@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Alert, AlertDescription, AlertIcon, CloseButton, Stack, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Stack, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
@@ -9,6 +9,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -125,6 +126,7 @@ export default function Join ({
               </AlertDescription>
               <CloseButton
                 position='absolute'
+                size='sm'
                 right={2}
                 top={2}
                 onClick={clearGrant}

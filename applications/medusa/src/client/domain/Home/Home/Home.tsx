@@ -21,6 +21,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
 import { Link } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -111,7 +112,10 @@ export default function Home (props: Props): JSX.Element {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
+          <ModalCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <ModalHeader>
             <Trans>
               Set Up Your Profile

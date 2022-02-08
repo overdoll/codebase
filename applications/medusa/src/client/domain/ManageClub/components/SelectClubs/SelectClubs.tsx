@@ -12,6 +12,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SwapCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   query: PreloadedQuery<SelectClubsQuery>
@@ -97,7 +98,10 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
               Switch to club
             </Trans>
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <ModalBody mb={4}>
             <ClubListSelector
               initialSelection={params.slug}

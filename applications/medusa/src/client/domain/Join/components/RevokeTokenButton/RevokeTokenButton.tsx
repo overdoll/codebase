@@ -17,6 +17,7 @@ import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { useHistoryDisclosure } from '@//:modules/hooks'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   queryRef: RevokeTokenButtonFragment$key
@@ -90,7 +91,10 @@ export default function RevokeTokenButton ({
               Confirm Cancel Join
             </Trans>
           </AlertDialogHeader>
-          <AlertDialogCloseButton />
+          <AlertDialogCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <AlertDialogBody>
             <Text>
               <Trans>

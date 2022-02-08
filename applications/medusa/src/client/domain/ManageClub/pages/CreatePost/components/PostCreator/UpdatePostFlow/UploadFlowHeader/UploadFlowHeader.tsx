@@ -8,7 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Box,
-  CloseButton,
   HStack,
   Stack
 } from '@chakra-ui/react'
@@ -23,6 +22,7 @@ import { UppyContext } from '../../../../context'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { FlowBuilderHeader, FlowBuilderProgress } from '@//:modules/content/PageLayout'
 import ProcessContent from './ProcessContent/ProcessContent'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   query: UploadFlowHeaderFragment$key
@@ -66,7 +66,7 @@ export default function UploadFlowHeader ({
       <Stack spacing={4}>
         <HStack justify='space-between' spacing={2}>
           <FlowBuilderHeader />
-          <CloseButton size='lg' onClick={onOpen} />
+          <CloseButton size='md' onClick={onOpen} />
         </HStack>
         <FlowBuilderProgress />
         <ProcessContent query={data} />
@@ -85,7 +85,10 @@ export default function UploadFlowHeader ({
               Exit Post Creator
             </Trans>
           </AlertDialogHeader>
-          <AlertDialogCloseButton />
+          <AlertDialogCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <AlertDialogBody>
             <Trans>
               Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any

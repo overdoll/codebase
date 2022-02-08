@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useTransition } from 'react'
 import { Box } from '@chakra-ui/react'
 import ClickableTile from '../ClickableTile/ClickableTile'
 import { MultiSelectedValue, MultiSelectedValueFunction } from '../../hooks/useMultiSelector'
@@ -20,8 +20,15 @@ export default function SingleSelector ({
   type,
   children
 }: Props): JSX.Element {
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 10000
+  })
+
   const onClick = (): void => {
-    onSelect(id, name, type)
+    startTransition(() => {
+      onSelect(id, name, type)
+    })
   }
 
   const isSelected = Object.keys(selected).includes(id)
@@ -35,6 +42,7 @@ export default function SingleSelector ({
       overflow='hidden'
     >
       <ClickableTile
+        isPending={isPending}
         onClick={onClick}
       >
         {children}

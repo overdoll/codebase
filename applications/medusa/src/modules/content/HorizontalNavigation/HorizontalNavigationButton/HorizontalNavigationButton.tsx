@@ -1,5 +1,5 @@
 import { HTMLChakraProps } from '@chakra-ui/react'
-import { ForwardedRef, FunctionComponent, ReactNode } from 'react'
+import { ForwardedRef, forwardRef, FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
 
@@ -16,7 +16,7 @@ interface Props extends HTMLChakraProps<any> {
   forwardRef?: ForwardedRef<any>
 }
 
-export default function HorizontalNavigationButton ({
+const HorizontalNavigationButton = forwardRef<any, Props>(({
   icon,
   label,
   onClick,
@@ -27,14 +27,14 @@ export default function HorizontalNavigationButton ({
   isActive = false,
   as,
   ...rest
-}: Props, forwardRef): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   const ButtonProps = {
     icon,
     label,
     onClick,
     colorScheme,
     as,
-    forwardRef: forwardRef,
+    ref: forwardRef,
     ...rest
   }
 
@@ -72,4 +72,6 @@ export default function HorizontalNavigationButton ({
       }}
     </NavLink>
   )
-}
+})
+
+export default HorizontalNavigationButton

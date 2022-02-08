@@ -1,8 +1,9 @@
-import { CloseButton, Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { DraggableContentFragment$key } from '@//:artifacts/DraggableContentFragment.graphql'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   onRemove: (string) => void
@@ -59,7 +60,12 @@ export default function DraggableContent ({
           <Flex w='38%' />
           <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>
             {!removeDisabled &&
-              <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(data.id)} />}
+              <CloseButton
+                size='md'
+                m={2}
+                isDisabled={dragDisabled}
+                onClick={() => onRemove(data.id)}
+              />}
           </Flex>
         </Flex>
       )}

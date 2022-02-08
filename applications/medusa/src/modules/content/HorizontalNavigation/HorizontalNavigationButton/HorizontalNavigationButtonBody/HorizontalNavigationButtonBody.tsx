@@ -1,10 +1,11 @@
 import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
 import { Icon } from '../../../PageLayout'
-import { FunctionComponent, ReactNode } from 'react'
+import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import Button from '../../../../form/Button/Button'
 import IconButton from '../../../../form/IconButton/IconButton'
+import { ForwardRefProp } from '@//:types/components'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends HTMLChakraProps<any>, ForwardRefProp {
   icon?: FunctionComponent<any>
   label: ReactNode
   onClick?: () => void
@@ -15,7 +16,7 @@ interface Props extends HTMLChakraProps<any> {
   isPending?: boolean | undefined
 }
 
-export default function HorizontalNavigationButtonBody ({
+const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   icon,
   label,
   onClick,
@@ -24,7 +25,7 @@ export default function HorizontalNavigationButtonBody ({
   isActive = false,
   as,
   isPending
-}: Props): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
   const ButtonProps = {
@@ -39,7 +40,8 @@ export default function HorizontalNavigationButtonBody ({
       md: '48px'
     },
     onClick: onClick,
-    isLoading: isPending
+    isLoading: isPending,
+    ref: forwardRef
   }
 
   const ButtonWrapper = ({ children }: { children: ReactNode }): JSX.Element => {
@@ -85,4 +87,6 @@ export default function HorizontalNavigationButtonBody ({
       />
     </ButtonWrapper>
   )
-}
+})
+
+export default HorizontalNavigationButtonBody

@@ -35,3 +35,4 @@ export { default as CharacterIdentifier } from './normal-bold/character-identifi
 export { default as SeriesIdentifier } from './normal-bold/series-identifier.svg'
 export { default as ClubMembers } from './normal-bold/club-members.svg'
 export { default as SubtractMinus } from './mini-bold/actions/subtract-minus.svg'
+export { default as RemoveCross } from './mini-bold/actions/remove-cross.svg'

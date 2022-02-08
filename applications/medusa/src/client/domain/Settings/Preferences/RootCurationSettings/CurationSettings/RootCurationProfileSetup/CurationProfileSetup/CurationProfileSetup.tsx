@@ -39,6 +39,7 @@ import type { CurationStepperFooterFragment$key } from '@//:artifacts/CurationSt
 import Button from '@//:modules/form/Button/Button'
 import { Link } from '@//:modules/routing'
 import { useUpdateEffect } from 'usehooks-ts'
+import CloseButton from '@//:modules/form/CloseButton/CloseButton'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
@@ -167,7 +168,10 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalCloseButton />
+            <ModalCloseButton
+              size='lg'
+              as={CloseButton}
+            />
             <ModalHeader>
               <Trans>
                 Curation Profile Setup Complete

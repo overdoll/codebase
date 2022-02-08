@@ -1,4 +1,4 @@
-import { Fade, Flex, HTMLChakraProps, Spinner } from '@chakra-ui/react'
+import { Box, Flex, HTMLChakraProps, Spinner } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { ClickableBox } from '../../../PageLayout'
 
@@ -15,6 +15,7 @@ export default function ClickableTile ({
   return (
     <ClickableBox
       isDisabled={isPending}
+      ignoreTransition
       p={0}
       h='100%'
       w='100%'
@@ -23,18 +24,17 @@ export default function ClickableTile ({
       {...rest}
     >
       {children}
-      <Fade
-        in={isPending}
-        style={{
-          position: 'absolute',
-          top: 0,
-          margin: 4
-        }}
-      >
-        <Flex bg='dimmers.500' borderRadius='full' p={1}>
-          <Spinner size='sm' />
-        </Flex>
-      </Fade>
+      {isPending === true &&
+        <Box
+          position='absolute'
+          top={0}
+          left={0}
+          margin={2}
+        >
+          <Flex bg='dimmers.500' borderRadius='full' p={1}>
+            <Spinner size='sm' />
+          </Flex>
+        </Box>}
     </ClickableBox>
   )
 }
