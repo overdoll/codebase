@@ -91,21 +91,15 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
 
   const headers = {
     dateOfBirth: {
-      title: <Trans>
-        Your Age
-      </Trans>,
+      title: 'Your Age',
       icon: UserHuman
     },
     audience: {
-      title: <Trans>
-        Audiences
-      </Trans>,
+      title: 'Audiences',
       icon: ClubMembers
     },
     category: {
-      title: <Trans>
-        Categories
-      </Trans>,
+      title: 'Categories',
       icon: CategoryIdentifier
     }
   }

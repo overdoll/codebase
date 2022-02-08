@@ -4,3 +4,4 @@ export { default as SkeletonDropdownMenuButton } from './Skeleton/SkeletonDropdo
 export { default as SkeletonPost } from './Skeleton/SkeletonPost/SkeletonPost'
 export { default as SkeletonRectangleGrid } from './Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
 export { default as SkeletonStack } from './Skeleton/SkeletonStack/SkeletonStack'
+export * from './NotFound/index'

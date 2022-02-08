@@ -23,7 +23,7 @@ interface ContextProps extends BuilderProps {
 
 interface HeaderProps {
   [step: string]: {
-    title: ReactNode
+    title: string
     icon: FunctionComponent<any>
   }
 }

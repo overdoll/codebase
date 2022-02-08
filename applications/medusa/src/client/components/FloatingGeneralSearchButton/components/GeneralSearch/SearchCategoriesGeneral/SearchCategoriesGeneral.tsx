@@ -24,8 +24,7 @@ interface Props {
 const Fragment = graphql`
   fragment SearchCategoriesGeneralFragment on Query
   @argumentDefinitions(
-    after: {type: String},
-    search: {type: String}
+    after: {type: String}
   )
   @refetchable(queryName: "SearchCategoriesGeneralPaginationFragment" )
   {

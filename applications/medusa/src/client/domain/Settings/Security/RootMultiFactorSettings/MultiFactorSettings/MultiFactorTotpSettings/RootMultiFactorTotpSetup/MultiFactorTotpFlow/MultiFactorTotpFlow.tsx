@@ -28,8 +28,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Link } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
 import TotpAppDownloadStep from './TotpAppDownloadStep/TotpAppDownloadStep'
-import { SearchBar } from '@//:assets/icons/navigation'
-import { Barcode, MobilePhone } from '@//:assets/icons/interface'
+import { Barcode, MobilePhone, QrCode } from '@//:assets/icons/interface'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
@@ -74,22 +73,16 @@ export default function MultiFactorTotpFlow (): JSX.Element {
 
   const headers = {
     app: {
-      title: <Trans>
-        Download App
-      </Trans>,
+      title: 'Download App',
       icon: MobilePhone
     },
     code: {
-      title: <Trans>
-        Scan Code
-      </Trans>,
-      icon: Barcode
+      title: 'Scan Code',
+      icon: QrCode
     },
     activate: {
-      title: <Trans>
-        Enter Code
-      </Trans>,
-      icon: SearchBar
+      title: 'Enter Code',
+      icon: Barcode
     }
   }
 
@@ -99,7 +92,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
       onCompleted (data) {
         setTotp(data)
       },
-      onError (data) {
+      onError () {
         setHasError(true)
       }
     })

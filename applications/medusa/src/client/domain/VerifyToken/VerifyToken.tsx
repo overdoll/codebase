@@ -14,6 +14,7 @@ import { Icon, PageWrapper } from '@//:modules/content/PageLayout'
 import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
 import { Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   prepared: {
@@ -56,6 +57,8 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
     VerifyTokenMutationGQL
   )
 
+  const { i18n } = useLingui()
+
   const notify = useToast()
 
   const [queryToken] = useQueryParam<string>('token')
@@ -73,7 +76,7 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         if (payload.verifyAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
-            title: translateValidation(payload.verifyAuthenticationToken.validation),
+            title: i18n._(translateValidation(payload.verifyAuthenticationToken.validation)),
             isClosable: true
           })
         }

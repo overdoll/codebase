@@ -6,6 +6,7 @@ import { t } from '@lingui/macro'
 import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { ClubMembers } from '@//:assets/icons/interface'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -29,6 +30,10 @@ export default function ClubHome ({ query }: Props): JSX.Element {
   const { i18n } = useLingui()
 
   const number = queryData?.club?.membersCount.toLocaleString() as string
+
+  if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
 
   return (
     <Stack spacing={8}>

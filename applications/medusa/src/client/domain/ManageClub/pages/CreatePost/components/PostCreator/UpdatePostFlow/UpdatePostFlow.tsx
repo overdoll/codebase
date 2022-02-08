@@ -6,7 +6,6 @@ import UploadAudienceStep from './UploadFlowSteps/UploadAudienceStep/UploadAudie
 import UploadCategoryStep from './UploadFlowSteps/UploadCategoryStep/UploadCategoryStep'
 import UploadArrangeStep from './UploadFlowSteps/UploadArrangeStep/UploadArrangeStep'
 import UploadReviewStep from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
-import { Trans } from '@lingui/macro'
 import { CategoryIdentifier, CharacterIdentifier, ClubMembers, HeartFull } from '@//:assets/icons/interface'
 import { FileMultiple } from '@//:assets/icons/navigation'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '@//:modules/content/PageLayout'
@@ -44,33 +43,23 @@ export default function UpdatePostFlow ({
   }
   const headers = {
     arrange: {
-      title: <Trans>
-        Arrange Uploads
-      </Trans>,
+      title: 'Arrange Uploads',
       icon: FileMultiple
     },
     audience: {
-      title: <Trans>
-        Select Audience
-      </Trans>,
+      title: 'Select Audience',
       icon: ClubMembers
     },
     category: {
-      title: <Trans>
-        Add Categories
-      </Trans>,
+      title: 'Add Categories',
       icon: CategoryIdentifier
     },
     character: {
-      title: <Trans>
-        Add Character
-      </Trans>,
+      title: 'Add Character',
       icon: CharacterIdentifier
     },
     review: {
-      title: <Trans>
-        Review Post
-      </Trans>,
+      title: 'Review Post',
       icon: HeartFull
     }
   }

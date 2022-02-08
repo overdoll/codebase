@@ -7,7 +7,6 @@ import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStac
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import CreateClubQuery, { CreateClubQuery as CreateClubQueryType } from '@//:artifacts/CreateClubQuery.graphql'
 import { Suspense } from 'react'
-import PageContents from '../../../Root/PageContents/PageContents'
 
 interface Props {
   prepared: {

@@ -19,6 +19,7 @@ interface Props extends StateProps {
 const Query = graphql`
   query GeneralSearchQuery(
     $first: Int,
+    $search: String,
     $seriesSlugs: [String!],
     $charactersSlugs: [String!],
     $categoriesSlugs: [String!],

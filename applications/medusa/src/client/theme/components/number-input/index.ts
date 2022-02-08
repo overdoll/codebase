@@ -64,8 +64,8 @@ function getSize (size: Size): PartsStyleObject<typeof parts> {
     xs: 'sm'
   }
 
-  const _fontSize = sizeStyle.field?.fontSize ?? 'md'
-  const fontSize = typography.fontSizes[_fontSize.toString()]
+  const initialFontSize = typeof sizeStyle.field?.fontSize !== 'string' ? 'md' : sizeStyle.field?.fontSize
+  const fontSize = typography.fontSizes[initialFontSize]
 
   return {
     field: {

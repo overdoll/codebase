@@ -1,6 +1,8 @@
-import { Box, Flex, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
-import { ClickableBox, Icon } from '../../../PageLayout'
+import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
+import { Icon } from '../../../PageLayout'
 import { FunctionComponent, ReactNode } from 'react'
+import Button from '../../../../form/Button/Button'
+import IconButton from '../../../../form/IconButton/IconButton'
 
 interface Props extends HTMLChakraProps<any> {
   icon?: FunctionComponent<any>
@@ -9,6 +11,7 @@ interface Props extends HTMLChakraProps<any> {
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
+  as?: any
 }
 
 export default function HorizontalNavigationButtonBody ({
@@ -17,45 +20,66 @@ export default function HorizontalNavigationButtonBody ({
   onClick,
   children,
   colorScheme = 'gray',
-  isActive = false
+  isActive = false,
+  as
 }: Props): JSX.Element {
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
-  return (
-    <Tooltip
-      hasArrow
-      label={label}
-      placement='bottom'
-    >
-      <Box>
-        <ClickableBox
-          onClick={onClick}
-          borderRadius={{
-            base: 2,
-            md: 10
-          }}
-          bg={isActive ? 'gray.500' : 'transparent'}
-          h='46px'
-          w={{
-            base: '58px',
-            md: '48px'
-          }}
+  const ButtonProps = {
+    borderRadius: {
+      base: 2,
+      md: 10
+    },
+    bg: isActive ? 'gray.500' : 'transparent',
+    h: '46px',
+    w: {
+      base: '58px',
+      md: '48px'
+    },
+    onClick: onClick
+  }
+
+  const ButtonWrapper = ({ children }: { children: ReactNode }): JSX.Element => {
+    return (
+      <Tooltip
+        hasArrow
+        label={label}
+        placement='bottom'
+      >
+        <Box pointerEvents='auto'>
+          {children}
+        </Box>
+      </Tooltip>
+    )
+  }
+
+  if (icon == null) {
+    return (
+      <ButtonWrapper>
+        <Button
+          as={as}
           p={0}
+          {...ButtonProps}
         >
-          {(icon != null)
-            ? (
-              <Flex justify='center' align='center' w='100%'>
-                <Icon
-                  icon={icon}
-                  p={2}
-                  fill={isActive ? fillColor : 'gray.300'}
-                  h='38px'
-                />
-              </Flex>
-              )
-            : children}
-        </ClickableBox>
-      </Box>
-    </Tooltip>
+          {children}
+        </Button>
+      </ButtonWrapper>
+    )
+  }
+
+  return (
+    <ButtonWrapper>
+      <IconButton
+        as={as}
+        aria-label={label as string}
+        icon={<Icon
+          icon={icon}
+          p={2}
+          fill={isActive ? fillColor : 'gray.300'}
+          h='38px'
+              />}
+        {...ButtonProps}
+      />
+    </ButtonWrapper>
   )
 }

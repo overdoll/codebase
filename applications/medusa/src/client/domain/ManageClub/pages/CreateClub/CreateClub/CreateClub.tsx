@@ -27,14 +27,15 @@ export default function CreateClub (props: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      {!canCreateClub && <Alert status='warning'>
-        <AlertIcon />
-        <AlertDescription>
-          <Trans>
-            You can only create a maximum of {queryData?.viewer?.clubsLimit} clubs
-          </Trans>
-        </AlertDescription>
-      </Alert>}
+      {!canCreateClub && (
+        <Alert status='warning'>
+          <AlertIcon />
+          <AlertDescription>
+            <Trans>
+              You can only create a maximum of {queryData?.viewer?.clubsLimit} clubs
+            </Trans>
+          </AlertDescription>
+        </Alert>)}
       <CreateClubForm isDisabled={!canCreateClub} />
     </Stack>
   )

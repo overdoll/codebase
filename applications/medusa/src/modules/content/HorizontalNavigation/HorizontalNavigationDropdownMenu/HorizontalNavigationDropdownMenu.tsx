@@ -2,12 +2,10 @@ import { FunctionComponent, ReactNode } from 'react'
 import HorizontalNavigationDropdownMenuButton
   from './HorizontalNavigationDropdownMenuButton/HorizontalNavigationDropdownMenuButton'
 import { useHistoryDisclosure } from '../../../hooks'
-import { ClickableBox, RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
-import Icon from '../../PageLayout/Flair/Icon/Icon'
+import { RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
 import { HorizontalNavigationDropdownMenuContext } from './context'
 import {
   Box,
-  Flex,
   HStack,
   Menu,
   MenuButton,
@@ -16,6 +14,7 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Portal,
   SimpleGrid,
   useDisclosure
 } from '@chakra-ui/react'
@@ -57,7 +56,6 @@ const HorizontalNavigationDropdownMenu = ({
         >
           <Box h='100%'>
             <HorizontalNavigation.Button
-              exact
               colorScheme='gray'
               icon={icon}
               isActive={isOpen}
@@ -98,44 +96,35 @@ const HorizontalNavigationDropdownMenu = ({
             isLazy
             onClose={onCloseMenu}
             offset={[-10, 20]}
+
           >
-            <Box h='100%'>
-              <ClickableBox
-                p={0}
-                onClick={onToggleMenu}
-                borderRadius={{
-                  base: 2,
-                  md: 10
-                }}
-                aria-label={label}
-                bg={isOpenMenu ? 'gray.500' : 'transparent'}
-                h='42px'
-                w='42px'
-                as={MenuButton}
-              >
-                <Flex w='100%' align='center' justify='center'>
-                  <Icon
-                    icon={icon}
-                    h='38px'
-                    p={2}
-                    fill={isOpenMenu ? 'gray.100' : 'gray.300'}
-                  />
-                </Flex>
-              </ClickableBox>
-            </Box>
-            <MenuList
-              minW='300px'
-              m={0}
-              p={0}
-              boxShadow='outline'
+            <MenuButton
+              pointerEvents='none'
+              as={Box}
             >
-              <SimpleGrid
-                p={4}
-                spacing={3}
+              <HorizontalNavigation.Button
+                colorScheme='gray'
+                icon={icon}
+                isActive={isOpenMenu}
+                label={label}
+                onClick={onToggleMenu}
+              />
+            </MenuButton>
+            <Portal>
+              <MenuList
+                minW='300px'
+                m={0}
+                p={0}
+                boxShadow='outline'
               >
-                {children}
-              </SimpleGrid>
-            </MenuList>
+                <SimpleGrid
+                  p={4}
+                  spacing={3}
+                >
+                  {children}
+                </SimpleGrid>
+              </MenuList>
+            </Portal>
           </Menu>
         </HorizontalNavigationDropdownMenuContext.Provider>
       </RenderOnDesktop>

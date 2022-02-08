@@ -116,9 +116,10 @@ export default function ChangeClubName ({ query }: Props): JSX.Element {
           colorScheme='gray'
           onClick={onToggle}
           size='sm'
-        ><Trans>
-          Change Club Name
-        </Trans>
+        >
+          <Trans>
+            Change Club Name
+          </Trans>
         </Button>
         <Collapse in={isOpen} animateOpacity>
           <form noValidate onSubmit={handleSubmit(onChangeName)}>
@@ -142,7 +143,7 @@ export default function ChangeClubName ({ query }: Props): JSX.Element {
                   variant='solid'
                   type='submit'
                   colorScheme='gray'
-                  disabled={(errors.name != null)}
+                  isDisabled={(errors.name != null)}
                   isLoading={isChangingName}
                 >
                   <Trans>

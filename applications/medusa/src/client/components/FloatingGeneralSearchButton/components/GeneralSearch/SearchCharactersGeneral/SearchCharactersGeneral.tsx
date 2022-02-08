@@ -1,5 +1,5 @@
 import { graphql } from 'react-relay/hooks'
-import type { SearchCharactersQuery } from '@//:artifacts/SearchCharactersQuery.graphql'
+import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
 import {
@@ -23,8 +23,7 @@ interface Props {
 const SearchCharactersFragmentGQL = graphql`
   fragment SearchCharactersGeneralFragment on Query
   @argumentDefinitions(
-    after: {type: String},
-    search: {type: String}
+    after: {type: String}
   )
   @refetchable(queryName: "SearchCharactersGeneralPaginationFragment" )
   {
@@ -60,7 +59,7 @@ export default function SearchCharactersGeneral ({
     loadNext,
     isLoadingNext,
     hasNext
-  } = usePaginationFragment<SearchCharactersQuery, any>(
+  } = usePaginationFragment<GeneralSearchQuery, any>(
     SearchCharactersFragmentGQL,
     query
   )

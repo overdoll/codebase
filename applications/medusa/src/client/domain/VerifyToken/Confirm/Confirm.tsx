@@ -74,8 +74,8 @@ export default function Confirm ({
               <Button
                 size='md'
                 variant='ghost'
-                disabled={isVerifying}
-                loading={isRevokingToken}
+                isDisabled={isVerifying}
+                isLoading={isRevokingToken}
                 onClick={revoke}
               >
                 <Trans>
@@ -85,8 +85,8 @@ export default function Confirm ({
               <Button
                 size='md'
                 colorScheme='pink'
-                disabled={isRevokingToken}
-                loading={isVerifying}
+                isDisabled={isRevokingToken}
+                isLoading={isVerifying}
                 onClick={verify}
               >
                 <Trans>

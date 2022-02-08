@@ -284,14 +284,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Settings/ConfirmEmail/ConfirmEmail'
+            './domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Settings/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -882,7 +882,7 @@ const routes: Route[] = [
         }
       },
       {
-        path: '/u/:username',
+        path: '/a/:username',
         exact: true,
         dependencies: [
           {

@@ -2,13 +2,14 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
-import { Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
 import { useHistory } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -17,7 +18,7 @@ interface Props {
 const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
-      id
+      __typename
     }
     viewer {
       ...ClubPostsFragment
@@ -65,13 +66,17 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
 
   const history = useHistory()
 
+  if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
+
   if (data.posts.edges.length < 1) {
     return (
-      <Text>
+      <SmallBackgroundBox>
         <Trans>
           No posts found
         </Trans>
-      </Text>
+      </SmallBackgroundBox>
     )
   }
 

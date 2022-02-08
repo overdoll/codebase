@@ -57,7 +57,7 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
   }
 
   if (queryData.club == null) {
-    history.push('/')
+    return <></>
   }
 
   if (queryData?.viewer !== null && queryData?.viewer?.clubsCount <= 1) {

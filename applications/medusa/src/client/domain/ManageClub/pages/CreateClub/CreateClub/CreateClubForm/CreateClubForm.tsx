@@ -100,7 +100,7 @@ export default function CreateClubForm ({ isDisabled }: Props): JSX.Element {
         if (data?.createClub?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: translateValidation(data.createClub.validation)
+            message: i18n._(translateValidation(data.createClub.validation))
           })
           return
         }

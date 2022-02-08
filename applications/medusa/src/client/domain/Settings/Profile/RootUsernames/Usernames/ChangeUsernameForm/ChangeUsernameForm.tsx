@@ -106,7 +106,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
         if (data?.updateAccountUsername?.validation != null) {
           setError('username', {
             type: 'mutation',
-            message: translateValidation(data.updateAccountUsername.validation)
+            message: i18n._(translateValidation(data.updateAccountUsername.validation))
           })
           return
         }
@@ -154,7 +154,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
               variant='solid'
               colorScheme='gray'
               type='submit'
-              disabled={errors.username != null || isDisabled}
+              isDisabled={errors.username != null || isDisabled}
               isLoading={isChangingUsername}
             >
               <Trans>

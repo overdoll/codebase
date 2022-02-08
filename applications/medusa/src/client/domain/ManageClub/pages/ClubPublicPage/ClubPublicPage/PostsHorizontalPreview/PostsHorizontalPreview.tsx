@@ -55,7 +55,7 @@ export default function PostsHorizontalPreview ({
           >
             <GridWrap>
               <GridTile m={1}>
-                <Link to={`/p/${item.node.reference as string}`}>
+                <Link to={`/p/${item.node.reference}`}>
                   <ClickableTile>
                     <PostPreviewContent query={item.node} />
                   </ClickableTile>

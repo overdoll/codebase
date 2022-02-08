@@ -2,6 +2,8 @@ import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { FunctionComponent, ReactNode, useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
+import { defineMessage } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface ChildrenCallable {
   currentTitle: ReactNode
@@ -19,8 +21,15 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
     colorScheme
   } = useContext(FlowContext)
 
+  const { i18n } = useLingui()
+
+  const messages = Object.keys(stepsHeaders).reduce((accum, item) => ({
+    ...accum,
+    [item]: defineMessage({ message: stepsHeaders[item].title })
+  }), {})
+
   const icon = stepsHeaders[currentStep].icon
-  const title = stepsHeaders[currentStep].title
+  const title = messages[currentStep]
 
   if (children == null) {
     return (
@@ -46,7 +55,7 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
           fontSize='3xl'
           color='gray.00'
         >
-          {title}
+          {i18n._(title)}
         </Heading>
       </HStack>
     )

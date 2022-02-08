@@ -1,11 +1,13 @@
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import { useCallback, useEffect, useState } from 'react'
-import Register from './Register/Register'
-import Lobby from './Lobby/Lobby'
+import { Suspense, useCallback, useEffect, useState, useTransition } from 'react'
+import Register from './pages/Register/Register'
+import Lobby from './pages/Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
-import Join from './Join/Join'
-import Grant from './Grant/Grant'
-import MultiFactor from './MultiFactor/MultiFactor'
+import Join from './pages/Join/Join'
+import Grant from './pages/Grant/Grant'
+import MultiFactor from './pages/MultiFactor/MultiFactor'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
   prepared: {
@@ -16,19 +18,19 @@ interface Props {
 const JoinTokenStatus = graphql`
   query JoinRootQuery($token: String!) {
     viewAuthenticationToken(token: $token) {
+      id
       ...LobbyFragment
       ...JoinFragment
       ...RegisterFragment
       ...MultiFactorFragment
       ...GrantFragment
-
       verified
       token
       sameDevice
       accountStatus {
         registered
         multiFactor {
-          totp
+          __typename
         }
       }
     }
@@ -52,9 +54,24 @@ export default function JoinRoot (props: Props): JSX.Element {
   const authenticationInitiated = !(data == null)
   const authenticationTokenVerified = data?.verified === true
 
-  // used to track whether or not there was previously a token grant, so that if
+  // used to track whether there was previously a token grant, so that if
   // an invalid token was returned, we can show an "expired" token page
   const [hadGrant, setHadGrant] = useState<boolean>(false)
+
+  // transition used to prevent flickering caused by refetch
+  // @ts-expect-error
+  const [, startTransition] = useTransition({
+    timeoutMs: 7000
+  })
+
+  // a refresh query - used mainly for polling
+  const refresh = useCallback(() => {
+    if (data?.verified !== true) {
+      startTransition(() => {
+        loadQuery({ token: data?.token as string }, { fetchPolicy: 'network-only' })
+      })
+    }
+  }, [data])
 
   // when a new join is started, we want to make sure that we save the fact that
   // there was one, so we can tell the user if the login code expired
@@ -67,13 +84,6 @@ export default function JoinRoot (props: Props): JSX.Element {
   const clearGrant = (): void => {
     setHadGrant(false)
   }
-
-  // a refresh query - used mainly for polling
-  const refresh = useCallback(() => {
-    if (data?.verified !== true) {
-      loadQuery({ token: data?.token as string }, { fetchPolicy: 'network-only' })
-    }
-  }, [data])
 
   // when authentication not initiated
   if (!authenticationInitiated) {
@@ -88,10 +98,16 @@ export default function JoinRoot (props: Props): JSX.Element {
 
   if (!authenticationTokenVerified) {
     return (
-      <Lobby
-        queryRef={data}
-        refresh={refresh}
-      />
+      <QueryErrorBoundary
+        loadQuery={() => loadQuery({ token: data?.token }, { fetchPolicy: 'network-only' })}
+      >
+        <Suspense fallback={SkeletonStack}>
+          <Lobby
+            queryRef={data}
+            refresh={refresh}
+          />
+        </Suspense>
+      </QueryErrorBoundary>
     )
   }
 
@@ -104,6 +120,6 @@ export default function JoinRoot (props: Props): JSX.Element {
     return <MultiFactor queryRef={data} />
   }
 
-  // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
+  // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
   return (<Grant queryRef={data} />)
 }

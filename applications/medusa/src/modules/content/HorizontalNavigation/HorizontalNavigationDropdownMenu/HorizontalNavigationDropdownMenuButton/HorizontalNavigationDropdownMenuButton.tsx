@@ -37,16 +37,20 @@ export default function HorizontalNavigationDropdownMenuButton ({
     ctx.onClose()
   }
 
+  const ButtonProps = {
+    icon,
+    color,
+    label,
+    onClick: onClickMenu,
+    isDisabled,
+    colorScheme
+  }
+
   if (to == null) {
     return (
       <HorizontalNavigationDropdownMenuButtonBody
-        icon={icon}
-        color={color}
-        label={label}
-        onClick={onClickMenu}
-        isDisabled={isDisabled}
         isActive={isActive}
-        colorScheme={colorScheme}
+        {...ButtonProps}
       >
         {children}
       </HorizontalNavigationDropdownMenuButtonBody>
@@ -57,13 +61,8 @@ export default function HorizontalNavigationDropdownMenuButton ({
     <NavLink to={to}>
       {({ isActiveBasePath }) => (
         <HorizontalNavigationDropdownMenuButtonBody
-          icon={icon}
-          color={color}
-          label={label}
-          onClick={onClickMenu}
-          isDisabled={isDisabled}
           isActive={isActiveBasePath}
-          colorScheme={colorScheme}
+          {...ButtonProps}
         >
           {children}
         </HorizontalNavigationDropdownMenuButtonBody>

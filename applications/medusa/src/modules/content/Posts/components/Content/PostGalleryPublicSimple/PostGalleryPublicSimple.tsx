@@ -3,7 +3,7 @@ import { Box, Flex, Stack } from '@chakra-ui/react'
 import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../helpers/PostVideoManager/PostVideoManager'
 import { GlobalVideoManagerContext } from '../../../helpers/GlobalVideoManager/GlobalVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
@@ -11,7 +11,6 @@ import ControlledVideo from '../../ControlledVideo/ControlledVideo'
 import Button from '../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { Link } from '../../../../../routing'
-import { Swiper as SwiperClass } from 'swiper'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null
@@ -35,8 +34,6 @@ export default function PostGalleryPublicSimple ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const [swiper, setSwiper] = useState<SwiperClass | null>(null)
 
   const {
     changeVideoVolume,

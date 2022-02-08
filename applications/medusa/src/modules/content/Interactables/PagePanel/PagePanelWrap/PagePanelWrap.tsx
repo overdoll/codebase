@@ -19,29 +19,30 @@ export default function PagePanelWrap ({
   disabled,
   isExternal = false
 }: Props): JSX.Element {
-  const BoxComponent = (): JSX.Element => <ClickableBox disabled={disabled} p={3}>
-    <Flex justify='space-between'>
-      <HStack
-        spacing={3}
-        w='100%'
-        align='center'
-      >
-        {children}
-      </HStack>
-      <Flex
-        w={6}
-        ml={1}
-        align='center'
-        justify='center'
-      >
-        <Icon
-          icon={isExternal ? ShareExternalLink : ArrowButtonRight}
+  const BoxComponent = (): JSX.Element => (
+    <ClickableBox disabled={disabled} p={3}>
+      <Flex justify='space-between'>
+        <HStack
+          spacing={3}
+          w='100%'
+          align='center'
+        >
+          {children}
+        </HStack>
+        <Flex
           w={6}
-          fill='gray.500'
-        />
+          ml={1}
+          align='center'
+          justify='center'
+        >
+          <Icon
+            icon={isExternal ? ShareExternalLink : ArrowButtonRight}
+            w={6}
+            fill='gray.500'
+          />
+        </Flex>
       </Flex>
-    </Flex>
-  </ClickableBox>
+    </ClickableBox>)
 
   if (isExternal) {
     return (

@@ -1,19 +1,18 @@
 import { Box, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { t } from '@lingui/macro'
-import SearchInput from '../../domain/ManageClub/pages/CreatePost/components/PostCreator/SearchInput/SearchInput'
+import SearchInput from '../SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
 import { Dispatch, SetStateAction, Suspense, useRef, useState } from 'react'
 import useSearchQueryArguments from '../../../modules/hooks/useSearchQueryArguments'
 import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
-import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
-import ErrorFallback from '@//:modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback'
 import GeneralSearch from './components/GeneralSearch/GeneralSearch'
 import SaveSearchButton from './components/GeneralSearch/SaveSearchButton/SaveSearchButton'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
 import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SearchBar } from '@//:assets/icons/navigation'
+import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   routeTo: string
@@ -43,7 +42,6 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
 
   const [series] = useQueryParam<string[] | null | undefined>('series')
   const [categories] = useQueryParam<string[] | null | undefined>('categories')
-  const [characters] = useQueryParam<string[] | null | undefined>('characters')
 
   // TODO handle character search somehow
 
@@ -121,27 +119,17 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
         <ModalContent bg='transparent' borderRadius='none'>
           <ModalBody overflowX='hidden' p={0}>
             <Suspense fallback={<SkeletonRectangleGrid />}>
-              <ErrorBoundary
-                fallback={({
-                  error,
-                  reset
-                }) => (
-                  <ErrorFallback
-                    error={error}
-                    reset={reset}
-                    refetch={() => setQueryArgs({
-                      search: null,
-                      first: 2
-                    })}
-                  />
-                )}
+              <QueryErrorBoundary loadQuery={() => setQueryArgs({
+                search: null,
+                first: 2
+              })}
               >
                 <GeneralSearch
                   searchValues={searchValues}
                   setSearchValues={setSearchValues}
                   queryArguments={queryArgs}
                 />
-              </ErrorBoundary>
+              </QueryErrorBoundary>
             </Suspense>
             <Box p={2} w='100%'>
               <Stack spacing={2}>

@@ -78,9 +78,10 @@ export default function ClubAliases ({ query }: Props): JSX.Element {
           colorScheme='gray'
           onClick={onToggle}
           size='sm'
-        ><Trans>
-          Add Club Link Alias
-        </Trans>
+        >
+          <Trans>
+            Add Club Link Alias
+          </Trans>
         </Button>
         <Collapse in={isOpen} animateOpacity>
           <AddClubSlugAlias query={data} />

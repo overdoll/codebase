@@ -18,14 +18,14 @@ const Fragment = graphql`
 `
 
 interface Props {
-  query: PostHeaderClubFragment$key
+  query: PostHeaderClubFragment$key | null
 }
 
 export default function PostHeaderClub ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Link to={`/${data?.club?.slug}`}>
+    <Link to={`/${data?.club?.slug as string}`}>
       <ClickableBox bg='transparent' p={0}>
         <Flex align='center'>
           <ResourceIcon h={8} w={8} mr={3} query={data?.club?.thumbnail as ResourceIconFragment$key} />

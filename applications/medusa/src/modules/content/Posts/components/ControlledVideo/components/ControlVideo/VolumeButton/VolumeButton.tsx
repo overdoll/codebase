@@ -14,9 +14,7 @@ export default function VolumeButton ({
   hasAudio
 }: Props): JSX.Element {
   const {
-    isOpen,
-    onOpen,
-    onClose
+    isOpen
   } = useDisclosure()
 
   if (!hasAudio) {

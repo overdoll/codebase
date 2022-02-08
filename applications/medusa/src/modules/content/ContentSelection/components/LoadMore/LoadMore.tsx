@@ -18,24 +18,28 @@ export default function LoadMore ({
     <Flex w='100%' h='100%' align='center' justify='center'>
       {isLoadingNext
         ? <Spinner color='gray.100' />
-        : <ClickableTile
+        : (
+          <ClickableTile
             onClick={onLoadNext}
           >
-          <Flex
-            whiteSpace='normal'
-            wordBreak='break-word'
-            w='100%'
-            justify='center'
-          >
-            <Heading textAlign='center' color='gray.00' fontSize='md'>
-              {text != null
-                ? text
-                : <Trans>
-                  Load More
-                </Trans>}
-            </Heading>
-          </Flex>
-        </ClickableTile>}
+            <Flex
+              whiteSpace='normal'
+              wordBreak='break-word'
+              w='100%'
+              justify='center'
+            >
+              <Heading textAlign='center' color='gray.00' fontSize='md'>
+                {text != null
+                  ? text
+                  : (
+                    <Trans>
+                      Load More
+                    </Trans>
+                    )}
+              </Heading>
+            </Flex>
+          </ClickableTile>
+          )}
     </Flex>
   )
 }

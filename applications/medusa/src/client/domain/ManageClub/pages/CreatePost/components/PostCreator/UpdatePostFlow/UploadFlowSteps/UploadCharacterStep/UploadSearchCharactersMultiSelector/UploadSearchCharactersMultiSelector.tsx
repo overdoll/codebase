@@ -14,13 +14,13 @@ import {
   MultiSelectedValueFunction,
   MultiSelector
 } from '@//:modules/content/ContentSelection'
-import type { QueryArgs as QueryArgsType } from '@//:types/upload'
 import { Trans } from '@lingui/macro'
+import { QueryArguments } from '@//:types/hooks'
 
 interface Props {
   selected: MultiSelectedValue
   onSelect: MultiSelectedValueFunction
-  queryArgs: QueryArgsType
+  queryArgs: QueryArguments
 }
 
 const Query = graphql`

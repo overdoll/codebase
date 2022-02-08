@@ -66,7 +66,6 @@ export default function ProcessUploads ({
   const onUpdateContent = (): void => {
     if (Object.keys(state.uploads.urls).length > 0) {
       setProcessingError(false)
-      const uploadedIDs = Object.keys(state.uploads.urls)
       const uploadedURLs = Object.values(state.uploads.urls)
 
       updateContent({
@@ -82,7 +81,7 @@ export default function ProcessUploads ({
             value: {}
           })
         },
-        onError (data) {
+        onError () {
           setProcessingError(true)
         }
       })
@@ -128,9 +127,10 @@ export default function ProcessUploads ({
             variant='solid'
             size='md'
             rightIcon={<Icon h={3} w={3} icon={FileUpload} fill='gray.100' />}
-          ><Trans>
-            Upload Files
-          </Trans>
+          >
+            <Trans>
+              Upload Files
+            </Trans>
           </Button>
         </Flex>
       </FilePicker>

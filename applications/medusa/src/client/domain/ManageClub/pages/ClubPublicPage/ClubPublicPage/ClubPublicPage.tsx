@@ -1,7 +1,6 @@
 import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 import { graphql } from 'react-relay'
-import { useHistory } from '@//:modules/routing'
 import LargeClubHeader from '../../../components/LargeClubHeader/LargeClubHeader'
 import { Box, HStack, Stack } from '@chakra-ui/react'
 import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber'
@@ -19,6 +18,7 @@ import type { ClubPublicPageTopPostsFragment$key } from '@//:artifacts/ClubPubli
 import type { ClubPublicPageNewPostsFragment$key } from '@//:artifacts/ClubPublicPageNewPostsFragment.graphql'
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -85,10 +85,8 @@ export default function ClubPublicPage (props: Props): JSX.Element {
   const topPostsData = useFragment<ClubPublicPageTopPostsFragment$key>(TopPostsFragment, queryData.club)
   const newPostsData = useFragment<ClubPublicPageNewPostsFragment$key>(NewPostsFragment, queryData.club)
 
-  const history = useHistory()
-
   if (queryData?.club == null) {
-    history.push('/')
+    return <NotFoundClub />
   }
 
   const { i18n } = useLingui()
@@ -164,7 +162,7 @@ export default function ClubPublicPage (props: Props): JSX.Element {
         </PageSectionWrap>
         {topPostsData != null &&
           <PostsHorizontalPreview
-            to={`/${queryData?.club?.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
+            to={`/${queryData?.club?.slug}/posts?${stringify(topPostsEncodedQuery)}`}
             query={topPostsData?.topPosts}
           />}
       </Box>
@@ -176,7 +174,7 @@ export default function ClubPublicPage (props: Props): JSX.Element {
         </PageSectionWrap>
         {newPostsData != null &&
           <PostsHorizontalPreview
-            to={`/${queryData?.club?.slug as string}/posts?${stringify(newPostsEncodedQuery)}`}
+            to={`/${queryData?.club?.slug}/posts?${stringify(newPostsEncodedQuery)}`}
             query={newPostsData?.newPosts}
           />}
       </Box>

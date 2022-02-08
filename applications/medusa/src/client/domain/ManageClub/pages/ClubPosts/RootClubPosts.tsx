@@ -8,11 +8,11 @@ import ClubPostsQuery from '@//:artifacts/ClubPostsQuery.graphql'
 import ClubPosts from './ClubPosts/ClubPosts'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
-import { Box, Select, Stack } from '@chakra-ui/react'
+import { Box, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { useQueryParam } from 'use-query-params'
-import { PostState } from '@//:artifacts/ClubPostsFragment.graphql'
 import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import Select from '@//:modules/form/Select/Select'
 
 interface Props {
   prepared: {
@@ -28,10 +28,10 @@ export default function RootClubPosts (props: Props): JSX.Element {
 
   const match = useParams()
 
-  const [postState, setPostState] = useQueryParam<PostState | null | undefined>('state')
+  const [postState, setPostState] = useQueryParam<'PUBLISHED' | 'DRAFT' | 'REVIEW' | 'REJECTED' | null | undefined>('state')
 
   const onChange = (e): void => {
-    setPostState(e.target.value)
+    setPostState(e.target.value === '' ? undefined : e.target.value)
   }
 
   useEffect(() => {
@@ -52,22 +52,30 @@ export default function RootClubPosts (props: Props): JSX.Element {
                 Club Posts
               </PageSectionTitle>
             </PageSectionWrap>
-            <Select placeholder='' defaultValue={postState ?? 'PUBLISHED'} onChange={onChange}>
-              <option value='PUBLISHED'><Trans>
-                Published
-              </Trans>
+            <Select
+              placeholder='All Posts'
+              defaultValue={postState ?? undefined}
+              onChange={onChange}
+            >
+              <option value='PUBLISHED'>
+                <Trans>
+                  Published
+                </Trans>
               </option>
-              <option value='DRAFT'><Trans>
-                Draft
-              </Trans>
+              <option value='DRAFT'>
+                <Trans>
+                  Draft
+                </Trans>
               </option>
-              <option value='REVIEW'><Trans>
-                In Review
-              </Trans>
+              <option value='REVIEW'>
+                <Trans>
+                  In Review
+                </Trans>
               </option>
-              <option value='REJECTED'><Trans>
-                Rejected
-              </Trans>
+              <option value='REJECTED'>
+                <Trans>
+                  Rejected
+                </Trans>
               </option>
             </Select>
           </Box>

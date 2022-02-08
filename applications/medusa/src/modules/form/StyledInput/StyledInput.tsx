@@ -39,16 +39,9 @@ export default function StyledInput ({
   isLoading = false,
   ...rest
 }: Props): JSX.Element {
-  const determineMargin = (): number => {
-    if (['xl'].includes(size)) {
-      return 2
-    }
-    return 0
-  }
-
   const determinePadding = (): number => {
     if (['xl'].includes(size)) {
-      return 4
+      return 5
     }
     if (['md', 'lg'].includes(size)) {
       return 3
@@ -98,7 +91,7 @@ export default function StyledInput ({
         {(error || success || isLoading) && (
           <InputRightElement
             p={determinePadding()}
-            mr={determineMargin()}
+            mr={0}
             h='100%'
             pointerEvents='none'
           >

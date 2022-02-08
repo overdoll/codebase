@@ -1,5 +1,5 @@
 import { HTMLChakraProps } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ForwardedRef, FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
 
@@ -12,6 +12,8 @@ interface Props extends HTMLChakraProps<any> {
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
+  as?: any
+  forwardRef?: ForwardedRef<any>
 }
 
 export default function HorizontalNavigationButton ({
@@ -22,18 +24,28 @@ export default function HorizontalNavigationButton ({
   to,
   exact = false,
   colorScheme = 'gray',
-  isActive = false
-}: Props): JSX.Element {
+  isActive = false,
+  as,
+  ...rest
+}: Props, forwardRef): JSX.Element {
+  const ButtonProps = {
+    icon,
+    label,
+    onClick,
+    colorScheme,
+    as,
+    forwardRef: forwardRef,
+    ...rest
+  }
+
   if (to == null) {
     return (
       <HorizontalNavigationButtonBody
-        icon={icon}
-        label={label}
         isActive={isActive}
-        onClick={onClick}
-        colorScheme={colorScheme}
+        {...ButtonProps}
       >{children}
-      </HorizontalNavigationButtonBody>
+      </HorizontalNavigationButtonBody
+      >
     )
   }
 
@@ -49,11 +61,8 @@ export default function HorizontalNavigationButton ({
         const determineActive = exact ? isActive : isActiveBasePath
         return (
           <HorizontalNavigationButtonBody
-            icon={icon}
-            label={label}
             isActive={determineActive}
-            onClick={onClick}
-            colorScheme={colorScheme}
+            {...ButtonProps}
           >{children}
           </HorizontalNavigationButtonBody>
         )

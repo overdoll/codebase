@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92a40fa3166a7488a4b2216b72a6531a>>
+ * @generated SignedSource<<dc43d602518376447ef89da7488e7c7c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,6 +42,10 @@ return {
       "defaultValue": 7,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -71,7 +75,13 @@ return {
   "selections": [
     {
       "alias": "clubs",
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "name",
+          "variableName": "search"
+        }
+      ],
       "concreteType": "ClubConnection",
       "kind": "LinkedField",
       "name": "__SuggestedClubs_clubs_connection",
@@ -164,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "3005950f7f75e61df8c2fe462ba5203b";
+(node as any).hash = "a3198e37c7c748fc2295fe8cf1b423d0";
 
 export default node;

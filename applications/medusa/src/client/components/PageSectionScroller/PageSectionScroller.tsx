@@ -32,13 +32,17 @@ export default function PageSectionScroller ({
     swiper.slideTo(index, 300)
   }
 
-  const ChildTab = (): JSX.Element => <Tab color='gray.100' borderRadius='full'>
-    {childrenTitle != null ? childrenTitle : 'children'}
-  </Tab>
+  const ChildTab = (): JSX.Element => (
+    <Tab color='gray.100' borderRadius='full'>
+      {childrenTitle != null ? childrenTitle : 'children'}
+    </Tab>
+  )
 
-  const ScrollTab = (): JSX.Element => <Tab color='gray.100' borderRadius='full'>
-    {infiniteScrollTitle != null ? infiniteScrollTitle : 'infinite-scroll'}
-  </Tab>
+  const ScrollTab = (): JSX.Element => (
+    <Tab color='gray.100' borderRadius='full'>
+      {infiniteScrollTitle != null ? infiniteScrollTitle : 'infinite-scroll'}
+    </Tab>
+  )
 
   const SwiperControl = (): JSX.Element => {
     return (

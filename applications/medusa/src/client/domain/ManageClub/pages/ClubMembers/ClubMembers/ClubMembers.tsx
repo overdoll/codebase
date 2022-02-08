@@ -7,6 +7,7 @@ import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import AccountTileOverlay
   from '../../../../../../modules/content/ContentSelection/components/TileOverlay/AccountTileOverlay/AccountTileOverlay'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -57,7 +58,9 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
     queryData.club
   )
 
-  if (queryData.club == null) return <></>
+  if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
 
   if (data.members.edges.length < 1) {
     return (
@@ -73,7 +76,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
     <GridWrap justify='flex-start'>
       {data.members.edges.map((item, index) =>
         <GridTile key={index}>
-          <Link to={`/u/${item.node.account.username as string}`}>
+          <Link to={`/a/${item.node.account.username as string}`}>
             <ClickableTile>
               <AccountTileOverlay query={item.node.account} />
             </ClickableTile>

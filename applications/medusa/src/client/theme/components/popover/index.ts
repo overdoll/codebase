@@ -7,7 +7,6 @@ const baseStylePopper = {
 
 const baseStyleContent: SystemStyleFunction = (props) => {
   const bg = mode('white', 'gray.700')(props)
-  const shadowColor = mode('gray.200', 'whiteAlpha.300')(props)
 
   return {
     bg: bg,

@@ -9,6 +9,7 @@ import StyledInput from '@//:modules/form/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import Totp from '@//:modules/validation/Totp'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { useLingui } from '@lingui/react'
 
 interface CodeValues {
   code: string
@@ -32,6 +33,8 @@ export default function TotpActivationForm (props: Props): JSX.Element {
   const [submitTotp, isSubmittingTotp] = useMutation<TotpActivationFormMutation>(
     Mutation
   )
+
+  const { i18n } = useLingui()
 
   const schema = Joi.object({
     code: Totp()
@@ -66,7 +69,7 @@ export default function TotpActivationForm (props: Props): JSX.Element {
         if (data?.enrollAccountMultiFactorTotp?.validation != null) {
           setError('code', {
             type: 'mutation',
-            message: translateValidation(data.enrollAccountMultiFactorTotp.validation)
+            message: i18n._(translateValidation(data.enrollAccountMultiFactorTotp.validation))
           })
           return
         }

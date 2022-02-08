@@ -14,6 +14,7 @@ import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFra
 import { Trans } from '@lingui/macro'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import PostSubmitted from './PostSubmitted/PostSubmitted'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -43,6 +44,10 @@ export default function PostCreator ({ query }: Props): JSX.Element {
   const history = useHistory()
 
   const postData = data.post
+
+  if (data?.club == null) {
+    return <NotFoundClub />
+  }
 
   if (state.isSubmitted.value === true) {
     return <PostSubmitted />
@@ -98,9 +103,10 @@ export default function PostCreator ({ query }: Props): JSX.Element {
             variant='solid'
             size='lg'
             onClick={() => history.goBack()}
-          ><Trans>
-            Go back
-          </Trans>
+          >
+            <Trans>
+              Go back
+            </Trans>
           </Button>
         </Stack>
       </PostPlaceholder>

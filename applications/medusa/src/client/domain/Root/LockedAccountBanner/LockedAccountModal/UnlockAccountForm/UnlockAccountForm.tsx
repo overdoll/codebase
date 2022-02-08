@@ -128,7 +128,7 @@ export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | n
           </FormErrorMessage>
         </FormControl>
         <Button
-          disabled={errors.checkbox != null}
+          isDisabled={errors.checkbox != null}
           isLoading={isUnlockingAccount}
           type='submit'
           colorScheme='green'

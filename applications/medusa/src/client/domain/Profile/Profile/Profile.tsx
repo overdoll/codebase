@@ -1,9 +1,9 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ProfileQuery } from '@//:artifacts/ProfileQuery.graphql'
 import { graphql } from 'react-relay'
-import { useHistory } from '@//:modules/routing'
 import { Heading, Stack } from '@chakra-ui/react'
 import { LargeBackgroundBox, ResourceIcon } from '@//:modules/content/PageLayout'
+import { NotFoundAccount } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -26,10 +26,8 @@ export default function Profile (props: Props): JSX.Element {
     props.query
   )
 
-  const history = useHistory()
-
   if (queryData?.account == null) {
-    history.push('/')
+    return <NotFoundAccount />
   }
 
   return (
