@@ -25,11 +25,10 @@ import { SkeletonStack } from '@//:modules/content/Placeholder'
 import TotpQrCodeStep from './TotpQrCodeStep/TotpQrCodeStep'
 import TotpActivateStep from './TotpActivateStep/TotpActivateStep'
 import { useHistoryDisclosure } from '@//:modules/hooks'
-import { Link } from '@//:modules/routing'
-import Button from '@//:modules/form/Button/Button'
 import TotpAppDownloadStep from './TotpAppDownloadStep/TotpAppDownloadStep'
 import { Barcode, MobilePhone, QrCode } from '@//:assets/icons/interface'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
@@ -167,13 +166,11 @@ export default function MultiFactorTotpFlow (): JSX.Element {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Link to='/settings/security'>
-              <Button size='lg' colorScheme='green'>
-                <Trans>
-                  Back to settings
-                </Trans>
-              </Button>
-            </Link>
+            <LinkButton size='lg' colorScheme='green' to='/settings/security'>
+              <Trans>
+                Back to settings
+              </Trans>
+            </LinkButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

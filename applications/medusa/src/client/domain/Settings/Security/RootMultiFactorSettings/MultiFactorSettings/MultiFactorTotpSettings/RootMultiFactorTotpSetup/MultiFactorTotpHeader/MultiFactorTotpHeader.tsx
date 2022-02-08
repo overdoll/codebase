@@ -2,9 +2,8 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
-import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<MultiFactorTotpHeaderQuery>
@@ -38,16 +37,15 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
             </Trans>
           </AlertDescription>
         </Alert>
-        <Link to='/configure/multi-factor/recovery-codes'>
-          <Button
-            colorScheme='gray'
-            size='md'
-          >
-            <Trans>
-              Go to recovery codes
-            </Trans>
-          </Button>
-        </Link>
+        <LinkButton
+          to='/configure/multi-factor/recovery-codes'
+          colorScheme='gray'
+          size='md'
+        >
+          <Trans>
+            Go to recovery codes
+          </Trans>
+        </LinkButton>
       </Flex>
     )
   }

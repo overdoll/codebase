@@ -1,7 +1,8 @@
 import { HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import Button from '../../../../form/Button/Button'
-import { Link, useHistory } from '../../../../routing'
+import { useHistory } from '../../../../routing'
+import LinkButton from '../../../../form/LinkButton/LinkButton'
 
 export default function NotFoundFooter (): JSX.Element {
   const history = useHistory()
@@ -13,13 +14,15 @@ export default function NotFoundFooter (): JSX.Element {
           Go Back
         </Trans>
       </Button>
-      <Link to='/'>
-        <Button colorScheme='primary' size='lg'>
-          <Trans>
-            Home
-          </Trans>
-        </Button>
-      </Link>
+      <LinkButton
+        colorScheme='primary'
+        size='lg'
+        to='/'
+      >
+        <Trans>
+          Home
+        </Trans>
+      </LinkButton>
     </HStack>
   )
 }

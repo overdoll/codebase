@@ -9,7 +9,7 @@ interface Props {
 /**
  * Opens links in a new tab
  */
-export default function Link ({
+export default function ExternalLink ({
   children,
   disabled = false,
   to

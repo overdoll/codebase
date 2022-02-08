@@ -4,9 +4,9 @@ import { Center, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import Link from '@//:modules/routing/Link'
 import { Trans } from '@lingui/macro'
 import NotFound from '@//:modules/routing/NotFound'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 export default function CatchAll (): JSX.Element {
   return (
@@ -46,16 +46,15 @@ export default function CatchAll (): JSX.Element {
                 Back
               </Trans>
             </Button>
-            <Link to='/'>
-              <Button
-                size='lg'
-                colorScheme='primary'
-              >
-                <Trans>
-                  Home
-                </Trans>
-              </Button>
-            </Link>
+            <LinkButton
+              size='lg'
+              colorScheme='primary'
+              to='/'
+            >
+              <Trans>
+                Home
+              </Trans>
+            </LinkButton>
           </Stack>
         </Center>
       </PageWrapper>

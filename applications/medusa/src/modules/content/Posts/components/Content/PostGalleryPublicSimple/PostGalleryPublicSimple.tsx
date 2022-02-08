@@ -8,9 +8,8 @@ import { PostVideoManagerContext } from '../../../helpers/PostVideoManager/PostV
 import { GlobalVideoManagerContext } from '../../../helpers/GlobalVideoManager/GlobalVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import ControlledVideo from '../../ControlledVideo/ControlledVideo'
-import Button from '../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
-import { Link } from '../../../../../routing'
+import LinkButton from '../../../../../form/LinkButton/LinkButton'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null
@@ -78,13 +77,15 @@ export default function PostGalleryPublicSimple ({
           </SwiperSlide>)}
         <SwiperSlide>
           <Stack h='72vh' align='center' justify='center' spacing={2}>
-            <Link to={`/p/${data?.reference as string}`}>
-              <Button size='lg' colorScheme='primary'>
-                <Trans>
-                  View Post
-                </Trans>
-              </Button>
-            </Link>
+            <LinkButton
+              size='lg'
+              colorScheme='primary'
+              to={`/p/${data?.reference as string}`}
+            >
+              <Trans>
+                View Post
+              </Trans>
+            </LinkButton>
           </Stack>
         </SwiperSlide>
       </Swiper>

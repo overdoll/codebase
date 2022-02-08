@@ -36,10 +36,9 @@ import type { DateOfBirthCurationStepFragment$key } from '@//:artifacts/DateOfBi
 import type { CategoriesCurationStepFragment$key } from '@//:artifacts/CategoriesCurationStepFragment.graphql'
 import CurationStepperFooter from './CurationStepperFooter/CurationStepperFooter'
 import type { CurationStepperFooterFragment$key } from '@//:artifacts/CurationStepperFooterFragment.graphql'
-import Button from '@//:modules/form/Button/Button'
-import { Link } from '@//:modules/routing'
 import { useUpdateEffect } from 'usehooks-ts'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
@@ -188,13 +187,11 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
               </Stack>
             </ModalBody>
             <ModalFooter>
-              <Link to='/'>
-                <Button size='lg' colorScheme='primary'>
-                  <Trans>
-                    Go home
-                  </Trans>
-                </Button>
-              </Link>
+              <LinkButton size='lg' colorScheme='primary' to='/'>
+                <Trans>
+                  Go home
+                </Trans>
+              </LinkButton>
             </ModalFooter>
           </ModalContent>
         </Modal>

@@ -39,7 +39,7 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
         <HorizontalNavigation>
           <HorizontalNavigation.Left>
             <RenderOnDesktop>
-              <SiteLinkLogo invisible={isHidden} />
+              <SiteLinkLogo />
             </RenderOnDesktop>
           </HorizontalNavigation.Left>
           {!isHidden && (

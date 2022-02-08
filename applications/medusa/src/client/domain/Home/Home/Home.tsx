@@ -19,9 +19,8 @@ import {
 import { useEffect } from 'react'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
-import { Link } from '@//:modules/routing'
-import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -133,13 +132,15 @@ export default function Home (props: Props): JSX.Element {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Link to='/configure/curation-profile'>
-              <Button size='lg' colorScheme='orange'>
-                <Trans>
-                  Set up profile
-                </Trans>
-              </Button>
-            </Link>
+            <LinkButton
+              size='lg'
+              colorScheme='orange'
+              to='/configure/curation-profile'
+            >
+              <Trans>
+                Set up profile
+              </Trans>
+            </LinkButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

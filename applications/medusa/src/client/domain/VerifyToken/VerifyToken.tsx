@@ -9,12 +9,12 @@ import { useEffect } from 'react'
 import type { VerifyTokenQuery } from '@//:artifacts/VerifyTokenQuery.graphql'
 import Button from '@//:modules/form/Button/Button'
 import Confirm from './Confirm/Confirm'
-import Link from '@//:modules/routing/Link'
 import { Icon, PageWrapper } from '@//:modules/content/PageLayout'
 import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
 import { Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 interface Props {
   prepared: {
@@ -122,17 +122,16 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
           </AlertDescription>
         </Alert>
         <Flex justify='center'>
-          <Link to='/join'>
-            <Button
-              size='lg'
-              colorScheme='gray'
-              variant='solid'
-            >
-              <Trans>
-                Back to the Join page
-              </Trans>
-            </Button>
-          </Link>
+          <LinkButton
+            size='lg'
+            colorScheme='gray'
+            variant='solid'
+            to='/join'
+          >
+            <Trans>
+              Back to the Join page
+            </Trans>
+          </LinkButton>
         </Flex>
       </PageWrapper>
     )

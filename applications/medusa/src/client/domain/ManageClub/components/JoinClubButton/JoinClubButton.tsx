@@ -9,8 +9,8 @@ import {
 } from '@//:artifacts/JoinClubButtonWithdrawMembershipMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
-import { Link } from '@//:modules/routing'
 import { useToast } from '@chakra-ui/react'
+import LinkButton from '@//:modules/form/LinkButton/LinkButton'
 
 interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null
@@ -138,17 +138,16 @@ export default function JoinClubButton ({
 
   if (viewerData == null) {
     return (
-      <Link to='/join'>
-        <Button
-          w={w}
-          size={size}
-          colorScheme='primary'
-        >
-          <Trans>
-            Join
-          </Trans>
-        </Button>
-      </Link>
+      <LinkButton
+        to='/join'
+        w={w}
+        size={size}
+        colorScheme='primary'
+      >
+        <Trans>
+          Join
+        </Trans>
+      </LinkButton>
     )
   }
 
