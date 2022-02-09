@@ -4,6 +4,8 @@ import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceI
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { DraggableContentFragment$key } from '@//:artifacts/DraggableContentFragment.graphql'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   onRemove: (string) => void
@@ -36,6 +38,8 @@ export default function DraggableContent ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const { i18n } = useLingui()
+
   return (
     <Draggable isDragDisabled={dragDisabled} draggableId={data.id} key={data.id} index={index}>
       {(provided, snapshot) => (
@@ -62,6 +66,7 @@ export default function DraggableContent ({
             {!removeDisabled &&
               <CloseButton
                 size='md'
+                aria-label={i18n._(t`Remove Upload`)}
                 m={2}
                 isDisabled={dragDisabled}
                 onClick={() => onRemove(data.id)}

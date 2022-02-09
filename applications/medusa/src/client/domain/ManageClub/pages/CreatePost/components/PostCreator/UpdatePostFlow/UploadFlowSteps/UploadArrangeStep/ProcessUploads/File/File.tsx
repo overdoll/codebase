@@ -5,6 +5,8 @@ import { useContext } from 'react'
 import { UppyContext } from '../../../../../../../context'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   file: UppyFile
@@ -18,6 +20,8 @@ export default function File ({
   const uppy = useContext(UppyContext)
   const state = useContext(StateContext)
   const dispatch = useContext(DispatchContext)
+
+  const { i18n } = useLingui()
 
   const progress = state.uploads.progress[file.id]
   const progressValue = progress != null &&
@@ -77,6 +81,7 @@ export default function File ({
         <FileMessage />
         <CloseButton
           size='md'
+          aria-label={i18n._(t`Remove File`)}
           isDisabled={disabled ?? url}
           onClick={() => onRemoveFile(file.id)}
         />

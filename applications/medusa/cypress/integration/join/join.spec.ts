@@ -29,4 +29,21 @@ describe('Join', () => {
 
     cy.findByText(/Welcome to overdoll!/iu).should('exist')
   })
+
+  it('can cancel join flow', () => {
+    const [, email] = generateUsernameAndEmail()
+
+    cy.visit('/join')
+
+    cy.findByRole('textbox', { name: /email/iu })
+      .type(email)
+
+    cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')).click()
+
+    cy.waitUntil(() => cy.findByRole('button', { name: /Cancel/iu }).should('not.be.disabled')).click()
+
+    cy.findByRole('button', { name: /Yes, cancel/iu }).should('not.be.disabled').click()
+
+    cy.findByRole('button', { name: /Continue/iu }).should('exist')
+  })
 })

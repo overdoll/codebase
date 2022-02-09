@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c45459b68fe9dda038f459a27975080c>>
- * @relayHash 804fe907fb28b2a3a8486ac387e04dd1
+ * @generated SignedSource<<f2c1b236580e80abd39660196c4769da>>
+ * @relayHash 7954790e3e77936a5f206c138eff9c9f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 804fe907fb28b2a3a8486ac387e04dd1
+// @relayRequestID 7954790e3e77936a5f206c138eff9c9f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type CreateClubQuery$variables = {};
+import { FragmentRefs } from "relay-runtime";
+export type CreateClubQuery$variables = {
+  first?: number | null;
+  after?: string | null;
+};
 export type CreateClubQueryVariables = CreateClubQuery$variables;
 export type CreateClubQuery$data = {
   readonly viewer: {
     readonly clubsLimit: number;
     readonly clubsCount: number;
+    readonly " $fragmentSpreads": FragmentRefs<"CreateClubFragment">;
   } | null;
 };
 export type CreateClubQueryResponse = CreateClubQuery$data;
@@ -28,22 +33,54 @@ export type CreateClubQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "clubsLimit",
   "storageKey": null
 },
-v1 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "clubsCount",
   "storageKey": null
+},
+v4 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "first"
+  }
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "CreateClubQuery",
@@ -56,8 +93,13 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "CreateClubFragment"
+          }
         ],
         "storageKey": null
       }
@@ -67,7 +109,10 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "CreateClubQuery",
     "selections": [
@@ -79,22 +124,124 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
+            "args": (v4/*: any*/),
+            "concreteType": "ClubConnection",
+            "kind": "LinkedField",
+            "name": "clubs",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v5/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "slug",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
+              }
+            ],
             "storageKey": null
-          }
+          },
+          {
+            "alias": null,
+            "args": (v4/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "CreateClubFragment_clubs",
+            "kind": "LinkedHandle",
+            "name": "clubs"
+          },
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "804fe907fb28b2a3a8486ac387e04dd1",
+    "id": "7954790e3e77936a5f206c138eff9c9f",
     "metadata": {},
     "name": "CreateClubQuery",
     "operationKind": "query",
@@ -103,6 +250,6 @@ return {
 };
 })();
 
-(node as any).hash = "e90a49fd67094a9cabdc5840f44733c3";
+(node as any).hash = "4582faf641513e22787dfbffc35925a2";
 
 export default node;

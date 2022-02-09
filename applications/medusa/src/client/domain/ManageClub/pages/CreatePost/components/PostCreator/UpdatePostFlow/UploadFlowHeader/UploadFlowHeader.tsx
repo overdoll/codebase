@@ -17,12 +17,13 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../context'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { FlowBuilderHeader, FlowBuilderProgress } from '@//:modules/content/PageLayout'
 import ProcessContent from './ProcessContent/ProcessContent'
 import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: UploadFlowHeaderFragment$key
@@ -38,6 +39,8 @@ export default function UploadFlowHeader ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const { i18n } = useLingui()
 
   const uppy = useContext(UppyContext)
   const dispatch = useContext(DispatchContext)
@@ -66,7 +69,7 @@ export default function UploadFlowHeader ({
       <Stack spacing={4}>
         <HStack justify='space-between' spacing={2}>
           <FlowBuilderHeader />
-          <CloseButton size='md' onClick={onOpen} />
+          <CloseButton aria-label={i18n._(t`Exit Creator`)} size='md' onClick={onOpen} />
         </HStack>
         <FlowBuilderProgress />
         <ProcessContent query={data} />

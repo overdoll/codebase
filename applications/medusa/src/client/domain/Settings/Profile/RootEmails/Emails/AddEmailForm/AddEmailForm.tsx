@@ -9,13 +9,13 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'
 import Button from '@//:modules/form/Button/Button'
+import { ConnectionProp } from '@//:types/components'
 
 interface EmailValues {
   email: string
 }
 
-interface Props {
-  connectionID: string
+interface Props extends ConnectionProp {
   isDisabled: boolean
 }
 
@@ -32,7 +32,7 @@ const AddEmailMutationGQL = graphql`
 `
 
 export default function AddEmailForm ({
-  connectionID,
+  connectionId,
   isDisabled
 }: Props): JSX.Element {
   const schema = Joi.object({
@@ -69,7 +69,7 @@ export default function AddEmailForm ({
         input: {
           email: data.email
         },
-        connections: [connectionID]
+        connections: [connectionId]
       },
       onCompleted () {
         notify({

@@ -67,7 +67,15 @@ const joinAndVerify = (email: string): void => {
     }
   }`
 
-  const startTimestamp = new Date().getTime()
+  let startTimestamp
+
+  // TODO fix flakiness with timestamp - the subtraction is a temp solution
+
+  cy
+    .wrap(null)
+    .then(() => {
+      startTimestamp = Date.now() - 10000
+    })
 
   // first, run the join mutation, and save the token ID
   cy

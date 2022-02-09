@@ -50,6 +50,7 @@ export default function RegisterForm ({
           <FormLabel
             htmlFor='username'
             variant='float'
+            zIndex={1}
             color={!success
               ? (errors.username != null)
                   ? 'orange.500'

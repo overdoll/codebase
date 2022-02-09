@@ -134,7 +134,7 @@ export default function Home (props: Props): JSX.Element {
           <ModalFooter>
             <LinkButton
               size='lg'
-              colorScheme='orange'
+              colorScheme='primary'
               to='/configure/curation-profile'
             >
               <Trans>
