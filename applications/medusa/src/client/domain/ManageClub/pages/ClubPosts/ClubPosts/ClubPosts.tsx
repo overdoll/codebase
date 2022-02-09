@@ -5,7 +5,7 @@ import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../..
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
-import { Link, useHistory } from '@//:modules/routing'
+import { Link } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
@@ -29,7 +29,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment ClubPostsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 11}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsPaginationQuery" ) {
@@ -63,8 +63,6 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
   )
 
   const match = useParams()
-
-  const history = useHistory()
 
   if (queryData?.club == null) {
     return <NotFoundClub />

@@ -8,14 +8,18 @@ import {
 import { usePaginationFragment } from 'react-relay'
 import CategoryTileOverlay
   from '../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
+import { QueryArguments } from '@//:types/hooks'
+import { Flex, Text } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   selected: MultiSelectedValue
   onSelect: MultiSelectedValueFunction
+  queryArgs: QueryArguments
 }
 
 const Query = graphql`
-  query CategoryMultiSelectorQuery {
+  query CategoryMultiSelectorQuery($title: String) {
     ...CategoryMultiSelectorFragment
   }
 `
@@ -25,7 +29,6 @@ const Fragment = graphql`
   @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String},
-    title: {type: String}
   )
   @refetchable(queryName: "CategoryMultiSelectorPaginationFragment" )
   {
@@ -48,11 +51,13 @@ const Fragment = graphql`
 
 export default function CategoryMultiSelector ({
   onSelect,
-  selected
+  selected,
+  queryArgs
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<CategoryMultiSelectorQuery>(
     Query,
-    {}
+    queryArgs.variables,
+    queryArgs.options
   )
 
   const {
@@ -64,6 +69,18 @@ export default function CategoryMultiSelector ({
     Fragment,
     queryData
   )
+
+  if (data.categories.edges.length < 1) {
+    return (
+      <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
+        <Text color='gray.200' textAlign='center' fontSize='lg'>
+          <Trans>
+            No categories were found with the title {queryArgs.variables.title}
+          </Trans>
+        </Text>
+      </Flex>
+    )
+  }
 
   return (
     <GridWrap>

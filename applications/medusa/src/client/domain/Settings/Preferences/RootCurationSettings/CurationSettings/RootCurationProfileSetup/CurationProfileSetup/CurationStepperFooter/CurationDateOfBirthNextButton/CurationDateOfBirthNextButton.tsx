@@ -79,6 +79,11 @@ export default function CurationDateOfBirthNextButton ({
         skipped: true
       },
       onCompleted () {
+        notify({
+          status: 'info',
+          title: t`Age preference was skipped`,
+          isClosable: true
+        })
         nextStep()
       },
       onError () {

@@ -61,6 +61,7 @@ export default function SearchInput ({
             : (
               <CloseButton
                 size='md'
+                aria-label={i18n._(t`Clear Search`)}
                 hidden={searchInput === ''}
                 onClick={clearSearch}
               />)}

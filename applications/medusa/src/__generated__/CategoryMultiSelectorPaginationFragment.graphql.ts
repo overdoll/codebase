@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aa3bb8e5e9b162cdb420eb91ba3d344b>>
- * @relayHash 467e9600e442ab4c08cbef88fedde076
+ * @generated SignedSource<<d517f72b579e59fcc242ed4ac64c932e>>
+ * @relayHash d201234550ec6a09b2780e2ee6d30502
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 467e9600e442ab4c08cbef88fedde076
+// @relayRequestID d201234550ec6a09b2780e2ee6d30502
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -46,24 +46,26 @@ var v0 = [
     "name": "title"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  },
+v1 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
+v2 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "first"
+},
+v3 = [
+  (v1/*: any*/),
+  (v2/*: any*/),
   {
     "kind": "Variable",
     "name": "title",
     "variableName": "title"
   }
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -78,7 +80,10 @@ return {
     "name": "CategoryMultiSelectorPaginationFragment",
     "selections": [
       {
-        "args": (v1/*: any*/),
+        "args": [
+          (v1/*: any*/),
+          (v2/*: any*/)
+        ],
         "kind": "FragmentSpread",
         "name": "CategoryMultiSelectorFragment"
       }
@@ -94,7 +99,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -116,7 +121,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -164,7 +169,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v2/*: any*/)
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -218,7 +223,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "filters": [
           "title"
         ],
@@ -230,7 +235,7 @@ return {
     ]
   },
   "params": {
-    "id": "467e9600e442ab4c08cbef88fedde076",
+    "id": "d201234550ec6a09b2780e2ee6d30502",
     "metadata": {},
     "name": "CategoryMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -239,6 +244,6 @@ return {
 };
 })();
 
-(node as any).hash = "ddee49fe0340cf7db8034ff6297714de";
+(node as any).hash = "3246623d306f7dbcfe4171e7c40fffdf";
 
 export default node;

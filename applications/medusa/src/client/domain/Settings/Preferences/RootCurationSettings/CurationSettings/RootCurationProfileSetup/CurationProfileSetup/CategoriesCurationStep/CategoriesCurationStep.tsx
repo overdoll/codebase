@@ -1,17 +1,21 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { Box, Stack } from '@chakra-ui/react'
-import { Suspense, useContext, useEffect } from 'react'
+import { Suspense, useContext, useEffect, useState } from 'react'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import SkeletonStack from '../../../../../../../../../modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import type { CategoriesCurationStepFragment$key } from '@//:artifacts/CategoriesCurationStepFragment.graphql'
 
 import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector'
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
-import HStackScroll from '../../../../../../../../../modules/content/PageLayout/BuildingBlocks/HStackScroll/HStackScroll'
+import HStackScroll
+  from '../../../../../../../../../modules/content/PageLayout/BuildingBlocks/HStackScroll/HStackScroll'
+import SearchInput from '../../../../../../../../components/SearchInput/SearchInput'
+import { useSearchQueryArguments } from '@//:modules/hooks'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: CategoriesCurationStepFragment$key | null
@@ -31,7 +35,13 @@ const Fragment = graphql`
 export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
+
+  const [search, setSearch] = useState<string>('')
+
   const dispatch = useContext(DispatchContext)
+
+  const { i18n } = useLingui()
 
   const currentCategories = data?.category?.categories.reduce((accum, value) => ({
     ...accum,
@@ -45,6 +55,10 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
       defaultValue: currentCategories ?? {}
     }
   )
+
+  useEffect(() => {
+    setQueryArgs({ title: search })
+  }, [search])
 
   useEffect(() => {
     dispatch({
@@ -74,12 +88,20 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
             />
           )}
         </HStackScroll>
+        <SearchInput
+          onChange={setSearch}
+          placeholder={i18n._(t`Search for a category`)}
+        />
         <Box maxH='60vh' overflowY='auto'>
           <QueryErrorBoundary loadQuery={() => {
           }}
           >
             <Suspense fallback={<SkeletonStack />}>
-              <CategoryMultiSelector selected={currentSelection} onSelect={changeSelection} />
+              <CategoryMultiSelector
+                queryArgs={queryArgs}
+                selected={currentSelection}
+                onSelect={changeSelection}
+              />
             </Suspense>
           </QueryErrorBoundary>
         </Box>

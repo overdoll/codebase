@@ -95,11 +95,11 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
       icon: UserHuman
     },
     audience: {
-      title: 'Audiences',
+      title: 'Select Audiences',
       icon: ClubMembers
     },
     category: {
-      title: 'Categories',
+      title: 'Select Categories',
       icon: CategoryIdentifier
     }
   }
@@ -136,7 +136,7 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
               bg='gray.800'
               borderRadius='md'
               p={3}
-              spacing={2}
+              spacing={4}
             >
               <FlowBuilderHeader />
               <FlowBuilderProgress />

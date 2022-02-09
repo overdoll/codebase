@@ -87,6 +87,11 @@ export default function CurationAudienceNextButton ({
           type: 'audience',
           value: {}
         })
+        notify({
+          status: 'info',
+          title: t`Audience preference was skipped`,
+          isClosable: true
+        })
         nextStep()
       },
       onError () {

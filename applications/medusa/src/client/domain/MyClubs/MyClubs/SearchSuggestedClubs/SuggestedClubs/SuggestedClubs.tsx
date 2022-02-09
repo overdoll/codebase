@@ -31,7 +31,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment SuggestedClubsFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 7}
+    first: {type: Int, defaultValue: 11}
     after: {type: String}
   )
   @refetchable(queryName: "SuggestedClubsPaginationQuery" ) {
@@ -78,14 +78,16 @@ export default function SuggestedClubs ({
   return (
     <GridWrap>
       {data.clubs.edges.map((item, index) =>
-        <GridTile key={index}>
-          <Link to={`/${item.node.slug as string}`}>
-            {({ isPending }) => (
-              <ClickableTile isPending={isPending}>
-                <ClubTileOverlay query={item.node} />
-              </ClickableTile>
-            )}
-          </Link>
+        <Box h='100%'>
+          <GridTile key={index}>
+            <Link to={`/${item.node.slug as string}`}>
+              {({ isPending }) => (
+                <ClickableTile isPending={isPending}>
+                  <ClubTileOverlay query={item.node} />
+                </ClickableTile>
+              )}
+            </Link>
+          </GridTile>
           <Box mt={2}>
             <JoinClubButton
               w='100%'
@@ -94,10 +96,10 @@ export default function SuggestedClubs ({
               viewerQuery={queryData?.viewer}
             />
           </Box>
-        </GridTile>)}
+        </Box>)}
       <LoadMoreGridTile
         hasNext={hasNext}
-        onLoadNext={() => loadNext(10)}
+        onLoadNext={() => loadNext(9)}
         isLoadingNext={isLoadingNext}
       />
     </GridWrap>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<02ef119071ff6934e011706a24cbca1e>>
- * @relayHash 3acc1549259fd98c49b09fabb3890275
+ * @generated SignedSource<<3f3fc625341e1f0e7e6e3d1a10f25b28>>
+ * @relayHash eb9ae2e5abc564fa8b6954a9c42cb48d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3acc1549259fd98c49b09fabb3890275
+// @relayRequestID eb9ae2e5abc564fa8b6954a9c42cb48d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CategoryMultiSelectorQuery$variables = {};
+export type CategoryMultiSelectorQuery$variables = {
+  title?: string | null;
+};
 export type CategoryMultiSelectorQueryVariables = CategoryMultiSelectorQuery$variables;
 export type CategoryMultiSelectorQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"CategoryMultiSelectorFragment">;
@@ -27,12 +29,24 @@ export type CategoryMultiSelectorQuery = {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "title"
+  }
+],
+v1 = [
+  {
     "kind": "Literal",
     "name": "first",
     "value": 5
+  },
+  {
+    "kind": "Variable",
+    "name": "title",
+    "variableName": "title"
   }
 ],
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -41,7 +55,7 @@ v1 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "CategoryMultiSelectorQuery",
@@ -57,13 +71,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "CategoryMultiSelectorQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -85,7 +99,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -133,7 +147,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v1/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -183,11 +197,11 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "categories(first:5)"
+        "storageKey": null
       },
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "title"
         ],
@@ -199,7 +213,7 @@ return {
     ]
   },
   "params": {
-    "id": "3acc1549259fd98c49b09fabb3890275",
+    "id": "eb9ae2e5abc564fa8b6954a9c42cb48d",
     "metadata": {},
     "name": "CategoryMultiSelectorQuery",
     "operationKind": "query",
@@ -208,6 +222,6 @@ return {
 };
 })();
 
-(node as any).hash = "610492142876739da82fde7029015a3c";
+(node as any).hash = "a69a8260f5e1c04b8f64941db1416166";
 
 export default node;

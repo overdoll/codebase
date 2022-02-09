@@ -4,7 +4,6 @@ import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { HStack, useToast } from '@chakra-ui/react'
 import type { CurationCategoryNextButtonFragment$key } from '@//:artifacts/CurationCategoryNextButtonFragment.graphql'
-import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 
@@ -87,7 +86,11 @@ export default function CurationCategoryNextButton ({
           type: 'category',
           value: {}
         })
-        nextStep()
+        notify({
+          status: 'info',
+          title: t`Category preference was skipped`,
+          isClosable: true
+        })
       },
       onError () {
         notify({
@@ -108,7 +111,7 @@ export default function CurationCategoryNextButton ({
         />
       )
     }
-    return <FlowBuilderNextButton />
+    return <></>
   }
 
   return (
