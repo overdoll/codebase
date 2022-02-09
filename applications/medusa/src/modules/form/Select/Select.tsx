@@ -15,7 +15,7 @@ export default function Select ({
 }: Props): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 7000
+    timeoutMs: 5000
   })
 
   const onStartChange = (e): void => {
@@ -28,7 +28,7 @@ export default function Select ({
     <ChakraSelect
       {...rest}
       icon={isPending
-        ? <Spinner m={1} />
+        ? <Spinner />
         : <Icon icon={ArrowButtonDown} fill='inherit' p={1} />}
       onChange={onStartChange}
       isDisabled={isPending}

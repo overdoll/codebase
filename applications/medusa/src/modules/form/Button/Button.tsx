@@ -19,7 +19,7 @@ const Button = forwardRef<any, Props>(({
 }: Props, forwardRef) => {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 10000
+    timeoutMs: 5000
   })
 
   const handleClick = (e): void => {
