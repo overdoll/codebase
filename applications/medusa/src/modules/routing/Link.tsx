@@ -26,7 +26,7 @@ export default function Link ({
 
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 10000
+    timeoutMs: 3000
   })
 
   // When the user clicks, change route

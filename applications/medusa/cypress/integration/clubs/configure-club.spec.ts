@@ -4,6 +4,8 @@ import { createClubWithName } from '../../support/artist_actions'
 
 const chance = new ChanceJS()
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 describe('Club - Configure', () => {
   const [username, email] = generateUsernameAndEmail()
 

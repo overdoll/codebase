@@ -2,6 +2,8 @@ import { generateUsernameAndEmail } from '../../../support/generate'
 import { join, logout } from '../../../support/join_actions'
 import { gotoNextStep } from '../../../support/flow_builder'
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 describe('Settings - Configure Two-Factor', () => {
   const [username, email] = generateUsernameAndEmail()
 

@@ -14,7 +14,7 @@ export default function Switch ({
 }: Props): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 5000
+    timeoutMs: 3000
   })
 
   const handleChange = (e): void => {

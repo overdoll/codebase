@@ -7,6 +7,8 @@ import { arrowDown, space } from '../../support/key_codes'
 
 const chance = new ChanceJS()
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 describe('Club - Create a Post', () => {
   const [username, email] = generateUsernameAndEmail()
 

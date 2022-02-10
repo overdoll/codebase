@@ -11,7 +11,7 @@ export default function useSearchQueryArguments (initialVariables: QueryArgument
 
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 5000
+    timeoutMs: 4000
   })
 
   const [queryArguments, setQueryArgumentsState] = useState<QueryArguments>(initialState)

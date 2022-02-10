@@ -18,7 +18,7 @@ export default function SingleSelector ({
 }: Props): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 10000
+    timeoutMs: 2000
   })
 
   const onClick = (): void => {

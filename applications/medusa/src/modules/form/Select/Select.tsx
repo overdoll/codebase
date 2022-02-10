@@ -15,7 +15,7 @@ export default function Select ({
 }: Props): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 5000
+    timeoutMs: 3000
   })
 
   const onStartChange = (e): void => {

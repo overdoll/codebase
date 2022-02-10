@@ -24,7 +24,7 @@ export default function SearchInput ({
 
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 7000
+    timeoutMs: 3000
   })
 
   const { i18n } = useLingui()
