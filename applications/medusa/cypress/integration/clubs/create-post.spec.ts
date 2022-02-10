@@ -63,6 +63,9 @@ describe('Club - Create a Post', () => {
   it('can add audience, categories, characters, and go to review step', () => {
     gotoClubCreatePost()
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
+    isOnStep('arrange')
+    cy.findByText(/You'll need to upload at least/iu).should('not.exist')
+    cy.findByText(/Processing Post Content/iu).should('not.exist')
     gotoNextStep()
 
     // adding and removing audiences
@@ -135,7 +138,9 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Upload Files/iu).should('exist')
 
     // test that post is in review and can be accessed from the posts page
+    cy.reload()
     cy.visit(`/club/${clubName}/posts?state=REVIEW`)
+    cy.findByText(/Club Posts/iu).should('be.visible')
     cy.findByText(/No posts found/iu).should('not.exist')
   })
 
