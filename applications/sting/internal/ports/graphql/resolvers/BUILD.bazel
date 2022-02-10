@@ -5,7 +5,9 @@ go_library(
     srcs = [
         "account.go",
         "audience.go",
+        "audience_curation_profile.go",
         "category.go",
+        "category_curation_profile.go",
         "character.go",
         "club.go",
         "post.go",

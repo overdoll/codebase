@@ -41,7 +41,9 @@ type Config struct {
 type ResolverRoot interface {
 	Account() AccountResolver
 	Audience() AudienceResolver
+	AudienceCurationProfile() AudienceCurationProfileResolver
 	Category() CategoryResolver
+	CategoryCurationProfile() CategoryCurationProfileResolver
 	Character() CharacterResolver
 	Club() ClubResolver
 	Entity() EntityResolver
@@ -421,8 +423,14 @@ type AccountResolver interface {
 type AudienceResolver interface {
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
 }
+type AudienceCurationProfileResolver interface {
+	Audiences(ctx context.Context, obj *types.AudienceCurationProfile) ([]*types.Audience, error)
+}
 type CategoryResolver interface {
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+}
+type CategoryCurationProfileResolver interface {
+	Categories(ctx context.Context, obj *types.CategoryCurationProfile) ([]*types.Category, error)
 }
 type CharacterResolver interface {
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
@@ -2661,7 +2669,7 @@ type AudienceCurationProfile {
   skipped: Boolean!
 
   """Audiences selected for this section."""
-  audiences: [Audience!]!
+  audiences: [Audience!]! @goField(forceResolver: true)
 }
 
 type CategoryCurationProfile {
@@ -2672,7 +2680,7 @@ type CategoryCurationProfile {
   skipped: Boolean!
 
   """Categories selected for this section."""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
 }
 
 type CurationProfile {
@@ -3572,8 +3580,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
-directive @extends on OBJECT | INTERFACE
+directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -5381,6 +5389,21 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *bool
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["includeDeprecated"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -6117,14 +6140,14 @@ func (ec *executionContext) _AudienceCurationProfile_audiences(ctx context.Conte
 		Object:     "AudienceCurationProfile",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Audiences, nil
+		return ec.resolvers.AudienceCurationProfile().Audiences(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6646,14 +6669,14 @@ func (ec *executionContext) _CategoryCurationProfile_categories(ctx context.Cont
 		Object:     "CategoryCurationProfile",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Categories, nil
+		return ec.resolvers.CategoryCurationProfile().Categories(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12476,6 +12499,13 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field___Field_args_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -14478,7 +14508,7 @@ func (ec *executionContext) _AudienceCurationProfile(ctx context.Context, sel as
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "skipped":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14488,18 +14518,28 @@ func (ec *executionContext) _AudienceCurationProfile(ctx context.Context, sel as
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "audiences":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AudienceCurationProfile_audiences(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AudienceCurationProfile_audiences(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14719,7 +14759,7 @@ func (ec *executionContext) _CategoryCurationProfile(ctx context.Context, sel as
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "skipped":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14729,18 +14769,28 @@ func (ec *executionContext) _CategoryCurationProfile(ctx context.Context, sel as
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "categories":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CategoryCurationProfile_categories(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CategoryCurationProfile_categories(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -18387,7 +18437,11 @@ func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐ
 func (ec *executionContext) unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx context.Context, v interface{}) ([]relay.ID, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]relay.ID, len(vSlice))
@@ -18741,7 +18795,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -18953,7 +19011,11 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -19105,7 +19167,11 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -19319,8 +19385,7 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	res := graphql.MarshalBoolean(v)
-	return res
+	return graphql.MarshalBoolean(v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -19335,8 +19400,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalBoolean(*v)
-	return res
+	return graphql.MarshalBoolean(*v)
 }
 
 func (ec *executionContext) marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx context.Context, sel ast.SelectionSet, v *types.Category) graphql.Marshaler {
@@ -19487,8 +19551,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalInt(*v)
-	return res
+	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) marshalOLikePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐLikePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.LikePostPayload) graphql.Marshaler {
@@ -19555,8 +19618,7 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
-	return res
+	return graphql.MarshalString(v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
@@ -19565,7 +19627,11 @@ func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v
 	}
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -19609,8 +19675,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(*v)
-	return res
+	return graphql.MarshalString(*v)
 }
 
 func (ec *executionContext) marshalOSubmitPostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSubmitPostPayload(ctx context.Context, sel ast.SelectionSet, v *types.SubmitPostPayload) graphql.Marshaler {
@@ -19632,8 +19697,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalTime(*v)
-	return res
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUndoLikePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UndoLikePostPayload) graphql.Marshaler {

@@ -2,7 +2,7 @@
   "baseUrl": "https://DEV_URL_HERE",
   "env": {
     "codeCoverage": {
-      "url": "https://DEV_URL_HERE/__coverage__"
+      "url": "/__coverage__"
     }
   },
   "experimentalSessionSupport": true
