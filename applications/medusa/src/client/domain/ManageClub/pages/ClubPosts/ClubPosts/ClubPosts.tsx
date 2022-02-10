@@ -4,7 +4,7 @@ import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
-  from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
 import { Link } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'

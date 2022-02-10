@@ -1,13 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type {
   CurationProfileSetupQuery as CurationProfileSetupQueryType
 } from '@//:artifacts/CurationProfileSetupQuery.graphql'
 import CurationProfileSetupQuery from '@//:artifacts/CurationProfileSetupQuery.graphql'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import CurationProfileSetup from './CurationProfileSetup/CurationProfileSetup'
 import ConfigureBackButton from '../../../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'

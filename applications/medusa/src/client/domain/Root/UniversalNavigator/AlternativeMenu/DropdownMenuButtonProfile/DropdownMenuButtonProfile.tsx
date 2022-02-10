@@ -1,7 +1,7 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RenderOnDesktop, RenderOnMobile, ResourceIcon } from '@//:modules/content/PageLayout'

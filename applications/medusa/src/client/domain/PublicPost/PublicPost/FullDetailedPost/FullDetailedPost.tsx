@@ -14,12 +14,12 @@ import {
 } from '@//:modules/content/Posts'
 import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/Content/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import CopyLinkToClipboard from '../../../../components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard'
 import PostClickableCharacters
-  from '@//:modules/content/Posts/components/Interaction/PostClickableCharacters/PostClickableCharacters'
+  from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
-  from '@//:modules/content/Posts/components/Interaction/PostClickableCategories/PostClickableCategories'
+  from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
 
 interface Props {
   query: FullDetailedPostFragment$key | null

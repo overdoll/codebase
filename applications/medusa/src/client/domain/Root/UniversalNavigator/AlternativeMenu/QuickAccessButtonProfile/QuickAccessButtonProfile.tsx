@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import { Flex } from '@chakra-ui/react'
-import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { QuickAccessButtonProfileFragment$key } from '@//:artifacts/QuickAccessButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { ResourceIcon } from '@//:modules/content/PageLayout'

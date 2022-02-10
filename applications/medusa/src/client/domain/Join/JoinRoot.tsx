@@ -6,7 +6,7 @@ import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
 import Join from './pages/Join/Join'
 import Grant from './pages/Grant/Grant'
 import MultiFactor from './pages/MultiFactor/MultiFactor'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {

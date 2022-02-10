@@ -12,7 +12,7 @@ import {
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/Content/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 
 interface Props {
   query: PostReviewFragment$key | null

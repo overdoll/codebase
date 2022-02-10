@@ -1,5 +1,5 @@
 import { ReactNode, Suspense, useMemo } from 'react'
-import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
+import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
 import {
   BirdHouse,
@@ -11,7 +11,7 @@ import {
 } from '@//:assets/icons/navigation'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import SelectClubsQuery, { SelectClubsQuery as SelectClubsQueryType } from '@//:artifacts/SelectClubsQuery.graphql'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectClubs from './components/SelectClubs/SelectClubs'
 import { useLocation } from '@//:modules/routing'
 import { Box, Skeleton } from '@chakra-ui/react'

@@ -1,6 +1,6 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { Trans } from '@lingui/macro'
 import generatePath from '@//:modules/routing/generatePath'
 import { ClubPeopleGroup } from '@//:assets/icons/navigation'

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useLocation } from '@//:modules/routing'
 import Redirect from '@//:modules/routing/Redirect'
-import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
+import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'

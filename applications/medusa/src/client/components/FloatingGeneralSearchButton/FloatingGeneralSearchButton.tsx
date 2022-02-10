@@ -5,14 +5,14 @@ import SearchInput from '../SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
 import { Dispatch, SetStateAction, Suspense, useRef, useState } from 'react'
 import useSearchQueryArguments from '../../../modules/hooks/useSearchQueryArguments'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import GeneralSearch from './components/GeneralSearch/GeneralSearch'
 import SaveSearchButton from './components/GeneralSearch/SaveSearchButton/SaveSearchButton'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
 import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SearchBar } from '@//:assets/icons/navigation'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 
 interface Props {
   routeTo: string

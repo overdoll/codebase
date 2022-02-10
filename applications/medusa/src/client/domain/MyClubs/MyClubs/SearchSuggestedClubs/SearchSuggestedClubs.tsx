@@ -5,8 +5,8 @@ import { t } from '@lingui/macro'
 import SearchInput from '../../../../components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import SkeletonRectangleGrid
-  from '../../../../../modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+  from '../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useLingui } from '@lingui/react'
 
 export default function SearchSuggestedClubs (): JSX.Element {

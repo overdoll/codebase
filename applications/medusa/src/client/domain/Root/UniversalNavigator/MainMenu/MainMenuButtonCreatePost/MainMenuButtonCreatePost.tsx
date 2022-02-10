@@ -4,7 +4,7 @@ import generatePath from '@//:modules/routing/generatePath'
 import { ContentBrushPen } from '@//:assets/icons/navigation'
 import { AddPlus } from '@//:assets/icons/interface'
 import { MainMenuButtonCreatePostQuery } from '@//:artifacts/MainMenuButtonCreatePostQuery.graphql'
-import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { useLingui } from '@lingui/react'
 
 const Query = graphql`

@@ -5,7 +5,7 @@ import RefreshProcessContent from './RefreshProcessContent/RefreshProcessContent
 import { Suspense, useContext, useEffect } from 'react'
 import { Collapse } from '@chakra-ui/react'
 import { useSearchQueryArguments } from '@//:modules/hooks'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 
 interface Props {

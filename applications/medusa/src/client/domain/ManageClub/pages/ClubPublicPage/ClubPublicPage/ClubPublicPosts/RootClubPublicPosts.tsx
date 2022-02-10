@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import type { ClubPublicPostsQuery as ClubPublicPostsQueryType } from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import ClubPublicPostsQuery from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
+import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 import { useParams } from '@//:modules/routing'
 import useSearchButtonQueryArguments

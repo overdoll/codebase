@@ -8,9 +8,9 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:m
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 import { Trans } from '@lingui/macro'
 import SkeletonStack
-  from '../../../../../../../../../../modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
+  from '../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import UploadAudiencesSingleSelector from './UploadAudiencesSingleSelector/UploadAudiencesSingleSelector'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 
 interface Props {

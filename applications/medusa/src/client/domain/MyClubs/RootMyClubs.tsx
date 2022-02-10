@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import type { MyClubsQuery as MyClubsQueryType } from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
+import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 
 interface Props {
   prepared: {

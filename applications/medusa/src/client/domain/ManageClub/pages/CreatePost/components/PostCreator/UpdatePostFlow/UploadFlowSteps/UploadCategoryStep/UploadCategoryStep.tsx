@@ -15,10 +15,10 @@ import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/Removable
 import { useLingui } from '@lingui/react'
 import { useSearchQueryArguments } from '@//:modules/hooks'
 import SkeletonRectangleGrid
-  from '../../../../../../../../../../modules/content/Placeholder/Skeleton/SkeletonRectangleGrid/SkeletonRectangleGrid'
+  from '../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import UploadSearchCategoriesMultiSelector
   from './UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 
