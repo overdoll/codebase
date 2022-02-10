@@ -56,6 +56,10 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
+  const clickOnGrid = (text: string): void => {
+    cy.findByText(text).should('not.be.disabled').click()
+  }
+
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
   })
@@ -75,32 +79,32 @@ describe('Club - Create a Post', () => {
     // adding and removing audiences
     isOnStep('audience')
     nextStepIsDisabled()
-    cy.findByText(postAudience).click()
-    cy.findByText('Non-Standard Audience').click()
-    cy.findByText(postAudience).click()
+    clickOnGrid(postAudience)
+    clickOnGrid('Non-Standard Audience')
+    clickOnGrid(postAudience)
     saveCurrentStep()
 
     // adding and removing categories
     isOnStep('category')
     nextStepIsDisabled()
     searchForTerm('Search for a category', postCategories[0])
-    cy.findByText(postCategories[0]).click()
+    clickOnGrid(postCategories[0])
     // test removing category by the label
     cy.get('button[aria-label="close"]').should('not.be.disabled').click()
     cy.get('button[aria-label="close"]').should('not.exist')
-    cy.findByText(postCategories[0]).click()
+    clickOnGrid(postCategories[0])
     // test removing category by selecting it again
     cy.findByRole('button', { name: postCategories[0] }).click()
     cy.get('button[aria-label="close"]').should('not.exist')
-    cy.findByText(postCategories[0]).click()
+    clickOnGrid(postCategories[0])
     // add second category
     searchForTerm('Search for a category', postCategories[1])
-    cy.findByText(postCategories[1]).click()
+    clickOnGrid(postCategories[1])
     // test button is still disabled if there are two categories
     nextStepIsDisabled()
     // add third category
     searchForTerm('Search for a category', postCategories[2])
-    cy.findByText(postCategories[2]).click()
+    clickOnGrid(postCategories[2])
     // button is enabled after 3 categories added
     saveCurrentStep()
 
@@ -108,14 +112,14 @@ describe('Club - Create a Post', () => {
     isOnStep('character')
     nextStepIsDisabled()
     searchForTerm('Search for a character by name', postCharacter)
-    cy.findByText(postCharacter).click()
+    clickOnGrid(postCharacter)
     saveCurrentStep()
     isOnStep('review')
 
     // test refresh to save progress as well as URL working for resuming progress and post page for drafts
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    cy.findByText('2').should('exist').click()
+    clickOnGrid('2')
     isOnStep('arrange')
     gotoNextStep()
     isOnStep('audience')
