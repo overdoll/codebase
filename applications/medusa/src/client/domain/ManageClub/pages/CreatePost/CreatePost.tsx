@@ -43,16 +43,16 @@ export default function CreatePost (props: Props): JSX.Element {
     characters: objectCategoryValueReducer({ dispatchType: 'characters' }),
     isProcessing: singleStringValueReducer({
       dispatchType: 'isProcessing',
-      defaultValue: { value: false }
+      defaultValue: { value: false },
     }),
     isInReview: singleStringValueReducer({
       dispatchType: 'isInReview',
-      defaultValue: { value: false }
+      defaultValue: { value: false },
     }),
     isSubmitted: singleStringValueReducer({
       dispatchType: 'isSubmitted',
-      defaultValue: { value: false }
-    })
+      defaultValue: { value: false },
+    }),
 
   })
 
@@ -60,7 +60,7 @@ export default function CreatePost (props: Props): JSX.Element {
 
   const [queryRef, loadQuery] = useQueryLoader(
     PostCreatorQuery,
-    props.prepared.query
+    props.prepared.query,
   )
 
   const notify = useToast()
@@ -79,7 +79,7 @@ export default function CreatePost (props: Props): JSX.Element {
         const url = response.uploadURL as string
         dispatch({
           type: 'uploads_urls',
-          value: { [file.id]: getIdFromUppyUrl(url) }
+          value: { [file.id]: getIdFromUppyUrl(url) },
         })
       }
     })
@@ -94,9 +94,9 @@ export default function CreatePost (props: Props): JSX.Element {
           value: {
             [file.id]: {
               0: progress.bytesUploaded,
-              1: progress.bytesTotal
-            }
-          }
+              1: progress.bytesTotal,
+            },
+          },
         })
       }
     })
@@ -111,8 +111,8 @@ export default function CreatePost (props: Props): JSX.Element {
           type: 'uploads_files',
           value: {
             id: file.id,
-            type: file.type
-          }
+            type: file.type,
+          },
         })
       }
     })
@@ -130,7 +130,7 @@ export default function CreatePost (props: Props): JSX.Element {
       notify({
         status: 'error',
         title: message,
-        isClosable: true
+        isClosable: true,
       })
     })
   }, [uppy])
@@ -139,7 +139,7 @@ export default function CreatePost (props: Props): JSX.Element {
     if (memoSlug == null) return
     loadQuery({
       reference: postReference ?? '',
-      slug: memoSlug
+      slug: memoSlug,
     })
   }, [postReference, memoSlug])
 
@@ -152,7 +152,7 @@ export default function CreatePost (props: Props): JSX.Element {
             <DispatchContext.Provider value={dispatch}>
               <QueryErrorBoundary loadQuery={() => loadQuery({
                 reference: postReference ?? '',
-                slug: params.slug as string
+                slug: params.slug as string,
               })}
               >
                 <Suspense fallback={<SkeletonPost />}>
