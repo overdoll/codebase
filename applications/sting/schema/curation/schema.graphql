@@ -17,7 +17,7 @@ type AudienceCurationProfile {
   skipped: Boolean!
 
   """Audiences selected for this section."""
-  audiences: [Audience!]!
+  audiences: [Audience!]! @goField(forceResolver: true)
 }
 
 type CategoryCurationProfile {
@@ -28,7 +28,7 @@ type CategoryCurationProfile {
   skipped: Boolean!
 
   """Categories selected for this section."""
-  categories: [Category!]!
+  categories: [Category!]! @goField(forceResolver: true)
 }
 
 type CurationProfile {

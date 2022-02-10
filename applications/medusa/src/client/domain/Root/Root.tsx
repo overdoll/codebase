@@ -7,6 +7,7 @@ import LockedAccountBanner from './LockedAccountBanner/LockedAccountBanner'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
+import NoScript from './NoScript/NoScript'
 
 interface Props {
   prepared: {
@@ -46,6 +47,7 @@ export default function Root (props: Props): JSX.Element {
           <LockedAccountBanner queryRef={data.viewer} />
           {props.children}
         </PageContents>
+        <NoScript />
       </AccountAuthorizer>
     </>
   )

@@ -63,7 +63,7 @@ index.use(coverage)
 index.use(version)
 
 // GraphQL Server
-graphql(index)
+void graphql(index)
 
 // Our entrypoint
 index.use(render)

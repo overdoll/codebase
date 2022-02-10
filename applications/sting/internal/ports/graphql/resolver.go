@@ -78,3 +78,15 @@ func (r *Resolver) Post() PostResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) AudienceCurationProfile() AudienceCurationProfileResolver {
+	return &resolvers.AudienceCurationProfileResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) CategoryCurationProfile() CategoryCurationProfileResolver {
+	return &resolvers.CategoryCurationProfileResolver{
+		App: r.app,
+	}
+}

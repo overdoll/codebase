@@ -21,14 +21,16 @@ type CurationProfileModified struct {
 		Completed bool
 		Skipped   bool
 		Audiences []struct {
-			ID string
+			ID    string
+			Title string
 		}
 	}
 	Category struct {
 		Completed  bool
 		Skipped    bool
 		Categories []struct {
-			ID string
+			ID    string
+			Title string
 		}
 	}
 }
@@ -124,6 +126,7 @@ func TestCreateAndCompleteCurationProfile(t *testing.T) {
 	personalProfile = getAccountCuration(t, testingAccountId)
 	require.True(t, personalProfile.Audience.Completed, "audience profile should be now completed")
 	require.Len(t, personalProfile.Audience.Audiences, 1, "should have correct count of audiences")
+	require.NotEmptyf(t, personalProfile.Audience.Audiences[0].Title, "title should not be empty")
 
 	var updateCategories UpdateCurationProfileCategory
 
@@ -139,6 +142,7 @@ func TestCreateAndCompleteCurationProfile(t *testing.T) {
 	personalProfile = getAccountCuration(t, testingAccountId)
 	require.True(t, personalProfile.Category.Completed, "category profile should be now completed")
 	require.Len(t, personalProfile.Category.Categories, 2, "should have correct count of categories")
+	require.NotEmptyf(t, personalProfile.Category.Categories[0].Title, "title should not be empty")
 
 	require.True(t, personalProfile.Completed, "profile should now be completed")
 }

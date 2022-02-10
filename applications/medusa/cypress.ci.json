@@ -2,7 +2,7 @@
   "baseUrl": "https://traefik",
   "env": {
     "codeCoverage": {
-      "url": "https://traefik/__coverage__"
+      "url": "/__coverage__"
     }
   },
   "projectId": "svdd6z",

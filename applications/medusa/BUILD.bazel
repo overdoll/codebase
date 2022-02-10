@@ -217,7 +217,7 @@ nodejs_image(
     name = "medusa-production-image",
     binary = ":medusa-production",
     env = {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
     },
     templated_args = [
         "--bazel_patch_module_resolver",
