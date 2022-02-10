@@ -173,6 +173,7 @@ describe('Club - Create a Post', () => {
 
     // can exit the flow
     cy.findByText(/Arrange Uploads/iu).parent().get('button[aria-label="Exit Creator"]').click()
+    cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     cy.findByRole('button', { name: /Yes, exit/iu }).click()
     cy.findByText(/Upload Files/iu).should('be.visible')
   })
