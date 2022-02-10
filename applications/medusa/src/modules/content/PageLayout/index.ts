@@ -20,7 +20,7 @@ export { default as ListSpacer } from './BuildingBlocks/ListSpacer/ListSpacer'
 export { default as SmallMenuButton } from '../Interactables/SmallMenuButton/SmallMenuButton'
 export { default as SmallMenuItem } from '../Interactables/SmallMenuItem/SmallMenuItem'
 
-export { default as PostPlaceholder } from './Flair/PostPlaceholder/PostPlaceholder'
+export { default as PostPlaceholder } from '../Placeholder/PostPlaceholder/PostPlaceholder'
 
 export { default as ResourceIcon } from '../DataDisplay/ResourceIcon/ResourceIcon'
 export { default as Icon } from './Flair/Icon/Icon'

@@ -53,10 +53,7 @@ describe('Club - Create a Post', () => {
   }
 
   const waitForProcessing = (): void => {
-    cy.waitUntil(() => cy.findByText(/Processing Post Content/iu).should('not.exist'), {
-      interval: 5000,
-      timeout: 30000
-    })
+    cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
   beforeEach(() => {
@@ -159,7 +156,6 @@ describe('Club - Create a Post', () => {
     // use the upload files button to upload
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.waitUntil(() => cy.get('button[aria-label="Remove Upload"]').should('be.visible'))
-    waitForProcessing()
 
     // test dragging and dropping to rearrange uploads
     // note that this is how react-beautiful-dnd tests the dragging and dropping behaviour
@@ -184,7 +180,6 @@ describe('Club - Create a Post', () => {
     // can remove uploads
     cy.get('button[aria-label="Remove Upload"]').first().click()
     cy.get('button[aria-label="Remove Upload"]').should('not.exist')
-
     // can exit the flow
     cy.findByText(/Arrange Uploads/iu).parent().get('button[aria-label="Exit Creator"]').click()
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
