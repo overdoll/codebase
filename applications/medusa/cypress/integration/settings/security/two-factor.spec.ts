@@ -105,8 +105,6 @@ describe('Settings - Configure Two-Factor', () => {
             cy.get(element).type(token as string)
             cy.findByRole('button', { name: /Submit Code/iu }).click()
             cy.findByText(/Welcome back! Thanks for using two-factor to log in!/iu).should('exist')
-            cy.url().should('include', '/')
-            cy.findAllByText(/Home/).should('exist')
           }
         })
       })

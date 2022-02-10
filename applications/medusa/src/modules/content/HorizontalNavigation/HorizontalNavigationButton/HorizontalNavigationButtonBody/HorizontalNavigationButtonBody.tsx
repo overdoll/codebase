@@ -7,7 +7,7 @@ import { ForwardRefProp } from '@//:types/components'
 
 interface Props extends HTMLChakraProps<any>, ForwardRefProp {
   icon?: FunctionComponent<any>
-  label: ReactNode
+  label: string
   onClick?: () => void
   colorScheme?: string
   children?: ReactNode
@@ -76,7 +76,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
     <ButtonWrapper>
       <IconButton
         as={as}
-        aria-label={label as string}
+        aria-label={label}
         icon={<Icon
           icon={icon}
           p={2}

@@ -38,6 +38,8 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
     ...rest
   }
 
+  console.log(label)
+
   if (to == null) {
     return (
       <HorizontalNavigationButtonBody

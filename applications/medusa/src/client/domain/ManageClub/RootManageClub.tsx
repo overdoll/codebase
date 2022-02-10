@@ -55,7 +55,7 @@ export default function RootManageClub (props: Props): JSX.Element {
           </Trans>
         }
         outsideElements={
-          <Box h={16}>
+          <Box>
             <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
               <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
                 <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />

@@ -1,13 +1,12 @@
 import NotFound from '../../../../routing/NotFound'
-import { LargeBackgroundBox } from '../../../PageLayout'
-import { Heading, Stack } from '@chakra-ui/react'
+import { Center, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../NotFoundFooter/NotFoundFooter'
 
 export default function NotFoundAccount (): JSX.Element {
   return (
     <NotFound>
-      <LargeBackgroundBox>
+      <Center>
         <Stack spacing={8}>
           <Heading fontSize='2xl' color='gray.00'>
             <Trans>
@@ -16,7 +15,7 @@ export default function NotFoundAccount (): JSX.Element {
           </Heading>
           <NotFoundFooter />
         </Stack>
-      </LargeBackgroundBox>
+      </Center>
     </NotFound>
   )
 }

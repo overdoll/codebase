@@ -149,10 +149,10 @@ describe('Club - Create a Post', () => {
     // drag and drop file to upload it
 
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
-
     // use the upload files button to upload
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.waitUntil(() => cy.get('button[aria-label="Remove Upload"]').should('be.visible'))
+    cy.findByText(/Processing Post Content/iu).should('not.exist')
 
     // test dragging and dropping to rearrange uploads
     // note that this is how react-beautiful-dnd tests the dragging and dropping behaviour
@@ -182,6 +182,6 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Arrange Uploads/iu).parent().get('button[aria-label="Exit Creator"]').click()
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     cy.findByRole('button', { name: /Yes, exit/iu }).click()
-    cy.findByText(/Upload Files/iu).should('be.visible')
+    cy.findByText(/Upload one or more files by/iu).should('be.visible')
   })
 })

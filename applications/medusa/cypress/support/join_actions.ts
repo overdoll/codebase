@@ -1,5 +1,11 @@
 export const logout = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: /Menu/iu }).should('not.be.disabled'))
+  cy.visit('/')
+
+  cy.url().should('include', '/')
+
+  cy.waitUntil(() => cy.get('button[aria-label="Home"]').should('be.visible'))
+
+  cy.waitUntil(() => cy.findByRole('button', { name: /Dropdown Menu/iu }).should('not.be.disabled'))
 
   cy.findByRole('button', { name: /Dropdown Menu/iu })
     .click()
