@@ -52,6 +52,13 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Upload Files/).should('exist')
   }
 
+  const waitForProcessing = (): void => {
+    cy.waitUntil(() => cy.findByText(/Processing Post Content/iu).should('not.exist'), {
+      interval: 5000,
+      timeout: 30000
+    })
+  }
+
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
   })
@@ -65,7 +72,7 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
     isOnStep('arrange')
     cy.findByText(/You'll need to upload at least/iu).should('not.exist')
-    cy.findByText(/Processing Post Content/iu).should('not.exist')
+    waitForProcessing()
     gotoNextStep()
 
     // adding and removing audiences
@@ -152,7 +159,7 @@ describe('Club - Create a Post', () => {
     // use the upload files button to upload
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.waitUntil(() => cy.get('button[aria-label="Remove Upload"]').should('be.visible'))
-    cy.findByText(/Processing Post Content/iu).should('not.exist')
+    waitForProcessing()
 
     // test dragging and dropping to rearrange uploads
     // note that this is how react-beautiful-dnd tests the dragging and dropping behaviour

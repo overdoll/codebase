@@ -10,7 +10,7 @@ import {
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { useToast } from '@chakra-ui/react'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null

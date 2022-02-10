@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key

@@ -1,6 +1,6 @@
 import { ButtonProps } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 export default function CommunityGuidelines ({ ...rest }: ButtonProps): JSX.Element {
   return (

@@ -22,7 +22,7 @@ import { UppyContext } from '../../../../context'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { FlowBuilderHeader, FlowBuilderProgress } from '@//:modules/content/PageLayout'
 import ProcessContent from './ProcessContent/ProcessContent'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useLingui } from '@lingui/react'
 
 interface Props {

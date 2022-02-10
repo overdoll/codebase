@@ -10,7 +10,7 @@ import { FileUpload } from '@//:assets/icons/interface'
 import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { Trans } from '@lingui/macro'
 import SuspenseImage from '../../../operations/SuspenseImage'
-import CloseButton from '../../../form/CloseButton/CloseButton'
+import CloseButton from '../../ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   onCompleted: (id) => void

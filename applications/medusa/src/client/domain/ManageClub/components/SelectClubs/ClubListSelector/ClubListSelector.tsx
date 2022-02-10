@@ -16,7 +16,7 @@ import { useHistory, useParams } from '@//:modules/routing'
 import { ClickableBox } from '@//:modules/content/PageLayout'
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { ReactNode } from 'react'
 
 interface Props {

@@ -9,7 +9,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   queryRef: JoinFragment$key | null

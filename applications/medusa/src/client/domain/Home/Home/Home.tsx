@@ -19,8 +19,8 @@ import {
 import { useEffect } from 'react'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>

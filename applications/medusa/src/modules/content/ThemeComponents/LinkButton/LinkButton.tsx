@@ -1,6 +1,6 @@
 import { ButtonProps } from '@chakra-ui/react'
-import Button from '../Button/Button'
-import { Link } from '../../routing'
+import Button from '../../../form/Button/Button'
+import { Link } from '../../../routing'
 
 interface Props extends ButtonProps {
   to: string

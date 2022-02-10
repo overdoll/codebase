@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import NotFound from '@//:modules/routing/NotFound'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 export default function CatchAll (): JSX.Element {
   return (

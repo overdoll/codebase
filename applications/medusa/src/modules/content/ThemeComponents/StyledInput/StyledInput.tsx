@@ -11,7 +11,7 @@ import {
 import { ReactNode } from 'react'
 import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-import { Icon } from '../../content/PageLayout'
+import { Icon } from '../../PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   register: any

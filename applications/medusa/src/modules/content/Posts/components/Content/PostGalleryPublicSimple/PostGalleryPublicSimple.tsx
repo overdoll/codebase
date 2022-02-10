@@ -9,7 +9,7 @@ import { GlobalVideoManagerContext } from '../../../helpers/GlobalVideoManager/G
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import ControlledVideo from '../../ControlledVideo/ControlledVideo'
 import { Trans } from '@lingui/macro'
-import LinkButton from '../../../../../form/LinkButton/LinkButton'
+import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null

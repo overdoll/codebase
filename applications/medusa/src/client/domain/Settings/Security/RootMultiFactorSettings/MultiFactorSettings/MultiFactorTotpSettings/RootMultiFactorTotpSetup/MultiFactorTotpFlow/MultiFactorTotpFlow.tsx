@@ -27,8 +27,8 @@ import TotpActivateStep from './TotpActivateStep/TotpActivateStep'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import TotpAppDownloadStep from './TotpAppDownloadStep/TotpAppDownloadStep'
 import { Barcode, MobilePhone, QrCode } from '@//:assets/icons/interface'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {

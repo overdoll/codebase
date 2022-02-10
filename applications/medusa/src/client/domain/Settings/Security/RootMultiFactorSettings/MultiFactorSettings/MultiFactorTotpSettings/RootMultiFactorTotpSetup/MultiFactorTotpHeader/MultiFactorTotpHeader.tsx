@@ -3,7 +3,7 @@ import type { MultiFactorTotpHeaderQuery } from '@//:artifacts/MultiFactorTotpHe
 import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<MultiFactorTotpHeaderQuery>

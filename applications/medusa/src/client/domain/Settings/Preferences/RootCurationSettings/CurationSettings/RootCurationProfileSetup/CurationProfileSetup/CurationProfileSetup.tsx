@@ -37,8 +37,8 @@ import type { CategoriesCurationStepFragment$key } from '@//:artifacts/Categorie
 import CurationStepperFooter from './CurationStepperFooter/CurationStepperFooter'
 import type { CurationStepperFooterFragment$key } from '@//:artifacts/CurationStepperFooterFragment.graphql'
 import { useUpdateEffect } from 'usehooks-ts'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>

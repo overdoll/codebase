@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { DraggableContentFragment$key } from '@//:artifacts/DraggableContentFragment.graphql'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 

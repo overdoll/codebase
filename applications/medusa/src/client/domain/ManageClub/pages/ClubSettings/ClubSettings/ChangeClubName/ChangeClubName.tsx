@@ -5,7 +5,7 @@ import { Collapse, FormControl, FormLabel, HStack, Text, useDisclosure, useToast
 import { ListSpacer, PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'

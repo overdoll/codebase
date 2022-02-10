@@ -4,7 +4,7 @@ import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { useContext } from 'react'
 import { UppyContext } from '../../../../../../../context'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 

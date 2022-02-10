@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useState, useTransition } from 'react'
 import { HTMLChakraProps, Input, InputGroup, InputRightElement, Spinner } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props extends HTMLChakraProps<any> {
   children?: ({ searchInput: string }) => {}

@@ -2,7 +2,7 @@ import { HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import Button from '../../../../form/Button/Button'
 import { useHistory } from '../../../../routing'
-import LinkButton from '../../../../form/LinkButton/LinkButton'
+import LinkButton from '../../../ThemeComponents/LinkButton/LinkButton'
 
 export default function NotFoundFooter (): JSX.Element {
   const history = useHistory()

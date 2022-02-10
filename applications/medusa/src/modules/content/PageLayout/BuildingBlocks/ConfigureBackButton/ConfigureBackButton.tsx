@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { ArrowButtonLeft } from '@//:assets/icons/navigation'
 import { Icon } from '../../index'
-import LinkButton from '../../../../form/LinkButton/LinkButton'
+import LinkButton from '../../../ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   to: string

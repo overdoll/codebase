@@ -4,7 +4,7 @@ import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.gr
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'

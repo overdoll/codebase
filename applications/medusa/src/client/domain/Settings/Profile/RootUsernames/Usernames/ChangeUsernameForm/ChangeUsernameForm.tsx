@@ -20,14 +20,14 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface UsernameValues {
   username: string

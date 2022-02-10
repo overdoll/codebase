@@ -2,7 +2,7 @@ import { FormControl, FormLabel, InputLeftAddon, Stack, useToast } from '@chakra
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'

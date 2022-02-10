@@ -139,7 +139,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
         <Alert status='warning'>
           <Flex align='center' direction='column'>
             <AlertIcon mb={2} />
-            <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+            <AlertDescription align='center'>
               <Trans>
                 Make sure you save these codes in a safe place. If you lose access to your device and the codes, you
                 will be permanently locked out of your account.

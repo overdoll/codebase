@@ -17,7 +17,7 @@ import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { useHistoryDisclosure } from '@//:modules/hooks'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   queryRef: RevokeTokenButtonFragment$key

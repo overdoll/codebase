@@ -1,7 +1,7 @@
 import { BirdHouse, ClubPeopleGroup, ContentBrushPen } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
-import { Trans, t } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import MainMenuButtonCreatePost from './MainMenuButtonCreatePost/MainMenuButtonCreatePost'
 import { useLingui } from '@lingui/react'
 

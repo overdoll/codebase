@@ -4,7 +4,7 @@ import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceh
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CheckCircle, PauseCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   moderator: NoPostsPlaceholderFragment$key

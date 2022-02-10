@@ -67,7 +67,7 @@ describe('Club - Configure', () => {
 
   it('visit club members page', () => {
     cy.visit(`/club/${newClubName}/members`)
-    cy.findByText(/Club Members/iu).should('exist')
+    cy.findByText('Club Members').should('exist')
     cy.findByText(/No members found/iu).should('exist')
   })
 

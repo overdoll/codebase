@@ -8,7 +8,7 @@ import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragmen
 import Button from '@//:modules/form/Button/Button'
 import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 import { t, Trans } from '@lingui/macro'
-import CloseButton from '@//:modules/form/CloseButton/CloseButton'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   infractions: RejectionReasonsFragment$key

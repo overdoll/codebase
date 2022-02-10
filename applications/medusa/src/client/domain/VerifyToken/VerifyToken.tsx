@@ -14,7 +14,7 @@ import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
 import { Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
-import LinkButton from '@//:modules/form/LinkButton/LinkButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   prepared: {
