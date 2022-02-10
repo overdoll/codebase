@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:60
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:66
 msgid "Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:64
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
 msgid "In Review"
 msgstr ""
 
@@ -25,14 +25,14 @@ msgstr ""
 #~ msgid "Load More"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:74
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:56
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
 msgid "Published"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:68
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
 msgid "Rejected"
 msgstr ""

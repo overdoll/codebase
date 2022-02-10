@@ -1,10 +1,10 @@
 import { Stack, Text } from '@chakra-ui/react'
 import ResourceItem from '../../../../DataDisplay/ResourceItem/ResourceItem'
-import { Icon } from '../../../../index'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CategoryTileOverlayFragment$key } from '@//:artifacts/CategoryTileOverlayFragment.graphql'
 import { TileOverlay } from '../../../index'
+import { Icon } from '../../../../PageLayout'
 
 interface Props {
   query: CategoryTileOverlayFragment$key

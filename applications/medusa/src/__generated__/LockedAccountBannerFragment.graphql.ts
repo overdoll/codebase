@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28cd82f5b3f4e2a8f3007a9c49b9287a>>
+ * @generated SignedSource<<d7b9347c710067e34fa648f002636903>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,11 +30,6 @@ const node: ReaderFragment = {
   "name": "LockedAccountBannerFragment",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "LockedAccountModalFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "concreteType": "AccountLock",
@@ -51,12 +46,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "LockedAccountModalFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "3a9ad104398bc5c29b6282ac5ab5e79e";
+(node as any).hash = "8d8c401cccef1b27b2224477f620e7fe";
 
 export default node;

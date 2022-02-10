@@ -1,18 +1,16 @@
 import { Helmet } from 'react-helmet-async'
-import { Flex } from '@chakra-ui/react'
 import { Suspense } from 'react'
-import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type {
   RecoveryCodesSetupQuery as RecoveryCodesSetupQueryType
 } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import RecoveryCodesSetupQuery from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
-import Button from '@//:modules/form/Button/Button'
-import Link from '@//:modules/routing/Link'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import RecoveryCodesSetup from './RecoveryCodesSetup/RecoveryCodesSetup'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
+import ConfigureBackButton from '../../../../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {
@@ -30,10 +28,11 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
     <>
       <Helmet title='recovery setup' />
       <PageWrapper>
+        <ConfigureBackButton to='/settings/security' />
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>
-              Set up two-factor recovery codes
+              Set up recovery codes
             </Trans>
           </PageSectionTitle>
           <PageSectionDescription>
@@ -48,15 +47,6 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
             <RecoveryCodesSetup query={queryRef as PreloadedQuery<RecoveryCodesSetupQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <Flex justify='center'>
-          <Link to='/settings/security'>
-            <Button w='100%' mt={8} size='sm' variant='link'>
-              <Trans>
-                Go back to settings
-              </Trans>
-            </Button>
-          </Link>
-        </Flex>
       </PageWrapper>
     </>
   )

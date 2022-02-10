@@ -3,11 +3,10 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import CreateClub from './CreateClub/CreateClub'
 import { Trans } from '@lingui/macro'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import CreateClubQuery, { CreateClubQuery as CreateClubQueryType } from '@//:artifacts/CreateClubQuery.graphql'
 import { Suspense } from 'react'
-import PageContents from '../../../Root/PageContents/PageContents'
 
 interface Props {
   prepared: {

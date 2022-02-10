@@ -25,7 +25,7 @@ msgstr ""
 msgid "Date Posted"
 msgstr ""
 
-#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:86
+#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:90
 msgid "Load More"
 msgstr ""
 
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Moderation History"
 msgstr ""
 
-#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:72
+#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:75
 msgid "No audit logs were found"
 msgstr ""
 
-#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:92
+#: src/client/domain/Moderation/History/AuditLogs/AuditLogs.tsx:97
 msgid "Only the last 7 days of logs are available"
 msgstr ""
 

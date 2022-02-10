@@ -3,10 +3,10 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
 import QueueSettings from './QueueSettings/QueueSettings'
-import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 
 interface Props {

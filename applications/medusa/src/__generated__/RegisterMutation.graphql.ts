@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9cf0e83a8e6d24046248e154e1ff7940>>
+ * @generated SignedSource<<09b8e41ba4ce2036dd3aff61b4b06023>>
  * @relayHash 633d6abdc12ec3db601c9c1bb6b1a230
  * @lightSyntaxTransform
  * @nogrep
@@ -12,7 +12,7 @@
 // @relayRequestID 633d6abdc12ec3db601c9c1bb6b1a230
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "USERNAME_TAKEN" | "TOKEN_INVALID" | "%future added value";
+export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "TOKEN_INVALID" | "USERNAME_TAKEN" | "%future added value";
 export type CreateAccountWithAuthenticationTokenInput = {
   token: string;
   username: string;

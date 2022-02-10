@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d0f071effaf02bc6b984ed3742d80d8>>
- * @relayHash c4f49218ff617ace3b9a824696aa5d77
+ * @generated SignedSource<<cacffcccf33c87e8e8b64dd25a46998a>>
+ * @relayHash d4d683f02db9a99095a60e56afdf5eba
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c4f49218ff617ace3b9a824696aa5d77
+// @relayRequestID d4d683f02db9a99095a60e56afdf5eba
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -122,7 +122,6 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -131,6 +130,13 @@ return {
                         "name": "account",
                         "plural": false,
                         "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "username",
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -175,17 +181,11 @@ return {
                             ],
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "username",
-                            "storageKey": null
-                          },
                           (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -250,7 +250,7 @@ return {
     ]
   },
   "params": {
-    "id": "c4f49218ff617ace3b9a824696aa5d77",
+    "id": "d4d683f02db9a99095a60e56afdf5eba",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

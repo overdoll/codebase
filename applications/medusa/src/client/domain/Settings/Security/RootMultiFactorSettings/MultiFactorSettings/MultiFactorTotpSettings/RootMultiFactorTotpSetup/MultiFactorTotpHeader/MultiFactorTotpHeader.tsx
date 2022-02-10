@@ -2,9 +2,8 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
 import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
-import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<MultiFactorTotpHeaderQuery>
@@ -25,7 +24,9 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
     props.query
   )
 
-  if (!queryData.viewer.recoveryCodesGenerated) {
+  if (queryData?.viewer == null) return null
+
+  if (!queryData.viewer?.recoveryCodesGenerated) {
     return (
       <Flex direction='column' align='center'>
         <Alert mb={3} status='warning'>
@@ -36,30 +37,29 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
             </Trans>
           </AlertDescription>
         </Alert>
-        <Link to='/configure/multi-factor/recovery-codes'>
-          <Button
-            colorScheme='gray'
-            size='md'
-          >
-            <Trans>
-              Go to recovery codes
-            </Trans>
-          </Button>
-        </Link>
+        <LinkButton
+          to='/configure/multi-factor/recovery-codes'
+          colorScheme='gray'
+          size='md'
+        >
+          <Trans>
+            Go to recovery codes
+          </Trans>
+        </LinkButton>
       </Flex>
     )
   }
 
   return (
     <>
-      {queryData.viewer.multiFactorTotpConfigured &&
+      {queryData?.viewer.multiFactorTotpConfigured &&
         <Flex mb={3} direction='column' align='center'>
           <Alert status='warning'>
             <AlertIcon />
             <AlertDescription lineHeight={5} fontSize='sm'>
               <Trans>
-                You're about to reconfigure your two-factor authentication device. This will invalidate your current
-                two-factor device configuration.
+                You have already set up your two-factor authentication device. Activating the code again will invalidate
+                your current two-factor device configuration.
               </Trans>
             </AlertDescription>
           </Alert>

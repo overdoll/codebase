@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:38
+#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:43
 msgid "Members"
 msgstr ""

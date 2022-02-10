@@ -1,10 +1,10 @@
-import { Button, Heading, Stack, Text } from '@chakra-ui/react'
+import { Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { Link } from '@//:modules/routing'
 import { CheckCircle, PauseCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   moderator: NoPostsPlaceholderFragment$key
@@ -41,17 +41,16 @@ export default function PostHeader (props: Props): JSX.Element {
             Since you've paused your moderator status, you won't get anymore new cases.
           </Trans>
         </Text>
-        <Link to='/settings/moderation'>
-          <Button
-            colorScheme='gray'
-            variant='ghost'
-            size='md'
-          >
-            <Trans>
-              Moderation Settings
-            </Trans>
-          </Button>
-        </Link>
+        <LinkButton
+          to='/settings/moderation'
+          colorScheme='gray'
+          variant='ghost'
+          size='md'
+        >
+          <Trans>
+            Moderation Settings
+          </Trans>
+        </LinkButton>
       </Stack>
     )
   }

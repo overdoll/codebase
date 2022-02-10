@@ -1,4 +1,4 @@
-import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import SiteLinkLogo from './SiteLinkLogo/SiteLinkLogo'
 import MainMenu from './MainMenu/MainMenu'
 import { useLocation } from '@//:modules/routing'
@@ -39,7 +39,7 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
         <HorizontalNavigation>
           <HorizontalNavigation.Left>
             <RenderOnDesktop>
-              <SiteLinkLogo invisible={isHidden} />
+              <SiteLinkLogo />
             </RenderOnDesktop>
           </HorizontalNavigation.Left>
           {!isHidden && (

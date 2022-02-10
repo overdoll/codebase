@@ -1,5 +1,6 @@
 import { OverlappingBubbles, OverlappingCircles, OverlappingPlus } from '@//:assets/icons/patterns'
 import IconPattern from '../../PageLayout/Flair/IconPattern/IconPattern'
+import { useConst } from '@chakra-ui/react'
 
 export default function RandomPattern (): JSX.Element {
   const icons = [
@@ -19,7 +20,9 @@ export default function RandomPattern (): JSX.Element {
 
   // TODO center it or position randomly so it doesnt look clipped on right/bottom edge
 
-  const randomIcon = icons[Math.floor(Math.random() * 3)]
+  const randomValue = useConst(Math.random() * 3)
+
+  const randomIcon = icons[Math.floor(randomValue)]
 
   return (
     <IconPattern

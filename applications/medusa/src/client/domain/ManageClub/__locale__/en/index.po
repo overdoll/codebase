@@ -6,60 +6,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:183
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:177
 msgid "A unique link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:81
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:82
 msgid "Add Club Link Alias"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
-msgid "Add categories"
-msgstr ""
+#~ msgid "Add categories"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
-msgid "Add characters"
-msgstr ""
+#~ msgid "Add characters"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:90
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:87
 msgid "Add some categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:72
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:72
 msgid "Add, arrange, or remove the files you're uploading."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:128
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:132
 msgid "Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:60
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:69
 msgid "All characters must be of legal age"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:132
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:96
 msgid "Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any time."
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:89
-msgid "Arrange your uploads"
-msgstr ""
+#~ msgid "Arrange your uploads"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:54
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:63
 msgid "As a reminder of the guidelines"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowBackwardButton/FlowBackwardButton.tsx:53
-msgid "Back"
-msgstr ""
+#~ msgid "Back"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:119
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:120
 msgid "Change Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:107
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:109
 msgid "Change Club Thumbnail"
 msgstr ""
 
@@ -71,31 +77,31 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:110
+#: src/client/domain/ManageClub/RootManageClub.tsx:114
 msgid "Club Page"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:90
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:91
 msgid "Club Thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:109
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:98
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:195
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:189
 msgid "Create Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:30
+#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:29
 msgid "Create a Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:69
+#: src/client/domain/ManageClub/RootManageClub.tsx:73
 msgid "Create a Post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:81
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:78
 msgid "Creating your post..."
 msgstr ""
 
@@ -103,74 +109,78 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:60
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:66
 msgid "Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:111
+#: src/client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:112
 msgid "Drop your files to upload them"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:136
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:153
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:137
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:154
 msgid "Enter a new club link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:127
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:137
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:128
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:138
 msgid "Enter a new club name"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/SearchInput/SearchInput.tsx:42
-msgid "Enter a search term"
-msgstr ""
+#~ msgid "Enter a search term"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:122
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:116
 msgid "Error creating club {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:126
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:72
+msgid "Exit Creator"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:87
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:97
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:139
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:107
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:103
 msgid "Go back"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:67
-msgid "Go to my posts"
-msgstr ""
+#~ msgid "Go to my posts"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:77
+#: src/client/domain/ManageClub/RootManageClub.tsx:81
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:64
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
 msgid "In Review"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:147
-#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:180
-#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:194
+#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:179
+#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:193
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:164
+#: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:163
 msgid "Leave"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:34
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:35
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:52
+#: src/client/domain/ManageClub/RootManageClub.tsx:53
 msgid "Manage Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:93
-#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:38
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:154
+#: src/client/domain/ManageClub/RootManageClub.tsx:97
+#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:43
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:152
 msgid "Members"
 msgstr ""
 
@@ -178,79 +188,91 @@ msgstr ""
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:125
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:124
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:138
-msgid "Next"
-msgstr ""
+#~ msgid "Next"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/RootSearchCategories/SearchCategories/SearchCategories.tsx:87
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector.tsx:86
 msgid "No categories were found with the title {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/RootSearchCharacters/SearchCharacters/SearchCharacters.tsx:87
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:86
 msgid "No characters were found with the name {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:65
+#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:68
 msgid "No members found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:74
 #: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:38
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:59
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:68
 msgid "Nothing extremely offensive or shocking"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowFooter.tsx:43
-msgid "Please wait for your post content to finish processing before continuing."
-msgstr ""
+#~ msgid "Please wait for your post content to finish processing before continuing."
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
 msgid "Post Content Processed"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:52
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostSubmitted/PostSubmitted.tsx:50
 msgid "Post Submitted"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:42
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostSubmitted/PostSubmitted.tsx:40
 msgid "Post again"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/Arrange.tsx:69
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:69
 msgid "Posting {0} media"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:85
+#: src/client/domain/ManageClub/RootManageClub.tsx:89
 msgid "Posts"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:59
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:98
+msgid "Processing"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:59
 msgid "Processing Post Content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:56
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
 msgid "Published"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:68
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:142
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:146
 msgid "Remove Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:132
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/File/File.tsx:84
+msgid "Remove File"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:69
+msgid "Remove Upload"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:112
 msgid "Retry"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
-msgid "Review post"
-msgstr ""
+#~ msgid "Review post"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Review/Review.tsx:29
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:30
 msgid "Review your selections"
 msgstr ""
 
@@ -258,72 +280,72 @@ msgstr ""
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:110
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:110
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:123
-msgid "Save"
-msgstr ""
+#~ msgid "Save"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:100
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:99
 msgid "Search for a category"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:103
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:96
 msgid "Search for a character by name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:73
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:76
 msgid "See All"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
-msgid "Select an audience"
-msgstr ""
+#~ msgid "Select an audience"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Category/Category.tsx:95
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:92
 msgid "Select the categories that would be most applicable to the content you have uploaded."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:98
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:89
 msgid "Select the character(s) that are the primary focus in your content."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:61
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:69
 msgid "Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We only show a person content they are interested in seeing."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:135
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
 msgid "Set Default"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:101
+#: src/client/domain/ManageClub/RootManageClub.tsx:105
 msgid "Settings"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:89
-msgid "Step 1"
-msgstr ""
+#~ msgid "Step 1"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
-msgid "Step 2"
-msgstr ""
+#~ msgid "Step 2"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:83
-msgid "Step 3"
-msgstr ""
+#~ msgid "Step 3"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:85
-msgid "Step 4"
-msgstr ""
+#~ msgid "Step 4"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:87
-msgid "Step 5"
-msgstr ""
+#~ msgid "Step 5"
+#~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:148
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:164
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:91
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:149
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:165
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:91
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:26
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostSubmitted/PostSubmitted.tsx:24
 msgid "Submitted For Review"
 msgstr ""
 
@@ -331,11 +353,11 @@ msgstr ""
 msgid "Successfully added the link alias {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:99
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:102
 msgid "Successfully promoted the link alias {slug} to default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:73
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:76
 msgid "Successfully removed the link alias {slug}. You can no longer use this link."
 msgstr ""
 
@@ -343,7 +365,7 @@ msgstr ""
 msgid "Successfully updated your club name to {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:71
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:72
 msgid "Successfully updated your club thumbnail"
 msgstr ""
 
@@ -351,11 +373,11 @@ msgstr ""
 msgid "Switch to club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:52
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:54
 msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:160
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:154
 msgid "The best name you can come up with"
 msgstr ""
 
@@ -367,35 +389,35 @@ msgstr ""
 msgid "There was an error creating a draft post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:126
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:106
 msgid "There was an error processing your files"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:106
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:110
 msgid "There was an error promoting the link alias to default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:80
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:83
 msgid "There was an error removing the link alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateAudienceButton/UpdateAudienceButton.tsx:78
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:71
 msgid "There was an error saving the audience"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCategoryButton/UpdateCategoryButton.tsx:93
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCategoryButton/UpdateCategoryButton.tsx:86
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateCharacterButton/UpdateCharacterButton.tsx:94
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:88
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/SubmitPostButton/SubmitPostButton.tsx:77
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:77
 msgid "There was an error submitting your post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowForward/components/UpdateContentButton/UpdateContentButton.tsx:106
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:94
 msgid "There was an error updating the post content"
 msgstr ""
 
@@ -403,40 +425,40 @@ msgstr ""
 msgid "There was an error updating your club name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:78
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:79
 msgid "There was an error updating your club thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:161
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:155
 msgid "This is the name everyone will see"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:184
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:178
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:87
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:96
 msgid "This post was already submitted"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:98
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ProcessUploads/ProcessUploads.tsx:150
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:95
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:131
 msgid "Upload Files"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:103
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:100
 msgid "Upload one or more files by dragging and dropping them or by tapping here"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:66
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:75
 msgid "Upstanding netizens will read all the rules before posting"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Character/Character.tsx:93
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:84
 msgid "Who is in your post?"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Audience/Audience.tsx:47
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:49
 msgid "Who is the target audience?"
 msgstr ""
 
@@ -445,7 +467,7 @@ msgstr ""
 msgid "Why is this required"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:144
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:108
 msgid "Yes, exit"
 msgstr ""
 
@@ -453,19 +475,19 @@ msgstr ""
 msgid "You are now a member of {0}!"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClub.tsx:33
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClub.tsx:54
 msgid "You can only create a maximum of {0} clubs"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:127
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:128
 msgid "You have added the maximum amount of aliases. You'll have to remove at least one alias to be able to add another."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:61
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:70
 msgid "You own the rights to the content you upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Arrange/ArrangeUploads/ArrangeUploads.tsx:136
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:136
 msgid "You'll need to upload at least one file to continue"
 msgstr ""
 
@@ -473,23 +495,23 @@ msgstr ""
 msgid "You're in too many clubs. You need to leave at least one before you can join this one."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:150
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:144
 msgid "Your Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:166
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:160
 msgid "Your Unique Club Link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:57
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostSubmitted/PostSubmitted.tsx:55
 msgid "Your post is now visible to the public"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:31
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostSubmitted/PostSubmitted.tsx:29
 msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:144
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:173
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:145
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:167
 msgid "overdoll.com/"
 msgstr ""

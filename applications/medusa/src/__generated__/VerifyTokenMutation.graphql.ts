@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<823917160d64f6948aae47e846c44fa9>>
+ * @generated SignedSource<<3d9f0612d972f81b564e06acd85d4c40>>
  * @relayHash 783f87ee699c44d613ebcdc34d94128e
  * @lightSyntaxTransform
  * @nogrep
@@ -14,8 +14,8 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type VerifyAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
 export type VerifyAuthenticationTokenInput = {
-  token: string;
   secret: string;
+  token: string;
 };
 export type VerifyTokenMutation$variables = {
   input: VerifyAuthenticationTokenInput;

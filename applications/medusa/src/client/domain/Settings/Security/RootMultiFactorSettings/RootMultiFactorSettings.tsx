@@ -4,11 +4,11 @@ import type {
   MultiFactorSettingsQuery as MultiFactorSettingsQueryType
 } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import SkeletonStack from '@//:modules/content/Placeholder/Skeleton/SkeletonStack/SkeletonStack'
+import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 
 interface Props {

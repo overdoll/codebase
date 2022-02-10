@@ -3,8 +3,9 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CopyCheck, CopyText } from '@//:assets/icons/interface'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
+import { HTMLChakraProps } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends HTMLChakraProps<any> {
   children: string
 }
 

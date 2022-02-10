@@ -1,7 +1,7 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RenderOnDesktop, RenderOnMobile, ResourceIcon } from '@//:modules/content/PageLayout'
@@ -24,7 +24,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
 
   return (
     <HorizontalNavigationDropdownMenu.Button
-      to={`/u/${data?.username as string}`}
+      to={`/a/${data?.username as string}`}
     >
       <RenderOnDesktop>
         <Flex
@@ -60,8 +60,8 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
       <RenderOnMobile>
         <Flex direction='column' align='center'>
           <ResourceIcon
-            w='34px'
-            h='34px'
+            w={8}
+            h={8}
             query={data?.avatar}
             mb={2}
           />

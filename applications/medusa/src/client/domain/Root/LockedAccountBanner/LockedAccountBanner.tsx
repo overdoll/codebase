@@ -12,6 +12,9 @@ interface Props {
 
 const LockedAccountBannerGQL = graphql`
   fragment LockedAccountBannerFragment on Account {
+    lock {
+      __typename
+    }
     ...LockedAccountModalFragment
     lock {
       __typename

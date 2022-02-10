@@ -6,11 +6,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: es\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:74
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:77
 msgid "Suggested Posts"
 msgstr ""
 
-#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:73
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:76
 msgid "View Post"
 msgstr ""

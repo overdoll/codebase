@@ -6,6 +6,7 @@ import { CheckMark, DeleteBin } from '@//:assets/icons/interface'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { ManageClubSlugAliasesRemoveMutation } from '@//:artifacts/ManageClubSlugAliasesRemoveMutation.graphql'
+import { useHistory } from '@//:modules/routing'
 
 interface Props {
   query: ManageClubSlugAliasesFragment$key | null
@@ -55,6 +56,8 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
 
   const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesRemoveMutation>(PromoteClubSlugMutationGQL)
 
+  const history = useHistory()
+
   const { i18n } = useLingui()
 
   const notify = useToast()
@@ -99,6 +102,7 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
           title: t`Successfully promoted the link alias ${slug} to default`,
           isClosable: true
         })
+        history.push(`/club/${slug as string}/settings`)
       },
       onError () {
         notify({

@@ -1,7 +1,13 @@
 export const logout = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: /Menu/iu }).should('not.be.disabled'))
+  cy.visit('/')
 
-  cy.findByRole('button', { name: /Menu/iu })
+  cy.url().should('include', '/')
+
+  cy.waitUntil(() => cy.get('button[aria-label="Home"]').should('be.visible'))
+
+  cy.waitUntil(() => cy.findByRole('button', { name: /Dropdown Menu/iu }).should('not.be.disabled'))
+
+  cy.findByRole('button', { name: /Dropdown Menu/iu })
     .click()
 
   cy.waitUntil(() => cy.findByRole('button', { name: /Log Out/iu }).should('exist'))
@@ -10,6 +16,7 @@ export const logout = (): void => {
     .click()
 
   cy.waitUntil(() => cy.findAllByText(/home/iu).should('exist'))
+  cy.waitUntil(() => cy.findAllByText(/You have been logged out/iu).should('exist'))
 }
 
 export const join = (email: string): void => {
@@ -18,8 +25,9 @@ export const join = (email: string): void => {
   let startTimestamp
 
   // wait until button isn't disabled (it's ready to be interacted with)
+  // TODO fix flakiness with timestamp - the subtraction is a temp solution
   cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')).then(() => {
-    startTimestamp = Date.now()
+    startTimestamp = Date.now() - 5000
   })
 
   cy.findByRole('textbox', { name: /email/iu })

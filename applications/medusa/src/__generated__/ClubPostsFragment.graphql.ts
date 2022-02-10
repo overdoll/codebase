@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16d7b3c989576aca482e63a30edba0db>>
+ * @generated SignedSource<<dc56a2e2f83a14087b37e38f832d2f52>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
-export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubPostsFragment$data = {
   readonly posts: {
@@ -42,7 +42,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 3,
+      "defaultValue": 11,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -189,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "479505f60508280e718cac91f70dcbfe";
+(node as any).hash = "68da1604e0337fcc0251faf004e47f2f";
 
 export default node;

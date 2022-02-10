@@ -51,9 +51,6 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
       }
     })
   }
-
-  // TODO write this better. seems super hacky.
-
   // add a state to uppy to keep track of the club that's selected
   useEffect(() => {
     uppy.setMeta({

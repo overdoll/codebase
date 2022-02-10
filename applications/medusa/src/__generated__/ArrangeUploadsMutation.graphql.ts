@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd96604bd83b2d3c372d8952e52c0e53>>
+ * @generated SignedSource<<d6ccce6511069043bdd70e49b9310489>>
  * @relayHash f45286610b48af3f6bdc4652b7a753e4
  * @lightSyntaxTransform
  * @nogrep
@@ -14,8 +14,8 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type RemovePostContentInput = {
-  id: string;
   contentIds: ReadonlyArray<string>;
+  id: string;
 };
 export type ArrangeUploadsMutation$variables = {
   input: RemovePostContentInput;

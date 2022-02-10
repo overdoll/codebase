@@ -1,18 +1,19 @@
 import { useRoutingContext } from './RoutingContext'
 import matchPath from './matchPath'
-import Link from './Link'
+import Link, { ChildrenCallableLink } from './Link'
 import { createLocation } from 'history'
 import { useLocation } from './Location'
-import { ReactNode } from 'react'
 import getBasePath from './getBasePath'
+import { MaybeRenderProp } from '@//:types/components'
+import { runIfFunction } from '../support'
 
-interface ChildrenCallable {
+interface ChildrenCallable extends ChildrenCallableLink {
   isActive: boolean
   isActiveBasePath: boolean
 }
 
 interface Props {
-  children: (ChildrenCallable: ChildrenCallable) => ReactNode
+  children: MaybeRenderProp<ChildrenCallable>
   to: string
   exact?: boolean
   strict?: boolean
@@ -38,7 +39,7 @@ const NavLink = ({
   strict = false,
   sensitive = false,
   ...rest
-}: Props): JSX.Element | null => {
+}: Props): JSX.Element => {
   const router = useRoutingContext()
 
   const location = useLocation()
@@ -66,19 +67,18 @@ const NavLink = ({
 
   const isActive = match != null
 
-  if (children == null) {
-    return null
-  }
-
   return (
     <Link
       {...rest}
       to={to}
     >
-      {children({
-        isActive,
-        isActiveBasePath
-      })}
+      {({ isPending }) => (
+        runIfFunction(children, {
+          isActive,
+          isActiveBasePath,
+          isPending
+        })
+      )}
     </Link>
   )
 }

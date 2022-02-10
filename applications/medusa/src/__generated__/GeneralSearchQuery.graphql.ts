@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fda4af6a30819af5efd0f0ed2fe60a32>>
- * @relayHash c18e5575fbcc65ea0baaa4f8c64af278
+ * @generated SignedSource<<f3f3cfe787963352414f18ae1eb0d31e>>
+ * @relayHash 672b2591e521c31d02524d3cf8e2e8cf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c18e5575fbcc65ea0baaa4f8c64af278
+// @relayRequestID 672b2591e521c31d02524d3cf8e2e8cf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GeneralSearchQuery$variables = {
   first?: number | null;
+  search?: string | null;
   seriesSlugs?: ReadonlyArray<string> | null;
   charactersSlugs?: ReadonlyArray<string> | null;
   categoriesSlugs?: ReadonlyArray<string> | null;
@@ -54,43 +55,54 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "seriesSlugs"
+  "name": "search"
 },
 v5 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "seriesSlugs"
+},
+v6 = {
   "kind": "Variable",
   "name": "first",
   "variableName": "first"
 },
-v6 = [
-  (v5/*: any*/),
+v7 = {
+  "kind": "Variable",
+  "name": "title",
+  "variableName": "search"
+},
+v8 = [
+  (v6/*: any*/),
   {
     "kind": "Variable",
     "name": "slugs",
     "variableName": "categoriesSlugs"
-  }
+  },
+  (v7/*: any*/)
 ],
-v7 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -130,25 +142,25 @@ v10 = {
       ],
       "storageKey": null
     },
-    (v7/*: any*/)
+    (v9/*: any*/)
   ],
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -173,12 +185,17 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = [
+v16 = [
   "title",
   "slugs"
 ],
-v15 = [
-  (v5/*: any*/),
+v17 = [
+  (v6/*: any*/),
+  {
+    "kind": "Variable",
+    "name": "name",
+    "variableName": "search"
+  },
   {
     "kind": "Variable",
     "name": "seriesSlug",
@@ -190,13 +207,14 @@ v15 = [
     "variableName": "charactersSlugs"
   }
 ],
-v16 = [
-  (v5/*: any*/),
+v18 = [
+  (v6/*: any*/),
   {
     "kind": "Variable",
     "name": "slugs",
     "variableName": "seriesSlugs"
-  }
+  },
+  (v7/*: any*/)
 ];
 return {
   "fragment": {
@@ -205,7 +223,8 @@ return {
       (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/)
+      (v4/*: any*/),
+      (v5/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -235,6 +254,7 @@ return {
     "argumentDefinitions": [
       (v3/*: any*/),
       (v4/*: any*/),
+      (v5/*: any*/),
       (v2/*: any*/),
       (v0/*: any*/),
       (v1/*: any*/)
@@ -244,7 +264,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v8/*: any*/),
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
         "name": "categories",
@@ -266,26 +286,26 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
-                  (v11/*: any*/)
+                  (v11/*: any*/),
+                  (v12/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v6/*: any*/),
-        "filters": (v14/*: any*/),
+        "args": (v8/*: any*/),
+        "filters": (v16/*: any*/),
         "handle": "connection",
         "key": "SearchCategoriesGeneral_categories",
         "kind": "LinkedHandle",
@@ -293,7 +313,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v15/*: any*/),
+        "args": (v17/*: any*/),
         "concreteType": "CharacterConnection",
         "kind": "LinkedField",
         "name": "characters",
@@ -315,8 +335,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v8/*: any*/),
+                  (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -332,27 +352,27 @@ return {
                     "name": "series",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
-                      (v7/*: any*/)
+                      (v11/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v10/*: any*/),
-                  (v11/*: any*/)
+                  (v12/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v15/*: any*/),
+        "args": (v17/*: any*/),
         "filters": [
           "name",
           "slugs",
@@ -365,7 +385,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
+        "args": (v18/*: any*/),
         "concreteType": "SeriesConnection",
         "kind": "LinkedField",
         "name": "series",
@@ -387,26 +407,26 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
                   (v9/*: any*/),
-                  (v8/*: any*/),
+                  (v11/*: any*/),
                   (v10/*: any*/),
-                  (v11/*: any*/)
+                  (v12/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v13/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
-        "filters": (v14/*: any*/),
+        "args": (v18/*: any*/),
+        "filters": (v16/*: any*/),
         "handle": "connection",
         "key": "SearchSeriesGeneral_series",
         "kind": "LinkedHandle",
@@ -415,7 +435,7 @@ return {
     ]
   },
   "params": {
-    "id": "c18e5575fbcc65ea0baaa4f8c64af278",
+    "id": "672b2591e521c31d02524d3cf8e2e8cf",
     "metadata": {},
     "name": "GeneralSearchQuery",
     "operationKind": "query",
@@ -424,6 +444,6 @@ return {
 };
 })();
 
-(node as any).hash = "d2e881aad281de75b32d174b3825168b";
+(node as any).hash = "f8e0685e79f8adea77f0a9a890e2f34d";
 
 export default node;

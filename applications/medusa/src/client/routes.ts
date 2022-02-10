@@ -284,14 +284,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Settings/ConfirmEmail/ConfirmEmail'
+            './domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Settings/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -670,6 +670,43 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/settings/preferences',
+            component: loadable(async () =>
+              await import(
+                './domain/Settings/Preferences/Preferences'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Preferences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({ environment }) => {
+                const ability = getAbilityFromUser(environment)
+
+                return ability.can('moderate', 'Post')
+              }
+            ],
+            prepare: () => {
+              const Query = require('@//:artifacts/CurationSettingsQuery.graphql')
+              return {
+                curationQuery: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -764,6 +801,51 @@ const routes: Route[] = [
         ]
       },
       {
+        path: '/configure/curation-profile',
+        component: loadable(async () =>
+          await import(
+            './domain/Settings/Preferences/RootCurationSettings/CurationSettings/RootCurationProfileSetup/RootCurationProfileSetup'
+          )
+        ),
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Settings/Preferences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        prepare: () => {
+          const Query = require('@//:artifacts/CurationProfileSetupQuery.graphql')
+
+          return {
+            curationQuery: {
+              query: Query,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'Account')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
         path: '/p/:reference',
         dependencies: [
           {
@@ -800,7 +882,7 @@ const routes: Route[] = [
         }
       },
       {
-        path: '/u/:username',
+        path: '/a/:username',
         exact: true,
         dependencies: [
           {

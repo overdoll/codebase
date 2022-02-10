@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -98,7 +98,7 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
         if (data?.addClubSlugAlias?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: translateValidation(data.addClubSlugAlias?.validation)
+            message: i18n._(translateValidation(data.addClubSlugAlias?.validation))
           })
           return
         }
@@ -121,15 +121,16 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
 
   return (
     <>
-      {disableSlugAdd && <Alert mb={2} status='warning'>
-        <AlertIcon />
-        <AlertDescription fontSize='sm'>
-          <Trans>
-            You have added the maximum amount of aliases. You'll have to remove at least one alias to be
-            able to add another.
-          </Trans>
-        </AlertDescription>
-      </Alert>}
+      {disableSlugAdd && (
+        <Alert mb={2} status='warning'>
+          <AlertIcon />
+          <AlertDescription fontSize='sm'>
+            <Trans>
+              You have added the maximum amount of aliases. You'll have to remove at least one alias to be
+              able to add another.
+            </Trans>
+          </AlertDescription>
+        </Alert>)}
       <form noValidate onSubmit={handleSubmit(onAddSlug)}>
         <FormControl isInvalid={errors.slug != null} id='email'>
           <FormLabel fontSize='sm'>
@@ -158,7 +159,7 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
               variant='solid'
               type='submit'
               colorScheme='gray'
-              disabled={(errors.slug != null) || disableSlugAdd}
+              isDisabled={(errors.slug != null) || disableSlugAdd}
               isLoading={isAddingSlug}
             >
               <Trans>

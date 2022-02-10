@@ -46,7 +46,7 @@ export default function CopyCodeToClipboard ({
           w={4}
           h={4}
           icon={hasCopied ? CopyCheck : CopyText}
-          fill='teal.50'
+          fill='gray.500'
         />
       </Flex>
     </ClickableBox>

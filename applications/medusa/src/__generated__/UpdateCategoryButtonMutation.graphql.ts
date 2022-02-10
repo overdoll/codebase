@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87bb5eb3d757ce6c7a686f46c77baf42>>
+ * @generated SignedSource<<1709b61704fd4bfe6331aa5e834776bb>>
  * @relayHash 5ad5fb0fd15f89acb4a7f9867a3f7a74
  * @lightSyntaxTransform
  * @nogrep
@@ -14,8 +14,8 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostCategoriesInput = {
-  id: string;
   categoryIds: ReadonlyArray<string>;
+  id: string;
 };
 export type UpdateCategoryButtonMutation$variables = {
   input: UpdatePostCategoriesInput;

@@ -1,20 +1,24 @@
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import type { Action, State } from '@//:types/upload'
 import { useToast } from '@chakra-ui/react'
-import { Reducer, Suspense, useEffect, useMemo, useReducer } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import PostCreator from './components/PostCreator/PostCreator'
-import { EVENTS, INITIAL_STATE } from './constants/constants'
-import useUpload from './hooks'
-import reducer from './reducer'
-import { DispatchContext, StateContext, UppyContext } from './context'
+import { UppyContext } from './context'
 import { useQueryParam } from 'use-query-params'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:artifacts/PostCreatorQuery.graphql'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
 import getIdFromUppyUrl from './hooks/getIdFromUppyUrl/getIdFromUppyUrl'
-import SkeletonPost from '@//:modules/content/Placeholder/Skeleton/SkeletonPost/SkeletonPost'
+import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import { useReducerBuilder } from '@//:modules/hooks'
+import { singleStringValueReducer } from '@//:modules/hooks/useReducerBuilder/options'
+import objectCategoryValueReducer from '@//:modules/hooks/useReducerBuilder/options/objectCategoryValueReducer'
+import arrayValueReducer from '@//:modules/hooks/useReducerBuilder/options/arrayValueReducer'
+import { Uppy } from '@uppy/core'
+import UppyInstance from './hooks/uppy/Uppy'
+import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import uploadObjectsReducer from '@//:modules/hooks/useReducerBuilder/options/uploadObjectsReducer'
 
 interface Props {
   prepared: {
@@ -23,11 +27,34 @@ interface Props {
 }
 
 export default function CreatePost (props: Props): JSX.Element {
-  const [state, dispatch] = useReducer<Reducer<State, Action>>(
-    reducer,
-    INITIAL_STATE,
-    undefined
-  )
+  const initUppy = useRef<Uppy | undefined>(undefined)
+
+  if (initUppy.current === undefined) {
+    initUppy.current = UppyInstance
+  }
+
+  const uppy = initUppy.current
+
+  const [state, dispatch] = useReducerBuilder({
+    uploads: uploadObjectsReducer({ dispatchType: 'uploads' }),
+    audience: singleStringValueReducer({ dispatchType: 'audience' }),
+    content: arrayValueReducer({ dispatchType: 'content' }),
+    categories: objectCategoryValueReducer({ dispatchType: 'categories' }),
+    characters: objectCategoryValueReducer({ dispatchType: 'characters' }),
+    isProcessing: singleStringValueReducer({
+      dispatchType: 'isProcessing',
+      defaultValue: { value: false }
+    }),
+    isInReview: singleStringValueReducer({
+      dispatchType: 'isInReview',
+      defaultValue: { value: false }
+    }),
+    isSubmitted: singleStringValueReducer({
+      dispatchType: 'isSubmitted',
+      defaultValue: { value: false }
+    })
+
+  })
 
   const [postReference] = useQueryParam<string | null | undefined>('post')
 
@@ -35,9 +62,6 @@ export default function CreatePost (props: Props): JSX.Element {
     PostCreatorQuery,
     props.prepared.query
   )
-
-  // hook controls lifecycle of uppy
-  const [uppy] = useUpload(state, dispatch)
 
   const notify = useToast()
 
@@ -47,14 +71,14 @@ export default function CreatePost (props: Props): JSX.Element {
     return params.slug
   }, [params.slug])
 
-  // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
+  // Urls - when upload is complete we have semi-public urls
   useEffect(() => {
     uppy.on('upload-success', (file, response) => {
       // only want the ID from URL
       if (file.source !== 'already-uploaded') {
         const url = response.uploadURL as string
         dispatch({
-          type: EVENTS.URLS,
+          type: 'uploads_urls',
           value: { [file.id]: getIdFromUppyUrl(url) }
         })
       }
@@ -66,7 +90,7 @@ export default function CreatePost (props: Props): JSX.Element {
     uppy.on('upload-progress', (file, progress) => {
       if (file.source !== 'already-uploaded') {
         dispatch({
-          type: EVENTS.PROGRESS,
+          type: 'uploads_progress',
           value: {
             [file.id]: {
               0: progress.bytesUploaded,
@@ -84,7 +108,7 @@ export default function CreatePost (props: Props): JSX.Element {
       // remove uploaded file and emit error if upload limit is hit
       if (file.source !== 'already-uploaded') {
         dispatch({
-          type: EVENTS.FILES,
+          type: 'uploads_files',
           value: {
             id: file.id,
             type: file.type

@@ -1,14 +1,16 @@
 import UppyInstance from './hooks/uppy/Uppy'
 import type { Uppy, UppyFile } from '@uppy/core'
 import { useEffect, useRef, useState } from 'react'
-import { CloseButton, Flex, Heading, HStack, Progress, Skeleton, useToast } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Progress, Skeleton, useToast } from '@chakra-ui/react'
 import { ClickableBox, LargeBackgroundBox } from '../../PageLayout'
 import FilePicker from '../../../../client/domain/ManageClub/pages/CreatePost/components/FilePicker/FilePicker'
-import DragOverFileInput from '../../../../client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput'
+import DragOverFileInput
+  from '../../../../client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput'
 import { FileUpload } from '@//:assets/icons/interface'
 import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { Trans } from '@lingui/macro'
 import SuspenseImage from '../../../operations/SuspenseImage'
+import CloseButton from '../../ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   onCompleted: (id) => void
@@ -145,7 +147,7 @@ export default function SingleFileImageUpload ({
               isAnimated
               mr={4}
             />}
-        <CloseButton isDisabled={isDisabled} onClick={removeUpload} />
+        <CloseButton size='sm' isDisabled={isDisabled} onClick={removeUpload} />
       </Flex>
     </LargeBackgroundBox>
   )

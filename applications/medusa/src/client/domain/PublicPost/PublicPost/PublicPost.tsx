@@ -1,13 +1,14 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { useHistory } from '@//:modules/routing'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
 import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
 import { Trans } from '@lingui/macro'
+import { PageWrapper } from '@//:modules/content/PageLayout'
+import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -60,10 +61,12 @@ export default function PublicPost (props: Props): JSX.Element {
     queryData.post
   )
 
-  const history = useHistory()
-
   if (queryData?.post == null) {
-    history.push('/')
+    return (
+      <PageWrapper>
+        <NotFoundPublicPost />
+      </PageWrapper>
+    )
   }
 
   return (
