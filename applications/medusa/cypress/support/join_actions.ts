@@ -10,6 +10,7 @@ export const logout = (): void => {
     .click()
 
   cy.waitUntil(() => cy.findAllByText(/home/iu).should('exist'))
+  cy.waitUntil(() => cy.findAllByText(/You have been logged out/iu).should('exist'))
 }
 
 export const join = (email: string): void => {
@@ -18,8 +19,9 @@ export const join = (email: string): void => {
   let startTimestamp
 
   // wait until button isn't disabled (it's ready to be interacted with)
+  // TODO fix flakiness with timestamp - the subtraction is a temp solution
   cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')).then(() => {
-    startTimestamp = Date.now()
+    startTimestamp = Date.now() - 5000
   })
 
   cy.findByRole('textbox', { name: /email/iu })

@@ -74,7 +74,7 @@ const joinAndVerify = (email: string): void => {
   cy
     .wrap(null)
     .then(() => {
-      startTimestamp = Date.now() - 10000
+      startTimestamp = Date.now() - 5000
     })
 
   // first, run the join mutation, and save the token ID

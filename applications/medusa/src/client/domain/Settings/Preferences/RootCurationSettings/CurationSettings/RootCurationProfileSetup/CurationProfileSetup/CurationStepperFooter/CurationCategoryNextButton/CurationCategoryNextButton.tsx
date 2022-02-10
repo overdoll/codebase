@@ -63,7 +63,6 @@ export default function CurationCategoryNextButton ({
         skipped: false
       },
       onCompleted () {
-        nextStep()
       },
       onError () {
         notify({

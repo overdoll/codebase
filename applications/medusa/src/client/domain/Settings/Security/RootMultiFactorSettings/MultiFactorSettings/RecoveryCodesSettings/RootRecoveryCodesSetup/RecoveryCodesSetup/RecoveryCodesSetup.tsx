@@ -4,12 +4,12 @@ import {
   AlertDescription,
   AlertIcon,
   Box,
+  Code,
   Flex,
   HStack,
   SimpleGrid,
   Skeleton,
   Stack,
-  Text,
   useToast
 } from '@chakra-ui/react'
 import fileDownload from 'js-file-download'
@@ -154,18 +154,17 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
                 {isGeneratingCodes
                   ? <Skeleton w='100%' h='100%' />
                   : (
-                    <Flex
+                    <Code
                       px={3}
                       py={1}
                       borderRadius='base'
                       justify='center'
                       fontSize='lg'
                       bg='gray.800'
+                      color='teal.300'
                     >
-                      <Text fontFamily='mono' color='teal.300'>
-                        {item.code}
-                      </Text>
-                    </Flex>
+                      {item.code}
+                    </Code>
                     )}
               </Flex>
             )
