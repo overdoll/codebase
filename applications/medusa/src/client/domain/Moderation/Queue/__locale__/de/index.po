@@ -17,11 +17,11 @@ msgstr ""
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:69
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:68
 msgid "All Clear"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:133
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:134
 msgid "Approve"
 msgstr ""
 
@@ -65,11 +65,11 @@ msgstr ""
 msgid "Please select a rejection reason"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:83
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:84
 msgid "Post created by {0} was approved successfully"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:109
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:110
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:128
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:129
 msgid "Reject"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Reject Post"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:159
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:160
 msgid "Select a reason for rejecting this post"
 msgstr ""
 
@@ -109,15 +109,15 @@ msgstr ""
 msgid "The note needs at least 5 characters"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:74
+#: src/client/domain/Moderation/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:73
 msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:90
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:91
 msgid "There was an error approving a post created by {0}"
 msgstr ""
 
-#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:117
+#: src/client/domain/Moderation/Queue/Posts/ModeratePost/ModeratePost.tsx:118
 msgid "There was an error rejecting the post created by {0}"
 msgstr ""
 

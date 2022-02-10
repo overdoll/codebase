@@ -53,7 +53,6 @@ export default function CurationAudienceNextButton ({
   const notify = useToast()
 
   const currentAudienceIds = data?.audiences.map((item) => item.id) ?? []
-  console.log(currentAudienceIds)
 
   const saveCondition = Object.keys(state.audience.value).length > 0 &&
     compareTwoArrays(Object.keys(state.audience.value), currentAudienceIds) === false

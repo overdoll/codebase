@@ -120,7 +120,7 @@ describe('Settings - Configure Two-Factor', () => {
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
       cy.findByRole('button', { name: /I lost access/iu }).click()
-      cy.waitUntil(() => cy.findByText(/Enter a recovery code/iu).should('be.visible'))
+      cy.waitUntil(() => cy.findByPlaceholderText(/recovery code/iu).should('exist'))
       cy.findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)
       cy.findByRole('button', { name: 'Submit' }).click()
       cy.findByText(/A recovery code was successfully used up to log you in/iu).should('exist')

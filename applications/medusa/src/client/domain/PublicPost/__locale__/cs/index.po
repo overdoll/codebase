@@ -13,10 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:74
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:77
 msgid "Suggested Posts"
 msgstr ""
 
-#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:73
+#: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:76
 msgid "View Post"
 msgstr ""

@@ -61,8 +61,8 @@ export default {
       include: ['src/client/domain/Settings/Security']
     },
     {
-      path: 'src/client/domain/Settings/ConfirmEmail/__locale__/{locale}/index',
-      include: ['src/client/domain/Settings/ConfirmEmail']
+      path: 'src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Profile/RootEmails/ConfirmEmail']
     },
     {
       path: 'src/client/domain/Settings/Preferences/__locale__/{locale}/index',

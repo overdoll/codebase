@@ -13,14 +13,18 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:47
+#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:48
 msgid "My Clubs"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/SuggestedClubs/SuggestedClubs.tsx:82
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:73
 msgid "No clubs found"
 msgstr ""
 
 #: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:44
 msgid "Popular Clubs"
+msgstr ""
+
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:27
+msgid "Search for a club by name"
 msgstr ""
