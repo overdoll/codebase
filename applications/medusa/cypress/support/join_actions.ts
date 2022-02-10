@@ -1,7 +1,7 @@
 export const logout = (): void => {
   cy.waitUntil(() => cy.findByRole('button', { name: /Menu/iu }).should('not.be.disabled'))
 
-  cy.findByRole('button', { name: /Menu/iu })
+  cy.findByRole('button', { name: /Dropdown Menu/iu })
     .click()
 
   cy.waitUntil(() => cy.findByRole('button', { name: /Log Out/iu }).should('exist'))

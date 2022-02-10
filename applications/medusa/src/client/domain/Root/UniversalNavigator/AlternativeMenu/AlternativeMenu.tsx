@@ -59,7 +59,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
-        label={i18n._(t`Menu`)}
+        label={i18n._(t`Dropdown Menu`)}
         icon={PageControllerSettings}
       >
         <Can not I='manage' a='Account'>

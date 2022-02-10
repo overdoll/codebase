@@ -96,7 +96,6 @@ const HorizontalNavigationDropdownMenu = ({
             isLazy
             onClose={onCloseMenu}
             offset={[-10, 20]}
-
           >
             <MenuButton
               pointerEvents='none'
