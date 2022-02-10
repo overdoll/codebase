@@ -131,6 +131,7 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
         isOpen={isOpen}
         onClose={onClose}
         leastDestructiveRef={cancelRef}
+        isCentered
       >
         <AlertDialogOverlay>
           <AlertDialogContent>

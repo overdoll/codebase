@@ -13,6 +13,7 @@ import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsI
 import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { ReactNode, useState } from 'react'
 import { Trans } from '@lingui/macro'
+import PageSectionChildrenWrapper from '../PageSectionScroller/PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
   query: PostsInfiniteScrollFragment$key | null
@@ -71,11 +72,14 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
-        <Trans>
-          No posts found
-        </Trans>
-      </SmallBackgroundBox>
+      <PageSectionChildrenWrapper>
+        <SmallBackgroundBox>
+          <Trans>
+            No posts found
+          </Trans>
+        </SmallBackgroundBox>
+      </PageSectionChildrenWrapper>
+
     )
   }
 
@@ -98,9 +102,11 @@ export default function PostsInfiniteScroll ({
         freeMode
         direction='vertical'
       >
-        {prependSlide != null && <SwiperSlide>
-          {prependSlide}
-        </SwiperSlide>}
+        {prependSlide != null && (
+          <SwiperSlide>
+            {prependSlide}
+          </SwiperSlide>
+        )}
         {data?.edges.map((item, index) =>
           <SwiperSlide
             key={index}
@@ -115,23 +121,25 @@ export default function PostsInfiniteScroll ({
             </Box>
           </SwiperSlide>)}
         {hasNext
-          ? <SwiperSlide>
-            {isLoadingNext &&
-              <PostPlaceholder>
-                <Spinner size='lg' />
-              </PostPlaceholder>}
-          </SwiperSlide>
-          : <SwiperSlide>
-            <LargeBackgroundBox h='72vh'>
-              <Flex align='center' h='100%' justify='center'>
-                <Heading fontSize='xl' color='gray.00'>
-                  <Trans>
-                    No more content available
-                  </Trans>
-                </Heading>
-              </Flex>
-            </LargeBackgroundBox>
-          </SwiperSlide>}
+          ? (
+            <SwiperSlide>
+              {isLoadingNext &&
+                <PostPlaceholder>
+                  <Spinner size='lg' />
+                </PostPlaceholder>}
+            </SwiperSlide>)
+          : (
+            <SwiperSlide>
+              <LargeBackgroundBox h='72vh'>
+                <Flex align='center' h='100%' justify='center'>
+                  <Heading fontSize='xl' color='gray.00'>
+                    <Trans>
+                      No more content available
+                    </Trans>
+                  </Heading>
+                </Flex>
+              </LargeBackgroundBox>
+            </SwiperSlide>)}
       </Swiper>
     </Box>
   )

@@ -37,9 +37,10 @@ export default function Root (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet
-        title='overdoll'
-      />
+      <Helmet>
+        <title>overdoll</title>
+        <meta name='viewport' content='width=device-width' />
+      </Helmet>
       <AccountAuthorizer queryRef={data.viewer}>
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>

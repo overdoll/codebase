@@ -1,13 +1,14 @@
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import { LanguageManagerQuery } from '@//:artifacts/LanguageManagerQuery.graphql'
 import { ChangeEvent, useEffect } from 'react'
-import { Select, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import { LanguageManagerMutation } from '@//:artifacts/LanguageManagerMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import { useFragment } from 'react-relay'
 import { LanguageManagerAccountMutation } from '@//:artifacts/LanguageManagerAccountMutation.graphql'
 import { LanguageManagerFragment$key } from '@//:artifacts/LanguageManagerFragment.graphql'
 import { t } from '@lingui/macro'
+import Select from '@//:modules/form/Select/Select'
 
 interface Props {
   queryRef: LanguageManagerFragment$key | null
@@ -26,7 +27,7 @@ const LanguageManagerGQL = graphql`
   }
 `
 
-const LangaugeManagerFragmentGQL = graphql`
+const LanguageManagerFragmentGQL = graphql`
   fragment LanguageManagerFragment on Account {
     language {
       locale
@@ -59,7 +60,7 @@ const LanguageManagerAccountMutationGQL = graphql`
 export default function LanguageManager ({ queryRef }: Props): JSX.Element {
   const query = useLazyLoadQuery<LanguageManagerQuery>(LanguageManagerGQL, {})
 
-  const data = useFragment(LangaugeManagerFragmentGQL, queryRef)
+  const data = useFragment(LanguageManagerFragmentGQL, queryRef)
 
   const [updateBrowserLanguage, isUpdatingBrowserLanguage] = useMutation<LanguageManagerMutation>(LanguageManagerMutationGQL)
   const [updateAccountLanguage, isUpdatingAccountLanguage] = useMutation<LanguageManagerAccountMutation>(LanguageManagerAccountMutationGQL)

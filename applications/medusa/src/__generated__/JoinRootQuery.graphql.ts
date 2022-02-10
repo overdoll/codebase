@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2c2c833514baa31217d94cd073845e45>>
- * @relayHash b9a9f9a603e985afc8ffb99a6f646732
+ * @generated SignedSource<<5333be9e52045b88c93821753edceb4c>>
+ * @relayHash 6ef3a7f5010c9c62ca1f3063d63fde7c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b9a9f9a603e985afc8ffb99a6f646732
+// @relayRequestID 6ef3a7f5010c9c62ca1f3063d63fde7c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,13 +19,14 @@ export type JoinRootQuery$variables = {
 export type JoinRootQueryVariables = JoinRootQuery$variables;
 export type JoinRootQuery$data = {
   readonly viewAuthenticationToken: {
+    readonly id: string;
     readonly verified: boolean;
     readonly token: string;
     readonly sameDevice: boolean;
     readonly accountStatus: {
       readonly registered: boolean;
       readonly multiFactor: {
-        readonly totp: boolean;
+        readonly __typename: string;
       } | null;
     } | null;
     readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment">;
@@ -56,46 +57,42 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "verified",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "token",
+  "name": "verified",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "sameDevice",
+  "name": "token",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "registered",
+  "name": "sameDevice",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
-  "concreteType": "MultiFactor",
-  "kind": "LinkedField",
-  "name": "multiFactor",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "totp",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "registered",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -113,6 +110,7 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -138,9 +136,9 @@ return {
             "kind": "FragmentSpread",
             "name": "GrantFragment"
           },
-          (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -149,8 +147,19 @@ return {
             "name": "accountStatus",
             "plural": false,
             "selections": [
-              (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MultiFactor",
+                "kind": "LinkedField",
+                "name": "multiFactor",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           }
@@ -175,13 +184,8 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v2/*: any*/),
+          (v4/*: any*/),
           {
             "kind": "ClientExtension",
             "selections": [
@@ -194,7 +198,6 @@ return {
               }
             ]
           },
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -203,20 +206,38 @@ return {
             "name": "accountStatus",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
-              (v5/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MultiFactor",
+                "kind": "LinkedField",
+                "name": "multiFactor",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "totp",
+                    "storageKey": null
+                  },
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
-          (v2/*: any*/),
-          (v4/*: any*/)
+          (v3/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "b9a9f9a603e985afc8ffb99a6f646732",
+    "id": "6ef3a7f5010c9c62ca1f3063d63fde7c",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -225,6 +246,6 @@ return {
 };
 })();
 
-(node as any).hash = "b6ab2a575167d026647e2fa71de653c0";
+(node as any).hash = "b6aa6fb5f043e6ed0cdf291524c94242";
 
 export default node;

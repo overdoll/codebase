@@ -29,8 +29,8 @@ export default function MultiFactorTotpSettings (props: Props): JSX.Element {
         description={data?.recoveryCodesGenerated
           ? (
               data.multiFactorTotpConfigured
-                ? <Trans>Configure authenticator app</Trans>
-                : <Trans>Reconfigure authenticator app</Trans>
+                ? <Trans>Reconfigure authenticator app</Trans>
+                : <Trans>Configure authenticator app</Trans>
             )
           : (
             <Trans>Recovery codes must be generated first</Trans>

@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, HStack } from '@chakra-ui/react'
-import { Icon } from '@//:modules/content'
 import { FunctionComponent } from 'react'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
+import { Icon } from '@//:modules/content/PageLayout'
 
 interface Props {
   value: string

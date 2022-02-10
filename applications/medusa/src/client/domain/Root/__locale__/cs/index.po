@@ -6,8 +6,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: cs\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:98
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:102
 msgid "Account Locked"
 msgstr ""
 
@@ -15,19 +21,28 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:99
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:16
+msgid "Back"
+msgstr ""
+
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:103
 msgid "Banned for {remainingTime}"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:76
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:77
 msgid "Changing to your preferred language..."
 msgstr ""
 
+#: src/client/components/SearchInput/SearchInput.tsx:64
+msgid "Clear Search"
+msgstr ""
+
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:58
+#: src/modules/form/CloseButton/CloseButton.tsx:27
 msgid "Close"
 msgstr ""
 
-#: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:15
+#: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:14
 msgid "Community Guidelines"
 msgstr ""
 
@@ -45,7 +60,7 @@ msgstr ""
 
 #: src/client/components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard.tsx:23
 #: src/client/components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard.tsx:22
-#: src/client/components/ContentHints/CopyToClipboardButton/CopyToClipboardButton.tsx:32
+#: src/client/components/ContentHints/CopyToClipboardButton/CopyToClipboardButton.tsx:33
 msgid "Copy"
 msgstr ""
 
@@ -59,8 +74,12 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:105
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:107
 msgid "Drag and drop or tap to upload"
+msgstr ""
+
+#: src/client/components/SearchInput/SearchInput.tsx:53
+msgid "Enter a search term"
 msgstr ""
 
 #: src/modules/content/Posts/components/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:23
@@ -69,6 +88,14 @@ msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:34
 msgid "Error {0}"
+msgstr ""
+
+#: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:13
+msgid "Go Back"
+msgstr ""
+
+#: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:21
+msgid "Go back to settings"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
@@ -80,11 +107,12 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:108
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:112
 msgid "Here's the reason..."
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:16
+#: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:22
 msgid "Home"
 msgstr ""
 
@@ -97,19 +125,19 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:33
+#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:35
 msgid "Load More"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesGeneral/SearchCategoriesGeneral.tsx:94
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesGeneral/SearchCategoriesGeneral.tsx:98
 msgid "Load More Categories"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersGeneral/SearchCharactersGeneral.tsx:94
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersGeneral/SearchCharactersGeneral.tsx:100
 msgid "Load More Characters"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesGeneral/SearchSeriesGeneral.tsx:91
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesGeneral/SearchSeriesGeneral.tsx:96
 msgid "Load More Series"
 msgstr ""
 
@@ -117,7 +145,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:102
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:106
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -137,19 +165,23 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:128
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:21
+msgid "Next"
+msgstr ""
+
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:136
 msgid "No more content available"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:77
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:118
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:122
 msgid "No reason was found"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:112
+#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:111
 msgid "Nothing was found"
 msgstr ""
 
@@ -182,7 +214,7 @@ msgstr ""
 msgid "Please enter an email"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:123
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:127
 msgid "Please review the community guidelines to make sure this doesn't happen again."
 msgstr ""
 
@@ -195,12 +227,20 @@ msgstr ""
 msgid "Reveal Spoiler"
 msgstr ""
 
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
+msgid "Save"
+msgstr ""
+
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:74
 msgid "Save ({0})"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:154
+#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:142
 msgid "Search for characters, categories, or series"
+msgstr ""
+
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton.tsx:13
+msgid "Skip"
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:6
@@ -251,9 +291,21 @@ msgstr ""
 msgid "There was an error unlocking your account"
 msgstr ""
 
+#: src/modules/content/Placeholder/NotFound/NotFoundAccount/NotFoundAccount.tsx:13
+msgid "This account was not found"
+msgstr ""
+
+#: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:13
+msgid "This club was not found"
+msgstr ""
+
 #: src/modules/validation/translateValidation.ts:9
 #: src/modules/validation/translateValidation.ts:10
 msgid "This code is either invalid or has expired"
+msgstr ""
+
+#: src/modules/content/Placeholder/NotFound/NotFoundPublicPost/NotFoundPublicPost.tsx:13
+msgid "This post was not found"
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:8
@@ -280,15 +332,15 @@ msgstr ""
 msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:58
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:62
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:86
+#: src/modules/content/Posts/components/Content/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:85
 msgid "View Post"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:132
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:136
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
@@ -296,7 +348,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:137
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:141
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
@@ -304,15 +356,15 @@ msgstr ""
 msgid "Your account has been unlocked"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:47
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountBanner.tsx:51
 msgid "Your account is currently locked"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo.tsx:13
-msgid "od"
-msgstr ""
+#~ msgid "od"
+#~ msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo.tsx:23
+#: src/client/domain/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo.tsx:17
 msgid "overdoll"
 msgstr ""
 
@@ -320,6 +372,10 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:147
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/LockedAccountModal.tsx:151
 msgid "{duration}"
+msgstr ""
+
+#: src/modules/form/StyledInput/StyledInput.tsx:63
+msgid "{helperText}"
 msgstr ""

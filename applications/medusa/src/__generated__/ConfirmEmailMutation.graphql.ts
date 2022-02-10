@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32a394a6067897a33397e50bd0e74e86>>
+ * @generated SignedSource<<71fabaa9237d8245b3eb438191429f4b>>
  * @relayHash 1f650479820cf72957f1588bc01645a4
  * @lightSyntaxTransform
  * @nogrep
@@ -12,7 +12,7 @@
 // @relayRequestID 1f650479820cf72957f1588bc01645a4
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type ConfirmAccountEmailInput = {
   id: string;
   secret: string;

@@ -20,13 +20,14 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface UsernameValues {
   username: string
@@ -106,7 +107,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
         if (data?.updateAccountUsername?.validation != null) {
           setError('username', {
             type: 'mutation',
-            message: translateValidation(data.updateAccountUsername.validation)
+            message: i18n._(translateValidation(data.updateAccountUsername.validation))
           })
           return
         }
@@ -154,7 +155,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
               variant='solid'
               colorScheme='gray'
               type='submit'
-              disabled={errors.username != null || isDisabled}
+              isDisabled={errors.username != null || isDisabled}
               isLoading={isChangingUsername}
             >
               <Trans>
@@ -178,7 +179,10 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
               Confirm Username Change
             </Trans>
           </AlertDialogHeader>
-          <AlertDialogCloseButton />
+          <AlertDialogCloseButton
+            size='lg'
+            as={CloseButton}
+          />
           <AlertDialogBody>
             <Stack spacing={2}>
               <Text>

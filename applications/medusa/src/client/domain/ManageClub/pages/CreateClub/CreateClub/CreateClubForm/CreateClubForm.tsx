@@ -2,7 +2,7 @@ import { FormControl, FormLabel, InputLeftAddon, Stack, useToast } from '@chakra
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -15,8 +15,9 @@ import generatePath from '@//:modules/routing/generatePath'
 import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   isDisabled: boolean
 }
 
@@ -26,30 +27,14 @@ interface ClubValues {
 }
 
 const Mutation = graphql`
-  mutation CreateClubFormMutation($name: String!, $slug: String!) {
+  mutation CreateClubFormMutation($name: String!, $slug: String!, $connections: [ID!]!) {
     createClub(input: {name: $name, slug: $slug}) {
-      club {
+      club @appendNode(connections: $connections, edgeTypeName: "createClubPrimaryEdge") {
         id
         slug
+        name
         owner {
           id
-          clubs (first: 1) {
-            edges {
-              node {
-                id
-                slug
-                name
-                thumbnail {
-                  type
-                  urls {
-                    url
-                    mimeType
-                  }
-                }
-              }
-            }
-          }
-          clubsCount
         }
       }
       validation
@@ -57,7 +42,10 @@ const Mutation = graphql`
   }
 `
 
-export default function CreateClubForm ({ isDisabled }: Props): JSX.Element {
+export default function CreateClubForm ({
+  isDisabled,
+  connectionId
+}: Props): JSX.Element {
   const [createClub, isCreatingClub] = useMutation<CreateClubFormMutation>(
     Mutation
   )
@@ -94,13 +82,14 @@ export default function CreateClubForm ({ isDisabled }: Props): JSX.Element {
     createClub({
       variables: {
         slug: formValues.slug,
-        name: formValues.name
+        name: formValues.name,
+        connections: [connectionId]
       },
       onCompleted (data) {
         if (data?.createClub?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: translateValidation(data.createClub.validation)
+            message: i18n._(translateValidation(data.createClub.validation))
           })
           return
         }
@@ -113,8 +102,13 @@ export default function CreateClubForm ({ isDisabled }: Props): JSX.Element {
           slug: data.createClub?.club?.slug,
           entity: 'home'
         })
-
         history.push(redirectPath)
+      },
+      updater: (store, payload) => {
+        const node = store.get(payload?.createClub?.club?.owner?.id as string)
+        if (node != null) {
+          node.setValue(node.getValue('clubsCount') as number + 1, 'clubsCount')
+        }
       },
       onError (data) {
         notify({

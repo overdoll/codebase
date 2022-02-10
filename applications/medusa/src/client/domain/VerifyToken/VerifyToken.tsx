@@ -2,7 +2,6 @@ import CenteredSpinner from '@//:modules/content/Placeholder/Loading/CenteredSpi
 import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import { Icon } from '@//:modules/content'
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useQueryParam } from 'use-query-params'
@@ -10,11 +9,12 @@ import { useEffect } from 'react'
 import type { VerifyTokenQuery } from '@//:artifacts/VerifyTokenQuery.graphql'
 import Button from '@//:modules/form/Button/Button'
 import Confirm from './Confirm/Confirm'
-import Link from '@//:modules/routing/Link'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { Icon, PageWrapper } from '@//:modules/content/PageLayout'
 import { VerifyTokenMutation } from '@//:artifacts/VerifyTokenMutation.graphql'
 import { Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { useLingui } from '@lingui/react'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   prepared: {
@@ -57,6 +57,8 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
     VerifyTokenMutationGQL
   )
 
+  const { i18n } = useLingui()
+
   const notify = useToast()
 
   const [queryToken] = useQueryParam<string>('token')
@@ -74,7 +76,7 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         if (payload.verifyAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
-            title: translateValidation(payload.verifyAuthenticationToken.validation),
+            title: i18n._(translateValidation(payload.verifyAuthenticationToken.validation)),
             isClosable: true
           })
         }
@@ -120,17 +122,16 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
           </AlertDescription>
         </Alert>
         <Flex justify='center'>
-          <Link to='/join'>
-            <Button
-              size='lg'
-              colorScheme='gray'
-              variant='solid'
-            >
-              <Trans>
-                Back to the Join page
-              </Trans>
-            </Button>
-          </Link>
+          <LinkButton
+            size='lg'
+            colorScheme='gray'
+            variant='solid'
+            to='/join'
+          >
+            <Trans>
+              Back to the Join page
+            </Trans>
+          </LinkButton>
         </Flex>
       </PageWrapper>
     )

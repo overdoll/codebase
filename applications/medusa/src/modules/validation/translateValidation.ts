@@ -1,13 +1,13 @@
-import { t } from '@lingui/macro'
+import { defineMessage } from '@lingui/macro'
 
 export default function translateValidation (validation: string): string {
   const dictionary = {
-    USERNAME_TAKEN: t`Sorry, this username is already taken`,
-    SLUG_TAKEN: t`Sorry, this club link is already taken`,
-    TOKEN_INVALID: t`The login link you used is either invalid or has expired`,
-    RECOVERY_CODE_INVALID: t`This recovery code is invalid`,
-    CODE_INVALID: t`This code is either invalid or has expired`,
-    INVALID_CODE: t`This code is either invalid or has expired`
+    USERNAME_TAKEN: defineMessage({ message: 'Sorry, this username is already taken' }),
+    SLUG_TAKEN: defineMessage({ message: 'Sorry, this club link is already taken' }),
+    TOKEN_INVALID: defineMessage({ message: 'The login link you used is either invalid or has expired' }),
+    RECOVERY_CODE_INVALID: defineMessage({ message: 'This recovery code is invalid' }),
+    CODE_INVALID: defineMessage({ message: 'This code is either invalid or has expired' }),
+    INVALID_CODE: defineMessage({ message: 'This code is either invalid or has expired' })
   }
 
   return dictionary[validation] != null ? dictionary[validation] : validation

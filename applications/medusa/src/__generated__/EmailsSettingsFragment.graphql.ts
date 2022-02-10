@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75676f30c00748bcd85dd98f0385f46d>>
+ * @generated SignedSource<<6a87bed9ae92573841bb1f7603458780>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
-export type AccountEmailStatus = "CONFIRMED" | "UNCONFIRMED" | "PRIMARY" | "%future added value";
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type EmailsSettingsFragment$data = {
   readonly emails: {

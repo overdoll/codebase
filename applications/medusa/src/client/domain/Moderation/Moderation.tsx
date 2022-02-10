@@ -1,7 +1,7 @@
 import Redirect from '@//:modules/routing/Redirect'
 import { useLocation } from '@//:modules/routing'
 import { ReactNode } from 'react'
-import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
+import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import { FileMultiple, TimeHourGlass } from '@//:assets/icons/navigation'
 import { Trans } from '@lingui/macro'
 

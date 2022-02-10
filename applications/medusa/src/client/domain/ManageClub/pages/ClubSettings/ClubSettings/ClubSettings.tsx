@@ -4,6 +4,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import ChangeClubName from './ChangeClubName/ChangeClubName'
 import ClubAliases from './ClubAliases/ClubAliases'
 import ChangeClubThumbnail from './ChangeClubThumbnail/ChangeClubThumbnail'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -24,6 +25,10 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
     Query,
     query
   )
+
+  if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
 
   return (
     <Stack spacing={8}>

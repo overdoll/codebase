@@ -2,26 +2,21 @@ import { Button } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import { Trans } from '@lingui/macro'
 
-interface Props {
-  invisible?: boolean
-}
-
-export default function SiteLinkLogo ({ invisible = false }: Props): JSX.Element {
+export default function SiteLinkLogo (): JSX.Element {
   return (
     <Link to='/'>
-      {invisible
-        ? (<Trans>od</Trans>)
-        : (
-          <Button
-            textColor='primary.500'
-            fontWeight='bold'
-            fontFamily='heading'
-            variant='link'
-            colorScheme='primary'
-
-          >
-            <Trans>overdoll</Trans>
-          </Button>)}
+      {({ isPending }) => (
+        <Button
+          textColor='primary.500'
+          fontWeight='bold'
+          fontFamily='heading'
+          variant='link'
+          colorScheme='primary'
+          isLoading={isPending}
+        >
+          <Trans>overdoll</Trans>
+        </Button>
+      )}
     </Link>
   )
 }

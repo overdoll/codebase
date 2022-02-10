@@ -6,15 +6,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pt\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:41
+#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:48
 msgid "My Clubs"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/SuggestedClubs/SuggestedClubs.tsx:82
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:73
 msgid "No clubs found"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:38
+#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:44
 msgid "Popular Clubs"
+msgstr ""
+
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:27
+msgid "Search for a club by name"
 msgstr ""

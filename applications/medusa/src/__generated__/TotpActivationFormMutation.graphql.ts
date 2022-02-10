@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6b3151bd7d5e2d579ee41c65e50db5b>>
+ * @generated SignedSource<<c70801b87eda2cec83598248fc83c9e6>>
  * @relayHash 2aa94deb9b52ae0f585815d12adfac43
  * @lightSyntaxTransform
  * @nogrep
@@ -14,8 +14,8 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type EnrollAccountMultiFactorTotpValidation = "INVALID_CODE" | "%future added value";
 export type EnrollAccountMultiFactorTotpInput = {
-  id: string;
   code: string;
+  id: string;
 };
 export type TotpActivationFormMutation$variables = {
   input: EnrollAccountMultiFactorTotpInput;

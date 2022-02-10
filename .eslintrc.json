@@ -60,7 +60,7 @@
     "relay/compat-uses-vars": "warn",
     "relay/graphql-naming": "error",
     "relay/generated-flow-types": "off",
-    "relay/must-colocate-fragment-spreads": "error",
+    "relay/must-colocate-fragment-spreads": "off",
     "relay/no-future-added-value": "warn",
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "error",

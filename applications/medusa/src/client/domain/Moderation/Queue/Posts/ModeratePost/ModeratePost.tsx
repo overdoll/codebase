@@ -2,12 +2,13 @@ import type { ModeratePostApproveMutation } from '@//:artifacts/ModeratePostAppr
 import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejectMutation.graphql'
 import { graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
-import { CloseButton, Fade, Flex, HStack, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Fade, Flex, HStack, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
 import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 import { t, Trans } from '@lingui/macro'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   infractions: RejectionReasonsFragment$key
@@ -160,7 +161,12 @@ export default function ModeratePost (props: Props): JSX.Element {
                   Select a reason for rejecting this post
                 </Trans>
               </Text>
-              <CloseButton isDisabled={isRejectingPost} onClick={onClose} right={0} />
+              <CloseButton
+                size='sm'
+                isDisabled={isRejectingPost}
+                onClick={onClose}
+                right={0}
+              />
             </Flex>
             <RejectionReasons
               infractions={props.infractions}

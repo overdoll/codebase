@@ -1,5 +1,5 @@
 import { ReactNode, Suspense, useMemo } from 'react'
-import VerticalNavigation from '@//:modules/content/VerticalNavigation/VerticalNavigation'
+import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
 import {
   BirdHouse,
@@ -11,7 +11,7 @@ import {
 } from '@//:assets/icons/navigation'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import SelectClubsQuery, { SelectClubsQuery as SelectClubsQueryType } from '@//:artifacts/SelectClubsQuery.graphql'
-import QueryErrorBoundary from '@//:modules/relay/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectClubs from './components/SelectClubs/SelectClubs'
 import { useLocation } from '@//:modules/routing'
 import { Box, Skeleton } from '@chakra-ui/react'
@@ -49,16 +49,20 @@ export default function RootManageClub (props: Props): JSX.Element {
   return (
     <VerticalNavigation>
       <VerticalNavigation.Content
-        title={<Trans>
-          Manage Club
-        </Trans>}
-        outsideElements={<Box h={16}>
-          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
-            <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
-              <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
-            </Suspense>
-          </QueryErrorBoundary>
-        </Box>}
+        title={
+          <Trans>
+            Manage Club
+          </Trans>
+        }
+        outsideElements={
+          <Box>
+            <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
+              <Suspense fallback={<Skeleton borderRadius='sm' h='100%' />}>
+                <SelectClubs query={queryRef as PreloadedQuery<SelectClubsQueryType>} />
+              </Suspense>
+            </QueryErrorBoundary>
+          </Box>
+        }
       >
         <VerticalNavigation.Button
           to={`${basePath}/create-post`}

@@ -140,7 +140,7 @@ export default function Emails (props: Props): JSX.Element {
         </Trans>
       </Button>
       <Collapse in={isFormOpen} animateOpacity>
-        <AddEmailForm isDisabled={disableEmailAdd} connectionID={emailsConnectionID} />
+        <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
       </Collapse>
     </ListSpacer>
   )

@@ -1,6 +1,6 @@
 import { Box, HTMLChakraProps, Tag, TagCloseButton, TagLabel } from '@chakra-ui/react'
-import { Icon } from '../../index'
 import { FunctionComponent } from 'react'
+import { Icon } from '../../PageLayout'
 
 interface Props extends HTMLChakraProps<any> {
   onRemove: (id) => void

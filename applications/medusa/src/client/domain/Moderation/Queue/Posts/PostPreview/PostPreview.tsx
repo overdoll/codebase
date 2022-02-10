@@ -1,15 +1,15 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import PostStaticAudience
-  from '../../../../../../modules/content/Posts/components/Content/PostStaticAudience/PostStaticAudience'
+  from '../../../../../../modules/content/Posts/components/PostContent/PostStaticAudience/PostStaticAudience'
 import PostStaticCharacters
-  from '../../../../../../modules/content/Posts/components/Content/PostStaticCharacters/PostStaticCharacters'
+  from '../../../../../../modules/content/Posts/components/PostContent/PostStaticCharacters/PostStaticCharacters'
 import PostStaticCategories
-  from '../../../../../../modules/content/Posts/components/Content/PostStaticCategories/PostStaticCategories'
+  from '../../../../../../modules/content/Posts/components/PostContent/PostStaticCategories/PostStaticCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
 import { Trans } from '@lingui/macro'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/Content/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import { PostFooter, PostHeaderClub, PostIndexer, PostVideoManagerContext } from '@//:modules/content/Posts'
 import { useContext } from 'react'
 

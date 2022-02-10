@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32c639c5eb12869572b6a8d5f5173c25>>
+ * @generated SignedSource<<8a82857d5f5fc6cb856740bb5886c057>>
  * @relayHash 66447af1fee23a4edaee4700871549be
  * @lightSyntaxTransform
  * @nogrep
@@ -13,8 +13,8 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RevokeAuthenticationTokenInput = {
-  token: string;
   secret?: string | null;
+  token: string;
 };
 export type ConfirmRevokeMutation$variables = {
   input: RevokeAuthenticationTokenInput;

@@ -1,4 +1,4 @@
-import { Box, Flex, HTMLChakraProps } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps } from '@chakra-ui/react'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
 
 import ResourceItem from '../ResourceItem/ResourceItem'
@@ -28,14 +28,14 @@ export default function ResourceIcon ({
 
   if (data == null) {
     return (
-      <Box bg='gray.500' w={8} h={8} borderRadius='25%' {...rest}>
+      <Flex flexShrink={0} bg='gray.500' w={8} h={8} borderRadius='25%' {...rest}>
         <RandomIcon />
-      </Box>
+      </Flex>
     )
   }
 
   return (
-    <Flex align='center' justify='center' borderRadius='25%' overflow='hidden' w={8} h={8} {...rest}>
+    <Flex flexShrink={0} align='center' justify='center' borderRadius='25%' overflow='hidden' w={8} h={8} {...rest}>
       <ResourceItem h='100%' query={data} />
     </Flex>
   )

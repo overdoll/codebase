@@ -3,8 +3,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
 import SearchCategoriesGeneral from './SearchCategoriesGeneral/SearchCategoriesGeneral'
 import { StateProps } from '../../FloatingGeneralSearchButton'
-import { addKeyToObject } from '../../helpers/addKeyToObject'
-import { removeKeyFromObject } from '../../helpers/removeKeyFromObject'
+import { addKeyToObject, removeKeyFromObject } from '@//:modules/support'
 import { filterObjectByKeyValue } from '../../helpers/filterObjectByKeyValue'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import SearchCharactersGeneral from './SearchCharactersGeneral/SearchCharactersGeneral'
@@ -20,6 +19,7 @@ interface Props extends StateProps {
 const Query = graphql`
   query GeneralSearchQuery(
     $first: Int,
+    $search: String,
     $seriesSlugs: [String!],
     $charactersSlugs: [String!],
     $categoriesSlugs: [String!],

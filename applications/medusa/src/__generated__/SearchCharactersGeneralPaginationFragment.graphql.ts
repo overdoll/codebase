@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e2dfd8077ed5c9df3c50fe8a3cd78edc>>
- * @relayHash 08cc20c80bc6cefd52e8bb18328d19a5
+ * @generated SignedSource<<0e146b2f90bfdbf6f15ca5aa6eff3898>>
+ * @relayHash 1fe0306a9dcfbead31e035266035633b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 08cc20c80bc6cefd52e8bb18328d19a5
+// @relayRequestID 1fe0306a9dcfbead31e035266035633b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -102,12 +102,7 @@ return {
     "selections": [
       {
         "args": [
-          (v1/*: any*/),
-          {
-            "kind": "Variable",
-            "name": "search",
-            "variableName": "search"
-          }
+          (v1/*: any*/)
         ],
         "kind": "FragmentSpread",
         "name": "SearchCharactersGeneralFragment"
@@ -288,7 +283,7 @@ return {
     ]
   },
   "params": {
-    "id": "08cc20c80bc6cefd52e8bb18328d19a5",
+    "id": "1fe0306a9dcfbead31e035266035633b",
     "metadata": {},
     "name": "SearchCharactersGeneralPaginationFragment",
     "operationKind": "query",
@@ -297,6 +292,6 @@ return {
 };
 })();
 
-(node as any).hash = "85664c3446f09f73d3ce3e6c9d7eedb0";
+(node as any).hash = "b1faf758fcf4ada4f0403d1367d0269c";
 
 export default node;

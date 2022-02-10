@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4638f0d135e307804f0efd1c694ac9fe>>
+ * @generated SignedSource<<3b95e3122e2ecb27a1487b74504bb6c1>>
  * @relayHash 89f44bcb143b2ddf9c77f21bdbde4406
  * @lightSyntaxTransform
  * @nogrep
@@ -13,9 +13,9 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RejectPostInput = {
+  notes?: string | null;
   postId: string;
   ruleId: string;
-  notes?: string | null;
 };
 export type ModeratePostRejectMutation$variables = {
   input: RejectPostInput;

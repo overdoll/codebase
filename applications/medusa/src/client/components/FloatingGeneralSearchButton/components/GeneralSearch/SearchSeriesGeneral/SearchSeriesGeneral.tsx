@@ -5,8 +5,8 @@ import {
   GridTile,
   GridWrap,
   LoadMoreGridTile,
-  Selector,
-  SeriesTileOverlay
+  SeriesTileOverlay,
+  SingleSelector
 } from '../../../../../../modules/content/ContentSelection'
 import { removeNode } from '@//:modules/support'
 import type { SearchSeriesGeneralFragment$key } from '@//:artifacts/SearchSeriesGeneralFragment.graphql'
@@ -23,8 +23,7 @@ interface Props {
 const Fragment = graphql`
   fragment SearchSeriesGeneralFragment on Query
   @argumentDefinitions(
-    after: {type: String},
-    search: {type: String}
+    after: {type: String}
   )
   @refetchable(queryName: "SearchSeriesGeneralPaginationFragment" )
   {
@@ -83,13 +82,13 @@ export default function SearchSeriesGeneral ({
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
             >
               <SeriesTileOverlay query={item} />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

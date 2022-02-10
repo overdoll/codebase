@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d5c6ebaa55ef3efed56fc9278c21095f>>
+ * @generated SignedSource<<e67d010e0fe26db81e0fe3eef755abd3>>
  * @relayHash 0d258f26ce3e9ebb86453f51934cda7f
  * @lightSyntaxTransform
  * @nogrep
@@ -23,7 +23,7 @@ export type JoinMutation$data = {
   readonly grantAuthenticationToken: {
     readonly authenticationToken: {
       readonly id: string;
-      readonly email: string;
+      readonly email: string | null;
       readonly token: string;
       readonly sameDevice: boolean;
     } | null;

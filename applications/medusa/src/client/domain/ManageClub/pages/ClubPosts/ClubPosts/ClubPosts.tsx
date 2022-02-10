@@ -2,13 +2,14 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
-import { Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
-  from '../../../../../../modules/content/Posts/components/Content/PostPreviewContent/PostPreviewContent'
-import { useHistory } from '@//:modules/routing'
+  from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+import { Link } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -17,7 +18,7 @@ interface Props {
 const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
-      id
+      __typename
     }
     viewer {
       ...ClubPostsFragment
@@ -28,7 +29,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment ClubPostsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 11}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsPaginationQuery" ) {
@@ -63,15 +64,17 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
 
   const match = useParams()
 
-  const history = useHistory()
+  if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
 
   if (data.posts.edges.length < 1) {
     return (
-      <Text>
+      <SmallBackgroundBox>
         <Trans>
           No posts found
         </Trans>
-      </Text>
+      </SmallBackgroundBox>
     )
   }
 
@@ -87,31 +90,29 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           })
         }
 
-        const onClick = (): void => {
-          switch (item.node.state) {
-            case 'DRAFT':
-              history.push(`${draftPostPath()}?post=${item.node.reference as string}`)
-              return
-            case 'PUBLISHED':
-              history.push(`/p/${item.node.reference as string}`)
-          }
-        }
-
         switch (item.node.state) {
           case 'DRAFT':
             return (
               <GridTile key={index}>
-                <ClickableTile onClick={onClick}>
-                  <PostPreviewContent query={item.node} />
-                </ClickableTile>
+                <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
+                  {({ isPending }) => (
+                    <ClickableTile isPending={isPending}>
+                      <PostPreviewContent query={item.node} />
+                    </ClickableTile>
+                  )}
+                </Link>
               </GridTile>
             )
           case 'PUBLISHED':
             return (
               <GridTile key={index}>
-                <ClickableTile onClick={onClick}>
-                  <PostPreviewContent query={item.node} />
-                </ClickableTile>
+                <Link to={`/p/${item.node.reference as string}`}>
+                  {({ isPending }) => (
+                    <ClickableTile isPending={isPending}>
+                      <PostPreviewContent query={item.node} />
+                    </ClickableTile>
+                  )}
+                </Link>
               </GridTile>
             )
           default:

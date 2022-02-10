@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:137
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:139
 msgid "Change your status for receiving posts in your Moderation Queue"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "There was an error changing your Queue status to On"
 msgstr ""
 
-#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:133
+#: src/client/domain/Settings/Moderation/RootQueueSettings/QueueSettings/QueueSettings.tsx:134
 msgid "Toggle Queue Status"
 msgstr ""
 

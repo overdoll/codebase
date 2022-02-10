@@ -1,5 +1,5 @@
 import { graphql } from 'react-relay/hooks'
-import type { SearchCharactersQuery } from '@//:artifacts/SearchCharactersQuery.graphql'
+import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
 import {
@@ -7,7 +7,7 @@ import {
   GridTile,
   GridWrap,
   LoadMoreGridTile,
-  Selector
+  SingleSelector
 } from '../../../../../../modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import { SearchCharactersGeneralFragment$key } from '@//:artifacts/SearchCharactersGeneralFragment.graphql'
@@ -23,8 +23,7 @@ interface Props {
 const SearchCharactersFragmentGQL = graphql`
   fragment SearchCharactersGeneralFragment on Query
   @argumentDefinitions(
-    after: {type: String},
-    search: {type: String}
+    after: {type: String}
   )
   @refetchable(queryName: "SearchCharactersGeneralPaginationFragment" )
   {
@@ -60,7 +59,7 @@ export default function SearchCharactersGeneral ({
     loadNext,
     isLoadingNext,
     hasNext
-  } = usePaginationFragment<SearchCharactersQuery, any>(
+  } = usePaginationFragment<GeneralSearchQuery, any>(
     SearchCharactersFragmentGQL,
     query
   )
@@ -85,7 +84,7 @@ export default function SearchCharactersGeneral ({
       <GridWrap justify='center'>
         {characters.map((item, index) => (
           <GridTile key={index}>
-            <Selector
+            <SingleSelector
               onSelect={onChangeSelection}
               selected={selected}
               id={item.id}
@@ -93,7 +92,7 @@ export default function SearchCharactersGeneral ({
               <CharacterTileOverlay
                 query={item}
               />
-            </Selector>
+            </SingleSelector>
           </GridTile>
         )
         )}

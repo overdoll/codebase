@@ -5,7 +5,7 @@ import { Collapse, FormControl, FormLabel, HStack, Text, useDisclosure, useToast
 import { ListSpacer, PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/form/StyledInput/StyledInput'
+import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -116,9 +116,10 @@ export default function ChangeClubName ({ query }: Props): JSX.Element {
           colorScheme='gray'
           onClick={onToggle}
           size='sm'
-        ><Trans>
-          Change Club Name
-        </Trans>
+        >
+          <Trans>
+            Change Club Name
+          </Trans>
         </Button>
         <Collapse in={isOpen} animateOpacity>
           <form noValidate onSubmit={handleSubmit(onChangeName)}>
@@ -142,7 +143,7 @@ export default function ChangeClubName ({ query }: Props): JSX.Element {
                   variant='solid'
                   type='submit'
                   colorScheme='gray'
-                  disabled={(errors.name != null)}
+                  isDisabled={(errors.name != null)}
                   isLoading={isChangingName}
                 >
                   <Trans>

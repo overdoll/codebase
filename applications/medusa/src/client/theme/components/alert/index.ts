@@ -5,7 +5,7 @@ const baseStyle = {
   container: {
     px: 3,
     py: 3,
-    borderRadius: 5
+    borderRadius: 'base'
   },
   title: {
     fontWeight: 'bold',
@@ -35,23 +35,11 @@ function getBg (props: StyleFunctionProps): string {
   return mode(lightBg, darkBg)(props)
 }
 
-function getBorder (props: StyleFunctionProps): string {
-  const {
-    theme,
-    colorScheme: c
-  } = props
-  const lightBg = getColor(theme, `${c}.100`, c)
-  const darkBg = transparentize(`${c}.300`, 0.5)(theme)
-  return mode(lightBg, darkBg)(props)
-}
-
 const variantSubtle: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
-      bg: getBg(props),
-      borderWidth: 2,
-      borderColor: getBorder(props)
+      bg: getBg(props)
     },
     icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
     title: {

@@ -11,7 +11,8 @@ import {
 } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import SingleFileImageUpload from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
+import SingleFileImageUpload
+  from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
 
 interface Props {
   query: ChangeClubThumbnailFragment$key | null
@@ -104,9 +105,10 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
           colorScheme='gray'
           onClick={onToggle}
           size='sm'
-        ><Trans>
-          Change Club Thumbnail
-        </Trans>
+        >
+          <Trans>
+            Change Club Thumbnail
+          </Trans>
         </Button>
         <Collapse in={isOpen} animateOpacity>
           <SingleFileImageUpload

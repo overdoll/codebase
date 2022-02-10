@@ -12,3 +12,15 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/client/domain/Home/Home/Home.tsx:119
+msgid "Set Up Your Profile"
+msgstr ""
+
+#: src/client/domain/Home/Home/Home.tsx:140
+msgid "Set up profile"
+msgstr ""
+
+#: src/client/domain/Home/Home/Home.tsx:126
+msgid "Welcome to overdoll! We're so glad to have you here. On our platform, we strive to make sure you're served content you want to see. Take a few minutes to set up your curation profile to let us know what you like?"
+msgstr ""

@@ -1,7 +1,7 @@
 import { CircularProgress, CircularProgressLabel, Flex, Tooltip } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
-import PostHeaderClub from '../../../../../../modules/content/Posts/components/Content/PostHeaderClub/PostHeaderClub'
+import PostHeaderClub from '../../../../../../modules/content/Posts/components/PostContent/PostHeaderClub/PostHeaderClub'
 import { Trans } from '@lingui/macro'
 
 interface Props {

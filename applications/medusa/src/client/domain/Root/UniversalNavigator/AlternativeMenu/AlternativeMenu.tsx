@@ -6,9 +6,9 @@ import {
   SafetyFloat
 } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
-import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
@@ -21,7 +21,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
 import SkeletonDropdownMenuButton
-  from '@//:modules/content/Placeholder/Skeleton/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
+  from '@//:modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -59,7 +59,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
-        label={i18n._(t`Menu`)}
+        label={i18n._(t`Dropdown Menu`)}
         icon={PageControllerSettings}
       >
         <Can not I='manage' a='Account'>

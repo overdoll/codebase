@@ -1,10 +1,13 @@
 import { BirdHouse, ClubPeopleGroup, ContentBrushPen } from '@//:assets/icons/navigation'
-import HorizontalNavigation from '@//:modules/content/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import MainMenuButtonCreatePost from './MainMenuButtonCreatePost/MainMenuButtonCreatePost'
+import { useLingui } from '@lingui/react'
 
 export default function MainMenu (): JSX.Element {
+  const { i18n } = useLingui()
+
   return (
     <>
       <HorizontalNavigation.Button
@@ -12,22 +15,14 @@ export default function MainMenu (): JSX.Element {
         colorScheme='primary'
         to='/'
         icon={BirdHouse}
-        label={
-          <Trans>
-            Home
-          </Trans>
-        }
+        label={i18n._(t`Home`)}
       />
       <HorizontalNavigation.Button
         exact
         colorScheme='primary'
         to='/clubs'
         icon={ClubPeopleGroup}
-        label={
-          <Trans>
-            My Clubs
-          </Trans>
-        }
+        label={i18n._(t`My Clubs`)}
       />
       <Can I='create' a='Post'>
         <MainMenuButtonCreatePost />
@@ -38,11 +33,7 @@ export default function MainMenu (): JSX.Element {
           colorScheme='primary'
           to='/join'
           icon={ContentBrushPen}
-          label={
-            <Trans>
-              Create a Post
-            </Trans>
-          }
+          label={i18n._(t`Create a Post`)}
         />
       </Can>
     </>

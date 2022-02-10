@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e18df3a892429af69fe38be8e90400d5>>
+ * @generated SignedSource<<d8b0667ddc963608d15c6e16aec7d575>>
  * @relayHash c49b64df64e1f7fc65b3512b5927b2f4
  * @lightSyntaxTransform
  * @nogrep
@@ -12,7 +12,7 @@
 // @relayRequestID c49b64df64e1f7fc65b3512b5927b2f4
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type PostState = "DRAFT" | "PUBLISHING" | "REVIEW" | "PUBLISHED" | "DISCARDING" | "DISCARDED" | "REJECTED" | "PROCESSING" | "REMOVING" | "REMOVED" | "%future added value";
+export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 export type SubmitPostInput = {
   id: string;
 };

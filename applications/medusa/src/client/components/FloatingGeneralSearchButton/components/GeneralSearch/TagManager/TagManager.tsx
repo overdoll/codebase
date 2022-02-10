@@ -2,7 +2,7 @@ import { StateProps } from '../../../FloatingGeneralSearchButton'
 import { Wrap, WrapItem } from '@chakra-ui/react'
 import RemovableTag from '../../../../../../modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { CategoryIdentifier, CharacterIdentifier, SeriesIdentifier } from '@//:assets/icons/interface'
-import { removeKeyFromObject } from '../../../helpers/removeKeyFromObject'
+import { removeKeyFromObject } from '@//:modules/support'
 
 export default function TagManager ({
   searchValues,

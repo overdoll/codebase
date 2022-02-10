@@ -3,6 +3,7 @@ import { ReactNode, useState } from 'react'
 import { Box, Flex, Tab, TabList, Tabs } from '@chakra-ui/react'
 import SwiperCore from 'swiper'
 import { useUpdateEffect } from 'usehooks-ts'
+import PageSectionChildrenWrapper from './PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
   children: ReactNode
@@ -31,13 +32,17 @@ export default function PageSectionScroller ({
     swiper.slideTo(index, 300)
   }
 
-  const ChildTab = (): JSX.Element => <Tab color='gray.100' borderRadius='full'>
-    {childrenTitle != null ? childrenTitle : 'children'}
-  </Tab>
+  const ChildTab = (): JSX.Element => (
+    <Tab color='gray.100' borderRadius='full'>
+      {childrenTitle != null ? childrenTitle : 'children'}
+    </Tab>
+  )
 
-  const ScrollTab = (): JSX.Element => <Tab color='gray.100' borderRadius='full'>
-    {infiniteScrollTitle != null ? infiniteScrollTitle : 'infinite-scroll'}
-  </Tab>
+  const ScrollTab = (): JSX.Element => (
+    <Tab color='gray.100' borderRadius='full'>
+      {infiniteScrollTitle != null ? infiniteScrollTitle : 'infinite-scroll'}
+    </Tab>
+  )
 
   const SwiperControl = (): JSX.Element => {
     return (
@@ -59,14 +64,18 @@ export default function PageSectionScroller ({
           >
             <TabList>
               {reversed
-                ? <>
-                  <ScrollTab />
-                  <ChildTab />
-                </>
-                : <>
-                  <ChildTab />
-                  <ScrollTab />
-                </>}
+                ? (
+                  <>
+                    <ScrollTab />
+                    <ChildTab />
+                  </>
+                  )
+                : (
+                  <>
+                    <ChildTab />
+                    <ScrollTab />
+                  </>
+                  )}
             </TabList>
           </Tabs>
         </Box>
@@ -95,27 +104,30 @@ export default function PageSectionScroller ({
           resistanceRatio={0}
         >
           {reversed
-            ? <>
-              <SwiperSlide>
-                {pageInfiniteScroll}
-              </SwiperSlide>
-              <SwiperSlide>
-                <Box mx={1} mt={6} mb={28}>
-                  {children}
-                </Box>
-              </SwiperSlide>
-
-            </>
-            : <>
-              <SwiperSlide>
-                <Box mx={1} mt={6} mb={16}>
-                  {children}
-                </Box>
-              </SwiperSlide>
-              <SwiperSlide>
-                {pageInfiniteScroll}
-              </SwiperSlide>
-            </>}
+            ? (
+              <>
+                <SwiperSlide>
+                  {pageInfiniteScroll}
+                </SwiperSlide>
+                <SwiperSlide>
+                  <PageSectionChildrenWrapper>
+                    {children}
+                  </PageSectionChildrenWrapper>
+                </SwiperSlide>
+              </>
+              )
+            : (
+              <>
+                <SwiperSlide>
+                  <PageSectionChildrenWrapper>
+                    {children}
+                  </PageSectionChildrenWrapper>
+                </SwiperSlide>
+                <SwiperSlide>
+                  {pageInfiniteScroll}
+                </SwiperSlide>
+              </>
+              )}
         </Swiper>
       </Box>
       <SwiperControl />
