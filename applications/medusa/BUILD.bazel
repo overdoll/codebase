@@ -126,6 +126,7 @@ _RUNTIME_DEPS = [
     "@npm//graphql-playground-html",
     "@npm//url-slug",
     "@npm//usehooks-ts",
+    "@npm//react-swipeable"
 ]
 
 TEST_DEPS = [
