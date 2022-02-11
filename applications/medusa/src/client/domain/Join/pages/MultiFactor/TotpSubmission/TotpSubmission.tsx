@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Box, FormControl, FormLabel, Heading, Stack, Text, useToast } from '@chakra-ui/react'
+import { Box, FormControl, FormLabel, Heading, Stack, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
@@ -15,6 +15,7 @@ import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledI
 import Button from '@//:modules/form/Button/Button'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface CodeValues {
   code: string
@@ -89,8 +90,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t`Welcome back! Thanks for using two-factor to log in!`,
-          isClosable: true
+          title: t`Welcome back! Thanks for using two-factor to log in!`
         })
       },
       updater: (store) => {
@@ -101,8 +101,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error submitting the authentication code`,
-          isClosable: true
+          title: t`There was an error submitting the authentication code`
         })
       }
     })

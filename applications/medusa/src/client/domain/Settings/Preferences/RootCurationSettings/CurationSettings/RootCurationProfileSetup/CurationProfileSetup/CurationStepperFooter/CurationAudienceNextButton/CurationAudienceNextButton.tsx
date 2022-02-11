@@ -2,11 +2,11 @@ import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import { HStack, useToast } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
 import type { CurationAudienceNextButtonFragment$key } from '@//:artifacts/CurationAudienceNextButtonFragment.graphql'
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   nextStep: () => void
   query: CurationAudienceNextButtonFragment$key | null
@@ -69,8 +69,7 @@ export default function CurationAudienceNextButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the audiences`,
-          isClosable: true
+          title: t`There was an error saving the audiences`
         })
       }
     })
@@ -89,16 +88,14 @@ export default function CurationAudienceNextButton ({
         })
         notify({
           status: 'info',
-          title: t`Audience preference was skipped`,
-          isClosable: true
+          title: t`Audience preference was skipped`
         })
         nextStep()
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error skipping audience`,
-          isClosable: true
+          title: t`There was an error skipping audience`
         })
       }
     })

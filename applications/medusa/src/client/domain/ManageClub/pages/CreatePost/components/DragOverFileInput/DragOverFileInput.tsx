@@ -1,11 +1,11 @@
 import type { DragEvent, ReactNode } from 'react'
 import { useState } from 'react'
-import { Flex, Heading, useDisclosure, useToast } from '@chakra-ui/react'
+import { Flex, Heading, useDisclosure } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   uppy: Uppy
   onSelect?: () => void
@@ -50,8 +50,7 @@ export default function DragOverFileInput ({
       } catch (err) {
         notify({
           status: 'error',
-          title: err.message,
-          isClosable: true
+          title: err.message
         })
       }
     })

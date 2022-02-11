@@ -83,7 +83,7 @@ const variantTopAccent: PartsStyleFunction<typeof parts> = (props) => {
   }
 }
 
-const variantSolidOriginal: PartsStyleFunction<typeof parts> = (props) => {
+const variantSolid: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
@@ -93,23 +93,23 @@ const variantSolidOriginal: PartsStyleFunction<typeof parts> = (props) => {
   }
 }
 
-const variantSolid: PartsStyleFunction<typeof parts> = (props) => {
+const variantToast: PartsStyleFunction<typeof parts> = (props) => {
   const { colorScheme: c } = props
   return {
     container: {
       paddingStart: 3,
-      borderStartWidth: '4px',
-      borderStartColor: mode(`${c}.500`, `${c}.500`)(props),
+      borderStartWidth: 4,
+      borderStartColor: mode(`${c}.400`, `${c}.400`)(props),
       bg: mode(`${c}.500`, 'gray.800')(props),
       color: mode('white', 'gray.00')(props)
     },
     icon: {
-      color: mode(`${c}.500`, `${c}.500`)(props),
-      width: 4,
-      height: 4,
-      marginTop: 1
+      color: mode(`${c}.400`, `${c}.400`)(props),
+      width: 5,
+      height: 5
     },
     title: {
+      color: mode('white', 'gray.00')(props),
       fontWeight: 'normal'
     }
   }
@@ -117,7 +117,7 @@ const variantSolid: PartsStyleFunction<typeof parts> = (props) => {
 
 const variants = {
   subtle: variantSubtle,
-  'solid-base': variantSolidOriginal,
+  toast: variantToast,
   'left-accent': variantLeftAccent,
   'top-accent': variantTopAccent,
   solid: variantSolid

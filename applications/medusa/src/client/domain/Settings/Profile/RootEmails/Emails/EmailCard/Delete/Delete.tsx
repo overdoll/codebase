@@ -1,10 +1,10 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql'
-import { useToast } from '@chakra-ui/react'
 import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql'
 import { SmallMenuItem } from '@//:modules/content/PageLayout'
 import { DeleteBin } from '@//:assets/icons/interface'
 import { t, Trans } from '@lingui/macro'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   connectionID: string

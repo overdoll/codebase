@@ -1,10 +1,11 @@
-import { Alert, AlertDescription, AlertIcon, Box, Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import LockedAccountModal from './LockedAccountModal/LockedAccountModal'
 import { Trans } from '@lingui/macro'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 interface Props {
   queryRef: LockedAccountBannerFragment$key | null

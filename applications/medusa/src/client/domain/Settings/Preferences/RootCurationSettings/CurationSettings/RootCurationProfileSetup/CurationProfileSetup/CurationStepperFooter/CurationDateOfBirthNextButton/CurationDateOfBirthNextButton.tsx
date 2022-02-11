@@ -2,14 +2,14 @@ import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useContext } from 'react'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import { HStack, useToast } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
 import type {
   CurationDateOfBirthNextButtonFragment$key
 } from '@//:artifacts/CurationDateOfBirthNextButtonFragment.graphql'
 import { FlowBuilderNextButton } from '../../../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import differenceInYears from 'date-fns/differenceInYears'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   nextStep: () => void
   query: CurationDateOfBirthNextButtonFragment$key | null
@@ -66,8 +66,7 @@ export default function CurationDateOfBirthNextButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the date of birth`,
-          isClosable: true
+          title: t`There was an error saving the date of birth`
         })
       }
     })
@@ -81,16 +80,14 @@ export default function CurationDateOfBirthNextButton ({
       onCompleted () {
         notify({
           status: 'info',
-          title: t`Age preference was skipped`,
-          isClosable: true
+          title: t`Age preference was skipped`
         })
         nextStep()
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error skipping the date of birth`,
-          isClosable: true
+          title: t`There was an error skipping the date of birth`
         })
       }
     })

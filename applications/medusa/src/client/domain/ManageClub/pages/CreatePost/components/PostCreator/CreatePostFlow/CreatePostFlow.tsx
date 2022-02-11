@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Box, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
+import { Box, Heading, Spinner, Text } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
@@ -10,7 +10,7 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../context'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   clubId: string | undefined
 }
@@ -45,8 +45,7 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error creating a draft post`,
-          isClosable: true
+          title: t`There was an error creating a draft post`
         })
       }
     })

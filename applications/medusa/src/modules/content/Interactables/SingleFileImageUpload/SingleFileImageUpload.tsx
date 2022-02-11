@@ -1,7 +1,7 @@
 import UppyInstance from './hooks/uppy/Uppy'
 import type { Uppy, UppyFile } from '@uppy/core'
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Heading, HStack, Progress, Skeleton, useToast } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Progress, Skeleton } from '@chakra-ui/react'
 import { ClickableBox, LargeBackgroundBox } from '../../PageLayout'
 import FilePicker from '../../../../client/domain/ManageClub/pages/CreatePost/components/FilePicker/FilePicker'
 import DragOverFileInput
@@ -11,7 +11,7 @@ import Icon from '../../PageLayout/Flair/Icon/Icon'
 import { Trans } from '@lingui/macro'
 import SuspenseImage from '../../../operations/SuspenseImage'
 import CloseButton from '../../ThemeComponents/CloseButton/CloseButton'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   onCompleted: (id) => void
   onCancelled?: () => void
@@ -84,8 +84,7 @@ export default function SingleFileImageUpload ({
 
       notify({
         status: 'error',
-        title: message,
-        isClosable: true
+        title: message
       })
     })
   }, [uppy])

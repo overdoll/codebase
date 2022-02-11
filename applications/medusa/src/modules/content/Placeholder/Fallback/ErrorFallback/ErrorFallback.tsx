@@ -1,7 +1,8 @@
-import { Alert, AlertDescription, AlertIcon, Button, Flex } from '@chakra-ui/react'
+import { Button, Flex } from '@chakra-ui/react'
 import Icon from '../../../PageLayout/Flair/Icon/Icon'
 import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
 import { Trans } from '@lingui/macro'
+import { Alert, AlertDescription, AlertIcon } from '../../../ThemeComponents/Alert/Alert'
 
 interface Props {
   error?: Error

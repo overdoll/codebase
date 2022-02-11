@@ -1,7 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { ChangeClubThumbnailFragment$key } from '@//:artifacts/ChangeClubThumbnailFragment.graphql'
 import { ChangeClubThumbnailMutation } from '@//:artifacts/ChangeClubThumbnailMutation.graphql'
-import { Collapse, Flex, useDisclosure, useToast } from '@chakra-ui/react'
+import { Collapse, Flex, useDisclosure } from '@chakra-ui/react'
 import {
   ListSpacer,
   PageSectionDescription,
@@ -13,6 +13,7 @@ import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import SingleFileImageUpload
   from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: ChangeClubThumbnailFragment$key | null
@@ -69,15 +70,13 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Successfully updated your club thumbnail`,
-          isClosable: true
+          title: t`Successfully updated your club thumbnail`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error updating your club thumbnail`,
-          isClosable: true
+          title: t`There was an error updating your club thumbnail`
         })
       }
     }

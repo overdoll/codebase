@@ -1,5 +1,5 @@
 import { graphql, useMutation } from 'react-relay/hooks'
-import { Alert, AlertDescription, AlertIcon, FormControl, FormLabel, HStack, useToast } from '@chakra-ui/react'
+import { FormControl, FormLabel, HStack } from '@chakra-ui/react'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -10,6 +10,8 @@ import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'
 import Button from '@//:modules/form/Button/Button'
 import { ConnectionProp } from '@//:types/components'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface EmailValues {
   email: string
@@ -74,15 +76,13 @@ export default function AddEmailForm ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`A confirmation email was sent to ${data.email}. Check your inbox/spam!`,
-          isClosable: true
+          title: t`A confirmation email was sent to ${data.email}. Check your inbox/spam!`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error adding the email`,
-          isClosable: true
+          title: t`There was an error adding the email`
         })
       }
     }

@@ -1,17 +1,5 @@
 import { useState } from 'react'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Select,
-  Stack,
-  Textarea
-} from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Select, Stack, Textarea } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import { Controller, useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -19,6 +7,7 @@ import Joi from 'joi'
 import type { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 interface NoteValues {
   note: string
@@ -140,7 +129,7 @@ export default function RejectionReasons (props: Props): JSX.Element {
           </FormErrorMessage>
         </FormControl>
         {infraction &&
-          <Alert borderRadius={5} mt={1} mb={1} status='warning'>
+          <Alert mt={1} mb={1} status='warning'>
             <AlertIcon mt={1} mb={3} />
             <AlertDescription>
               <Trans>

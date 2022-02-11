@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormErrorMessage, Stack, useToast } from '@chakra-ui/react'
+import { Checkbox, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Joi from 'joi'
 import { Controller, useForm } from 'react-hook-form'
@@ -8,7 +8,7 @@ import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UnlockAccountFormMutation } from '@//:artifacts/UnlockAccountFormMutation.graphql'
 import { UnlockAccountFormFragment$key } from '@//:artifacts/UnlockAccountFormFragment.graphql'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface FormValues {
   checkbox: boolean
 }
@@ -80,15 +80,13 @@ export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | n
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Your account has been unlocked`,
-          isClosable: true
+          title: t`Your account has been unlocked`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error unlocking your account`,
-          isClosable: true
+          title: t`There was an error unlocking your account`
         })
       }
     })

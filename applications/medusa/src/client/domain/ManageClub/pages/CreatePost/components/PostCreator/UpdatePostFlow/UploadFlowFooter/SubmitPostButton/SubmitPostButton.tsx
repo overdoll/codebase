@@ -1,4 +1,3 @@
-import { useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { useQueryParam } from 'use-query-params'
@@ -9,7 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { UppyContext } from '../../../../../context'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   query: SubmitPostButtonFragment$key
 }
@@ -74,8 +73,7 @@ export default function SubmitPostButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error submitting your post`,
-          isClosable: true
+          title: t`There was an error submitting your post`
         })
       }
     })

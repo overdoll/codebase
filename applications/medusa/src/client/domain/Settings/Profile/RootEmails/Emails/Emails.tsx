@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Collapse, Flex, useDisclosure, useToast } from '@chakra-ui/react'
+import { Collapse, Flex, useDisclosure } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import EmailCard from './EmailCard/EmailCard'
@@ -10,6 +10,7 @@ import { usePaginationFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: PreloadedQuery<EmailsQuery>
@@ -87,7 +88,6 @@ export default function Emails (props: Props): JSX.Element {
       notify({
         status: 'error',
         duration: 10000,
-        isClosable: true,
         title: confirmationError
       })
       flush('confirmation.error')
@@ -96,7 +96,6 @@ export default function Emails (props: Props): JSX.Element {
     if (confirmationSuccess != null) {
       notify({
         status: 'success',
-        isClosable: true,
         title: confirmationSuccess
       })
       flush('confirmation.success')

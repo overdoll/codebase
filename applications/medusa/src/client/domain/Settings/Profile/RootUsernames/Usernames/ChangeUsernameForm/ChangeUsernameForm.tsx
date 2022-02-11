@@ -12,8 +12,7 @@ import {
   FormLabel,
   HStack,
   Stack,
-  Text,
-  useToast
+  Text
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -28,6 +27,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface UsernameValues {
   username: string
@@ -113,15 +113,13 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
         }
         notify({
           status: 'success',
-          title: t`Username changed successfully`,
-          isClosable: true
+          title: t`Username changed successfully`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error changing your username`,
-          isClosable: true
+          title: t`There was an error changing your username`
         })
       }
     })

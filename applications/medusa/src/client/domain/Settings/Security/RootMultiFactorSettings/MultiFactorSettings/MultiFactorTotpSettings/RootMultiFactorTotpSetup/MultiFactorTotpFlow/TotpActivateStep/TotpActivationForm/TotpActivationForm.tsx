@@ -1,6 +1,6 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpActivationFormMutation } from '@//:artifacts/TotpActivationFormMutation.graphql'
-import { FormControl, HStack, useToast } from '@chakra-ui/react'
+import { FormControl, HStack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -10,7 +10,7 @@ import { t, Trans } from '@lingui/macro'
 import Totp from '@//:modules/validation/Totp'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface CodeValues {
   code: string
 }

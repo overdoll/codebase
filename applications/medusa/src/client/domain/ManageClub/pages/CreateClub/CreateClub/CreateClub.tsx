@@ -1,9 +1,10 @@
-import { Alert, AlertDescription, AlertIcon, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import { CreateClubQuery } from '@//:artifacts/CreateClubQuery.graphql'
 import CreateClubForm from './CreateClubForm/CreateClubForm'
 import { CreateClubFragment$key } from '@//:artifacts/CreateClubFragment.graphql'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 interface Props {
   query: PreloadedQuery<CreateClubQuery>

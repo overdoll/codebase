@@ -1,7 +1,5 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import {
-  Alert,
-  AlertDescription,
   Box,
   Heading,
   Modal,
@@ -22,6 +20,7 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -118,6 +117,7 @@ export default function LockedAccountModal ({
               mb={4}
               status='warning'
             >
+              <AlertIcon />
               <AlertDescription>
                 <Trans>No reason was found</Trans>
               </AlertDescription>

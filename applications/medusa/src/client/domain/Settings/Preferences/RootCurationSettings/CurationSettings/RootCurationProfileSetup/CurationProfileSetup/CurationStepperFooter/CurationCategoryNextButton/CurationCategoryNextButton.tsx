@@ -2,11 +2,11 @@ import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useContext } from 'react'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import { HStack, useToast } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
 import type { CurationCategoryNextButtonFragment$key } from '@//:artifacts/CurationCategoryNextButtonFragment.graphql'
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   nextStep: () => void
   query: CurationCategoryNextButtonFragment$key | null
@@ -67,8 +67,7 @@ export default function CurationCategoryNextButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the categories`,
-          isClosable: true
+          title: t`There was an error saving the categories`
         })
       }
     })
@@ -87,15 +86,13 @@ export default function CurationCategoryNextButton ({
         })
         notify({
           status: 'info',
-          title: t`Category preference was skipped`,
-          isClosable: true
+          title: t`Category preference was skipped`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error skipping the categories`,
-          isClosable: true
+          title: t`There was an error skipping the categories`
         })
       }
     })

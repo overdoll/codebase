@@ -105,7 +105,7 @@ function getDefaults (props: Record<string, any>): Record<string, string> {
     errorBorderColor: ec
   } = props
   return {
-    focusBorderColor: fc ?? mode('blue.700', 'pink.500')(props),
+    focusBorderColor: fc ?? mode('teal.700', 'pink.500')(props),
     errorBorderColor: ec ?? mode('red.500', 'orange.500')(props)
   }
 }
