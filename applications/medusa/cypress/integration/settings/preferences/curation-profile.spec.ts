@@ -1,4 +1,8 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
+import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../../support/flow_builder'
+import { clickOnTile, searchForTerm } from '../../../support/user_actions'
+
+Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Settings - Curation Profile', () => {
   const [username, email] = generateUsernameAndEmail()
@@ -13,18 +17,14 @@ describe('Settings - Curation Profile', () => {
         break
       case 'audience':
         cy.findByText('Select Audiences').should('exist')
-        cy.waitUntil(() => cy.findByText(preferenceAudience).should('exist'))
         break
       case 'category':
         cy.findByText('Select Categories').should('exist')
-        cy.waitUntil(() => cy.findByRole('button', { name: /Load More/iu }).should('exist'))
         break
       default:
         break
     }
   }
-  // TODO this test is broken because the query for the curation profile is broken. should work after its fixed.
-  /*
 
   it('fill out the curation profile', () => {
     cy.joinWithNewAccount(username, email)
@@ -49,13 +49,13 @@ describe('Settings - Curation Profile', () => {
     skipCurrentStep()
     isOnStep('category')
     gotoPreviousStep()
-    cy.findByText(preferenceAudience).should('exist').click()
+    clickOnTile(preferenceAudience)
     saveCurrentStep()
 
     // fill out the categories section
     isOnStep('category')
     searchForTerm('Search for a category', preferenceCategory)
-    cy.findByText(preferenceCategory).should('exist').click()
+    clickOnTile(preferenceCategory)
     saveCurrentStep()
     cy.findByRole('button', { name: /Go home/iu }).should('exist').click()
     cy.visit('/configure/curation-profile')
@@ -66,6 +66,4 @@ describe('Settings - Curation Profile', () => {
     skipCurrentStep()
     cy.findByText(/Category preference was skipped/iu).should('exist')
   })
-
-   */
 })

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<caa4b7f24b42c6422c3676e19e4bef6a>>
+ * @generated SignedSource<<e022628490a6caed1cf938950d4f9fa6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubAliasesFragment$data = {
   readonly slug: string;
   readonly slugAliases: ReadonlyArray<{
+    readonly __id: string;
     readonly slug: string;
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment" | "ManageClubSlugAliasesFragment">;
@@ -57,7 +58,19 @@ return {
       "name": "slugAliases",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
+        }
       ],
       "storageKey": null
     }
@@ -67,6 +80,6 @@ return {
 };
 })();
 
-(node as any).hash = "25c9e53a5c52d724475f9db85cf228ce";
+(node as any).hash = "923e992de96d1376374d21a89a31277f";
 
 export default node;

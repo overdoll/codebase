@@ -7,6 +7,7 @@ import type { CurationAudienceNextButtonFragment$key } from '@//:artifacts/Curat
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   nextStep: () => void
   query: CurationAudienceNextButtonFragment$key | null
@@ -56,6 +57,8 @@ export default function CurationAudienceNextButton ({
 
   const saveCondition = Object.keys(state.audience.value).length > 0 &&
     compareTwoArrays(Object.keys(state.audience.value), currentAudienceIds) === false
+
+  console.log('rerender')
 
   const onUpdateAudience = (): void => {
     updateAudience({

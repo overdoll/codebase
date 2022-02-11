@@ -21,7 +21,8 @@ export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, (
     onCopy()
     notify({
       title: t`Copied to clipboard!`,
-      status: 'error'
+      status: 'info',
+      duration: null
     })
   }
 

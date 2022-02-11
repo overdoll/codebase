@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b2779b80c4745352ee064c7bd06e8d85>>
+ * @generated SignedSource<<c3442c1a02623b983cca3c602373e738>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,8 @@ export type AddClubSlugAliasFragment$data = {
   readonly id: string;
   readonly slug: string;
   readonly slugAliases: ReadonlyArray<{
-    readonly __typename: string;
+    readonly __id: string;
+    readonly slug: string;
   }>;
   readonly slugAliasesLimit: number;
   readonly " $fragmentType": "AddClubSlugAliasFragment";
@@ -25,7 +26,15 @@ export type AddClubSlugAliasFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -38,13 +47,7 @@ const node: ReaderFragment = {
       "name": "id",
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "slug",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -53,12 +56,18 @@ const node: ReaderFragment = {
       "name": "slugAliases",
       "plural": true,
       "selections": [
+        (v0/*: any*/),
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -74,7 +83,8 @@ const node: ReaderFragment = {
   "type": "Club",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "1961a61402df94890848debcd801e8db";
+(node as any).hash = "779450f39f1b3a21b08413184c925933";
 
 export default node;

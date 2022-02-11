@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon, AlertTitle } from '../Alert/Alert'
+import { useSwipeable } from 'react-swipeable'
 
 type UseToastInput = UseToastOptions
 
@@ -35,6 +36,11 @@ export default function useToast (options: UseToastInput = {}): (options: UseToa
       isClosable = true
     } = props
 
+    // if user swipes the toast in any direction, we close it
+    const swipeHandler = useSwipeable({
+      onSwiped: () => isClosable && onClose()
+    })
+
     return (
       <Alert
         status={status}
@@ -46,6 +52,7 @@ export default function useToast (options: UseToastInput = {}): (options: UseToa
         paddingEnd={8}
         textAlign='start'
         width='auto'
+        {...swipeHandler}
       >
         <AlertIcon />
         <Flex maxWidth='100%'>

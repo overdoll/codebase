@@ -14,7 +14,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import generatePath from '../../../../../../modules/routing/generatePath'
 import { useHistory, useParams } from '@//:modules/routing'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { ReactNode } from 'react'
@@ -122,6 +122,12 @@ export default function ClubListSelector ({
             as={CloseButton}
           />
           <ModalBody mb={4}>
+            {data.clubs.edges.length < 1 &&
+              <Box>
+                <Trans>
+                  No clubs founds
+                </Trans>
+              </Box>}
             <GridWrap>
               {data.clubs.edges.map((item, index) => (
                 <GridTile key={index}>

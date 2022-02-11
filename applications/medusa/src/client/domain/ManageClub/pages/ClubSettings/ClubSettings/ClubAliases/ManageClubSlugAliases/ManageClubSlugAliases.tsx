@@ -6,8 +6,11 @@ import { CheckMark, DeleteBin } from '@//:assets/icons/interface'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { ManageClubSlugAliasesRemoveMutation } from '@//:artifacts/ManageClubSlugAliasesRemoveMutation.graphql'
+import { ManageClubSlugAliasesPromoteMutation } from '@//:artifacts/ManageClubSlugAliasesPromoteMutation.graphql'
+
 import { useHistory } from '@//:modules/routing'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   query: ManageClubSlugAliasesFragment$key | null
 }
@@ -39,7 +42,6 @@ const PromoteClubSlugMutationGQL = graphql`
   mutation ManageClubSlugAliasesPromoteMutation ($id: ID!, $slug: String!) {
     promoteClubSlugAliasToDefault(input: {id: $id, slug: $slug}) {
       club {
-        id
         slug
         slugAliases {
           slug
@@ -54,7 +56,7 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
 
   const [removeSlug, isRemovingSlug] = useMutation<ManageClubSlugAliasesRemoveMutation>(RemoveClubSlugMutationGQL)
 
-  const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesRemoveMutation>(PromoteClubSlugMutationGQL)
+  const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesPromoteMutation>(PromoteClubSlugMutationGQL)
 
   const history = useHistory()
 
@@ -102,11 +104,17 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
         })
         history.push(`/club/${slug as string}/settings`)
       },
-      onError () {
+      updater: (store, payload) => {
+        const node = store.get(data.id)
+        if (node != null) {
+          const newSlug = payload?.promoteClubSlugAliasToDefault?.club?.slug
+          node.setValue(newSlug, 'slug')
+        }
+      },
+      onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error promoting the link alias to default`,
-          isClosable: true
+          title: t`There was an error promoting the link alias to default`
         })
       }
     }

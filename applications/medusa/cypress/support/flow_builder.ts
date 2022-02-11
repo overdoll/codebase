@@ -1,19 +1,17 @@
+import { clickOnButton } from './user_actions'
+
 export const gotoNextStep = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: 'Next' }).should('not.be.disabled'))
-  cy.findByRole('button', { name: 'Next' }).click()
+  clickOnButton('Next')
 }
 
 export const gotoPreviousStep = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: 'Back' }).should('not.be.disabled'))
-  cy.findByRole('button', { name: 'Back' }).click()
+  clickOnButton('Back')
 }
 
 export const skipCurrentStep = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: 'Skip' }).should('not.be.disabled'))
-  cy.findByRole('button', { name: 'Skip' }).click()
+  clickOnButton('Skip')
 }
 
 export const saveCurrentStep = (): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: 'Save' }).should('not.be.disabled'))
-  cy.findByRole('button', { name: 'Save' }).click()
+  clickOnButton('Save')
 }

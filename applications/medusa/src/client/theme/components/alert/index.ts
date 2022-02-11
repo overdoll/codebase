@@ -41,7 +41,7 @@ const variantSubtle: PartsStyleFunction<typeof parts> = (props) => {
     container: {
       bg: getBg(props)
     },
-    icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
+    icon: { fill: mode(`${c}.500`, `${c}.300`)(props) },
     title: {
       color: mode(`${c}.500`, `${c}.300`)(props)
     },
@@ -62,7 +62,7 @@ const variantLeftAccent: PartsStyleFunction<typeof parts> = (props) => {
 
     },
     icon: {
-      color: mode(`${c}.500`, `${c}.200`)(props)
+      fill: mode(`${c}.500`, `${c}.200`)(props)
     }
   }
 }
@@ -78,7 +78,7 @@ const variantTopAccent: PartsStyleFunction<typeof parts> = (props) => {
 
     },
     icon: {
-      color: mode(`${c}.500`, `${c}.200`)(props)
+      fill: mode(`${c}.500`, `${c}.200`)(props)
     }
   }
 }
@@ -104,7 +104,7 @@ const variantToast: PartsStyleFunction<typeof parts> = (props) => {
       color: mode('white', 'gray.00')(props)
     },
     icon: {
-      color: mode(`${c}.400`, `${c}.400`)(props),
+      fill: mode(`${c}.400`, `${c}.400`)(props),
       width: 5,
       height: 5
     },

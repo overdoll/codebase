@@ -1,4 +1,4 @@
-import { CheckCircle, InfoCircle, RemoveCross, WarningTriangle } from '@//:assets/icons'
+import { CheckCircle, DeleteCircle, InfoCircle, WarningTriangle } from '@//:assets/icons'
 import {
   Alert as ChakraAlert,
   AlertDescription as ChakraAlertDescription,
@@ -11,7 +11,7 @@ import {
   CloseButtonProps,
   HTMLChakraProps
 } from '@chakra-ui/react'
-import { createContext, useContext } from 'react'
+import { createContext, forwardRef, useContext } from 'react'
 import CloseButton from '../CloseButton/CloseButton'
 
 export const statusColors = {
@@ -22,7 +22,7 @@ export const statusColors = {
 }
 
 const statusIcons = {
-  error: RemoveCross,
+  error: DeleteCircle,
   success: CheckCircle,
   warning: WarningTriangle,
   info: InfoCircle
@@ -32,24 +32,27 @@ interface AlertOptions {
   status?: keyof typeof statusColors
 }
 
+type AlertPropsOptions = AlertProps & AlertOptions & HTMLChakraProps<any>
+
 const AlertContext = createContext<AlertOptions>({ status: 'info' })
 
-export const Alert = ({
+export const Alert = forwardRef<any, AlertPropsOptions>(({
   status = 'info',
   ...rest
-}: AlertProps & AlertOptions & HTMLChakraProps<any>): JSX.Element => {
+}: AlertPropsOptions, forwardRef): JSX.Element => {
   const colorScheme = statusColors[status]
 
   return (
     <AlertContext.Provider value={{ status }}>
       <ChakraAlert
+        ref={forwardRef}
         variant='subtle'
         colorScheme={colorScheme}
         {...rest}
       />
     </AlertContext.Provider>
   )
-}
+})
 
 export const AlertIcon = ({ ...rest }: AlertIconProps & HTMLChakraProps<any>): JSX.Element => {
   const context = useContext(AlertContext)

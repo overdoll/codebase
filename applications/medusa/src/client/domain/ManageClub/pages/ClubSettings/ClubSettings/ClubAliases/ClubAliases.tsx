@@ -24,6 +24,7 @@ const Fragment = graphql`
     ...AddClubSlugAliasFragment
     ...ManageClubSlugAliasesFragment
     slugAliases {
+      __id
       slug
     }
   }

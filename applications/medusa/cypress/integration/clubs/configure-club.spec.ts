@@ -21,9 +21,6 @@ describe('Club - Configure', () => {
 
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
-  })
-
-  it('create club', () => {
     createClubWithName(clubName)
   })
 
@@ -72,8 +69,11 @@ describe('Club - Configure', () => {
   })
 
   it('visit club public page', () => {
-    // TODO test joining club from here when it's fixed
     cy.visit(`/${newClubName}`)
     cy.findByText(newClubName).should('exist')
+    cy.findByRole('button', { name: /Join/iu }).should('not.be.disabled').click()
+    cy.findByText(/You are now a member of/iu).should('be.visible')
+    cy.findByRole('button', { name: /Leave/iu }).should('not.be.disabled').click()
+    cy.findByRole('button', { name: /Join/iu }).should('exist')
   })
 })

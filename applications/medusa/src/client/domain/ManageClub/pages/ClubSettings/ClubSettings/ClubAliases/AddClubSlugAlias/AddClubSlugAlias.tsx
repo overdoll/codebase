@@ -27,7 +27,8 @@ const Fragment = graphql`
     id
     slug
     slugAliases {
-      __typename
+      __id
+      slug
     }
     slugAliasesLimit
   }
@@ -40,6 +41,7 @@ const Mutation = graphql`
         id
         slug
         slugAliases {
+          __id
           slug
         }
       }
@@ -100,6 +102,7 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
           title: t`Successfully added the link alias ${formData.slug}`
         })
       },
+
       onError () {
         notify({
           status: 'error',
