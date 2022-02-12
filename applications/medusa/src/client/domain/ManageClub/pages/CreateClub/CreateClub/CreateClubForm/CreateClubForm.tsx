@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, InputLeftAddon, Stack, useToast } from '@chakra-ui/react'
+import { FormControl, FormLabel, InputLeftAddon, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -16,7 +16,7 @@ import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props extends ConnectionProp {
   isDisabled: boolean
 }
@@ -95,8 +95,7 @@ export default function CreateClubForm ({
         }
         notify({
           status: 'success',
-          title: t`Club ${formValues.name} was created successfully`,
-          isClosable: true
+          title: t`Club ${formValues.name} was created successfully`
         })
         const redirectPath = generatePath('/club/:slug/:entity', {
           slug: data.createClub?.club?.slug,
@@ -113,8 +112,7 @@ export default function CreateClubForm ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`Error creating club ${data.message}`,
-          isClosable: true
+          title: t`Error creating club ${data.message}`
         })
       }
     })

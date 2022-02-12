@@ -3,9 +3,6 @@ import type { CurationProfileSetupQuery } from '@//:artifacts/CurationProfileSet
 import { Trans } from '@lingui/macro'
 import { UserHuman } from '@//:assets/icons/navigation'
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -39,6 +36,7 @@ import type { CurationStepperFooterFragment$key } from '@//:artifacts/CurationSt
 import { useUpdateEffect } from 'usehooks-ts'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
@@ -116,7 +114,7 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
         <Stack spacing={2}>
           {queryData?.viewer?.curationProfile?.completed === true &&
             <Alert
-              colorScheme='teal'
+              status='info'
             >
               <AlertIcon />
               <AlertDescription>

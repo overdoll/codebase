@@ -1,16 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { AddClubSlugAliasFragment$key } from '@//:artifacts/AddClubSlugAliasFragment.graphql'
 import { AddClubSlugAliasMutation } from '@//:artifacts/AddClubSlugAliasMutation.graphql'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  FormControl,
-  FormLabel,
-  HStack,
-  InputLeftAddon,
-  useToast
-} from '@chakra-ui/react'
+import { FormControl, FormLabel, HStack, InputLeftAddon } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
@@ -20,6 +11,8 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: AddClubSlugAliasFragment$key | null
@@ -34,7 +27,8 @@ const Fragment = graphql`
     id
     slug
     slugAliases {
-      __typename
+      __id
+      slug
     }
     slugAliasesLimit
   }
@@ -47,6 +41,7 @@ const Mutation = graphql`
         id
         slug
         slugAliases {
+          __id
           slug
         }
       }
@@ -104,15 +99,14 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t`Successfully added the link alias ${formData.slug}`,
-          isClosable: true
+          title: t`Successfully added the link alias ${formData.slug}`
         })
       },
+
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error adding a link alias`,
-          isClosable: true
+          title: t`There was an error adding a link alias`
         })
       }
     }

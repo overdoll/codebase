@@ -1,7 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { ChangeClubNameFragment$key } from '@//:artifacts/ChangeClubNameFragment.graphql'
 import { ChangeClubNameMutation } from '@//:artifacts/ChangeClubNameMutation.graphql'
-import { Collapse, FormControl, FormLabel, HStack, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Collapse, FormControl, FormLabel, HStack, Text, useDisclosure } from '@chakra-ui/react'
 import { ListSpacer, PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import ClubName from '@//:modules/validation/ClubName'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: ChangeClubNameFragment$key | null
@@ -83,15 +84,13 @@ export default function ChangeClubName ({ query }: Props): JSX.Element {
       onCompleted (data) {
         notify({
           status: 'success',
-          title: t`Successfully updated your club name to ${formData.name}`,
-          isClosable: true
+          title: t`Successfully updated your club name to ${formData.name}`
         })
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error updating your club name`,
-          isClosable: true
+          title: t`There was an error updating your club name`
         })
       }
     }

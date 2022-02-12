@@ -2,14 +2,14 @@ import type { ModeratePostApproveMutation } from '@//:artifacts/ModeratePostAppr
 import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejectMutation.graphql'
 import { graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
-import { Fade, Flex, HStack, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import { Fade, Flex, HStack, Text, useDisclosure } from '@chakra-ui/react'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
 import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 import { t, Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   infractions: RejectionReasonsFragment$key
   postID: ModeratePostFragment$key
@@ -81,15 +81,13 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post created by ${data?.club?.name} was approved successfully`,
-          isClosable: true
+          title: t`Post created by ${data?.club?.name} was approved successfully`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error approving a post created by ${data?.club?.name}`,
-          isClosable: true
+          title: t`There was an error approving a post created by ${data?.club?.name}`
         })
       }
     })

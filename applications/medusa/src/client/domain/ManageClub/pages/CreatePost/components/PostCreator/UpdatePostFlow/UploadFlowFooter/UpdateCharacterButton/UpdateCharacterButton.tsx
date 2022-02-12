@@ -1,4 +1,3 @@
-import { useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { UpdateCharacterButtonFragment$key } from '@//:artifacts/UpdateCharacterButtonFragment.graphql'
@@ -9,7 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   query: UpdateCharacterButtonFragment$key
   nextStep: () => void
@@ -85,8 +84,7 @@ export default function UpdateCharacterButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the characters`,
-          isClosable: true
+          title: t`There was an error saving the characters`
         })
       }
     })

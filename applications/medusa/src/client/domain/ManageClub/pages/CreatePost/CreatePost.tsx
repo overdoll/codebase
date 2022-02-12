@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import { useToast } from '@chakra-ui/react'
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import PostCreator from './components/PostCreator/PostCreator'
 import { UppyContext } from './context'
@@ -19,7 +18,7 @@ import { Uppy } from '@uppy/core'
 import UppyInstance from './hooks/uppy/Uppy'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import uploadObjectsReducer from '@//:modules/hooks/useReducerBuilder/options/uploadObjectsReducer'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   prepared: {
     query: PreloadedQuery<PostCreatorQueryType>
@@ -129,8 +128,7 @@ export default function CreatePost (props: Props): JSX.Element {
 
       notify({
         status: 'error',
-        title: message,
-        isClosable: true
+        title: message
       })
     })
   }, [uppy])

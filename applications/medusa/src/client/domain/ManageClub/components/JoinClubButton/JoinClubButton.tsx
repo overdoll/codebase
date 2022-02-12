@@ -9,8 +9,8 @@ import {
 } from '@//:artifacts/JoinClubButtonWithdrawMembershipMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
-import { useToast } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   clubQuery: JoinClubButtonClubFragment$key | null
@@ -86,8 +86,7 @@ export default function JoinClubButton ({
   const onJoinWhenLimited = (): void => {
     notify({
       status: 'error',
-      title: t`You're in too many clubs. You need to leave at least one before you can join this one.`,
-      isClosable: true
+      title: t`You're in too many clubs. You need to leave at least one before you can join this one.`
     })
   }
 
@@ -101,8 +100,7 @@ export default function JoinClubButton ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`You are now a member of ${clubData.name}!`,
-          isClosable: true
+          title: t`You are now a member of ${clubData.name}!`
         })
       },
       updater: (store, payload) => {

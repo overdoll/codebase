@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useClipboard, useToast } from '@chakra-ui/react'
+import { useClipboard } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
+import { useToast } from '../../content/ThemeComponents'
 
 interface Props {
   text: string
@@ -14,16 +15,14 @@ export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, (
     onCopy
   } = useClipboard(copied)
 
-  const notify = useToast()
+  const notify = useToast({})
 
   const onClickButton = (): void => {
     onCopy()
     notify({
       title: t`Copied to clipboard!`,
-      duration: 1000,
-      status: 'success',
-      isClosable: true,
-      variant: 'solid'
+      status: 'info',
+      duration: null
     })
   }
 

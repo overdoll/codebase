@@ -1,4 +1,4 @@
-import { useToast } from '@chakra-ui/react'
+
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { UpdateCategoryButtonFragment$key } from '@//:artifacts/UpdateCategoryButtonFragment.graphql'
@@ -8,7 +8,7 @@ import { t } from '@lingui/macro'
 import { useContext } from 'react'
 import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   query: UpdateCategoryButtonFragment$key
   nextStep: () => void
@@ -83,8 +83,7 @@ export default function UpdateCategoryButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the categories`,
-          isClosable: true
+          title: t`There was an error saving the categories`
         })
       }
     })

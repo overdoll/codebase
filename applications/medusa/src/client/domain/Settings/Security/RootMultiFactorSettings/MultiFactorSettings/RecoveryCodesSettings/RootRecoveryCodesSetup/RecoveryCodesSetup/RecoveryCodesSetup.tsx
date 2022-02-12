@@ -1,17 +1,6 @@
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay/hooks'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Box,
-  Code,
-  Flex,
-  HStack,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  useToast
-} from '@chakra-ui/react'
+import { Box, Code, Flex, HStack, SimpleGrid, Skeleton, Stack } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
@@ -21,7 +10,7 @@ import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetu
 import { t, Trans } from '@lingui/macro'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   query: PreloadedQuery<RecoveryCodesSetupQuery>
 }
@@ -74,8 +63,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
     notify({
       status: 'info',
       duration: 3000,
-      title: t`Saving your recovery codes...`,
-      isClosable: true
+      title: t`Saving your recovery codes...`
     })
   }
 
@@ -85,15 +73,13 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Recovery codes successfully generated`,
-          isClosable: true
+          title: t`Recovery codes successfully generated`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error generating recovery codes`,
-          isClosable: true
+          title: t`There was an error generating recovery codes`
         })
       },
       updater: (store) => {

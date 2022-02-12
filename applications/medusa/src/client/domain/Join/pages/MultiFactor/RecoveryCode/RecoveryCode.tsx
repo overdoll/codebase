@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Alert, AlertDescription, AlertIcon, Flex, FormControl, FormLabel, Stack, useToast } from '@chakra-ui/react'
+import { Flex, FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -12,6 +12,8 @@ import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.gra
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface CodeValues {
   code: string
@@ -97,7 +99,6 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          isClosable: true,
           title: t`A recovery code was successfully used up to log you in`
         })
         history.push('/')
@@ -110,8 +111,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error submitting a recovery code`,
-          isClosable: true
+          title: t`There was an error submitting a recovery code`
         })
       }
     })

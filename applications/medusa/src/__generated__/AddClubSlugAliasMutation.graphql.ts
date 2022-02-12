@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e5afe11ae13c6026de384ab961298b5>>
+ * @generated SignedSource<<1273551a6d24549a8f67eb611db7adcc>>
  * @relayHash 2691930cf470e487a3900088c53d85d8
  * @lightSyntaxTransform
  * @nogrep
@@ -24,6 +24,7 @@ export type AddClubSlugAliasMutation$data = {
       readonly id: string;
       readonly slug: string;
       readonly slugAliases: ReadonlyArray<{
+        readonly __id: string;
         readonly slug: string;
       }>;
     } | null;
@@ -106,7 +107,19 @@ v2 = [
             "name": "slugAliases",
             "plural": true,
             "selections": [
-              (v1/*: any*/)
+              (v1/*: any*/),
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
+              }
             ],
             "storageKey": null
           }
@@ -151,6 +164,6 @@ return {
 };
 })();
 
-(node as any).hash = "b1cf49c95d432ed8840ae76a91c66b4f";
+(node as any).hash = "751e4d7eab2795bf2de0b93b4949109e";
 
 export default node;

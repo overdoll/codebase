@@ -2,7 +2,6 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
 import ClubListSelector from './ClubListSelector/ClubListSelector'
 import { Flex, Heading } from '@chakra-ui/react'
-import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFragment.graphql'
 import ClubPreview from '../ClubPreview/ClubPreview'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'
 import { Icon } from '@//:modules/content/PageLayout'
@@ -21,7 +20,6 @@ const Query = graphql`
     }
     viewer {
       clubsCount
-      ...ClubListSelectorFragment
     }
   }
 `
@@ -34,7 +32,7 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
 
   if (queryData.club == null) {
     return (
-      <ClubListSelector query={queryData.viewer as ClubListSelectorFragment$key}>
+      <ClubListSelector>
         <Flex borderRadius='md' bg='gray.900' h={16} p={2} px={3} align='center' w='100%' justify='space-between'>
           <Heading color='gray.00' fontSize='lg'>
             <Trans>
@@ -56,15 +54,11 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
   }
 
   return (
-
-    <ClubListSelector
-      query={queryData.viewer as ClubListSelectorFragment$key}
-    >
+    <ClubListSelector>
       <Flex borderRadius='md' bg='gray.900' h={16} p={2} px={3} align='center' w='100%' justify='space-between'>
         <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
         <Icon ml={3} icon={SwapCircle} h={5} w={5} fill='gray.300' />
       </Flex>
     </ClubListSelector>
-
   )
 }

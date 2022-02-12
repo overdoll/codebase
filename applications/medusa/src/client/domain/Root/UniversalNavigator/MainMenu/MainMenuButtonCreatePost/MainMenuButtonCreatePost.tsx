@@ -8,13 +8,17 @@ import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavig
 import { useLingui } from '@lingui/react'
 
 const Query = graphql`
-  query MainMenuButtonCreatePostQuery {
+  query MainMenuButtonCreatePostQuery($first: Int, $after: String) {
     viewer {
       clubsCount
-      clubs(first: 1) {
+      clubs (first: $first, after: $after)
+      @connection(key: "CreateClubListener_clubs") {
+        __id
         edges {
           node {
+            id
             slug
+            name
           }
         }
       }

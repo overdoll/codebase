@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Alert, AlertDescription, AlertIcon, Flex, Stack } from '@chakra-ui/react'
+import { Flex, Stack } from '@chakra-ui/react'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql'
@@ -12,6 +12,7 @@ import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../../../context'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 interface Props {
   query: ProcessUploadsFragment$key

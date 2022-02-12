@@ -1,4 +1,3 @@
-import { useToast } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { UpdateContentButtonFragment$key } from '@//:artifacts/UpdateContentButtonFragment.graphql'
@@ -8,7 +7,7 @@ import { t } from '@lingui/macro'
 import { useContext } from 'react'
 import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
 import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   query: UpdateContentButtonFragment$key
   nextStep: () => void

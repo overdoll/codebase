@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2c1b236580e80abd39660196c4769da>>
+ * @generated SignedSource<<37b80742582c8eb581d18a3f605e1200>>
  * @relayHash 7954790e3e77936a5f206c138eff9c9f
  * @lightSyntaxTransform
  * @nogrep
@@ -230,7 +230,7 @@ return {
             "args": (v4/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "CreateClubFragment_clubs",
+            "key": "CreateClubListener_clubs",
             "kind": "LinkedHandle",
             "name": "clubs"
           },

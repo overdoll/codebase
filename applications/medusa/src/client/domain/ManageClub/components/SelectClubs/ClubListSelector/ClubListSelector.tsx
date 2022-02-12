@@ -1,5 +1,4 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFragment.graphql'
 import {
   GridTile,
   GridWrap,
@@ -7,22 +6,30 @@ import {
   SingleSelector,
   useSingleSelector
 } from '../../../../../../modules/content/ContentSelection'
-import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
+import { ClubListSelectorQuery } from '@//:artifacts/ClubListSelectorQuery.graphql'
 import ClubTileOverlay
   from '../../../../../../modules/content/ContentSelection/components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import generatePath from '../../../../../../modules/routing/generatePath'
 import { useHistory, useParams } from '@//:modules/routing'
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { ReactNode } from 'react'
+import { useLazyLoadQuery } from 'react-relay/hooks'
 
 interface Props {
-  query: ClubListSelectorFragment$key | null
   children: ReactNode
 }
+
+const Query = graphql`
+  query ClubListSelectorQuery {
+    viewer {
+      ...ClubListSelectorFragment
+    }
+  }
+`
 
 const Fragment = graphql`
   fragment ClubListSelectorFragment on Account
@@ -50,17 +57,18 @@ const Fragment = graphql`
 `
 
 export default function ClubListSelector ({
-  query,
   children
 }: Props): JSX.Element {
+  const queryData = useLazyLoadQuery<ClubListSelectorQuery>(Query, {})
+
   const {
     data,
     loadNext,
     isLoadingNext,
     hasNext
-  } = usePaginationFragment<SelectClubsQuery, any>(
+  } = usePaginationFragment<ClubListSelectorQuery, any>(
     Fragment,
-    query
+    queryData?.viewer
   )
 
   const {
@@ -122,6 +130,12 @@ export default function ClubListSelector ({
             as={CloseButton}
           />
           <ModalBody mb={4}>
+            {data.clubs.edges.length < 1 &&
+              <Box>
+                <Trans>
+                  No clubs founds
+                </Trans>
+              </Box>}
             <GridWrap>
               {data.clubs.edges.map((item, index) => (
                 <GridTile key={index}>

@@ -78,7 +78,7 @@ export default function SuggestedClubs ({
   return (
     <GridWrap>
       {data.clubs.edges.map((item, index) =>
-        <Box h='100%'>
+        <Box key={index} h='100%'>
           <GridTile key={index}>
             <Link to={`/${item.node.slug as string}`}>
               {({ isPending }) => (

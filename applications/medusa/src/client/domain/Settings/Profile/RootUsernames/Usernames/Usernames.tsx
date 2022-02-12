@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, Collapse, Flex, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Collapse, Flex, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
@@ -9,6 +9,7 @@ import { Trans } from '@lingui/macro'
 import { formatDistanceStrict, isPast } from 'date-fns'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery {
