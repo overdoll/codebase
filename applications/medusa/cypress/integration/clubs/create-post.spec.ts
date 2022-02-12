@@ -56,9 +56,13 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
-  beforeEach(() => {
+  before(() => {
     cy.joinWithNewAccount(username, email)
     createClubWithName(clubName)
+  })
+
+  beforeEach(() => {
+    cy.joinWithNewAccount(username, email)
   })
 
   it('can add audience, categories, characters, and submit post', () => {

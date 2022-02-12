@@ -1,5 +1,4 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { ClubListSelectorFragment$key } from '@//:artifacts/ClubListSelectorFragment.graphql'
 import {
   GridTile,
   GridWrap,
@@ -7,7 +6,7 @@ import {
   SingleSelector,
   useSingleSelector
 } from '../../../../../../modules/content/ContentSelection'
-import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
+import { ClubListSelectorQuery } from '@//:artifacts/ClubListSelectorQuery.graphql'
 import ClubTileOverlay
   from '../../../../../../modules/content/ContentSelection/components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 import { useHistoryDisclosure } from '@//:modules/hooks'
@@ -18,11 +17,19 @@ import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, Mod
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { ReactNode } from 'react'
+import { useLazyLoadQuery } from 'react-relay/hooks'
 
 interface Props {
-  query: ClubListSelectorFragment$key | null
   children: ReactNode
 }
+
+const Query = graphql`
+  query ClubListSelectorQuery {
+    viewer {
+      ...ClubListSelectorFragment
+    }
+  }
+`
 
 const Fragment = graphql`
   fragment ClubListSelectorFragment on Account
@@ -50,17 +57,18 @@ const Fragment = graphql`
 `
 
 export default function ClubListSelector ({
-  query,
   children
 }: Props): JSX.Element {
+  const queryData = useLazyLoadQuery<ClubListSelectorQuery>(Query, {})
+
   const {
     data,
     loadNext,
     isLoadingNext,
     hasNext
-  } = usePaginationFragment<SelectClubsQuery, any>(
+  } = usePaginationFragment<ClubListSelectorQuery, any>(
     Fragment,
-    query
+    queryData?.viewer
   )
 
   const {

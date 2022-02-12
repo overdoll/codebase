@@ -19,9 +19,13 @@ describe('Club - Configure', () => {
     pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
   })
 
-  beforeEach(() => {
+  before(() => {
     cy.joinWithNewAccount(username, email)
     createClubWithName(clubName)
+  })
+
+  beforeEach(() => {
+    cy.joinWithNewAccount(username, email)
   })
 
   it('visit club settings and change them', () => {
