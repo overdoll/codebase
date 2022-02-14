@@ -2,6 +2,7 @@ package post
 
 import (
 	"errors"
+	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -30,8 +31,6 @@ type Post struct {
 
 	moderatorId   *string
 	contributorId string
-
-	requesterIsSupporter bool
 
 	clubId string
 
@@ -67,17 +66,19 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requesterSupportedClubIds []string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, supporter *club.Supporter) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
 
 	requesterIsSupporter := false
 
-	for _, requesterClubId := range requesterSupportedClubIds {
-		if clubId == requesterClubId {
-			requesterIsSupporter = true
-			break
+	if supporter != nil {
+		for _, requesterClubId := range supporter.ClubIds() {
+			if clubId == requesterClubId {
+				requesterIsSupporter = true
+				break
+			}
 		}
 	}
 
@@ -88,27 +89,26 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 			resourceId:           resourceId,
 			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
 			isSupporterOnly:      contentSupporterOnly[resourceId],
-			requesterIsSupporter: requesterIsSupporter,
+			canViewSupporterOnly: requesterIsSupporter,
 		})
 	}
 
 	return &Post{
-		id:                   id,
-		moderatorId:          moderatorId,
-		state:                ps,
-		supporterOnlyStatus:  so,
-		clubId:               clubId,
-		likes:                likes,
-		audienceId:           audienceId,
-		contributorId:        contributorId,
-		content:              content,
-		requesterIsSupporter: requesterIsSupporter,
-		characterIds:         characterIds,
-		seriesIds:            seriesIds,
-		categoryIds:          categoryIds,
-		createdAt:            createdAt,
-		postedAt:             postedAt,
-		reassignmentAt:       reassignmentAt,
+		id:                  id,
+		moderatorId:         moderatorId,
+		state:               ps,
+		supporterOnlyStatus: so,
+		clubId:              clubId,
+		likes:               likes,
+		audienceId:          audienceId,
+		contributorId:       contributorId,
+		content:             content,
+		characterIds:        characterIds,
+		seriesIds:           seriesIds,
+		categoryIds:         categoryIds,
+		createdAt:           createdAt,
+		postedAt:            postedAt,
+		reassignmentAt:      reassignmentAt,
 	}
 }
 
@@ -142,34 +142,6 @@ func (p *Post) State() State {
 
 func (p *Post) SupporterOnlyStatus() SupporterOnlyStatus {
 	return p.supporterOnlyStatus
-}
-
-// ContentResourceIdsRequest - should be used as the actual display
-func (p *Post) ContentResourceIdsRequest() []string {
-
-	var resourceIds []string
-
-	if p.state != Published || p.requesterIsSupporter {
-		// anybody that views post while not published can see all content
-		// or, if the requester is a supporter of the club, they can view all the details any ways
-
-		for _, content := range p.content {
-			resourceIds = append(resourceIds, content.resourceId)
-		}
-
-		return resourceIds
-	}
-
-	// if content is supporter only, use hidden resource ID
-	for _, content := range p.content {
-		if content.isSupporterOnly {
-			resourceIds = append(resourceIds, content.resourceIdHidden)
-		} else {
-			resourceIds = append(resourceIds, content.resourceId)
-		}
-	}
-
-	return resourceIds
 }
 
 func (p *Post) Content() []Content {
@@ -379,6 +351,25 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	return nil
 }
 
+func (p *Post) updatePostSupporterOnlyStatus() {
+
+	var supporterOnlyContent []string
+
+	for _, c := range p.content {
+		if c.isSupporterOnly {
+			supporterOnlyContent = append(supporterOnlyContent, c.resourceId)
+		}
+	}
+
+	if len(supporterOnlyContent) == 0 {
+		p.supporterOnlyStatus = None
+	} else if len(supporterOnlyContent) == len(p.content) {
+		p.supporterOnlyStatus = Full
+	} else {
+		p.supporterOnlyStatus = Partial
+	}
+}
+
 func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {
@@ -389,14 +380,14 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 
 	for _, contentId := range contentIds {
 		newContent = append(newContent, Content{
-			resourceId:           contentId,
-			resourceIdHidden:     "",
-			isSupporterOnly:      false,
-			requesterIsSupporter: true,
+			resourceId:       contentId,
+			resourceIdHidden: "",
+			isSupporterOnly:  false,
 		})
 	}
 
 	p.content = append(p.content, newContent...)
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 
@@ -459,6 +450,7 @@ func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, conten
 	}
 
 	p.content = actualContent
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 
@@ -487,6 +479,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 	}
 
 	p.content = actualContent
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 

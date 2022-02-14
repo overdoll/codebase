@@ -59,7 +59,7 @@ func (r AccountResolver) CurationProfile(ctx context.Context, obj *types.Account
 	return types.MarshalCurationProfileToGraphQL(ctx, profile), nil
 }
 
-func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -71,26 +71,10 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	moderatorId := obj.ID.GetID()
-
-	var stateModified *string
-
-	if state != nil {
-		str := state.String()
-		stateModified = &str
-	}
-
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+	results, err := r.App.Queries.ModeratorPostsQueue.Handle(ctx, query.ModeratorPostsQueue{
 		Cursor:             cursor,
-		ModeratorId:        &moderatorId,
-		State:              stateModified,
-		SortBy:             strings.ToLower(sortBy.String()),
-		AudienceSlugs:      audienceSlugs,
-		CharacterSlugs:     characterSlugs,
-		CategorySlugs:      categorySlugs,
-		SeriesSlugs:        seriesSlugs,
+		ModeratorAccountId: obj.ID.GetID(),
 		Principal:          principal.FromContext(ctx),
-		ShowSuspendedClubs: true,
 	})
 
 	if err != nil {
@@ -100,7 +84,7 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -121,17 +105,24 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		stateModified = &str
 	}
 
+	var supporterOnly []string
+
+	for _, s := range supporterOnlyStatus {
+		supporterOnly = append(supporterOnly, s.String())
+	}
+
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:             cursor,
-		ContributorId:      &contributorId,
-		AudienceSlugs:      audienceSlugs,
-		SeriesSlugs:        seriesSlugs,
-		CategorySlugs:      categorySlugs,
-		CharacterSlugs:     characterSlugs,
-		SortBy:             strings.ToLower(sortBy.String()),
-		State:              stateModified,
-		Principal:          principal.FromContext(ctx),
-		ShowSuspendedClubs: true,
+		Cursor:              cursor,
+		ContributorId:       &contributorId,
+		AudienceSlugs:       audienceSlugs,
+		SeriesSlugs:         seriesSlugs,
+		CategorySlugs:       categorySlugs,
+		CharacterSlugs:      characterSlugs,
+		SortBy:              strings.ToLower(sortBy.String()),
+		State:               stateModified,
+		SupporterOnlyStatus: supporterOnly,
+		Principal:           principal.FromContext(ctx),
+		ShowSuspendedClubs:  true,
 	})
 
 	if err != nil {

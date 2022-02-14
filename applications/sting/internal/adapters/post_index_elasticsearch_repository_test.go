@@ -42,9 +42,12 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 			post.UnmarshalPostFromDatabase(
 				id.String(),
 				"published",
+				"none",
 				0,
 				&testClubId,
 				testAccountId,
+				nil,
+				nil,
 				nil,
 				testClubId,
 				&audienceId,
@@ -54,6 +57,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				time.Now(),
 				&postTime,
 				&postTime,
+				nil,
 			)
 
 		// create the new post
@@ -79,6 +83,8 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	filters, err := post.NewPostFilters(
 		"new",
 		&state,
+
+		nil,
 		nil,
 		nil,
 		[]string{testClubId},

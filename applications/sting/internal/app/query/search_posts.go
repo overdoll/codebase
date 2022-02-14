@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -20,7 +19,8 @@ type SearchPosts struct {
 	CharacterSlugs []string
 	SeriesSlugs    []string
 
-	State *string
+	SupporterOnlyStatus []string
+	State               *string
 
 	SortBy string
 
@@ -96,6 +96,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,
+		query.SupporterOnlyStatus,
 		query.ClubIds,
 		audienceIds,
 		categoryIds,

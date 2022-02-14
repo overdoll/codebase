@@ -62,6 +62,5 @@ service Stella {
   rpc CanAccountCreatePostUnderClub(CanAccountCreatePostUnderClubRequest) returns (CanAccountCreatePostUnderClubResponse);
   rpc CanAccountViewPostUnderClub(CanAccountViewPostUnderClubRequest) returns (CanAccountViewPostUnderClubResponse);
   rpc GetSuspendedClubs(GetSuspendedClubsRequest) returns (GetSuspendedClubsResponse);
-  rpc GetAccountSupportedClubs(GetAccountSupportedClubsRequest) returns (GetAccountSupportedClubsResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }

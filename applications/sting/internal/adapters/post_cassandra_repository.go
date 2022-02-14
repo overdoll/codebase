@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -18,7 +19,10 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
+		"supporter_only_status",
 		"content_resource_ids",
+		"content_supporter_only",
+		"content_supporter_only_resource_ids",
 		"moderator_account_id",
 		"contributor_account_id",
 		"club_id",
@@ -35,19 +39,22 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id                 string     `db:"id"`
-	State              string     `db:"state"`
-	ContentResourceIds []string   `db:"content_resource_ids"`
-	ModeratorId        *string    `db:"moderator_account_id"`
-	ContributorId      string     `db:"contributor_account_id"`
-	ClubId             string     `db:"club_id"`
-	AudienceId         *string    `db:"audience_id"`
-	CategoryIds        []string   `db:"category_ids"`
-	CharacterIds       []string   `db:"character_ids"`
-	SeriesIds          []string   `db:"series_ids"`
-	CreatedAt          time.Time  `db:"created_at"`
-	PostedAt           *time.Time `db:"posted_at"`
-	ReassignmentAt     *time.Time `db:"moderator_reassignment_at"`
+	Id                              string            `db:"id"`
+	State                           string            `db:"state"`
+	SupporterOnlyStatus             string            `db:"supporter_only_status"`
+	ContentResourceIds              []string          `db:"content_resource_ids"`
+	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
+	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
+	ModeratorId                     *string           `db:"moderator_account_id"`
+	ContributorId                   string            `db:"contributor_account_id"`
+	ClubId                          string            `db:"club_id"`
+	AudienceId                      *string           `db:"audience_id"`
+	CategoryIds                     []string          `db:"category_ids"`
+	CharacterIds                    []string          `db:"character_ids"`
+	SeriesIds                       []string          `db:"series_ids"`
+	CreatedAt                       time.Time         `db:"created_at"`
+	PostedAt                        *time.Time        `db:"posted_at"`
+	ReassignmentAt                  *time.Time        `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -59,24 +66,40 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
+
+	var contentResourceIds []string
+	var contentSupporterOnly map[string]bool
+	var contentSupporterOnlyResourceIds map[string]string
+
+	for _, cont := range pending.Content() {
+		contentResourceIds = append(contentResourceIds, cont.ResourceId())
+		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() {
+			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+		}
+	}
+
 	return &posts{
-		Id:                 pending.ID(),
-		State:              pending.State().String(),
-		ModeratorId:        pending.ModeratorId(),
-		ClubId:             pending.ClubId(),
-		AudienceId:         pending.AudienceId(),
-		ContributorId:      pending.ContributorId(),
-		ContentResourceIds: pending.ContentResourceIds(),
-		CategoryIds:        pending.CategoryIds(),
-		CharacterIds:       pending.CharacterIds(),
-		SeriesIds:          pending.SeriesIds(),
-		CreatedAt:          pending.CreatedAt(),
-		PostedAt:           pending.PostedAt(),
-		ReassignmentAt:     pending.ReassignmentAt(),
+		Id:                              pending.ID(),
+		State:                           pending.State().String(),
+		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
+		ModeratorId:                     pending.ModeratorId(),
+		ClubId:                          pending.ClubId(),
+		AudienceId:                      pending.AudienceId(),
+		ContributorId:                   pending.ContributorId(),
+		ContentResourceIds:              contentResourceIds,
+		ContentSupporterOnly:            contentSupporterOnly,
+		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
+		CategoryIds:                     pending.CategoryIds(),
+		CharacterIds:                    pending.CharacterIds(),
+		SeriesIds:                       pending.SeriesIds(),
+		CreatedAt:                       pending.CreatedAt(),
+		PostedAt:                        pending.PostedAt(),
+		ReassignmentAt:                  pending.ReassignmentAt(),
 	}, nil
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
+func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts, supporter *club.Supporter) (*post.Post, error) {
 
 	likes, err := r.getLikesForPost(ctx, postPending.Id)
 
@@ -87,10 +110,13 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
+		postPending.SupporterOnlyStatus,
 		likes,
 		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
+		postPending.ContentSupporterOnly,
+		postPending.ContentSupporterOnlyResourceIds,
 		postPending.ClubId,
 		postPending.AudienceId,
 		postPending.CharacterIds,
@@ -99,6 +125,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.CreatedAt,
 		postPending.PostedAt,
 		postPending.ReassignmentAt,
+		supporter,
 	), nil
 }
 
@@ -154,8 +181,14 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
 	}
 
+	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+
+	if err != nil {
+		return nil, err
+	}
+
 	for _, b := range postsModels {
-		p, err := r.unmarshalPost(ctx, *b)
+		p, err := r.unmarshalPost(ctx, *b, support)
 		if err != nil {
 			return nil, err
 		}
@@ -165,9 +198,9 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 	return postResults, nil
 }
 
-func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
+func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*posts, error) {
 
-	var postPending posts
+	var postPending *posts
 
 	if err := r.session.
 		Query(postTable.Get()).
@@ -182,12 +215,35 @@ func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id st
 		return nil, fmt.Errorf("failed to get post: %v", err)
 	}
 
-	return r.unmarshalPost(ctx, postPending)
+	return postPending, nil
+}
+
+func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
+
+	postPending, err := r.getPostById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.unmarshalPost(ctx, *postPending, nil)
 }
 
 func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
 
-	pst, err := r.GetPostByIdOperator(ctx, id)
+	postPending, err := r.getPostById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := r.unmarshalPost(ctx, *postPending, support)
 
 	if err != nil {
 		return nil, err
@@ -270,7 +326,7 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 }
 
 func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids"})
 }
 
 func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

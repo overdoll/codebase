@@ -1,11 +1,29 @@
+"""Represents content for a post."""
+type PostContent {
+  """The ID of this content."""
+  id: ID!
+
+  """The resource belonging to this content."""
+  resource: Resource!
+
+  """Whether or not this content is supporter only."""
+  isSupporterOnly: Boolean!
+
+  """Whether or not the viewer is able to see this content."""
+  viewerCanViewSupporterOnlyContent: Boolean!
+}
+
 type Post implements Node @key(fields: "id") {
   id: ID!
 
   """The reference of this post. Should always be used to reference this post."""
   reference: String!
 
-  """The state of the post"""
+  """The state of the post."""
   state: PostState!
+
+  """The supporter-only status."""
+  supporterOnlyStatus: SupporterOnlyStatus!
 
   """The moderator to whom this pending post was assigned"""
   moderator: Account
@@ -17,7 +35,7 @@ type Post implements Node @key(fields: "id") {
   club: Club!
 
   """Content belonging to this post"""
-  content: [Resource!]!
+  content: [PostContent!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!
@@ -55,6 +73,17 @@ enum PostState {
   PROCESSING
   REMOVING
   REMOVED
+}
+
+enum SupporterOnlyStatus {
+  """None of the content requires supporting to view."""
+  NONE
+
+  """Some of the content requires supporting to view, at least 1 content piece is free."""
+  PARTIAL
+
+  """All of the content is supporter-only."""
+  FULL
 }
 
 """Create a new post. A club ID is required."""
@@ -97,6 +126,18 @@ input UpdatePostContentOrderInput {
 
   """Content IDs for the content"""
   contentIds: [ID!]!
+}
+
+"""Update post content is supporter only."""
+input UpdatePostContentIsSupporterOnlyInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs to update"""
+  contentIds: [ID!]!
+
+  """The change to make"""
+  isSupporterOnly: Boolean!
 }
 
 """Update post audience."""
@@ -155,6 +196,12 @@ type RemovePostContentPayload {
 
 """Payload for updating a post"""
 type UpdatePostContentOrderPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentIsSupporterOnlyPayload {
   """The post after the update"""
   post: Post
 }
@@ -229,24 +276,6 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = REVIEW
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = NEW
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
@@ -278,6 +307,9 @@ extend type Account {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -308,6 +340,11 @@ extend type Mutation {
   Update a post in draft status - update post content order - need to send exact same IDs
   """
   updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+
+  """
+  Update a post content - whether or not it is supporter only
+  """
+  updatePostContentIsSupporterOnly(input: UpdatePostContentIsSupporterOnlyInput!): UpdatePostContentIsSupporterOnlyPayload
 
   """
   Update a post in draft status - characters
@@ -376,6 +413,9 @@ extend type Query {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection!
@@ -408,6 +448,9 @@ extend type Category {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -436,6 +479,9 @@ extend type Character {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -468,6 +514,9 @@ extend type Series {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -504,6 +553,9 @@ extend type Club {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -535,6 +587,9 @@ extend type Audience {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP

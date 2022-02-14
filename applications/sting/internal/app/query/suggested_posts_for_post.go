@@ -14,12 +14,13 @@ type SuggestedPostsForPost struct {
 }
 
 type SuggestedPostsForPostHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	pr     post.Repository
+	pi     post.IndexRepository
+	stella StellaService
 }
 
-func NewSuggestedPostsForPostHandler(pr post.Repository, pi post.IndexRepository) SuggestedPostsForPostHandler {
-	return SuggestedPostsForPostHandler{pi: pi, pr: pr}
+func NewSuggestedPostsForPostHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) SuggestedPostsForPostHandler {
+	return SuggestedPostsForPostHandler{pi: pi, pr: pr, stella: stella}
 }
 
 func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query SuggestedPostsForPost) ([]*post.Post, error) {
@@ -30,7 +31,13 @@ func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query Suggeste
 		return nil, err
 	}
 
-	filters, err := post.NewSuggestedPostsByPost(pst)
+	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filters, err := post.NewSuggestedPostsByPost(pst, suspendedClubIds)
 
 	if err != nil {
 		return nil, err

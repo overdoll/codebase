@@ -112,8 +112,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, postIndexRepo, loader),
 		},
 		Queries: app.Queries{
-			PrincipalById: query.NewPrincipalByIdHandler(eva),
-
+			PrincipalById:    query.NewPrincipalByIdHandler(eva),
 			SearchCharacters: query.NewSearchCharactersHandler(postIndexRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
 			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
@@ -136,9 +135,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SeriesByIds:  query.NewSeriesByIdsHandler(postRepo),
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
+			ModeratorPostsQueue:        query.NewModeratorPostsQueueHandler(postRepo, postIndexRepo),
 
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo, stella),
-			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),
+			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo, stella),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(stella, postIndexRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),

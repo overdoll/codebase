@@ -155,6 +155,7 @@ func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.Re
 }
 
 func (r *MutationResolver) UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error) {
+
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}

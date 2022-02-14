@@ -14,8 +14,7 @@ type Filters struct {
 
 	supporterOnlyStatus []SupporterOnlyStatus
 
-	suspendedClubIds          []string
-	requesterSupportedClubIds []string
+	suspendedClubIds []string
 
 	characterIds []string
 	seriesIds    []string
@@ -23,7 +22,7 @@ type Filters struct {
 	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds, requesterSupportedClubIds []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds []string) (*Filters, error) {
 
 	newState := Unknown
 	var err error
@@ -63,18 +62,17 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, su
 	}
 
 	return &Filters{
-		sortBy:                    sorting,
-		state:                     newState,
-		moderatorId:               moderatorId,
-		contributorId:             contributorId,
-		clubIds:                   clubIds,
-		audienceIds:               audienceIds,
-		categoryIds:               categoryIds,
-		characterIds:              characterIds,
-		seriesIds:                 seriesIds,
-		suspendedClubIds:          suspendedClubIds,
-		requesterSupportedClubIds: requesterSupportedClubIds,
-		supporterOnlyStatus:       supporterOnlyStatusItem,
+		sortBy:              sorting,
+		state:               newState,
+		moderatorId:         moderatorId,
+		contributorId:       contributorId,
+		clubIds:             clubIds,
+		audienceIds:         audienceIds,
+		categoryIds:         categoryIds,
+		characterIds:        characterIds,
+		seriesIds:           seriesIds,
+		suspendedClubIds:    suspendedClubIds,
+		supporterOnlyStatus: supporterOnlyStatusItem,
 	}, nil
 }
 
@@ -100,10 +98,6 @@ func (e *Filters) SupporterOnlyStatus() []SupporterOnlyStatus {
 
 func (e *Filters) SuspendedClubIds() []string {
 	return e.suspendedClubIds
-}
-
-func (e *Filters) RequesterSupportedClubIds() []string {
-	return e.requesterSupportedClubIds
 }
 
 func (e *Filters) SortBy() Sorting {

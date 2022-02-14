@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"overdoll/applications/sting/internal/domain/club"
 	"strconv"
 	"time"
 
@@ -17,20 +18,23 @@ import (
 )
 
 type postDocument struct {
-	Id                 string   `json:"id"`
-	State              string   `json:"state"`
-	Likes              int      `json:"likes"`
-	ModeratorId        string   `json:"moderator_id"`
-	ContributorId      string   `json:"contributor_id"`
-	ClubId             string   `json:"club_id"`
-	ContentResourceIds []string `json:"content_resource_ids"`
-	AudienceId         string   `json:"audience_id"`
-	CategoryIds        []string `json:"category_ids"`
-	CharacterIds       []string `json:"character_ids"`
-	SeriesIds          []string `json:"series_ids"`
-	CreatedAt          string   `json:"created_at"`
-	PostedAt           string   `json:"posted_at"`
-	ReassignmentAt     string   `json:"reassignment_at"`
+	Id                              string            `json:"id"`
+	State                           string            `json:"state"`
+	SupporterOnlyStatus             string            `db:"supporter_only_status"`
+	ContentResourceIds              []string          `db:"content_resource_ids"`
+	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
+	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
+	Likes                           int               `json:"likes"`
+	ModeratorId                     string            `json:"moderator_id"`
+	ContributorId                   string            `json:"contributor_id"`
+	ClubId                          string            `json:"club_id"`
+	AudienceId                      string            `json:"audience_id"`
+	CategoryIds                     []string          `json:"category_ids"`
+	CharacterIds                    []string          `json:"character_ids"`
+	SeriesIds                       []string          `json:"series_ids"`
+	CreatedAt                       string            `json:"created_at"`
+	PostedAt                        string            `json:"posted_at"`
+	ReassignmentAt                  string            `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -42,6 +46,9 @@ const postIndex = `
 					"type": "keyword"
 				},
 				"state": {
+					"type": "keyword"
+				},
+				"supporter_only_status": {
 					"type": "keyword"
 				},
 				"likes": {
@@ -71,6 +78,14 @@ const postIndex = `
 				"content_resource_ids": {
                      "type": "keyword"
 				},
+				"content_supporter_only": {
+                     "type": "object",
+					 "dynamic": true
+				},
+				"content_supporter_only_resource_ids": {
+                     "type": "object",
+					 "dynamic": true
+				},
 				"created_at": {
                      "type": "date"
 				},			
@@ -96,7 +111,7 @@ func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx
 	return PostsIndexElasticSearchRepository{client: client, session: session}
 }
 
-func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+func unmarshalPostDocument(hit *elastic.SearchHit, supporter *club.Supporter) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -148,10 +163,13 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 	createdPost := post.UnmarshalPostFromDatabase(
 		pst.Id,
 		pst.State,
+		pst.SupporterOnlyStatus,
 		pst.Likes,
 		&pst.ModeratorId,
 		pst.ContributorId,
 		pst.ContentResourceIds,
+		pst.ContentSupporterOnly,
+		pst.ContentSupporterOnlyResourceIds,
 		pst.ClubId,
 		audience,
 		pst.CharacterIds,
@@ -160,6 +178,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		time.Unix(createdAt, 0),
 		postedAtTime,
 		reassignmentAtTime,
+		supporter,
 	)
 
 	createdPost.Node = paging.NewNode(hit.Sort)
@@ -197,21 +216,36 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		audience = *pst.AudienceId()
 	}
 
+	var contentResourceIds []string
+	var contentSupporterOnly map[string]bool
+	var contentSupporterOnlyResourceIds map[string]string
+
+	for _, cont := range pst.Content() {
+		contentResourceIds = append(contentResourceIds, cont.ResourceId())
+		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() {
+			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+		}
+	}
+
 	return &postDocument{
-		Id:                 pst.ID(),
-		Likes:              pst.Likes(),
-		State:              pst.State().String(),
-		AudienceId:         audience,
-		ClubId:             pst.ClubId(),
-		ModeratorId:        moderatorId,
-		ContributorId:      pst.ContributorId(),
-		ContentResourceIds: pst.ContentResourceIds(),
-		CategoryIds:        pst.CategoryIds(),
-		CharacterIds:       pst.CharacterIds(),
-		SeriesIds:          pst.SeriesIds(),
-		CreatedAt:          strconv.FormatInt(pst.CreatedAt().Unix(), 10),
-		PostedAt:           postedAt,
-		ReassignmentAt:     reassignmentAt,
+		Id:                              pst.ID(),
+		Likes:                           pst.Likes(),
+		SupporterOnlyStatus:             pst.SupporterOnlyStatus().String(),
+		State:                           pst.State().String(),
+		AudienceId:                      audience,
+		ClubId:                          pst.ClubId(),
+		ModeratorId:                     moderatorId,
+		ContributorId:                   pst.ContributorId(),
+		ContentResourceIds:              contentResourceIds,
+		ContentSupporterOnly:            contentSupporterOnly,
+		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
+		CategoryIds:                     pst.CategoryIds(),
+		CharacterIds:                    pst.CharacterIds(),
+		SeriesIds:                       pst.SeriesIds(),
+		CreatedAt:                       strconv.FormatInt(pst.CreatedAt().Unix(), 10),
+		PostedAt:                        postedAt,
+		ReassignmentAt:                  reassignmentAt,
 	}, nil
 }
 
@@ -429,6 +463,7 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		Modifier("none")
 
 	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
+	query.Add(elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()), postedTimeFunc)
 
 	if len(filter.AudienceIds()) > 0 {
 		query.Add(
@@ -450,11 +485,17 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
+	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := unmarshalPostDocument(hit, support)
 
 		if err != nil {
 			return nil, err
@@ -509,6 +550,14 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
 	}
 
+	if len(filter.SupporterOnlyStatus()) > 0 {
+		var supporterStatus []string
+		for _, status := range filter.SupporterOnlyStatus() {
+			supporterStatus = append(supporterStatus, status.String())
+		}
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", supporterStatus...))
+	}
+
 	if filter.ModeratorId() != nil {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
@@ -549,11 +598,17 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
+	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := unmarshalPostDocument(hit, support)
 
 		if err != nil {
 			return nil, err
