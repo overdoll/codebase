@@ -60,8 +60,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	session := bootstrap.InitializeDatabaseSession()
 	client := bootstrap.InitializeElasticSearchSession()
 
-	postRepo := adapters.NewPostsCassandraRepository(session)
-	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
+	postRepo := adapters.NewPostsCassandraRepository(session, stella)
+	postIndexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session, stella)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return app.Application{
@@ -79,9 +79,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, postIndexRepo),
 			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, postIndexRepo),
 
-			AddPostContent:         command.NewAddPostContentHandler(postRepo, postIndexRepo, loader),
-			RemovePostContent:      command.NewRemovePostContentHandler(postRepo, postIndexRepo),
-			UpdatePostContentOrder: command.NewUpdatePostContentOrderHandler(postRepo, postIndexRepo),
+			AddPostContent:                   command.NewAddPostContentHandler(postRepo, postIndexRepo, loader),
+			RemovePostContent:                command.NewRemovePostContentHandler(postRepo, postIndexRepo),
+			UpdatePostContentOrder:           command.NewUpdatePostContentOrderHandler(postRepo, postIndexRepo),
+			UpdatePostContentIsSupporterOnly: command.NewUpdatePostContentIsSupporterOnlyHandler(postRepo, postIndexRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, postIndexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),

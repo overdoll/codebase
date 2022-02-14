@@ -14,7 +14,7 @@ type Filters struct {
 
 	supporterOnlyStatus []SupporterOnlyStatus
 
-	suspendedClubIds []string
+	showSuspendedClubs bool
 
 	characterIds []string
 	seriesIds    []string
@@ -22,7 +22,7 @@ type Filters struct {
 	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string, showSuspendedClubs bool) (*Filters, error) {
 
 	newState := Unknown
 	var err error
@@ -71,7 +71,7 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, su
 		categoryIds:         categoryIds,
 		characterIds:        characterIds,
 		seriesIds:           seriesIds,
-		suspendedClubIds:    suspendedClubIds,
+		showSuspendedClubs:  showSuspendedClubs,
 		supporterOnlyStatus: supporterOnlyStatusItem,
 	}, nil
 }
@@ -96,8 +96,8 @@ func (e *Filters) SupporterOnlyStatus() []SupporterOnlyStatus {
 	return e.supporterOnlyStatus
 }
 
-func (e *Filters) SuspendedClubIds() []string {
-	return e.suspendedClubIds
+func (e *Filters) ShowSuspendedClubs() bool {
+	return e.showSuspendedClubs
 }
 
 func (e *Filters) SortBy() Sorting {

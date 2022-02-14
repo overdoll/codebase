@@ -28,7 +28,7 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 
 	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(post *post.Post) error {
 
-		allProcessed, err := h.loader.AllResourcesProcessed(ctx, post.ID(), post.ContentResourceIds())
+		allProcessed, err := h.loader.AllResourcesProcessed(ctx, post.ID(), post.AllContentResourceIds())
 
 		if err != nil {
 			return errors.Wrap(err, "failed to get resource process status")

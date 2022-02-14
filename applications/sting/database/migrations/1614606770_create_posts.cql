@@ -120,10 +120,3 @@ CREATE TABLE IF NOT EXISTS curation_profile
     category_ids_skipped  boolean,
     primary key ( account_id )
 );
-
-CREATE TABLE IF NOT EXISTS account_club_supporter_cache
-(
-    account_id text,
-    club_ids   list<text>,
-    primary key ( account_id)
-);

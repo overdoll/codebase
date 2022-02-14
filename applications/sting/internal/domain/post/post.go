@@ -2,7 +2,6 @@ package post
 
 import (
 	"errors"
-	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -66,19 +65,17 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, supporter *club.Supporter) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, supportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
 
 	requesterIsSupporter := false
 
-	if supporter != nil {
-		for _, requesterClubId := range supporter.ClubIds() {
-			if clubId == requesterClubId {
-				requesterIsSupporter = true
-				break
-			}
+	for _, requesterClubId := range supportedClubIds {
+		if clubId == requesterClubId {
+			requesterIsSupporter = true
+			break
 		}
 	}
 
@@ -146,6 +143,20 @@ func (p *Post) SupporterOnlyStatus() SupporterOnlyStatus {
 
 func (p *Post) Content() []Content {
 	return p.content
+}
+
+func (p *Post) AllContentResourceIds() []string {
+	var resourceIdsToDelete []string
+	var resourceIds2ToDelete []string
+
+	for _, cnt := range p.Content() {
+		resourceIdsToDelete = append(resourceIdsToDelete, cnt.ResourceId())
+		if cnt.ResourceIdHidden() != "" {
+			resourceIds2ToDelete = append(resourceIds2ToDelete, cnt.ResourceIdHidden())
+		}
+	}
+
+	return append(resourceIdsToDelete, resourceIds2ToDelete...)
 }
 
 func (p *Post) UpdateModerator(moderatorId string) error {

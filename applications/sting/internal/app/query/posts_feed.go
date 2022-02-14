@@ -58,13 +58,7 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		}
 	}
 
-	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	filters, err := post.NewPostFeed(audienceIDs, categoryIds, suspendedClubIds)
+	filters, err := post.NewPostFeed(audienceIDs, categoryIds)
 
 	if err != nil {
 		return nil, err

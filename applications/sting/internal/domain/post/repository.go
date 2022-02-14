@@ -82,6 +82,7 @@ type IndexRepository interface {
 	IndexAllPosts(ctx context.Context) error
 
 	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
+	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
 
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
 	DeletePostIndex(ctx context.Context) error

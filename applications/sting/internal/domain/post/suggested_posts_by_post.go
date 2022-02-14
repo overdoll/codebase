@@ -1,9 +1,9 @@
 package post
 
-func NewSuggestedPostsByPost(post *Post, suspendedClubIds []string) (*Filters, error) {
+func NewSuggestedPostsByPost(post *Post) (*Filters, error) {
 	return &Filters{
 		audienceIds:         []string{*post.audienceId},
-		suspendedClubIds:    suspendedClubIds,
+		showSuspendedClubs:  false,
 		sortBy:              TopSort,
 		state:               Published,
 		supporterOnlyStatus: []SupporterOnlyStatus{Partial, None},

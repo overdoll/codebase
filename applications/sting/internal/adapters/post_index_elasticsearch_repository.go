@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/sting/internal/app/query"
 	"strconv"
 	"time"
 
@@ -105,13 +105,14 @@ const PostIndexName = "posts"
 type PostsIndexElasticSearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
+	stella  query.StellaService
 }
 
-func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PostsIndexElasticSearchRepository {
-	return PostsIndexElasticSearchRepository{client: client, session: session}
+func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session, stella query.StellaService) PostsIndexElasticSearchRepository {
+	return PostsIndexElasticSearchRepository{client: client, session: session, stella: stella}
 }
 
-func unmarshalPostDocument(hit *elastic.SearchHit, supporter *club.Supporter) (*post.Post, error) {
+func unmarshalPostDocument(hit *elastic.SearchHit, supportedClubIds []string) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -178,7 +179,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit, supporter *club.Supporter) (*
 		time.Unix(createdAt, 0),
 		postedAtTime,
 		reassignmentAtTime,
-		supporter,
+		supportedClubIds,
 	)
 
 	createdPost.Node = paging.NewNode(hit.Sort)
@@ -433,6 +434,68 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx 
 	return int(count), nil
 }
 
+func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
+
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	if err := cursor.BuildElasticsearch(builder, post.NewSort.String(), "id", true); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)))
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String(), post.Full.String()))
+
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to search posts: %v", err)
+	}
+
+	var supportedClubIds []string
+
+	if requester != nil {
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts, nil
+}
+
 func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
@@ -465,6 +528,13 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
 	query.Add(elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()), postedTimeFunc)
 
+	suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	query.Add(elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)), postedTimeFunc)
+
 	if len(filter.AudienceIds()) > 0 {
 		query.Add(
 			elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...),
@@ -485,7 +555,17 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
-	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+	var supportedClubIds []string
+
+	if requester != nil {
+
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
 
 	if err != nil {
 		return nil, err
@@ -495,7 +575,7 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit, support)
+		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -542,8 +622,13 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	var filterQueries []elastic.Query
 
-	if len(filter.SuspendedClubIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...)))
+	if !filter.ShowSuspendedClubs() {
+		suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)))
 	}
 
 	if filter.State() != post.Unknown {
@@ -598,17 +683,23 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
-	support, err := getAccountSupportedClubs(ctx, r.session, requester)
+	var supportedClubIds []string
 
-	if err != nil {
-		return nil, err
+	if requester != nil {
+
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+
+		if err != nil {
+			return nil, err
+		}
+
 	}
 
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit, support)
+		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -630,7 +721,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 		},
 	)
 
-	rep := NewPostsCassandraRepository(r.session)
+	rep := NewPostsCassandraRepository(r.session, r.stella)
 
 	err := scanner.RunIterator(ctx, postTable, func(iter *gocqlx.Iterx) error {
 

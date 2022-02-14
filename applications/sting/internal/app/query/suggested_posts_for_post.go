@@ -31,13 +31,7 @@ func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query Suggeste
 		return nil, err
 	}
 
-	suspendedClubIds, err := h.stella.GetSuspendedClubs(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	filters, err := post.NewSuggestedPostsByPost(pst, suspendedClubIds)
+	filters, err := post.NewSuggestedPostsByPost(pst)
 
 	if err != nil {
 		return nil, err
