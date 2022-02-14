@@ -337,6 +337,16 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, err
 	}
 
+	validClub, err := r.stella.CanAccountCreatePostUnderClub(ctx, currentPost.ClubId(), requester.AccountId())
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get account permissions for posting")
+	}
+
+	if !validClub {
+		return nil, errors.New("bad club given")
+	}
+
 	err = updateFn(currentPost)
 
 	if err != nil {
