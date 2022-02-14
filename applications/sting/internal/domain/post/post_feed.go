@@ -1,16 +1,18 @@
 package post
 
 type Feed struct {
-	audienceIds      []string
-	categoryIds      []string
-	suspendedClubIds []string
+	audienceIds               []string
+	categoryIds               []string
+	suspendedClubIds          []string
+	requesterSupportedClubIds []string
 }
 
-func NewPostFeed(audienceIds, categoryIds, suspendedClubIds []string) (*Feed, error) {
+func NewPostFeed(audienceIds, categoryIds, suspendedClubIds, requesterSupportedClubIds []string) (*Feed, error) {
 	return &Feed{
-		audienceIds:      audienceIds,
-		categoryIds:      categoryIds,
-		suspendedClubIds: suspendedClubIds,
+		audienceIds:               audienceIds,
+		categoryIds:               categoryIds,
+		suspendedClubIds:          suspendedClubIds,
+		requesterSupportedClubIds: requesterSupportedClubIds,
 	}, nil
 }
 
@@ -24,4 +26,8 @@ func (e *Feed) AudienceIds() []string {
 
 func (e *Feed) SuspendedClubIds() []string {
 	return e.suspendedClubIds
+}
+
+func (e *Feed) RequesterSupportedClubIds() []string {
+	return e.requesterSupportedClubIds
 }

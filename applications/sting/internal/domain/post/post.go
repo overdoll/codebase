@@ -26,8 +26,12 @@ type Post struct {
 
 	state State
 
+	supporterOnlyStatus SupporterOnlyStatus
+
 	moderatorId   *string
 	contributorId string
+
+	requesterIsSupporter bool
 
 	clubId string
 
@@ -37,10 +41,11 @@ type Post struct {
 	seriesIds    []string
 	categoryIds  []string
 
-	contentResourceIds []string
-	createdAt          time.Time
-	postedAt           *time.Time
-	reassignmentAt     *time.Time
+	content []Content
+
+	createdAt      time.Time
+	postedAt       *time.Time
+	reassignmentAt *time.Time
 
 	likes int
 }
@@ -53,33 +58,57 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}
 
 	return &Post{
-		id:            id.String(),
-		clubId:        clubId,
-		state:         Draft,
-		contributorId: requester.AccountId(),
-		createdAt:     time.Now(),
+		id:                  id.String(),
+		clubId:              clubId,
+		state:               Draft,
+		supporterOnlyStatus: None,
+		contributorId:       requester.AccountId(),
+		createdAt:           time.Now(),
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string, contributorId string, contentIds []string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requesterSupportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
+	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
+
+	requesterIsSupporter := false
+
+	for _, requesterClubId := range requesterSupportedClubIds {
+		if clubId == requesterClubId {
+			requesterIsSupporter = true
+			break
+		}
+	}
+
+	var content []Content
+
+	for _, resourceId := range contentResourceIds {
+		content = append(content, Content{
+			resourceId:           resourceId,
+			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
+			isSupporterOnly:      contentSupporterOnly[resourceId],
+			requesterIsSupporter: requesterIsSupporter,
+		})
+	}
 
 	return &Post{
-		id:                 id,
-		moderatorId:        moderatorId,
-		state:              ps,
-		clubId:             clubId,
-		likes:              likes,
-		audienceId:         audienceId,
-		contributorId:      contributorId,
-		contentResourceIds: contentIds,
-		characterIds:       characterIds,
-		seriesIds:          seriesIds,
-		categoryIds:        categoryIds,
-		createdAt:          createdAt,
-		postedAt:           postedAt,
-		reassignmentAt:     reassignmentAt,
+		id:                   id,
+		moderatorId:          moderatorId,
+		state:                ps,
+		supporterOnlyStatus:  so,
+		clubId:               clubId,
+		likes:                likes,
+		audienceId:           audienceId,
+		contributorId:        contributorId,
+		content:              content,
+		requesterIsSupporter: requesterIsSupporter,
+		characterIds:         characterIds,
+		seriesIds:            seriesIds,
+		categoryIds:          categoryIds,
+		createdAt:            createdAt,
+		postedAt:             postedAt,
+		reassignmentAt:       reassignmentAt,
 	}
 }
 
@@ -111,8 +140,40 @@ func (p *Post) State() State {
 	return p.state
 }
 
-func (p *Post) ContentResourceIds() []string {
-	return p.contentResourceIds
+func (p *Post) SupporterOnlyStatus() SupporterOnlyStatus {
+	return p.supporterOnlyStatus
+}
+
+// ContentResourceIdsRequest - should be used as the actual display
+func (p *Post) ContentResourceIdsRequest() []string {
+
+	var resourceIds []string
+
+	if p.state != Published || p.requesterIsSupporter {
+		// anybody that views post while not published can see all content
+		// or, if the requester is a supporter of the club, they can view all the details any ways
+
+		for _, content := range p.content {
+			resourceIds = append(resourceIds, content.resourceId)
+		}
+
+		return resourceIds
+	}
+
+	// if content is supporter only, use hidden resource ID
+	for _, content := range p.content {
+		if content.isSupporterOnly {
+			resourceIds = append(resourceIds, content.resourceIdHidden)
+		} else {
+			resourceIds = append(resourceIds, content.resourceId)
+		}
+	}
+
+	return resourceIds
+}
+
+func (p *Post) Content() []Content {
+	return p.content
 }
 
 func (p *Post) UpdateModerator(moderatorId string) error {
@@ -194,7 +255,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.contentResourceIds = []string{}
+	p.content = []Content{}
 
 	return nil
 }
@@ -221,7 +282,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.contentResourceIds = []string{}
+	p.content = []Content{}
 
 	return nil
 }
@@ -324,7 +385,18 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 		return err
 	}
 
-	p.contentResourceIds = append(p.contentResourceIds, contentIds...)
+	var newContent []Content
+
+	for _, contentId := range contentIds {
+		newContent = append(newContent, Content{
+			resourceId:           contentId,
+			resourceIdHidden:     "",
+			isSupporterOnly:      false,
+			requesterIsSupporter: true,
+		})
+	}
+
+	p.content = append(p.content, newContent...)
 	return nil
 }
 
@@ -334,17 +406,20 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		return err
 	}
 
-	if len(contentIds) != len(p.contentResourceIds) {
+	if len(contentIds) != len(p.content) {
 		return errors.New("missing resources")
 	}
 
-	for _, currentContent := range p.contentResourceIds {
+	var reorderedContent []Content
+
+	for _, newContent := range contentIds {
 
 		foundContent := false
 
-		for _, newContent := range contentIds {
-			if currentContent == newContent {
+		for _, currentContent := range p.content {
+			if currentContent.resourceId == newContent {
 				foundContent = true
+				reorderedContent = append(reorderedContent, currentContent)
 				break
 			}
 		}
@@ -353,8 +428,37 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 			return errors.New("content was not found as part of post. must send IDs already part of post")
 		}
 	}
+	return nil
+}
 
-	p.contentResourceIds = contentIds
+func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	var actualContent []Content
+
+	for _, content := range p.content {
+
+		foundContent := false
+
+		for _, updatedContent := range contentIds {
+			if updatedContent == content.resourceId {
+				foundContent = true
+				continue
+			}
+		}
+
+		if !foundContent {
+			actualContent = append(actualContent, content)
+		} else {
+			content.isSupporterOnly = supporterOnly
+			actualContent = append(actualContent, content)
+		}
+	}
+
+	p.content = actualContent
 	return nil
 }
 
@@ -364,14 +468,14 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		return err
 	}
 
-	var actualContent []string
+	var actualContent []Content
 
-	for _, content := range p.contentResourceIds {
+	for _, content := range p.content {
 
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content {
+			if removedContent == content.resourceId {
 				foundContent = true
 				continue
 			}
@@ -382,7 +486,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		}
 	}
 
-	p.contentResourceIds = actualContent
+	p.content = actualContent
 	return nil
 }
 

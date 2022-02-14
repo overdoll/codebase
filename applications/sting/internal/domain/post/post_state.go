@@ -48,5 +48,5 @@ func StateFromString(s string) (State, error) {
 		return Removing, nil
 	}
 
-	return Unknown, errors.New("unknown lock reason: " + s)
+	return Unknown, errors.New("unknown post state: " + s)
 }

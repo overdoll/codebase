@@ -42,9 +42,19 @@ message GetAccountClubMembershipIdsResponse {
 }
 
 message GetSuspendedClubsRequest {}
+
 message GetSuspendedClubsResponse {
   repeated string clubIds = 1;
 }
+
+message GetAccountSupportedClubsRequest {
+  string accountId = 1;
+}
+
+message GetAccountSupportedClubsResponse {
+  repeated string clubIds = 1;
+}
+
 
 service Stella {
   rpc SuspendClub(SuspendClubRequest) returns (SuspendClubResponse);
@@ -52,5 +62,6 @@ service Stella {
   rpc CanAccountCreatePostUnderClub(CanAccountCreatePostUnderClubRequest) returns (CanAccountCreatePostUnderClubResponse);
   rpc CanAccountViewPostUnderClub(CanAccountViewPostUnderClubRequest) returns (CanAccountViewPostUnderClubResponse);
   rpc GetSuspendedClubs(GetSuspendedClubsRequest) returns (GetSuspendedClubsResponse);
+  rpc GetAccountSupportedClubs(GetAccountSupportedClubsRequest) returns (GetAccountSupportedClubsResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }
