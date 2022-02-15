@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "billing",
+    srcs = [
+        "ccbill_club_supporter_payment_link.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/domain/billing",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = ["//libraries/principal"],
+)
