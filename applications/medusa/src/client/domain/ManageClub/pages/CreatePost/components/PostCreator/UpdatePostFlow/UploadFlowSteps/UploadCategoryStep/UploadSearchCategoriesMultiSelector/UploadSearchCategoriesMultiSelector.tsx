@@ -1,7 +1,6 @@
 import { usePaginationFragment } from 'react-relay'
 import { QueryArguments } from '@//:types/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import { Flex, Text } from '@chakra-ui/react'
 import {
   GridTile,
   GridWrap,
@@ -14,9 +13,9 @@ import { removeNode } from '@//:modules/support'
 import type {
   UploadSearchCategoriesMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
-import { Trans } from '@lingui/macro'
 import CategoryTileOverlay
   from '@//:modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
+import { EmptyCategories } from '@//:modules/content/Placeholder'
 
 interface Props {
   selected: MultiSelectedValue
@@ -81,13 +80,7 @@ export default function UploadSearchCategoriesMultiSelector ({
   // If no categories were found, show empty placeholder
   if (categories.length < 1) {
     return (
-      <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-        <Text color='gray.200' textAlign='center' fontSize='lg'>
-          <Trans>
-            No categories were found with the title {queryArgs.variables.title}
-          </Trans>
-        </Text>
-      </Flex>
+      <EmptyCategories hint={queryArgs.variables.title} />
     )
   }
 

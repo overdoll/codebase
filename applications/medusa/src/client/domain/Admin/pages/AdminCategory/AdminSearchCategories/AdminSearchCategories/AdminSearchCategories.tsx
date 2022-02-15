@@ -2,15 +2,11 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { AdminSearchCategoriesQuery } from '@//:artifacts/AdminSearchCategoriesQuery.graphql'
 import { removeNode } from '@//:modules/support'
-import { Flex, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
 import { GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import CategoryTileOverlay
   from '@//:modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
-import {
-  UploadSearchCategoriesMultiSelectorQuery
-} from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
 import { QueryArguments } from '@//:types/hooks'
+import { EmptyCategories } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryArgs: QueryArguments
@@ -46,7 +42,7 @@ const Fragment = graphql`
   }
 `
 export default function AdminSearchCategories ({ queryArgs }: Props): JSX.Element {
-  const queryData = useLazyLoadQuery<UploadSearchCategoriesMultiSelectorQuery>(
+  const queryData = useLazyLoadQuery<AdminSearchCategoriesQuery>(
     Query,
     queryArgs.variables,
     queryArgs.options
@@ -65,13 +61,7 @@ export default function AdminSearchCategories ({ queryArgs }: Props): JSX.Elemen
 
   if (categories.length < 1) {
     return (
-      <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-        <Text color='gray.200' textAlign='center' fontSize='lg'>
-          <Trans>
-            No categories were found
-          </Trans>
-        </Text>
-      </Flex>
+      <EmptyCategories hint={queryArgs.variables.title} />
     )
   }
 

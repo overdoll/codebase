@@ -597,6 +597,60 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/admin/series/create',
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateSeriesQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/series/search',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries'
+              )
+            )
+          },
+          {
+            path: '/admin/series/search/:slug',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminViewSeries/RootAdminViewSeries'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewSeriesQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

@@ -19,9 +19,8 @@ import {
   InputBuilderHeader,
   InputFeedback,
   TextInput
-} from '@//:modules/form/InputBuilder'
-import FormBuilder from '@//:modules/form/FormBuilder/FormBuilder'
-import FormBuilderSubmitButton from '@//:modules/form/FormBuilder/FormBuilderSubmitButton/FormBuilderSubmitButton'
+} from '@//:modules/form/FormBuilder/InputBuilder'
+import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 import { TagSlug, TagTitle } from '@//:types/form'
 
 type Props = ConnectionProp
@@ -44,7 +43,7 @@ const Mutation = graphql`
 export default function CreateCategoryForm ({
   connectionId
 }: Props): JSX.Element {
-  const [createCategory, isCreatingCategory] = useMutation<CreateCategoryFormMutation>(
+  const [commit, isInFlight] = useMutation<CreateCategoryFormMutation>(
     Mutation
   )
 
@@ -57,23 +56,20 @@ export default function CreateCategoryForm ({
     slug: GenericTagSlug()
   })
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    setError,
-    formState: {
-      errors
-    }
-  } = useForm<CategoryValues>({
+  const methods = useForm<CategoryValues>({
     resolver: joiResolver(
       schema
     )
   })
 
+  const {
+    setError,
+    setValue,
+    watch
+  } = methods
+
   const onSubmit = (formValues): void => {
-    createCategory({
+    commit({
       variables: {
         input: { ...formValues },
         connections: [connectionId]
@@ -108,9 +104,8 @@ export default function CreateCategoryForm ({
 
   return (
     <FormBuilder
-      onSubmit={handleSubmit(onSubmit)}
-      register={register}
-      errors={errors}
+      onSubmit={onSubmit}
+      {...methods}
     >
       <Stack spacing={4}>
         <InputBuilder
@@ -142,7 +137,7 @@ export default function CreateCategoryForm ({
           <InputBuilderFooter />
         </InputBuilder>
         <FormBuilderSubmitButton
-          isLoading={isCreatingCategory}
+          isLoading={isInFlight}
           w='100%'
           size='lg'
         >

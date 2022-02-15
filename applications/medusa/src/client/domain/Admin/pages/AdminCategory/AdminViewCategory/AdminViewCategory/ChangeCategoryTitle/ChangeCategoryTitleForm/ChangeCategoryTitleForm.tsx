@@ -13,14 +13,13 @@ import {
   InputBuilderHeader,
   InputFeedback,
   TextInput
-} from '@//:modules/form/InputBuilder'
-import FormBuilder from '@//:modules/form/FormBuilder/FormBuilder'
-import FormBuilderSubmitButton from '@//:modules/form/FormBuilder/FormBuilderSubmitButton/FormBuilderSubmitButton'
+} from '@//:modules/form/FormBuilder/InputBuilder'
 import { TagLocale, TagTitle } from '@//:types/form'
 import { ChangeCategoryTitleFormMutation } from '@//:artifacts/ChangeCategoryTitleFormMutation.graphql'
 import { ChangeCategoryTitleFormFragment$key } from '@//:artifacts/ChangeCategoryTitleFormFragment.graphql'
 import GenericTagTitle from '../../../../../../validation/GenericTagTitle'
 import Locale from '@//:modules/validation/Locale'
+import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 
 interface Props {
   query: ChangeCategoryTitleFormFragment$key
@@ -40,6 +39,13 @@ const Mutation = graphql`
       category {
         id
         title
+        titleTranslations {
+          text
+          language {
+            locale
+            name
+          }
+        }
       }
     }
   }
@@ -61,13 +67,7 @@ export default function ChangeCategoryTitleForm ({
 
   const notify = useToast()
 
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors
-    }
-  } = useForm<CategoryValues>({
+  const methods = useForm<CategoryValues>({
     resolver: joiResolver(
       schema
     )
@@ -98,9 +98,8 @@ export default function ChangeCategoryTitleForm ({
 
   return (
     <FormBuilder
-      onSubmit={handleSubmit(onSubmit)}
-      register={register}
-      errors={errors}
+      onSubmit={onSubmit}
+      {...methods}
     >
       <Stack spacing={4}>
         <Stack spacing={2}>

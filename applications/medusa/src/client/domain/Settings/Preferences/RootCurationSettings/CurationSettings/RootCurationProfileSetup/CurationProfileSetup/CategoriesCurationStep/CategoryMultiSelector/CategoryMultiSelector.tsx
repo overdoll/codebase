@@ -9,8 +9,7 @@ import { usePaginationFragment } from 'react-relay'
 import CategoryTileOverlay
   from '../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
 import { QueryArguments } from '@//:types/hooks'
-import { Flex, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { EmptyCategories } from '@//:modules/content/Placeholder'
 
 interface Props {
   selected: MultiSelectedValue
@@ -72,13 +71,7 @@ export default function CategoryMultiSelector ({
 
   if (data.categories.edges.length < 1) {
     return (
-      <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-        <Text color='gray.200' textAlign='center' fontSize='lg'>
-          <Trans>
-            No categories were found with the title {queryArgs.variables.title}
-          </Trans>
-        </Text>
-      </Flex>
+      <EmptyCategories hint={queryArgs.variables.title} />
     )
   }
 

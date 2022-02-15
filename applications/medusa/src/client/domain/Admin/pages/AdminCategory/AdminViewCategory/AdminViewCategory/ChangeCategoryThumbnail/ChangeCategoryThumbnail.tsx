@@ -1,12 +1,12 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { ChangeCategoryThumbnailFragment$key } from '@//:artifacts/ChangeCategoryThumbnailFragment.graphql'
-import { Collapse, Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import { Flex, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
-import Button from '@//:modules/form/Button/Button'
 import SingleFileImageUpload from '@//:modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
 import { ChangeCategoryThumbnailMutation } from '@//:artifacts/ChangeCategoryThumbnailMutation.graphql'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
 
 interface Props {
   query: ChangeCategoryThumbnailFragment$key
@@ -42,11 +42,6 @@ export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element 
   const data = useFragment(Fragment, query)
 
   const [commit, isPending] = useMutation<ChangeCategoryThumbnailMutation>(Mutation)
-
-  const {
-    onToggle: OnToggleForm,
-    isOpen: isOpenForm
-  } = useDisclosure()
 
   const notify = useToast()
 
@@ -89,21 +84,18 @@ export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element 
         <Flex w='100%' align='center' justify='center'>
           <ResourceIcon w={16} h={16} query={data.thumbnail} />
         </Flex>
-        <Button
-          variant='solid'
-          colorScheme='gray'
-          onClick={OnToggleForm}
-          size='sm'
-        >
-          <Trans>
-            Change Thumbnail
-          </Trans>
-        </Button>
-        <Collapse in={isOpenForm} animateOpacity>
-          <SingleFileImageUpload
-            onCompleted={onCompleted}
-            isDisabled={isPending}
-          />
+        <Collapse>
+          <CollapseButton>
+            <Trans>
+              Change Thumbnail
+            </Trans>
+          </CollapseButton>
+          <CollapseBody>
+            <SingleFileImageUpload
+              onCompleted={onCompleted}
+              isDisabled={isPending}
+            />
+          </CollapseBody>
         </Collapse>
       </Stack>
     </>

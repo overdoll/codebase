@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import { Trans } from '@lingui/macro'
-import { ContentBrushPen } from '@//:assets/icons/navigation'
 
 interface Props {
   children: ReactNode
@@ -23,14 +22,25 @@ export default function Admin (props: Props): JSX.Element {
           title={
             <Trans>Create Category</Trans>
           }
-          icon={ContentBrushPen}
         />
         <VerticalNavigation.Button
           to='/admin/category/search'
           title={
             <Trans>Search Categories</Trans>
           }
-          icon={ContentBrushPen}
+        />
+        <VerticalNavigation.Button
+          to='/admin/series/create'
+          exact
+          title={
+            <Trans>Create Series</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/series/search'
+          title={
+            <Trans>Search Series</Trans>
+          }
         />
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>

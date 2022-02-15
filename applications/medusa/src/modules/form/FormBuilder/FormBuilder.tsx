@@ -1,52 +1,54 @@
-import { createContext, ReactNode } from 'react'
-import { ChangeHandler, FormState, UseFormRegister } from 'react-hook-form/dist/types/form'
-import { FieldValue, FieldValues } from 'react-hook-form'
+import { ReactNode } from 'react'
+import { FormProviderProps } from 'react-hook-form/dist/types/form'
+import { FormProvider, useFormContext } from 'react-hook-form'
+import { ButtonProps } from '@chakra-ui/react'
+import Button from '../Button/Button'
+import {
+  CharacterValues
+} from '../../../client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm'
 
-interface FormBuilderProps {
-  register: UseFormRegister<FieldValue<any>>
-  errors: FormState<FieldValues>['errors']
-}
-
-interface ComponentProps extends FormBuilderProps {
+interface ComponentProps extends FormProviderProps {
   children: ReactNode
   onSubmit: (value: any) => void
 }
 
-type ContextProps = FormBuilderProps
+export const FormBuilder = ({
+  children,
+  onSubmit,
+  ...formMethods
+}: ComponentProps): JSX.Element => {
+  const { handleSubmit } = formMethods
 
-const defaultValue = {
-  register: () => ({
-    onChange: new Promise((resolve) => {
-      resolve(false)
-    }) as unknown as ChangeHandler,
-    onBlur: new Promise((resolve) => {
-      resolve(false)
-    }) as unknown as ChangeHandler,
-    name: '',
-    ref: () => {
-    }
-  }),
-  errors: {}
+  return (
+    <FormProvider {...formMethods}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        {children}
+      </form>
+    </FormProvider>
+  )
 }
 
-export const FormBuilderContext = createContext<ContextProps>(defaultValue)
+export const FormBuilderSubmitButton = ({
+  ...rest
+}: ButtonProps): JSX.Element => {
+  const {
+    formState: {
+      errors
+    }
+  } = useFormContext<CharacterValues>()
 
-export default function FormBuilder ({
-  children,
-  register,
-  onSubmit,
-  errors
-}: ComponentProps): JSX.Element {
-  const contextValue = {
-    register: register,
-    errors: errors
+  const isDisabled = (): boolean => {
+    Object.keys(errors).forEach((item) => {
+      if (errors[item] != null) return true
+    })
+    return false
   }
 
   return (
-    <FormBuilderContext.Provider value={contextValue}>
-      <form noValidate onSubmit={onSubmit}>
-        {children}
-      </form>
-    </FormBuilderContext.Provider>
+    <Button
+      type='submit'
+      isDisabled={isDisabled()}
+      {...rest}
+    />
   )
 }

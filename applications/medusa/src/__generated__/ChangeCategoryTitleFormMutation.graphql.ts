@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f5e2b4a71a6a8b2769aeb704fa7bdfdb>>
- * @relayHash 576843f454a998f96883bb7e353667c9
+ * @generated SignedSource<<6a229deff2a02c01c398d448d37de10f>>
+ * @relayHash 3f4366a06d946692f8b5fbea8d77db2f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 576843f454a998f96883bb7e353667c9
+// @relayRequestID 3f4366a06d946692f8b5fbea8d77db2f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateCategoryTitleInput = {
@@ -26,6 +26,13 @@ export type ChangeCategoryTitleFormMutation$data = {
     readonly category: {
       readonly id: string;
       readonly title: string;
+      readonly titleTranslations: ReadonlyArray<{
+        readonly text: string;
+        readonly language: {
+          readonly locale: string;
+          readonly name: string;
+        };
+      }>;
     } | null;
   } | null;
 };
@@ -79,6 +86,49 @@ v1 = [
             "kind": "ScalarField",
             "name": "title",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Translation",
+            "kind": "LinkedField",
+            "name": "titleTranslations",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "text",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Language",
+                "kind": "LinkedField",
+                "name": "language",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "locale",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -105,7 +155,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "576843f454a998f96883bb7e353667c9",
+    "id": "3f4366a06d946692f8b5fbea8d77db2f",
     "metadata": {},
     "name": "ChangeCategoryTitleFormMutation",
     "operationKind": "mutation",
@@ -114,6 +164,6 @@ return {
 };
 })();
 
-(node as any).hash = "2eb2eeff1d68fa57889e28e927f9432e";
+(node as any).hash = "a8d66d2e1688d716d326012c2dbc3cfa";
 
 export default node;

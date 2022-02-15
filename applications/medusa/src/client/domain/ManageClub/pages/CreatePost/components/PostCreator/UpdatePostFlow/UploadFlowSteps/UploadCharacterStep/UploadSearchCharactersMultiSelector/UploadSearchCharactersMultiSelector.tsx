@@ -16,6 +16,7 @@ import {
 } from '@//:modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import { QueryArguments } from '@//:types/hooks'
+import { EmptyCharacters } from '@//:modules/content/Placeholder'
 
 interface Props {
   selected: MultiSelectedValue
@@ -78,16 +79,9 @@ export default function UploadSearchCharactersMultiSelector ({
 
   const characters = removeNode(data.characters.edges)
 
-  // If no categories were found, show empty placeholder
   if (characters.length < 1) {
     return (
-      <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-        <Text color='gray.200' textAlign='center' fontSize='lg'>
-          <Trans>
-            No characters were found with the name {queryArgs.variables.name}
-          </Trans>
-        </Text>
-      </Flex>
+      <EmptyCharacters hint={queryArgs.variables.name} />
     )
   }
 
