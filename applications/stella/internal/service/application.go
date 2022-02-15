@@ -60,6 +60,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 	clubRepo := adapters.NewClubCassandraRepository(session)
 	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(esClient, session)
 	eventRepo := adapters.NewEventTemporalRepository(client)
+	billingRepo := adapters.NewBillingCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -75,6 +76,9 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, clubIndexRepo),
 			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, clubIndexRepo),
 			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, clubIndexRepo),
+
+			ProcessCCBillWebhook:                   command.NewProcessCCBillWebhookHandler(billingRepo, eventRepo),
+			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupporterPaymentLinkHandler(clubRepo, billingRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                  query.NewPrincipalByIdHandler(eva),

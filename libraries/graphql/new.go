@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
-	"overdoll/libraries/helpers"
+	"overdoll/libraries/support"
 )
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
@@ -27,7 +27,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			zap.S().Error("resolver failed ", err)
 
-			if !helpers.IsDebug() {
+			if !support.IsDebug() {
 				err.Message = "internal server error"
 			}
 

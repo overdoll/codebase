@@ -2,17 +2,12 @@ package mutations
 
 import (
 	"context"
-	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
-
-type MutationResolver struct {
-	App *app.Application
-}
 
 func (r *MutationResolver) CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error) {
 

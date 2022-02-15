@@ -4,9 +4,15 @@ go_library(
     name = "billing",
     srcs = [
         "ccbill_club_supporter_payment_link.go",
+        "ccbill_payment_link.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/stella/internal/domain/billing",
     visibility = ["//applications/stella:__subpackages__"],
-    deps = ["//libraries/principal"],
+    deps = [
+        "//applications/stella/proto:v1_go_proto",
+        "//libraries/principal",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@org_golang_x_crypto//nacl/secretbox",
+    ],
 )

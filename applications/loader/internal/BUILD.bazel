@@ -15,7 +15,6 @@ go_library(
         "//applications/loader/internal/service",
         "//applications/loader/proto:v1_go_proto",
         "//libraries/bootstrap",
-        "//libraries/clients",
         "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",

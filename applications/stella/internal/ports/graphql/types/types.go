@@ -56,6 +56,10 @@ type BecomeClubMemberPayload struct {
 	ClubMember *ClubMember `json:"clubMember"`
 }
 
+type CCBillPaymentLink struct {
+	Link string `json:"link"`
+}
+
 type Club struct {
 	// An ID pointing to this club.
 	ID relay.ID `json:"id"`
@@ -145,6 +149,20 @@ type CreateClubPayload struct {
 	Club *Club `json:"club"`
 	// Validation for creating a new club
 	Validation *CreateClubValidation `json:"validation"`
+}
+
+// Generate ccbill club supporter payment link.
+type GenerateCCBillClubSupporterPaymentLinkInput struct {
+	// The chosen club ID.
+	ClubID relay.ID `json:"clubId"`
+	// Whether or not we want to save the payment details for later.
+	SavePaymentDetailsForLater bool `json:"savePaymentDetailsForLater"`
+}
+
+// Payload for a new ccbill payment link
+type GenerateCCBillClubSupporterPaymentLinkPayload struct {
+	// The new payment link
+	CcbillPaymentLink *CCBillPaymentLink `json:"ccbillPaymentLink"`
 }
 
 type Language struct {

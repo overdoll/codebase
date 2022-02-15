@@ -3,13 +3,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "adapters",
     srcs = [
+        "event_temporal_repository.go",
         "resource_cassandra_repository.go",
         "resource_s3_file_repository.go",
     ],
     importpath = "overdoll/applications/loader/internal/adapters",
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
+        "//applications/loader/internal/app/workflows",
         "//applications/loader/internal/domain/resource",
+        "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/session",
         "@com_github_aws_aws_sdk_go//service/s3",
@@ -18,7 +21,9 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",
+        "@com_github_spf13_viper//:viper",
         "@com_github_tus_tusd//pkg/handler",
         "@com_github_tus_tusd//pkg/s3store",
+        "@io_temporal_go_sdk//client",
     ],
 )

@@ -63,6 +63,22 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) 
 	return nil
 }
 
+func (r EventTemporalRepository) SubmitPost(ctx context.Context, postId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "SubmitPostWorkflow_" + postId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, postId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) AddPostLike(ctx context.Context, postId, accountId string) error {
 
 	options := client.StartWorkflowOptions{

@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/event"
 
 	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
@@ -16,12 +17,13 @@ type SubmitPost struct {
 type SubmitPostHandler struct {
 	pr     post.Repository
 	pi     post.IndexRepository
+	event  event.Repository
 	parley ParleyService
 	loader LoaderService
 }
 
-func NewSubmitPostHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, loader LoaderService) SubmitPostHandler {
-	return SubmitPostHandler{pr: pr, pi: pi, parley: parley, loader: loader}
+func NewSubmitPostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository, parley ParleyService, loader LoaderService) SubmitPostHandler {
+	return SubmitPostHandler{pr: pr, pi: pi, event: event, parley: parley, loader: loader}
 }
 
 func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Post, error) {
@@ -44,6 +46,10 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 	})
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := h.event.PublishPost(ctx, pendingPost.ID()); err != nil {
 		return nil, err
 	}
 

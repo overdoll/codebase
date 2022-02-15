@@ -4,11 +4,13 @@ go_library(
     name = "command",
     srcs = [
         "create_or_get_resources_from_uploads.go",
+        "delete_resources.go",
         "tus_composer.go",
     ],
     importpath = "overdoll/applications/loader/internal/app/command",
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
+        "//applications/loader/internal/domain/event",
         "//applications/loader/internal/domain/resource",
         "@com_github_tus_tusd//pkg/handler",
     ],

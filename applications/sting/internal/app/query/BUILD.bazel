@@ -11,6 +11,7 @@ go_library(
         "characters_by_ids.go",
         "club_members_posts_feed.go",
         "curation_profile_by_account_id.go",
+        "moderator_posts_queue.go",
         "post_by_id.go",
         "post_by_id_operator.go",
         "post_like_by_id.go",
@@ -34,6 +35,5 @@ go_library(
         "//applications/sting/internal/domain/post",
         "//libraries/paging",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
     ],
 )

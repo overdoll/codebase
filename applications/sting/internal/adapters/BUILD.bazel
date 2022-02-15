@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "curation_profile_cassandra_repository.go",
         "eva_grpc.go",
+        "event_temporal_repository.go",
         "loader_grpc.go",
         "parley_grpc.go",
         "post_audience_cassandra_repository.go",
@@ -28,6 +29,7 @@ go_library(
         "//applications/parley/proto:v1_go_proto",
         "//applications/stella/proto:v1_go_proto",
         "//applications/sting/internal/app/query",
+        "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/post",
         "//libraries/localization",
@@ -41,6 +43,8 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_segmentio_ksuid//:ksuid",
+        "@com_github_spf13_viper//:viper",
+        "@io_temporal_go_sdk//client",
     ],
 )
 

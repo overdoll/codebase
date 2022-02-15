@@ -6,6 +6,7 @@ go_library(
         "add_club_slug_alias.go",
         "become_club_member.go",
         "create_club.go",
+        "generate_ccbill_club_supporter_payment_link.go",
         "index_all_clubs.go",
         "promote_club_slug_alias_to_default.go",
         "remove_club_slug_alias.go",
@@ -20,7 +21,9 @@ go_library(
     importpath = "overdoll/applications/stella/internal/app/command",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
+        "//applications/stella/internal/domain/billing",
         "//applications/stella/internal/domain/club",
+        "//applications/stella/internal/domain/event",
         "//libraries/principal",
         "@com_github_pkg_errors//:errors",
     ],

@@ -55,7 +55,6 @@ message GetAccountSupportedClubsResponse {
   repeated string clubIds = 1;
 }
 
-
 service Stella {
   rpc SuspendClub(SuspendClubRequest) returns (SuspendClubResponse);
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
@@ -64,4 +63,15 @@ service Stella {
   rpc GetSuspendedClubs(GetSuspendedClubsRequest) returns (GetSuspendedClubsResponse);
   rpc GetAccountSupportedClubs(GetAccountSupportedClubsRequest) returns (GetAccountSupportedClubsResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
+}
+
+// generated messages used to communicate with CCBill and our system
+message CCBillClubSupporter {
+  string accountId = 1;
+  string clubId = 2;
+}
+
+message CCBillPaymentLink {
+  bool savePaymentDetails = 1;
+  CCBillClubSupporter ccbillClubSupporter = 2;
 }

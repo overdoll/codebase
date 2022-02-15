@@ -2,10 +2,7 @@ package mutations
 
 import (
 	"context"
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/command"
-	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -49,17 +46,6 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 				PostId:    input.ID.GetID(),
 			},
 		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SubmitPostWorkflow_" + pst.ID(),
-	}
-
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, pst.ID())
 
 	if err != nil {
 		return nil, err

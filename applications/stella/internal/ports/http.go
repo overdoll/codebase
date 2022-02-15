@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"overdoll/applications/stella/internal/app"
+	"overdoll/applications/stella/internal/ports/ccbill_webhook"
 	gen "overdoll/applications/stella/internal/ports/graphql"
 	"overdoll/applications/stella/internal/ports/graphql/dataloader"
 
@@ -49,6 +50,8 @@ func NewHttpServer(app *app.Application) http.Handler {
 			Resolvers: gen.NewResolver(app),
 		})),
 	)
+
+	rtr.POST("/api/ccbill-webhook", ccbill_webhook.CCBillWebhook(app))
 
 	return rtr
 }

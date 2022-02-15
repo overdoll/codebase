@@ -73,7 +73,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eventRepo),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo, eventRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, parley, loader),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, parley, loader),
 			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),
@@ -91,8 +91,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, postIndexRepo),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, postIndexRepo),
 
-			LikePost:     command.NewLikePostHandler(postRepo),
-			UndoLikePost: command.NewUndoLikePostHandler(postRepo),
+			LikePost:     command.NewLikePostHandler(postRepo, eventRepo),
+			UndoLikePost: command.NewUndoLikePostHandler(postRepo, eventRepo),
 
 			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
 			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
