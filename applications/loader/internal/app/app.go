@@ -15,6 +15,7 @@ type Application struct {
 type Commands struct {
 	TusComposer                        command.TusComposerHandler
 	NewCreateOrGetResourcesFromUploads command.CreateOrGetResourcesFromUploadsHandler
+	DeleteResources                    command.DeleteResourcesHandler
 }
 
 type Queries struct {

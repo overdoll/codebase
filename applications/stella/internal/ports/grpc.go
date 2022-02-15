@@ -116,3 +116,7 @@ func (s Server) GetSuspendedClubs(ctx context.Context, request *stella.GetSuspen
 
 	return &stella.GetSuspendedClubsResponse{ClubIds: clubIds}, nil
 }
+
+func (s Server) GetAccountSupportedClubs(ctx context.Context, request *stella.GetAccountSupportedClubsRequest) (*stella.GetAccountSupportedClubsResponse, error) {
+	return &stella.GetAccountSupportedClubsResponse{ClubIds: []string{}}, nil
+}

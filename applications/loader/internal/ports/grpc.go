@@ -2,25 +2,19 @@ package ports
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
-	"overdoll/applications/loader/internal/app/workflows"
 	loader "overdoll/applications/loader/proto"
 )
 
 type Server struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewGrpcServer(application *app.Application, client client.Client) *Server {
+func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
-		app:    application,
-		client: client,
+		app: application,
 	}
 }
 
@@ -29,6 +23,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
 		ItemId:    request.ItemId,
 		UploadIds: request.ResourceIds,
+		IsPrivate: request.Private,
 	})
 
 	if err != nil {
@@ -41,30 +36,15 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		newResourceIds = append(newResourceIds, r.ID())
 	}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "ProcessResourcesForUpload" + uuid.New().String(),
-	}
-
-	_, err = s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, newResourceIds)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: newResourceIds}, nil
 }
 
 func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResourcesRequest) (*loader.DeleteResourcesResponse, error) {
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "DeleteProcessedResources" + uuid.New().String(),
-	}
-
-	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, request.ResourceIds)
-
-	if err != nil {
+	if err := s.app.Commands.DeleteResources.Handle(ctx, command.DeleteResources{
+		ItemId:      request.ItemId,
+		ResourceIds: request.ResourceIds,
+	}); err != nil {
 		return nil, err
 	}
 

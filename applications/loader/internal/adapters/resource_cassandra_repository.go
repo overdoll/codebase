@@ -16,6 +16,7 @@ var resourcesTable = table.New(table.Metadata{
 		"item_id",
 		"resource_id",
 		"type",
+		"is_private",
 		"mime_types",
 		"processed",
 		"processed_id",
@@ -36,6 +37,8 @@ type resources struct {
 	MimeTypes   []string `db:"mime_types"`
 	Processed   bool     `db:"processed"`
 	ProcessedId string   `db:"processed_id"`
+
+	IsPrivate bool `db:"is_private"`
 
 	VideoDuration          int    `db:"video_duration"`
 	VideoThumbnail         string `db:"video_thumbnail"`
@@ -69,6 +72,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		ResourceId:             r.ID(),
 		Type:                   typ,
 		MimeTypes:              r.MimeTypes(),
+		IsPrivate:              r.IsPrivate(),
 		Processed:              r.IsProcessed(),
 		ProcessedId:            r.ProcessedId(),
 		VideoThumbnailMimeType: r.VideoThumbnailMimeType(),
@@ -93,6 +97,7 @@ func (r ResourceCassandraRepository) CreateResources(ctx context.Context, res []
 			marshalled.ItemId,
 			marshalled.ResourceId,
 			marshalled.Type,
+			marshalled.IsPrivate,
 			marshalled.MimeTypes,
 			marshalled.Processed,
 			marshalled.ProcessedId,
@@ -133,6 +138,7 @@ func (r ResourceCassandraRepository) GetResourcesByIds(ctx context.Context, item
 					i.ItemId,
 					i.ResourceId,
 					i.Type,
+					i.IsPrivate,
 					i.MimeTypes,
 					i.Processed,
 					i.ProcessedId,
@@ -171,6 +177,7 @@ func (r ResourceCassandraRepository) GetResourceById(ctx context.Context, itemId
 		i.ItemId,
 		i.ResourceId,
 		i.Type,
+		i.IsPrivate,
 		i.MimeTypes,
 		i.Processed,
 		i.ProcessedId,

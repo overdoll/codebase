@@ -1,7 +1,6 @@
 package gen
 
 import (
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/ports/graphql/entities"
 	"overdoll/applications/sting/internal/ports/graphql/mutations"
@@ -10,18 +9,16 @@ import (
 )
 
 type Resolver struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewResolver(app *app.Application, client client.Client) *Resolver {
-	return &Resolver{app: app, client: client}
+func NewResolver(app *app.Application) *Resolver {
+	return &Resolver{app: app}
 }
 
 func (r *Resolver) Mutation() MutationResolver {
 	return &mutations.MutationResolver{
-		App:    r.app,
-		Client: r.client,
+		App: r.app,
 	}
 }
 

@@ -14,12 +14,11 @@ type ClubMembersPostsFeed struct {
 }
 
 type ClubMembersPostsFeedHandler struct {
-	pi     post.IndexRepository
-	stella StellaService
+	pi post.IndexRepository
 }
 
-func NewClubMembersPostsFeedHandler(stella StellaService, pi post.IndexRepository) ClubMembersPostsFeedHandler {
-	return ClubMembersPostsFeedHandler{stella: stella, pi: pi}
+func NewClubMembersPostsFeedHandler(pi post.IndexRepository) ClubMembersPostsFeedHandler {
+	return ClubMembersPostsFeedHandler{pi: pi}
 }
 
 func (h ClubMembersPostsFeedHandler) Handle(ctx context.Context, query ClubMembersPostsFeed) ([]*post.Post, error) {

@@ -15,14 +15,13 @@ type PostsFeed struct {
 }
 
 type PostsFeedHandler struct {
-	ppr    curation.Repository
-	pr     post.Repository
-	pi     post.IndexRepository
-	stella StellaService
+	ppr curation.Repository
+	pr  post.Repository
+	pi  post.IndexRepository
 }
 
-func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository, stella StellaService) PostsFeedHandler {
-	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr, stella: stella}
+func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository) PostsFeedHandler {
+	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr}
 }
 
 func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.Post, error) {

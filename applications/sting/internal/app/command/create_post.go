@@ -15,11 +15,10 @@ type CreatePostHandler struct {
 	pr     post.Repository
 	pi     post.IndexRepository
 	parley ParleyService
-	stella StellaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, stella StellaService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pi: pi, parley: parley, stella: stella}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi, parley: parley}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {

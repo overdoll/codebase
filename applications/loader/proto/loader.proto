@@ -22,6 +22,7 @@ message GetResourcesRequest {
 message CreateOrGetResourcesFromUploadsRequest {
   string itemId = 1;
   repeated string resourceIds = 2;
+  bool private = 3;
 }
 
 message CreateOrGetResourcesFromUploadsResponse {

@@ -12,7 +12,6 @@ import (
 	"overdoll/applications/sting/internal/service"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/clients"
 	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
@@ -79,11 +78,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	client := clients.NewTemporalClient(ctx)
-
-	defer client.Close()
-
-	srv := ports.NewHttpServer(&app, client)
+	srv := ports.NewHttpServer(&app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
@@ -96,11 +91,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	client := clients.NewTemporalClient(ctx)
-
-	defer client.Close()
-
-	s := ports.NewGrpcServer(&app, client)
+	s := ports.NewGrpcServer(&app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)

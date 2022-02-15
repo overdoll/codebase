@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/event"
 
 	"overdoll/libraries/principal"
 )
@@ -13,11 +14,12 @@ type BecomeClubMember struct {
 }
 
 type BecomeClubMemberHandler struct {
-	cr club.Repository
+	cr    club.Repository
+	event event.Repository
 }
 
-func NewBecomeClubMemberHandler(cr club.Repository) BecomeClubMemberHandler {
-	return BecomeClubMemberHandler{cr: cr}
+func NewBecomeClubMemberHandler(cr club.Repository, event event.Repository) BecomeClubMemberHandler {
+	return BecomeClubMemberHandler{cr: cr, event: event}
 }
 
 func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMember) (*club.Member, error) {
@@ -42,6 +44,10 @@ func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMembe
 	}
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := h.event.AddClubMember(ctx, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
 		return nil, err
 	}
 

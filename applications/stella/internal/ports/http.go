@@ -8,8 +8,6 @@ import (
 	gen "overdoll/applications/stella/internal/ports/graphql"
 	"overdoll/applications/stella/internal/ports/graphql/dataloader"
 
-	"go.temporal.io/sdk/client"
-
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
@@ -38,7 +36,7 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
-func NewHttpServer(app *app.Application, client client.Client) http.Handler {
+func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter()
 
@@ -48,7 +46,7 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	// graphql
 	rtr.POST("/api/graphql",
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
-			Resolvers: gen.NewResolver(app, client),
+			Resolvers: gen.NewResolver(app),
 		})),
 	)
 

@@ -28,13 +28,12 @@ type SearchPosts struct {
 }
 
 type SearchPostsHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	stella StellaService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr, pi: pi, stella: stella}
+func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr, pi: pi}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {

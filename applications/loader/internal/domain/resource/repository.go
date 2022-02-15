@@ -6,7 +6,7 @@ import (
 )
 
 type FileRepository interface {
-	GetResources(ctx context.Context, itemId string, uploads []string) ([]*Resource, error)
+	GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool) ([]*Resource, error)
 	DeleteResources(ctx context.Context, resources []*Resource) error
 	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
 	UploadProcessedResources(ctx context.Context, resources []*Resource) error

@@ -55,6 +55,8 @@ type Resource struct {
 	processed   bool
 	processedId string
 
+	isPrivate bool
+
 	videoThumbnail         string
 	videoThumbnailMimeType string
 
@@ -68,7 +70,7 @@ type Resource struct {
 	resourceType Type
 }
 
-func NewResource(itemId, id, mimeType string) (*Resource, error) {
+func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType Type
@@ -95,6 +97,7 @@ func NewResource(itemId, id, mimeType string) (*Resource, error) {
 		mimeTypes:     []string{mimeType},
 		sizes:         []int{},
 		resourceType:  rType,
+		isPrivate:     isPrivate,
 		processed:     false,
 		height:        0,
 		width:         0,
@@ -266,6 +269,10 @@ func (r *Resource) ItemId() string {
 	return r.itemId
 }
 
+func (r *Resource) IsPrivate() bool {
+	return r.isPrivate
+}
+
 func (r *Resource) Url() string {
 
 	if r.processed {
@@ -368,7 +375,7 @@ func (r *Resource) FullUrls() []*Url {
 	return generatedContent
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
@@ -376,6 +383,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes 
 		id:                     resourceId,
 		itemId:                 itemId,
 		videoDuration:          videoDuration,
+		isPrivate:              isPrivate,
 		videoThumbnail:         videoThumbnail,
 		videoThumbnailMimeType: videoThumbnailMimeType,
 		width:                  width,

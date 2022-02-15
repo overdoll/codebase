@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
 	"strings"
 )
@@ -9,15 +10,17 @@ import (
 type CreateOrGetResourcesFromUploads struct {
 	ItemId    string
 	UploadIds []string
+	IsPrivate bool
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {
-	rr resource.Repository
-	fr resource.FileRepository
+	rr    resource.Repository
+	fr    resource.FileRepository
+	event event.Repository
 }
 
-func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, fr resource.FileRepository) CreateOrGetResourcesFromUploadsHandler {
-	return CreateOrGetResourcesFromUploadsHandler{rr: rr, fr: fr}
+func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, fr resource.FileRepository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
+	return CreateOrGetResourcesFromUploadsHandler{rr: rr, fr: fr, event: event}
 }
 
 func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd CreateOrGetResourcesFromUploads) ([]*resource.Resource, error) {
@@ -60,7 +63,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 	// found at least 1 resource that was not created
 	if len(idsNotFound) > 0 {
 		// get the resources from our remote source - grabbing information like file info
-		newResources, err = h.fr.GetResources(ctx, cmd.ItemId, idsNotFound)
+		newResources, err = h.fr.GetAndCreateResources(ctx, cmd.ItemId, idsNotFound, cmd.IsPrivate)
 
 		if err != nil {
 			return nil, err
@@ -73,7 +76,19 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 	}
 
 	// merge 2 arrays: new resources + current resources
-	return append(resourcesFromIds, newResources...), nil
+	resources := append(resourcesFromIds, newResources...)
+
+	var newResourceIds []string
+
+	for _, r := range resources {
+		newResourceIds = append(newResourceIds, r.ID())
+	}
+
+	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds); err != nil {
+		return nil, err
+	}
+
+	return resources, nil
 }
 
 func getUploadIdWithoutExtension(uploadId string) string {

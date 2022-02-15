@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/event"
 
 	"overdoll/applications/sting/internal/domain/post"
 )
@@ -11,12 +12,13 @@ type PublishPost struct {
 }
 
 type PublishPostHandler struct {
-	pi post.IndexRepository
-	pr post.Repository
+	pi    post.IndexRepository
+	pr    post.Repository
+	event event.Repository
 }
 
-func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository) PublishPostHandler {
-	return PublishPostHandler{pr: pr, pi: pi}
+func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) PublishPostHandler {
+	return PublishPostHandler{pr: pr, pi: pi, event: event}
 }
 
 func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {
@@ -30,5 +32,9 @@ func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {
 		return nil
 	}
 
-	return h.pi.IndexPost(ctx, pendingPost)
+	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
+		return err
+	}
+
+	return h.event.PublishPost(ctx, pendingPost.ID())
 }

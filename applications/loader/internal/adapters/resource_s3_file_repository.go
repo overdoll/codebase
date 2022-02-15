@@ -45,9 +45,9 @@ func (r ResourceS3FileRepository) DeleteResources(ctx context.Context, resources
 	return nil
 }
 
-// GetResources will create resources from a list of IDs passed
+// GetAndCreateResources will create resources from a list of IDs passed
 // uploads are stored in uploads bucket - we HeadObject each file to determine the file format
-func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId string, uploads []string) ([]*resource.Resource, error) {
+func (r ResourceS3FileRepository) GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool) ([]*resource.Resource, error) {
 
 	var resources []*resource.Resource
 
@@ -70,7 +70,7 @@ func (r ResourceS3FileRepository) GetResources(ctx context.Context, itemId strin
 
 		fileType := resp.Metadata["Filetype"]
 
-		newResource, err := resource.NewResource(itemId, uploadId, *fileType)
+		newResource, err := resource.NewResource(itemId, uploadId, *fileType, isPrivate)
 
 		if err != nil {
 			return nil, err

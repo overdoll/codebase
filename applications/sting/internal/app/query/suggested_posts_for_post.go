@@ -14,13 +14,12 @@ type SuggestedPostsForPost struct {
 }
 
 type SuggestedPostsForPostHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	stella StellaService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewSuggestedPostsForPostHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) SuggestedPostsForPostHandler {
-	return SuggestedPostsForPostHandler{pi: pi, pr: pr, stella: stella}
+func NewSuggestedPostsForPostHandler(pr post.Repository, pi post.IndexRepository) SuggestedPostsForPostHandler {
+	return SuggestedPostsForPostHandler{pi: pi, pr: pr}
 }
 
 func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query SuggestedPostsForPost) ([]*post.Post, error) {

@@ -53,10 +53,13 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 
 	session := bootstrap.InitializeDatabaseSession()
 
-	client := bootstrap.InitializeElasticSearchSession()
+	esClient := bootstrap.InitializeElasticSearchSession()
+
+	client := clients.NewTemporalClient(ctx)
 
 	clubRepo := adapters.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(client, session)
+	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(esClient, session)
+	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -66,8 +69,8 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
 			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
 			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
-			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
-			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
+			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo, eventRepo),
+			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo, eventRepo),
 			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, clubIndexRepo, loader),
 			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, clubIndexRepo),
 			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, clubIndexRepo),
