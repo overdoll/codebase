@@ -96,7 +96,7 @@ export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element 
           size='sm'
         >
           <Trans>
-            Change Category Thumbnail
+            Change Thumbnail
           </Trans>
         </Button>
         <Collapse in={isOpenForm} animateOpacity>
