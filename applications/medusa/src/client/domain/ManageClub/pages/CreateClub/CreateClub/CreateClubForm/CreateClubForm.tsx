@@ -9,14 +9,14 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { CreateClubFormMutation } from '@//:artifacts/CreateClubFormMutation.graphql'
 import { useHistory } from '@//:modules/routing'
-import { useEffect } from 'react'
-import urlSlug from 'url-slug'
 import generatePath from '@//:modules/routing/generatePath'
 import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import useSlugSubscribe from '../../../../../Admin/helpers/useSlugSubscribe'
+
 interface Props extends ConnectionProp {
   isDisabled: boolean
 }
@@ -122,17 +122,11 @@ export default function CreateClubForm ({
 
   const successSlug = isDirty && (errors.slug == null) && isSubmitted
 
-  // We watch the name of the club and set that as the slug
-  useEffect(() => {
-    const subscription = watch((value, {
-      name
-    }) => {
-      if (name === 'name') {
-        setValue('slug', urlSlug(value.name))
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+  useSlugSubscribe({
+    watch: watch,
+    setValue: setValue,
+    from: 'name'
+  })
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>

@@ -21,7 +21,8 @@ export default function ClubSlug (): Joi.Schema {
     'accounts', 'serial', 'series',
     'character', 'characters', 'audience',
     'audiences', 'log-in', 'log-out',
-    'review', 'help', 'submit']
+    'review', 'help', 'submit',
+    'search', 'view']
 
   return Joi
     .string()

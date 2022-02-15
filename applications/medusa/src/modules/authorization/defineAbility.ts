@@ -19,6 +19,10 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
         can('moderate', 'Post')
       }
     }
+
+    if (data.isStaff) {
+      can('manage', 'Tags')
+    }
   }
 
   return build()

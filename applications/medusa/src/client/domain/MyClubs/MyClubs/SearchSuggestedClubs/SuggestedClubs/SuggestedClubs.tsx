@@ -1,16 +1,9 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import JoinClubButton from '../../../../ManageClub/components/JoinClubButton/JoinClubButton'
-import {
-  ClickableTile,
-  ClubTileOverlay,
-  GridTile,
-  GridWrap,
-  LoadMoreGridTile
-} from '@//:modules/content/ContentSelection'
+import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Trans } from '@lingui/macro'
 import { Box } from '@chakra-ui/react'
-import { Link } from '@//:modules/routing'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
 import { QueryArguments } from '@//:types/hooks'
@@ -80,13 +73,9 @@ export default function SuggestedClubs ({
       {data.clubs.edges.map((item, index) =>
         <Box key={index} h='100%'>
           <GridTile key={index}>
-            <Link to={`/${item.node.slug as string}`}>
-              {({ isPending }) => (
-                <ClickableTile isPending={isPending}>
-                  <ClubTileOverlay query={item.node} />
-                </ClickableTile>
-              )}
-            </Link>
+            <LinkTile to={`/${item.node.slug as string}`}>
+              <ClubTileOverlay query={item.node} />
+            </LinkTile>
           </GridTile>
           <Box mt={2}>
             <JoinClubButton

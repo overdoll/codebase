@@ -7,7 +7,7 @@ import { PostPreviewContent } from '@//:modules/content/Posts'
 import type { PostsHorizontalPreviewFragment$key } from '@//:artifacts/PostsHorizontalPreviewFragment.graphql'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { ClickableTile, GridTile, GridWrap } from '@//:modules/content/ContentSelection'
+import { ClickableTile, GridTile, GridWrap, LinkTile } from '@//:modules/content/ContentSelection'
 import { Link } from '@//:modules/routing'
 
 interface Props {
@@ -55,32 +55,24 @@ export default function PostsHorizontalPreview ({
           >
             <GridWrap>
               <GridTile m={1}>
-                <Link to={`/p/${item.node.reference}`}>
-                  {({ isPending }) => (
-                    <ClickableTile isPending={isPending}>
-                      <PostPreviewContent query={item.node} />
-                    </ClickableTile>
-                  )}
-                </Link>
+                <LinkTile to={`/p/${item.node.reference}`}>
+                  <PostPreviewContent query={item.node} />
+                </LinkTile>
               </GridTile>
             </GridWrap>
           </SwiperSlide>)}
         <SwiperSlide>
           <GridWrap>
             <GridTile m={1}>
-              <Link to={to}>
-                {({ isPending }) => (
-                  <ClickableTile isPending={isPending}>
-                    <Flex w='100%' align='center' justify='center'>
-                      <Heading fontSize='lg' color='gray.00'>
-                        <Trans>
-                          See All
-                        </Trans>
-                      </Heading>
-                    </Flex>
-                  </ClickableTile>
-                )}
-              </Link>
+              <LinkTile to={to}>
+                <Flex w='100%' align='center' justify='center'>
+                  <Heading fontSize='lg' color='gray.00'>
+                    <Trans>
+                      See All
+                    </Trans>
+                  </Heading>
+                </Flex>
+              </LinkTile>
             </GridTile>
           </GridWrap>
         </SwiperSlide>

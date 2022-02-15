@@ -18,3 +18,4 @@ export { default as CategoryTileOverlay } from './components/TileOverlay/Categor
 export { default as CharacterTileOverlay } from './components/TileOverlay/CharacterTileOverlay/CharacterTileOverlay'
 export { default as ClubTileOverlay } from './components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 export { default as SeriesTileOverlay } from './components/TileOverlay/SeriesTileOverlay/SeriesTileOverlay'
+export { default as LinkTile } from './components/LinkTile/LinkTile'

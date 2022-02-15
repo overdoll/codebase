@@ -523,6 +523,84 @@ const routes: Route[] = [
         ]
       },
       {
+        path: '/admin',
+        component: loadable(async () =>
+          await import(
+            './domain/Admin/Admin'
+          )
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'Tags')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/admin/category/create',
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCategoryQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/category/search',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories'
+              )
+            )
+          },
+          {
+            path: '/admin/category/search/:slug',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminViewCategory/RootAdminViewCategory'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCategoryQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
         path: '/settings',
         component: loadable(async () =>
           await import(
@@ -882,7 +960,7 @@ const routes: Route[] = [
         }
       },
       {
-        path: '/a/:username',
+        path: '/m/:username',
         exact: true,
         dependencies: [
           {

@@ -1,15 +1,15 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
-import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
+import { GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
-import { Link } from '@//:modules/routing'
 import generatePath from '@//:modules/routing/generatePath'
 import { useParams } from '@//:modules/routing/useParams'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -94,25 +94,17 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           case 'DRAFT':
             return (
               <GridTile key={index}>
-                <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
-                  {({ isPending }) => (
-                    <ClickableTile isPending={isPending}>
-                      <PostPreviewContent query={item.node} />
-                    </ClickableTile>
-                  )}
-                </Link>
+                <LinkTile to={`${draftPostPath()}?post=${item.node.reference as string}`}>
+                  <PostPreviewContent query={item.node} />
+                </LinkTile>
               </GridTile>
             )
           case 'PUBLISHED':
             return (
               <GridTile key={index}>
-                <Link to={`/p/${item.node.reference as string}`}>
-                  {({ isPending }) => (
-                    <ClickableTile isPending={isPending}>
-                      <PostPreviewContent query={item.node} />
-                    </ClickableTile>
-                  )}
-                </Link>
+                <LinkTile to={`/p/${item.node.reference as string}`}>
+                  <PostPreviewContent query={item.node} />
+                </LinkTile>
               </GridTile>
             )
           default:

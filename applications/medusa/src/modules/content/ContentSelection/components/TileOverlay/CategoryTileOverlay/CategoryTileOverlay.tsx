@@ -28,6 +28,7 @@ export default function CategoryTileOverlay ({
   return (
     <TileOverlay background={
       <ResourceItem
+        h='100%'
         query={data.thumbnail}
       />
     }
