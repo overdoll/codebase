@@ -30,12 +30,14 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
 CREATE TABLE IF NOT EXISTS account_transaction_history
 (
     account_id                 text,
-    bucket                     text,
+    bucket                     int,
     id                         text,
+
+    timestamp                  timestamp,
 
     transaction_type           text,
 
-    supporting_club_id         text,
+    supported_club_id          text,
 
     encrypted_payment_method   text,
 

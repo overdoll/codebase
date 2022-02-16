@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 var accountSavedPaymentMethodTable = table.New(table.Metadata{
@@ -47,6 +48,41 @@ var accountClubsSupportTable = table.New(table.Metadata{
 	SortKey: []string{"club_id"},
 })
 
+var accountTransactionHistoryTable = table.New(table.Metadata{
+	Name: "account_clubs_support",
+	Columns: []string{
+		"account_id",
+		"bucket",
+		"id",
+
+		"timestamp",
+
+		"transaction_type",
+
+		"supporting_club_id",
+
+		"amount",
+		"currency",
+
+		"is_recurring",
+
+		"billing_failure_retry_date",
+
+		"billed_at_date",
+		"next_billing_date",
+
+		"encrypted_payment_method",
+
+		"ccbill_error_text",
+		"ccbill_error_code",
+		"ccbill_reason",
+		"ccbill_subscription_id",
+		"ccbill_transaction_id",
+	},
+	PartKey: []string{"account_id", "bucket"},
+	SortKey: []string{"id"},
+})
+
 type paymentMethod struct {
 	AddressLine1 string `json:"address_line_1"`
 	City         string `json:"city"`
@@ -72,6 +108,50 @@ type accountSavedPaymentMethod struct {
 	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
 
 	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
+}
+
+type accountClubSupport struct {
+	AccountId       string    `db:"account_id"`
+	ClubId          string    `db:"club_id"`
+	Status          string    `db:"status"`
+	SupporterSince  time.Time `db:"supporter_since"`
+	LastBillingDate time.Time `db:"last_billing_date"`
+	NextBillingDate time.Time `db:"next_billing_date"`
+	BillingAmount   float64   `db:"billing_amount"`
+	BillingCurrency string    `db:"billing_currency"`
+
+	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
+
+	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
+}
+
+type accountTransactionHistory struct {
+	AccountId string `db:"account_id"`
+	Bucket    int    `db:"bucket"`
+	Id        string `db:"id"`
+
+	Timestamp time.Time `db:"timestamp"`
+
+	TransactionType string `db:"transaction_type"`
+
+	SupportedClubId        *string `db:"supported_club_id"`
+	EncryptedPaymentMethod *string `db:"encrypted_payment_method"`
+
+	Amount   *float64 `db:"amount"`
+	Currency *string  `db:"currency"`
+
+	IsRecurring *bool `db:"is_recurring"`
+
+	BillingFailureRetryDate *time.Time `db:"billing_failure_retry_date"`
+
+	BilledAtDate    *time.Time `db:"billed_at_date"`
+	NextBillingDate *time.Time `db:"next_billing_date"`
+
+	CCBillErrorText      *string `db:"ccbill_error_text"`
+	CCBillErrorCode      *string `db:"ccbill_error_code"`
+	CCBillReason         *string `db:"ccbill_reason"`
+	CCBillSubscriptionId string  `db:"ccbill_subscription_id"`
+	CCBillTransactionId  *string `db:"ccbill_transaction_id"`
 }
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
@@ -215,6 +295,206 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 	return savedPayments, nil
 }
 
-func (r BillingCassandraRepository) updateAccountSavedPaymentMethod(ctx context.Context, savedPaymentMethod *billing.SavedPaymentMethod) error {
+func (r BillingCassandraRepository) CreateAccountClubSupport(ctx context.Context, accountClubSupp *billing.AccountClubSupport) error {
+
+	encrypted, err := encryptPaymentMethod(accountClubSupp.PaymentMethod())
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(accountSavedPaymentMethodTable.Insert()).
+		BindStruct(&accountClubSupport{
+			AccountId:              accountClubSupp.AccountId(),
+			ClubId:                 accountClubSupp.ClubId(),
+			Status:                 accountClubSupp.Status().String(),
+			SupporterSince:         accountClubSupp.SupporterSince(),
+			LastBillingDate:        accountClubSupp.LastBillingDate(),
+			NextBillingDate:        accountClubSupp.NextBillingDate(),
+			BillingAmount:          accountClubSupp.BillingAmount(),
+			BillingCurrency:        accountClubSupp.BillingCurrency().String(),
+			EncryptedPaymentMethod: encrypted,
+			CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
+		}).
+		ExecRelease(); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupport, error) {
+
+	if err := billing.CanViewAccountClubSupport(requester, accountId); err != nil {
+		return nil, err
+	}
+
+	var accountClubSupported []*accountClubSupport
+
+	builder := accountClubsSupportTable.SelectBuilder()
+
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "club_id", true); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := builder.Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupport{
+			AccountId: accountId,
+		}).
+		Select(&accountClubSupported); err != nil {
+		return nil, fmt.Errorf("failed to get account club support: %v", err)
+	}
+
+	var accountSupport []*billing.AccountClubSupport
+
+	for _, support := range accountClubSupported {
+
+		decrypt, err := decryptPaymentMethod(support.EncryptedPaymentMethod)
+
+		if err != nil {
+			return nil, err
+		}
+
+		supportItem := billing.UnmarshalAccountClubSupportFromDatabase(
+			support.AccountId,
+			support.ClubId,
+			support.Status,
+			support.SupporterSince,
+			support.LastBillingDate,
+			support.NextBillingDate,
+			support.BillingAmount,
+			support.BillingCurrency,
+			decrypt,
+			support.CCBillSubscriptionId,
+		)
+
+		supportItem.Node = paging.NewNode(support.ClubId)
+		accountSupport = append(accountSupport, supportItem)
+	}
+
+	return accountSupport, nil
+}
+
+func (r BillingCassandraRepository) CreateAccountTransactionHistory(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
+
+	var encrypted *string
+
+	if accountHistory.PaymentMethod() != nil {
+
+		enc, err := encryptPaymentMethod(accountHistory.PaymentMethod())
+
+		if err != nil {
+			return err
+		}
+
+		encrypted = &enc
+	}
+
+	var currency *string
+
+	if accountHistory.Currency() != nil {
+		cr := accountHistory.Currency().String()
+		currency = &cr
+	}
+
+	if err := r.session.
+		Query(accountTransactionHistoryTable.Insert()).
+		BindStruct(&accountTransactionHistory{
+			AccountId:               accountHistory.AccountId(),
+			Bucket:                  0,
+			Id:                      accountHistory.Id(),
+			TransactionType:         accountHistory.Transaction().String(),
+			SupportedClubId:         accountHistory.SupportedClubId(),
+			EncryptedPaymentMethod:  encrypted,
+			Amount:                  accountHistory.Amount(),
+			Currency:                currency,
+			Timestamp:               accountHistory.Timestamp(),
+			IsRecurring:             accountHistory.IsRecurring(),
+			BillingFailureRetryDate: accountHistory.BillingFailureNextRetryDate(),
+			BilledAtDate:            accountHistory.BilledAtDate(),
+			NextBillingDate:         accountHistory.NextBillingDate(),
+			CCBillErrorText:         accountHistory.CCBillErrorText(),
+			CCBillErrorCode:         accountHistory.CCBillErrorCode(),
+			CCBillReason:            accountHistory.CCBillReason(),
+			CCBillSubscriptionId:    accountHistory.CCBillSubscriptionId(),
+			CCBillTransactionId:     accountHistory.CCBillTransactionId(),
+		}).
+		ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r BillingCassandraRepository) GetAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransactionHistory, error) {
+
+	if err := billing.CanViewAccountTransactionHistory(requester, filters.AccountId()); err != nil {
+		return nil, err
+	}
+
+	var accountTransactions []*accountTransactionHistory
+
+	builder := accountTransactionHistoryTable.SelectBuilder()
+
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := builder.Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountTransactionHistory{
+			AccountId: filters.AccountId(),
+			Bucket:    0,
+		}).
+		Select(&accountTransactions); err != nil {
+		return nil, fmt.Errorf("failed to get account transaction history: %v", err)
+	}
+
+	var accountTransactionsMorphed []*billing.AccountTransactionHistory
+
+	for _, transaction := range accountTransactions {
+
+		var paymentMethod *billing.PaymentMethod
+
+		if transaction.EncryptedPaymentMethod != nil {
+			decrypt, err := decryptPaymentMethod(*transaction.EncryptedPaymentMethod)
+
+			if err != nil {
+				return nil, err
+			}
+
+			paymentMethod = decrypt
+		}
+
+		transactionItem := billing.UnmarshalAccountTransactionHistoryFromDatabase(
+			transaction.AccountId,
+			transaction.Id,
+			transaction.Timestamp,
+			transaction.TransactionType,
+			transaction.SupportedClubId,
+			paymentMethod,
+			transaction.Amount,
+			transaction.Currency,
+			transaction.IsRecurring,
+			transaction.BillingFailureRetryDate,
+			transaction.BilledAtDate,
+			transaction.NextBillingDate,
+			transaction.CCBillSubscriptionId,
+			transaction.CCBillTransactionId,
+			transaction.CCBillErrorText,
+			transaction.CCBillErrorCode,
+			transaction.CCBillReason,
+		)
+
+		transactionItem.Node = paging.NewNode(transaction.Id)
+		accountTransactionsMorphed = append(accountTransactionsMorphed, transactionItem)
+	}
+
+	return accountTransactionsMorphed, nil
 }

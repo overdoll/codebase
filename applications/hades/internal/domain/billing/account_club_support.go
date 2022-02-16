@@ -1,8 +1,14 @@
 package billing
 
-import "time"
+import (
+	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
+	"time"
+)
 
 type AccountClubSupport struct {
+	*paging.Node
+
 	accountId string
 	clubId    string
 
@@ -79,4 +85,12 @@ func UnmarshalAccountClubSupportFromDatabase(accountId, clubId, status string, s
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 	}
+}
+
+func CanViewAccountClubSupport(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

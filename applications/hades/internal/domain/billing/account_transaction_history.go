@@ -1,8 +1,14 @@
 package billing
 
-import "time"
+import (
+	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
+	"time"
+)
 
 type AccountTransactionHistory struct {
+	*paging.Node
+
 	accountId string
 	id        string
 
@@ -25,9 +31,11 @@ type AccountTransactionHistory struct {
 	nextBillingDate *time.Time
 
 	ccbillSubscriptionId string
-	ccbillErrorText      *string
-	ccbillErrorCode      *string
-	ccbillReason         *string
+	ccbillTransactionId  *string
+
+	ccbillErrorText *string
+	ccbillErrorCode *string
+	ccbillReason    *string
 }
 
 func (c *AccountTransactionHistory) AccountId() string {
@@ -82,6 +90,10 @@ func (c *AccountTransactionHistory) CCBillSubscriptionId() string {
 	return c.ccbillSubscriptionId
 }
 
+func (c *AccountTransactionHistory) CCBillTransactionId() *string {
+	return c.ccbillTransactionId
+}
+
 func (c *AccountTransactionHistory) CCBillErrorText() *string {
 	return c.ccbillErrorText
 }
@@ -94,7 +106,7 @@ func (c *AccountTransactionHistory) CCBillReason() *string {
 	return c.ccbillReason
 }
 
-func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, supportedClubId *string, paymentMethod *PaymentMethod, amount *float64, currency *string, isRecurring *bool, billingFailureNextRetryDate, billedAtDate, nextBillingDate *time.Time, ccbillSubscriptionId string, ccbillErrorText, ccbillErrorCode, ccbillReason *string) *AccountTransactionHistory {
+func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, supportedClubId *string, paymentMethod *PaymentMethod, amount *float64, currency *string, isRecurring *bool, billingFailureNextRetryDate, billedAtDate, nextBillingDate *time.Time, ccbillSubscriptionId string, ccbillTransactionId, ccbillErrorText, ccbillErrorCode, ccbillReason *string) *AccountTransactionHistory {
 	tr, _ := TransactionFromString(transaction)
 
 	var cr *Currency
@@ -122,4 +134,12 @@ func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timest
 		ccbillErrorCode:             ccbillErrorCode,
 		ccbillReason:                ccbillReason,
 	}
+}
+
+func CanViewAccountTransactionHistory(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

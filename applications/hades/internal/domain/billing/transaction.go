@@ -14,6 +14,7 @@ var (
 	ClubSupportChargeback = Transaction{"club_support_chargeback"}
 	ClubSupportCancel     = Transaction{"club_support_cancel"}
 	ClubSupportRefund     = Transaction{"club_support_refund"}
+	ClubSupportReactivate = Transaction{"club_support_reactivate"}
 )
 
 func (r Transaction) String() string {
@@ -34,6 +35,8 @@ func TransactionFromString(s string) (Transaction, error) {
 		return ClubSupportCancel, nil
 	case ClubSupportRefund.slug:
 		return ClubSupportRefund, nil
+	case ClubSupportReactivate.slug:
+		return ClubSupportReactivate, nil
 	}
 
 	return UnknownTransaction, errors.New("unknown transaction: " + s)

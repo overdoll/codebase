@@ -3,7 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
-        "billing_cassandra_repository.go",
         "club_cassandra_repository.go",
         "club_index_elasticsearch_repository.go",
         "club_members_cassandra_repository.go",
@@ -17,7 +16,6 @@ go_library(
         "//applications/eva/proto:v1_go_proto",
         "//applications/loader/proto:v1_go_proto",
         "//applications/stella/internal/app/workflows",
-        "//applications/stella/internal/domain/billing",
         "//applications/stella/internal/domain/club",
         "//libraries/localization",
         "//libraries/paging",

@@ -10,3 +10,15 @@ go_library(
     visibility = ["//visibility:public"],
     deps = ["@com_github_gin_gonic_gin//:gin"],
 )
+
+go_library(
+    name = "support",
+    srcs = [
+        "debug.go",
+        "gin.go",
+        "ip.go",
+    ],
+    importpath = "overdoll/libraries/support",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_gin_gonic_gin//:gin"],
+)

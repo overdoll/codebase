@@ -16,7 +16,6 @@ go_library(
         "//applications/stella/internal/app/query",
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/domain/club",
-        "//applications/stella/internal/ports/ccbill_webhook",
         "//applications/stella/internal/ports/graphql",
         "//applications/stella/internal/ports/graphql/dataloader",
         "//applications/stella/internal/service",

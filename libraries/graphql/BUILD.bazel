@@ -11,7 +11,7 @@ go_library(
     importpath = "overdoll/libraries/graphql",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/helpers",
+        "//libraries/support",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",
         "@com_github_99designs_gqlgen//graphql/handler/apollotracing",
