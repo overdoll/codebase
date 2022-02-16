@@ -315,6 +315,33 @@ func (m *Club) CanView(requester *principal.Principal) bool {
 	return true
 }
 
+func (m *Club) CanBecomeSupporter(requester *principal.Principal, clubMemberships []*Member) (bool, error) {
+
+	if m.suspended {
+		return false, nil
+	}
+
+	if requester.AccountId() == m.ownerAccountId {
+		return false, nil
+	}
+
+	foundClub := false
+
+	for _, membership := range clubMemberships {
+		if membership.clubId == m.id {
+			foundClub = true
+			break
+		}
+	}
+
+	// already member, return false
+	if foundClub {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {
 
 	lim, err := ViewAccountClubsLimit(requester, accountId)
@@ -331,6 +358,7 @@ func IsAccountClubsLimitReached(requester *principal.Principal, accountId string
 }
 
 func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
 	}

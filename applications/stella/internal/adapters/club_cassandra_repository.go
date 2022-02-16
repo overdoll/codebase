@@ -443,7 +443,9 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, club *club.Club
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	if err := r.addInitialClubPartitionInsertsToBatch(ctx, batch, cla.Id); err != nil {
+	firstPartition, err := r.addInitialClubPartitionInsertsToBatch(ctx, batch, cla.Id)
+
+	if err != nil {
 		return err
 	}
 
@@ -456,6 +458,10 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, club *club.Club
 
 	// create entry for account's clubs
 	batch.Query(stmt, cla.OwnerAccountId, cla.Id)
+
+	if err := r.addInitialClubMemberToBatch(ctx, batch, cla.Id, cla.OwnerAccountId, firstPartition); err != nil {
+		return err
+	}
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {

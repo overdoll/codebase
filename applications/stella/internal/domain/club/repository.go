@@ -22,6 +22,7 @@ type Repository interface {
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 
+	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, requester *principal.Principal, member *Member) error
 	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error
@@ -29,6 +30,7 @@ type Repository interface {
 	AddClubMemberToList(ctx context.Context, clubId, accountId string) error
 
 	UpdateClubMembersTotalCount(ctx context.Context, clubId string) error
+	UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *Member) error) (*Member, error)
 
 	GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)

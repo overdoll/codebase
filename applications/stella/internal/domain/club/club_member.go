@@ -19,15 +19,21 @@ var (
 type Member struct {
 	*paging.Node
 
-	accountId string
-	clubId    string
-	joinedAt  time.Time
+	accountId      string
+	isSupporter    bool
+	clubId         string
+	joinedAt       time.Time
+	supporterSince *time.Time
 }
 
 func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Member) (*Member, error) {
 
 	if requester.IsLocked() {
 		return nil, principal.ErrLocked
+	}
+
+	if club.ownerAccountId == requester.AccountId() {
+		return nil, errors.New("owner cannot become member of own club")
 	}
 
 	res, err := IsAccountClubMembershipReached(requester, requester.AccountId(), currentClubIds)
@@ -47,11 +53,13 @@ func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Mem
 	}, nil
 }
 
-func UnmarshalMemberFromDatabase(accountId, clubId string, joinedAt time.Time) *Member {
+func UnmarshalMemberFromDatabase(accountId, clubId string, joinedAt time.Time, isSupporter bool, supporterSince *time.Time) *Member {
 	return &Member{
-		accountId: accountId,
-		clubId:    clubId,
-		joinedAt:  joinedAt,
+		accountId:      accountId,
+		clubId:         clubId,
+		joinedAt:       joinedAt,
+		isSupporter:    isSupporter,
+		supporterSince: supporterSince,
 	}
 }
 
@@ -63,17 +71,49 @@ func (m *Member) ClubId() string {
 	return m.clubId
 }
 
+func (m *Member) IsSupporter() bool {
+	return m.isSupporter
+}
+
+func (m *Member) SupporterSince() *time.Time {
+	return m.supporterSince
+}
+
 func (m *Member) JoinedAt() time.Time {
 	return m.joinedAt
 }
 
-func CanRemoveClubMembership(requester *principal.Principal, clubMemberId string) error {
+func (m *Member) MakeSupporter(time time.Time) error {
+	m.isSupporter = true
+	m.supporterSince = &time
+	return nil
+}
+
+func (m *Member) UnMakeSupporter() error {
+	m.isSupporter = false
+	m.supporterSince = nil
+	return nil
+}
+
+func (m *Member) CanRevokeClubMembership(requester *principal.Principal, club *Club) error {
 
 	if requester.IsLocked() {
 		return principal.ErrLocked
 	}
 
-	return requester.BelongsToAccount(clubMemberId)
+	if err := requester.BelongsToAccount(m.accountId); err != nil {
+		return err
+	}
+
+	if m.accountId == club.ownerAccountId {
+		return errors.New("club owner cannot leave club")
+	}
+
+	if m.isSupporter {
+		return errors.New("cannot leave club while supporter. cancel subscription and wait until supporter benefits expire")
+	}
+
+	return nil
 }
 
 func IsAccountClubMembershipReached(requester *principal.Principal, accountId string, currentClubIds []*Member) (bool, error) {

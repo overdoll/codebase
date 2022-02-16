@@ -31,6 +31,8 @@ var clubMembersTable = table.New(table.Metadata{
 		"member_account_id",
 		"joined_at",
 		"deleted",
+		"is_supporter",
+		"supporter_since",
 	},
 	PartKey: []string{"club_id", "member_account_id"},
 	SortKey: []string{},
@@ -41,6 +43,8 @@ type clubMember struct {
 	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
+	IsSupporter     bool       `db:"is_supporter"`
+	SupporterSince  *time.Time `db:"supporter_since"`
 	Deleted         bool       `db:"deleted"`
 }
 
@@ -51,6 +55,8 @@ var clubMembersByAccountTable = table.New(table.Metadata{
 		"bucket",
 		"member_account_id",
 		"joined_at",
+		"is_supporter",
+		"supporter_since",
 	},
 	PartKey: []string{"member_account_id"},
 	SortKey: []string{"joined_at", "club_id"},
@@ -61,6 +67,8 @@ type clubMembersByAccount struct {
 	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
+	IsSupporter     bool       `db:"is_supporter"`
+	SupporterSince  *time.Time `db:"supporter_since"`
 }
 
 var clubMembersByClubTable = table.New(table.Metadata{
@@ -70,6 +78,8 @@ var clubMembersByClubTable = table.New(table.Metadata{
 		"bucket",
 		"member_account_id",
 		"joined_at",
+		"is_supporter",
+		"supporter_since",
 	},
 	PartKey: []string{"club_id", "bucket"},
 	SortKey: []string{"joined_at", "member_account_id"},
@@ -80,6 +90,8 @@ type clubMemberByClub struct {
 	Bucket          gocql.UUID `db:"bucket"`
 	MemberAccountId string     `db:"member_account_id"`
 	JoinedAt        gocql.UUID `db:"joined_at"`
+	IsSupporter     bool       `db:"is_supporter"`
+	SupporterSince  *time.Time `db:"supporter_since"`
 }
 
 var clubMembersPartitionsTable = table.New(table.Metadata{
@@ -103,15 +115,42 @@ type clubMembersPartition struct {
 	MaxMembersCount   int        `db:"max_members_count"`
 }
 
-func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) error {
+func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) (gocql.UUID, error) {
 
 	stmt, _ := clubMembersPartitionsTable.Insert()
+
+	var firstPartition gocql.UUID
 
 	// initially, make 10 partitions with a maximum member count of x members per partition
 	// will expand when partitions begin to fill up
 	for i := 0; i <= initialClubMembersPartitions; i++ {
-		batch.Query(stmt, clubId, gocql.TimeUUID(), gocql.TimeUUID(), 0, maxClubMembersPerPartition)
+
+		tm := gocql.TimeUUID()
+
+		if i == 0 {
+			firstPartition = tm
+		}
+
+		batch.Query(stmt, clubId, tm, tm, 0, maxClubMembersPerPartition)
 	}
+
+	// also return the first partition to be used
+	return firstPartition, nil
+}
+
+func (r ClubCassandraRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, partition gocql.UUID) error {
+
+	stmt, _ := clubMembersTable.Insert()
+
+	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time())
+
+	// insert into account's club list
+	stmt, _ = clubMembersByAccountTable.Insert()
+	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time())
+
+	// insert into club members list
+	stmt, _ = clubMembersByClubTable.Insert()
+	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time())
 
 	return nil
 }
@@ -157,8 +196,6 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 		Get(&clubMemberCounter); err != nil {
 		return fmt.Errorf("failed to count: %v", err)
 	}
-
-	fmt.Println(clubMemberCounter)
 
 	partBuilder := clubMembersPartitionsTable.
 		UpdateBuilder().
@@ -272,6 +309,8 @@ func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, requester
 			Bucket:          partition.Bucket,
 			MemberAccountId: member.AccountId(),
 			JoinedAt:        gocql.UUIDFromTime(member.JoinedAt()),
+			IsSupporter:     member.IsSupporter(),
+			SupporterSince:  member.SupporterSince(),
 			Deleted:         false,
 		}).
 		ExecRelease(); err != nil {
@@ -314,6 +353,17 @@ func (r ClubCassandraRepository) deleteClubMemberById(ctx context.Context, clubI
 	return nil
 }
 
+func (r ClubCassandraRepository) GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*club.Member, error) {
+
+	clb, err := r.getClubMemberById(ctx, clubId, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince), nil
+}
+
 func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
@@ -327,12 +377,26 @@ func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requeste
 		return nil, club.ErrClubMemberNotFound
 	}
 
-	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time()), nil
+	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince), nil
 }
 
 func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
 
-	if err := club.CanRemoveClubMembership(requester, accountId); err != nil {
+	mclub, err := r.GetClubById(ctx, clubId)
+
+	if err != nil {
+		return err
+	}
+
+	clb, err := r.getClubMemberById(ctx, clubId, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	clubMembership := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince)
+
+	if err := clubMembership.CanRevokeClubMembership(requester, mclub); err != nil {
 		return err
 	}
 
@@ -364,11 +428,11 @@ func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId
 
 	// insert into account's club list
 	stmt, _ := clubMembersByAccountTable.Insert()
-	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt)
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
 
 	// insert into club members list
 	stmt, _ = clubMembersByClubTable.Insert()
-	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt)
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.MemberAccountId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -421,7 +485,7 @@ func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.C
 	var members []*club.Member
 
 	for _, clb := range accountClubs {
-		members = append(members, club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time()))
+		members = append(members, club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince))
 	}
 
 	return members, nil
@@ -455,7 +519,7 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 	var members []*club.Member
 
 	for _, clb := range accountClubs {
-		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time())
+		em := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince)
 		em.Node = paging.NewNode(clb.JoinedAt.String())
 		members = append(members, em)
 	}
@@ -597,7 +661,7 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 		}
 
 		for _, member := range clubMembers {
-			em := club.UnmarshalMemberFromDatabase(member.MemberAccountId, member.ClubId, member.JoinedAt.Time())
+			em := club.UnmarshalMemberFromDatabase(member.MemberAccountId, member.ClubId, member.JoinedAt.Time(), member.IsSupporter, member.SupporterSince)
 			members = append(members, em)
 			em.Node = paging.NewNode(member.JoinedAt)
 		}
@@ -608,4 +672,39 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 	}
 
 	return members, nil
+}
+
+func (r ClubCassandraRepository) UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *club.Member) error) (*club.Member, error) {
+
+	clb, err := r.getClubMemberById(ctx, clubId, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	currentClub := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince)
+
+	err = updateFn(currentClub)
+
+	if err != nil {
+		return nil, err
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := clubMembersByAccountTable.Update("is_supporter", "supporter_since")
+	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId, clb.IsSupporter, clb.SupporterSince)
+
+	stmt, _ = clubMembersByClubTable.Update("is_supporter", "supporter_since")
+	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId, clb.IsSupporter, clb.SupporterSince)
+
+	stmt, _ = clubMembersTable.Update("is_supporter", "supporter_since")
+	batch.Query(stmt, clb.ClubId, clb.ClubId, clb.IsSupporter, clb.SupporterSince)
+
+	// execute batch
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return nil, fmt.Errorf("failed to update club supporter status: %v", err)
+	}
+
+	return currentClub, nil
 }

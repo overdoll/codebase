@@ -120,3 +120,42 @@ func (s Server) GetSuspendedClubs(ctx context.Context, request *stella.GetSuspen
 func (s Server) GetAccountSupportedClubs(ctx context.Context, request *stella.GetAccountSupportedClubsRequest) (*stella.GetAccountSupportedClubsResponse, error) {
 	return &stella.GetAccountSupportedClubsResponse{ClubIds: []string{}}, nil
 }
+
+func (s Server) AddClubSupporter(ctx context.Context, request *stella.AddClubSupporterRequest) (*stella.AddClubSupporterResponse, error) {
+
+	if err := s.app.Commands.AddClubSupporter.Handle(ctx, command.AddClubSupporter{
+		ClubId:      request.ClubId,
+		AccountId:   request.AccountId,
+		SupportedAt: request.SupportedAt.AsTime(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &stella.AddClubSupporterResponse{}, nil
+}
+
+func (s Server) RemoveClubSupporter(ctx context.Context, request *stella.RemoveClubSupporterRequest) (*stella.RemoveClubSupporterResponse, error) {
+
+	if err := s.app.Commands.RemoveClubSupporter.Handle(ctx, command.RemoveClubSupporter{
+		ClubId:    request.ClubId,
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &stella.RemoveClubSupporterResponse{}, nil
+}
+
+func (s Server) CanAccountBecomeClubSupporter(ctx context.Context, request *stella.CanAccountBecomeClubSupporterRequest) (*stella.CanAccountBecomeClubSupporterResponse, error) {
+
+	res, err := s.app.Queries.CanAccountBecomeClubSupporter.Handle(ctx, query.CanAccountBecomeClubSupporter{
+		AccountId: request.AccountId,
+		ClubId:    request.ClubId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stella.CanAccountBecomeClubSupporterResponse{Allowed: res}, nil
+}

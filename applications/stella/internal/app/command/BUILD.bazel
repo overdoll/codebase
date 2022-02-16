@@ -4,11 +4,13 @@ go_library(
     name = "command",
     srcs = [
         "add_club_slug_alias.go",
+        "add_club_supporter.go",
         "become_club_member.go",
         "create_club.go",
         "index_all_clubs.go",
         "promote_club_slug_alias_to_default.go",
         "remove_club_slug_alias.go",
+        "remove_club_supporter.go",
         "services.go",
         "suspend_club.go",
         "suspend_club_operator.go",
