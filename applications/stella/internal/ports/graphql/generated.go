@@ -70,10 +70,6 @@ type ComplexityRoot struct {
 		ClubMember func(childComplexity int) int
 	}
 
-	CCBillPaymentLink struct {
-		Link func(childComplexity int) int
-	}
-
 	Club struct {
 		ID               func(childComplexity int) int
 		Members          func(childComplexity int, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) int
@@ -135,27 +131,22 @@ type ComplexityRoot struct {
 		FindClubMemberByID func(childComplexity int, id relay.ID) int
 	}
 
-	GenerateCCBillClubSupporterPaymentLinkPayload struct {
-		CcbillPaymentLink func(childComplexity int) int
-	}
-
 	Language struct {
 		Locale func(childComplexity int) int
 		Name   func(childComplexity int) int
 	}
 
 	Mutation struct {
-		AddClubSlugAlias                       func(childComplexity int, input types.AddClubSlugAliasInput) int
-		BecomeClubMember                       func(childComplexity int, input types.BecomeClubMemberInput) int
-		CreateClub                             func(childComplexity int, input types.CreateClubInput) int
-		GenerateCCBillClubSupporterPaymentLink func(childComplexity int, input types.GenerateCCBillClubSupporterPaymentLinkInput) int
-		PromoteClubSlugAliasToDefault          func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
-		RemoveClubSlugAlias                    func(childComplexity int, input types.RemoveClubSlugAliasInput) int
-		SuspendClub                            func(childComplexity int, input types.SuspendClubInput) int
-		UnSuspendClub                          func(childComplexity int, input types.UnSuspendClubInput) int
-		UpdateClubName                         func(childComplexity int, input types.UpdateClubNameInput) int
-		UpdateClubThumbnail                    func(childComplexity int, input types.UpdateClubThumbnailInput) int
-		WithdrawClubMembership                 func(childComplexity int, input types.WithdrawClubMembershipInput) int
+		AddClubSlugAlias              func(childComplexity int, input types.AddClubSlugAliasInput) int
+		BecomeClubMember              func(childComplexity int, input types.BecomeClubMemberInput) int
+		CreateClub                    func(childComplexity int, input types.CreateClubInput) int
+		PromoteClubSlugAliasToDefault func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
+		RemoveClubSlugAlias           func(childComplexity int, input types.RemoveClubSlugAliasInput) int
+		SuspendClub                   func(childComplexity int, input types.SuspendClubInput) int
+		UnSuspendClub                 func(childComplexity int, input types.UnSuspendClubInput) int
+		UpdateClubName                func(childComplexity int, input types.UpdateClubNameInput) int
+		UpdateClubThumbnail           func(childComplexity int, input types.UpdateClubThumbnailInput) int
+		WithdrawClubMembership        func(childComplexity int, input types.WithdrawClubMembershipInput) int
 	}
 
 	PageInfo struct {
@@ -247,7 +238,6 @@ type MutationResolver interface {
 	UpdateClubThumbnail(ctx context.Context, input types.UpdateClubThumbnailInput) (*types.UpdateClubThumbnailPayload, error)
 	SuspendClub(ctx context.Context, input types.SuspendClubInput) (*types.SuspendClubPayload, error)
 	UnSuspendClub(ctx context.Context, input types.UnSuspendClubInput) (*types.UnSuspendClubPayload, error)
-	GenerateCCBillClubSupporterPaymentLink(ctx context.Context, input types.GenerateCCBillClubSupporterPaymentLinkInput) (*types.GenerateCCBillClubSupporterPaymentLinkPayload, error)
 }
 type QueryResolver interface {
 	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error)
@@ -348,13 +338,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BecomeClubMemberPayload.ClubMember(childComplexity), true
-
-	case "CCBillPaymentLink.link":
-		if e.complexity.CCBillPaymentLink.Link == nil {
-			break
-		}
-
-		return e.complexity.CCBillPaymentLink.Link(childComplexity), true
 
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
@@ -598,13 +581,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindClubMemberByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "GenerateCCBillClubSupporterPaymentLinkPayload.ccbillPaymentLink":
-		if e.complexity.GenerateCCBillClubSupporterPaymentLinkPayload.CcbillPaymentLink == nil {
-			break
-		}
-
-		return e.complexity.GenerateCCBillClubSupporterPaymentLinkPayload.CcbillPaymentLink(childComplexity), true
-
 	case "Language.locale":
 		if e.complexity.Language.Locale == nil {
 			break
@@ -654,18 +630,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateClub(childComplexity, args["input"].(types.CreateClubInput)), true
-
-	case "Mutation.generateCCBillClubSupporterPaymentLink":
-		if e.complexity.Mutation.GenerateCCBillClubSupporterPaymentLink == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generateCCBillClubSupporterPaymentLink_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GenerateCCBillClubSupporterPaymentLink(childComplexity, args["input"].(types.GenerateCCBillClubSupporterPaymentLinkInput)), true
 
 	case "Mutation.promoteClubSlugAliasToDefault":
 		if e.complexity.Mutation.PromoteClubSlugAliasToDefault == nil {
@@ -963,32 +927,6 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/billing/schema.graphql", Input: `type CCBillPaymentLink {
-  link: String!
-}
-
-"""Generate ccbill club supporter payment link."""
-input GenerateCCBillClubSupporterPaymentLinkInput {
-  """The chosen club ID."""
-  clubId: ID!
-
-  """Whether or not we want to save the payment details for later."""
-  savePaymentDetailsForLater: Boolean!
-}
-
-"""Payload for a new ccbill payment link"""
-type GenerateCCBillClubSupporterPaymentLinkPayload {
-  """The new payment link"""
-  ccbillPaymentLink: CCBillPaymentLink
-}
-
-extend type Mutation {
-  """
-  Generate a CCBill payment link to become a club supporter
-  """
-  generateCCBillClubSupporterPaymentLink(input: GenerateCCBillClubSupporterPaymentLinkInput!): GenerateCCBillClubSupporterPaymentLinkPayload
-}
-`, BuiltIn: false},
 	{Name: "schema/club/schema.graphql", Input: `type Club implements Node @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
@@ -1793,21 +1731,6 @@ func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_generateCCBillClubSupporterPaymentLink_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GenerateCCBillClubSupporterPaymentLinkInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGenerateCCBillClubSupporterPaymentLinkInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_promoteClubSlugAliasToDefault_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2433,41 +2356,6 @@ func (ec *executionContext) _BecomeClubMemberPayload_clubMember(ctx context.Cont
 	res := resTmp.(*types.ClubMember)
 	fc.Result = res
 	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _CCBillPaymentLink_link(ctx context.Context, field graphql.CollectedField, obj *types.CCBillPaymentLink) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "CCBillPaymentLink",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Link, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -3575,38 +3463,6 @@ func (ec *executionContext) _Entity_findClubMemberByID(ctx context.Context, fiel
 	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _GenerateCCBillClubSupporterPaymentLinkPayload_ccbillPaymentLink(ctx context.Context, field graphql.CollectedField, obj *types.GenerateCCBillClubSupporterPaymentLinkPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "GenerateCCBillClubSupporterPaymentLinkPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CcbillPaymentLink, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.CCBillPaymentLink)
-	fc.Result = res
-	return ec.marshalOCCBillPaymentLink2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillPaymentLink(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4065,45 +3921,6 @@ func (ec *executionContext) _Mutation_unSuspendClub(ctx context.Context, field g
 	res := resTmp.(*types.UnSuspendClubPayload)
 	fc.Result = res
 	return ec.marshalOUnSuspendClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnSuspendClubPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_generateCCBillClubSupporterPaymentLink(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_generateCCBillClubSupporterPaymentLink_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateCCBillClubSupporterPaymentLink(rctx, args["input"].(types.GenerateCCBillClubSupporterPaymentLinkInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GenerateCCBillClubSupporterPaymentLinkPayload)
-	fc.Result = res
-	return ec.marshalOGenerateCCBillClubSupporterPaymentLinkPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
@@ -6047,37 +5864,6 @@ func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, o
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputGenerateCCBillClubSupporterPaymentLinkInput(ctx context.Context, obj interface{}) (types.GenerateCCBillClubSupporterPaymentLinkInput, error) {
-	var it types.GenerateCCBillClubSupporterPaymentLinkInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "savePaymentDetailsForLater":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("savePaymentDetailsForLater"))
-			it.SavePaymentDetailsForLater, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx context.Context, obj interface{}) (types.PromoteClubSlugAliasToDefaultInput, error) {
 	var it types.PromoteClubSlugAliasToDefaultInput
 	asMap := map[string]interface{}{}
@@ -6550,37 +6336,6 @@ func (ec *executionContext) _BecomeClubMemberPayload(ctx context.Context, sel as
 
 			out.Values[i] = innerFunc(ctx)
 
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var cCBillPaymentLinkImplementors = []string{"CCBillPaymentLink"}
-
-func (ec *executionContext) _CCBillPaymentLink(ctx context.Context, sel ast.SelectionSet, obj *types.CCBillPaymentLink) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, cCBillPaymentLinkImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CCBillPaymentLink")
-		case "link":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CCBillPaymentLink_link(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7185,34 +6940,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
-var generateCCBillClubSupporterPaymentLinkPayloadImplementors = []string{"GenerateCCBillClubSupporterPaymentLinkPayload"}
-
-func (ec *executionContext) _GenerateCCBillClubSupporterPaymentLinkPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateCCBillClubSupporterPaymentLinkPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generateCCBillClubSupporterPaymentLinkPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GenerateCCBillClubSupporterPaymentLinkPayload")
-		case "ccbillPaymentLink":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._GenerateCCBillClubSupporterPaymentLinkPayload_ccbillPaymentLink(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var languageImplementors = []string{"Language"}
 
 func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
@@ -7339,13 +7066,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "unSuspendClub":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_unSuspendClub(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-		case "generateCCBillClubSupporterPaymentLink":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateCCBillClubSupporterPaymentLink(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -8554,11 +8274,6 @@ func (ec *executionContext) unmarshalNCreateClubInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGenerateCCBillClubSupporterPaymentLinkInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkInput(ctx context.Context, v interface{}) (types.GenerateCCBillClubSupporterPaymentLinkInput, error) {
-	res, err := ec.unmarshalInputGenerateCCBillClubSupporterPaymentLinkInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -9094,13 +8809,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOCCBillPaymentLink2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillPaymentLink(ctx context.Context, sel ast.SelectionSet, v *types.CCBillPaymentLink) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CCBillPaymentLink(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOClub2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -9143,13 +8851,6 @@ func (ec *executionContext) marshalOCreateClubValidation2ᚖoverdollᚋapplicati
 		return graphql.Null
 	}
 	return v
-}
-
-func (ec *executionContext) marshalOGenerateCCBillClubSupporterPaymentLinkPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateCCBillClubSupporterPaymentLinkPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GenerateCCBillClubSupporterPaymentLinkPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

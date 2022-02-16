@@ -64,14 +64,3 @@ service Stella {
   rpc GetAccountSupportedClubs(GetAccountSupportedClubsRequest) returns (GetAccountSupportedClubsResponse);
   rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
 }
-
-// generated messages used to communicate with CCBill and our system
-message CCBillClubSupporter {
-  string accountId = 1;
-  string clubId = 2;
-}
-
-message CCBillPaymentLink {
-  bool savePaymentDetails = 1;
-  CCBillClubSupporter ccbillClubSupporter = 2;
-}

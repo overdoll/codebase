@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "types",
+    srcs = [
+        "marshal.go",
+        "types.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/ports/graphql/types",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = ["//libraries/graphql/relay"],
+)

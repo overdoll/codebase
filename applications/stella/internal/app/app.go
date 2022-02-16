@@ -28,9 +28,6 @@ type Commands struct {
 	UnSuspendClub command.UnSuspendClubHandler
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
-
-	GenerateCCBillClubSupporterPaymentLink command.GenerateCCBillClubSupporterPaymentLinkHandler
-	ProcessCCBillWebhook                   command.ProcessCCBillWebhookHandler
 }
 
 type Queries struct {

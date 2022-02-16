@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package applications.grpc.hades.v1;
+
+// generated messages used to communicate with CCBill and our system
+message CCBillClubSupporter {
+  string accountId = 1;
+  string clubId = 2;
+}
+
+message CCBillPaymentLink {
+  bool savePaymentDetails = 1;
+  CCBillClubSupporter ccbillClubSupporter = 2;
+}

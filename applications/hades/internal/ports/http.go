@@ -2,11 +2,10 @@ package ports
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"overdoll/applications/stella/internal/app"
-	gen "overdoll/applications/stella/internal/ports/graphql"
-	"overdoll/applications/stella/internal/ports/graphql/dataloader"
+	"overdoll/applications/hades/internal/app"
+	"overdoll/applications/hades/internal/ports/ccbill_webhook"
+	gen "overdoll/applications/hades/internal/ports/graphql"
 
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/principal"
@@ -28,19 +27,10 @@ func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal
 	return acc, nil
 }
 
-func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewDataLoader(app))
-		c.Request = c.Request.WithContext(ctx)
-		c.Next()
-	}
-}
-
 func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter()
 
-	rtr.Use(dataLoaderToContext(app))
 	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
 
 	// graphql
@@ -49,6 +39,8 @@ func NewHttpServer(app *app.Application) http.Handler {
 			Resolvers: gen.NewResolver(app),
 		})),
 	)
+
+	rtr.POST("/api/ccbill-webhook", ccbill_webhook.CCBillWebhook(app))
 
 	return rtr
 }

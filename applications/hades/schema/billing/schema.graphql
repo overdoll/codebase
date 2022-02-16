@@ -1,0 +1,25 @@
+type CCBillPaymentLink {
+  link: String!
+}
+
+"""Generate ccbill club supporter payment link."""
+input GenerateCCBillClubSupporterPaymentLinkInput {
+  """The chosen club ID."""
+  clubId: ID!
+
+  """Whether or not we want to save the payment details for later."""
+  savePaymentDetailsForLater: Boolean!
+}
+
+"""Payload for a new ccbill payment link"""
+type GenerateCCBillClubSupporterPaymentLinkPayload {
+  """The new payment link"""
+  ccbillPaymentLink: CCBillPaymentLink
+}
+
+extend type Mutation {
+  """
+  Generate a CCBill payment link to become a club supporter
+  """
+  generateCCBillClubSupporterPaymentLink(input: GenerateCCBillClubSupporterPaymentLinkInput!): GenerateCCBillClubSupporterPaymentLinkPayload
+}

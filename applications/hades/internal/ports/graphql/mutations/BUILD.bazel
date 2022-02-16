@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mutations",
+    srcs = [
+        "billing.go",
+        "resolvers.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/ports/graphql/mutations",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/app",
+        "//applications/hades/internal/app/command",
+        "//applications/hades/internal/ports/graphql/types",
+        "//libraries/passport",
+        "//libraries/principal",
+    ],
+)
