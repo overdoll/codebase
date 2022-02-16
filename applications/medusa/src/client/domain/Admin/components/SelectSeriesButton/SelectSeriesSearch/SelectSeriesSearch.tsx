@@ -2,18 +2,12 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { SelectSeriesSearchQuery } from '@//:artifacts/SelectSeriesSearchQuery.graphql'
 import { removeNode } from '@//:modules/support'
-import {
-  GridTile,
-  GridWrap,
-  LoadMoreGridTile,
-  SeriesTileOverlay,
-  SingleSelector
-} from '@//:modules/content/ContentSelection'
+import { GridTile, GridWrap, LoadMoreGridTile, SeriesTileOverlay } from '@//:modules/content/ContentSelection'
 import { QueryArguments } from '@//:types/hooks'
 import { EmptySeries } from '@//:modules/content/Placeholder'
-import { SingleSelectorProps } from '@//:modules/content/ContentSelection/components/SingleSelector/SingleSelector'
+import { Choice, useChoiceContext } from '../../Choice'
 
-interface Props extends SingleSelectorProps {
+interface Props {
   queryArgs: QueryArguments
 }
 
@@ -40,7 +34,7 @@ const Fragment = graphql`
       edges {
         node {
           id
-          slug
+          title
           ...SeriesTileOverlayFragment
         }
       }
@@ -48,9 +42,7 @@ const Fragment = graphql`
   }
 `
 export default function SelectSeriesSearch ({
-  queryArgs,
-  onSelect,
-  selected
+  queryArgs
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SelectSeriesSearchQuery>(
     Query,
@@ -69,6 +61,8 @@ export default function SelectSeriesSearch ({
   )
   const series = removeNode(data.series.edges)
 
+  const { register } = useChoiceContext()
+
   if (series.length < 1) {
     return (
       <EmptySeries hint={queryArgs.variables.title} />
@@ -80,13 +74,11 @@ export default function SelectSeriesSearch ({
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
-            <SingleSelector
-              id={item.id}
-              selected={selected}
-              onSelect={onSelect}
+            <Choice
+              {...register(item.id, { tagTitle: item.title })}
             >
               <SeriesTileOverlay query={item} />
-            </SingleSelector>
+            </Choice>
           </GridTile>
         )
         )}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8e176a799b3d2de26805a56df644625b>>
- * @relayHash eb683ca0288d3caa8471436eb3c27807
+ * @generated SignedSource<<84d02cfb931e68ed23c8ad25d0e31aa0>>
+ * @relayHash 2a5a6b622d0e341a642ecbed560acbf9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eb683ca0288d3caa8471436eb3c27807
+// @relayRequestID 2a5a6b622d0e341a642ecbed560acbf9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -100,13 +100,6 @@ return {
                 "plural": false,
                 "selections": [
                   (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "slug",
-                    "storageKey": null
-                  },
                   {
                     "alias": null,
                     "args": null,
@@ -220,7 +213,7 @@ return {
     ]
   },
   "params": {
-    "id": "eb683ca0288d3caa8471436eb3c27807",
+    "id": "2a5a6b622d0e341a642ecbed560acbf9",
     "metadata": {},
     "name": "SelectSeriesSearchQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8402eaeffdacaafe0f1717f6d347827a>>
- * @relayHash 626601774354a26c3a94429949ed393e
+ * @generated SignedSource<<b934fb047df3f00190878656dd14e430>>
+ * @relayHash a1f0e6849eeea4f151ff6651e5906f83
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 626601774354a26c3a94429949ed393e
+// @relayRequestID a1f0e6849eeea4f151ff6651e5906f83
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -126,13 +126,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "slug",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "title",
                     "storageKey": null
                   },
@@ -242,7 +235,7 @@ return {
     ]
   },
   "params": {
-    "id": "626601774354a26c3a94429949ed393e",
+    "id": "a1f0e6849eeea4f151ff6651e5906f83",
     "metadata": {},
     "name": "SelectSeriesPaginationFragment",
     "operationKind": "query",
@@ -251,6 +244,6 @@ return {
 };
 })();
 
-(node as any).hash = "32fe52b78fe262ac7e692a3fd3bcb9f6";
+(node as any).hash = "1dc6d9645105adcecb0dfb8a33fdf658";
 
 export default node;

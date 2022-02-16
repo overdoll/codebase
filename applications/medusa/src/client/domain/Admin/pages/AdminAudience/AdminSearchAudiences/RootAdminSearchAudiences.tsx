@@ -6,7 +6,7 @@ import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack
 import { t, Trans } from '@lingui/macro'
 import AdminSearchAudiences from './AdminSearchAudiences/AdminSearchAudiences'
 import { useSearchQueryArguments } from '@//:modules/hooks'
-import SearchInput from '../../../../../components/SearchInput/SearchInput'
+import SearchInput from '../../../components/Search/components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 

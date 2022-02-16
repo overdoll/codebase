@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63a2f3a9c08bd009b2cdebd576e3b0b3>>
+ * @generated SignedSource<<17e45b71fb638fcd24930336e177d6d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type SelectSeriesSearchFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly slug: string;
+        readonly title: string;
         readonly " $fragmentSpreads": FragmentRefs<"SeriesTileOverlayFragment">;
       };
     }>;
@@ -115,7 +115,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "slug",
+                  "name": "title",
                   "storageKey": null
                 },
                 {
@@ -177,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "32fe52b78fe262ac7e692a3fd3bcb9f6";
+(node as any).hash = "1dc6d9645105adcecb0dfb8a33fdf658";
 
 export default node;

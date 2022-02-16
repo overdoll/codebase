@@ -7,10 +7,7 @@ export default function StackTile ({
   return (
     <Box
       w='100%'
-      h={{
-        base: 58,
-        md: 90
-      }}
+      h={58}
       {...rest}
     >
       {children}

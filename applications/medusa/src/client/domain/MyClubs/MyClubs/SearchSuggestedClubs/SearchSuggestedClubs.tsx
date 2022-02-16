@@ -2,7 +2,7 @@ import SuggestedClubs from './SuggestedClubs/SuggestedClubs'
 import { useSearchQueryArguments } from '@//:modules/hooks'
 import { Suspense, useEffect, useState } from 'react'
 import { t } from '@lingui/macro'
-import SearchInput from '../../../../components/SearchInput/SearchInput'
+import SearchInput from '../../../Admin/components/Search/components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import SkeletonRectangleGrid
   from '../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'

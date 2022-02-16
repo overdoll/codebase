@@ -1,7 +1,7 @@
 import { Box, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { t } from '@lingui/macro'
-import SearchInput from '../SearchInput/SearchInput'
+import SearchInput from '../../domain/Admin/components/Search/components/SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
 import { Dispatch, SetStateAction, Suspense, useRef, useState } from 'react'
 import useSearchQueryArguments from '../../../modules/hooks/useSearchQueryArguments'

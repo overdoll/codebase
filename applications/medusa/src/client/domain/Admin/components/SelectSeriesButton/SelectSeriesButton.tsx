@@ -14,17 +14,22 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import { useHistoryDisclosure, useSearchQueryArguments } from '@//:modules/hooks'
 import { Suspense, useEffect, useState } from 'react'
 import { useLingui } from '@lingui/react'
-import SearchInput from '../../../../components/SearchInput/SearchInput'
+import SearchInput from '../Search/components/SearchInput/SearchInput'
 import SkeletonStack from '../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary
   from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectSeriesSearch from './SelectSeriesSearch/SelectSeriesSearch'
-import { useSingleSelector } from '@//:modules/content/ContentSelection'
-import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
+import { ChoiceProvider, useChoice } from '../Choice'
+import ChoiceRemovableTags from '../Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props extends HTMLChakraProps<any> {
   onChange: (id: string) => void
   isInvalid?: boolean | undefined
+}
+
+interface ChoiceProps {
+  tagTitle: string
 }
 
 export default function SelectSeriesButton ({
@@ -40,36 +45,34 @@ export default function SelectSeriesButton ({
 
   const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
 
-  const [currentSelection, setCurrentSelection, clearSelection] = useSingleSelector({})
+  const methods = useChoice<ChoiceProps>({ max: 1 })
+
+  const {
+    value,
+    values,
+    removeValue
+  } = methods
 
   const [search, setSearch] = useState<string>('')
 
   const { i18n } = useLingui()
 
-  const onClear = (): void => {
-    clearSelection()
-    onChange('')
-  }
-
-  const onChangeSelection = (id: string): void => {
-    onChange(id)
-    setCurrentSelection(id)
-    onClose()
-  }
-
   useEffect(() => {
     setQueryArgs({ title: search })
   }, [search])
 
-  const DisplayButton = (): JSX.Element => {
-    return (
+  useUpdateEffect(() => {
+    onChange(value != null ? value.id : '')
+    onClose()
+  }, [value])
+
+  return (
+    <ChoiceProvider {...methods}>
       <Stack spacing={2}>
-        {currentSelection != null && (
-          <RemovableTag
-            onRemove={onClear}
-            id={currentSelection}
-            title={currentSelection}
-          />)}
+        <ChoiceRemovableTags
+          values={values}
+          removeValue={removeValue}
+        />
         <Button
           colorScheme={isInvalid === true ? 'orange' : 'gray'}
           variant='solid'
@@ -81,12 +84,6 @@ export default function SelectSeriesButton ({
           </Trans>
         </Button>
       </Stack>
-    )
-  }
-
-  return (
-    <>
-      <DisplayButton />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -116,8 +113,6 @@ export default function SelectSeriesButton ({
                 <Suspense fallback={<SkeletonStack />}>
                   <SelectSeriesSearch
                     queryArgs={queryArgs}
-                    selected={currentSelection}
-                    onSelect={onChangeSelection}
                   />
                 </Suspense>
               </QueryErrorBoundary>
@@ -125,6 +120,6 @@ export default function SelectSeriesButton ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </ChoiceProvider>
   )
 }
