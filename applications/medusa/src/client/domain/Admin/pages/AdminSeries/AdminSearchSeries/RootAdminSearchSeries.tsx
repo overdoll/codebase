@@ -4,12 +4,11 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { Suspense, useEffect, useState } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { t, Trans } from '@lingui/macro'
-import AdminSearchCategories from './AdminSearchSeries/AdminSearchSeries'
+import AdminSearchSeries from './AdminSearchSeries/AdminSearchSeries'
 import { useSearchQueryArguments } from '@//:modules/hooks'
 import SearchInput from '../../../../../components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
-import AdminSearchSeries from './AdminSearchSeries/AdminSearchSeries'
 
 export default function RootAdminSearchSeries (): JSX.Element {
   const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })

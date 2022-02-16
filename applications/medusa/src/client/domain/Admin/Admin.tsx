@@ -17,16 +17,15 @@ export default function Admin (props: Props): JSX.Element {
         }
       >
         <VerticalNavigation.Button
-          to='/admin/category/create'
-          exact
+          to='/admin/character/create'
           title={
-            <Trans>Create Category</Trans>
+            <Trans>Create Character</Trans>
           }
         />
         <VerticalNavigation.Button
-          to='/admin/category/search'
+          to='/admin/character/search'
           title={
-            <Trans>Search Categories</Trans>
+            <Trans>Search Characters</Trans>
           }
         />
         <VerticalNavigation.Button
@@ -40,6 +39,31 @@ export default function Admin (props: Props): JSX.Element {
           to='/admin/series/search'
           title={
             <Trans>Search Series</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/category/create'
+          exact
+          title={
+            <Trans>Create Category</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/category/search'
+          title={
+            <Trans>Search Categories</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/audience/create'
+          title={
+            <Trans>Create Audience</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/audience/search'
+          title={
+            <Trans>Search Audiences</Trans>
           }
         />
       </VerticalNavigation.Content>

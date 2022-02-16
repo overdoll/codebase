@@ -8,6 +8,7 @@ export default function GenericTagId (): Joi.Schema {
     .string()
     .required()
     .messages({
-      'string.empty': i18n._(t`Selection cannot be empty`)
+      'string.empty': i18n._(t`Selection cannot be empty`),
+      'any.required': i18n._(t`A selection is required`)
     })
 }

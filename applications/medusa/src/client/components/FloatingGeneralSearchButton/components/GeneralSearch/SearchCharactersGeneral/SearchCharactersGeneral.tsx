@@ -12,10 +12,9 @@ import {
 import { Trans } from '@lingui/macro'
 import { SearchCharactersGeneralFragment$key } from '@//:artifacts/SearchCharactersGeneralFragment.graphql'
 import { useEffect } from 'react'
+import { SingleSelectorProps } from '@//:modules/content/ContentSelection/components/SingleSelector/SingleSelector'
 
-interface Props {
-  selected: string[]
-  onSelect: (category: any) => void
+interface Props extends SingleSelectorProps {
   query: SearchCharactersGeneralFragment$key
   onDataChange?: (data) => void
 }

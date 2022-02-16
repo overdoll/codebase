@@ -23,6 +23,7 @@ import { TagName, TagSeriesId, TagSlug } from '@//:types/form'
 import GenericTagId from '../../../../../validation/GenericTagId'
 import GenericTagName from '../../../../../validation/GenericTagName'
 import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
+import SeriesInput from '@//:modules/form/FormBuilder/InputBuilder/InputBuilderBody/Inputs/SeriesInput/SeriesInput'
 
 type Props = ConnectionProp
 
@@ -64,7 +65,11 @@ export default function CreateCharacterForm ({
     )
   })
 
-  const { setError, watch, setValue } = methods
+  const {
+    setError,
+    watch,
+    setValue
+  } = methods
 
   const onSubmit = (formValues): void => {
     commit({
@@ -97,7 +102,7 @@ export default function CreateCharacterForm ({
   useSlugSubscribe({
     watch: watch,
     setValue: setValue,
-    from: 'title'
+    from: 'name'
   })
 
   return (
@@ -135,17 +140,14 @@ export default function CreateCharacterForm ({
           <InputBuilderFooter />
         </InputBuilder>
         <InputBuilder
-          id='series'
+          id='seriesId'
         >
           <InputBuilderHeader>
             <Trans>
               Character Series
             </Trans>
           </InputBuilderHeader>
-          <InputBuilderBody>
-            <TextInput placeholder={i18n._(t`Enter a series`)} />
-            <InputFeedback />
-          </InputBuilderBody>
+          <SeriesInput />
           <InputBuilderFooter />
         </InputBuilder>
         <FormBuilderSubmitButton

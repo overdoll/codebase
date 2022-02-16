@@ -38,6 +38,8 @@ export default function InputBuilder ({
 
   const error = errors[id]
 
+  // TODO get required state and pass it into FormControl
+
   return (
     <InputBuilderContext.Provider value={contextValue}>
       <FormControl isInvalid={error != null}>

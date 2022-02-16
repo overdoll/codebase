@@ -12,10 +12,9 @@ import { removeNode } from '@//:modules/support'
 import type { SearchSeriesGeneralFragment$key } from '@//:artifacts/SearchSeriesGeneralFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { useEffect } from 'react'
+import { SingleSelectorProps } from '@//:modules/content/ContentSelection/components/SingleSelector/SingleSelector'
 
-interface Props {
-  selected: string[]
-  onSelect: (category: any) => void
+interface Props extends SingleSelectorProps {
   query: SearchSeriesGeneralFragment$key
   onDataChange?: (data) => void
 }

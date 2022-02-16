@@ -1,4 +1,4 @@
-import { ReactNode, useTransition } from 'react'
+import { forwardRef, ReactNode, useTransition } from 'react'
 import { Switch as ChakraSwitch, SwitchProps } from '@chakra-ui/react'
 import useSSRDisable from '../../hooks/useSSRDisable'
 
@@ -6,12 +6,12 @@ interface Props extends SwitchProps {
   children?: ReactNode
 }
 
-export default function Switch ({
+const Switch = forwardRef<any, Props>(({
   isDisabled,
   children,
   onChange,
   ...rest
-}: Props): JSX.Element {
+}: Props, ref): JSX.Element => {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
     timeoutMs: 3000
@@ -29,6 +29,7 @@ export default function Switch ({
 
   return (
     <ChakraSwitch
+      ref={ref}
       isDisabled={fullDisable}
       onChange={handleChange}
       {...rest}
@@ -36,4 +37,6 @@ export default function Switch ({
       {children}
     </ChakraSwitch>
   )
-}
+})
+
+export default Switch

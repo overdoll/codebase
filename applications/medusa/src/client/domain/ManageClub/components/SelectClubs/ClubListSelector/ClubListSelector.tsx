@@ -141,7 +141,7 @@ export default function ClubListSelector ({
                 <GridTile key={index}>
                   <SingleSelector
                     onSelect={onSelect}
-                    selected={(currentSelection != null) ? [currentSelection] : []}
+                    selected={currentSelection}
                     id={item.node.slug}
                   >
                     <ClubTileOverlay query={item.node} />

@@ -17,3 +17,7 @@ export interface TagLocale {
 export interface TagSeriesId {
   [seriesId: string]: string
 }
+
+export interface TagStandard {
+  [standard: string]: boolean
+}

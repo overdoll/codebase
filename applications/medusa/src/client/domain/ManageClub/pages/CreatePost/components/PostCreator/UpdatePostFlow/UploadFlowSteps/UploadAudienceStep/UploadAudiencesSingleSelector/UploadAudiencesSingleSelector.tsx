@@ -1,18 +1,12 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { UploadAudiencesSingleSelectorQuery } from '@//:artifacts/UploadAudiencesSingleSelectorQuery.graphql'
-import {
-  SingleSelectedValue,
-  SingleSelectedValueFunction,
-  SingleSelector,
-  StackTile
-} from '@//:modules/content/ContentSelection'
+import { SingleSelector, StackTile } from '@//:modules/content/ContentSelection'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import AudienceTileOverlay
   from '@//:modules/content/ContentSelection/components/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
+import { SingleSelectorProps } from '@//:modules/content/ContentSelection/components/SingleSelector/SingleSelector'
 
-interface Props {
-  selected: SingleSelectedValue
-  onSelect: SingleSelectedValueFunction
+interface Props extends SingleSelectorProps {
 }
 
 const Query = graphql`
@@ -44,7 +38,7 @@ export default function UploadAudiencesSingleSelector ({
         <StackTile key={index}>
           <SingleSelector
             onSelect={onSelect}
-            selected={(selected != null) ? [selected] : []}
+            selected={selected}
             id={item.node.id}
           >
             <AudienceTileOverlay query={item.node} />

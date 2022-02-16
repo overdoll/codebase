@@ -651,6 +651,115 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/admin/character/create',
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCharacterQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/character/search',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter'
+              )
+            )
+          },
+          {
+            path: '/admin/character/search/:slug/:seriesSlug',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminViewCharacter/RootAdminViewCharacter'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCharacterQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug,
+                    seriesSlug: params.seriesSlug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/audience/create',
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateAudienceQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/audience/search',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences'
+              )
+            )
+          },
+          {
+            path: '/admin/audience/search/:slug',
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminViewAudience/RootAdminViewAudience'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewAudienceQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

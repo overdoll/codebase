@@ -3,10 +3,13 @@ import { Box } from '@chakra-ui/react'
 import ClickableTile from '../ClickableTile/ClickableTile'
 import { SingleSelectedValue, SingleSelectedValueFunction } from '../../hooks/useSingleSelector'
 
-interface Props {
-  id: string
-  selected: SingleSelectedValue[]
+export interface SingleSelectorProps {
+  selected: SingleSelectedValue
   onSelect: SingleSelectedValueFunction
+}
+
+interface Props extends SingleSelectorProps {
+  id: string
   children: ReactNode
 }
 
@@ -27,7 +30,7 @@ export default function SingleSelector ({
     })
   }
 
-  const isSelected = selected.includes(id)
+  const isSelected = selected === id
 
   return (
     <Box
