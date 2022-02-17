@@ -5,18 +5,18 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { TagUrl } from '@//:types/form'
+import { TagThumbnail } from '@//:types/form'
 import { ChangeCategoryThumbnailFormFragment$key } from '@//:artifacts/ChangeCategoryThumbnailFormFragment.graphql'
 import { ChangeCategoryThumbnailFormMutation } from '@//:artifacts/ChangeCategoryThumbnailFormMutation.graphql'
 import GenericFile from '../../../../../../validation/GenericFile'
-import UploadInput from '@//:modules/content/HookedComponents/Form/FormInput/InputBody/Inputs/UploadInput/UploadInput'
+import UploadInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/UploadInput/UploadInput'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
 
 interface Props {
   query: ChangeCategoryThumbnailFormFragment$key
 }
 
-type CategoryValues = TagUrl
+type CategoryValues = TagThumbnail
 
 const Fragment = graphql`
   fragment ChangeCategoryThumbnailFormFragment on Category {

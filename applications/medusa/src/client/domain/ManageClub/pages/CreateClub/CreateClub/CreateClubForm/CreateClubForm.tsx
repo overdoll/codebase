@@ -1,8 +1,6 @@
-import { FormControl, FormLabel, InputLeftAddon, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
+import { InputLeftAddon, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -16,6 +14,17 @@ import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import useSlugSubscribe from '../../../../../Admin/helpers/useSlugSubscribe'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  InputHelperText,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface Props extends ConnectionProp {
   isDisabled: boolean
@@ -27,8 +36,8 @@ interface ClubValues {
 }
 
 const Mutation = graphql`
-  mutation CreateClubFormMutation($name: String!, $slug: String!, $connections: [ID!]!) {
-    createClub(input: {name: $name, slug: $slug}) {
+  mutation CreateClubFormMutation($input: CreateClubInput!, $connections: [ID!]!) {
+    createClub(input: $input) {
       club @appendNode(connections: $connections, edgeTypeName: "createClubPrimaryEdge") {
         id
         slug
@@ -44,10 +53,10 @@ const Mutation = graphql`
 
 export default function CreateClubForm ({
   isDisabled,
-  connectionId,
+  connectionId
 }: Props): JSX.Element {
   const [createClub, isCreatingClub] = useMutation<CreateClubFormMutation>(
-    Mutation,
+    Mutation
   )
 
   const notify = useToast()
@@ -58,48 +67,42 @@ export default function CreateClubForm ({
 
   const schema = Joi.object({
     name: ClubName(),
-    slug: ClubSlug(),
+    slug: ClubSlug()
   })
 
   const methods = useForm<ClubValues>({
     resolver: joiResolver(
-      schema,
-    ),
+      schema
+    )
   })
 
   const {
-    register,
-    handleSubmit,
-    setError,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted,
-    },
+    setError
   } = methods
 
   const onSubmit = (formValues): void => {
     createClub({
       variables: {
-        slug: formValues.slug,
-        name: formValues.name,
-        connections: [connectionId],
+        input: {
+          ...formValues
+        },
+        connections: [connectionId]
       },
       onCompleted (data) {
         if (data?.createClub?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: i18n._(translateValidation(data.createClub.validation)),
+            message: i18n._(translateValidation(data.createClub.validation))
           })
           return
         }
         notify({
           status: 'success',
-          title: t`Club ${formValues.name} was created successfully`,
+          title: t`Club ${formValues.name} was created successfully`
         })
         const redirectPath = generatePath('/club/:slug/:entity', {
           slug: data.createClub?.club?.slug,
-          entity: 'home',
+          entity: 'home'
         })
         history.push(redirectPath)
       },
@@ -112,76 +115,72 @@ export default function CreateClubForm ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`Error creating club ${data.message}`,
+          title: t`Error creating club ${data.message}`
         })
-      },
+      }
     })
   }
 
-  const successName = isDirty && (errors.name == null) && isSubmitted
-
-  const successSlug = isDirty && (errors.slug == null) && isSubmitted
-
   useSlugSubscribe({
     from: 'name',
-    ...methods,
+    ...methods
   })
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={6}>
-        <FormControl isInvalid={errors.name != null}>
-          <FormLabel>
+        <FormInput size='lg' id='name'>
+          <InputHeader>
             <Trans>
               Your Club Name
             </Trans>
-          </FormLabel>
-          <StyledInput
-            size='lg'
-            register={register('name')}
-            success={successName}
-            error={errors.name != null}
-            errorMessage={errors?.name?.message}
-            placeholder={i18n._(t`The best name you can come up with`)}
-            helperText={i18n._(t`This is the name everyone will see`)}
-          />
-        </FormControl>
-        <FormControl isInvalid={errors.slug != null}>
-          <FormLabel>
+          </InputHeader>
+          <InputBody>
+            <TextInput placeholder={i18n._(t`The best name you can come up with`)} />
+            <InputFeedback />
+          </InputBody>
+          <InputFooter>
+            <InputHelperText>
+              <Trans>
+                This is the name everyone will see
+              </Trans>
+            </InputHelperText>
+          </InputFooter>
+        </FormInput>
+        <FormInput size='md' id='slug'>
+          <InputHeader>
             <Trans>
               Your Unique Club Link
             </Trans>
-          </FormLabel>
-          <StyledInput
-            inputLeftAddon={
-              <InputLeftAddon>
-                <Trans>
-                  overdoll.com/
-                </Trans>
-              </InputLeftAddon>
-            }
-            size='md'
-            register={register('slug')}
-            success={successSlug}
-            error={errors.slug != null}
-            errorMessage={errors?.slug?.message}
-            placeholder={i18n._(t`A unique link`)}
-            helperText={i18n._(t`This is the unique link everyone will use to see your club`)}
-          />
-        </FormControl>
-        <Button
-          isDisabled={errors.name != null || errors.slug != null || isDisabled}
-          isLoading={isCreatingClub}
-          type='submit'
+          </InputHeader>
+          <InputBody>
+            <InputLeftAddon>
+              <Trans>
+                overdoll.com/
+              </Trans>
+            </InputLeftAddon>
+            <TextInput placeholder={i18n._(t`A unique link`)} />
+            <InputFeedback />
+          </InputBody>
+          <InputFooter>
+            <InputHelperText>
+              <Trans>
+                This is the unique link everyone will use to see your club
+              </Trans>
+            </InputHelperText>
+          </InputFooter>
+        </FormInput>
+        <FormSubmitButton
           w='100%'
           size='lg'
-          colorScheme={errors.name != null || errors.slug != null ? 'gray' : 'teal'}
+          isLoading={isCreatingClub}
+          colorScheme='teal'
         >
           <Trans>
             Create Club
           </Trans>
-        </Button>
+        </FormSubmitButton>
       </Stack>
-    </form>
+    </Form>
   )
 }

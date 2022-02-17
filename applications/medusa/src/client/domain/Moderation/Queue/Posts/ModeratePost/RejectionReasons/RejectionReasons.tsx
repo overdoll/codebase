@@ -1,13 +1,22 @@
-import { useState } from 'react'
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Select, Stack, Textarea } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Flex, Stack } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import type { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import {
+  TextareaInput,
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputFooter,
+  InputHeader,
+  SelectInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface NoteValues {
   note: string
@@ -34,8 +43,12 @@ const InfractionsGQL = graphql`
   }
 `
 
-export default function RejectionReasons (props: Props): JSX.Element {
-  const data = useFragment(InfractionsGQL, props.infractions)
+export default function RejectionReasons ({
+  onSubmit,
+  infractions,
+  isModeratingPost
+}: Props): JSX.Element {
+  const data = useFragment(InfractionsGQL, infractions)
 
   const { i18n } = useLingui()
 
@@ -64,70 +77,56 @@ export default function RejectionReasons (props: Props): JSX.Element {
       })
   })
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<NoteValues>({
+  const methods = useForm<NoteValues>({
     resolver: joiResolver(
       schema
     )
   })
 
+  const { watch } = methods
+
+  useEffect(() => {
+    const subscription = watch((value, {
+      name
+    }) => {
+      if (name === 'rejectionId') {
+        findInfraction(value)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
+
   return (
-    <form noValidate onSubmit={handleSubmit(props.onSubmit)}>
+    <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={3}>
-        <FormControl isInvalid={errors.rejectionId != null}>
-          <FormLabel>
+        <FormInput
+          size='md'
+          id='rejectionId'
+        >
+          <InputHeader>
             <Trans>
               Reason
             </Trans>
-          </FormLabel>
-          <Controller
-            control={control}
-            name='rejectionId'
-            render={({
-              field: {
-                onChange
-              },
-              fieldState: {
-                invalid
-              }
-            }) => (
-              <Select
-                onChange={(e) => {
-                  findInfraction(e.target.value)
-                  onChange(e.target.value)
-                }}
-                placeholder={i18n._(t`Select the rejection reason`)}
-                isInvalid={invalid}
-              >
-                {data.rules.edges.map((item, index) =>
-                  <option key={index} value={item.node.id}>{item.node.title}</option>
-                )}
-              </Select>
+          </InputHeader>
+          <SelectInput placeholder={i18n._(t`Select the rejection reason`)}>
+            {data.rules.edges.map((item, index) =>
+              <option key={index} value={item.node.id}>{item.node.title}</option>
             )}
-          />
-          <FormErrorMessage>
-            {errors?.rejectionId?.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.note != null}>
-          <FormLabel>
+          </SelectInput>
+          <InputFooter />
+        </FormInput>
+        <FormInput
+          size='md'
+          id='note'
+        >
+          <InputHeader>
             <Trans>
               Note
             </Trans>
-          </FormLabel>
-          <Textarea
-            resize='none'
-            {...register('note')}
-            placeholder={i18n._(t`Add a note describing the reason in detail...`)}
-          />
-          <FormErrorMessage>
-            {errors?.note?.message}
-          </FormErrorMessage>
-        </FormControl>
+          </InputHeader>
+          <TextareaInput placeholder={i18n._(t`Add a note describing the reason in detail...`)} />
+          <InputFooter />
+        </FormInput>
         {infraction &&
           <Alert mt={1} mb={1} status='warning'>
             <AlertIcon mt={1} mb={3} />
@@ -138,19 +137,17 @@ export default function RejectionReasons (props: Props): JSX.Element {
             </AlertDescription>
           </Alert>}
         <Flex justify='flex-end'>
-          <Button
-            isDisabled={(errors.rejectionId != null) || (errors.note != null)}
-            isLoading={props.isModeratingPost}
+          <FormSubmitButton
             size='md'
             colorScheme='orange'
-            type='submit'
+            isLoading={isModeratingPost}
           >
             <Trans>
               Reject Post
             </Trans>
-          </Button>
+          </FormSubmitButton>
         </Flex>
       </Stack>
-    </form>
+    </Form>
   )
 }

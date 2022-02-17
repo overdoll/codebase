@@ -1,14 +1,14 @@
 import { Textarea, TextareaProps } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { InputBuilderContext } from '../../../FormInput'
+import { FormInputContext } from '../../FormInput'
 import { useFormContext } from 'react-hook-form'
 
-export default function DescriptionInput ({
+export default function TextareaInput ({
   ...rest
 }: TextareaProps): JSX.Element {
   const {
     id
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const { register } = useFormContext()
 

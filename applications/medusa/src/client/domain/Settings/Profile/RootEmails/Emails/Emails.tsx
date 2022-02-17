@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Stack } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import EmailCard from './EmailCard/EmailCard'
@@ -10,7 +10,7 @@ import { usePaginationFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
 import { Collapse, CollapseBody, CollapseButton } from '../../../../../components/Collapse/Collapse'
 
 interface Props {
@@ -131,7 +131,20 @@ export default function Emails (props: Props): JSX.Element {
           </Trans>
         </CollapseButton>
         <CollapseBody>
-          <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+          <Stack spacing={2}>
+            {disableEmailAdd &&
+              <Alert mb={2} status='warning'>
+                <AlertIcon />
+                <AlertDescription fontSize='sm'>
+                  <Trans>
+                    You have added the maximum amount of confirmed emails. You'll have to remove at least one email to
+                    be
+                    able to add another.
+                  </Trans>
+                </AlertDescription>
+              </Alert>}
+            <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+          </Stack>
         </CollapseBody>
       </Collapse>
     </ListSpacer>

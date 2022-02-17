@@ -9,6 +9,7 @@ export default function GenericFile (): Joi.Schema {
     .string()
     .required()
     .messages({
-      'any.required': i18n._(t`A file upload is required`)
+      'any.required': i18n._(t`A file upload is required`),
+      'string.empty': i18n._(t`A file upload is required`)
     })
 }

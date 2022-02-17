@@ -1,6 +1,6 @@
 import { FormErrorMessage } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { determineTextSizing, InputBuilderContext } from '../FormInput'
+import { determineTextSizing, FormInputContext } from '../FormInput'
 import { useFormContext } from 'react-hook-form'
 
 interface Props {
@@ -13,7 +13,7 @@ export default function InputFooter ({
   const {
     size = 'md',
     id
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const { formState: { errors } } = useFormContext()
 

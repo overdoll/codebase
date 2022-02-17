@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from 'react'
-import { InputBuilderContext } from '../../../FormInput'
+import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
-import Switch from '../../../../../../../form/Switch/Switch'
+import Switch from '../../../../../../form/Switch/Switch'
 import { Heading, HStack } from '@chakra-ui/react'
 
 interface Props {
@@ -12,7 +12,7 @@ export default function SwitchInput ({ placeholder }: Props): JSX.Element {
   const {
     id,
     size
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const {
     control
@@ -46,7 +46,7 @@ export default function SwitchInput ({ placeholder }: Props): JSX.Element {
           />
         )}
       />
-      <Heading fontSize={size} color='gray.00'>
+      <Heading fontSize={size} color='gray.100'>
         {placeholder}
       </Heading>
     </HStack>

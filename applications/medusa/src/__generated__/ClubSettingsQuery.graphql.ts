@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7a0c7097c74028b9ff66d3072ceb226c>>
- * @relayHash 5005b78f912bc04989dab5bd8c20520c
+ * @generated SignedSource<<2f57b566ef0b9e763183ace7b6250ce0>>
+ * @relayHash a4c0bc9071f91a3c373f8ab1a04e51f4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5005b78f912bc04989dab5bd8c20520c
+// @relayRequestID a4c0bc9071f91a3c373f8ab1a04e51f4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -108,7 +108,6 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -116,6 +115,7 @@ return {
             "name": "name",
             "storageKey": null
           },
+          (v2/*: any*/),
           (v3/*: any*/),
           {
             "alias": null,
@@ -198,7 +198,7 @@ return {
     ]
   },
   "params": {
-    "id": "5005b78f912bc04989dab5bd8c20520c",
+    "id": "a4c0bc9071f91a3c373f8ab1a04e51f4",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

@@ -1,14 +1,15 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
-  background: ReactNode
+interface Props extends FlexProps {
+  backdrop: ReactNode
   children: ReactNode
 }
 
 export default function TileOverlay ({
   children,
-  background
+  backdrop,
+  ...rest
 }: Props): JSX.Element {
   return (
     <Flex
@@ -19,8 +20,9 @@ export default function TileOverlay ({
       h='100%'
       w='100%'
       position='relative'
+      {...rest}
     >
-      {background}
+      {backdrop}
       <Flex
         p={2}
         bg='dimmers.400'

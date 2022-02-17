@@ -1,6 +1,6 @@
 import { Input, InputProps } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { InputBuilderContext } from '../../../FormInput'
+import { FormInputContext } from '../../../FormInput'
 import { useFormContext } from 'react-hook-form'
 
 export default function TextInput ({
@@ -8,7 +8,7 @@ export default function TextInput ({
 }: InputProps): JSX.Element {
   const {
     id
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const { register } = useFormContext()
 

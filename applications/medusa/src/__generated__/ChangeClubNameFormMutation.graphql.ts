@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<672753f81fbac6a68eb50b14f066acf8>>
- * @relayHash fa46b33d00292f22e9607b295f9ddab6
+ * @generated SignedSource<<c10acf3f808033e07c7ec9292fdcb384>>
+ * @relayHash a4f2ddd3c39a36e038577fa110701b43
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fa46b33d00292f22e9607b295f9ddab6
+// @relayRequestID a4f2ddd3c39a36e038577fa110701b43
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type ChangeClubNameMutation$variables = {
+export type UpdateClubNameInput = {
   id: string;
   name: string;
 };
-export type ChangeClubNameMutationVariables = ChangeClubNameMutation$variables;
-export type ChangeClubNameMutation$data = {
+export type ChangeClubNameFormMutation$variables = {
+  input: UpdateClubNameInput;
+};
+export type ChangeClubNameFormMutationVariables = ChangeClubNameFormMutation$variables;
+export type ChangeClubNameFormMutation$data = {
   readonly updateClubName: {
     readonly club: {
       readonly id: string;
@@ -25,10 +28,10 @@ export type ChangeClubNameMutation$data = {
     } | null;
   } | null;
 };
-export type ChangeClubNameMutationResponse = ChangeClubNameMutation$data;
-export type ChangeClubNameMutation = {
-  variables: ChangeClubNameMutationVariables;
-  response: ChangeClubNameMutation$data;
+export type ChangeClubNameFormMutationResponse = ChangeClubNameFormMutation$data;
+export type ChangeClubNameFormMutation = {
+  variables: ChangeClubNameFormMutationVariables;
+  response: ChangeClubNameFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -36,12 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "id"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "name"
+    "name": "input"
   }
 ],
 v1 = [
@@ -49,20 +47,9 @@ v1 = [
     "alias": null,
     "args": [
       {
-        "fields": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "id"
-          },
-          {
-            "kind": "Variable",
-            "name": "name",
-            "variableName": "name"
-          }
-        ],
-        "kind": "ObjectValue",
-        "name": "input"
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
       }
     ],
     "concreteType": "UpdateClubNamePayload",
@@ -104,7 +91,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ChangeClubNameMutation",
+    "name": "ChangeClubNameFormMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -113,19 +100,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ChangeClubNameMutation",
+    "name": "ChangeClubNameFormMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "fa46b33d00292f22e9607b295f9ddab6",
+    "id": "a4f2ddd3c39a36e038577fa110701b43",
     "metadata": {},
-    "name": "ChangeClubNameMutation",
+    "name": "ChangeClubNameFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "87cd26fdc027eaae39a95369fcedd075";
+(node as any).hash = "ef85fa165af3da645348a7c5832096ae";
 
 export default node;

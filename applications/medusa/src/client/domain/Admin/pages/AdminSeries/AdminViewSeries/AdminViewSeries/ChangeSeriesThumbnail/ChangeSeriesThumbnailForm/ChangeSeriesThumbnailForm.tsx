@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { TagUrl } from '@//:types/form'
+import { TagThumbnail } from '@//:types/form'
 import { ChangeSeriesThumbnailFormFragment$key } from '@//:artifacts/ChangeSeriesThumbnailFormFragment.graphql'
 import GenericFile from '../../../../../../validation/GenericFile'
 import { ChangeSeriesThumbnailFormMutation } from '@//:artifacts/ChangeSeriesThumbnailFormMutation.graphql'
@@ -22,7 +22,7 @@ interface Props {
   query: ChangeSeriesThumbnailFormFragment$key
 }
 
-type SeriesValues = TagUrl
+type SeriesValues = TagThumbnail
 
 const Fragment = graphql`
   fragment ChangeSeriesThumbnailFormFragment on Series {

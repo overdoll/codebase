@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Box, FormControl, FormLabel, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
@@ -11,11 +11,17 @@ import Joi from 'joi'
 import Totp from '@//:modules/validation/Totp'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
-import Button from '@//:modules/form/Button/Button'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface CodeValues {
   code: string
@@ -53,20 +59,13 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
     code: Totp()
   })
 
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<CodeValues>({
+  const methods = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
   })
+
+  const { setError } = methods
 
   const notify = useToast()
 
@@ -107,8 +106,6 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
     })
   }
 
-  const success = isDirty && (errors.code == null) && isSubmitted
-
   return (
     <>
       <Box>
@@ -140,55 +137,30 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
           </Trans>
         </Text>
       </Box>
-      <form noValidate onSubmit={handleSubmit(onSubmitTotp)}>
-        <FormControl
-          isInvalid={errors.code != null}
-        >
-          <Stack spacing={3}>
-            <FormControl
-              isInvalid={errors.code != null}
-              id='email'
-            >
-              <FormLabel
-                zIndex={1}
-                htmlFor='code'
-                variant='float'
-                color={!success
-                  ? (errors.code != null)
-                      ? 'orange.500'
-                      : 'gray.200'
-                  : 'green.600'}
-              >
-                <Trans>
-                  Code
-                </Trans>
-              </FormLabel>
-              <StyledInput
-                register={register('code')}
-                success={success}
-                error={errors.code != null}
-                size='xl'
-                variant='filled'
-                placeholder='123456'
-                errorMessage={errors?.code?.message}
-              />
-            </FormControl>
-            <Button
-              size='xl'
-              variant='outline'
-              type='submit'
-              ml={2}
-              colorScheme='primary'
-              isDisabled={errors.code != null}
-              isLoading={isSubmittingTotp}
-            >
+      <Form {...methods} onSubmit={onSubmitTotp}>
+        <Stack spacing={3}>
+          <FormInput size='xl' id='code'>
+            <InputHeader>
               <Trans>
-                Submit Code
+                Code
               </Trans>
-            </Button>
-          </Stack>
-        </FormControl>
-      </form>
+            </InputHeader>
+            <InputBody>
+              <TextInput placeholder='123456' />
+            </InputBody>
+          </FormInput>
+          <FormSubmitButton
+            size='xl'
+            variant='outline'
+            colorScheme='primary'
+            isLoading={isSubmittingTotp}
+          >
+            <Trans>
+              Submit Code
+            </Trans>
+          </FormSubmitButton>
+        </Stack>
+      </Form>
     </>
   )
 }

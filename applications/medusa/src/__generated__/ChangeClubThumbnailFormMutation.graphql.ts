@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bf1d9536bf28788800f5999505da2deb>>
- * @relayHash 69bfd7f2a4245402cf60d66094adf319
+ * @generated SignedSource<<ed1671fcfd9e7036098f3da8b576a2b2>>
+ * @relayHash b3860f3f81b3a47de297279ad3f6d0aa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,16 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69bfd7f2a4245402cf60d66094adf319
+// @relayRequestID b3860f3f81b3a47de297279ad3f6d0aa
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type ChangeClubThumbnailMutation$variables = {
+export type UpdateClubThumbnailInput = {
   id: string;
   thumbnail: string;
 };
-export type ChangeClubThumbnailMutationVariables = ChangeClubThumbnailMutation$variables;
-export type ChangeClubThumbnailMutation$data = {
+export type ChangeClubThumbnailFormMutation$variables = {
+  input: UpdateClubThumbnailInput;
+};
+export type ChangeClubThumbnailFormMutationVariables = ChangeClubThumbnailFormMutation$variables;
+export type ChangeClubThumbnailFormMutation$data = {
   readonly updateClubThumbnail: {
     readonly club: {
       readonly id: string;
@@ -33,10 +36,10 @@ export type ChangeClubThumbnailMutation$data = {
     } | null;
   } | null;
 };
-export type ChangeClubThumbnailMutationResponse = ChangeClubThumbnailMutation$data;
-export type ChangeClubThumbnailMutation = {
-  variables: ChangeClubThumbnailMutationVariables;
-  response: ChangeClubThumbnailMutation$data;
+export type ChangeClubThumbnailFormMutationResponse = ChangeClubThumbnailFormMutation$data;
+export type ChangeClubThumbnailFormMutation = {
+  variables: ChangeClubThumbnailFormMutationVariables;
+  response: ChangeClubThumbnailFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -44,30 +47,14 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "id"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "thumbnail"
+    "name": "input"
   }
 ],
 v1 = [
   {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "id",
-        "variableName": "id"
-      },
-      {
-        "kind": "Variable",
-        "name": "thumbnail",
-        "variableName": "thumbnail"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "input"
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
 ],
 v2 = {
@@ -121,7 +108,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ChangeClubThumbnailMutation",
+    "name": "ChangeClubThumbnailFormMutation",
     "selections": [
       {
         "alias": null,
@@ -168,7 +155,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ChangeClubThumbnailMutation",
+    "name": "ChangeClubThumbnailFormMutation",
     "selections": [
       {
         "alias": null,
@@ -211,15 +198,15 @@ return {
     ]
   },
   "params": {
-    "id": "69bfd7f2a4245402cf60d66094adf319",
+    "id": "b3860f3f81b3a47de297279ad3f6d0aa",
     "metadata": {},
-    "name": "ChangeClubThumbnailMutation",
+    "name": "ChangeClubThumbnailFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "2b0f438e8b304946a1e85db946277c48";
+(node as any).hash = "597b82c0d8cad03277559d2542713664";
 
 export default node;

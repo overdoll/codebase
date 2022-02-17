@@ -6,35 +6,30 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagThumbnail } from '@//:types/form'
-import { ChangeCharacterThumbnailFormFragment$key } from '@//:artifacts/ChangeCharacterThumbnailFormFragment.graphql'
-import GenericFile from '../../../../../../validation/GenericFile'
-import { ChangeCharacterThumbnailFormMutation } from '@//:artifacts/ChangeCharacterThumbnailFormMutation.graphql'
-import {
-  Form,
-  FormInput,
-  FormSubmitButton,
-  InputFooter,
-  InputHeader,
-  UploadInput
-} from '@//:modules/content/HookedComponents/Form'
+import { ChangeClubThumbnailFormFragment$key } from '@//:artifacts/ChangeClubThumbnailFormFragment.graphql'
+import { ChangeClubThumbnailFormMutation } from '@//:artifacts/ChangeClubThumbnailFormMutation.graphql'
+import UploadInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/UploadInput/UploadInput'
+import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
+import GenericFile from '../../../../../../Admin/validation/GenericFile'
 
 interface Props {
-  query: ChangeCharacterThumbnailFormFragment$key
+  query: ChangeClubThumbnailFormFragment$key
 }
 
-type AudienceValues = TagThumbnail
+type ClubValues = TagThumbnail
 
 const Fragment = graphql`
-  fragment ChangeCharacterThumbnailFormFragment on Character {
+  fragment ChangeClubThumbnailFormFragment on Club {
     id
   }
 `
 
 const Mutation = graphql`
-  mutation ChangeCharacterThumbnailFormMutation($input: UpdateCharacterThumbnailInput!) {
-    updateCharacterThumbnail(input: $input) {
-      character {
+  mutation ChangeClubThumbnailFormMutation ($input: UpdateClubThumbnailInput!) {
+    updateClubThumbnail(input: $input) {
+      club {
         id
+        name
         thumbnail {
           type
           urls {
@@ -47,12 +42,12 @@ const Mutation = graphql`
   }
 `
 
-export default function ChangeCharacterThumbnailForm ({
+export default function ChangeClubThumbnailForm ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [commit, isInFlight] = useMutation<ChangeCharacterThumbnailFormMutation>(Mutation)
+  const [commit, IsInFlight] = useMutation<ChangeClubThumbnailFormMutation>(Mutation)
 
   const notify = useToast()
 
@@ -60,7 +55,7 @@ export default function ChangeCharacterThumbnailForm ({
     thumbnail: GenericFile()
   })
 
-  const methods = useForm<AudienceValues>({
+  const methods = useForm<ClubValues>({
     resolver: joiResolver(
       schema
     )
@@ -70,20 +65,20 @@ export default function ChangeCharacterThumbnailForm ({
     commit({
       variables: {
         input: {
-          id: data.id,
+          id: data?.id,
           ...formValues
         }
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Successfully updated character thumbnail`
+          title: t`Successfully updated your club thumbnail`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error updating the character thumbnail`
+          title: t`There was an error updating your club thumbnail`
         })
       }
     }
@@ -102,14 +97,14 @@ export default function ChangeCharacterThumbnailForm ({
         >
           <InputHeader>
             <Trans>
-              Character Thumbnail
+              Club Thumbnail
             </Trans>
           </InputHeader>
           <UploadInput />
           <InputFooter />
         </FormInput>
         <FormSubmitButton
-          isLoading={isInFlight}
+          isLoading={IsInFlight}
           w='100%'
           size='sm'
         >

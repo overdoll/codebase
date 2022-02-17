@@ -1,12 +1,12 @@
 import { InputGroup, InputGroupProps } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { InputBuilderContext } from '../FormInput'
+import { FormInputContext } from '../../FormInput'
 
 export default function InputBody ({
   children,
   ...rest
 }: InputGroupProps): JSX.Element {
-  const { size = 'md' } = useContext(InputBuilderContext)
+  const { size = 'md' } = useContext(FormInputContext)
 
   return (
     <InputGroup

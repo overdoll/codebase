@@ -29,7 +29,7 @@ export default function CharacterTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={
+    <TileOverlay backdrop={
       <ResourceItem
         query={data.thumbnail}
       />

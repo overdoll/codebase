@@ -1,8 +1,8 @@
 import { InputElementProps, InputRightElement, Spinner } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { InputBuilderContext } from '../../FormInput'
+import { FormInputContext } from '../../../FormInput'
 import { useFormContext } from 'react-hook-form'
-import { Icon } from '../../../../../PageLayout'
+import { Icon } from '../../../../../../PageLayout'
 import { CheckMark, WarningTriangle } from '@//:assets/icons'
 
 const SuccessIcon = (): JSX.Element => {
@@ -29,7 +29,7 @@ const PendingIcon = (): JSX.Element => {
   return <Spinner h={15} w={15} color='gray.200' />
 }
 
-export default function InputBuilderHeader ({
+export default function InputFeedback ({
   children,
   ...rest
 }: InputElementProps): JSX.Element {
@@ -37,7 +37,7 @@ export default function InputBuilderHeader ({
     size = 'md',
     isPending,
     id
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const {
     formState: {

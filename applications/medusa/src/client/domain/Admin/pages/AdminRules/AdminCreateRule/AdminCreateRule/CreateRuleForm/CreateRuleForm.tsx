@@ -13,7 +13,6 @@ import { TagDescription, TagInfraction, TagTitle } from '@//:types/form'
 import GenericBoolean from '../../../../../validation/GenericBoolean'
 import GenericTagDescription from '../../../../../validation/GenericTagDescription'
 import {
-  DescriptionInput,
   Form,
   FormInput,
   FormSubmitButton,
@@ -22,6 +21,7 @@ import {
   InputFooter,
   InputHeader,
   SwitchInput,
+  TextareaInput,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 
@@ -116,7 +116,10 @@ export default function CreateRuleForm ({
               Rule Description
             </Trans>
           </InputHeader>
-          <DescriptionInput placeholder={i18n._(t`Enter a description for the rule`)} />
+          <TextareaInput
+            variant='filled'
+            placeholder={i18n._(t`Enter a description for the rule`)}
+          />
           <InputFooter />
         </FormInput>
         <FormInput

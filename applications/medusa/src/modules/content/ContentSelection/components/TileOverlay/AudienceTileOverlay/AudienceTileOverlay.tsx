@@ -23,11 +23,12 @@ export default function AudienceTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={
-      <ResourceItem
-        minH={58}
-        query={data.thumbnail}
-      />
+    <TileOverlay
+      maxH={58}
+      backdrop={
+        <ResourceItem
+          query={data.thumbnail}
+        />
     }
     >
       <Text

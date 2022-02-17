@@ -2,19 +2,19 @@ import { FormControl } from '@chakra-ui/react'
 import { createContext, ReactNode } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-interface InputBuilderProps {
+interface FormInputProps {
   id: string
   size?: string
   isPending?: boolean
 }
 
-interface ComponentProps extends InputBuilderProps {
+interface ComponentProps extends FormInputProps {
   children: ReactNode
 }
 
-type ContextProps = InputBuilderProps
+type ContextProps = FormInputProps
 
-export const InputBuilderContext = createContext<ContextProps>({
+export const FormInputContext = createContext<ContextProps>({
   id: 'none',
   size: 'md',
   isPending: false
@@ -38,14 +38,12 @@ export default function FormInput ({
 
   const error = errors[id]
 
-  // TODO get required state and pass it into FormControl
-
   return (
-    <InputBuilderContext.Provider value={contextValue}>
+    <FormInputContext.Provider value={contextValue}>
       <FormControl isInvalid={error != null}>
         {children}
       </FormControl>
-    </InputBuilderContext.Provider>
+    </FormInputContext.Provider>
   )
 }
 

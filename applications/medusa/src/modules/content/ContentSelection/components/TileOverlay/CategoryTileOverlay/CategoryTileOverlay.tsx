@@ -26,7 +26,7 @@ export default function CategoryTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={
+    <TileOverlay backdrop={
       <ResourceItem
         h='100%'
         query={data.thumbnail}

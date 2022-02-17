@@ -47,7 +47,7 @@ export default function SingleFileImageUpload ({
     setResponse(undefined)
     setFile(undefined)
     setProgress(undefined)
-    onChange(null)
+    onChange('')
     uppy?.reset()
   }
 

@@ -1,14 +1,15 @@
-import { Checkbox, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Joi from 'joi'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
-import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UnlockAccountFormMutation } from '@//:artifacts/UnlockAccountFormMutation.graphql'
 import { UnlockAccountFormFragment$key } from '@//:artifacts/UnlockAccountFormFragment.graphql'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { CheckboxInput, Form, FormInput, FormSubmitButton } from '@//:modules/content/HookedComponents/Form'
+
 interface FormValues {
   checkbox: boolean
 }
@@ -16,6 +17,12 @@ interface FormValues {
 interface Props {
   queryRef: UnlockAccountFormFragment$key
 }
+
+const UnlockAccountFormGQL = graphql`
+  fragment UnlockAccountFormFragment on Account {
+    id
+  }
+`
 
 const Mutation = graphql`
   mutation UnlockAccountFormMutation($input: UnlockAccountInput!) {
@@ -32,14 +39,8 @@ const Mutation = graphql`
   }
 `
 
-const UnlockAccountFormGQL = graphql`
-  fragment UnlockAccountFormFragment on Account {
-    id
-  }
-`
-
 export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | null {
-  const [unlockAccount, isUnlockingAccount] = useMutation<UnlockAccountFormMutation>(Mutation)
+  const [commit, IsInFlight] = useMutation<UnlockAccountFormMutation>(Mutation)
 
   const data = useFragment(UnlockAccountFormGQL, queryRef)
 
@@ -55,13 +56,7 @@ export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | n
       })
   })
 
-  const {
-    control,
-    handleSubmit,
-    formState: {
-      errors
-    }
-  } = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     resolver: joiResolver(
       schema
     ),
@@ -70,8 +65,8 @@ export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | n
     }
   })
 
-  const onUnlockAccount = (): void => {
-    unlockAccount({
+  const onSubmit = (): void => {
+    commit({
       variables: {
         input: {
           accountID: data.id
@@ -95,48 +90,28 @@ export default function UnlockAccountForm ({ queryRef }: Props): JSX.Element | n
   const notify = useToast()
 
   return (
-    <form noValidate onSubmit={handleSubmit(onUnlockAccount)}>
+    <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={3}>
-        <FormControl isInvalid={errors.checkbox != null}>
-          <Controller
-            control={control}
-            name='checkbox'
-            render={({
-              field: {
-                onChange,
-                value
-              },
-              fieldState: {
-                invalid
-              }
-            }) => (
-              <Checkbox
-                onChange={onChange}
-                isChecked={value}
-                isInvalid={invalid}
-              >
-                <Trans>
-                  I promise to be better and to follow the community guidelines more closely
-                </Trans>
-              </Checkbox>
-            )}
-          />
-          <FormErrorMessage>
-            {errors?.checkbox?.message}
-          </FormErrorMessage>
-        </FormControl>
-        <Button
-          isDisabled={errors.checkbox != null}
-          isLoading={isUnlockingAccount}
-          type='submit'
+        <FormInput
+          size='sm'
+          id='checkbox'
+        >
+          <CheckboxInput>
+            <Trans>
+              I promise to be better and to follow the community guidelines more closely
+            </Trans>
+          </CheckboxInput>
+        </FormInput>
+        <FormSubmitButton
+          isLoading={IsInFlight}
           colorScheme='green'
           size='lg'
         >
           <Trans>
             Unlock Account
           </Trans>
-        </Button>
+        </FormSubmitButton>
       </Stack>
-    </form>
+    </Form>
   )
 }

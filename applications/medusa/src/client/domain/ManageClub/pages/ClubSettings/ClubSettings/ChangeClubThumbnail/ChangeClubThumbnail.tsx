@@ -1,6 +1,5 @@
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeClubThumbnailFragment$key } from '@//:artifacts/ChangeClubThumbnailFragment.graphql'
-import { ChangeClubThumbnailMutation } from '@//:artifacts/ChangeClubThumbnailMutation.graphql'
 import { Flex } from '@chakra-ui/react'
 import {
   ListSpacer,
@@ -9,74 +8,25 @@ import {
   PageSectionWrap,
   ResourceIcon
 } from '@//:modules/content/PageLayout'
-import { t, Trans } from '@lingui/macro'
-import SingleFileImageUpload
-  from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
+import ChangeClubThumbnailForm from './ChangeClubThumbnailForm/ChangeClubThumbnailForm'
 
 interface Props {
-  query: ChangeClubThumbnailFragment$key | null
+  query: ChangeClubThumbnailFragment$key
 }
 
 const Fragment = graphql`
   fragment ChangeClubThumbnailFragment on Club {
-    id
     thumbnail {
       ...ResourceIconFragment
     }
-  }
-`
-
-const Mutation = graphql`
-  mutation ChangeClubThumbnailMutation ($id: ID!, $thumbnail: String!) {
-    updateClubThumbnail(input: {id: $id, thumbnail: $thumbnail}) {
-      club {
-        id
-        name
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
-          }
-        }
-      }
-    }
+    ...ChangeClubThumbnailFormFragment
   }
 `
 
 export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const [changeThumbnail, isChangingThumbnail] = useMutation<ChangeClubThumbnailMutation>(Mutation)
-
-  const notify = useToast()
-
-  const onCompleted = (id): void => {
-    if (data?.id == null) return
-    if (id == null) return
-
-    changeThumbnail({
-      variables: {
-        id: data?.id,
-        thumbnail: id
-      },
-      onCompleted () {
-        notify({
-          status: 'success',
-          title: t`Successfully updated your club thumbnail`
-        })
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t`There was an error updating your club thumbnail`
-        })
-      }
-    }
-    )
-  }
 
   return (
     <>
@@ -101,10 +51,7 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
             </Trans>
           </CollapseButton>
           <CollapseBody>
-            <SingleFileImageUpload
-              onCompleted={onCompleted}
-              isDisabled={isChangingThumbnail}
-            />
+            <ChangeClubThumbnailForm query={data} />
           </CollapseBody>
         </Collapse>
       </ListSpacer>

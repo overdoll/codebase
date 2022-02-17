@@ -22,7 +22,7 @@ export interface TagStandard {
   standard: boolean
 }
 
-export interface TagUrl {
+export interface TagThumbnail {
   thumbnail: string
 }
 

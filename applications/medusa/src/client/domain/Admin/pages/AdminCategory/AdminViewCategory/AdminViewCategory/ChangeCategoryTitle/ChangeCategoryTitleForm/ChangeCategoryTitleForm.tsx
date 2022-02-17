@@ -21,6 +21,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+
 interface Props {
   query: ChangeCategoryTitleFormFragment$key
 }
@@ -50,7 +51,6 @@ const Mutation = graphql`
     }
   }
 `
-
 export default function ChangeCategoryTitleForm ({
   query
 }: Props): JSX.Element {

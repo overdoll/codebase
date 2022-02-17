@@ -1,5 +1,0 @@
-export { default as TextInput } from './TextInput/TextInput'
-export { default as SeriesInput } from './SeriesInput/SeriesInput'
-export { default as SwitchInput } from './SwitchInput/SwitchInput'
-export { default as UploadInput } from './UploadInput/UploadInput'
-export { default as DescriptionInput } from './DescriptionInput/DescriptionInput'

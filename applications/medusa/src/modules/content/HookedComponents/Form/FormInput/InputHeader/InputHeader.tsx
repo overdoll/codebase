@@ -1,6 +1,6 @@
 import { FormLabel, FormLabelProps } from '@chakra-ui/react'
 import { useContext } from 'react'
-import { InputBuilderContext } from '../FormInput'
+import { FormInputContext } from '../FormInput'
 import { useFormContext } from 'react-hook-form'
 
 export default function InputHeader ({
@@ -10,7 +10,7 @@ export default function InputHeader ({
   const {
     size = 'md',
     id
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const { formState: { errors } } = useFormContext()
 

@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { RuleTileOverlayFragment$key } from '@//:artifacts/RuleTileOverlayFragment.graphql'
 
@@ -19,7 +19,7 @@ export default function RuleTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Stack bg='gray.800' spacing={1}>
+    <Box borderRadius='inherit' px={4} py={3} bg='gray.800'>
       <Text
         fontSize='lg'
         color='gray.00'
@@ -29,6 +29,6 @@ export default function RuleTileOverlay ({
       <Text fontSize='sm' color='gray.200'>
         {data.description}
       </Text>
-    </Stack>
+    </Box>
   )
 }

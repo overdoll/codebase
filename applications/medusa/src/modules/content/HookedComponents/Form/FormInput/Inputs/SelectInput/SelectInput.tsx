@@ -1,13 +1,15 @@
 import { useContext } from 'react'
-import { InputBuilderContext } from '../../../FormInput'
+import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
-import SelectSeriesButton from '../../../../../../../../client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton'
+import { Select, SelectProps } from '@chakra-ui/react'
 
-export default function SeriesInput (): JSX.Element {
+type SelectInputProps = SelectProps
+
+export default function SelectInput (props: SelectInputProps): JSX.Element {
   const {
     id,
     size
-  } = useContext(InputBuilderContext)
+  } = useContext(FormInputContext)
 
   const {
     control
@@ -25,13 +27,15 @@ export default function SeriesInput (): JSX.Element {
           invalid
         }
       }) => (
-        <SelectSeriesButton
+        <Select
           size={size}
+          onChange={(e) => {
+            onChange(e.target.value)
+          }}
           isInvalid={invalid}
-          onChange={(id) => onChange(id)}
+          {...props}
         />
       )}
     />
-
   )
 }
