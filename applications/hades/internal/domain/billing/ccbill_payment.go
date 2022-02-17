@@ -11,7 +11,7 @@ import (
 	hades "overdoll/applications/hades/proto"
 )
 
-func encryptCCBillPaymentLink(paymentLink *hades.CCBillPaymentLink) (*string, error) {
+func encryptCCBillPayment(payment *hades.CCBillPayment) (*string, error) {
 
 	secretKeyBytes := []byte(os.Getenv("OVERDOLL_CCBILL_PAYMENT_LINK_SECRET"))
 
@@ -23,7 +23,7 @@ func encryptCCBillPaymentLink(paymentLink *hades.CCBillPaymentLink) (*string, er
 		return nil, err
 	}
 
-	data, err := proto.Marshal(paymentLink)
+	data, err := proto.Marshal(payment)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func encryptCCBillPaymentLink(paymentLink *hades.CCBillPaymentLink) (*string, er
 	return &encryptedEncoded, nil
 }
 
-func decryptCCBillPaymentLink(content string) (*hades.CCBillPaymentLink, error) {
+func DecryptCCBillPayment(content string) (*hades.CCBillPayment, error) {
 
 	secretKeyBytes := []byte(os.Getenv("OVERDOLL_CCBILL_PAYMENT_LINK_SECRET"))
 
@@ -55,7 +55,7 @@ func decryptCCBillPaymentLink(content string) (*hades.CCBillPaymentLink, error) 
 		return nil, errors.New("invalid secret or failure")
 	}
 
-	newPaymentMessage := &hades.CCBillPaymentLink{}
+	newPaymentMessage := &hades.CCBillPayment{}
 	err = proto.Unmarshal(decrypted, newPaymentMessage)
 	if err != nil {
 		panic(err)

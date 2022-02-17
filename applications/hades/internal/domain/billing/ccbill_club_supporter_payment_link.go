@@ -78,16 +78,18 @@ func (c *CCBillClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
 
 	ccbillFormDigest := hex.EncodeToString(ccbillFormDigestBuilder.Sum(nil)[:])
 
-	paymentLink := &hades.CCBillPaymentLink{
-		SavePaymentDetails: c.savePaymentDetails,
+	paymentLink := &hades.CCBillPayment{
+		HeaderConfiguration: &hades.HeaderConfiguration{SavePaymentDetails: c.savePaymentDetails},
 		CcbillClubSupporter: &hades.CCBillClubSupporter{
+			ClubId: c.clubId,
+		},
+		AccountInitiator: &hades.AccountInitiator{
 			AccountId: c.accountId,
-			ClubId:    c.clubId,
 		},
 	}
 
 	// create an encrypted ccbill payment link that will be passed to other services
-	encrypted, err := encryptCCBillPaymentLink(paymentLink)
+	encrypted, err := encryptCCBillPayment(paymentLink)
 
 	if err != nil {
 		return "", err

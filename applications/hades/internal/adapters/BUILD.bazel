@@ -12,14 +12,17 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/internal/app/workflows",
         "//applications/hades/internal/domain/billing",
         "//applications/stella/proto:v1_go_proto",
         "//libraries/crypt",
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//table",
+        "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
     ],
 )

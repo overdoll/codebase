@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "cancel_duplicate_subscription.go",
+        "check_for_duplicate_subscriptions.go",
+        "unravel_ccbill_payment_link.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/app/workflows/activities",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/proto:v1_go_proto",
+    ],
+)

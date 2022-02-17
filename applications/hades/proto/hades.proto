@@ -4,11 +4,21 @@ package applications.grpc.hades.v1;
 
 // generated messages used to communicate with CCBill and our system
 message CCBillClubSupporter {
-  string accountId = 1;
-  string clubId = 2;
+  string clubId = 1;
 }
 
-message CCBillPaymentLink {
+// source initiator
+message AccountInitiator {
+  string accountId = 1;
+}
+
+// any extra details in the header
+message HeaderConfiguration {
   bool savePaymentDetails = 1;
+}
+
+message CCBillPayment {
+  HeaderConfiguration headerConfiguration = 1;
   CCBillClubSupporter ccbillClubSupporter = 2;
+  AccountInitiator accountInitiator = 3;
 }
