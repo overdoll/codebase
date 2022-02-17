@@ -3,13 +3,12 @@ import { usePaginationFragment } from 'react-relay'
 import { SelectSeriesSearchQuery } from '@//:artifacts/SelectSeriesSearchQuery.graphql'
 import { removeNode } from '@//:modules/support'
 import { GridTile, GridWrap, LoadMoreGridTile, SeriesTileOverlay } from '@//:modules/content/ContentSelection'
-import { QueryArguments } from '@//:types/hooks'
 import { EmptySeries } from '@//:modules/content/Placeholder'
-import { Choice, useChoiceContext } from '../../Choice'
+import { Choice } from '../../../../../../modules/content/HookedComponents/Choice'
+import { ComponentSearchArguments } from '../../../../../../modules/content/HookedComponents/Search/types'
+import { ComponentChoiceArguments } from '../../../../../../modules/content/HookedComponents/Choice/types'
 
-interface Props {
-  queryArgs: QueryArguments
-}
+type Props = ComponentSearchArguments<any> & ComponentChoiceArguments<any>
 
 const Query = graphql`
   query SelectSeriesSearchQuery($title: String) {
@@ -42,12 +41,13 @@ const Fragment = graphql`
   }
 `
 export default function SelectSeriesSearch ({
-  queryArgs
+  searchArguments,
+  register
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SelectSeriesSearchQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -61,11 +61,9 @@ export default function SelectSeriesSearch ({
   )
   const series = removeNode(data.series.edges)
 
-  const { register } = useChoiceContext()
-
   if (series.length < 1) {
     return (
-      <EmptySeries hint={queryArgs.variables.title} />
+      <EmptySeries hint={searchArguments.variables.title} />
     )
   }
 

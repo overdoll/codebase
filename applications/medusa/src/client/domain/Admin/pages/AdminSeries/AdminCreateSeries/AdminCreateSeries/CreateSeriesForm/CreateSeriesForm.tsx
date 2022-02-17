@@ -19,7 +19,7 @@ import {
   InputBuilderHeader,
   InputFeedback,
   TextInput
-} from '@//:modules/form/FormBuilder/InputBuilder'
+} from '@//:modules/form/InputBuilder'
 import { TagSlug, TagTitle } from '@//:types/form'
 import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 

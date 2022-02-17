@@ -13,7 +13,7 @@ import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
 import HStackScroll
   from '../../../../../../../../../modules/content/PageLayout/BuildingBlocks/HStackScroll/HStackScroll'
-import SearchInput from '../../../../../../../Admin/components/Search/components/SearchInput/SearchInput'
+import SearchInput from '../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { useSearchQueryArguments } from '@//:modules/hooks'
 import { useLingui } from '@lingui/react'
 

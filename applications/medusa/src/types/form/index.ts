@@ -21,3 +21,7 @@ export interface TagSeriesId {
 export interface TagStandard {
   [standard: string]: boolean
 }
+
+export interface TagUrl {
+  [thumbnail: string]: string
+}

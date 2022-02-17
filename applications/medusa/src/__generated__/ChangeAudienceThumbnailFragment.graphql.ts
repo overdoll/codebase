@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<368003b5c500ea1bbbdc9d3425b7da91>>
+ * @generated SignedSource<<1b30389dd6cbfe328cdc3949c3b54f75>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ChangeAudienceThumbnailFragment$data = {
-  readonly id: string;
   readonly thumbnail: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
   } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeAudienceThumbnailFormFragment">;
   readonly " $fragmentType": "ChangeAudienceThumbnailFragment";
 };
 export type ChangeAudienceThumbnailFragment = ChangeAudienceThumbnailFragment$data;
@@ -32,13 +32,6 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Resource",
       "kind": "LinkedField",
       "name": "thumbnail",
@@ -51,12 +44,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ChangeAudienceThumbnailFormFragment"
     }
   ],
   "type": "Audience",
   "abstractKey": null
 };
 
-(node as any).hash = "cba8e20774d065d4528d0885c7012ced";
+(node as any).hash = "25a32516f5fb80e6120801acada3d6c7";
 
 export default node;

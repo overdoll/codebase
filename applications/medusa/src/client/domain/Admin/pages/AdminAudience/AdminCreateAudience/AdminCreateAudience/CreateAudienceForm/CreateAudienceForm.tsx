@@ -20,7 +20,7 @@ import {
   InputFeedback,
   SwitchInput,
   TextInput
-} from '@//:modules/form/FormBuilder/InputBuilder'
+} from '@//:modules/form/InputBuilder'
 import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 import { TagSlug, TagStandard, TagTitle } from '@//:types/form'
 import GenericBoolean from '../../../../../validation/GenericBoolean'

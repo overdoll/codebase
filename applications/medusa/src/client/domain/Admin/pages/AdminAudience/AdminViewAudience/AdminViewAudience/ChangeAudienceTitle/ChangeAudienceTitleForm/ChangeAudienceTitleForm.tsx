@@ -13,7 +13,7 @@ import {
   InputBuilderHeader,
   InputFeedback,
   TextInput
-} from '@//:modules/form/FormBuilder/InputBuilder'
+} from '@//:modules/form/InputBuilder'
 import { TagLocale, TagTitle } from '@//:types/form'
 import { ChangeAudienceTitleFormMutation } from '@//:artifacts/ChangeAudienceTitleFormMutation.graphql'
 import { ChangeAudienceTitleFormFragment$key } from '@//:artifacts/ChangeAudienceTitleFormFragment.graphql'

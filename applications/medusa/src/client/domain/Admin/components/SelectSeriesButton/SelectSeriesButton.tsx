@@ -11,17 +11,17 @@ import {
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { useHistoryDisclosure, useSearchQueryArguments } from '@//:modules/hooks'
-import { Suspense, useEffect, useState } from 'react'
+import { useHistoryDisclosure } from '@//:modules/hooks'
+import { Suspense } from 'react'
 import { useLingui } from '@lingui/react'
-import SearchInput from '../Search/components/SearchInput/SearchInput'
+import SearchInput from '../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import SkeletonStack from '../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary
   from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectSeriesSearch from './SelectSeriesSearch/SelectSeriesSearch'
-import { ChoiceProvider, useChoice } from '../Choice'
-import ChoiceRemovableTags from '../Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
-import { useUpdateEffect } from 'usehooks-ts'
+import { useChoice } from '../../../../../modules/content/HookedComponents/Choice'
+import ChoiceRemovableTags from '../../../../../modules/content/HookedComponents/Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
+import useSearch from '../../../../../modules/content/HookedComponents/Search/hooks/useSearch'
 
 interface Props extends HTMLChakraProps<any> {
   onChange: (id: string) => void
@@ -30,6 +30,10 @@ interface Props extends HTMLChakraProps<any> {
 
 interface ChoiceProps {
   tagTitle: string
+}
+
+interface SearchProps {
+  title: string
 }
 
 export default function SelectSeriesButton ({
@@ -43,31 +47,28 @@ export default function SelectSeriesButton ({
     onClose
   } = useHistoryDisclosure()
 
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
-
-  const methods = useChoice<ChoiceProps>({ max: 1 })
+  const {
+    register: registerSearch,
+    loadQuery,
+    searchArguments
+  } = useSearch<SearchProps>({})
 
   const {
-    value,
     values,
-    removeValue
-  } = methods
-
-  const [search, setSearch] = useState<string>('')
+    removeValue,
+    register
+  } = useChoice<ChoiceProps>({
+    max: 1,
+    onChange: (values) => {
+      onChange(Object.keys(values)[0] != null ? Object.keys(values)[0] : '')
+      onClose()
+    }
+  })
 
   const { i18n } = useLingui()
 
-  useEffect(() => {
-    setQueryArgs({ title: search })
-  }, [search])
-
-  useUpdateEffect(() => {
-    onChange(value != null ? value.id : '')
-    onClose()
-  }, [value])
-
   return (
-    <ChoiceProvider {...methods}>
+    <>
       <Stack spacing={2}>
         <ChoiceRemovableTags
           values={values}
@@ -105,14 +106,15 @@ export default function SelectSeriesButton ({
           <ModalBody>
             <Stack spacing={4}>
               <SearchInput
+                {...registerSearch('title')}
                 variant='outline'
-                onChange={setSearch}
                 placeholder={i18n._(t`Search for a series`)}
               />
-              <QueryErrorBoundary loadQuery={() => setQueryArgs({ title: null })}>
+              <QueryErrorBoundary loadQuery={loadQuery}>
                 <Suspense fallback={<SkeletonStack />}>
                   <SelectSeriesSearch
-                    queryArgs={queryArgs}
+                    searchArguments={searchArguments}
+                    register={register}
                   />
                 </Suspense>
               </QueryErrorBoundary>
@@ -120,6 +122,6 @@ export default function SelectSeriesButton ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </ChoiceProvider>
+    </>
   )
 }

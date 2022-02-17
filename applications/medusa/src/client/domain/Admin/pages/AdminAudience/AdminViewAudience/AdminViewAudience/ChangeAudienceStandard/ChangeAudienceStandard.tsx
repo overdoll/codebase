@@ -1,11 +1,11 @@
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeAudienceStandardFragment$key } from '@//:artifacts/ChangeAudienceStandardFragment.graphql'
-import { Heading, HStack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import { t, Trans } from '@lingui/macro'
-import { ChangeAudienceStandardMutation } from '@//:artifacts/ChangeAudienceStandardMutation.graphql'
-import { useToast } from '@//:modules/content/ThemeComponents'
-import Switch from '@//:modules/form/Switch/Switch'
+import { Trans } from '@lingui/macro'
+import BooleanHeader from '../../../../../components/BooleanHeader/BooleanHeader'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import ChangeAudienceStandardForm from './ChangeAudienceStandardForm/ChangeAudienceStandardForm'
 
 interface Props {
   query: ChangeAudienceStandardFragment$key
@@ -13,52 +13,13 @@ interface Props {
 
 const Fragment = graphql`
   fragment ChangeAudienceStandardFragment on Audience {
-    id
     standard
-  }
-`
-
-const Mutation = graphql`
-  mutation ChangeAudienceStandardMutation($input: UpdateAudienceIsStandardInput!) {
-    updateAudienceIsStandard(input: $input) {
-      audience {
-        id
-        standard
-      }
-    }
+    ...ChangeAudienceStandardFormFragment
   }
 `
 
 export default function ChangeAudienceStandard ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const [commit, isPending] = useMutation<ChangeAudienceStandardMutation>(Mutation)
-
-  const notify = useToast()
-
-  const onChange = (e): void => {
-    commit({
-      variables: {
-        input: {
-          id: data.id,
-          standard: e.target.checked
-        }
-      },
-      onCompleted () {
-        notify({
-          status: 'success',
-          title: t`Successfully updated audience standard`
-        })
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t`There was an error updating audience standard`
-        })
-      }
-    }
-    )
-  }
 
   return (
     <>
@@ -69,18 +30,19 @@ export default function ChangeAudienceStandard ({ query }: Props): JSX.Element {
           </Trans>
         </PageSectionTitle>
       </PageSectionWrap>
-      <HStack align='center' spacing={2}>
-        <Switch
-          isDisabled={isPending}
-          defaultIsChecked={data.standard}
-          onChange={onChange}
-        />
-        <Heading fontSize='lg' color='gray.00'>
-          <Trans>
-            Is standard?
-          </Trans>
-        </Heading>
-      </HStack>
+      <Stack spacing={2}>
+        <BooleanHeader isEnabled={data.standard} />
+        <Collapse>
+          <CollapseButton>
+            <Trans>
+              Change Standard
+            </Trans>
+          </CollapseButton>
+          <CollapseBody>
+            <ChangeAudienceStandardForm query={data} />
+          </CollapseBody>
+        </Collapse>
+      </Stack>
     </>
   )
 }

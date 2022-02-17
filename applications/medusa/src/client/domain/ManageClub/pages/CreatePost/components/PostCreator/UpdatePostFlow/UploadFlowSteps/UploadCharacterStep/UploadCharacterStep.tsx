@@ -3,7 +3,7 @@ import type { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharac
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import SearchInput from '../../../../../../../../Admin/components/Search/components/SearchInput/SearchInput'
+import SearchInput from '../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { Stack, Wrap, WrapItem } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'

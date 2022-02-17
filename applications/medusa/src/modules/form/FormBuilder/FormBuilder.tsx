@@ -3,9 +3,6 @@ import { FormProviderProps } from 'react-hook-form/dist/types/form'
 import { FormProvider, useFormContext } from 'react-hook-form'
 import { ButtonProps } from '@chakra-ui/react'
 import Button from '../Button/Button'
-import {
-  CharacterValues
-} from '../../../client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm'
 
 interface ComponentProps extends FormProviderProps {
   children: ReactNode
@@ -35,7 +32,7 @@ export const FormBuilderSubmitButton = ({
     formState: {
       errors
     }
-  } = useFormContext<CharacterValues>()
+  } = useFormContext()
 
   const isDisabled = (): boolean => {
     Object.keys(errors).forEach((item) => {

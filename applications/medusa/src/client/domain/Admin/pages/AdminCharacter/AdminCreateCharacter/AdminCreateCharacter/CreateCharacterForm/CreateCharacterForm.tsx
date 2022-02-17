@@ -18,12 +18,12 @@ import {
   InputBuilderHeader,
   InputFeedback,
   TextInput
-} from '@//:modules/form/FormBuilder/InputBuilder'
+} from '@//:modules/form/InputBuilder'
 import { TagName, TagSeriesId, TagSlug } from '@//:types/form'
 import GenericTagId from '../../../../../validation/GenericTagId'
 import GenericTagName from '../../../../../validation/GenericTagName'
 import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
-import SeriesInput from '@//:modules/form/FormBuilder/InputBuilder/InputBuilderBody/Inputs/SeriesInput/SeriesInput'
+import SeriesInput from '@//:modules/form/InputBuilder/InputBuilderBody/Inputs/SeriesInput/SeriesInput'
 
 type Props = ConnectionProp
 
