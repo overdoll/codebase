@@ -1,14 +1,16 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
-import { AdminSearchAudiencesQuery } from '@//:artifacts/AdminSearchAudiencesQuery.graphql'
+import {
+  AdminSearchAudiencesQuery,
+  AdminSearchAudiencesQuery$variables
+} from '@//:artifacts/AdminSearchAudiencesQuery.graphql'
 import { removeNode } from '@//:modules/support'
 import { AudienceTileOverlay, LinkTile, LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptyAudiences } from '@//:modules/content/Placeholder'
+import { EmptyAudiences, EmptyBoundary } from '@//:modules/content/Placeholder'
 import { ListSpacer } from '@//:modules/content/PageLayout'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<AdminSearchAudiencesQuery$variables> {
 }
 
 const Query = graphql`
@@ -41,11 +43,11 @@ const Fragment = graphql`
   }
 `
 
-export default function AdminSearchAudiences ({ queryArgs }: Props): JSX.Element {
+export default function AdminSearchAudiences ({ searchArguments }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<AdminSearchAudiencesQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -59,14 +61,11 @@ export default function AdminSearchAudiences ({ queryArgs }: Props): JSX.Element
   )
   const audiences = removeNode(data.audiences.edges)
 
-  if (audiences.length < 1) {
-    return (
-      <EmptyAudiences hint={queryArgs.variables.title} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptyAudiences hint={searchArguments.variables.title} />}
+      condition={audiences.length < 1}
+    >
       <ListSpacer>
         {audiences.map((item, index) => (
           <StackTile key={index}>
@@ -82,6 +81,6 @@ export default function AdminSearchAudiences ({ queryArgs }: Props): JSX.Element
           isLoadingNext={isLoadingNext}
         />
       </ListSpacer>
-    </>
+    </EmptyBoundary>
   )
 }

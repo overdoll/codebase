@@ -1,0 +1,484 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-02-17 14:53-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: it\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Admin/validation/GenericFile.ts:12
+msgid "A file upload is required"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagId.ts:12
+msgid "A selection is required"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:133
+msgid "Audience Slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:147
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandard.tsx:28
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:106
+msgid "Audience Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:104
+msgid "Audience Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:119
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:32
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:112
+msgid "Audience Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:92
+msgid "Audience {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:127
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:126
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:128
+msgid "BCP 47 Locale Code"
+msgstr ""
+
+#: src/client/domain/Admin/components/AdminBackButton/AdminBackButton.tsx:23
+msgid "Back to search"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:127
+msgid "Category Slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:98
+msgid "Category Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:113
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:32
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:111
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:113
+msgid "Category Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:86
+msgid "Category {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:130
+msgid "Causes an infraction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:57
+msgid "Change Audience Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:57
+msgid "Change Category Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:57
+msgid "Change Character Name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:57
+msgid "Change Series Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandard.tsx:37
+msgid "Change Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:40
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:40
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:40
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:40
+msgid "Change Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:116
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:32
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:111
+msgid "Character Name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:144
+msgid "Character Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:130
+msgid "Character Slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:104
+msgid "Character Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:89
+msgid "Character {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:60
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:159
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience.tsx:30
+msgid "Create Audience"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:48
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory.tsx:30
+msgid "Create Category"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:22
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:156
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter.tsx:30
+msgid "Create Character"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:72
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:138
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule.tsx:30
+msgid "Create Rule"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:35
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries.tsx:30
+msgid "Create Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:132
+msgid "Enter a category slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:118
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:116
+msgid "Enter a category title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:135
+msgid "Enter a character slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:119
+msgid "Enter a description for the rule"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:116
+msgid "Enter a name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:121
+msgid "Enter a name for the character"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:106
+msgid "Enter a rule title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:132
+msgid "Enter a series slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:118
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:118
+msgid "Enter a series title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:138
+msgid "Enter an audience slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:124
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:117
+msgid "Enter an audience title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:98
+msgid "Error creating audience {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:92
+msgid "Error creating category {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:95
+msgid "Error creating character {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:85
+msgid "Error creating rule {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
+msgid "Error creating series {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:94
+msgid "Error updating audience title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:93
+msgid "Error updating category title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:93
+msgid "Error updating character name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:95
+msgid "Error updating series title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:133
+msgid "Locale"
+msgstr ""
+
+#: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:27
+msgid "No"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:14
+msgid "Platform Admin"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagDescription.ts:13
+msgid "Please enter a description"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagName.ts:13
+msgid "Please enter a name"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagSlug.ts:14
+msgid "Please enter a slug"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagTitle.ts:13
+msgid "Please enter a title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
+msgid "Rule Description"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:126
+msgid "Rule Infraction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:101
+msgid "Rule Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:79
+msgid "Rule {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:66
+#: src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences.tsx:32
+msgid "Search Audiences"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:54
+#: src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories.tsx:32
+msgid "Search Categories"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:28
+msgid "Search Characters"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:78
+#: src/client/domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules.tsx:23
+msgid "Search Rules"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:41
+#: src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter.tsx:31
+#: src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries.tsx:32
+msgid "Search Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories.tsx:38
+msgid "Search for a category"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter.tsx:37
+msgid "Search for a character"
+msgstr ""
+
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:111
+#: src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries.tsx:38
+msgid "Search for a series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences.tsx:38
+msgid "Search for an audience"
+msgstr ""
+
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:83
+msgid "Select Series"
+msgstr ""
+
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:98
+msgid "Select a series"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagId.ts:11
+msgid "Selection cannot be empty"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:127
+msgid "Series Slug"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:104
+msgid "Series Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:113
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:32
+msgid "Series Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
+msgid "Series {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:151
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:110
+msgid "Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:118
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:82
+msgid "Successfully updated audience standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:80
+msgid "Successfully updated audience thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:74
+msgid "Successfully updated category thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:80
+msgid "Successfully updated character thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
+msgid "Successfully updated series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagDescription.ts:15
+msgid "The description cannot exceed 255 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagDescription.ts:14
+msgid "The description must be at least 5 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagName.ts:15
+msgid "The name cannot exceed 70 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagName.ts:14
+msgid "The name must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagSlug.ts:17
+msgid "The slug can only contain numbers, letters, and dashes."
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagSlug.ts:16
+msgid "The slug cannot exceed 25 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagSlug.ts:15
+msgid "The slug must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagTitle.ts:15
+msgid "The title cannot exceed 30 characters"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericTagTitle.ts:14
+msgid "The title must be at least 3 characters"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:88
+msgid "There was an error updating audience standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:86
+msgid "There was an error updating the audience thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:80
+msgid "There was an error updating the category thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:86
+msgid "There was an error updating the character thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:86
+msgid "There was an error updating the series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:88
+msgid "Updated audience title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:87
+msgid "Updated category title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:87
+msgid "Updated character name to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:89
+msgid "Updated series title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:43
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:43
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:43
+msgid "View Translations"
+msgstr ""
+
+#: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:16
+msgid "Yes"
+msgstr ""

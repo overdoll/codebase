@@ -5,6 +5,10 @@ import { FetchPolicy } from 'relay-runtime'
 export type RegisterSearchKey = string
 export type RegisterSearchValue = any
 
+export interface SearchAnyValues {
+  [name: string]: any
+}
+
 export interface UseSearchQueryOptions {
   options: {
     fetchKey: number

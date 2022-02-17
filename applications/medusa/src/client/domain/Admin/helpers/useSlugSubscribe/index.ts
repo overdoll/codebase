@@ -1,14 +1,8 @@
 import { useEffect } from 'react'
 import urlSlug from 'url-slug'
-import { FieldValue, FieldValues, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 
-interface FormValues {
-  [id: string]: any
-}
-
-interface Props {
-  watch: UseFormWatch<FieldValues>
-  setValue: UseFormSetValue<FieldValue<FormValues>>
+interface Props extends UseFormReturn<any> {
   from: string
   to?: string
 }
@@ -16,7 +10,9 @@ interface Props {
 function useSlugSubscribe ({
   watch,
   setValue,
+  trigger,
   from,
+  formState,
   to = 'slug'
 }: Props): void {
   useEffect(() => {
@@ -25,6 +21,9 @@ function useSlugSubscribe ({
     }) => {
       if (name === from) {
         setValue(to, urlSlug(value[from]))
+        if (formState.errors[to] != null) {
+          void trigger(to)
+        }
       }
     })
     return () => subscription.unsubscribe()

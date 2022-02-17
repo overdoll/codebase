@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Collapse, Flex, useDisclosure } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import EmailCard from './EmailCard/EmailCard'
@@ -11,6 +11,7 @@ import Button from '@//:modules/form/Button/Button'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../components/Collapse/Collapse'
 
 interface Props {
   query: PreloadedQuery<EmailsQuery>
@@ -64,11 +65,6 @@ export default function Emails (props: Props): JSX.Element {
   const currentEmails = data.emails.edges.filter((item) => item.node.status !== 'UNCONFIRMED')
 
   const disableEmailAdd = queryData?.viewer != null && currentEmails.length >= queryData?.viewer?.emailsLimit
-
-  const {
-    isOpen: isFormOpen,
-    onToggle: onToggleForm
-  } = useDisclosure()
 
   const emailsConnectionID = data?.emails?.__id
 
@@ -128,18 +124,15 @@ export default function Emails (props: Props): JSX.Element {
             </Trans>
           </Button>
         </Flex>}
-      <Button
-        variant='solid'
-        colorScheme='gray'
-        onClick={onToggleForm}
-        size='sm'
-      >
-        <Trans>
-          Add Email
-        </Trans>
-      </Button>
-      <Collapse in={isFormOpen} animateOpacity>
-        <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+      <Collapse>
+        <CollapseButton>
+          <Trans>
+            Add Email
+          </Trans>
+        </CollapseButton>
+        <CollapseBody>
+          <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+        </CollapseBody>
       </Collapse>
     </ListSpacer>
   )

@@ -524,6 +524,16 @@ const routes: Route[] = [
       },
       {
         path: '/admin',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Admin/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
         component: loadable(async () =>
           await import(
             './domain/Admin/Admin'
@@ -546,6 +556,16 @@ const routes: Route[] = [
         routes: [
           {
             path: '/admin/category/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminCreateCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory'
@@ -567,6 +587,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/category/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminSearchCategories/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -576,6 +606,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/category/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminViewCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -600,6 +640,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/series/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries'
@@ -621,6 +671,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/series/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminSearchSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -630,6 +690,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/series/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -654,6 +724,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/character/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminCreateCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter'
@@ -675,6 +755,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/character/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminSearchCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -684,6 +774,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/character/search/:slug/:seriesSlug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminViewCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -709,6 +809,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/audience/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminCreateAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience'
@@ -730,6 +840,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/audience/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminSearchAudiences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -739,6 +859,16 @@ const routes: Route[] = [
           },
           {
             path: '/admin/audience/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminViewAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -760,6 +890,56 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/admin/rule/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminRules/AdminCreateRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateRuleQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/rule/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminRules/AdminSearchRules/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules'
+              )
+            )
           }
         ]
       },

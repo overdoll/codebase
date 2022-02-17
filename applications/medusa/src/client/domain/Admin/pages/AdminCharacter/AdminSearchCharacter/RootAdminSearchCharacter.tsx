@@ -1,26 +1,27 @@
 import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { t, Trans } from '@lingui/macro'
 import AdminSearchCharacter from './AdminSearchCharacter/AdminSearchCharacter'
-import { useSearchQueryArguments } from '@//:modules/hooks'
 import SearchInput from '../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+
+interface SearchProps {
+  name: string
+}
 
 export default function RootAdminSearchCharacter (): JSX.Element {
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ name: null })
-
-  const [search, setSearch] = useState<string>('')
+  const {
+    searchArguments,
+    register,
+    loadQuery
+  } = useSearch<SearchProps>({})
 
   const { i18n } = useLingui()
-
-  useEffect(() => {
-    setQueryArgs({ name: search })
-  }, [search])
-
   return (
     <>
       <Helmet title='search character' />
@@ -32,13 +33,13 @@ export default function RootAdminSearchCharacter (): JSX.Element {
             </Trans>
           </PageSectionTitle>
           <SearchInput
-            onChange={setSearch}
+            {...register('name')}
             placeholder={i18n._(t`Search for a character`)}
           />
-          <QueryErrorBoundary loadQuery={() => setQueryArgs({ name: null })}>
+          <QueryErrorBoundary loadQuery={loadQuery}>
             <Suspense fallback={<SkeletonStack />}>
               <AdminSearchCharacter
-                queryArgs={queryArgs}
+                searchArguments={searchArguments}
               />
             </Suspense>
           </QueryErrorBoundary>

@@ -3,7 +3,7 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 interface Props {
-  hint?: string | undefined
+  hint?: string | undefined | null
 }
 
 export default function EmptySeries ({ hint }: Props): JSX.Element {

@@ -69,7 +69,7 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
   const loadQuery = useCallback(() => {
     startTransition(() => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, {} as TArguments))
+      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, defaultValue as TArguments))
     })
   }, [])
 

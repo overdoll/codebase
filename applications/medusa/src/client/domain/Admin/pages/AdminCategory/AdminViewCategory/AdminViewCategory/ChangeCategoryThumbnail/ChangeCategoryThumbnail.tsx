@@ -1,12 +1,10 @@
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeCategoryThumbnailFragment$key } from '@//:artifacts/ChangeCategoryThumbnailFragment.graphql'
 import { Flex, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
-import { t, Trans } from '@lingui/macro'
-import SingleFileImageUpload from '@//:modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
-import { ChangeCategoryThumbnailMutation } from '@//:artifacts/ChangeCategoryThumbnailMutation.graphql'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import ChangeCategoryThumbnailForm from './ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm'
 
 interface Props {
   query: ChangeCategoryThumbnailFragment$key
@@ -14,62 +12,15 @@ interface Props {
 
 const Fragment = graphql`
   fragment ChangeCategoryThumbnailFragment on Category {
-    id
     thumbnail {
       ...ResourceIconFragment
     }
-  }
-`
-
-const Mutation = graphql`
-  mutation ChangeCategoryThumbnailMutation($input: UpdateCategoryThumbnailInput!) {
-    updateCategoryThumbnail(input: $input) {
-      category {
-        id
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
-          }
-        }
-      }
-    }
+    ...ChangeCategoryThumbnailFormFragment
   }
 `
 
 export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const [commit, isPending] = useMutation<ChangeCategoryThumbnailMutation>(Mutation)
-
-  const notify = useToast()
-
-  const onCompleted = (id): void => {
-    if (id == null) return
-
-    commit({
-      variables: {
-        input: {
-          id: data.id,
-          thumbnail: id
-        }
-      },
-      onCompleted () {
-        notify({
-          status: 'success',
-          title: t`Successfully updated category thumbnail`
-        })
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t`There was an error updating the category thumbnail`
-        })
-      }
-    }
-    )
-  }
 
   return (
     <>
@@ -91,10 +42,7 @@ export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element 
             </Trans>
           </CollapseButton>
           <CollapseBody>
-            <SingleFileImageUpload
-              onCompleted={onCompleted}
-              isDisabled={isPending}
-            />
+            <ChangeCategoryThumbnailForm query={data} />
           </CollapseBody>
         </Collapse>
       </Stack>

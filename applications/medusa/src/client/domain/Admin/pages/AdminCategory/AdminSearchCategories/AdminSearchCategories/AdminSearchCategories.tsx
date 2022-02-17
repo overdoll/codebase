@@ -5,11 +5,10 @@ import { removeNode } from '@//:modules/support'
 import { GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import CategoryTileOverlay
   from '@//:modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptyCategories } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -41,11 +40,11 @@ const Fragment = graphql`
     }
   }
 `
-export default function AdminSearchCategories ({ queryArgs }: Props): JSX.Element {
+export default function AdminSearchCategories ({ searchArguments }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<AdminSearchCategoriesQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -59,14 +58,11 @@ export default function AdminSearchCategories ({ queryArgs }: Props): JSX.Elemen
   )
   const categories = removeNode(data.categories.edges)
 
-  if (categories.length < 1) {
-    return (
-      <EmptyCategories hint={queryArgs.variables.title} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptyCategories hint={searchArguments.variables.title} />}
+      condition={categories.length < 1}
+    >
       <GridWrap justify='center'>
         {categories.map((item, index) => (
           <GridTile key={index}>
@@ -82,6 +78,6 @@ export default function AdminSearchCategories ({ queryArgs }: Props): JSX.Elemen
           isLoadingNext={isLoadingNext}
         />
       </GridWrap>
-    </>
+    </EmptyBoundary>
   )
 }

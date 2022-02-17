@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubAliasesFragment$key } from '@//:artifacts/ClubAliasesFragment.graphql'
-import { Badge, Collapse, Flex, useDisclosure } from '@chakra-ui/react'
+import { Badge, Flex, useDisclosure } from '@chakra-ui/react'
 import {
   ListSpacer,
   PageSectionDescription,
@@ -9,10 +9,10 @@ import {
   SmallBackgroundBox
 } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import Button from '@//:modules/form/Button/Button'
 import AddClubSlugAlias from './AddClubSlugAlias/AddClubSlugAlias'
 import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import ManageClubSlugAliases from './ManageClubSlugAliases/ManageClubSlugAliases'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
 
 interface Props {
   query: ClubAliasesFragment$key | null
@@ -32,11 +32,6 @@ const Fragment = graphql`
 
 export default function ClubAliases ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
 
   const clubLink = `overdoll.com/${data?.slug as string}`
 
@@ -74,18 +69,15 @@ export default function ClubAliases ({ query }: Props): JSX.Element {
           </Flex>
         </SmallBackgroundBox>
         {aliasesExist && <ManageClubSlugAliases query={data} />}
-        <Button
-          variant='solid'
-          colorScheme='gray'
-          onClick={onToggle}
-          size='sm'
-        >
-          <Trans>
-            Add Club Link Alias
-          </Trans>
-        </Button>
-        <Collapse in={isOpen} animateOpacity>
-          <AddClubSlugAlias query={data} />
+        <Collapse>
+          <CollapseButton>
+            <Trans>
+              Add Club Link Alias
+            </Trans>
+          </CollapseButton>
+          <CollapseBody>
+            <AddClubSlugAlias query={data} />
+          </CollapseBody>
         </Collapse>
       </ListSpacer>
     </>

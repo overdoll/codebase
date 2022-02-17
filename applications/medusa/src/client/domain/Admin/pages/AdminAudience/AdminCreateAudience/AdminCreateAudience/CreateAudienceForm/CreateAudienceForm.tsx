@@ -12,18 +12,19 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import useSlugSubscribe from '../../../../../helpers/useSlugSubscribe'
 import GenericTagTitle from '../../../../../validation/GenericTagTitle'
 import GenericTagSlug from '../../../../../validation/GenericTagSlug'
-import {
-  InputBuilder,
-  InputBuilderBody,
-  InputBuilderFooter,
-  InputBuilderHeader,
-  InputFeedback,
-  SwitchInput,
-  TextInput
-} from '@//:modules/form/InputBuilder'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 import { TagSlug, TagStandard, TagTitle } from '@//:types/form'
 import GenericBoolean from '../../../../../validation/GenericBoolean'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  SwitchInput,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 type Props = ConnectionProp
 
@@ -62,13 +63,14 @@ export default function CreateAudienceForm ({
   const methods = useForm<AudienceValues>({
     resolver: joiResolver(
       schema
-    )
+    ),
+    defaultValues: {
+      standard: false
+    }
   })
 
   const {
-    setError,
-    setValue,
-    watch
+    setError
   } = methods
 
   const onSubmit = (formValues): void => {
@@ -100,57 +102,56 @@ export default function CreateAudienceForm ({
   }
 
   useSlugSubscribe({
-    watch: watch,
-    setValue: setValue,
-    from: 'title'
+    from: 'title',
+    ...methods
   })
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
-        <InputBuilder
+        <FormInput
           id='title'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Audience Title
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter an audience title`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <InputBuilder
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
           id='slug'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Audience Slug
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter an audience slug`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <InputBuilder
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
           id='standard'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Audience Standard
             </Trans>
-          </InputBuilderHeader>
-          <SwitchInput placeholder={i18n._(t`Is standard?`)} />
-          <InputBuilderFooter />
-        </InputBuilder>
-        <FormBuilderSubmitButton
+          </InputHeader>
+          <SwitchInput placeholder={i18n._(t`Standard`)} />
+          <InputFooter />
+        </FormInput>
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='lg'
@@ -158,8 +159,8 @@ export default function CreateAudienceForm ({
           <Trans>
             Create Audience
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

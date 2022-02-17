@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fa6ff13264e4fed475413db94a5edaae>>
- * @relayHash c7d8240041b8f7c671a6d13b294d9cf4
+ * @generated SignedSource<<975eb014a07f0fdf931ec3620d04ece6>>
+ * @relayHash d9e15c2da073c665c98ce2b7620cac2b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c7d8240041b8f7c671a6d13b294d9cf4
+// @relayRequestID d9e15c2da073c665c98ce2b7620cac2b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -197,7 +197,7 @@ return {
     ]
   },
   "params": {
-    "id": "c7d8240041b8f7c671a6d13b294d9cf4",
+    "id": "d9e15c2da073c665c98ce2b7620cac2b",
     "metadata": {},
     "name": "AdminViewSeriesQuery",
     "operationKind": "query",

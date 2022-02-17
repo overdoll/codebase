@@ -1,27 +1,35 @@
 export interface TagTitle {
-  [title: string]: string
+  title: string
 }
 
 export interface TagName {
-  [name: string]: string
+  name: string
 }
 
 export interface TagSlug {
-  [slug: string]: string
+  slug: string
 }
 
 export interface TagLocale {
-  [locale: string]: string
+  locale: string
 }
 
 export interface TagSeriesId {
-  [seriesId: string]: string
+  seriesId: string
 }
 
 export interface TagStandard {
-  [standard: string]: boolean
+  standard: boolean
 }
 
 export interface TagUrl {
-  [thumbnail: string]: string
+  thumbnail: string
+}
+
+export interface TagDescription {
+  description: string
+}
+
+export interface TagInfraction {
+  infraction: boolean
 }

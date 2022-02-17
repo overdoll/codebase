@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import ResourceItem from '../../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AudienceTileOverlayFragment$key } from '@//:artifacts/AudienceTileOverlayFragment.graphql'
@@ -25,19 +25,18 @@ export default function AudienceTileOverlay ({
   return (
     <TileOverlay background={
       <ResourceItem
+        minH={58}
         query={data.thumbnail}
       />
     }
     >
-      <Stack spacing={1}>
-        <Text
-          fontSize='lg'
-          color='gray.00'
-          textAlign='center'
-        >
-          {data.title}
-        </Text>
-      </Stack>
+      <Text
+        fontSize='lg'
+        color='gray.00'
+        textAlign='center'
+      >
+        {data.title}
+      </Text>
     </TileOverlay>
   )
 }

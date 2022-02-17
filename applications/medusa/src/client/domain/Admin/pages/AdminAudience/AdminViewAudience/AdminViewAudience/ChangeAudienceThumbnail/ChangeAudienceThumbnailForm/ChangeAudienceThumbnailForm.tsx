@@ -5,13 +5,18 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { InputBuilder, InputBuilderFooter, InputBuilderHeader } from '@//:modules/form/InputBuilder'
 import { TagUrl } from '@//:types/form'
 import { ChangeAudienceThumbnailFormFragment$key } from '@//:artifacts/ChangeAudienceThumbnailFormFragment.graphql'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 import { ChangeAudienceThumbnailFormMutation } from '@//:artifacts/ChangeAudienceThumbnailFormMutation.graphql'
 import GenericFile from '../../../../../../validation/GenericFile'
-import UploadInput from '@//:modules/form/InputBuilder/InputBuilderBody/Inputs/UploadInput/UploadInput'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputFooter,
+  InputHeader,
+  UploadInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface Props {
   query: ChangeAudienceThumbnailFormFragment$key
@@ -86,24 +91,24 @@ export default function ChangeAudienceThumbnailForm ({
   }
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
-        <InputBuilder
-          id='standard'
+        <FormInput
+          id='thumbnail'
           size='md'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Audience Thumbnail
             </Trans>
-          </InputBuilderHeader>
+          </InputHeader>
           <UploadInput />
-          <InputBuilderFooter />
-        </InputBuilder>
-        <FormBuilderSubmitButton
+          <InputFooter />
+        </FormInput>
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='sm'
@@ -111,8 +116,8 @@ export default function ChangeAudienceThumbnailForm ({
           <Trans>
             Submit
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

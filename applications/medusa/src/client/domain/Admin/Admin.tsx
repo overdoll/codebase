@@ -66,6 +66,18 @@ export default function Admin (props: Props): JSX.Element {
             <Trans>Search Audiences</Trans>
           }
         />
+        <VerticalNavigation.Button
+          to='/admin/rule/create'
+          title={
+            <Trans>Create Rule</Trans>
+          }
+        />
+        <VerticalNavigation.Button
+          to='/admin/rule/search'
+          title={
+            <Trans>Search Rules</Trans>
+          }
+        />
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {props.children}

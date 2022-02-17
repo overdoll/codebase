@@ -1,7 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { ChangeClubThumbnailFragment$key } from '@//:artifacts/ChangeClubThumbnailFragment.graphql'
 import { ChangeClubThumbnailMutation } from '@//:artifacts/ChangeClubThumbnailMutation.graphql'
-import { Collapse, Flex, useDisclosure } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import {
   ListSpacer,
   PageSectionDescription,
@@ -10,10 +10,10 @@ import {
   ResourceIcon
 } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
-import Button from '@//:modules/form/Button/Button'
 import SingleFileImageUpload
   from '../../../../../../../modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
 
 interface Props {
   query: ChangeClubThumbnailFragment$key | null
@@ -50,11 +50,6 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const [changeThumbnail, isChangingThumbnail] = useMutation<ChangeClubThumbnailMutation>(Mutation)
-
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
 
   const notify = useToast()
 
@@ -99,21 +94,18 @@ export default function ChangeClubThumbnail ({ query }: Props): JSX.Element {
         <Flex w='100%' align='center' justify='center'>
           <ResourceIcon w={16} h={16} query={data?.thumbnail} />
         </Flex>
-        <Button
-          variant='solid'
-          colorScheme='gray'
-          onClick={onToggle}
-          size='sm'
-        >
-          <Trans>
-            Change Club Thumbnail
-          </Trans>
-        </Button>
-        <Collapse in={isOpen} animateOpacity>
-          <SingleFileImageUpload
-            onCompleted={onCompleted}
-            isDisabled={isChangingThumbnail}
-          />
+        <Collapse>
+          <CollapseButton>
+            <Trans>
+              Change Club Thumbnail
+            </Trans>
+          </CollapseButton>
+          <CollapseBody>
+            <SingleFileImageUpload
+              onCompleted={onCompleted}
+              isDisabled={isChangingThumbnail}
+            />
+          </CollapseBody>
         </Collapse>
       </ListSpacer>
 

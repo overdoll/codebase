@@ -6,21 +6,21 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import {
-  InputBuilder,
-  InputBuilderBody,
-  InputBuilderFooter,
-  InputBuilderHeader,
-  InputFeedback,
-  TextInput
-} from '@//:modules/form/InputBuilder'
 import { TagLocale, TagTitle } from '@//:types/form'
 import { ChangeCategoryTitleFormMutation } from '@//:artifacts/ChangeCategoryTitleFormMutation.graphql'
 import { ChangeCategoryTitleFormFragment$key } from '@//:artifacts/ChangeCategoryTitleFormFragment.graphql'
 import GenericTagTitle from '../../../../../../validation/GenericTagTitle'
 import Locale from '@//:modules/validation/Locale'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
-
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 interface Props {
   query: ChangeCategoryTitleFormFragment$key
 }
@@ -97,44 +97,44 @@ export default function ChangeCategoryTitleForm ({
   }
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
         <Stack spacing={2}>
-          <InputBuilder
+          <FormInput
             id='title'
             size='sm'
           >
-            <InputBuilderHeader>
+            <InputHeader>
               <Trans>
                 Category Title
               </Trans>
-            </InputBuilderHeader>
-            <InputBuilderBody>
+            </InputHeader>
+            <InputBody>
               <TextInput placeholder={i18n._(t`Enter a category title`)} />
               <InputFeedback />
-            </InputBuilderBody>
-            <InputBuilderFooter />
-          </InputBuilder>
-          <InputBuilder
+            </InputBody>
+            <InputFooter />
+          </FormInput>
+          <FormInput
             id='locale'
             size='sm'
           >
-            <InputBuilderHeader>
+            <InputHeader>
               <Trans>
                 BCP 47 Locale Code
               </Trans>
-            </InputBuilderHeader>
-            <InputBuilderBody>
+            </InputHeader>
+            <InputBody>
               <TextInput placeholder={i18n._(t`Locale`)} />
               <InputFeedback />
-            </InputBuilderBody>
-            <InputBuilderFooter />
-          </InputBuilder>
+            </InputBody>
+            <InputFooter />
+          </FormInput>
         </Stack>
-        <FormBuilderSubmitButton
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='sm'
@@ -142,8 +142,8 @@ export default function ChangeCategoryTitleForm ({
           <Trans>
             Submit
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

@@ -6,12 +6,18 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { InputBuilder, InputBuilderFooter, InputBuilderHeader, SwitchInput } from '@//:modules/form/InputBuilder'
 import { TagStandard } from '@//:types/form'
 import { ChangeAudienceStandardFormMutation } from '@//:artifacts/ChangeAudienceStandardFormMutation.graphql'
 import { ChangeAudienceStandardFormFragment$key } from '@//:artifacts/ChangeAudienceStandardFormFragment.graphql'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
 import GenericBoolean from '../../../../../../validation/GenericBoolean'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputFooter,
+  InputHeader,
+  SwitchInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface Props {
   query: ChangeAudienceStandardFormFragment$key
@@ -23,7 +29,7 @@ const Fragment = graphql`
   fragment ChangeAudienceStandardFormFragment on Audience {
     id
     standard
-    
+
   }
 `
 
@@ -87,24 +93,24 @@ export default function ChangeAudienceStandardForm ({
   }
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
-        <InputBuilder
+        <FormInput
           id='standard'
           size='md'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Audience Standard
             </Trans>
-          </InputBuilderHeader>
+          </InputHeader>
           <SwitchInput placeholder={i18n._(t`Standard`)} />
-          <InputBuilderFooter />
-        </InputBuilder>
-        <FormBuilderSubmitButton
+          <InputFooter />
+        </FormInput>
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='sm'
@@ -112,8 +118,8 @@ export default function ChangeAudienceStandardForm ({
           <Trans>
             Submit
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

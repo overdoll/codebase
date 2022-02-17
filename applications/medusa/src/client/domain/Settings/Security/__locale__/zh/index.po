@@ -41,7 +41,7 @@ msgstr ""
 msgid "Configure authenticator app"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:180
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:166
 msgid "Copy"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:190
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:176
 msgid "Download"
 msgstr ""
 
@@ -82,12 +82,12 @@ msgstr ""
 msgid "Enter the code"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:127
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:217
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:113
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:203
 msgid "Generate Recovery Codes"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:199
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:185
 msgid "Generate new recovery codes"
 msgstr ""
 
@@ -95,7 +95,7 @@ msgstr ""
 msgid "Generate recovery codes"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:204
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:190
 msgid "Generating a new set of recovery codes will invalidate your old codes, meaning you will need to save them again."
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 #~ msgid "Go back to settings"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:45
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:46
 msgid "Go to recovery codes"
 msgstr ""
 
@@ -160,7 +160,7 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:143
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:129
 msgid "Make sure you save these codes in a safe place. If you lose access to your device and the codes, you will be permanently locked out of your account."
 msgstr ""
 
@@ -184,15 +184,15 @@ msgstr ""
 msgid "Recovery codes must be generated first"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:88
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:76
 msgid "Recovery codes successfully generated"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:71
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:68
 msgid "Revoke Session"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:77
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:66
 msgid "Saving your recovery codes..."
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Scan the QR Code"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:49
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:48
 msgid "Session successfully revoked"
 msgstr ""
 
@@ -232,11 +232,11 @@ msgstr ""
 msgid "There was an error disabling two-factor authentication"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:95
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:82
 msgid "There was an error generating recovery codes"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:56
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/RevokeSession/RevokeSession.tsx:54
 msgid "There was an error revoking the session"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "View or regenerate recovery codes"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:60
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:61
 msgid "You have already set up your two-factor authentication device. Activating the code again will invalidate your current two-factor device configuration."
 msgstr ""
 
@@ -276,7 +276,7 @@ msgstr ""
 #~ msgid "You have successfully set up two-factor authentication!"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:35
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpHeader/MultiFactorTotpHeader.tsx:36
 msgid "You must generate a set of recovery codes before you can set up two-factor authentication"
 msgstr ""
 
@@ -292,7 +292,7 @@ msgstr ""
 #~ msgid "Your recovery codes"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:73
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:62
 msgid "overdoll-recovery-codes"
 msgstr ""
 

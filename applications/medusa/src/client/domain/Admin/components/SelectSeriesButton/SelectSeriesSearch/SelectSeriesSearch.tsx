@@ -1,14 +1,17 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
-import { SelectSeriesSearchQuery } from '@//:artifacts/SelectSeriesSearchQuery.graphql'
+import {
+  SelectSeriesSearchQuery,
+  SelectSeriesSearchQuery$variables
+} from '@//:artifacts/SelectSeriesSearchQuery.graphql'
 import { removeNode } from '@//:modules/support'
 import { GridTile, GridWrap, LoadMoreGridTile, SeriesTileOverlay } from '@//:modules/content/ContentSelection'
-import { EmptySeries } from '@//:modules/content/Placeholder'
+import { EmptySeries, EmptyBoundary } from '@//:modules/content/Placeholder'
 import { Choice } from '../../../../../../modules/content/HookedComponents/Choice'
-import { ComponentSearchArguments } from '../../../../../../modules/content/HookedComponents/Search/types'
-import { ComponentChoiceArguments } from '../../../../../../modules/content/HookedComponents/Choice/types'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 
-type Props = ComponentSearchArguments<any> & ComponentChoiceArguments<any>
+type Props = ComponentSearchArguments<SelectSeriesSearchQuery$variables> & ComponentChoiceArguments<any>
 
 const Query = graphql`
   query SelectSeriesSearchQuery($title: String) {
@@ -61,14 +64,11 @@ export default function SelectSeriesSearch ({
   )
   const series = removeNode(data.series.edges)
 
-  if (series.length < 1) {
-    return (
-      <EmptySeries hint={searchArguments.variables.title} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptySeries hint={searchArguments.variables.title} />}
+      condition={series.length < 1}
+    >
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
@@ -86,6 +86,6 @@ export default function SelectSeriesSearch ({
           isLoadingNext={isLoadingNext}
         />
       </GridWrap>
-    </>
+    </EmptyBoundary>
   )
 }

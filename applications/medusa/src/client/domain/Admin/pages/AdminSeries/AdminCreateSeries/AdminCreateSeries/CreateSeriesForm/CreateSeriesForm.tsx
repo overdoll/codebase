@@ -12,16 +12,17 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import useSlugSubscribe from '../../../../../helpers/useSlugSubscribe'
 import GenericTagTitle from '../../../../../validation/GenericTagTitle'
 import GenericTagSlug from '../../../../../validation/GenericTagSlug'
-import {
-  InputBuilder,
-  InputBuilderBody,
-  InputBuilderFooter,
-  InputBuilderHeader,
-  InputFeedback,
-  TextInput
-} from '@//:modules/form/InputBuilder'
 import { TagSlug, TagTitle } from '@//:types/form'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 type Props = ConnectionProp
 
@@ -63,9 +64,7 @@ export default function CreateSeriesForm ({
   })
 
   const {
-    setError,
-    watch,
-    setValue
+    setError
   } = methods
 
   const onSubmit = (formValues): void => {
@@ -97,46 +96,45 @@ export default function CreateSeriesForm ({
   }
 
   useSlugSubscribe({
-    watch: watch,
-    setValue: setValue,
-    from: 'title'
+    from: 'title',
+    ...methods
   })
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
-        <InputBuilder
+        <FormInput
           id='title'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Series Title
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter a series title`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <InputBuilder
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
           id='slug'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Series Slug
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter a series slug`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <FormBuilderSubmitButton
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='lg'
@@ -144,8 +142,8 @@ export default function CreateSeriesForm ({
           <Trans>
             Create Series
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

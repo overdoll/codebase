@@ -49,11 +49,11 @@ msgstr ""
 #~ msgid "Back"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:78
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:77
 msgid "Creating your post..."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:112
+#: src/client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:111
 msgid "Drop your files to upload them"
 msgstr ""
 
@@ -90,12 +90,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector.tsx:86
-msgid "No categories were found with the title {0}"
-msgstr ""
+#~ msgid "No categories were found with the title {0}"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:86
-msgid "No characters were found with the name {0}"
-msgstr ""
+#~ msgid "No characters were found with the name {0}"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostCreator.tsx:68
 msgid "Nothing extremely offensive or shocking"
@@ -125,7 +125,7 @@ msgstr ""
 #~ msgid "Process post"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:98
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:96
 msgid "Processing"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:112
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:113
 msgid "Retry"
 msgstr ""
 
@@ -208,7 +208,7 @@ msgstr ""
 #~ msgid "Step 6"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:91
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
 msgid "Submit"
 msgstr ""
 
@@ -224,7 +224,7 @@ msgstr ""
 msgid "There was an error creating a draft post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:106
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:107
 msgid "There was an error processing your files"
 msgstr ""
 
@@ -236,15 +236,15 @@ msgstr ""
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:88
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:87
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:77
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:76
 msgid "There was an error submitting your post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:94
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:93
 msgid "There was an error updating the post content"
 msgstr ""
 
@@ -252,12 +252,12 @@ msgstr ""
 msgid "This post was already submitted"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:95
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:131
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:94
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:132
 msgid "Upload Files"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:100
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/CreatePostFlow/CreatePostFlow.tsx:99
 msgid "Upload one or more files by dragging and dropping them or by tapping here"
 msgstr ""
 

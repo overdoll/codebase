@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9392a7e024ac1d304db4f4d016325301>>
- * @relayHash 112874faced96c57f4599a30bb22cd6d
+ * @generated SignedSource<<3a542ef412c13e607e168b27ff27de28>>
+ * @relayHash 644d32f33cf0211e73373708498db2b7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 112874faced96c57f4599a30bb22cd6d
+// @relayRequestID 644d32f33cf0211e73373708498db2b7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -207,7 +207,7 @@ return {
     ]
   },
   "params": {
-    "id": "112874faced96c57f4599a30bb22cd6d",
+    "id": "644d32f33cf0211e73373708498db2b7",
     "metadata": {},
     "name": "AdminViewCharacterQuery",
     "operationKind": "query",

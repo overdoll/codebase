@@ -3,11 +3,10 @@ import { usePaginationFragment } from 'react-relay'
 import { AdminSearchSeriesQuery } from '@//:artifacts/AdminSearchSeriesQuery.graphql'
 import { removeNode } from '@//:modules/support'
 import { GridTile, GridWrap, LinkTile, LoadMoreGridTile, SeriesTileOverlay } from '@//:modules/content/ContentSelection'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptySeries } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, EmptySeries } from '@//:modules/content/Placeholder'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -39,11 +38,11 @@ const Fragment = graphql`
     }
   }
 `
-export default function AdminSearchSeries ({ queryArgs }: Props): JSX.Element {
+export default function AdminSearchSeries ({ searchArguments }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<AdminSearchSeriesQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -57,14 +56,11 @@ export default function AdminSearchSeries ({ queryArgs }: Props): JSX.Element {
   )
   const series = removeNode(data.series.edges)
 
-  if (series.length < 1) {
-    return (
-      <EmptySeries hint={queryArgs.variables.title} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptySeries hint={searchArguments.variables.title} />}
+      condition={series.length < 1}
+    >
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
@@ -80,6 +76,6 @@ export default function AdminSearchSeries ({ queryArgs }: Props): JSX.Element {
           isLoadingNext={isLoadingNext}
         />
       </GridWrap>
-    </>
+    </EmptyBoundary>
   )
 }

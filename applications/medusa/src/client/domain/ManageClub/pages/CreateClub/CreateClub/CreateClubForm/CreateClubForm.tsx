@@ -44,10 +44,10 @@ const Mutation = graphql`
 
 export default function CreateClubForm ({
   isDisabled,
-  connectionId
+  connectionId,
 }: Props): JSX.Element {
   const [createClub, isCreatingClub] = useMutation<CreateClubFormMutation>(
-    Mutation
+    Mutation,
   )
 
   const notify = useToast()
@@ -58,48 +58,48 @@ export default function CreateClubForm ({
 
   const schema = Joi.object({
     name: ClubName(),
-    slug: ClubSlug()
+    slug: ClubSlug(),
+  })
+
+  const methods = useForm<ClubValues>({
+    resolver: joiResolver(
+      schema,
+    ),
   })
 
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     setError,
     formState: {
       errors,
       isDirty,
-      isSubmitted
-    }
-  } = useForm<ClubValues>({
-    resolver: joiResolver(
-      schema
-    )
-  })
+      isSubmitted,
+    },
+  } = methods
 
   const onSubmit = (formValues): void => {
     createClub({
       variables: {
         slug: formValues.slug,
         name: formValues.name,
-        connections: [connectionId]
+        connections: [connectionId],
       },
       onCompleted (data) {
         if (data?.createClub?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: i18n._(translateValidation(data.createClub.validation))
+            message: i18n._(translateValidation(data.createClub.validation)),
           })
           return
         }
         notify({
           status: 'success',
-          title: t`Club ${formValues.name} was created successfully`
+          title: t`Club ${formValues.name} was created successfully`,
         })
         const redirectPath = generatePath('/club/:slug/:entity', {
           slug: data.createClub?.club?.slug,
-          entity: 'home'
+          entity: 'home',
         })
         history.push(redirectPath)
       },
@@ -112,9 +112,9 @@ export default function CreateClubForm ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`Error creating club ${data.message}`
+          title: t`Error creating club ${data.message}`,
         })
-      }
+      },
     })
   }
 
@@ -123,9 +123,8 @@ export default function CreateClubForm ({
   const successSlug = isDirty && (errors.slug == null) && isSubmitted
 
   useSlugSubscribe({
-    watch: watch,
-    setValue: setValue,
-    from: 'name'
+    from: 'name',
+    ...methods,
   })
 
   return (

@@ -11,19 +11,20 @@ import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import useSlugSubscribe from '../../../../../helpers/useSlugSubscribe'
 import GenericTagSlug from '../../../../../validation/GenericTagSlug'
-import {
-  InputBuilder,
-  InputBuilderBody,
-  InputBuilderFooter,
-  InputBuilderHeader,
-  InputFeedback,
-  TextInput
-} from '@//:modules/form/InputBuilder'
 import { TagName, TagSeriesId, TagSlug } from '@//:types/form'
 import GenericTagId from '../../../../../validation/GenericTagId'
 import GenericTagName from '../../../../../validation/GenericTagName'
-import { FormBuilder, FormBuilderSubmitButton } from '@//:modules/form/FormBuilder/FormBuilder'
-import SeriesInput from '@//:modules/form/InputBuilder/InputBuilderBody/Inputs/SeriesInput/SeriesInput'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  SeriesInput,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 type Props = ConnectionProp
 
@@ -66,9 +67,7 @@ export default function CreateCharacterForm ({
   })
 
   const {
-    setError,
-    watch,
-    setValue
+    setError
   } = methods
 
   const onSubmit = (formValues): void => {
@@ -100,57 +99,56 @@ export default function CreateCharacterForm ({
   }
 
   useSlugSubscribe({
-    watch: watch,
-    setValue: setValue,
-    from: 'name'
+    from: 'title',
+    ...methods
   })
 
   return (
-    <FormBuilder
+    <Form
       onSubmit={onSubmit}
       {...methods}
     >
       <Stack spacing={4}>
-        <InputBuilder
+        <FormInput
           id='name'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Character Name
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter a name for the character`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <InputBuilder
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
           id='slug'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Character Slug
             </Trans>
-          </InputBuilderHeader>
-          <InputBuilderBody>
+          </InputHeader>
+          <InputBody>
             <TextInput placeholder={i18n._(t`Enter a character slug`)} />
             <InputFeedback />
-          </InputBuilderBody>
-          <InputBuilderFooter />
-        </InputBuilder>
-        <InputBuilder
+          </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
           id='seriesId'
         >
-          <InputBuilderHeader>
+          <InputHeader>
             <Trans>
               Character Series
             </Trans>
-          </InputBuilderHeader>
+          </InputHeader>
           <SeriesInput />
-          <InputBuilderFooter />
-        </InputBuilder>
-        <FormBuilderSubmitButton
+          <InputFooter />
+        </FormInput>
+        <FormSubmitButton
           isLoading={isInFlight}
           w='100%'
           size='lg'
@@ -158,8 +156,8 @@ export default function CreateCharacterForm ({
           <Trans>
             Create Character
           </Trans>
-        </FormBuilderSubmitButton>
+        </FormSubmitButton>
       </Stack>
-    </FormBuilder>
+    </Form>
   )
 }

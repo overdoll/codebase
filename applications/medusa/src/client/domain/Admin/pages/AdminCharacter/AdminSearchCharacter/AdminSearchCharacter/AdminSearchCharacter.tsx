@@ -9,11 +9,10 @@ import {
   LinkTile,
   LoadMoreGridTile
 } from '@//:modules/content/ContentSelection'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptyCharacters } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -48,11 +47,11 @@ const Fragment = graphql`
     }
   }
 `
-export default function AdminSearchCharacter ({ queryArgs }: Props): JSX.Element {
+export default function AdminSearchCharacter ({ searchArguments }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<AdminSearchSeriesQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -66,14 +65,11 @@ export default function AdminSearchCharacter ({ queryArgs }: Props): JSX.Element
   )
   const characters = removeNode(data.characters.edges)
 
-  if (characters.length < 1) {
-    return (
-      <EmptyCharacters hint={queryArgs.variables.name} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
+      condition={characters.length < 1}
+    >
       <GridWrap justify='center'>
         {characters.map((item, index) => (
           <GridTile key={index}>
@@ -89,6 +85,6 @@ export default function AdminSearchCharacter ({ queryArgs }: Props): JSX.Element
           isLoadingNext={isLoadingNext}
         />
       </GridWrap>
-    </>
+    </EmptyBoundary>
   )
 }

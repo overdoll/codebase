@@ -21,6 +21,6 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:70
 msgid "See All"
 msgstr ""

@@ -1,25 +1,27 @@
 import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { t, Trans } from '@lingui/macro'
 import AdminSearchSeries from './AdminSearchSeries/AdminSearchSeries'
-import { useSearchQueryArguments } from '@//:modules/hooks'
 import SearchInput from '../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+
+interface SearchProps {
+  title: string
+}
 
 export default function RootAdminSearchSeries (): JSX.Element {
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
-
-  const [search, setSearch] = useState<string>('')
+  const {
+    searchArguments,
+    register,
+    loadQuery
+  } = useSearch<SearchProps>({})
 
   const { i18n } = useLingui()
-
-  useEffect(() => {
-    setQueryArgs({ title: search })
-  }, [search])
 
   return (
     <>
@@ -32,13 +34,13 @@ export default function RootAdminSearchSeries (): JSX.Element {
             </Trans>
           </PageSectionTitle>
           <SearchInput
-            onChange={setSearch}
+            {...register('title')}
             placeholder={i18n._(t`Search for a series`)}
           />
-          <QueryErrorBoundary loadQuery={() => setQueryArgs({ title: null })}>
+          <QueryErrorBoundary loadQuery={loadQuery}>
             <Suspense fallback={<SkeletonStack />}>
               <AdminSearchSeries
-                queryArgs={queryArgs}
+                searchArguments={searchArguments}
               />
             </Suspense>
           </QueryErrorBoundary>
