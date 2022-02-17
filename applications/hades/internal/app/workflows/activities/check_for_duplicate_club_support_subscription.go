@@ -52,7 +52,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 			}, nil
 		}
 
-		// brand new subscription that failed along the way - continue
+		// brand-new subscription that failed along the way - continue
 		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
 			DuplicateSupportSameSubscription:      false,
 			DuplicateSupportDifferentSubscription: false,
