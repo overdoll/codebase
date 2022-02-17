@@ -26,6 +26,11 @@ func (c *PaymentMethod) BillingAddress() *Address {
 	return c.billingAddress
 }
 
+func (c *PaymentMethod) UpdateCard(card *Card) error {
+	c.card = card
+	return nil
+}
+
 func UnmarshalPaymentMethodFromDatabase(card *Card, billingContact *Contact, billingAddress *Address) *PaymentMethod {
 	return &PaymentMethod{
 		card:           card,

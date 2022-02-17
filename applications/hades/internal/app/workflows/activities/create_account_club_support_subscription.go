@@ -17,22 +17,6 @@ type CreateAccountClubSupportSubscription struct {
 
 	Timestamp string
 
-	CardBin            string
-	CardType           string
-	CardLast4          string
-	CardExpirationDate string
-
-	FirstName   string
-	Email       string
-	LastName    string
-	PhoneNumber string
-
-	AddressLine1 string
-	City         string
-	Country      string
-	State        string
-	PostalCode   string
-
 	Amount   string
 	Currency string
 
@@ -41,25 +25,7 @@ type CreateAccountClubSupportSubscription struct {
 
 func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, request CreateAccountClubSupportSubscription) error {
 
-	card, err := billing.NewCard(request.CardBin, request.CardType, request.CardLast4, request.CardExpirationDate)
-
-	if err != nil {
-		return err
-	}
-
-	contact, err := billing.NewContact(request.FirstName, request.LastName, request.Email, request.PhoneNumber)
-
-	if err != nil {
-		return err
-	}
-
-	address, err := billing.NewAddress(request.AddressLine1, request.City, request.State, request.Country, request.PostalCode)
-
-	if err != nil {
-		return err
-	}
-
-	paymentMethod, err := billing.NewPaymentMethod(card, contact, address)
+	ccbillSubscription, err := h.billing.GetCCBillSubscription(ctx, request.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
@@ -68,7 +34,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 	// save payment details for later
 	if request.SavePaymentDetails {
 
-		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(request.AccountId, request.CCBillSubscriptionId, paymentMethod)
+		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(request.AccountId, request.CCBillSubscriptionId, ccbillSubscription.PaymentMethod())
 
 		if err != nil {
 			return err
@@ -112,7 +78,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 		nextBillingDate,
 		amount,
 		request.Currency,
-		paymentMethod,
+		ccbillSubscription.PaymentMethod(),
 	)
 
 	if err != nil {

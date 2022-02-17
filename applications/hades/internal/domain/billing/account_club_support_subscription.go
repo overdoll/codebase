@@ -118,6 +118,11 @@ func (c *AccountClubSupportSubscription) IsCCBill() bool {
 	return c.ccbillSubscriptionId != ""
 }
 
+func (c *AccountClubSupportSubscription) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
+	c.paymentMethod = paymentMethod
+	return nil
+}
+
 func (c *AccountClubSupportSubscription) MarkCancelled(cancelledAt time.Time) error {
 	c.cancelledAt = &cancelledAt
 	c.status = Cancelled

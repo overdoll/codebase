@@ -49,7 +49,6 @@ func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivation
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
-			Timestamp:            payload.Timestamp,
 			NextBillingDate:      payload.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {

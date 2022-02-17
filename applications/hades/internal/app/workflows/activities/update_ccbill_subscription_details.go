@@ -6,8 +6,6 @@ import (
 )
 
 type UpdateCCBillSubscriptionDetails struct {
-	AccountId            string
-	ClubId               string
 	CCBillSubscriptionId string
 	Timestamp            string
 
@@ -54,13 +52,30 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, reques
 		return err
 	}
 
-	ccbillSubscription, err := billing.NewCCBillSubscription(request.AccountId, request.ClubId, request.CCBillSubscriptionId, paymentMethod)
+	_, err = h.billing.UpdateCCBillSubscriptionPaymentMethod(ctx, request.CCBillSubscriptionId, func(subscription *billing.CCBillSubscription) error {
+
+		// update saved payment method, if it exists for this subscription
+		_, err = h.billing.UpdateAccountSavedPaymentMethod(ctx, subscription.AccountId(), subscription.CCBillSubscriptionId(), func(savedPaymentMethod *billing.SavedPaymentMethod) error {
+			return savedPaymentMethod.UpdatePaymentMethod(paymentMethod)
+		})
+
+		// the account may not have saved their payment method for this subscription, so we ignore the not existing error
+		if err != nil && err != billing.ErrAccountSavedPaymentMethodNotFound {
+			return err
+		}
+
+		_, err = h.billing.UpdateAccountClubSupportPaymentMethod(ctx, subscription.AccountId(), subscription.ClubId(), subscription.CCBillSubscriptionId(), func(accountClubSupport *billing.AccountClubSupportSubscription) error {
+			return accountClubSupport.UpdatePaymentMethod(paymentMethod)
+		})
+
+		if err != nil {
+			return err
+		}
+
+		return subscription.UpdatePaymentMethod(paymentMethod)
+	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.billing.UpdateCCBillSubscription(ctx, ccbillSubscription); err != nil {
 		return err
 	}
 

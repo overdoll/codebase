@@ -35,19 +35,10 @@ func CCBillCustomerDataUpdate(ctx workflow.Context, payload CCBillCustomerDataUp
 
 	var a *activities.Activities
 
-	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
-
-	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
-		return err
-	}
-
 	// update with new payment details data
 	if err := workflow.ExecuteActivity(ctx, a.UpdateCCBillSubscriptionDetails,
 		activities.UpdateCCBillSubscriptionDetails{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
 			CardBin:              payload.Bin,
 			CardType:             payload.CardType,
 			CardLast4:            payload.Last4,

@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
+type CreateNewClubSubscriptionAccountTransactionRecord struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -21,33 +21,9 @@ type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
 
 	BillingDate     string
 	NextBillingDate string
-
-	CardType           string
-	CardLast4          string
-	CardExpirationDate string
 }
 
-func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateInvoiceClubSubscriptionAccountTransactionRecord) error {
-
-	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscription(ctx, request.CCBillSubscriptionId)
-
-	if err != nil {
-		return err
-	}
-
-	paymentMethod := ccbillSubscription.PaymentMethod()
-
-	card, err := billing.NewCard("", request.CardType, request.CardLast4, request.CardExpirationDate)
-
-	if err != nil {
-		return err
-	}
-
-	// the card that was used - we keep this information
-	if err := paymentMethod.UpdateCard(card); err != nil {
-		return err
-	}
+func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateNewClubSubscriptionAccountTransactionRecord) error {
 
 	amount, err := strconv.ParseFloat(request.Amount, 64)
 
@@ -73,7 +49,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		return err
 	}
 
-	transaction, err := billing.NewInvoiceClubSubscriptionAccountTransactionFromCCBill(
+	transaction, err := billing.NewNewClubSubscriptionAccountTransactionFromCCBill(
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
@@ -83,7 +59,6 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		nextBillingDate,
 		amount,
 		request.Currency,
-		paymentMethod,
 	)
 
 	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {

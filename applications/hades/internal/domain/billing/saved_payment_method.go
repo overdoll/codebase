@@ -1,9 +1,14 @@
 package billing
 
 import (
+	"errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
+)
+
+var (
+	ErrAccountSavedPaymentMethodNotFound = errors.New("account saved payment method not found")
 )
 
 type SavedPaymentMethod struct {
@@ -50,6 +55,11 @@ func (c *SavedPaymentMethod) IsCCBill() bool {
 
 func (c *SavedPaymentMethod) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
+}
+
+func (c *SavedPaymentMethod) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
+	c.paymentMethod = paymentMethod
+	return nil
 }
 
 func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time) *SavedPaymentMethod {

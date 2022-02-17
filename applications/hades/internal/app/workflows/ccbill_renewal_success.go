@@ -65,7 +65,6 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 			CCBillSubscriptionId: payload.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			LastBillingDate:      payload.RenewalDate,
 			NextBillingDate:      payload.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {

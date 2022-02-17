@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -13,6 +14,24 @@ import (
 	"overdoll/libraries/principal"
 	"time"
 )
+
+type paymentMethod struct {
+	AddressLine1 string `json:"address_line_1"`
+	City         string `json:"city"`
+	State        string `json:"state"`
+	Country      string `json:"country"`
+	PostalCode   string `json:"postal_code"`
+
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	PhoneNumber string `json:"phone_number"`
+	Email       string `json:"email"`
+
+	CardBin        string `json:"card_bin"`
+	CardType       string `json:"card_type"`
+	CardLast4      string `json:"card_last4"`
+	CardExpiration string `json:"card_expiration"`
+}
 
 var accountSavedPaymentMethodTable = table.New(table.Metadata{
 	Name: "account_saved_payment_methods",
@@ -30,11 +49,23 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+type accountSavedPaymentMethod struct {
+	AccountId string `db:"account_id"`
+	Id        string `db:"id"`
+
+	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
+
+	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
+
+	UpdatedAt time.Time `db:"updated_at"`
+}
+
 var accountClubsSupportTable = table.New(table.Metadata{
 	Name: "account_clubs_support_subscriptions",
 	Columns: []string{
 		"account_id",
 		"club_id",
+		"id",
 		"status",
 		"supporter_since",
 		"last_billing_date",
@@ -44,7 +75,6 @@ var accountClubsSupportTable = table.New(table.Metadata{
 
 		"encrypted_payment_method",
 
-		"id",
 		"ccbill_subscription_id",
 
 		"updated_at",
@@ -52,6 +82,22 @@ var accountClubsSupportTable = table.New(table.Metadata{
 	PartKey: []string{"account_id"},
 	SortKey: []string{"club_id", "id"},
 })
+
+type accountClubSupportSubscription struct {
+	AccountId              string     `db:"account_id"`
+	ClubId                 string     `db:"club_id"`
+	Status                 string     `db:"status"`
+	SupporterSince         time.Time  `db:"supporter_since"`
+	LastBillingDate        time.Time  `db:"last_billing_date"`
+	NextBillingDate        time.Time  `db:"next_billing_date"`
+	BillingAmount          float64    `db:"billing_amount"`
+	BillingCurrency        string     `db:"billing_currency"`
+	Id                     string     `db:"id"`
+	CancelledAt            *time.Time `db:"cancelled_at"`
+	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
+	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
+	UpdatedAt              time.Time  `db:"updated_at"`
+}
 
 var accountTransactionHistoryTable = table.New(table.Metadata{
 	Name: "account_transaction_history",
@@ -88,51 +134,6 @@ var accountTransactionHistoryTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
-type paymentMethod struct {
-	AddressLine1 string `json:"address_line_1"`
-	City         string `json:"city"`
-	State        string `json:"state"`
-	Country      string `json:"country"`
-	PostalCode   string `json:"postal_code"`
-
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	PhoneNumber string `json:"phone_number"`
-	Email       string `json:"email"`
-
-	CardBin        string `json:"card_bin"`
-	CardType       string `json:"card_type"`
-	CardLast4      string `json:"card_last4"`
-	CardExpiration string `json:"card_expiration"`
-}
-
-type accountSavedPaymentMethod struct {
-	AccountId string `db:"account_id"`
-	Id        string `db:"id"`
-
-	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
-
-	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
-
-	UpdatedAt time.Time `db:"updated_at"`
-}
-
-type accountClubSupportSubscription struct {
-	AccountId              string     `db:"account_id"`
-	ClubId                 string     `db:"club_id"`
-	Status                 string     `db:"status"`
-	SupporterSince         time.Time  `db:"supporter_since"`
-	LastBillingDate        time.Time  `db:"last_billing_date"`
-	NextBillingDate        time.Time  `db:"next_billing_date"`
-	BillingAmount          float64    `db:"billing_amount"`
-	BillingCurrency        string     `db:"billing_currency"`
-	Id                     string     `db:"id"`
-	CancelledAt            *time.Time `db:"cancelled_at"`
-	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
-	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
-	UpdatedAt              time.Time  `db:"updated_at"`
-}
-
 type accountTransactionHistory struct {
 	AccountId string `db:"account_id"`
 	Bucket    int    `db:"bucket"`
@@ -160,6 +161,29 @@ type accountTransactionHistory struct {
 	CCBillReason         *string `db:"ccbill_reason"`
 	CCBillSubscriptionId string  `db:"ccbill_subscription_id"`
 	CCBillTransactionId  *string `db:"ccbill_transaction_id"`
+}
+
+var ccbillSubscriptionsTable = table.New(table.Metadata{
+	Name: "ccbill_subscriptions",
+	Columns: []string{
+		"ccbill_subscription_id",
+		"supporting_club_id",
+		"initiator_account_id",
+		"encrypted_payment_method",
+		"updated_at",
+		"idempotency_key",
+	},
+	PartKey: []string{"ccbill_subscription_id"},
+	SortKey: []string{},
+})
+
+type ccbillSubscriptions struct {
+	CCBillSubscriptionId   string    `db:"ccbill_subscription_id"`
+	InitiatorAccountId     string    `db:"initiator_account_id"`
+	SupportingClubId       string    `db:"supporting_club_id"`
+	EncryptedPaymentMethod string    `db:"encrypted_payment_method"`
+	UpdatedAt              time.Time `db:"updated_at"`
+	IdempotencyKey         string    `db:"idempotency_key"`
 }
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
@@ -232,6 +256,40 @@ func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountCl
 	}, nil
 }
 
+func marshalCCBillSubscriptionToDatabase(subscription *billing.CCBillSubscription) (*ccbillSubscriptions, error) {
+
+	encrypted, err := encryptPaymentMethod(subscription.PaymentMethod())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ccbillSubscriptions{
+		CCBillSubscriptionId:   subscription.CCBillSubscriptionId(),
+		InitiatorAccountId:     subscription.AccountId(),
+		SupportingClubId:       subscription.ClubId(),
+		EncryptedPaymentMethod: encrypted,
+		UpdatedAt:              subscription.UpdatedAt(),
+		IdempotencyKey:         subscription.IdempotencyKey(),
+	}, nil
+}
+
+func marshalAccountSavedPaymentMethodToDatabase(savedPaymentMethod *billing.SavedPaymentMethod) (*accountSavedPaymentMethod, error) {
+	encrypted, err := encryptPaymentMethod(savedPaymentMethod.PaymentMethod())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &accountSavedPaymentMethod{
+		AccountId:              savedPaymentMethod.AccountId(),
+		Id:                     savedPaymentMethod.Id(),
+		EncryptedPaymentMethod: encrypted,
+		CCBillSubscriptionId:   savedPaymentMethod.CCBillSubscriptionId(),
+		UpdatedAt:              savedPaymentMethod.UpdatedAt(),
+	}, nil
+}
+
 type BillingCassandraRepository struct {
 	session gocqlx.Session
 }
@@ -242,7 +300,7 @@ func NewBillingCassandraRepository(session gocqlx.Session) BillingCassandraRepos
 
 func (r BillingCassandraRepository) CreateAccountSavedPaymentMethod(ctx context.Context, savedPaymentMethod *billing.SavedPaymentMethod) error {
 
-	encrypted, err := encryptPaymentMethod(savedPaymentMethod.PaymentMethod())
+	marshalled, err := marshalAccountSavedPaymentMethodToDatabase(savedPaymentMethod)
 
 	if err != nil {
 		return err
@@ -250,13 +308,7 @@ func (r BillingCassandraRepository) CreateAccountSavedPaymentMethod(ctx context.
 
 	if err := r.session.
 		Query(accountSavedPaymentMethodTable.Insert()).
-		BindStruct(&accountSavedPaymentMethod{
-			AccountId:              savedPaymentMethod.AccountId(),
-			Id:                     savedPaymentMethod.Id(),
-			EncryptedPaymentMethod: encrypted,
-			CCBillSubscriptionId:   savedPaymentMethod.CCBillSubscriptionId(),
-			UpdatedAt:              savedPaymentMethod.UpdatedAt(),
-		}).
+		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return err
 	}
@@ -325,6 +377,57 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 	return savedPayments, nil
 }
 
+func (r BillingCassandraRepository) GetAccountSavedPaymentMethodById(ctx context.Context, accountId, id string) (*billing.SavedPaymentMethod, error) {
+
+	var savedPay accountSavedPaymentMethod
+
+	if err := r.session.
+		Query(accountSavedPaymentMethodTable.Get()).
+		BindStruct(&accountSavedPaymentMethod{AccountId: accountId, Id: id}).
+		Get(&savedPay); err != nil {
+		return nil, err
+	}
+
+	decrypt, err := decryptPaymentMethod(savedPay.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt), nil
+}
+
+func (r BillingCassandraRepository) UpdateAccountSavedPaymentMethod(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *billing.SavedPaymentMethod) error) (*billing.SavedPaymentMethod, error) {
+
+	savedPaymentMethod, err := r.GetAccountSavedPaymentMethodById(ctx, accountId, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(savedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalAccountSavedPaymentMethodToDatabase(savedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(accountSavedPaymentMethodTable.Update("encrypted_payment_method")).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update account saved payment method: %v", err)
+	}
+
+	return savedPaymentMethod, nil
+}
+
 func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx context.Context, accountClubSupp *billing.AccountClubSupportSubscription) error {
 
 	marshalled, err := marshalAccountClubSubscriptionToDatabase(accountClubSupp)
@@ -343,9 +446,9 @@ func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx con
 	return nil
 }
 
-func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionByAccountAndClubId(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupportSubscription, error) {
+func (r BillingCassandraRepository) GetFirstAccountClubSupportSubscriptionByAccountAndClubId(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupportSubscription, error) {
 
-	var accountClubSupported *accountClubSupportSubscription
+	var accountClubSupporting []*accountClubSupportSubscription
 
 	if err := accountClubsSupportTable.
 		SelectBuilder().
@@ -355,18 +458,19 @@ func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionByAccountAn
 			AccountId: accountId,
 			ClubId:    clubId,
 		}).
-		Get(&accountClubSupported); err != nil {
+		Select(&accountClubSupporting); err != nil {
 		return nil, fmt.Errorf("failed to get account club support by account and club id: %v", err)
 	}
+
+	if len(accountClubSupporting) == 0 {
+		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+	}
+
+	accountClubSupported := accountClubSupporting[0]
 
 	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
 
 	if err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
-		}
-
 		return nil, err
 	}
 
@@ -482,6 +586,10 @@ func (r BillingCassandraRepository) UpdateAccountClubSupportBillingDate(ctx cont
 
 func (r BillingCassandraRepository) UpdateAccountClubSupportSubscriptionStatus(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupportSubscription) error) (*billing.AccountClubSupportSubscription, error) {
 	return r.updateAccountClubSupportSubscription(ctx, accountId, clubId, id, updateFn, []string{"cancelled_at", "status", "next_billing_date"})
+}
+
+func (r BillingCassandraRepository) UpdateAccountClubSupportPaymentMethod(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupportSubscription) error) (*billing.AccountClubSupportSubscription, error) {
+	return r.updateAccountClubSupportSubscription(ctx, accountId, clubId, id, updateFn, []string{"encrypted_payment_method"})
 }
 
 func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupportSubscription, error) {
@@ -660,4 +768,90 @@ func (r BillingCassandraRepository) GetAccountTransactionHistory(ctx context.Con
 	}
 
 	return accountTransactionsMorphed, nil
+}
+
+func (r BillingCassandraRepository) GetCCBillSubscription(ctx context.Context, ccbillSubscriptionId string) (*billing.CCBillSubscription, error) {
+
+	var ccbillSubscription *ccbillSubscriptions
+
+	if err := r.session.
+		Query(ccbillSubscriptionsTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&ccbillSubscriptions{
+			CCBillSubscriptionId: ccbillSubscriptionId,
+		}).
+		Get(&ccbillSubscription); err != nil {
+		return nil, fmt.Errorf("failed to get ccbill subscription: %v", err)
+	}
+
+	decrypt, err := decryptPaymentMethod(ccbillSubscription.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billing.UnmarshalCCBillSubscriptionFromDatabase(
+		ccbillSubscription.InitiatorAccountId,
+		ccbillSubscription.SupportingClubId,
+		ccbillSubscriptionId,
+		decrypt,
+		ccbillSubscription.UpdatedAt,
+		ccbillSubscription.IdempotencyKey,
+	), nil
+}
+
+func (r BillingCassandraRepository) CreateCCBillSubscription(ctx context.Context, subscription *billing.CCBillSubscription) error {
+
+	marshalled, err := marshalCCBillSubscriptionToDatabase(subscription)
+
+	if err != nil {
+		return err
+	}
+
+	applied, err := ccbillSubscriptionsTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		BindStruct(marshalled).
+		ExecCAS()
+
+	if err != nil {
+		return fmt.Errorf("failed to create ccbill subscription: %v", err)
+	}
+
+	if !applied {
+		return errors.New("could not create ccbill subscription")
+	}
+
+	return nil
+}
+
+func (r BillingCassandraRepository) UpdateCCBillSubscriptionPaymentMethod(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *billing.CCBillSubscription) error) (*billing.CCBillSubscription, error) {
+
+	ccbillSubscription, err := r.GetCCBillSubscription(ctx, ccbillSubscriptionId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(ccbillSubscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalCCBillSubscriptionToDatabase(ccbillSubscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(ccbillSubscriptionsTable.Update("encrypted_payment_method")).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to updated ccbill subscription: %v", err)
+	}
+
+	return ccbillSubscription, nil
 }

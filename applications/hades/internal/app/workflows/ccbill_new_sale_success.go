@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"errors"
+	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	hades "overdoll/applications/hades/proto"
@@ -92,15 +93,40 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 		return err
 	}
 
-	var existingClubSupport *activities.CheckForExistingClubSupportPayload
+	// create an idempotency key - in case the following activity fails but the record is still created
+	idempotencyKey := workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
+		return ksuid.New().String()
+	})
+
+	var idempotentKey string
+
+	if err := idempotencyKey.Get(&idempotentKey); err != nil {
+		return err
+	}
+
+	var existingClubSupport *activities.GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload
 
 	// check for duplicate subscriptions - if the account already supports the club
-
-	if err := workflow.ExecuteActivity(ctx, a.CheckForDuplicateClubSupportSubscription,
-		activities.CheckForDuplicateClubSupportSubscription{
+	if err := workflow.ExecuteActivity(ctx, a.GetOrCreateCCBillSubscriptionAndCheckForDuplicates,
+		activities.GetOrCreateCCBillSubscriptionAndCheckForDuplicates{
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
+			IdempotencyKey:       idempotentKey,
+
+			CardBin:            payload.Bin,
+			CardType:           payload.CardType,
+			CardLast4:          payload.Last4,
+			CardExpirationDate: payload.ExpDate,
+			FirstName:          payload.FirstName,
+			Email:              payload.Email,
+			LastName:           payload.LastName,
+			PhoneNumber:        payload.PhoneNumber,
+			AddressLine1:       payload.Address1,
+			City:               payload.City,
+			Country:            payload.Country,
+			State:              payload.State,
+			PostalCode:         payload.PostalCode,
 		},
 	).Get(ctx, &existingClubSupport); err != nil {
 		return err
@@ -130,25 +156,28 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
-			CardBin:              payload.Bin,
-			CardType:             payload.CardType,
-			CardLast4:            payload.Last4,
-			CardExpirationDate:   payload.ExpDate,
-			FirstName:            payload.FirstName,
-			Email:                payload.Email,
-			LastName:             payload.LastName,
-			PhoneNumber:          payload.PhoneNumber,
-			AddressLine1:         payload.Address1,
-			City:                 payload.City,
-			Country:              payload.Country,
-			State:                payload.State,
-			PostalCode:           payload.PostalCode,
 			NextRenewalDate:      payload.NextRenewalDate,
 			Timestamp:            payload.Timestamp,
 			Amount:               payload.BilledRecurringPrice,
 			Currency:             payload.BilledCurrency,
 		},
 	).Get(ctx, &details); err != nil {
+		return err
+	}
+
+	// create record for new transaction
+	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
+		activities.CreateNewClubSubscriptionAccountTransactionRecord{
+			CCBillSubscriptionId: payload.SubscriptionId,
+			CCBillTransactionId:  payload.TransactionId,
+			AccountId:            details.AccountInitiator.AccountId,
+			ClubId:               details.CcbillClubSupporter.ClubId,
+			Timestamp:            payload.Timestamp,
+			Amount:               payload.BilledRecurringPrice,
+			Currency:             payload.BilledCurrency,
+			NextBillingDate:      payload.NextRenewalDate,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

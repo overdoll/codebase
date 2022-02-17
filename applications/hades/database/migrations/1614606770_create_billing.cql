@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     primary key ( (account_id, bucket), id )
 );
 
-CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details_mapping
+CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details
 (
     ccbill_subscription_id   text,
 
@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details_mapping
     initiator_account_id     text,
 
     updated_at               timestamp,
+
+    idempotency_key          text,
 
     primary key ( ccbill_subscription_id )
 );
