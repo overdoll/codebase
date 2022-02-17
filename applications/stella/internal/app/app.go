@@ -46,6 +46,7 @@ type Queries struct {
 	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
 	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
 	CanAccountBecomeClubSupporter query.CanAccountBecomeClubSupporterHandler
+	AccountSupportedClubs         query.AccountSupportedClubsHandler
 
 	SuspendedClubs query.SuspendedClubsHandler
 

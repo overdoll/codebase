@@ -23,6 +23,21 @@ var (
 	ErrNoValidPartitionFound = errors.New("no valid partition to place club member into")
 )
 
+var accountSupportedClubsTable = table.New(table.Metadata{
+	Name: "account_supported_clubs",
+	Columns: []string{
+		"account_id",
+		"club_id",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{"club_id"},
+})
+
+type accountSupportedClubs struct {
+	ClubId    string `db:"club_id"`
+	AccountId string `db:"account_id"`
+}
+
 var clubMembersTable = table.New(table.Metadata{
 	Name: "club_members",
 	Columns: []string{
@@ -151,6 +166,10 @@ func (r ClubCassandraRepository) addInitialClubMemberToBatch(ctx context.Context
 	// insert into club members list
 	stmt, _ = clubMembersByClubTable.Insert()
 	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time())
+
+	// insert into account's supported clubs
+	stmt, _ = accountSupportedClubsTable.Insert()
+	batch.Query(stmt, accountId, clubId)
 
 	return nil
 }
@@ -701,10 +720,42 @@ func (r ClubCassandraRepository) UpdateClubMemberIsSupporter(ctx context.Context
 	stmt, _ = clubMembersTable.Update("is_supporter", "supporter_since")
 	batch.Query(stmt, clb.ClubId, clb.ClubId, clb.IsSupporter, clb.SupporterSince)
 
+	if clb.IsSupporter {
+		stmt, _ = accountSupportedClubsTable.Insert()
+		batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
+	} else {
+		stmt, _ = accountSupportedClubsTable.Delete()
+		batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
+	}
+
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, fmt.Errorf("failed to update club supporter status: %v", err)
 	}
 
 	return currentClub, nil
+}
+
+func (r ClubCassandraRepository) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+
+	var supportedClubs []*accountSupportedClubs
+
+	if err := accountSupportedClubsTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountSupportedClubs{
+			AccountId: accountId,
+		}).
+		Select(&supportedClubs); err != nil {
+		return nil, fmt.Errorf("failed to get account supported clubs: %v", err)
+	}
+
+	var supportedIds []string
+
+	for _, supported := range supportedClubs {
+		supportedIds = append(supportedIds, supported.ClubId)
+	}
+
+	return supportedIds, nil
 }

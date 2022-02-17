@@ -80,6 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 		},
 		Queries: app.Queries{
 			PrincipalById:                  query.NewPrincipalByIdHandler(eva),
+			AccountSupportedClubs:          query.NewAccountSupportedClubsHandler(clubRepo),
 			CanAccountCreatePostUnderClub:  query.NewCanAccountCreatePostUnderClubHandler(clubRepo),
 			CanAccountViewPostUnderClub:    query.NewCanAccountViewPostUnderClubHandler(clubRepo, eva),
 			CanAccountBecomeClubSupporter:  query.NewCanAccountBecomeClubSupporterHandler(clubRepo, eva),

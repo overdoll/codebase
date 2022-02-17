@@ -23,6 +23,8 @@ type Repository interface {
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 
 	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
+	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
+
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, requester *principal.Principal, member *Member) error
 	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error

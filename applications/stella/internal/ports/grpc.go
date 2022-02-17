@@ -118,7 +118,14 @@ func (s Server) GetSuspendedClubs(ctx context.Context, request *stella.GetSuspen
 }
 
 func (s Server) GetAccountSupportedClubs(ctx context.Context, request *stella.GetAccountSupportedClubsRequest) (*stella.GetAccountSupportedClubsResponse, error) {
-	return &stella.GetAccountSupportedClubsResponse{ClubIds: []string{}}, nil
+
+	clubIds, err := s.app.Queries.AccountSupportedClubs.Handle(ctx, query.AccountSupportedClubs{AccountId: request.AccountId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stella.GetAccountSupportedClubsResponse{ClubIds: clubIds}, nil
 }
 
 func (s Server) AddClubSupporter(ctx context.Context, request *stella.AddClubSupporterRequest) (*stella.AddClubSupporterResponse, error) {
