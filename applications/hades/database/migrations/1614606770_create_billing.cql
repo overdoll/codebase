@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS account_clubs_support
+CREATE TABLE IF NOT EXISTS account_clubs_support_subscriptions
 (
     account_id               text,
     club_id                  text,

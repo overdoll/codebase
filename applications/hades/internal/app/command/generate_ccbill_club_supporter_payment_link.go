@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/principal"
 )
 
@@ -22,9 +23,9 @@ func NewGenerateCCBillClubSupporterPaymentLinkHandler(br billing.Repository, ste
 	return GenerateCCBillClubSupporterPaymentLinkHandler{br: br, stella: stella}
 }
 
-func (h GenerateCCBillClubSupporterPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupporterPaymentLink) (*billing.CCBillClubSupporterPaymentLink, error) {
+func (h GenerateCCBillClubSupporterPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupporterPaymentLink) (*ccbill.ClubSupporterPaymentLink, error) {
 
-	allowed, err := h.stella.CanAccountViewClub(ctx, cmd.ClubId, cmd.Principal.AccountId())
+	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err
@@ -34,7 +35,7 @@ func (h GenerateCCBillClubSupporterPaymentLinkHandler) Handle(ctx context.Contex
 		return nil, errors.New("cannot generate a link - club not accessible")
 	}
 
-	paymentLink, err := billing.NewCCBillClubSupporterPaymentLink(cmd.Principal, cmd.ClubId, cmd.SavePaymentForLater)
+	paymentLink, err := ccbill.NewCCBillClubSupporterPaymentLink(cmd.Principal, cmd.ClubId, cmd.SavePaymentForLater)
 
 	if err != nil {
 		return nil, err

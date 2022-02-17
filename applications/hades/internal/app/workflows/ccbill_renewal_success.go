@@ -40,8 +40,8 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 	}
 
 	// create record for failed transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceAccountTransactionRecord,
-		activities.CreateInvoiceAccountTransactionRecord{
+	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransactionRecord,
+		activities.CreateInvoiceClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
 			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
@@ -53,6 +53,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 			Amount:               payload.BilledAmount,
 			Currency:             payload.BilledCurrency,
 			BillingDate:          payload.RenewalDate,
+			NextBillingDate:      payload.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

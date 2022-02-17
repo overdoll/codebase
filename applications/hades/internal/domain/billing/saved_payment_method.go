@@ -15,6 +15,15 @@ type SavedPaymentMethod struct {
 	ccbillSubscriptionId string
 }
 
+func NewSavedPaymentMethodFromCCBill(accountId, ccbillSubscriptionId string, paymentMethod *PaymentMethod) (*SavedPaymentMethod, error) {
+	return &SavedPaymentMethod{
+		accountId:            accountId,
+		id:                   ccbillSubscriptionId,
+		paymentMethod:        paymentMethod,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+	}, nil
+}
+
 func (c *SavedPaymentMethod) AccountId() string {
 	return c.accountId
 }

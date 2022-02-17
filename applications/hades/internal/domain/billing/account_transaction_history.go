@@ -1,6 +1,7 @@
 package billing
 
 import (
+	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -36,6 +37,149 @@ type AccountTransactionHistory struct {
 	ccbillErrorText *string
 	ccbillErrorCode *string
 	ccbillReason    *string
+}
+
+func NewReactivatedClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId, ccbillTransactionId string, timestamp, nextBillingDate time.Time) (*AccountTransactionHistory, error) {
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Reactivate,
+		supportedClubId:      &clubId,
+		ccbillTransactionId:  &ccbillTransactionId,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		nextBillingDate:      &nextBillingDate,
+	}, nil
+}
+
+func NewFailedClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp, nextRetryDate time.Time, failureReason, failureCode string) (*AccountTransactionHistory, error) {
+	return &AccountTransactionHistory{
+		accountId:                   accountId,
+		id:                          ksuid.New().String(),
+		timestamp:                   timestamp,
+		billingFailureNextRetryDate: &nextRetryDate,
+		ccbillErrorText:             &failureReason,
+		ccbillErrorCode:             &failureCode,
+		transaction:                 Failed,
+		supportedClubId:             &clubId,
+		ccbillSubscriptionId:        ccbillSubscriptionId,
+	}, nil
+}
+
+func NewExpiredClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time) (*AccountTransactionHistory, error) {
+
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Expired,
+		supportedClubId:      &clubId,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+	}, nil
+}
+
+func NewRefundClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId, ccbillTransactionId string, timestamp time.Time, amount float64, currency, reason string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
+
+	cr, err := CurrencyFromString(currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Refund,
+		supportedClubId:      &clubId,
+		amount:               &amount,
+		ccbillReason:         &reason,
+		currency:             &cr,
+		paymentMethod:        paymentMethod,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillTransactionId:  &ccbillTransactionId,
+	}, nil
+}
+
+func NewVoidClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId, ccbillTransactionId string, timestamp time.Time, amount float64, currency, reason string) (*AccountTransactionHistory, error) {
+
+	cr, err := CurrencyFromString(currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Void,
+		supportedClubId:      &clubId,
+		amount:               &amount,
+		ccbillReason:         &reason,
+		currency:             &cr,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillTransactionId:  &ccbillTransactionId,
+	}, nil
+}
+
+func NewInvoiceClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId, ccbillTransactionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
+
+	cr, err := CurrencyFromString(currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Invoice,
+		supportedClubId:      &clubId,
+		amount:               &amount,
+		billedAtDate:         &billedAtDate,
+		nextBillingDate:      &nextBillingDate,
+		currency:             &cr,
+		paymentMethod:        paymentMethod,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillTransactionId:  &ccbillTransactionId,
+	}, nil
+}
+
+func NewChargebackClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId, ccbillTransactionId string, timestamp time.Time, reason string, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
+
+	cr, err := CurrencyFromString(currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Chargeback,
+		supportedClubId:      &clubId,
+		amount:               &amount,
+		currency:             &cr,
+		paymentMethod:        paymentMethod,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillTransactionId:  &ccbillTransactionId,
+		ccbillReason:         &reason,
+	}, nil
+}
+
+func NewCancelledClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time, reason string) (*AccountTransactionHistory, error) {
+	return &AccountTransactionHistory{
+		accountId:            accountId,
+		id:                   ksuid.New().String(),
+		timestamp:            timestamp,
+		transaction:          Cancel,
+		supportedClubId:      &clubId,
+		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillReason:         &reason,
+	}, nil
 }
 
 func (c *AccountTransactionHistory) AccountId() string {

@@ -8,6 +8,16 @@ type Address struct {
 	postalCode   string
 }
 
+func NewAddress(addressLine1, city, state, country, postalCode string) (*Address, error) {
+	return &Address{
+		addressLine1: addressLine1,
+		city:         city,
+		state:        state,
+		country:      country,
+		postalCode:   postalCode,
+	}, nil
+}
+
 func (c *Address) AddressLine1() string {
 	return c.addressLine1
 }

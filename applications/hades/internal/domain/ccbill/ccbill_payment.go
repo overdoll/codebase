@@ -1,4 +1,4 @@
-package billing
+package ccbill
 
 import (
 	"crypto/rand"

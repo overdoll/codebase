@@ -26,8 +26,8 @@ func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) err
 	}
 
 	// create expired record
-	if err := workflow.ExecuteActivity(ctx, a.CreateExpiredAccountTransactionRecord,
-		activities.CreateExpiredAccountTransactionRecord{
+	if err := workflow.ExecuteActivity(ctx, a.CreateExpiredClubSubscriptionAccountTransactionRecord,
+		activities.CreateExpiredClubSubscriptionAccountTransactionRecord{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
@@ -38,8 +38,8 @@ func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) err
 	}
 
 	// remove account club support
-	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupport,
-		activities.RemoveAccountClubSupport{
+	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
+		activities.RemoveAccountClubSupportSubscription{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,

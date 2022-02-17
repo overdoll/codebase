@@ -30,8 +30,8 @@ func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivation
 	}
 
 	// create reactivated record
-	if err := workflow.ExecuteActivity(ctx, a.CreateReactivatedAccountTransactionRecord,
-		activities.CreateReactivatedAccountTransactionRecord{
+	if err := workflow.ExecuteActivity(ctx, a.CreateReactivatedClubSubscriptionAccountTransactionRecord,
+		activities.CreateReactivatedClubSubscriptionAccountTransactionRecord{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,

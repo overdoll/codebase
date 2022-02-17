@@ -33,8 +33,8 @@ func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayl
 	}
 
 	// create record for failed transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateFailedAccountTransactionRecord,
-		activities.CreateFailedAccountTransactionRecord{
+	if err := workflow.ExecuteActivity(ctx, a.CreateFailedClubSubscriptionAccountTransactionRecord,
+		activities.CreateFailedClubSubscriptionAccountTransactionRecord{
 			CCBillTransactionId:  payload.TransactionId,
 			NextRetryDate:        payload.NextRetryDate,
 			FailureReason:        payload.FailureReason,

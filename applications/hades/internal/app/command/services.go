@@ -1,7 +1,12 @@
 package command
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type StellaService interface {
-	CanAccountViewClub(ctx context.Context, clubId, accountId string) (bool, error)
+	CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error)
+	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
+	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
 }

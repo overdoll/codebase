@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type EvaServiceMock struct {
@@ -34,6 +35,21 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 }
 
 type StellaServiceMock struct{}
+
+func (s StellaServiceMock) CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s StellaServiceMock) RemoveClubSupporter(ctx context.Context, clubId, accountId string) error {
+	//TODO implement me
+	panic("implement me")
+}
 
 func (s StellaServiceMock) CanAccountViewClub(ctx context.Context, clubId, accountId string) (bool, error) {
 	return true, nil

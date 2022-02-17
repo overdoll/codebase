@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"net/http"
 	"os"
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/command"
 	"overdoll/applications/hades/internal/app/query"
+	"overdoll/applications/hades/internal/app/workflows/activities"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
@@ -53,8 +55,11 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	client := clients.NewTemporalClient(ctx)
 
+	ccbillClient := &http.Client{}
+
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session)
+	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -64,5 +69,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 		},
+		Activities: activities.NewActivitiesHandler(billingRepo, ccbillRepo, stella),
 	}
 }

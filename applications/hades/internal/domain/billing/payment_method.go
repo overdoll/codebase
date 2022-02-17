@@ -6,6 +6,14 @@ type PaymentMethod struct {
 	billingAddress *Address
 }
 
+func NewPaymentMethod(card *Card, billingContact *Contact, billingAddress *Address) (*PaymentMethod, error) {
+	return &PaymentMethod{
+		card:           card,
+		billingContact: billingContact,
+		billingAddress: billingAddress,
+	}, nil
+}
+
 func (c *PaymentMethod) Card() *Card {
 	return c.card
 }

@@ -96,8 +96,8 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 
 	// check for duplicate subscriptions - if the account already supports the club
 
-	if err := workflow.ExecuteActivity(ctx, a.CheckForExistingClubSupport,
-		activities.CheckForExistingClubSupport{
+	if err := workflow.ExecuteActivity(ctx, a.CheckForDuplicateClubSupportSubscription,
+		activities.CheckForDuplicateClubSupportSubscription{
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
@@ -108,11 +108,11 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 
 	// a duplicate subscription detected
 	if existingClubSupport.DuplicateSupportSameSubscription || existingClubSupport.DuplicateSupportDifferentSubscription {
-		// basically, if the subscription ID that was passed in is not the one currently being used, then it will cancel it
+		// basically, if the subscription ID that was passed in is not the one currently being used, then it will void/refund it
 		// otherwise, the subscription ID that was passed in is the same as the current subscription ID, so we don't want to accidentally cancel
 		// an existing CCBill subscription
 		if existingClubSupport.DuplicateSupportDifferentSubscription {
-			if err := workflow.ExecuteActivity(ctx, a.CancelCCBillSubscription, payload.SubscriptionId).Get(ctx, nil); err != nil {
+			if err := workflow.ExecuteActivity(ctx, a.VoidOrRefundCCBillSubscription, payload.SubscriptionId).Get(ctx, nil); err != nil {
 				return err
 			}
 		}
@@ -121,8 +121,11 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 	}
 
 	// create a new account supporter record
-	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupporter,
-		activities.CreateAccountClubSupporter{
+	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
+		activities.CreateAccountClubSupportSubscription{
+			// save payment details
+			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
+
 			CCBillSubscriptionId: payload.SubscriptionId,
 			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            details.AccountInitiator.AccountId,
@@ -147,31 +150,6 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 		},
 	).Get(ctx, &details); err != nil {
 		return err
-	}
-
-	// save payment details for later
-	if details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails {
-		if err := workflow.ExecuteActivity(ctx, a.SavePaymentDetails,
-			activities.SavePaymentDetails{
-				AccountId:            details.AccountInitiator.AccountId,
-				CCBillSubscriptionId: payload.SubscriptionId,
-				CardBin:              payload.Bin,
-				CardType:             payload.CardType,
-				CardLast4:            payload.Last4,
-				CardExpirationDate:   payload.ExpDate,
-				FirstName:            payload.FirstName,
-				Email:                payload.Email,
-				LastName:             payload.LastName,
-				PhoneNumber:          payload.PhoneNumber,
-				AddressLine1:         payload.Address1,
-				City:                 payload.City,
-				Country:              payload.Country,
-				State:                payload.State,
-				PostalCode:           payload.PostalCode,
-			},
-		).Get(ctx, &details); err != nil {
-			return err
-		}
 	}
 
 	// tell stella about this new supporter

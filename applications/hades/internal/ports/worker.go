@@ -19,7 +19,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
 	// register activities with our struct
-	//w.RegisterActivity(app.Activities)
+	w.RegisterActivity(app.Activities)
 
 	return w, func() {
 		client.Close()

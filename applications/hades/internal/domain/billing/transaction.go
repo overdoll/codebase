@@ -7,14 +7,16 @@ type Transaction struct {
 }
 
 var (
-	UnknownTransaction    = Transaction{""}
-	ClubSupportNew        = Transaction{"club_support_new"}
-	ClubSupportInvoice    = Transaction{"club_support_invoice"}
-	ClubSupportVoid       = Transaction{"club_support_void"}
-	ClubSupportChargeback = Transaction{"club_support_chargeback"}
-	ClubSupportCancel     = Transaction{"club_support_cancel"}
-	ClubSupportRefund     = Transaction{"club_support_refund"}
-	ClubSupportReactivate = Transaction{"club_support_reactivate"}
+	UnknownTransaction = Transaction{""}
+	New                = Transaction{"new"}
+	Invoice            = Transaction{"invoice"}
+	Void               = Transaction{"void"}
+	Chargeback         = Transaction{"chargeback"}
+	Cancel             = Transaction{"cancel"}
+	Expired            = Transaction{"expired"}
+	Refund             = Transaction{"refund"}
+	Failed             = Transaction{"failed"}
+	Reactivate         = Transaction{"reactivate"}
 )
 
 func (r Transaction) String() string {
@@ -23,20 +25,24 @@ func (r Transaction) String() string {
 
 func TransactionFromString(s string) (Transaction, error) {
 	switch s {
-	case ClubSupportNew.slug:
-		return ClubSupportNew, nil
-	case ClubSupportInvoice.slug:
-		return ClubSupportInvoice, nil
-	case ClubSupportVoid.slug:
-		return ClubSupportVoid, nil
-	case ClubSupportChargeback.slug:
-		return ClubSupportChargeback, nil
-	case ClubSupportCancel.slug:
-		return ClubSupportCancel, nil
-	case ClubSupportRefund.slug:
-		return ClubSupportRefund, nil
-	case ClubSupportReactivate.slug:
-		return ClubSupportReactivate, nil
+	case New.slug:
+		return New, nil
+	case Invoice.slug:
+		return Invoice, nil
+	case Void.slug:
+		return Void, nil
+	case Chargeback.slug:
+		return Chargeback, nil
+	case Failed.slug:
+		return Failed, nil
+	case Cancel.slug:
+		return Cancel, nil
+	case Expired.slug:
+		return Expired, nil
+	case Refund.slug:
+		return Refund, nil
+	case Reactivate.slug:
+		return Reactivate, nil
 	}
 
 	return UnknownTransaction, errors.New("unknown transaction: " + s)

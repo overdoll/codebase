@@ -28,7 +28,7 @@ func CCBillCancellation(ctx workflow.Context, payload CCBillCancellationPayload)
 
 	// create cancelled record
 	if err := workflow.ExecuteActivity(ctx, a.CreateCancelledAccountTransactionRecord,
-		activities.CreateCancelledAccountTransactionRecord{
+		activities.CreateCancelledClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,

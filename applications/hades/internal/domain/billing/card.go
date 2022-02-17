@@ -7,6 +7,22 @@ type Card struct {
 	expiration string
 }
 
+func NewCard(bin, btype, last4, expiration string) (*Card, error) {
+
+	parsedType, err := CardTypeFromString(btype)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Card{
+		bin:        bin,
+		btype:      parsedType,
+		last4:      last4,
+		expiration: expiration,
+	}, nil
+}
+
 func (c *Card) Type() CardType {
 	return c.btype
 }

@@ -29,7 +29,7 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 })
 
 var accountClubsSupportTable = table.New(table.Metadata{
-	Name: "account_clubs_support",
+	Name: "account_clubs_support_subscriptions",
 	Columns: []string{
 		"account_id",
 		"club_id",
@@ -111,7 +111,7 @@ type accountSavedPaymentMethod struct {
 	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
 }
 
-type accountClubSupport struct {
+type accountClubSupportSubscription struct {
 	AccountId              string     `db:"account_id"`
 	ClubId                 string     `db:"club_id"`
 	Status                 string     `db:"status"`
@@ -208,10 +208,6 @@ func NewBillingCassandraRepository(session gocqlx.Session) BillingCassandraRepos
 	return BillingCassandraRepository{session: session}
 }
 
-func (r BillingCassandraRepository) EnsureUniqueCCBillClubSupporterSubscription(ctx context.Context, paymentLink *billing.CCBillClubSupporterPaymentLink) error {
-	return nil
-}
-
 func (r BillingCassandraRepository) CreateAccountSavedPaymentMethod(ctx context.Context, savedPaymentMethod *billing.SavedPaymentMethod) error {
 
 	encrypted, err := encryptPaymentMethod(savedPaymentMethod.PaymentMethod())
@@ -296,7 +292,7 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 	return savedPayments, nil
 }
 
-func (r BillingCassandraRepository) CreateAccountClubSupport(ctx context.Context, accountClubSupp *billing.AccountClubSupport) error {
+func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx context.Context, accountClubSupp *billing.AccountClubSupportSubscription) error {
 
 	encrypted, err := encryptPaymentMethod(accountClubSupp.PaymentMethod())
 
@@ -306,7 +302,7 @@ func (r BillingCassandraRepository) CreateAccountClubSupport(ctx context.Context
 
 	if err := r.session.
 		Query(accountSavedPaymentMethodTable.Insert()).
-		BindStruct(&accountClubSupport{
+		BindStruct(&accountClubSupportSubscription{
 			AccountId:              accountClubSupp.AccountId(),
 			ClubId:                 accountClubSupp.ClubId(),
 			Status:                 accountClubSupp.Status().String(),
@@ -327,13 +323,95 @@ func (r BillingCassandraRepository) CreateAccountClubSupport(ctx context.Context
 	return nil
 }
 
-func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupport, error) {
+func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionByAccountAndClubId(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupportSubscription, error) {
+
+	var accountClubSupported *accountClubSupportSubscription
+
+	if err := accountClubsSupportTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupportSubscription{
+			AccountId: accountId,
+			ClubId:    clubId,
+		}).
+		Get(&accountClubSupported); err != nil {
+		return nil, fmt.Errorf("failed to get account club support by account and club id: %v", err)
+	}
+
+	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
+
+	if err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+		}
+
+		return nil, err
+	}
+
+	return billing.UnmarshalAccountClubSupportSubscriptionFromDatabase(
+		accountClubSupported.Id,
+		accountClubSupported.AccountId,
+		accountClubSupported.ClubId,
+		accountClubSupported.Status,
+		accountClubSupported.SupporterSince,
+		accountClubSupported.LastBillingDate,
+		accountClubSupported.NextBillingDate,
+		accountClubSupported.BillingAmount,
+		accountClubSupported.BillingCurrency,
+		decrypt,
+		accountClubSupported.CCBillSubscriptionId,
+		accountClubSupported.CancelledAt,
+	), nil
+}
+
+func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionById(ctx context.Context, accountId, clubId, id string) (*billing.AccountClubSupportSubscription, error) {
+
+	var accountClubSupported *accountClubSupportSubscription
+
+	if err := accountClubsSupportTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupportSubscription{
+			AccountId: accountId,
+			ClubId:    clubId,
+			Id:        id,
+		}).
+		Get(&accountClubSupported); err != nil {
+		return nil, fmt.Errorf("failed to get account club support by id: %v", err)
+	}
+
+	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billing.UnmarshalAccountClubSupportSubscriptionFromDatabase(
+		accountClubSupported.Id,
+		accountClubSupported.AccountId,
+		accountClubSupported.ClubId,
+		accountClubSupported.Status,
+		accountClubSupported.SupporterSince,
+		accountClubSupported.LastBillingDate,
+		accountClubSupported.NextBillingDate,
+		accountClubSupported.BillingAmount,
+		accountClubSupported.BillingCurrency,
+		decrypt,
+		accountClubSupported.CCBillSubscriptionId,
+		accountClubSupported.CancelledAt,
+	), nil
+}
+
+func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupportSubscription, error) {
 
 	if err := billing.CanViewAccountClubSupport(requester, accountId); err != nil {
 		return nil, err
 	}
 
-	var accountClubSupported []*accountClubSupport
+	var accountClubSupported []*accountClubSupportSubscription
 
 	builder := accountClubsSupportTable.SelectBuilder()
 
@@ -345,14 +423,14 @@ func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, r
 
 	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountClubSupport{
+		BindStruct(&accountClubSupportSubscription{
 			AccountId: accountId,
 		}).
 		Select(&accountClubSupported); err != nil {
 		return nil, fmt.Errorf("failed to get account club support: %v", err)
 	}
 
-	var accountSupport []*billing.AccountClubSupport
+	var accountSupport []*billing.AccountClubSupportSubscription
 
 	for _, support := range accountClubSupported {
 
@@ -362,7 +440,7 @@ func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, r
 			return nil, err
 		}
 
-		supportItem := billing.UnmarshalAccountClubSupportFromDatabase(
+		supportItem := billing.UnmarshalAccountClubSupportSubscriptionFromDatabase(
 			support.Id,
 			support.AccountId,
 			support.ClubId,

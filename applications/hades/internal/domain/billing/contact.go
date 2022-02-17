@@ -7,6 +7,15 @@ type Contact struct {
 	phoneNumber string
 }
 
+func NewContact(firstName, lastName, email, phoneNumber string) (*Contact, error) {
+	return &Contact{
+		firstName:   firstName,
+		lastName:    lastName,
+		email:       email,
+		phoneNumber: phoneNumber,
+	}, nil
+}
+
 func (c *Contact) FirstName() string {
 	return c.firstName
 }

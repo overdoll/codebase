@@ -1,4 +1,4 @@
-package billing
+package ccbill
 
 import (
 	"crypto/md5"
@@ -29,29 +29,29 @@ const (
 	ccbillNumRebills = 99
 )
 
-type CCBillClubSupporterPaymentLink struct {
+type ClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
 }
 
-func NewCCBillClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool) (*CCBillClubSupporterPaymentLink, error) {
-	return &CCBillClubSupporterPaymentLink{
+func NewCCBillClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool) (*ClubSupporterPaymentLink, error) {
+	return &ClubSupporterPaymentLink{
 		savePaymentDetails: savePaymentDetails,
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
 	}, nil
 }
 
-func (c *CCBillClubSupporterPaymentLink) ClubId() string {
+func (c *ClubSupporterPaymentLink) ClubId() string {
 	return c.clubId
 }
 
-func (c *CCBillClubSupporterPaymentLink) AccountId() string {
+func (c *ClubSupporterPaymentLink) AccountId() string {
 	return c.accountId
 }
 
-func (c *CCBillClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
+func (c *ClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
 
 	ccbillSubAccountNumber := os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER")
 

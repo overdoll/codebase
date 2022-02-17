@@ -39,8 +39,8 @@ func CCBillChargeback(ctx workflow.Context, payload CCBillChargebackPayload) err
 	}
 
 	// create refund record
-	if err := workflow.ExecuteActivity(ctx, a.CreateChargebackAccountTransactionRecord,
-		activities.CreateChargebackAccountTransactionRecord{
+	if err := workflow.ExecuteActivity(ctx, a.CreateChargebackClubSubscriptionAccountTransactionRecord,
+		activities.CreateChargebackClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
 			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
@@ -58,8 +58,8 @@ func CCBillChargeback(ctx workflow.Context, payload CCBillChargebackPayload) err
 	}
 
 	// remove account club support
-	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupport,
-		activities.RemoveAccountClubSupport{
+	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
+		activities.RemoveAccountClubSupportSubscription{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
