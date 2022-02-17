@@ -74,7 +74,7 @@ func (c *ClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
 
 	ccbillFormDigestBuilder.Write([]byte(billCurrencyCode))
 
-	ccbillFormDigestBuilder.Write([]byte(os.Getenv("CCBILL_FLEXFORMS_SALT_KEY")))
+	ccbillFormDigestBuilder.Write([]byte(os.Getenv("CCBILL_SALT_KEY")))
 
 	ccbillFormDigest := hex.EncodeToString(ccbillFormDigestBuilder.Sum(nil)[:])
 

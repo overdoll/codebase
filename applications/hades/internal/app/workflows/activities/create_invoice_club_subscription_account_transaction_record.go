@@ -3,8 +3,8 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/ccbill"
 	"strconv"
-	"time"
 )
 
 type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
@@ -47,19 +47,19 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		return err
 	}
 
-	timestamp, err := time.Parse("2006-01-02 15:04:05", request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
-	billedAtDate, err := time.Parse("2006-01-02", request.BillingDate)
+	billedAtDate, err := ccbill.ParseCCBillDate(request.BillingDate)
 
 	if err != nil {
 		return err
 	}
 
-	nextBillingDate, err := time.Parse("2006-01-02", request.NextBillingDate)
+	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
 
 	if err != nil {
 		return err

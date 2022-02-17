@@ -3,6 +3,7 @@ package billing
 import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type SavedPaymentMethod struct {
@@ -11,6 +12,8 @@ type SavedPaymentMethod struct {
 	accountId     string
 	id            string
 	paymentMethod *PaymentMethod
+
+	updatedAt time.Time
 
 	ccbillSubscriptionId string
 }
@@ -21,6 +24,7 @@ func NewSavedPaymentMethodFromCCBill(accountId, ccbillSubscriptionId string, pay
 		id:                   ccbillSubscriptionId,
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
+		updatedAt:            time.Now(),
 	}, nil
 }
 
@@ -30,6 +34,10 @@ func (c *SavedPaymentMethod) AccountId() string {
 
 func (c *SavedPaymentMethod) Id() string {
 	return c.id
+}
+
+func (c *SavedPaymentMethod) UpdatedAt() time.Time {
+	return c.updatedAt
 }
 
 func (c *SavedPaymentMethod) CCBillSubscriptionId() string {
@@ -44,12 +52,13 @@ func (c *SavedPaymentMethod) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
-func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod) *SavedPaymentMethod {
+func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time) *SavedPaymentMethod {
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   id,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		paymentMethod:        paymentMethod,
+		updatedAt:            updatedAt,
 	}
 }
 

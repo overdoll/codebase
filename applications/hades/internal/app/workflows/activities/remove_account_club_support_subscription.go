@@ -10,6 +10,6 @@ type RemoveAccountClubSupportSubscription struct {
 	CCBillSubscriptionId string
 }
 
-func (h *Activities) RemoveAccountClubSupportSubscription(ctx context.Context, payload RemoveAccountClubSupportSubscription) error {
-	return nil
+func (h *Activities) RemoveAccountClubSupportSubscription(ctx context.Context, request RemoveAccountClubSupportSubscription) error {
+	return h.billing.DeleteAccountClubSupportSubscription(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId)
 }

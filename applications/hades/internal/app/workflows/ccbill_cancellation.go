@@ -45,7 +45,7 @@ func CCBillCancellation(ctx workflow.Context, payload CCBillCancellationPayload)
 			CCBillSubscriptionId: payload.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
+			CancelledAt:          payload.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

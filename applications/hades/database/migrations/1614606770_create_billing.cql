@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS account_clubs_support_subscriptions
     id                       text,
     ccbill_subscription_id   text,
 
+    updated_at               timestamp,
+
     primary key ( account_id, club_id, id )
 );
 
@@ -25,6 +27,8 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
     id                       text,
 
     encrypted_payment_method text,
+
+    updated_at               timestamp,
 
     ccbill_subscription_id   text,
     primary key ( account_id, id )
@@ -72,6 +76,7 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details_mapping
     supporting_club_id       text,
     initiator_account_id     text,
 
-    duplicate                boolean,
+    updated_at               timestamp,
+
     primary key ( ccbill_subscription_id )
 );

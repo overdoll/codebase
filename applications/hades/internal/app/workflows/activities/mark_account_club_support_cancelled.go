@@ -2,15 +2,32 @@ package activities
 
 import (
 	"context"
+	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type MarkAccountClubSupportCancelled struct {
 	AccountId            string
 	ClubId               string
 	CCBillSubscriptionId string
-	Timestamp            string
+	CancelledAt          string
 }
 
-func (h *Activities) MarkAccountClubSupportCancelled(ctx context.Context, payload MarkAccountClubSupportCancelled) error {
+func (h *Activities) MarkAccountClubSupportCancelled(ctx context.Context, request MarkAccountClubSupportCancelled) error {
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(request.CancelledAt)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = h.billing.UpdateAccountClubSupportSubscriptionStatus(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupportSubscription) error {
+		return subscription.MarkCancelled(timestamp)
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

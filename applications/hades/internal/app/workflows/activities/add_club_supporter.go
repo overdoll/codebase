@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"time"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type AddClubSupporter struct {
@@ -13,7 +13,7 @@ type AddClubSupporter struct {
 
 func (h *Activities) AddClubSupporter(ctx context.Context, payload AddClubSupporter) error {
 
-	res, err := time.Parse("2006-01-02 15:04:05", payload.SupportedAt)
+	res, err := ccbill.ParseCCBillDateWithTime(payload.SupportedAt)
 
 	if err != nil {
 		return err

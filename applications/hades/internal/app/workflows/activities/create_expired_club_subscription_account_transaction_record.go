@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"time"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CreateExpiredClubSubscriptionAccountTransactionRecord struct {
@@ -15,7 +15,7 @@ type CreateExpiredClubSubscriptionAccountTransactionRecord struct {
 
 func (h *Activities) CreateExpiredClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateExpiredClubSubscriptionAccountTransactionRecord) error {
 
-	timestamp, err := time.Parse("2006-01-02 15:04:05", request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
 
 	if err != nil {
 		return err

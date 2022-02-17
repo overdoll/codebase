@@ -10,5 +10,5 @@ type RemoveClubSupporter struct {
 }
 
 func (h *Activities) RemoveClubSupporter(ctx context.Context, payload RemoveClubSupporter) error {
-	return nil
+	return h.stella.RemoveClubSupporter(ctx, payload.ClubId, payload.AccountId)
 }

@@ -23,6 +23,8 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 		"encrypted_payment_method",
 
 		"ccbill_subscription_id",
+
+		"updated_at",
 	},
 	PartKey: []string{"account_id"},
 	SortKey: []string{"id"},
@@ -44,13 +46,15 @@ var accountClubsSupportTable = table.New(table.Metadata{
 
 		"id",
 		"ccbill_subscription_id",
+
+		"updated_at",
 	},
 	PartKey: []string{"account_id"},
 	SortKey: []string{"club_id", "id"},
 })
 
 var accountTransactionHistoryTable = table.New(table.Metadata{
-	Name: "account_clubs_support",
+	Name: "account_transaction_history",
 	Columns: []string{
 		"account_id",
 		"bucket",
@@ -109,6 +113,8 @@ type accountSavedPaymentMethod struct {
 	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
 
 	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
+
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type accountClubSupportSubscription struct {
@@ -124,6 +130,7 @@ type accountClubSupportSubscription struct {
 	CancelledAt            *time.Time `db:"cancelled_at"`
 	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
 	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
+	UpdatedAt              time.Time  `db:"updated_at"`
 }
 
 type accountTransactionHistory struct {
@@ -200,6 +207,31 @@ func decryptPaymentMethod(payM string) (*billing.PaymentMethod, error) {
 	), nil
 }
 
+func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountClubSupportSubscription) (*accountClubSupportSubscription, error) {
+
+	encrypted, err := encryptPaymentMethod(accountClubSupp.PaymentMethod())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &accountClubSupportSubscription{
+		AccountId:              accountClubSupp.AccountId(),
+		ClubId:                 accountClubSupp.ClubId(),
+		Status:                 accountClubSupp.Status().String(),
+		SupporterSince:         accountClubSupp.SupporterSince(),
+		LastBillingDate:        accountClubSupp.LastBillingDate(),
+		NextBillingDate:        accountClubSupp.NextBillingDate(),
+		CancelledAt:            accountClubSupp.CancelledAt(),
+		BillingAmount:          accountClubSupp.BillingAmount(),
+		BillingCurrency:        accountClubSupp.BillingCurrency().String(),
+		EncryptedPaymentMethod: encrypted,
+		Id:                     accountClubSupp.Id(),
+		CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
+		UpdatedAt:              accountClubSupp.UpdatedAt(),
+	}, nil
+}
+
 type BillingCassandraRepository struct {
 	session gocqlx.Session
 }
@@ -223,6 +255,7 @@ func (r BillingCassandraRepository) CreateAccountSavedPaymentMethod(ctx context.
 			Id:                     savedPaymentMethod.Id(),
 			EncryptedPaymentMethod: encrypted,
 			CCBillSubscriptionId:   savedPaymentMethod.CCBillSubscriptionId(),
+			UpdatedAt:              savedPaymentMethod.UpdatedAt(),
 		}).
 		ExecRelease(); err != nil {
 		return err
@@ -284,7 +317,7 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 			return nil, err
 		}
 
-		savedMethod := billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt)
+		savedMethod := billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt)
 		savedMethod.Node = paging.NewNode(savedPay.Id)
 		savedPayments = append(savedPayments, savedMethod)
 	}
@@ -294,7 +327,7 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 
 func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx context.Context, accountClubSupp *billing.AccountClubSupportSubscription) error {
 
-	encrypted, err := encryptPaymentMethod(accountClubSupp.PaymentMethod())
+	marshalled, err := marshalAccountClubSubscriptionToDatabase(accountClubSupp)
 
 	if err != nil {
 		return err
@@ -302,20 +335,7 @@ func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx con
 
 	if err := r.session.
 		Query(accountSavedPaymentMethodTable.Insert()).
-		BindStruct(&accountClubSupportSubscription{
-			AccountId:              accountClubSupp.AccountId(),
-			ClubId:                 accountClubSupp.ClubId(),
-			Status:                 accountClubSupp.Status().String(),
-			SupporterSince:         accountClubSupp.SupporterSince(),
-			LastBillingDate:        accountClubSupp.LastBillingDate(),
-			NextBillingDate:        accountClubSupp.NextBillingDate(),
-			CancelledAt:            accountClubSupp.CancelledAt(),
-			BillingAmount:          accountClubSupp.BillingAmount(),
-			BillingCurrency:        accountClubSupp.BillingCurrency().String(),
-			EncryptedPaymentMethod: encrypted,
-			Id:                     accountClubSupp.Id(),
-			CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
-		}).
+		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return err
 	}
@@ -363,7 +383,26 @@ func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionByAccountAn
 		decrypt,
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
+		accountClubSupported.UpdatedAt,
 	), nil
+}
+
+func (r BillingCassandraRepository) DeleteAccountClubSupportSubscription(ctx context.Context, accountId, clubId, id string) error {
+
+	if err := accountClubsSupportTable.
+		DeleteBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupportSubscription{
+			AccountId: accountId,
+			ClubId:    clubId,
+			Id:        id,
+		}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete account club support subscription: %v", err)
+	}
+
+	return nil
 }
 
 func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionById(ctx context.Context, accountId, clubId, id string) (*billing.AccountClubSupportSubscription, error) {
@@ -402,7 +441,47 @@ func (r BillingCassandraRepository) GetAccountClubSupportSubscriptionById(ctx co
 		decrypt,
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
+		accountClubSupported.UpdatedAt,
 	), nil
+}
+
+func (r BillingCassandraRepository) updateAccountClubSupportSubscription(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupportSubscription) error, columns []string) (*billing.AccountClubSupportSubscription, error) {
+
+	subscription, err := r.GetAccountClubSupportSubscriptionById(ctx, accountId, clubId, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalAccountClubSubscriptionToDatabase(subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(accountClubsSupportTable.Update(columns...)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
+	}
+
+	return subscription, nil
+}
+
+func (r BillingCassandraRepository) UpdateAccountClubSupportBillingDate(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupportSubscription) error) (*billing.AccountClubSupportSubscription, error) {
+	return r.updateAccountClubSupportSubscription(ctx, accountId, clubId, id, updateFn, []string{"next_billing_date"})
+}
+
+func (r BillingCassandraRepository) UpdateAccountClubSupportSubscriptionStatus(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupportSubscription) error) (*billing.AccountClubSupportSubscription, error) {
+	return r.updateAccountClubSupportSubscription(ctx, accountId, clubId, id, updateFn, []string{"cancelled_at", "status", "next_billing_date"})
 }
 
 func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupportSubscription, error) {
@@ -453,6 +532,7 @@ func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx conte
 			decrypt,
 			support.CCBillSubscriptionId,
 			support.CancelledAt,
+			support.UpdatedAt,
 		)
 
 		supportItem.Node = paging.NewNode(support.ClubId)

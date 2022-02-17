@@ -25,6 +25,8 @@ type AccountClubSupportSubscription struct {
 	lastBillingDate time.Time
 	nextBillingDate time.Time
 
+	updatedAt time.Time
+
 	cancelledAt *time.Time
 
 	billingAmount   float64
@@ -55,6 +57,7 @@ func NewAccountClubSupportSubscriptionFromCCBill(accountId, clubId, ccbillSubscr
 		billingAmount:        amount,
 		billingCurrency:      currenc,
 		paymentMethod:        paymentMethod,
+		updatedAt:            time.Now(),
 		ccbillSubscriptionId: ccbillSubscriptionId,
 	}, nil
 }
@@ -69,6 +72,10 @@ func (c *AccountClubSupportSubscription) AccountId() string {
 
 func (c *AccountClubSupportSubscription) ClubId() string {
 	return c.clubId
+}
+
+func (c *AccountClubSupportSubscription) UpdatedAt() time.Time {
+	return c.updatedAt
 }
 
 func (c *AccountClubSupportSubscription) Status() SupportStatus {
@@ -111,7 +118,25 @@ func (c *AccountClubSupportSubscription) IsCCBill() bool {
 	return c.ccbillSubscriptionId != ""
 }
 
-func UnmarshalAccountClubSupportSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time) *AccountClubSupportSubscription {
+func (c *AccountClubSupportSubscription) MarkCancelled(cancelledAt time.Time) error {
+	c.cancelledAt = &cancelledAt
+	c.status = Cancelled
+	return nil
+}
+
+func (c *AccountClubSupportSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
+	c.nextBillingDate = nextBillingDate
+	return nil
+}
+
+func (c *AccountClubSupportSubscription) MakeReactivated(nextBillingDate time.Time) error {
+	c.cancelledAt = nil
+	c.status = Active
+	c.nextBillingDate = nextBillingDate
+	return nil
+}
+
+func UnmarshalAccountClubSupportSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time, updatedAt time.Time) *AccountClubSupportSubscription {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupportSubscription{
@@ -127,6 +152,7 @@ func UnmarshalAccountClubSupportSubscriptionFromDatabase(id, accountId, clubId, 
 		billingCurrency:      cr,
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
+		updatedAt:            updatedAt,
 	}
 }
 

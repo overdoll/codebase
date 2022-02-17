@@ -10,5 +10,15 @@ type GetCCBillSubscriptionDetailsPayload struct {
 }
 
 func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSubscriptionId string) (*GetCCBillSubscriptionDetailsPayload, error) {
-	return nil, nil
+
+	details, err := h.billing.GetCCBillSubscription(ctx, ccbillSubscriptionId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetCCBillSubscriptionDetailsPayload{
+		ClubId:    details.ClubId(),
+		AccountId: details.AccountId(),
+	}, nil
 }

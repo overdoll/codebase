@@ -43,8 +43,8 @@ func CCBillCustomerDataUpdate(ctx workflow.Context, payload CCBillCustomerDataUp
 	}
 
 	// update with new payment details data
-	if err := workflow.ExecuteActivity(ctx, a.UpdatePaymentMethodDetails,
-		activities.UpdatePaymentMethodDetails{
+	if err := workflow.ExecuteActivity(ctx, a.UpdateCCBillSubscriptionDetails,
+		activities.UpdateCCBillSubscriptionDetails{
 			CCBillSubscriptionId: payload.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
