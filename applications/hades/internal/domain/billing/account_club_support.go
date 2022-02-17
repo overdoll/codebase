@@ -12,11 +12,15 @@ type AccountClubSupport struct {
 	accountId string
 	clubId    string
 
+	id string
+
 	status SupportStatus
 
 	supporterSince  time.Time
 	lastBillingDate time.Time
 	nextBillingDate time.Time
+
+	cancelledAt *time.Time
 
 	billingAmount   float64
 	billingCurrency Currency
@@ -24,6 +28,10 @@ type AccountClubSupport struct {
 	paymentMethod *PaymentMethod
 
 	ccbillSubscriptionId string
+}
+
+func (c *AccountClubSupport) Id() string {
+	return c.id
 }
 
 func (c *AccountClubSupport) AccountId() string {
@@ -40,6 +48,10 @@ func (c *AccountClubSupport) Status() SupportStatus {
 
 func (c *AccountClubSupport) SupporterSince() time.Time {
 	return c.supporterSince
+}
+
+func (c *AccountClubSupport) CancelledAt() *time.Time {
+	return c.cancelledAt
 }
 
 func (c *AccountClubSupport) LastBillingDate() time.Time {
@@ -70,13 +82,15 @@ func (c *AccountClubSupport) IsCCBill() bool {
 	return c.ccbillSubscriptionId != ""
 }
 
-func UnmarshalAccountClubSupportFromDatabase(accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string) *AccountClubSupport {
+func UnmarshalAccountClubSupportFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time) *AccountClubSupport {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupport{
+		id:                   id,
 		accountId:            accountId,
 		clubId:               clubId,
 		status:               st,
+		cancelledAt:          cancelledAt,
 		supporterSince:       supporterSince,
 		lastBillingDate:      lastBillingDate,
 		nextBillingDate:      nextBillingDate,

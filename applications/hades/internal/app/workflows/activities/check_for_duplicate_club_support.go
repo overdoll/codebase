@@ -2,8 +2,17 @@ package activities
 
 import "context"
 
-func (h *Activities) CheckForExistingClubSupport(ctx context.Context, accountId, clubId string) (bool, error) {
+type CheckForExistingClubSupport struct {
+	AccountId            string
+	ClubId               string
+	CCBillSubscriptionId string
+}
 
-	// TODO: also check if
-	return false, nil
+type CheckForExistingClubSupportPayload struct {
+	DuplicateSupportDifferentSubscription bool
+	DuplicateSupportSameSubscription      bool
+}
+
+func (h *Activities) CheckForExistingClubSupport(ctx context.Context, request CheckForExistingClubSupport) (*CheckForExistingClubSupportPayload, error) {
+	return nil, nil
 }

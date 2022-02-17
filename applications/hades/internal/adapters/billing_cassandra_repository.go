@@ -42,10 +42,11 @@ var accountClubsSupportTable = table.New(table.Metadata{
 
 		"encrypted_payment_method",
 
+		"id",
 		"ccbill_subscription_id",
 	},
 	PartKey: []string{"account_id"},
-	SortKey: []string{"club_id"},
+	SortKey: []string{"club_id", "id"},
 })
 
 var accountTransactionHistoryTable = table.New(table.Metadata{
@@ -111,18 +112,18 @@ type accountSavedPaymentMethod struct {
 }
 
 type accountClubSupport struct {
-	AccountId       string    `db:"account_id"`
-	ClubId          string    `db:"club_id"`
-	Status          string    `db:"status"`
-	SupporterSince  time.Time `db:"supporter_since"`
-	LastBillingDate time.Time `db:"last_billing_date"`
-	NextBillingDate time.Time `db:"next_billing_date"`
-	BillingAmount   float64   `db:"billing_amount"`
-	BillingCurrency string    `db:"billing_currency"`
-
-	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
-
-	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
+	AccountId              string     `db:"account_id"`
+	ClubId                 string     `db:"club_id"`
+	Status                 string     `db:"status"`
+	SupporterSince         time.Time  `db:"supporter_since"`
+	LastBillingDate        time.Time  `db:"last_billing_date"`
+	NextBillingDate        time.Time  `db:"next_billing_date"`
+	BillingAmount          float64    `db:"billing_amount"`
+	BillingCurrency        string     `db:"billing_currency"`
+	Id                     string     `db:"id"`
+	CancelledAt            *time.Time `db:"cancelled_at"`
+	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
+	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
 }
 
 type accountTransactionHistory struct {
@@ -312,9 +313,11 @@ func (r BillingCassandraRepository) CreateAccountClubSupport(ctx context.Context
 			SupporterSince:         accountClubSupp.SupporterSince(),
 			LastBillingDate:        accountClubSupp.LastBillingDate(),
 			NextBillingDate:        accountClubSupp.NextBillingDate(),
+			CancelledAt:            accountClubSupp.CancelledAt(),
 			BillingAmount:          accountClubSupp.BillingAmount(),
 			BillingCurrency:        accountClubSupp.BillingCurrency().String(),
 			EncryptedPaymentMethod: encrypted,
+			Id:                     accountClubSupp.Id(),
 			CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
 		}).
 		ExecRelease(); err != nil {
@@ -360,6 +363,7 @@ func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, r
 		}
 
 		supportItem := billing.UnmarshalAccountClubSupportFromDatabase(
+			support.Id,
 			support.AccountId,
 			support.ClubId,
 			support.Status,
@@ -370,6 +374,7 @@ func (r BillingCassandraRepository) GetAccountClubSupport(ctx context.Context, r
 			support.BillingCurrency,
 			decrypt,
 			support.CCBillSubscriptionId,
+			support.CancelledAt,
 		)
 
 		supportItem.Node = paging.NewNode(support.ClubId)

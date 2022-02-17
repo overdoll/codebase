@@ -72,10 +72,12 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 
 	var validDigest bool
 
-	if err := workflow.ExecuteActivity(ctx, a.ValidateCCBillDigest, activities.ValidateCCBillDigest{
-		CCBillSubscriptionId:           payload.SubscriptionId,
-		DynamicPricingValidationDigest: payload.DynamicPricingValidationDigest,
-	}).Get(ctx, &validDigest); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.ValidateCCBillDigest,
+		activities.ValidateCCBillDigest{
+			CCBillSubscriptionId:           payload.SubscriptionId,
+			DynamicPricingValidationDigest: payload.DynamicPricingValidationDigest,
+		},
+	).Get(ctx, &validDigest); err != nil {
 		return err
 	}
 
@@ -90,18 +92,29 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 		return err
 	}
 
-	var clubAlreadySupportedByAccount bool
+	var existingClubSupport *activities.CheckForExistingClubSupportPayload
 
 	// check for duplicate subscriptions - if the account already supports the club
-	if err := workflow.ExecuteActivity(ctx, a.CheckForExistingClubSupport, details.AccountInitiator.AccountId, details.CcbillClubSupporter.ClubId).Get(ctx, &clubAlreadySupportedByAccount); err != nil {
+
+	if err := workflow.ExecuteActivity(ctx, a.CheckForExistingClubSupport,
+		activities.CheckForExistingClubSupport{
+			AccountId:            details.AccountInitiator.AccountId,
+			ClubId:               details.CcbillClubSupporter.ClubId,
+			CCBillSubscriptionId: payload.SubscriptionId,
+		},
+	).Get(ctx, &existingClubSupport); err != nil {
 		return err
 	}
 
-	// cancel duplicated ccbill subscription, don't proceed
-	if clubAlreadySupportedByAccount {
-
-		if err := workflow.ExecuteActivity(ctx, a.CancelCCBillSubscription, payload.SubscriptionId).Get(ctx, nil); err != nil {
-			return err
+	// a duplicate subscription detected
+	if existingClubSupport.DuplicateSupportSameSubscription || existingClubSupport.DuplicateSupportDifferentSubscription {
+		// basically, if the subscription ID that was passed in is not the one currently being used, then it will cancel it
+		// otherwise, the subscription ID that was passed in is the same as the current subscription ID, so we don't want to accidentally cancel
+		// an existing CCBill subscription
+		if existingClubSupport.DuplicateSupportDifferentSubscription {
+			if err := workflow.ExecuteActivity(ctx, a.CancelCCBillSubscription, payload.SubscriptionId).Get(ctx, nil); err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -163,9 +176,11 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 
 	// tell stella about this new supporter
 	if err := workflow.ExecuteActivity(ctx, a.AddClubSupporter,
-		details.AccountInitiator.AccountId,
-		details.CcbillClubSupporter.ClubId,
-		payload.Timestamp,
+		activities.AddClubSupporter{
+			AccountId:   details.AccountInitiator.AccountId,
+			ClubId:      details.CcbillClubSupporter.ClubId,
+			SupportedAt: payload.Timestamp,
+		},
 	).Get(ctx, &details); err != nil {
 		return err
 	}

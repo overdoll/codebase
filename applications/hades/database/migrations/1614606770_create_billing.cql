@@ -9,11 +9,14 @@ CREATE TABLE IF NOT EXISTS account_clubs_support
     billing_amount           float,
     billing_currency         text,
 
+    cancelled_at             timestamp,
+
     encrypted_payment_method text,
 
+    id                       text,
     ccbill_subscription_id   text,
 
-    primary key ( account_id, club_id )
+    primary key ( account_id, club_id, id )
 );
 
 CREATE TABLE IF NOT EXISTS account_saved_payment_methods
@@ -68,5 +71,7 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details_mapping
 
     supporting_club_id       text,
     initiator_account_id     text,
+
+    duplicate                boolean,
     primary key ( ccbill_subscription_id )
 );

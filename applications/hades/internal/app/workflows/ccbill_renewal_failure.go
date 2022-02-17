@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/sdk/workflow"
+	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
 type CCBillRenewalFailurePayload struct {
@@ -21,6 +22,31 @@ type CCBillRenewalFailurePayload struct {
 func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayload) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+
+	var a *activities.Activities
+
+	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
+
+	// get subscription details so we know the club
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
+	// create record for failed transaction
+	if err := workflow.ExecuteActivity(ctx, a.CreateFailedAccountTransactionRecord,
+		activities.CreateFailedAccountTransactionRecord{
+			CCBillTransactionId:  payload.TransactionId,
+			NextRetryDate:        payload.NextRetryDate,
+			FailureReason:        payload.FailureReason,
+			FailureCode:          payload.FailureCode,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			CCBillSubscriptionId: payload.SubscriptionId,
+			Timestamp:            payload.Timestamp,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
 
 	return nil
 }
