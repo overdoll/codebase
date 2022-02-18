@@ -9,49 +9,29 @@ import (
 	"strconv"
 )
 
-const (
-	// initial price
-	ccbillInitialPrice = 6.99
-
-	// initial period (days)
-	ccbillInitialPeriod = 30
-
-	// charge in USD
-	ccbillCurrencyCode = 840
-
-	// recurring price
-	ccbillRecurringPrice = 6.99
-
-	// recurring period (days)
-	ccbillRecurringPeriod = 30
-
-	// indefinite rebills
-	ccbillNumRebills = 99
-)
-
-type ClubSupporterPaymentLink struct {
+type FlexFormsClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
 }
 
-func NewCCBillClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool) (*ClubSupporterPaymentLink, error) {
-	return &ClubSupporterPaymentLink{
+func NewFlexFormsClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool) (*FlexFormsClubSupporterPaymentLink, error) {
+	return &FlexFormsClubSupporterPaymentLink{
 		savePaymentDetails: savePaymentDetails,
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
 	}, nil
 }
 
-func (c *ClubSupporterPaymentLink) ClubId() string {
+func (c *FlexFormsClubSupporterPaymentLink) ClubId() string {
 	return c.clubId
 }
 
-func (c *ClubSupporterPaymentLink) AccountId() string {
+func (c *FlexFormsClubSupporterPaymentLink) AccountId() string {
 	return c.accountId
 }
 
-func (c *ClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
+func (c *FlexFormsClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
 
 	ccbillSubAccountNumber := os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER")
 

@@ -13,7 +13,7 @@ type Application struct {
 }
 
 type Commands struct {
-	GenerateCCBillClubSupporterPaymentLink command.GenerateCCBillClubSupporterPaymentLinkHandler
+	GenerateCCBillClubSupporterPaymentLink command.GenerateCCBillClubSupportPaymentLinkHandler
 	ProcessCCBillWebhook                   command.ProcessCCBillWebhookHandler
 }
 

@@ -63,7 +63,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	return app.Application{
 		Commands: app.Commands{
-			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupporterPaymentLinkHandler(billingRepo, stella),
+			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, stella),
 			ProcessCCBillWebhook:                   command.NewProcessCCBillWebhookHandler(eventRepo),
 		},
 		Queries: app.Queries{

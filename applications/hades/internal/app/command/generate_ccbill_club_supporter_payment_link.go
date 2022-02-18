@@ -8,22 +8,22 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type GenerateCCBillClubSupporterPaymentLink struct {
+type GenerateCCBillClubSupportPaymentLink struct {
 	Principal           *principal.Principal
 	ClubId              string
 	SavePaymentForLater bool
 }
 
-type GenerateCCBillClubSupporterPaymentLinkHandler struct {
+type GenerateCCBillClubSupportPaymentLinkHandler struct {
 	br     billing.Repository
 	stella StellaService
 }
 
-func NewGenerateCCBillClubSupporterPaymentLinkHandler(br billing.Repository, stella StellaService) GenerateCCBillClubSupporterPaymentLinkHandler {
-	return GenerateCCBillClubSupporterPaymentLinkHandler{br: br, stella: stella}
+func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, stella StellaService) GenerateCCBillClubSupportPaymentLinkHandler {
+	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, stella: stella}
 }
 
-func (h GenerateCCBillClubSupporterPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupporterPaymentLink) (*ccbill.ClubSupporterPaymentLink, error) {
+func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupportPaymentLink) (*ccbill.FlexFormsClubSupporterPaymentLink, error) {
 
 	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
@@ -35,7 +35,18 @@ func (h GenerateCCBillClubSupporterPaymentLinkHandler) Handle(ctx context.Contex
 		return nil, errors.New("cannot generate a link - club not accessible")
 	}
 
-	paymentLink, err := ccbill.NewCCBillClubSupporterPaymentLink(cmd.Principal, cmd.ClubId, cmd.SavePaymentForLater)
+	// check to make sure an existing subscription doesn't already exist for this club + account combination
+	subscription, err := h.br.HasExistingAccountClubSupporterSubscription(ctx, cmd.Principal.AccountId(), cmd.ClubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if subscription {
+		return nil, errors.New("existing subscription found")
+	}
+
+	paymentLink, err := ccbill.NewFlexFormsClubSupporterPaymentLink(cmd.Principal, cmd.ClubId, cmd.SavePaymentForLater)
 
 	if err != nil {
 		return nil, err

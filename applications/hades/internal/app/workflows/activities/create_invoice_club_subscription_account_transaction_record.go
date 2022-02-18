@@ -30,7 +30,7 @@ type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
 func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateInvoiceClubSubscriptionAccountTransactionRecord) error {
 
 	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscription(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
 
 	if err != nil {
 		return err

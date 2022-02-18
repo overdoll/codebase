@@ -17,7 +17,7 @@ func (r *MutationResolver) GenerateCCBillClubSupporterPaymentLink(ctx context.Co
 	pst, err := r.App.Commands.GenerateCCBillClubSupporterPaymentLink.
 		Handle(
 			ctx,
-			command.GenerateCCBillClubSupporterPaymentLink{
+			command.GenerateCCBillClubSupportPaymentLink{
 				Principal:           principal.FromContext(ctx),
 				ClubId:              input.ClubID.GetID(),
 				SavePaymentForLater: input.SavePaymentDetailsForLater,

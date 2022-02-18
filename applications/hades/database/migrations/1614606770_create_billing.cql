@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS account_clubs_support_subscriptions
+CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
 (
     account_id               text,
     club_id                  text,
@@ -67,18 +67,30 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     primary key ( (account_id, bucket), id )
 );
 
-CREATE TABLE IF NOT EXISTS ccbill_subscription_billing_details
+CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 (
-    ccbill_subscription_id   text,
+    ccbill_subscription_id       text,
 
-    encrypted_payment_method text,
+    encrypted_payment_method     text,
 
-    supporting_club_id       text,
-    initiator_account_id     text,
+    supporting_club_id           text,
+    initiator_account_id         text,
 
-    updated_at               timestamp,
+    updated_at                   timestamp,
 
-    idempotency_key          text,
+    subscription_initial_price   float,
+    subscription_recurring_price float,
+    subscription_currency        text,
+
+    billed_initial_price         float,
+    billed_recurring_price       float,
+    billed_currency              text,
+
+    accounting_initial_price     float,
+    accounting_recurring_price   float,
+    accounting_currency          text,
+
+    idempotency_key              text,
 
     primary key ( ccbill_subscription_id )
 );

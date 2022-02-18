@@ -18,14 +18,6 @@ func NewCCBillHttpRepository(client *http.Client) CCBillHttpRepository {
 	return CCBillHttpRepository{client: client}
 }
 
-func addDatalinkCredentialsToRequest(req *http.Request) {
-	q := req.URL.Query()
-	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
-	q.Add("usingSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
-	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
-	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
-}
-
 type subscription struct {
 	XMLName               xml.Name `xml:"results"`
 	CancelDate            string   `xml:"cancelDate"`
@@ -43,7 +35,15 @@ type response struct {
 	Results int `xml:"results"`
 }
 
-func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbillSubscriptionId string) (*ccbill.Subscription, error) {
+func addDatalinkCredentialsToRequest(req *http.Request) {
+	q := req.URL.Query()
+	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
+	q.Add("usingSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
+	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
+	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
+}
+
+func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbillSubscriptionId string) (*ccbill.SubscriptionStatus, error) {
 
 	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
 
@@ -74,7 +74,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		return nil, err
 	}
 
-	return ccbill.UnmarshalSubscriptionFromDatabase(
+	return ccbill.UnmarshalSubscriptionStatusFromDatabase(
 		subResult.CancelDate,
 		subResult.ChargebacksIssued,
 		subResult.ExpirationDate,
@@ -164,4 +164,9 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	}
 
 	return nil
+}
+
+func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, ccbillSubscriptionId string) error {
+	//TODO implement me
+	panic("implement me")
 }

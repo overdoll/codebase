@@ -25,7 +25,7 @@ type CreateAccountClubSupportSubscription struct {
 
 func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, request CreateAccountClubSupportSubscription) error {
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscription(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsOperator(ctx, request.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 		return err
 	}
 
-	newSubscription, err := billing.NewAccountClubSupportSubscriptionFromCCBill(
+	newSubscription, err := billing.NewAccountClubSupporterSubscriptionFromCCBill(
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
@@ -86,7 +86,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 	}
 
 	// create new subscription
-	if err := h.billing.CreateAccountClubSupportSubscription(ctx, newSubscription); err != nil {
+	if err := h.billing.CreateAccountClubSupporterSubscription(ctx, newSubscription); err != nil {
 		return err
 	}
 

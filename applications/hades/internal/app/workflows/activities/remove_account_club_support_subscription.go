@@ -11,5 +11,5 @@ type RemoveAccountClubSupportSubscription struct {
 }
 
 func (h *Activities) RemoveAccountClubSupportSubscription(ctx context.Context, request RemoveAccountClubSupportSubscription) error {
-	return h.billing.DeleteAccountClubSupportSubscription(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId)
+	return h.billing.DeleteAccountClubSupporterSubscription(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId)
 }

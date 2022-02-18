@@ -21,7 +21,7 @@ func (h *Activities) MarkAccountClubSupportCancelled(ctx context.Context, reques
 		return err
 	}
 
-	_, err = h.billing.UpdateAccountClubSupportSubscriptionStatus(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupportSubscription) error {
+	_, err = h.billing.UpdateAccountClubSupporterSubscriptionStatus(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.MarkCancelled(timestamp)
 	})
 

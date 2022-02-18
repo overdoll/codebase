@@ -14,6 +14,16 @@ type CCBillNewSaleSuccessPayload struct {
 	AccountingInitialPrice   string `json:"accountingInitialPrice"`
 	AccountingRecurringPrice string `json:"accountingRecurringPrice"`
 
+	BilledCurrency       string `json:"billedCurrency"`
+	BilledCurrencyCode   string `json:"billedCurrencyCode"`
+	BilledInitialPrice   string `json:"billedInitialPrice"`
+	BilledRecurringPrice string `json:"billedRecurringPrice"`
+
+	SubscriptionCurrency       string `json:"subscriptionCurrency"`
+	SubscriptionCurrencyCode   string `json:"subscriptionCurrencyCode"`
+	SubscriptionInitialPrice   string `json:"subscriptionInitialPrice"`
+	SubscriptionRecurringPrice string `json:"subscriptionRecurringPrice"`
+
 	Address1 string `json:"address1"`
 
 	Bin            string `json:"bin"`
@@ -30,11 +40,6 @@ type CCBillNewSaleSuccessPayload struct {
 	State          string `json:"state"`
 	SubscriptionId string `json:"subscriptionId"`
 
-	BilledCurrency       string `json:"billedCurrency"`
-	BilledCurrencyCode   string `json:"billedCurrencyCode"`
-	BilledInitialPrice   string `json:"billedInitialPrice"`
-	BilledRecurringPrice string `json:"billedRecurringPrice"`
-
 	ClientAccnum                   string `json:"clientAccnum"`
 	ClientSubacc                   string `json:"clientSubacc"`
 	DynamicPricingValidationDigest string `json:"dynamicPricingValidationDigest"`
@@ -48,21 +53,18 @@ type CCBillNewSaleSuccessPayload struct {
 	TransactionId   string `json:"transactionId"`
 	Timestamp       string `json:"timestamp"`
 
-	PaymentAccount             string `json:"paymentAccount"`
-	PaymentType                string `json:"paymentType"`
-	PriceDescription           string `json:"priceDescription"`
-	Rebills                    string `json:"rebills"`
-	RecurringPeriod            string `json:"recurringPeriod"`
-	RecurringPriceDescription  string `json:"recurringPriceDescription"`
-	ReferringUrl               string `json:"referringUrl"`
-	SubscriptionCurrency       string `json:"subscriptionCurrency"`
-	SubscriptionCurrencyCode   string `json:"subscriptionCurrencyCode"`
-	SubscriptionInitialPrice   string `json:"subscriptionInitialPrice"`
-	SubscriptionRecurringPrice string `json:"subscriptionRecurringPrice"`
-	SubscriptionTypeId         string `json:"subscriptionTypeId"`
-	XFormDigest                string `json:"X-formDigest"`
-	XCurrencyCode              string `json:"X-currencyCode"`
-	XOverdollLocker            string `json:"X-overdollLocker"`
+	PaymentAccount            string `json:"paymentAccount"`
+	PaymentType               string `json:"paymentType"`
+	PriceDescription          string `json:"priceDescription"`
+	Rebills                   string `json:"rebills"`
+	RecurringPeriod           string `json:"recurringPeriod"`
+	RecurringPriceDescription string `json:"recurringPriceDescription"`
+	ReferringUrl              string `json:"referringUrl"`
+
+	SubscriptionTypeId string `json:"subscriptionTypeId"`
+	XFormDigest        string `json:"X-formDigest"`
+	XCurrencyCode      string `json:"X-currencyCode"`
+	XOverdollLocker    string `json:"X-overdollLocker"`
 }
 
 func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayload) error {
@@ -113,6 +115,18 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 			ClubId:               details.CcbillClubSupporter.ClubId,
 			CCBillSubscriptionId: payload.SubscriptionId,
 			IdempotencyKey:       idempotentKey,
+
+			AccountingCurrency:       payload.AccountingCurrency,
+			AccountingInitialPrice:   payload.AccountingInitialPrice,
+			AccountingRecurringPrice: payload.AccountingRecurringPrice,
+
+			BilledCurrency:       payload.BilledCurrency,
+			BilledInitialPrice:   payload.BilledInitialPrice,
+			BilledRecurringPrice: payload.BilledRecurringPrice,
+
+			SubscriptionCurrency:       payload.SubscriptionCurrency,
+			SubscriptionInitialPrice:   payload.SubscriptionInitialPrice,
+			SubscriptionRecurringPrice: payload.SubscriptionRecurringPrice,
 
 			CardBin:            payload.Bin,
 			CardType:           payload.CardType,

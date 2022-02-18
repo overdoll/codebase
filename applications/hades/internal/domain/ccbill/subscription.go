@@ -2,7 +2,7 @@ package ccbill
 
 import "time"
 
-type Subscription struct {
+type SubscriptionStatus struct {
 	cancelDate            time.Time
 	chargebacksIssued     int
 	expirationDate        time.Time
@@ -14,8 +14,8 @@ type Subscription struct {
 	voidsIssued           int
 }
 
-func UnmarshalSubscriptionFromDatabase(cancelDate string, chargebacksIssued int, expirationDate string, recurringSubscription, refundsIssued int, signupDate string, subscriptionStatus, timesRebilled, voidsIssued int) *Subscription {
-	return &Subscription{
+func UnmarshalSubscriptionStatusFromDatabase(cancelDate string, chargebacksIssued int, expirationDate string, recurringSubscription, refundsIssued int, signupDate string, subscriptionStatus, timesRebilled, voidsIssued int) *SubscriptionStatus {
+	return &SubscriptionStatus{
 		cancelDate:            time.Time{},
 		chargebacksIssued:     0,
 		expirationDate:        time.Time{},

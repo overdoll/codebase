@@ -62,6 +62,10 @@ func (c *SavedPaymentMethod) UpdatePaymentMethod(paymentMethod *PaymentMethod) e
 	return nil
 }
 
+func (c *SavedPaymentMethod) CanDelete(requester *principal.Principal) error {
+	return requester.BelongsToAccount(c.accountId)
+}
+
 func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time) *SavedPaymentMethod {
 	return &SavedPaymentMethod{
 		accountId:            accountId,
