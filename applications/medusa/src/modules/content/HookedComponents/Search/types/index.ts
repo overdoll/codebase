@@ -5,6 +5,8 @@ import { FetchPolicy } from 'relay-runtime'
 export type RegisterSearchKey = string
 export type RegisterSearchValue = any
 
+export type SearchValues = Record<string, any>
+
 export interface SearchAnyValues {
   [name: string]: any
 }
@@ -17,7 +19,7 @@ export interface UseSearchQueryOptions {
 }
 
 export interface UseSearchQueryState<TArguments> extends UseSearchQueryOptions {
-  variables: TArguments
+  variables: TArguments | {}
 }
 
 export interface ComponentSearchArguments<T> {

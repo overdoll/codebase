@@ -2,6 +2,7 @@ import {
   RegisterFunctionReturn,
   RegisterSearchKey,
   RegisterSearchValue,
+  SearchValues,
   UseSearchProps,
   UseSearchQueryOptions,
   UseSearchQueryState,
@@ -10,9 +11,7 @@ import {
 import { useCallback, useState, useTransition } from 'react'
 import { FetchPolicy } from 'relay-runtime'
 
-type SearchProps = Record<string, any>
-
-function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSearchProps<TArguments>): UseSearchReturn<TArguments> {
+function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArguments>): UseSearchReturn<TArguments> {
   const {
     defaultValue = {}
   } = props
@@ -25,8 +24,6 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
     variables: defaultValue
   }
 
-  // @ts-expect-error
-  // TODO fix types here
   const [searchArgs, setSearchArgs] = useState<UseSearchQueryState<TArguments>>(queryState)
 
   // @ts-expect-error
@@ -42,7 +39,7 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
   })
 
   // Keep the previous variables as to not interrupt the query
-  const replaceOrCreateQueryArguments = (previous: UseSearchQueryState<TArguments>, args: TArguments): UseSearchQueryState<TArguments> => ({
+  const replaceOrCreateQueryArguments = (previous, args): UseSearchQueryState<TArguments> => ({
     ...incrementFetchKey(previous.options.fetchKey),
     variables: {
       ...previous.variables, ...args
@@ -50,19 +47,19 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
   })
 
   // Replace all variables regardless of whether it will interrupt the query
-  const replaceQueryArguments = (previous: UseSearchQueryState<TArguments>, args: TArguments): UseSearchQueryState<TArguments> => ({
+  const replaceQueryArguments = (previous, args): UseSearchQueryState<TArguments> => ({
     ...incrementFetchKey(previous.options.fetchKey),
     variables: args
   })
 
   // One of the replace functions but as a callback and with a transition
-  const changeArguments = useCallback((args: TArguments) => {
+  const changeArguments = useCallback((args) => {
     startTransition(() => {
       setSearchArgs(prev => replaceOrCreateQueryArguments(prev, args))
     })
   }, [])
 
-  const setArguments = useCallback((args: TArguments) => {
+  const setArguments = useCallback((args) => {
     startTransition(() => {
       setSearchArgs(prev => replaceQueryArguments(prev, args))
     })
@@ -70,16 +67,14 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
 
   const loadQuery = useCallback(() => {
     startTransition(() => {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, defaultValue as TArguments))
+      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, {}))
     })
   }, [])
 
   // register a search component or any other component that can change an argument
   const register = (key: RegisterSearchKey): RegisterFunctionReturn => {
     const onChangeRegister = (value: RegisterSearchValue): void => {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      changeArguments({ [key]: value } as TArguments)
+      changeArguments({ [key]: value })
     }
     return {
       id: key,
