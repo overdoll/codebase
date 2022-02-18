@@ -3,8 +3,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { t } from '@lingui/macro'
 import SearchInput from '../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
-import { Dispatch, SetStateAction, Suspense, useRef, useState } from 'react'
-import useSearchQueryArguments from '../../../modules/hooks/useSearchQueryArguments'
+import { Dispatch, SetStateAction, Suspense, useState } from 'react'
 import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import GeneralSearch from './components/GeneralSearch/GeneralSearch'
 import SaveSearchButton from './components/GeneralSearch/SaveSearchButton/SaveSearchButton'
@@ -13,6 +12,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 import { ClickableBox, Icon } from '@//:modules/content/PageLayout'
 import { SearchBar } from '@//:assets/icons/navigation'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 interface Props {
   routeTo: string
@@ -25,6 +25,15 @@ export interface SearchValues {
     slug: string
   }
 }
+
+declare type SearchProps = Partial<{
+  search: string | null
+  first: number
+  seriesSlugs: string[] | null
+  categoriesSlugs: string[] | null
+  charactersSlugs: string[] | null
+  charactersSeriesSlug: string | null
+}>
 
 export interface StateProps {
   searchValues: SearchValues
@@ -45,39 +54,36 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
 
   // TODO handle character search somehow
 
-  const inputRef = useRef(null)
-
-  const [search, setSearch] = useState<string>('')
-
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({
-    search: null,
-    first: 2,
-    seriesSlugs: series,
-    categoriesSlugs: categories,
-    charactersSlugs: null,
-    charactersSeriesSlug: series != null ? series[0] : null
+  const {
+    searchArguments,
+    loadQuery,
+    setArguments,
+    register
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      search: null,
+      first: 3,
+      seriesSlugs: series,
+      categoriesSlugs: categories,
+      charactersSlugs: null,
+      charactersSeriesSlug: series != null ? series[0] : null
+    }
   })
 
   const [searchValues, setSearchValues] = useState<SearchValues>({})
 
   useUpdateEffect(() => {
-    setQueryArgs({
-      search: search,
-      first: 2,
-      seriesSlugs: null,
-      categoriesSlugs: null,
-      charactersSlugs: null,
-      charactersSeriesSlug: null
+    setArguments({
+      search: searchArguments.variables.search,
+      first: 2
     })
-  }, [search])
+  }, [searchArguments.variables.search])
 
   useUpdateEffect(() => {
-    setQueryArgs({
-      search: null,
+    setArguments({
       first: 2,
       seriesSlugs: series,
       categoriesSlugs: categories,
-      charactersSlugs: null,
       charactersSeriesSlug: series != null ? series[0] : null
     })
   }, [series, categories])
@@ -110,7 +116,6 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
         onClose={onClose}
         size='full'
         motionPreset='none'
-        initialFocusRef={inputRef}
         isCentered
         scrollBehavior='inside'
         preserveScrollBarGap
@@ -119,26 +124,21 @@ export default function FloatingGeneralSearchButton ({ routeTo }: Props): JSX.El
         <ModalContent bg='transparent' borderRadius='none'>
           <ModalBody overflowX='hidden' p={0}>
             <Suspense fallback={<SkeletonRectangleGrid />}>
-              <QueryErrorBoundary loadQuery={() => setQueryArgs({
-                search: null,
-                first: 2
-              })}
-              >
+              <QueryErrorBoundary loadQuery={loadQuery}>
                 <GeneralSearch
                   searchValues={searchValues}
                   setSearchValues={setSearchValues}
-                  queryArguments={queryArgs}
+                  searchArguments={searchArguments}
                 />
               </QueryErrorBoundary>
             </Suspense>
             <Box p={2} w='100%'>
               <Stack spacing={2}>
                 <SearchInput
+                  {...register('search')}
                   boxShadow='md'
                   size='md'
-                  sendRef={inputRef}
                   variant='outline'
-                  onChange={setSearch}
                   placeholder={i18n._(t`Search for characters, categories, or series`)}
                 />
                 <SaveSearchButton

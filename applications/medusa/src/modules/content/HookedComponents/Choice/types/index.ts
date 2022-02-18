@@ -42,6 +42,7 @@ export declare type UseChoiceProps<T> = Partial<{
   max: number | null
   onChange: (values: Choices<T>) => void
   onRemove: (id: Id) => void
+  onChoice: (id: Id, values: T) => void
 }>
 
 export interface UseChoiceReturn<T> extends ComponentChoiceArguments<T> {

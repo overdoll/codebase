@@ -4,12 +4,16 @@ import { useFragment } from 'react-relay'
 import RefreshProcessContent from './RefreshProcessContent/RefreshProcessContent'
 import { Suspense, useContext, useEffect } from 'react'
 import { Collapse } from '@chakra-ui/react'
-import { useSearchQueryArguments } from '@//:modules/hooks'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 interface Props {
   query: ProcessContentFragment$key
+}
+
+interface SearchProps {
+  reference: string
 }
 
 const Fragment = graphql`
@@ -28,12 +32,19 @@ export default function ProcessContent ({
 
   const state = useContext(StateContext)
 
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ reference: data.reference })
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      reference: data.reference
+    }
+  })
 
   useEffect(() => {
     if (state.isProcessing.value === false) return
     const refreshLoop = (): void => {
-      setQueryArgs({ reference: data.reference })
+      loadQuery()
       setTimeout(refreshLoop, 5000)
     }
 
@@ -42,9 +53,9 @@ export default function ProcessContent ({
 
   return (
     <Collapse in={state.isProcessing.value === true}>
-      <QueryErrorBoundary loadQuery={() => setQueryArgs({ reference: data.reference })}>
+      <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<></>}>
-          <RefreshProcessContent queryArgs={queryArgs} />
+          <RefreshProcessContent searchArguments={searchArguments} />
         </Suspense>
       </QueryErrorBoundary>
     </Collapse>

@@ -1,24 +1,29 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { Box, Stack } from '@chakra-ui/react'
-import { Suspense, useContext, useEffect, useState } from 'react'
+import { Suspense, useContext } from 'react'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import SkeletonStack from '../../../../../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
 import type { CategoriesCurationStepFragment$key } from '@//:artifacts/CategoriesCurationStepFragment.graphql'
-
-import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector'
-import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
-import HStackScroll
-  from '../../../../../../../../../modules/content/PageLayout/BuildingBlocks/HStackScroll/HStackScroll'
-import SearchInput from '../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
-import { useSearchQueryArguments } from '@//:modules/hooks'
+import SearchInput
+  from '../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 
 interface Props {
   query: CategoriesCurationStepFragment$key | null
+}
+
+interface SearchProps {
+  title: string
+}
+
+interface ChoiceProps {
+  title: string
 }
 
 const Fragment = graphql`
@@ -35,14 +40,6 @@ const Fragment = graphql`
 export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
-
-  const [search, setSearch] = useState<string>('')
-
-  const dispatch = useContext(DispatchContext)
-
-  const { i18n } = useLingui()
-
   const currentCategories = data?.category?.categories.reduce((accum, value) => ({
     ...accum,
     [value.id]: {
@@ -50,22 +47,27 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
     }
   }), {})
 
-  const [currentSelection, changeSelection, removeSelection] = useMultiSelector(
-    {
-      defaultValue: currentCategories ?? {}
-    }
-  )
+  const dispatch = useContext(DispatchContext)
 
-  useEffect(() => {
-    setQueryArgs({ title: search })
-  }, [search])
+  const { i18n } = useLingui()
 
-  useEffect(() => {
-    dispatch({
-      type: 'category',
-      value: currentSelection
+  const {
+    searchArguments,
+    loadQuery,
+    register: registerSearch
+  } = useSearch<SearchProps>({})
+
+  const {
+    values,
+    register,
+    removeValue
+  } = useChoice<ChoiceProps>({
+    defaultValue: currentCategories ?? {},
+    onChange: (props) => dispatch({
+      type: 'categories',
+      value: props
     })
-  }, [currentSelection])
+  })
 
   return (
     <Box>
@@ -78,29 +80,21 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <Stack spacing={2}>
-        <HStackScroll>
-          {Object.keys(currentSelection).map((item, index) =>
-            <RemovableTag
-              key={index}
-              onRemove={removeSelection}
-              id={item}
-              title={currentSelection[item].name}
-            />
-          )}
-        </HStackScroll>
+        <ChoiceRemovableTags
+          values={values}
+          removeValue={removeValue}
+          titleKey='title'
+        />
         <SearchInput
-          onChange={setSearch}
+          {...registerSearch('title')}
           placeholder={i18n._(t`Search for a category`)}
         />
         <Box maxH='60vh' overflowY='auto'>
-          <QueryErrorBoundary loadQuery={() => {
-          }}
-          >
+          <QueryErrorBoundary loadQuery={loadQuery}>
             <Suspense fallback={<SkeletonStack />}>
               <CategoryMultiSelector
-                queryArgs={queryArgs}
-                selected={currentSelection}
-                onSelect={changeSelection}
+                searchArguments={searchArguments}
+                register={register}
               />
             </Suspense>
           </QueryErrorBoundary>

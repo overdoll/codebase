@@ -10,7 +10,8 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
     defaultValue = fallbackDefaultValue,
     max = null,
     onChange: onChangeCallback,
-    onRemove: onRemoveCallback
+    onRemove: onRemoveCallback,
+    onChoice: onChoiceCallback
   } = props
 
   const [globalValues, setNewValues] = useState<Choices<T>>(defaultValue)
@@ -28,6 +29,7 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
 
   // basic function to add a value to the state
   const addValue = (id: Id, values: T): void => {
+    onChoiceCallback?.(id, values)
     setNewValues(prev => addKeyToObject({ [id]: values }, prev))
   }
 
@@ -48,6 +50,7 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
 
   // basic function to replace all the values from the state
   const replaceValue = (id: Id, values: T): void => {
+    onChoiceCallback?.(id, values)
     setNewValues(prev => addOrReplacePreviousValue(prev, id, values))
   }
 

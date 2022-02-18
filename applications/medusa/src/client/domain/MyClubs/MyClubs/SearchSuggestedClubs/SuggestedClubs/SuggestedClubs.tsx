@@ -6,10 +6,10 @@ import { Trans } from '@lingui/macro'
 import { Box } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
-import { QueryArguments } from '@//:types/hooks'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { EmptyBoundary } from '@//:modules/content/Placeholder'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -42,12 +42,12 @@ const Fragment = graphql`
 `
 
 export default function SuggestedClubs ({
-  queryArgs
+  searchArguments
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SuggestedClubsQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -60,37 +60,38 @@ export default function SuggestedClubs ({
     queryData
   )
 
-  if (data.clubs.edges.length < 1) {
-    return (
-      <SmallBackgroundBox>
-        <Trans>No clubs found</Trans>
-      </SmallBackgroundBox>
-    )
-  }
-
   return (
-    <GridWrap>
-      {data.clubs.edges.map((item, index) =>
-        <Box key={index} h='100%'>
-          <GridTile key={index}>
-            <LinkTile to={`/${item.node.slug as string}`}>
-              <ClubTileOverlay query={item.node} />
-            </LinkTile>
-          </GridTile>
-          <Box mt={2}>
-            <JoinClubButton
-              w='100%'
-              size='md'
-              clubQuery={item.node}
-              viewerQuery={queryData?.viewer}
-            />
-          </Box>
-        </Box>)}
-      <LoadMoreGridTile
-        hasNext={hasNext}
-        onLoadNext={() => loadNext(9)}
-        isLoadingNext={isLoadingNext}
-      />
-    </GridWrap>
+    <EmptyBoundary
+      fallback={
+        <SmallBackgroundBox>
+          <Trans>No clubs found</Trans>
+        </SmallBackgroundBox>
+    }
+      condition={data.clubs.edges.length < 1}
+    >
+      <GridWrap>
+        {data.clubs.edges.map((item, index) =>
+          <Box key={index} h='100%'>
+            <GridTile key={index}>
+              <LinkTile to={`/${item.node.slug as string}`}>
+                <ClubTileOverlay query={item.node} />
+              </LinkTile>
+            </GridTile>
+            <Box mt={2}>
+              <JoinClubButton
+                w='100%'
+                size='md'
+                clubQuery={item.node}
+                viewerQuery={queryData?.viewer}
+              />
+            </Box>
+          </Box>)}
+        <LoadMoreGridTile
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(9)}
+          isLoadingNext={isLoadingNext}
+        />
+      </GridWrap>
+    </EmptyBoundary>
   )
 }

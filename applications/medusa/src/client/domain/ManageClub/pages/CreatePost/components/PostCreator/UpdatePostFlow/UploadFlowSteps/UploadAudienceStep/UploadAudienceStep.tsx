@@ -1,9 +1,8 @@
-import { Suspense, useContext, useEffect } from 'react'
+import { Suspense, useContext } from 'react'
 import type { UploadAudienceStepFragment$key } from '@//:artifacts/UploadAudienceStepFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Flex, Stack } from '@chakra-ui/react'
-import { useSingleSelector } from '../../../../../../../../../../modules/content/ContentSelection'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import RequiredPrompt from '../../../../RequiredPrompt/RequiredPrompt'
 import { Trans } from '@lingui/macro'
@@ -12,9 +11,15 @@ import SkeletonStack
 import UploadAudiencesSingleSelector from './UploadAudiencesSingleSelector/UploadAudiencesSingleSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { useChoice } from '@//:modules/content/HookedComponents/Choice'
 
 interface Props {
   query: UploadAudienceStepFragment$key
+}
+
+interface ChoiceProps {
+  title: string
 }
 
 const Fragment = graphql`
@@ -33,14 +38,26 @@ export default function UploadAudienceStep ({
 
   const dispatch = useContext(DispatchContext)
 
-  const [currentSelection, setCurrentSelection] = useSingleSelector({ defaultValue: data?.audience?.id as string })
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<{}>({})
 
-  useEffect(() => {
-    dispatch({
+  const defaultValue = data.audience != null
+    ? {
+        [data.audience.id]: {
+          title: data.audience.title
+        }
+      }
+    : {}
+
+  const { register } = useChoice({
+    defaultValue: defaultValue,
+    onChange: (props) => dispatch({
       type: 'audience',
-      value: currentSelection
+      value: props
     })
-  }, [currentSelection])
+  })
 
   return (
     <Stack spacing={2}>
@@ -57,11 +74,12 @@ export default function UploadAudienceStep ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <QueryErrorBoundary loadQuery={() => {
-      }}
-      >
+      <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<SkeletonStack />}>
-          <UploadAudiencesSingleSelector selected={currentSelection} onSelect={setCurrentSelection} />
+          <UploadAudiencesSingleSelector
+            searchArguments={searchArguments}
+            register={register}
+          />
         </Suspense>
       </QueryErrorBoundary>
       <Flex justify='center'>

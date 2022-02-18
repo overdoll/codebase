@@ -1,20 +1,15 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { CategoryMultiSelectorQuery } from '@//:artifacts/CategoryMultiSelectorQuery.graphql'
-import { GridTile, GridWrap, LoadMoreGridTile, MultiSelector } from '@//:modules/content/ContentSelection'
-import {
-  MultiSelectedValue,
-  MultiSelectedValueFunction
-} from '@//:modules/content/ContentSelection/hooks/useMultiSelector'
+import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { usePaginationFragment } from 'react-relay'
 import CategoryTileOverlay
   from '../../../../../../../../../../modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptyCategories } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
+import { Choice } from '@//:modules/content/HookedComponents/Choice'
 
-interface Props {
-  selected: MultiSelectedValue
-  onSelect: MultiSelectedValueFunction
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
 
 const Query = graphql`
@@ -49,14 +44,13 @@ const Fragment = graphql`
 `
 
 export default function CategoryMultiSelector ({
-  onSelect,
-  selected,
-  queryArgs
+  searchArguments,
+  register
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<CategoryMultiSelectorQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -69,33 +63,26 @@ export default function CategoryMultiSelector ({
     queryData
   )
 
-  if (data.categories.edges.length < 1) {
-    return (
-      <EmptyCategories hint={queryArgs.variables.title} />
-    )
-  }
-
   return (
-    <GridWrap>
-      {data.categories.edges.map((item, index) => (
-        <GridTile key={index}>
-          <MultiSelector
-            onSelect={onSelect}
-            selected={selected}
-            id={item.node.id}
-            name={item.node.title}
-            type='category'
-          >
-            <CategoryTileOverlay query={item.node} />
-          </MultiSelector>
-        </GridTile>
-      )
-      )}
-      <LoadMoreGridTile
-        hasNext={hasNext}
-        onLoadNext={() => loadNext(5)}
-        isLoadingNext={isLoadingNext}
-      />
-    </GridWrap>
+    <EmptyBoundary
+      fallback={<EmptyCategories hint={searchArguments.variables.title} />}
+      condition={data.categories.edges.length < 1}
+    >
+      <GridWrap>
+        {data.categories.edges.map((item, index) => (
+          <GridTile key={index}>
+            <Choice {...register(item.node.id, { title: item.node.title })}>
+              <CategoryTileOverlay query={item.node} />
+            </Choice>
+          </GridTile>
+        )
+        )}
+        <LoadMoreGridTile
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(5)}
+          isLoadingNext={isLoadingNext}
+        />
+      </GridWrap>
+    </EmptyBoundary>
   )
 }

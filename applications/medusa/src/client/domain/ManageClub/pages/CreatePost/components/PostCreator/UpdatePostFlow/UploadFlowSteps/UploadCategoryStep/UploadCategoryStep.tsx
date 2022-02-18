@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect, useState } from 'react'
+import { Suspense, useContext } from 'react'
 import {
   FlowBuilderScrollableContainer,
   PageSectionDescription,
@@ -8,22 +8,30 @@ import {
 import { useFragment } from 'react-relay'
 import type { UploadCategoryStepFragment$key } from '@//:artifacts/UploadCategoryStepFragment.graphql'
 import { graphql } from 'react-relay/hooks'
-import { Stack, Wrap, WrapItem } from '@chakra-ui/react'
-import SearchInput from '../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
+import { Stack } from '@chakra-ui/react'
+import SearchInput
+  from '../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { t, Trans } from '@lingui/macro'
-import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { useLingui } from '@lingui/react'
-import { useSearchQueryArguments } from '@//:modules/hooks'
 import SkeletonRectangleGrid
   from '../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import UploadSearchCategoriesMultiSelector
   from './UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 
 interface Props {
   query: UploadCategoryStepFragment$key
+}
+
+interface SearchProps {
+  title: string
+}
+
+interface ChoiceProps {
+  title: string
 }
 
 const CategoryFragmentGQL = graphql`
@@ -48,13 +56,9 @@ export default function UploadCategoryStep ({
 }: Props): JSX.Element {
   const data = useFragment(CategoryFragmentGQL, query)
 
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ title: null })
-
-  const [search, setSearch] = useState<string>('')
+  const dispatch = useContext(DispatchContext)
 
   const { i18n } = useLingui()
-
-  const dispatch = useContext(DispatchContext)
 
   const currentCategories = data?.categories.reduce((accum, value) => ({
     ...accum,
@@ -63,22 +67,23 @@ export default function UploadCategoryStep ({
     }
   }), {})
 
-  const [currentSelection, changeSelection, removeSelection] = useMultiSelector(
-    {
-      defaultValue: currentCategories ?? {}
-    }
-  )
+  const {
+    searchArguments,
+    loadQuery,
+    register: registerSearch
+  } = useSearch<SearchProps>({})
 
-  useEffect(() => {
-    dispatch({
+  const {
+    values,
+    register,
+    removeValue
+  } = useChoice<ChoiceProps>({
+    defaultValue: currentCategories ?? {},
+    onChange: (props) => dispatch({
       type: 'categories',
-      value: currentSelection
+      value: props
     })
-  }, [currentSelection])
-
-  useEffect(() => {
-    setQueryArgs({ title: search })
-  }, [search])
+  })
 
   return (
     <Stack spacing={2}>
@@ -95,27 +100,20 @@ export default function UploadCategoryStep ({
         </PageSectionDescription>
       </PageSectionWrap>
       <SearchInput
-        onChange={setSearch}
+        {...registerSearch('title')}
         placeholder={i18n._(t`Search for a category`)}
       />
-      <Wrap>
-        {Object.keys(currentSelection).map((item, index) =>
-          <WrapItem key={index}>
-            <RemovableTag
-              onRemove={removeSelection}
-              id={item}
-              title={currentSelection[item].name}
-            />
-          </WrapItem>
-        )}
-      </Wrap>
+      <ChoiceRemovableTags
+        titleKey='title'
+        values={values}
+        removeValue={removeValue}
+      />
       <FlowBuilderScrollableContainer>
-        <QueryErrorBoundary loadQuery={() => setQueryArgs({ title: null })}>
+        <QueryErrorBoundary loadQuery={loadQuery}>
           <Suspense fallback={<SkeletonRectangleGrid />}>
             <UploadSearchCategoriesMultiSelector
-              selected={currentSelection}
-              onSelect={changeSelection}
-              queryArgs={queryArgs}
+              searchArguments={searchArguments}
+              register={register}
             />
           </Suspense>
         </QueryErrorBoundary>

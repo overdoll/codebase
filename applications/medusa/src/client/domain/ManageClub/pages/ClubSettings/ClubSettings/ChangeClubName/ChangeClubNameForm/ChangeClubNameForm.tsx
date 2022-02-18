@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Joi from 'joi'
@@ -14,6 +14,7 @@ import {
   FormSubmitButton,
   InputBody,
   InputFeedback,
+  InputFooter,
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -73,13 +74,13 @@ export default function ChangeClubNameForm ({
           ...formData
         }
       },
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
           title: t`Successfully updated your club name to ${formData.name}`
         })
       },
-      onError (data) {
+      onError () {
         notify({
           status: 'error',
           title: t`There was an error updating your club name`
@@ -101,21 +102,24 @@ export default function ChangeClubNameForm ({
               Enter a new club name
             </Trans>
           </InputHeader>
-          <InputBody>
-            <TextInput placeholder={i18n._(t`Enter a new club name`)} />
-            <InputFeedback />
-          </InputBody>
+          <HStack align='flex-start'>
+            <InputBody>
+              <TextInput placeholder={i18n._(t`Enter a new club name`)} />
+              <InputFeedback />
+            </InputBody>
+            <FormSubmitButton
+              size='sm'
+              variant='solid'
+              colorScheme='gray'
+              isLoading={isInFlight}
+            >
+              <Trans>
+                Submit
+              </Trans>
+            </FormSubmitButton>
+          </HStack>
+          <InputFooter />
         </FormInput>
-        <FormSubmitButton
-          size='sm'
-          variant='solid'
-          colorScheme='gray'
-          isLoading={isInFlight}
-        >
-          <Trans>
-            Submit
-          </Trans>
-        </FormSubmitButton>
       </Stack>
     </Form>
   )

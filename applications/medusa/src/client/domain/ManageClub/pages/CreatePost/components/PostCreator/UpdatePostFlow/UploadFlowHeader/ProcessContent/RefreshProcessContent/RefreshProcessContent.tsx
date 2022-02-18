@@ -1,5 +1,8 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import type { RefreshProcessContentQuery } from '@//:artifacts/RefreshProcessContentQuery.graphql'
+import type {
+  RefreshProcessContentQuery,
+  RefreshProcessContentQuery$variables
+} from '@//:artifacts/RefreshProcessContentQuery.graphql'
 import { CheckMark } from '@//:assets/icons/interface'
 import { HStack, Spinner, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
@@ -8,9 +11,9 @@ import { useContext } from 'react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { useUpdateEffect } from 'usehooks-ts'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  queryArgs: QueryArguments
+interface Props extends ComponentSearchArguments<RefreshProcessContentQuery$variables> {
 }
 
 const Query = graphql`
@@ -27,12 +30,12 @@ const Query = graphql`
 `
 
 export default function RefreshProcessContent ({
-  queryArgs
+  searchArguments
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<RefreshProcessContentQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const dispatch = useContext(DispatchContext)

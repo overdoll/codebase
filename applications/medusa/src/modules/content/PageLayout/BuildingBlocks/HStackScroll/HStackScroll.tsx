@@ -1,13 +1,22 @@
 import { ReactNode } from 'react'
-import { HStack } from '@chakra-ui/react'
+import { HStack, StackProps } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends StackProps {
   children: ReactNode
 }
 
-export default function HStackScroll ({ children }: Props): JSX.Element {
+export default function HStackScroll ({
+  children,
+  ...rest
+}: Props): JSX.Element {
   return (
-    <HStack display='initial' whiteSpace='nowrap' overflowX='auto' spacing={2}>
+    <HStack
+      display='initial'
+      whiteSpace='nowrap'
+      overflowX='auto'
+      spacing={2}
+      {...rest}
+    >
       {children}
     </HStack>
   )

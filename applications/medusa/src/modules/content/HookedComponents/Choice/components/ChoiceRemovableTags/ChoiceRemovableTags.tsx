@@ -1,33 +1,31 @@
 import RemovableTag from '../../../../DataDisplay/RemovableTag/RemovableTag'
-import { ChoiceAnyValues, Choices, Id, UseChoiceReturnRemoveValue } from '../../types'
-import { Box } from '@chakra-ui/react'
-
-interface TagProps extends ChoiceAnyValues {
-  tagTitle: string
-}
+import { Choices, Id, UseChoiceReturnRemoveValue } from '../../types'
+import { HStackScroll } from '../../../../PageLayout'
 
 interface ChoiceRemovableTagsProps {
-  values: Choices<TagProps>
+  values: Choices<any>
   removeValue: UseChoiceReturnRemoveValue
+  titleKey: string
 }
 
 export default function ChoiceRemovableTags ({
   values,
-  removeValue
+  removeValue,
+  titleKey
 }: ChoiceRemovableTagsProps): JSX.Element {
   const onRemove = (id: Id): void => {
     removeValue(id)
   }
 
   return (
-    <Box>
+    <HStackScroll spacing={1}>
       {Object.keys(values).map((item, index) => (
         <RemovableTag
           key={index}
           onRemove={onRemove}
           id={item}
-          title={values[item].tagTitle}
+          title={values[item][titleKey]}
         />))}
-    </Box>
+    </HStackScroll>
   )
 }

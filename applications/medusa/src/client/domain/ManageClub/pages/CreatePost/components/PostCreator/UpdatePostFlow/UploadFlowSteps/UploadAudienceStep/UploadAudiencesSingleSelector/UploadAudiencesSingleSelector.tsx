@@ -1,12 +1,14 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { UploadAudiencesSingleSelectorQuery } from '@//:artifacts/UploadAudiencesSingleSelectorQuery.graphql'
-import { SingleSelector, StackTile } from '@//:modules/content/ContentSelection'
+import { StackTile } from '@//:modules/content/ContentSelection'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import AudienceTileOverlay
   from '@//:modules/content/ContentSelection/components/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
-import { SingleSelectorProps } from '@//:modules/content/ContentSelection/components/SingleSelector/SingleSelector'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
+import { Choice } from '@//:modules/content/HookedComponents/Choice'
 
-interface Props extends SingleSelectorProps {
+interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
 
 const Query = graphql`
@@ -24,25 +26,24 @@ const Query = graphql`
 `
 
 export default function UploadAudiencesSingleSelector ({
-  onSelect,
-  selected
+  searchArguments,
+  register
 }: Props): JSX.Element {
   const data = useLazyLoadQuery<UploadAudiencesSingleSelectorQuery>(
     Query,
-    {}
+    searchArguments.variables,
+    searchArguments.options
   )
 
   return (
     <ListSpacer>
       {data.audiences.edges.map((item, index) => (
         <StackTile key={index}>
-          <SingleSelector
-            onSelect={onSelect}
-            selected={selected}
-            id={item.node.id}
+          <Choice
+            {...register(item.node.id, { title: item.node.title })}
           >
             <AudienceTileOverlay query={item.node} />
-          </SingleSelector>
+          </Choice>
         </StackTile>
       )
       )}

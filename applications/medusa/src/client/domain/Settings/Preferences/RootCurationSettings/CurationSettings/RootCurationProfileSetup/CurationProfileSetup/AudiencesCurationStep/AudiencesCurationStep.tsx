@@ -1,17 +1,22 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { AudiencesCurationStepFragment$key } from '@//:artifacts/AudiencesCurationStepFragment.graphql'
 import { Box } from '@chakra-ui/react'
-import { Suspense, useContext, useEffect } from 'react'
-import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { Suspense, useContext } from 'react'
+import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
 import SkeletonStack from '../../../../../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import AudienceMultiSelector from './AudienceMultiSelector/AudienceMultiSelector'
-import { useMultiSelector } from '@//:modules/content/ContentSelection'
+import { useChoice } from '@//:modules/content/HookedComponents/Choice'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 interface Props {
   query: AudiencesCurationStepFragment$key | null
+}
+
+interface ChoiceProps {
+  title: string
 }
 
 const Fragment = graphql`
@@ -29,7 +34,6 @@ export default function AudiencesCurationStep ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const dispatch = useContext(DispatchContext)
-  const state = useContext(StateContext)
 
   const currentAudiences = data?.audience?.audiences.reduce((accum, value) => ({
     ...accum,
@@ -38,24 +42,18 @@ export default function AudiencesCurationStep ({ query }: Props): JSX.Element {
     }
   }), {})
 
-  const defaultValue = Object.keys(state.audience.value).length > 0
-    ? state.audience.value
-    : (data?.audience != null && data?.audience?.audiences?.length > 0)
-        ? currentAudiences
-        : {}
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<{}>({})
 
-  const [currentSelection, changeSelection] = useMultiSelector(
-    {
-      defaultValue: defaultValue
-    }
-  )
-
-  useEffect(() => {
-    dispatch({
+  const { register } = useChoice<ChoiceProps>({
+    defaultValue: currentAudiences,
+    onChange: (props) => dispatch({
       type: 'audience',
-      value: currentSelection
+      value: props
     })
-  }, [currentSelection])
+  })
 
   return (
     <Box>
@@ -68,11 +66,9 @@ export default function AudiencesCurationStep ({ query }: Props): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <Box maxH='60vh' overflowY='auto'>
-        <QueryErrorBoundary loadQuery={() => {
-        }}
-        >
+        <QueryErrorBoundary loadQuery={loadQuery}>
           <Suspense fallback={<SkeletonStack />}>
-            <AudienceMultiSelector selected={currentSelection} onSelect={changeSelection} />
+            <AudienceMultiSelector searchArguments={searchArguments} register={register} />
           </Suspense>
         </QueryErrorBoundary>
       </Box>

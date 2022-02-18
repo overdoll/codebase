@@ -25,6 +25,8 @@ function useSearch<TArguments extends SearchProps = SearchProps> (props: UseSear
     variables: defaultValue
   }
 
+  // @ts-expect-error
+  // TODO fix types here
   const [searchArgs, setSearchArgs] = useState<UseSearchQueryState<TArguments>>(queryState)
 
   // @ts-expect-error

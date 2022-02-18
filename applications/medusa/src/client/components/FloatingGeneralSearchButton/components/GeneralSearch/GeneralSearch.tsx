@@ -1,4 +1,3 @@
-import { QueryArguments } from '@//:types/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { GeneralSearchQuery } from '@//:artifacts/GeneralSearchQuery.graphql'
 import SearchCategoriesGeneral from './SearchCategoriesGeneral/SearchCategoriesGeneral'
@@ -11,9 +10,9 @@ import SearchSeriesGeneral from './SearchSeriesGeneral/SearchSeriesGeneral'
 import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import TagManager from './TagManager/TagManager'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props extends StateProps {
-  queryArguments: QueryArguments
+interface Props extends StateProps, ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -32,14 +31,14 @@ const Query = graphql`
 `
 
 export default function GeneralSearch ({
-  queryArguments,
+  searchArguments,
   searchValues,
   setSearchValues
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<GeneralSearchQuery>(
     Query,
-    queryArguments.variables,
-    queryArguments.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const [searchSeriesCount, setSearchSeriesCount] = useState([])

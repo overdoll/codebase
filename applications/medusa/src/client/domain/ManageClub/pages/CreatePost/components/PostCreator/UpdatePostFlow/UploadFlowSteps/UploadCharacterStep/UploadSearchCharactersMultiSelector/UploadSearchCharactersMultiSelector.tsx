@@ -4,24 +4,13 @@ import type {
 } from '@//:artifacts/UploadSearchCharactersMultiSelectorQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { removeNode } from '@//:modules/support'
-import { Flex, Text } from '@chakra-ui/react'
-import {
-  CharacterTileOverlay,
-  GridTile,
-  GridWrap,
-  LoadMoreGridTile,
-  MultiSelectedValue,
-  MultiSelectedValueFunction,
-  MultiSelector
-} from '@//:modules/content/ContentSelection'
-import { Trans } from '@lingui/macro'
-import { QueryArguments } from '@//:types/hooks'
-import { EmptyCharacters } from '@//:modules/content/Placeholder'
+import { CharacterTileOverlay, GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
+import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
+import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { Choice } from '@//:modules/content/HookedComponents/Choice'
 
-interface Props {
-  selected: MultiSelectedValue
-  onSelect: MultiSelectedValueFunction
-  queryArgs: QueryArguments
+interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
@@ -57,14 +46,13 @@ const Fragment = graphql`
 `
 
 export default function UploadSearchCharactersMultiSelector ({
-  onSelect,
-  selected,
-  queryArgs
+  searchArguments,
+  register
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<UploadSearchCharactersMultiSelectorQuery>(
     Query,
-    queryArgs.variables,
-    queryArgs.options
+    searchArguments.variables,
+    searchArguments.options
   )
 
   const {
@@ -79,25 +67,17 @@ export default function UploadSearchCharactersMultiSelector ({
 
   const characters = removeNode(data.characters.edges)
 
-  if (characters.length < 1) {
-    return (
-      <EmptyCharacters hint={queryArgs.variables.name} />
-    )
-  }
-
   return (
-    <>
+    <EmptyBoundary
+      fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
+      condition={characters.length < 1}
+    >
       <GridWrap justify='center'>
         {characters.map((item, index) => (
           <GridTile key={index}>
-            <MultiSelector
-              id={item.id}
-              selected={selected}
-              name={item.name}
-              onSelect={onSelect}
-            >
+            <Choice {...register(item.id, { name: item.name })}>
               <CharacterTileOverlay query={item} />
-            </MultiSelector>
+            </Choice>
           </GridTile>
         )
         )}
@@ -107,6 +87,6 @@ export default function UploadSearchCharactersMultiSelector ({
           isLoadingNext={isLoadingNext}
         />
       </GridWrap>
-    </>
+    </EmptyBoundary>
   )
 }

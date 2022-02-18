@@ -17,7 +17,7 @@ export interface UseSearchQueryOptions {
 }
 
 export interface UseSearchQueryState<TArguments> extends UseSearchQueryOptions {
-  variables: Partial<TArguments>
+  variables: TArguments
 }
 
 export interface ComponentSearchArguments<T> {

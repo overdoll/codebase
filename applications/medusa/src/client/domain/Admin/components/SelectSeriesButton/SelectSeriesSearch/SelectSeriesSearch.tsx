@@ -73,7 +73,7 @@ export default function SelectSeriesSearch ({
         {series.map((item, index) => (
           <GridTile key={index}>
             <Choice
-              {...register(item.id, { tagTitle: item.title })}
+              {...register(item.id, { title: item.title })}
             >
               <SeriesTileOverlay query={item} />
             </Choice>

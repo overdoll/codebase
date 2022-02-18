@@ -1,23 +1,31 @@
-import { Suspense, useContext, useEffect, useState } from 'react'
+import { Suspense, useContext } from 'react'
 import type { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharacterStepFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import SearchInput from '../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
-import { Stack, Wrap, WrapItem } from '@chakra-ui/react'
+import SearchInput
+  from '../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
+import { Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { useLingui } from '@lingui/react'
 import SkeletonRectangleGrid
   from '../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import SearchCharacters from './UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useSearchQueryArguments } from '@//:modules/hooks'
-import { useMultiSelector } from '@//:modules/content/ContentSelection'
 import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 
 interface Props {
   query: UploadCharacterStepFragment$key
+}
+
+interface SearchProps {
+  name: string
+}
+
+interface ChoiceProps {
+  name: string
 }
 
 const Fragment = graphql`
@@ -49,10 +57,6 @@ export default function UploadCharacterStep ({
 
   const dispatch = useContext(DispatchContext)
 
-  const [queryArgs, setQueryArgs] = useSearchQueryArguments({ name: null })
-
-  const [search, setSearch] = useState<string>('')
-
   const currentCharacters = data?.characters.reduce((accum, value) => ({
     ...accum,
     [value.id]: {
@@ -60,22 +64,23 @@ export default function UploadCharacterStep ({
     }
   }), {})
 
-  const [currentSelection, changeSelection, removeSelection] = useMultiSelector(
-    {
-      defaultValue: currentCharacters ?? {}
-    }
-  )
+  const {
+    searchArguments,
+    loadQuery,
+    register: registerSearch
+  } = useSearch<SearchProps>({})
 
-  useEffect(() => {
-    dispatch({
+  const {
+    values,
+    register,
+    removeValue
+  } = useChoice<ChoiceProps>({
+    defaultValue: currentCharacters ?? {},
+    onChange: (props) => dispatch({
       type: 'characters',
-      value: currentSelection
+      value: props
     })
-  }, [currentSelection])
-
-  useEffect(() => {
-    setQueryArgs({ name: search })
-  }, [search])
+  })
 
   return (
     <Stack spacing={2}>
@@ -92,28 +97,21 @@ export default function UploadCharacterStep ({
         </PageSectionDescription>
       </PageSectionWrap>
       <SearchInput
-        onChange={setSearch}
+        {...registerSearch('name')}
         placeholder={i18n._(t`Search for a character by name`)}
       />
-      <Wrap>
-        {Object.keys(currentSelection).map((item, index) =>
-          <WrapItem key={index}>
-            <RemovableTag
-              onRemove={removeSelection}
-              id={item}
-              title={currentSelection[item].name}
-            />
-          </WrapItem>
-        )}
-      </Wrap>
+      <ChoiceRemovableTags
+        values={values}
+        removeValue={removeValue}
+        titleKey='name'
+      />
       <QueryErrorBoundary
-        loadQuery={() => setQueryArgs({ name: null })}
+        loadQuery={loadQuery}
       >
         <Suspense fallback={<SkeletonRectangleGrid />}>
           <SearchCharacters
-            selected={currentSelection}
-            onSelect={changeSelection}
-            queryArgs={queryArgs}
+            searchArguments={searchArguments}
+            register={register}
           />
         </Suspense>
       </QueryErrorBoundary>

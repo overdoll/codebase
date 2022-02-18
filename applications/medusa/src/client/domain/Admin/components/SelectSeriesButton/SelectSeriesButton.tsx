@@ -20,7 +20,8 @@ import QueryErrorBoundary
   from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectSeriesSearch from './SelectSeriesSearch/SelectSeriesSearch'
 import { useChoice } from '../../../../../modules/content/HookedComponents/Choice'
-import ChoiceRemovableTags from '../../../../../modules/content/HookedComponents/Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
+import ChoiceRemovableTags
+  from '../../../../../modules/content/HookedComponents/Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
 import useSearch from '../../../../../modules/content/HookedComponents/Search/hooks/useSearch'
 
 interface Props extends HTMLChakraProps<any> {
@@ -71,6 +72,7 @@ export default function SelectSeriesButton ({
     <>
       <Stack spacing={2}>
         <ChoiceRemovableTags
+          titleKey='title'
           values={values}
           removeValue={removeValue}
         />
