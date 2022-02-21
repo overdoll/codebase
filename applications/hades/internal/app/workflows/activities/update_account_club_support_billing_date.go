@@ -21,7 +21,7 @@ func (h *Activities) UpdateAccountClubSupportBillingDate(ctx context.Context, re
 		return err
 	}
 
-	_, err = h.billing.UpdateAccountClubSupporterBillingDate(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	_, err = h.billing.UpdateAccountClubSupporterBillingDateOperator(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.UpdateBillingDate(nextBillingDate)
 	})
 

@@ -86,7 +86,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		paymentMethod,
 	)
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

@@ -3,6 +3,7 @@ package billing
 import (
 	"errors"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -134,6 +135,15 @@ func (c *CCBillSubscriptionDetails) IdempotencyKey() string {
 
 func (c *CCBillSubscriptionDetails) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
 	c.paymentMethod = paymentMethod
+	return nil
+}
+
+func (c *CCBillSubscriptionDetails) CanView(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return errors.New("only staff can view ccbill subscription details")
+	}
+
 	return nil
 }
 

@@ -40,7 +40,7 @@ func (h *Activities) CreateReactivatedClubSubscriptionAccountTransactionRecord(c
 		nextBillingDate,
 	)
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

@@ -37,7 +37,7 @@ func (h *Activities) CreateCancelledAccountTransactionRecord(ctx context.Context
 		return err
 	}
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

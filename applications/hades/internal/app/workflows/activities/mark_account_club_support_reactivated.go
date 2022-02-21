@@ -21,7 +21,7 @@ func (h *Activities) MarkAccountClubSupportReactivated(ctx context.Context, requ
 		return err
 	}
 
-	_, err = h.billing.UpdateAccountClubSupporterSubscriptionStatus(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	_, err = h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.MakeReactivated(nextBillingDate)
 	})
 

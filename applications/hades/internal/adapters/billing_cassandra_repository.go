@@ -336,7 +336,7 @@ func NewBillingCassandraRepository(session gocqlx.Session) BillingCassandraRepos
 	return BillingCassandraRepository{session: session}
 }
 
-func (r BillingCassandraRepository) CreateAccountSavedPaymentMethod(ctx context.Context, savedPaymentMethod *billing.SavedPaymentMethod) error {
+func (r BillingCassandraRepository) CreateAccountSavedPaymentMethodOperator(ctx context.Context, savedPaymentMethod *billing.SavedPaymentMethod) error {
 
 	marshalled, err := marshalAccountSavedPaymentMethodToDatabase(savedPaymentMethod)
 
@@ -415,7 +415,7 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 	return savedPayments, nil
 }
 
-func (r BillingCassandraRepository) GetAccountSavedPaymentMethodById(ctx context.Context, accountId, id string) (*billing.SavedPaymentMethod, error) {
+func (r BillingCassandraRepository) GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*billing.SavedPaymentMethod, error) {
 
 	var savedPay accountSavedPaymentMethod
 
@@ -435,9 +435,9 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethodById(ctx context
 	return billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt), nil
 }
 
-func (r BillingCassandraRepository) UpdateAccountSavedPaymentMethod(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *billing.SavedPaymentMethod) error) (*billing.SavedPaymentMethod, error) {
+func (r BillingCassandraRepository) UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *billing.SavedPaymentMethod) error) (*billing.SavedPaymentMethod, error) {
 
-	savedPaymentMethod, err := r.GetAccountSavedPaymentMethodById(ctx, accountId, id)
+	savedPaymentMethod, err := r.GetAccountSavedPaymentMethodByIdOperator(ctx, accountId, id)
 
 	if err != nil {
 		return nil, err
@@ -466,7 +466,7 @@ func (r BillingCassandraRepository) UpdateAccountSavedPaymentMethod(ctx context.
 	return savedPaymentMethod, nil
 }
 
-func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx context.Context, accountClubSupp *billing.AccountClubSupporterSubscription) error {
+func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperator(ctx context.Context, accountClubSupp *billing.AccountClubSupporterSubscription) error {
 
 	marshalled, err := marshalAccountClubSubscriptionToDatabase(accountClubSupp)
 
@@ -484,54 +484,9 @@ func (r BillingCassandraRepository) CreateAccountClubSupportSubscription(ctx con
 	return nil
 }
 
-func (r BillingCassandraRepository) GetFirstAccountClubSupportSubscriptionByAccountAndClubId(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
-
-	var accountClubSupporting []*accountClubSupporterSubscription
-
-	if err := accountClubSupporterSubscriptionsTable.
-		SelectBuilder().
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountClubSupporterSubscription{
-			AccountId: accountId,
-			ClubId:    clubId,
-		}).
-		Select(&accountClubSupporting); err != nil {
-		return nil, fmt.Errorf("failed to get account club support by account and club id: %v", err)
-	}
-
-	if len(accountClubSupporting) == 0 {
-		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
-	}
-
-	accountClubSupported := accountClubSupporting[0]
-
-	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return billing.UnmarshalAccountClubSupporterSubscriptionFromDatabase(
-		accountClubSupported.Id,
-		accountClubSupported.AccountId,
-		accountClubSupported.ClubId,
-		accountClubSupported.Status,
-		accountClubSupported.SupporterSince,
-		accountClubSupported.LastBillingDate,
-		accountClubSupported.NextBillingDate,
-		accountClubSupported.BillingAmount,
-		accountClubSupported.BillingCurrency,
-		decrypt,
-		accountClubSupported.CCBillSubscriptionId,
-		accountClubSupported.CancelledAt,
-		accountClubSupported.UpdatedAt,
-	), nil
-}
-
 func (r BillingCassandraRepository) DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error {
 
-	savedPaymentMethod, err := r.GetAccountSavedPaymentMethodById(ctx, accountId, id)
+	savedPaymentMethod, err := r.GetAccountSavedPaymentMethodByIdOperator(ctx, accountId, id)
 
 	if err != nil {
 		return err
@@ -556,7 +511,7 @@ func (r BillingCassandraRepository) DeleteAccountSavedPaymentMethod(ctx context.
 	return nil
 }
 
-func (r BillingCassandraRepository) DeleteAccountClubSupportSubscription(ctx context.Context, accountId, clubId, id string) error {
+func (r BillingCassandraRepository) DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId, id string) error {
 
 	if err := accountClubSupporterSubscriptionsTable.
 		DeleteBuilder().
@@ -660,19 +615,64 @@ func (r BillingCassandraRepository) updateAccountClubSupporterSubscription(ctx c
 	return subscription, nil
 }
 
-func (r BillingCassandraRepository) UpdateAccountClubSupportBillingDate(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+func (r BillingCassandraRepository) UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, accountId, clubId, id, updateFn, []string{"next_billing_date"})
 }
 
-func (r BillingCassandraRepository) UpdateAccountClubSupportSubscriptionStatus(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+func (r BillingCassandraRepository) UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, accountId, clubId, id, updateFn, []string{"cancelled_at", "status", "next_billing_date"})
 }
 
-func (r BillingCassandraRepository) UpdateAccountClubSupportPaymentMethod(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+func (r BillingCassandraRepository) UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, accountId, clubId, id, updateFn, []string{"encrypted_payment_method"})
 }
 
-func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
+func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
+
+	var accountClubSupporting []*accountClubSupporterSubscription
+
+	if err := accountClubSupporterSubscriptionsTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupporterSubscription{
+			AccountId: accountId,
+			ClubId:    clubId,
+		}).
+		Select(&accountClubSupporting); err != nil {
+		return nil, fmt.Errorf("failed to get account club support by account and club id: %v", err)
+	}
+
+	if len(accountClubSupporting) == 0 {
+		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+	}
+
+	accountClubSupported := accountClubSupporting[0]
+
+	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billing.UnmarshalAccountClubSupporterSubscriptionFromDatabase(
+		accountClubSupported.Id,
+		accountClubSupported.AccountId,
+		accountClubSupported.ClubId,
+		accountClubSupported.Status,
+		accountClubSupported.SupporterSince,
+		accountClubSupported.LastBillingDate,
+		accountClubSupported.NextBillingDate,
+		accountClubSupported.BillingAmount,
+		accountClubSupported.BillingCurrency,
+		decrypt,
+		accountClubSupported.CCBillSubscriptionId,
+		accountClubSupported.CancelledAt,
+		accountClubSupported.UpdatedAt,
+	), nil
+}
+
+func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
 
 	if err := billing.CanViewAccountClubSupporterSubscription(requester, accountId); err != nil {
 		return nil, err
@@ -730,7 +730,7 @@ func (r BillingCassandraRepository) GetAccountClubSupportSubscriptions(ctx conte
 	return accountSupport, nil
 }
 
-func (r BillingCassandraRepository) CreateAccountTransactionHistory(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
+func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
 
 	var encrypted *string
 
@@ -781,7 +781,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistory(ctx context.
 	return nil
 }
 
-func (r BillingCassandraRepository) GetAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransactionHistory, error) {
+func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransactionHistory, error) {
 
 	if err := billing.CanViewAccountTransactionHistory(requester, filters.AccountId()); err != nil {
 		return nil, err
@@ -850,7 +850,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistory(ctx context.Con
 	return accountTransactionsMorphed, nil
 }
 
-func (r BillingCassandraRepository) GetCCBillSubscription(ctx context.Context, ccbillSubscriptionId string) (*billing.CCBillSubscriptionDetails, error) {
+func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*billing.CCBillSubscriptionDetails, error) {
 
 	var ccbillSubscription *ccbillSubscriptionDetails
 
@@ -889,7 +889,7 @@ func (r BillingCassandraRepository) GetCCBillSubscription(ctx context.Context, c
 	), nil
 }
 
-func (r BillingCassandraRepository) CreateCCBillSubscription(ctx context.Context, subscription *billing.CCBillSubscriptionDetails) error {
+func (r BillingCassandraRepository) CreateCCBillSubscriptionDetailsOperator(ctx context.Context, subscription *billing.CCBillSubscriptionDetails) error {
 
 	marshalled, err := marshalCCBillSubscriptionToDatabase(subscription)
 
@@ -915,9 +915,9 @@ func (r BillingCassandraRepository) CreateCCBillSubscription(ctx context.Context
 	return nil
 }
 
-func (r BillingCassandraRepository) UpdateCCBillSubscriptionPaymentMethod(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *billing.CCBillSubscriptionDetails) error) (*billing.CCBillSubscriptionDetails, error) {
+func (r BillingCassandraRepository) UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *billing.CCBillSubscriptionDetails) error) (*billing.CCBillSubscriptionDetails, error) {
 
-	ccbillSubscription, err := r.GetCCBillSubscription(ctx, ccbillSubscriptionId)
+	ccbillSubscription, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, ccbillSubscriptionId)
 
 	if err != nil {
 		return nil, err
@@ -943,4 +943,20 @@ func (r BillingCassandraRepository) UpdateCCBillSubscriptionPaymentMethod(ctx co
 	}
 
 	return ccbillSubscription, nil
+}
+
+func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*billing.CCBillSubscriptionDetails, error) {
+
+	ccbillSubscription, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, ccbillSubscriptionId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := ccbillSubscription.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return ccbillSubscription, nil
+
 }

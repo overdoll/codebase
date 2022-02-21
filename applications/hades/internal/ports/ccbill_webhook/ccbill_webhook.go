@@ -33,6 +33,13 @@ var (
 func CCBillWebhook(app *app.Application) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
+		var buf bytes.Buffer
+		tee := io.TeeReader(c.Request.Body, &buf)
+		body, _ := ioutil.ReadAll(tee)
+		fmt.Println(string(body))
+		c.JSON(http.StatusOK, map[string]string{"message": "invalid ip header"})
+		return
+
 		trial := net.ParseIP(support.GetIPFromRequest(c.Request))
 		if trial.To4() == nil {
 			c.JSON(http.StatusBadRequest, map[string]string{"message": "invalid ip header"})

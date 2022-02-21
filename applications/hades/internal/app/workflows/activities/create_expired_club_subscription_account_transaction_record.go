@@ -28,7 +28,7 @@ func (h *Activities) CreateExpiredClubSubscriptionAccountTransactionRecord(ctx c
 		timestamp,
 	)
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

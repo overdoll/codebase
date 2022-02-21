@@ -36,13 +36,13 @@ func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context,
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
-	subscription, err := h.br.HasExistingAccountClubSupporterSubscription(ctx, cmd.Principal.AccountId(), cmd.ClubId)
+	subscription, err := h.br.HasExistingAccountClubSupporterSubscriptionOperator(ctx, cmd.Principal.AccountId(), cmd.ClubId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if subscription {
+	if subscription != nil {
 		return nil, errors.New("existing subscription found")
 	}
 

@@ -52,10 +52,10 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, reques
 		return err
 	}
 
-	_, err = h.billing.UpdateCCBillSubscriptionDetailsPaymentMethod(ctx, request.CCBillSubscriptionId, func(subscription *billing.CCBillSubscriptionDetails) error {
+	_, err = h.billing.UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx, request.CCBillSubscriptionId, func(subscription *billing.CCBillSubscriptionDetails) error {
 
 		// update saved payment method, if it exists for this subscription
-		_, err = h.billing.UpdateAccountSavedPaymentMethod(ctx, subscription.AccountId(), subscription.CCBillSubscriptionId(), func(savedPaymentMethod *billing.SavedPaymentMethod) error {
+		_, err = h.billing.UpdateAccountSavedPaymentMethodOperator(ctx, subscription.AccountId(), subscription.CCBillSubscriptionId(), func(savedPaymentMethod *billing.SavedPaymentMethod) error {
 			return savedPaymentMethod.UpdatePaymentMethod(paymentMethod)
 		})
 
@@ -64,7 +64,7 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, reques
 			return err
 		}
 
-		_, err = h.billing.UpdateAccountClubSupporterPaymentMethod(ctx, subscription.AccountId(), subscription.ClubId(), subscription.CCBillSubscriptionId(), func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
+		_, err = h.billing.UpdateAccountClubSupporterPaymentMethodOperator(ctx, subscription.AccountId(), subscription.ClubId(), subscription.CCBillSubscriptionId(), func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
 			return accountClubSupport.UpdatePaymentMethod(paymentMethod)
 		})
 

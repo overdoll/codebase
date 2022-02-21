@@ -41,10 +41,8 @@ func (h VoidOrRefundAccountClubSupporterSubscriptionHandler) Handle(ctx context.
 		// create a voidOrRefund object which will calculate the correct amount, if one was passed in
 		voidOrRefund, err = ccbill.NewVoidOrRefundWithCustomAmount(
 			clubSupporterSubscription.CCBillSubscriptionId(),
-			cmd.Amount,
+			*cmd.Amount,
 			clubSupporterSubscription.BillingAmount(),
-			clubSupporterSubscription.LastBillingDate(),
-			clubSupporterSubscription.NextBillingDate(),
 		)
 	} else {
 		voidOrRefund, err = ccbill.NewVoidOrRefundWithoutAmount(

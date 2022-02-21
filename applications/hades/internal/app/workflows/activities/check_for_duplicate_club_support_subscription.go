@@ -74,14 +74,14 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 
 	// ccbill subscription is nil - so we didn't have ccbill duplicate subscription ids come in.
 	// now, we need to check the actual account subscription for duplicates
-	subscription, err := h.billing.HasExistingAccountClubSupporterSubscription(ctx, request.AccountId, request.ClubId)
+	subscription, err := h.billing.HasExistingAccountClubSupporterSubscriptionOperator(ctx, request.AccountId, request.ClubId)
 
 	if err != nil && err != billing.ErrAccountClubSupportSubscriptionNotFound {
 		return nil, err
 	}
 
 	// an existing subscription was found, so we need to tell it to void this new subscription
-	if subscription {
+	if subscription != nil {
 		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
 			DuplicateSupportSameSubscription:      false,
 			DuplicateSupportDifferentSubscription: true,

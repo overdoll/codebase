@@ -37,17 +37,17 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
-	subscription, err := h.br.HasExistingAccountClubSupporterSubscription(ctx, cmd.Principal.AccountId(), cmd.ClubId)
+	subscription, err := h.br.HasExistingAccountClubSupporterSubscriptionOperator(ctx, cmd.Principal.AccountId(), cmd.ClubId)
 
 	if err != nil {
 		return err
 	}
 
-	if subscription {
+	if subscription != nil {
 		return errors.New("existing subscription found")
 	}
 
-	savedPaymentMethod, err := h.br.GetAccountSavedPaymentMethodById(ctx, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId)
+	savedPaymentMethod, err := h.br.GetAccountSavedPaymentMethodByIdOperator(ctx, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId)
 
 	if err != nil {
 		return err

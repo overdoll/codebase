@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CCBillHttpRepository struct {
@@ -74,13 +75,51 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		return nil, err
 	}
 
+	var cancelDate *time.Time
+	var expirationDate *time.Time
+
+	if subResult.CancelDate != "" {
+		newCancelDate, err := time.Parse("20050228", subResult.CancelDate)
+
+		if err != nil {
+			return nil, err
+		}
+
+		cancelDate = &newCancelDate
+	}
+
+	if subResult.ExpirationDate != "" {
+		newExpirationDate, err := time.Parse("20050228", subResult.ExpirationDate)
+
+		if err != nil {
+			return nil, err
+		}
+
+		expirationDate = &newExpirationDate
+	}
+
+	signupDate, err := time.Parse("20050228170442", subResult.SignupDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var isRecurring bool
+
+	if subResult.SubscriptionStatus == 1 {
+		isRecurring = true
+	} else {
+		isRecurring = false
+	}
+
 	return ccbill.UnmarshalSubscriptionStatusFromDatabase(
-		subResult.CancelDate,
+		ccbillSubscriptionId,
+		cancelDate,
 		subResult.ChargebacksIssued,
-		subResult.ExpirationDate,
-		subResult.RecurringSubscription,
+		expirationDate,
+		isRecurring,
 		subResult.RefundsIssued,
-		subResult.SignupDate,
+		signupDate,
 		subResult.SubscriptionStatus,
 		subResult.TimesRebilled,
 		subResult.VoidsIssued,
@@ -166,7 +205,7 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	return nil
 }
 
-func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, ccbillSubscriptionId string) error {
+func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) error {
 	//TODO implement me
 	panic("implement me")
 }

@@ -46,7 +46,7 @@ func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx cont
 		request.Reason,
 	)
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

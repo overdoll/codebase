@@ -44,7 +44,7 @@ func (h *Activities) CreateFailedClubSubscriptionAccountTransactionRecord(ctx co
 		request.FailureCode,
 	)
 
-	if err := h.billing.CreateAccountTransactionHistory(ctx, transaction); err != nil {
+	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err
 	}
 

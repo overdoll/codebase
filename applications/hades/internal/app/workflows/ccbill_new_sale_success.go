@@ -160,25 +160,6 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 		return nil
 	}
 
-	// create a new account supporter record
-	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
-		activities.CreateAccountClubSupportSubscription{
-			// save payment details
-			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
-
-			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
-			AccountId:            details.AccountInitiator.AccountId,
-			ClubId:               details.CcbillClubSupporter.ClubId,
-			NextRenewalDate:      payload.NextRenewalDate,
-			Timestamp:            payload.Timestamp,
-			Amount:               payload.BilledRecurringPrice,
-			Currency:             payload.BilledCurrency,
-		},
-	).Get(ctx, &details); err != nil {
-		return err
-	}
-
 	// create record for new transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
 		activities.CreateNewClubSubscriptionAccountTransactionRecord{
@@ -201,6 +182,25 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 			AccountId:   details.AccountInitiator.AccountId,
 			ClubId:      details.CcbillClubSupporter.ClubId,
 			SupportedAt: payload.Timestamp,
+		},
+	).Get(ctx, &details); err != nil {
+		return err
+	}
+
+	// create a new account supporter record (this is done last because it serves as a "confirmation" that everything has been set up correctly)
+	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
+		activities.CreateAccountClubSupportSubscription{
+			// save payment details
+			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
+
+			CCBillSubscriptionId: payload.SubscriptionId,
+			CCBillTransactionId:  payload.TransactionId,
+			AccountId:            details.AccountInitiator.AccountId,
+			ClubId:               details.CcbillClubSupporter.ClubId,
+			NextRenewalDate:      payload.NextRenewalDate,
+			Timestamp:            payload.Timestamp,
+			Amount:               payload.BilledRecurringPrice,
+			Currency:             payload.BilledCurrency,
 		},
 	).Get(ctx, &details); err != nil {
 		return err
