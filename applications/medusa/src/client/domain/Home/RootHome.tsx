@@ -17,7 +17,7 @@ interface Props {
 export default function RootHome (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader(
     HomeQuery,
-    props.prepared.query
+    props.prepared.query,
   )
 
   return (

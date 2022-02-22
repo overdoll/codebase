@@ -1,5 +1,6 @@
 import {
   RegisterFunctionReturn,
+  RegisterMethod,
   RegisterSearchKey,
   RegisterSearchValue,
   SearchValues,
@@ -24,6 +25,7 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
     variables: defaultValue
   }
 
+  // @ts-expect-error
   const [searchArgs, setSearchArgs] = useState<UseSearchQueryState<TArguments>>(queryState)
 
   // @ts-expect-error
@@ -72,9 +74,13 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
   }, [])
 
   // register a search component or any other component that can change an argument
-  const register = (key: RegisterSearchKey): RegisterFunctionReturn => {
+  const register = (key: RegisterSearchKey, method: RegisterMethod): RegisterFunctionReturn => {
     const onChangeRegister = (value: RegisterSearchValue): void => {
-      changeArguments({ [key]: value })
+      if (method === 'set') {
+        setArguments({ [key]: value })
+      } else {
+        changeArguments({ [key]: value })
+      }
     }
     return {
       id: key,

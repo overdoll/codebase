@@ -8,6 +8,7 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
 
   const {
     defaultValue = fallbackDefaultValue,
+    defaultChoices = [],
     max = null,
     onChange: onChangeCallback,
     onRemove: onRemoveCallback,
@@ -26,6 +27,9 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
 
   // basic function to check if the current selection is already a part of the group
   const checkIfActive = (id: Id): boolean => Object.keys(globalValues).includes(id)
+
+  // basic function to check if the registered choice should be pre-selected
+  const checkIfDefault = (id: Id): boolean => defaultChoices.includes(id)
 
   // basic function to add a value to the state
   const addValue = (id: Id, values: T): void => {
@@ -100,9 +104,15 @@ function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {
   // register the choice component to handle the internal state
   const register = (id: Id, values: T): RegisterFunctionReturn => {
     const isActive = checkIfActive(id)
+    const isDefault = checkIfDefault(id)
 
     const onChangeRegister = (): void => {
       onChange(id, values)
+    }
+
+    // TODO fix this as it causes a render loop
+    if (isDefault) {
+      onChangeRegister()
     }
 
     return {

@@ -34,7 +34,7 @@ export default function RootAdminSearchSeries (): JSX.Element {
             </Trans>
           </PageSectionTitle>
           <SearchInput
-            {...register('title')}
+            {...register('title', 'change')}
             placeholder={i18n._(t`Search for a series`)}
           />
           <QueryErrorBoundary loadQuery={loadQuery}>

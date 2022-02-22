@@ -5,8 +5,8 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import type { MyClubsQuery as MyClubsQueryType } from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   prepared: {

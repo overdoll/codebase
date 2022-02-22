@@ -3,7 +3,6 @@ import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
-import FloatingGeneralSearchButton from '../../../components/FloatingGeneralSearchButton/FloatingGeneralSearchButton'
 import { useFlash } from '@//:modules/flash'
 import {
   Modal,
@@ -21,6 +20,8 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import PostSearchButton from '../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -90,10 +91,10 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <>
+      <PageFixedHeader justify='flex-end'>
+        <PostSearchButton routeTo='/search' />
+      </PageFixedHeader>
       <GlobalVideoManagerProvider>
-        <FloatingGeneralSearchButton
-          routeTo='/search'
-        />
         <PostsInfiniteScroll
           hasNext={hasNext}
           isLoadingNext={isLoadingNext}

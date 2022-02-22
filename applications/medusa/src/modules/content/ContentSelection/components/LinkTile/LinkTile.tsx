@@ -10,6 +10,8 @@ export default function LinkTile ({
   to,
   children
 }: Props): JSX.Element {
+  //
+
   return (
     <Link to={to}>
       {({ isPending }) => (

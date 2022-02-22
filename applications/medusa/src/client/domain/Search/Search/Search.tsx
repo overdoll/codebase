@@ -3,7 +3,6 @@ import type { SearchQuery } from '@//:artifacts/SearchQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
-import FloatingGeneralSearchButton from '../../../components/FloatingGeneralSearchButton/FloatingGeneralSearchButton'
 
 interface Props {
   query: PreloadedQuery<SearchQuery>
@@ -62,19 +61,14 @@ export default function Search (props: Props): JSX.Element {
   )
 
   return (
-    <>
-      <FloatingGeneralSearchButton
-        routeTo='/search'
+    <GlobalVideoManagerProvider>
+      <PostsInfiniteScroll
+        hasNext={hasNext}
+        isLoadingNext={isLoadingNext}
+        loadNext={loadNext}
+        query={data.posts}
+        viewerQuery={queryData.viewer}
       />
-      <GlobalVideoManagerProvider>
-        <PostsInfiniteScroll
-          hasNext={hasNext}
-          isLoadingNext={isLoadingNext}
-          loadNext={loadNext}
-          query={data.posts}
-          viewerQuery={queryData.viewer}
-        />
-      </GlobalVideoManagerProvider>
-    </>
+    </GlobalVideoManagerProvider>
   )
 }

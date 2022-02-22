@@ -7,8 +7,9 @@ import SearchQuery from '@//:artifacts/SearchQuery.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import Search from './Search/Search'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import useSearchButtonQueryArguments
-  from '../../components/FloatingGeneralSearchButton/helpers/useSearchButtonQueryArguments'
+import useGeneralSearchArguments from '../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import { PostOrderButton, PostSearchButton } from '../../components/PostsSearch'
+import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
 
 interface Props {
   prepared: {
@@ -22,16 +23,20 @@ export default function RootSearch (props: Props): JSX.Element {
     props.prepared.query
   )
 
-  const loadQueryWithParams = useSearchButtonQueryArguments({
-    queryLoader: loadQuery,
-    extraParams: {}
-  })
+  useGeneralSearchArguments((params) => loadQuery(params))
 
   return (
     <>
       <Helmet title='search' />
+      <PageFixedHeader>
+        <PostOrderButton />
+        <PostSearchButton routeTo='/search' />
+      </PageFixedHeader>
       <PageWrapper fillPage>
-        <QueryErrorBoundary loadQuery={loadQueryWithParams}>
+        <QueryErrorBoundary loadQuery={() => loadQuery({
+          sortBy: 'TOP'
+        })}
+        >
           <Suspense fallback={<SkeletonPost />}>
             <Search query={queryRef as PreloadedQuery<SearchQueryType>} />
           </Suspense>

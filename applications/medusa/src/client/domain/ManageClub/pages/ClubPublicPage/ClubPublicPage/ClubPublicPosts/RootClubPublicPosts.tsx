@@ -8,8 +8,10 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 import { useParams } from '@//:modules/routing'
-import useSearchButtonQueryArguments
-  from '../../../../../../components/FloatingGeneralSearchButton/helpers/useSearchButtonQueryArguments'
+import useGeneralSearchArguments from '../../../../../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import { PostOrderButton } from '../../../../../../components/PostsSearch'
+import PostSearchButton from '../../../../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../../../../components/PageFixedHeader/PageFixedHeader'
 
 interface Props {
   prepared: {
@@ -25,16 +27,21 @@ export default function RootClubPublicPosts (props: Props): JSX.Element {
 
   const match = useParams()
 
-  const loadQueryWithParams = useSearchButtonQueryArguments({
-    queryLoader: loadQuery,
-    extraParams: { slug: match.slug as string }
-  })
+  useGeneralSearchArguments((params) => loadQuery(params))
 
   return (
     <>
       <Helmet title='club posts' />
+      <PageFixedHeader>
+        <PostOrderButton />
+        <PostSearchButton routeTo={`/${match.slug as string}/posts`} />
+      </PageFixedHeader>
       <PageWrapper fillPage>
-        <QueryErrorBoundary loadQuery={loadQueryWithParams}>
+        <QueryErrorBoundary loadQuery={() => loadQuery({
+          sortBy: 'TOP',
+          slug: match.slug as string
+        })}
+        >
           <Suspense fallback={<SkeletonPost />}>
             <ClubPublicPosts query={queryRef as PreloadedQuery<ClubPublicPostsQueryType>} />
           </Suspense>

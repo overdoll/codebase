@@ -39,6 +39,7 @@ export type UseChoiceReturnClearValues = () => void
 // useChoice Hook
 export declare type UseChoiceProps<T> = Partial<{
   defaultValue: Choices<T>
+  defaultChoices: Id[]
   max: number | null
   onChange: (values: Choices<T>) => void
   onRemove: (id: Id) => void

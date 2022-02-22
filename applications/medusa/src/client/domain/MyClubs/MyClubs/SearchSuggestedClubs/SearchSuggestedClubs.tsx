@@ -25,7 +25,7 @@ export default function SearchSuggestedClubs (): JSX.Element {
   return (
     <Stack spacing={2}>
       <SearchInput
-        {...register('search')}
+        {...register('search', 'change')}
         placeholder={i18n._(t`Search for a club by name`)}
       />
       <QueryErrorBoundary

@@ -7,9 +7,7 @@ export type RegisterSearchValue = any
 
 export type SearchValues = Record<string, any>
 
-export interface SearchAnyValues {
-  [name: string]: any
-}
+export declare type SearchAnyValues = Record<string, any>
 
 export interface UseSearchQueryOptions {
   options: {
@@ -19,7 +17,7 @@ export interface UseSearchQueryOptions {
 }
 
 export interface UseSearchQueryState<TArguments> extends UseSearchQueryOptions {
-  variables: TArguments | {}
+  variables: TArguments
 }
 
 export interface ComponentSearchArguments<T> {
@@ -29,13 +27,15 @@ export interface ComponentSearchArguments<T> {
 // register function
 type OnChangeRegister = (value: RegisterSearchValue) => void
 
+export type RegisterMethod = 'change' | 'set'
+
 export interface RegisterFunctionReturn {
   id: RegisterSearchKey
   isPending: boolean
   onChangeRegister: OnChangeRegister
 }
 
-export type RegisterFunction = (key: RegisterSearchKey) => RegisterFunctionReturn
+export type RegisterFunction = (key: RegisterSearchKey, method: RegisterMethod) => RegisterFunctionReturn
 
 // useChoice Hook
 export declare type UseSearchProps<TArguments> = Partial<{

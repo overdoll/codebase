@@ -24,7 +24,6 @@ import {
 import DateOfBirthCurationStep from './DateOfBirthCurationStep/DateOfBirthCurationStep'
 import { useHistoryDisclosure, useReducerBuilder } from '@//:modules/hooks'
 import { singleStringValueReducer } from '@//:modules/hooks/useReducerBuilder/options'
-import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import objectCategoryValueReducer from '@//:modules/hooks/useReducerBuilder/options/objectCategoryValueReducer'
 import AudiencesCurationStep from './AudiencesCurationStep/AudiencesCurationStep'
 import CategoriesCurationStep from './CategoriesCurationStep/CategoriesCurationStep'
@@ -37,9 +36,29 @@ import { useUpdateEffect } from 'usehooks-ts'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import {
+  ObjectResolver,
+  SequenceProvider,
+  useSequence,
+  ValueResolver
+} from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
+}
+
+interface SequenceProps {
+  dateOfBirth: string | null
+  audience: {
+    [id: string]: {
+      title: string
+    }
+  }
+  category: {
+    [id: string]: {
+      title: string
+    }
+  }
 }
 
 const Query = graphql`
@@ -61,10 +80,18 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
     Query,
     props.query
   )
-  const [state, dispatch] = useReducerBuilder({
-    dateOfBirth: singleStringValueReducer({ dispatchType: 'dateOfBirth' }),
-    audience: objectCategoryValueReducer({ dispatchType: 'audience' }),
-    category: objectCategoryValueReducer({ dispatchType: 'category' })
+
+  const methods = useSequence<SequenceProps>({
+    defaultValue: {
+      dateOfBirth: null,
+      audience: {},
+      category: {}
+    },
+    resolver: {
+      dateOfBirth: ValueResolver(),
+      audience: ObjectResolver(),
+      category: ObjectResolver()
+    }
   })
 
   const {
@@ -109,91 +136,89 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
   }, [queryData?.viewer?.curationProfile?.completed])
 
   return (
-    <StateContext.Provider value={state}>
-      <DispatchContext.Provider value={dispatch}>
-        <Stack spacing={2}>
-          {queryData?.viewer?.curationProfile?.completed === true &&
-            <Alert
-              status='info'
-            >
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>
-                  Your curation profile is already complete. Going through the setup will overwrite your current
-                  profile.
-                </Trans>
-              </AlertDescription>
-            </Alert>}
-          <FlowBuilder
-            colorScheme='orange'
-            stepsArray={steps}
-            stepsComponents={components}
-            stepsHeaders={headers}
+    <SequenceProvider {...methods}>
+      <Stack spacing={2}>
+        {queryData?.viewer?.curationProfile?.completed === true &&
+          <Alert
+            status='info'
           >
-            <Stack
-              bg='gray.800'
-              borderRadius='md'
-              p={3}
-              spacing={4}
-            >
-              <FlowBuilderHeader />
-              <FlowBuilderProgress />
-            </Stack>
-            <FlowBuilderBody />
-            <FlowBuilderFooter>
-              {({
-                currentStep,
-                nextStep,
-                isAtStart
-              }) => (
-                <CurationStepperFooter
-                  query={queryData?.viewer?.curationProfile as CurationStepperFooterFragment$key}
-                  currentStep={currentStep}
-                  nextStep={nextStep}
-                  isAtStart={isAtStart}
-                />
-              )}
-            </FlowBuilderFooter>
-          </FlowBuilder>
-        </Stack>
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-          motionPreset='none'
-          isCentered
-          preserveScrollBarGap
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton
-              size='lg'
-              as={CloseButton}
-            />
-            <ModalHeader>
+            <AlertIcon />
+            <AlertDescription>
               <Trans>
-                Curation Profile Setup Complete
+                Your curation profile is already complete. Going through the setup will overwrite your current
+                profile.
               </Trans>
-            </ModalHeader>
-            <ModalBody>
-              <Stack spacing={4}>
-                <Text color='gray.00' fontSize='md'>
-                  <Trans>
-                    You've successfully set up your curation profile! Now we'll show you the content based on the
-                    preferences you gave us.
-                  </Trans>
-                </Text>
-              </Stack>
-            </ModalBody>
-            <ModalFooter>
-              <LinkButton size='lg' colorScheme='primary' to='/'>
+            </AlertDescription>
+          </Alert>}
+        <FlowBuilder
+          colorScheme='orange'
+          stepsArray={steps}
+          stepsComponents={components}
+          stepsHeaders={headers}
+        >
+          <Stack
+            bg='gray.800'
+            borderRadius='md'
+            p={3}
+            spacing={4}
+          >
+            <FlowBuilderHeader />
+            <FlowBuilderProgress />
+          </Stack>
+          <FlowBuilderBody />
+          <FlowBuilderFooter>
+            {({
+              currentStep,
+              nextStep,
+              isAtStart
+            }) => (
+              <CurationStepperFooter
+                query={queryData?.viewer?.curationProfile as CurationStepperFooterFragment$key}
+                currentStep={currentStep}
+                nextStep={nextStep}
+                isAtStart={isAtStart}
+              />
+            )}
+          </FlowBuilderFooter>
+        </FlowBuilder>
+      </Stack>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        motionPreset='none'
+        isCentered
+        preserveScrollBarGap
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton
+            size='lg'
+            as={CloseButton}
+          />
+          <ModalHeader>
+            <Trans>
+              Curation Profile Setup Complete
+            </Trans>
+          </ModalHeader>
+          <ModalBody>
+            <Stack spacing={4}>
+              <Text color='gray.00' fontSize='md'>
                 <Trans>
-                  Go home
+                  You've successfully set up your curation profile! Now we'll show you the content based on the
+                  preferences you gave us.
                 </Trans>
-              </LinkButton>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </DispatchContext.Provider>
-    </StateContext.Provider>
+              </Text>
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <LinkButton size='lg' colorScheme='primary' to='/'>
+              <Trans>
+                Go home
+              </Trans>
+            </LinkButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </SequenceProvider>
   )
 }

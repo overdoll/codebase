@@ -33,7 +33,7 @@ export default function RootAdminSearchCharacter (): JSX.Element {
             </Trans>
           </PageSectionTitle>
           <SearchInput
-            {...register('name')}
+            {...register('name', 'change')}
             placeholder={i18n._(t`Search for a character`)}
           />
           <QueryErrorBoundary loadQuery={loadQuery}>

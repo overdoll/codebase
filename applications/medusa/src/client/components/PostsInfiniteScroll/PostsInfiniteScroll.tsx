@@ -13,7 +13,6 @@ import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsI
 import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { ReactNode, useState } from 'react'
 import { Trans } from '@lingui/macro'
-import PageSectionChildrenWrapper from '../PageSectionScroller/PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
   query: PostsInfiniteScrollFragment$key | null
@@ -72,14 +71,11 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <PageSectionChildrenWrapper>
-        <SmallBackgroundBox>
-          <Trans>
-            No posts found
-          </Trans>
-        </SmallBackgroundBox>
-      </PageSectionChildrenWrapper>
-
+      <SmallBackgroundBox>
+        <Trans>
+          No posts found
+        </Trans>
+      </SmallBackgroundBox>
     )
   }
 
@@ -94,8 +90,8 @@ export default function PostsInfiniteScroll ({
         slidesOffsetBefore={10}
         virtual={{
           cache: true,
-          addSlidesBefore: 7,
-          addSlidesAfter: 7
+          addSlidesBefore: 12,
+          addSlidesAfter: 12
         }}
         spaceBetween={20}
         slidesPerView={1.1}

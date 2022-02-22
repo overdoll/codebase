@@ -34,7 +34,7 @@ export default function RootAdminSearchAudiences (): JSX.Element {
             </Trans>
           </PageSectionTitle>
           <SearchInput
-            {...register('title')}
+            {...register('title', 'change')}
             placeholder={i18n._(t`Search for an audience`)}
           />
           <QueryErrorBoundary loadQuery={loadQuery}>

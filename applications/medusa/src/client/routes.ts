@@ -3,6 +3,7 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
+import { decodeRouterArguments } from './components/PostsSearch'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -381,10 +382,7 @@ const routes: Route[] = [
             query: {
               query: Query,
               variables: {
-                sortBy: query.get('sort') ?? 'TOP',
-                categorySlugs: query.get('categories'),
-                seriesSlugs: query.get('series'),
-                characterSlugs: query.get('characters')
+                ...decodeRouterArguments(query)
               },
               options: {
                 fetchPolicy: 'store-or-network'
