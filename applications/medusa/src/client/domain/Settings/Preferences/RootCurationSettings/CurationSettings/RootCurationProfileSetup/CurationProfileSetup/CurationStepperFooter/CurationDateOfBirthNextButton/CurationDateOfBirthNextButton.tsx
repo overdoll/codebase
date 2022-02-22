@@ -1,7 +1,5 @@
 import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { useContext } from 'react'
-import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { HStack } from '@chakra-ui/react'
 import type {
   CurationDateOfBirthNextButtonFragment$key
@@ -10,6 +8,8 @@ import { FlowBuilderNextButton } from '../../../../../../../../../../modules/con
 import differenceInYears from 'date-fns/differenceInYears'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+
 interface Props {
   nextStep: () => void
   query: CurationDateOfBirthNextButtonFragment$key | null
@@ -45,19 +45,19 @@ export default function CurationDateOfBirthNextButton ({
 
   const [updateDob, isUpdatingDob] = useMutation(Mutation)
 
-  const state = useContext(StateContext)
+  const { state } = useSequenceContext()
 
   const notify = useToast()
 
-  const enteredYears = differenceInYears(new Date(), new Date(state.dateOfBirth.value))
+  const enteredYears = differenceInYears(new Date(), new Date(state.dateOfBirth))
   const newYears = differenceInYears(new Date(), new Date(data?.dateOfBirth as Date))
 
-  const saveCondition = state.dateOfBirth.value != null && enteredYears !== newYears
+  const saveCondition = state.dateOfBirth != null && enteredYears !== newYears
 
   const onUpdateDob = (): void => {
     updateDob({
       variables: {
-        dateOfBirth: state.dateOfBirth.value,
+        dateOfBirth: state.dateOfBirth,
         skipped: false
       },
       onCompleted () {

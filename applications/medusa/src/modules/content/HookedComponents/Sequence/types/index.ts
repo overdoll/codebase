@@ -16,8 +16,8 @@ export declare type SequenceResolver<T> = {
 
 export type SequenceRecords = Record<string, any>
 
-declare type SequenceActionType<T extends SequenceRecords = SequenceRecords> = T
-declare type SequenceActionValue<T extends SequenceRecords = SequenceRecords> = T
+declare type SequenceActionType<T extends SequenceRecords = SequenceRecords> = keyof T
+declare type SequenceActionValue<T extends SequenceRecords = SequenceRecords> = T[keyof T]
 declare type SequenceTransformers = 'SET' | 'ADD' | 'REMOVE'
 
 export interface SequenceAction<T> {

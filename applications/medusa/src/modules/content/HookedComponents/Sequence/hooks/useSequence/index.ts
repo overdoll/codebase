@@ -12,10 +12,12 @@ export default function useSequence<TState extends SequenceRecords> (props: UseS
 
   const resolvedReducers = (sequenceState, sequenceAction): TState =>
     resolvers.reduce(
-      (accum, func, index) => ({
-        ...accum,
-        [sections[index]]: func(sequenceState[sections[index]], sequenceAction)
-      }),
+      (accum, func, index) => {
+        return ({
+          ...accum,
+          [sections[index]]: sequenceAction.type === sections[index] ? func(sequenceState[sections[index]], sequenceAction) : sequenceState[sections[index]]
+        })
+      },
       sequenceState
     )
 

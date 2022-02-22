@@ -1,22 +1,16 @@
-import { graphql, useFragment } from 'react-relay/hooks'
 import { Box, Stack } from '@chakra-ui/react'
-import { Suspense, useContext } from 'react'
-import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { Suspense } from 'react'
 import SkeletonStack from '../../../../../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { t, Trans } from '@lingui/macro'
-import type { CategoriesCurationStepFragment$key } from '@//:artifacts/CategoriesCurationStepFragment.graphql'
 import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector'
 import SearchInput
   from '../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { useLingui } from '@lingui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
-
-interface Props {
-  query: CategoriesCurationStepFragment$key | null
-}
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface SearchProps {
   title: string
@@ -26,28 +20,11 @@ interface ChoiceProps {
   title: string
 }
 
-const Fragment = graphql`
-  fragment CategoriesCurationStepFragment on CurationProfile {
-    category {
-      categories {
-        id
-        title
-      }
-    }
-  }
-`
-
-export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
-  const currentCategories = data?.category?.categories.reduce((accum, value) => ({
-    ...accum,
-    [value.id]: {
-      name: value.title
-    }
-  }), {})
-
-  const dispatch = useContext(DispatchContext)
+export default function CategoriesCurationStep (): JSX.Element {
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const { i18n } = useLingui()
 
@@ -62,10 +39,11 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
     register,
     removeValue
   } = useChoice<ChoiceProps>({
-    defaultValue: currentCategories ?? {},
+    defaultValue: state.category,
     onChange: (props) => dispatch({
-      type: 'categories',
-      value: props
+      type: 'category',
+      value: props,
+      transform: 'SET'
     })
   })
 
@@ -86,7 +64,7 @@ export default function CategoriesCurationStep ({ query }: Props): JSX.Element {
           titleKey='title'
         />
         <SearchInput
-          {...registerSearch('title')}
+          {...registerSearch('title', 'change')}
           placeholder={i18n._(t`Search for a category`)}
         />
         <Box maxH='60vh' overflowY='auto'>

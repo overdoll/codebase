@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<23a635ff4672530691200a45473ced86>>
- * @relayHash 7474114de940c48e48331f15f73ae380
+ * @generated SignedSource<<fad7497231772072ea9e9d92c488f006>>
+ * @relayHash 78b23a16e45fb31eec6c58bedbafac6f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7474114de940c48e48331f15f73ae380
+// @relayRequestID 78b23a16e45fb31eec6c58bedbafac6f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 export type PostCreatorQuery$variables = {
   reference: string;
   slug: string;
@@ -22,11 +21,11 @@ export type PostCreatorQueryVariables = PostCreatorQuery$variables;
 export type PostCreatorQuery$data = {
   readonly post: {
     readonly __typename: string;
-    readonly state: PostState;
-    readonly " $fragmentSpreads": FragmentRefs<"UpdatePostFlowFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostStateFragment">;
   } | null;
   readonly club: {
-    readonly id: string;
+    readonly __typename: string;
+    readonly " $fragmentSpreads": FragmentRefs<"PostStateClubFragment">;
   } | null;
 };
 export type PostCreatorQueryResponse = PostCreatorQuery$data;
@@ -62,13 +61,13 @@ v2 = {
   "name": "__typename",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "state",
-  "storageKey": null
-},
+v3 = [
+  {
+    "kind": "Variable",
+    "name": "slug",
+    "variableName": "slug"
+  }
+],
 v4 = {
   "alias": null,
   "args": null,
@@ -78,19 +77,26 @@ v4 = {
 },
 v5 = {
   "alias": null,
-  "args": [
-    {
-      "kind": "Variable",
-      "name": "slug",
-      "variableName": "slug"
-    }
-  ],
-  "concreteType": "Club",
+  "args": null,
+  "concreteType": "ResourceUrl",
   "kind": "LinkedField",
-  "name": "club",
-  "plural": false,
+  "name": "urls",
+  "plural": true,
   "selections": [
-    (v4/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "url",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
   ],
   "storageKey": null
 },
@@ -98,58 +104,24 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "type",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "mimeType",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    (v6/*: any*/),
-    (v7/*: any*/)
-  ],
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v11 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v13 = {
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -157,10 +129,17 @@ v13 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v9/*: any*/),
-    (v8/*: any*/),
+    (v6/*: any*/),
+    (v5/*: any*/),
     (v4/*: any*/)
   ],
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -179,16 +158,31 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "UpdatePostFlowFragment"
+            "name": "PostStateFragment"
           }
         ],
         "storageKey": null
       },
-      (v5/*: any*/)
+      {
+        "alias": null,
+        "args": (v3/*: any*/),
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PostStateClubFragment"
+          }
+        ],
+        "storageKey": null
+      }
     ],
     "type": "Query",
     "abstractKey": null
@@ -208,7 +202,13 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "state",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -232,8 +232,8 @@ return {
                 "storageKey": null
               },
               (v4/*: any*/),
-              (v8/*: any*/),
-              (v9/*: any*/)
+              (v5/*: any*/),
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -247,7 +247,7 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v10/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
@@ -260,34 +260,9 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v10/*: any*/),
-              (v11/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
-                "selections": [
-                  (v9/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "urls",
-                    "plural": true,
-                    "selections": [
-                      (v7/*: any*/),
-                      (v6/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              }
+              (v8/*: any*/),
+              (v7/*: any*/),
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -300,8 +275,8 @@ return {
             "plural": true,
             "selections": [
               (v4/*: any*/),
-              (v12/*: any*/),
-              (v11/*: any*/),
+              (v10/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -310,12 +285,12 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v10/*: any*/),
+                  (v7/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v13/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -327,9 +302,9 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
-              (v12/*: any*/),
-              (v11/*: any*/),
-              (v13/*: any*/),
+              (v10/*: any*/),
+              (v8/*: any*/),
+              (v9/*: any*/),
               (v4/*: any*/)
             ],
             "storageKey": null
@@ -337,11 +312,23 @@ return {
         ],
         "storageKey": null
       },
-      (v5/*: any*/)
+      {
+        "alias": null,
+        "args": (v3/*: any*/),
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v4/*: any*/)
+        ],
+        "storageKey": null
+      }
     ]
   },
   "params": {
-    "id": "7474114de940c48e48331f15f73ae380",
+    "id": "78b23a16e45fb31eec6c58bedbafac6f",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",
@@ -350,6 +337,6 @@ return {
 };
 })();
 
-(node as any).hash = "78e74a2b9feb0530dc8af91b86005ae6";
+(node as any).hash = "19d5f5634046299c790f849fce1630f1";
 
 export default node;

@@ -1,57 +1,39 @@
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { AudiencesCurationStepFragment$key } from '@//:artifacts/AudiencesCurationStepFragment.graphql'
-import { Box } from '@chakra-ui/react'
-import { Suspense, useContext } from 'react'
-import { DispatchContext } from '@//:modules/hooks/useReducerBuilder/context'
+import { Box, Stack } from '@chakra-ui/react'
+import { Suspense } from 'react'
 import SkeletonStack from '../../../../../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import AudienceMultiSelector from './AudienceMultiSelector/AudienceMultiSelector'
-import { useChoice } from '@//:modules/content/HookedComponents/Choice'
+import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-
-interface Props {
-  query: AudiencesCurationStepFragment$key | null
-}
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface ChoiceProps {
   title: string
 }
 
-const Fragment = graphql`
-  fragment AudiencesCurationStepFragment on CurationProfile {
-    audience {
-      audiences {
-        id
-        title
-      }
-    }
-  }
-`
-
-export default function AudiencesCurationStep ({ query }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
-  const dispatch = useContext(DispatchContext)
-
-  const currentAudiences = data?.audience?.audiences.reduce((accum, value) => ({
-    ...accum,
-    [value.id]: {
-      name: value.title
-    }
-  }), {})
+export default function AudiencesCurationStep (): JSX.Element {
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const {
     searchArguments,
     loadQuery
   } = useSearch<{}>({})
 
-  const { register } = useChoice<ChoiceProps>({
-    defaultValue: currentAudiences,
+  const {
+    values,
+    removeValue,
+    register
+  } = useChoice<ChoiceProps>({
+    defaultValue: state.audience,
     onChange: (props) => dispatch({
       type: 'audience',
-      value: props
+      value: props,
+      transform: 'SET'
     })
   })
 
@@ -65,13 +47,16 @@ export default function AudiencesCurationStep ({ query }: Props): JSX.Element {
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <Box maxH='60vh' overflowY='auto'>
-        <QueryErrorBoundary loadQuery={loadQuery}>
-          <Suspense fallback={<SkeletonStack />}>
-            <AudienceMultiSelector searchArguments={searchArguments} register={register} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </Box>
+      <Stack spacing={2}>
+        <ChoiceRemovableTags values={values} removeValue={removeValue} titleKey='title' />
+        <Box maxH='60vh' overflowY='auto'>
+          <QueryErrorBoundary loadQuery={loadQuery}>
+            <Suspense fallback={<SkeletonStack />}>
+              <AudienceMultiSelector searchArguments={searchArguments} register={register} />
+            </Suspense>
+          </QueryErrorBoundary>
+        </Box>
+      </Stack>
     </Box>
   )
 }

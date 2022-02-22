@@ -1,7 +1,7 @@
 import { createContext, ReactNode } from 'react'
 import { UseSequenceReturn } from '../../types'
 
-export type SequenceContextProps = UseSequenceReturn<Record<string, any>>
+export type SequenceContextProps = UseSequenceReturn<any>
 
 interface SequenceProviderProps extends SequenceContextProps {
   children: ReactNode

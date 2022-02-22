@@ -22,14 +22,9 @@ import {
   FlowBuilderProgress
 } from '../../../../../../../../modules/content/PageLayout/FlowBuilder'
 import DateOfBirthCurationStep from './DateOfBirthCurationStep/DateOfBirthCurationStep'
-import { useHistoryDisclosure, useReducerBuilder } from '@//:modules/hooks'
-import { singleStringValueReducer } from '@//:modules/hooks/useReducerBuilder/options'
-import objectCategoryValueReducer from '@//:modules/hooks/useReducerBuilder/options/objectCategoryValueReducer'
+import { useHistoryDisclosure } from '@//:modules/hooks'
 import AudiencesCurationStep from './AudiencesCurationStep/AudiencesCurationStep'
 import CategoriesCurationStep from './CategoriesCurationStep/CategoriesCurationStep'
-import type { AudiencesCurationStepFragment$key } from '@//:artifacts/AudiencesCurationStepFragment.graphql'
-import type { DateOfBirthCurationStepFragment$key } from '@//:artifacts/DateOfBirthCurationStepFragment.graphql'
-import type { CategoriesCurationStepFragment$key } from '@//:artifacts/CategoriesCurationStepFragment.graphql'
 import CurationStepperFooter from './CurationStepperFooter/CurationStepperFooter'
 import type { CurationStepperFooterFragment$key } from '@//:artifacts/CurationStepperFooterFragment.graphql'
 import { useUpdateEffect } from 'usehooks-ts'
@@ -65,11 +60,23 @@ const Query = graphql`
   query CurationProfileSetupQuery {
     viewer {
       curationProfile {
-        completed
-        ...DateOfBirthCurationStepFragment
-        ...AudiencesCurationStepFragment
-        ...CategoriesCurationStepFragment
         ...CurationStepperFooterFragment
+        completed
+        dateOfBirth {
+          dateOfBirth
+        }
+        audience {
+          audiences {
+            id
+            title
+          }
+        }
+        category {
+          categories {
+            id
+            title
+          }
+        }
       }
     }
   }
@@ -81,11 +88,29 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
     props.query
   )
 
+  const defaultDateOfBirth = queryData.viewer?.curationProfile.dateOfBirth?.dateOfBirth != null
+    ? queryData.viewer?.curationProfile.dateOfBirth?.dateOfBirth
+    : null
+
+  const defaultAudience = queryData.viewer?.curationProfile?.audience?.audiences.reduce((accum, value) => ({
+    ...accum,
+    [value.id]: {
+      name: value.title
+    }
+  }), {}) as SequenceProps['audience']
+
+  const defaultCategories = queryData.viewer?.curationProfile?.category?.categories.reduce((accum, value) => ({
+    ...accum,
+    [value.id]: {
+      name: value.title
+    }
+  }), {}) as SequenceProps['category']
+
   const methods = useSequence<SequenceProps>({
     defaultValue: {
-      dateOfBirth: null,
-      audience: {},
-      category: {}
+      dateOfBirth: defaultDateOfBirth,
+      audience: defaultAudience,
+      category: defaultCategories
     },
     resolver: {
       dateOfBirth: ValueResolver(),
@@ -103,15 +128,9 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
   const steps = ['dateOfBirth', 'audience', 'category']
 
   const components = {
-    dateOfBirth: <DateOfBirthCurationStep
-      query={queryData?.viewer?.curationProfile as DateOfBirthCurationStepFragment$key}
-                 />,
-    audience: <AudiencesCurationStep
-      query={queryData?.viewer?.curationProfile as AudiencesCurationStepFragment$key}
-              />,
-    category: <CategoriesCurationStep
-      query={queryData?.viewer?.curationProfile as CategoriesCurationStepFragment$key}
-              />
+    dateOfBirth: <DateOfBirthCurationStep />,
+    audience: <AudiencesCurationStep />,
+    category: <CategoriesCurationStep />
   }
 
   const headers = {

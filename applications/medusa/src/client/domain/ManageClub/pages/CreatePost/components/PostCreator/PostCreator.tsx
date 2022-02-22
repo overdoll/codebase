@@ -1,20 +1,11 @@
-import { useContext } from 'react'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
-import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import type { PostCreatorQuery } from '@//:artifacts/PostCreatorQuery.graphql'
-import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
-import Button from '@//:modules/form/Button/Button'
-import { PostPlaceholder } from '@//:modules/content/PageLayout'
-import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { PauseCircle } from '@//:assets/icons/interface'
-import { useHistory } from '@//:modules/routing'
-import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
-import { Trans } from '@lingui/macro'
-import { StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import PostSubmitted from './PostSubmitted/PostSubmitted'
-import { NotFoundClub } from '@//:modules/content/Placeholder'
+import PostState from './PostState/PostState'
+import { useContext, useEffect } from 'react'
+import getIdFromUppyUrl from '../../hooks/getIdFromUppyUrl/getIdFromUppyUrl'
+import { UppyContext } from '../../context'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -24,11 +15,11 @@ const Query = graphql`
   query PostCreatorQuery ($reference: String!, $slug: String!) {
     post (reference: $reference) {
       __typename
-      state
-      ...UpdatePostFlowFragment
+      ...PostStateFragment
     }
     club (slug: $slug) {
-      id
+      __typename
+      ...PostStateClubFragment
     }
   }
 `
@@ -38,85 +29,79 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     Query,
     query
   )
+  const notify = useToast()
 
-  const state = useContext(StateContext)
+  const uppy = useContext(UppyContext)
 
-  const history = useHistory()
+  const { dispatch } = useSequenceContext()
 
-  const postData = data.post
+  // Urls - when upload is complete we have semi-public urls
+  useEffect(() => {
+    uppy.on('upload-success', (file, response) => {
+      // only want the ID from URL
+      if (file.source !== 'already-uploaded') {
+        const url = response.uploadURL as string
+        dispatch({
+          type: 'urls',
+          value: { [file.id]: getIdFromUppyUrl(url) },
+          transform: 'ADD'
+        })
+      }
+    })
+  }, [uppy])
 
-  if (data?.club == null) {
-    return <NotFoundClub />
-  }
+  // Upload progress - when a file reports progress, update state so user can see
+  useEffect(() => {
+    uppy.on('upload-progress', (file, progress) => {
+      if (file.source !== 'already-uploaded') {
+        dispatch({
+          type: 'progress',
+          value: {
+            [file.id]: {
+              0: progress.bytesUploaded,
+              1: progress.bytesTotal
+            }
+          },
+          transform: 'ADD'
+        })
+      }
+    })
+  }, [uppy])
 
-  if (state.isSubmitted.value === true) {
-    return <PostSubmitted />
-  }
+  // file-added- uppy file was added
+  useEffect(() => {
+    uppy.on('file-added', file => {
+      // remove uploaded file and emit error if upload limit is hit
+      if (file.source !== 'already-uploaded') {
+        dispatch({
+          type: 'files',
+          value: [{
+            id: file.id,
+            type: file.type
+          }],
+          transform: 'ADD'
+        })
+      }
+    })
+  }, [uppy])
 
-  // If there is no post found from the URL parameter, show create post initiator
-  if (postData == null) {
-    return (
-      <Stack spacing={4}>
-        <CreatePostFlow clubId={data?.club?.id} />
-        <Box>
-          <Heading color='gray.00' fontSize='xl'>
-            <Trans>
-              As a reminder of the guidelines
-            </Trans>
-          </Heading>
-          <Box ml={4}>
-            <Text><Trans>Nothing extremely offensive or shocking</Trans></Text>
-            <Text><Trans>All characters must be of legal age</Trans></Text>
-            <Text><Trans>You own the rights to the content you upload</Trans></Text>
-          </Box>
-        </Box>
-        <Box>
-          <Text fontSize='md' color='gray.100'>
-            <Trans>Upstanding netizens will read all the rules before posting</Trans>
-          </Text>
-          <CommunityGuidelines size='md' />
-        </Box>
-      </Stack>
-    )
-  }
+  // Event for errors
+  useEffect(() => {
+    uppy.on('info-visible', () => {
+      const info = uppy.getState().info
 
-  // If the post was already submitted
-  if (postData?.state !== 'DRAFT') {
-    return (
-      <PostPlaceholder>
-        <Stack spacing={4} align='center'>
-          <Icon
-            w={12}
-            h={12}
-            icon={PauseCircle}
-            fill='orange.300'
-          />
-          <Box>
-            <Heading color='gray.00' fontSize='4xl'>
-              <Trans>
-                This post was already submitted
-              </Trans>
-            </Heading>
-          </Box>
-          <Button
-            colorScheme='orange'
-            variant='solid'
-            size='lg'
-            onClick={() => history.goBack()}
-          >
-            <Trans>
-              Go back
-            </Trans>
-          </Button>
-        </Stack>
-      </PostPlaceholder>
-    )
-  }
+      if (info == null) return
 
-  // When there is a valid post we load the post creator flow
+      const message = `${info.message}`
+
+      notify({
+        status: 'error',
+        title: message
+      })
+    })
+  }, [uppy])
+
   return (
-    <UpdatePostFlow
-      query={data?.post as UpdatePostFlowFragment$key}
-    />
+    <PostState postQuery={data.post} clubQuery={data.club} />
   )
 }
