@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5b3da9b9746758844a71e3fa53194233>>
- * @relayHash 3b46e25ff30ba8ece26cbdd2c5e1cc7c
+ * @generated SignedSource<<e4c503717a230e956c38a7b5a32b1cd7>>
+ * @relayHash 069a982a4bb8a3f3ef755f819938b38c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b46e25ff30ba8ece26cbdd2c5e1cc7c
+// @relayRequestID 069a982a4bb8a3f3ef755f819938b38c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -193,7 +193,7 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
+                            "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
@@ -201,32 +201,44 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
+                                "concreteType": "Resource",
                                 "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
+                                "name": "resource",
+                                "plural": false,
                                 "selections": [
                                   {
                                     "alias": null,
                                     "args": null,
                                     "kind": "ScalarField",
-                                    "name": "url",
+                                    "name": "type",
                                     "storageKey": null
                                   },
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
+                                    "concreteType": "ResourceUrl",
+                                    "kind": "LinkedField",
+                                    "name": "urls",
+                                    "plural": true,
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "url",
+                                        "storageKey": null
+                                      },
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "mimeType",
+                                        "storageKey": null
+                                      }
+                                    ],
                                     "storageKey": null
-                                  }
+                                  },
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -298,7 +310,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b46e25ff30ba8ece26cbdd2c5e1cc7c",
+    "id": "069a982a4bb8a3f3ef755f819938b38c",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

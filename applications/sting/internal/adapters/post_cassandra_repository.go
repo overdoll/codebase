@@ -70,8 +70,8 @@ func NewPostsCassandraRepository(session gocqlx.Session, stella query.StellaServ
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	var contentResourceIds []string
-	var contentSupporterOnly map[string]bool
-	var contentSupporterOnlyResourceIds map[string]string
+	contentSupporterOnly := make(map[string]bool)
+	contentSupporterOnlyResourceIds := make(map[string]string)
 
 	for _, cont := range pending.Content() {
 		contentResourceIds = append(contentResourceIds, cont.ResourceId())
@@ -217,7 +217,7 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 
 func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*posts, error) {
 
-	var postPending *posts
+	var postPending posts
 
 	if err := r.session.
 		Query(postTable.Get()).
@@ -232,7 +232,7 @@ func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*
 		return nil, fmt.Errorf("failed to get post: %v", err)
 	}
 
-	return postPending, nil
+	return &postPending, nil
 }
 
 func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {

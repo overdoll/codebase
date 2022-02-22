@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bdc83af99130e0770325b027e925046e>>
+ * @generated SignedSource<<848d17e71801f776d5fbd576c87ade00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type UploadArrangeStepFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly urls: ReadonlyArray<{
-      readonly url: string;
-      readonly mimeType: string;
-    }>;
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"ArrangeUploadsFragment" | "ProcessUploadsFragment">;
   readonly " $fragmentType": "UploadArrangeStepFragment";
@@ -36,7 +32,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -46,31 +42,6 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "mimeType",
-              "storageKey": null
-            }
-          ],
           "storageKey": null
         }
       ],
@@ -91,6 +62,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c52a3e480ee0ab99ed3ab735ad53a5d5";
+(node as any).hash = "4dc3ce1cce2115209f9b6a3d0fb4845c";
 
 export default node;

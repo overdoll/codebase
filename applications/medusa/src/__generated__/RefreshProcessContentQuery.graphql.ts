@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<77e0611545a4a298cddadfd9306ac5c8>>
- * @relayHash 1f7c979d17ba068ea6a12b8c216ec8df
+ * @generated SignedSource<<801d1607879fbb113cf1ff0c6ab17e75>>
+ * @relayHash 3dcd6dbea1a6016a2cf628d3f919dcee
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1f7c979d17ba068ea6a12b8c216ec8df
+// @relayRequestID 3dcd6dbea1a6016a2cf628d3f919dcee
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -22,7 +22,9 @@ export type RefreshProcessContentQuery$data = {
     readonly reference: string;
     readonly content: ReadonlyArray<{
       readonly id: string;
-      readonly processed: boolean;
+      readonly resource: {
+        readonly processed: boolean;
+      };
     }>;
   } | null;
 };
@@ -40,66 +42,79 @@ var v0 = [
     "name": "reference"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "reference",
+    "variableName": "reference"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "reference",
-        "variableName": "reference"
-      }
-    ],
-    "concreteType": "Post",
-    "kind": "LinkedField",
-    "name": "post",
-    "plural": false,
-    "selections": [
-      (v1/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "reference",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Resource",
-        "kind": "LinkedField",
-        "name": "content",
-        "plural": true,
-        "selections": [
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "processed",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "processed",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "RefreshProcessContentQuery",
-    "selections": (v2/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "post",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostContent",
+            "kind": "LinkedField",
+            "name": "content",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -108,10 +123,49 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RefreshProcessContentQuery",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "post",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostContent",
+            "kind": "LinkedField",
+            "name": "content",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "1f7c979d17ba068ea6a12b8c216ec8df",
+    "id": "3dcd6dbea1a6016a2cf628d3f919dcee",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -120,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "a0e5a1df244f026dfd280f1d95b2eb4a";
+(node as any).hash = "869952080b2e9cfb54a931d45e857f94";
 
 export default node;

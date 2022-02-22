@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62cec36ab0ea15d0578b406efc4f8bbf>>
+ * @generated SignedSource<<6f8d3dab553648b0fb9e8b7398b18290>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type ProcessContentFragment$data = {
   readonly reference: string;
   readonly content: ReadonlyArray<{
-    readonly processed: boolean;
+    readonly resource: {
+      readonly processed: boolean;
+    };
   }>;
   readonly " $fragmentType": "ProcessContentFragment";
 };
@@ -39,7 +41,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -47,8 +49,19 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "processed",
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "processed",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -59,6 +72,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "bacc31f8b7304038514d4c8efac6120b";
+(node as any).hash = "5349f96bdfc0b1b4fc7586e81fc35d8d";
 
 export default node;

@@ -73,7 +73,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	for _, res := range result.Content() {
 		content = append(content, &PostContent{
-			ID:                                relay.NewID(PostContent{}, res.Id()),
+			ID:                                relay.NewID(PostContent{}, res.Id(), res.ResourceIdRequest(result)),
 			Resource:                          &Resource{ID: relay.NewID(Resource{}, result.ID(), res.ResourceIdRequest(result))},
 			IsSupporterOnly:                   res.IsSupporterOnly(),
 			ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(),

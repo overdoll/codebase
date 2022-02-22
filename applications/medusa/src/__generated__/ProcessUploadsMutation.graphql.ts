@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fb55cc1201989868f4aaf8625c4d0d60>>
- * @relayHash 9ea7c23d5abd5d3f17baf09a2087db58
+ * @generated SignedSource<<75d9f9c1add35f41a31beb2d867d79fd>>
+ * @relayHash e3bc4d4418f4d3e6c150c95b9361b238
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9ea7c23d5abd5d3f17baf09a2087db58
+// @relayRequestID e3bc4d4418f4d3e6c150c95b9361b238
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -28,12 +28,14 @@ export type ProcessUploadsMutation$data = {
       readonly reference: string;
       readonly content: ReadonlyArray<{
         readonly id: string;
-        readonly type: ResourceType;
-        readonly processed: boolean;
-        readonly urls: ReadonlyArray<{
-          readonly url: string;
-          readonly mimeType: string;
-        }>;
+        readonly resource: {
+          readonly type: ResourceType;
+          readonly processed: boolean;
+          readonly urls: ReadonlyArray<{
+            readonly url: string;
+            readonly mimeType: string;
+          }>;
+        };
       }>;
     } | null;
   } | null;
@@ -52,87 +54,112 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "AddPostContentPayload",
-    "kind": "LinkedField",
-    "name": "addPostContent",
-    "plural": false,
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "processed",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "url",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ProcessUploadsMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Post",
+        "args": (v1/*: any*/),
+        "concreteType": "AddPostContentPayload",
         "kind": "LinkedField",
-        "name": "post",
+        "name": "addPostContent",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "reference",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Resource",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
+            "name": "post",
+            "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "processed",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
+                "concreteType": "PostContent",
                 "kind": "LinkedField",
-                "name": "urls",
+                "name": "content",
                 "plural": true,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "resource",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v5/*: any*/),
+                      (v6/*: any*/)
+                    ],
                     "storageKey": null
                   }
                 ],
@@ -145,16 +172,6 @@ v2 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ProcessUploadsMutation",
-    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -163,10 +180,62 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ProcessUploadsMutation",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "AddPostContentPayload",
+        "kind": "LinkedField",
+        "name": "addPostContent",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Post",
+            "kind": "LinkedField",
+            "name": "post",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostContent",
+                "kind": "LinkedField",
+                "name": "content",
+                "plural": true,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "resource",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v5/*: any*/),
+                      (v6/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "9ea7c23d5abd5d3f17baf09a2087db58",
+    "id": "e3bc4d4418f4d3e6c150c95b9361b238",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -175,6 +244,6 @@ return {
 };
 })();
 
-(node as any).hash = "619ecedb8295f38f93bcb20c88a6530c";
+(node as any).hash = "d37618f316e8b0b2a8d9c3d1fc1a28eb";
 
 export default node;

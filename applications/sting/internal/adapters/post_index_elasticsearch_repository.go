@@ -20,10 +20,10 @@ import (
 type postDocument struct {
 	Id                              string            `json:"id"`
 	State                           string            `json:"state"`
-	SupporterOnlyStatus             string            `db:"supporter_only_status"`
-	ContentResourceIds              []string          `db:"content_resource_ids"`
-	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
-	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
+	SupporterOnlyStatus             string            `json:"supporter_only_status"`
+	ContentResourceIds              []string          `json:"content_resource_ids"`
+	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
+	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
 	Likes                           int               `json:"likes"`
 	ModeratorId                     string            `json:"moderator_id"`
 	ContributorId                   string            `json:"contributor_id"`
@@ -218,8 +218,8 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	}
 
 	var contentResourceIds []string
-	var contentSupporterOnly map[string]bool
-	var contentSupporterOnlyResourceIds map[string]string
+	contentSupporterOnly := make(map[string]bool)
+	contentSupporterOnlyResourceIds := make(map[string]string)
 
 	for _, cont := range pst.Content() {
 		contentResourceIds = append(contentResourceIds, cont.ResourceId())

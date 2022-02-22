@@ -45,9 +45,9 @@ var clubMembersTable = table.New(table.Metadata{
 		"bucket",
 		"member_account_id",
 		"joined_at",
-		"deleted",
 		"is_supporter",
 		"supporter_since",
+		"deleted",
 	},
 	PartKey: []string{"club_id", "member_account_id"},
 	SortKey: []string{},
@@ -157,7 +157,7 @@ func (r ClubCassandraRepository) addInitialClubMemberToBatch(ctx context.Context
 
 	stmt, _ := clubMembersTable.Insert()
 
-	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time())
+	batch.Query(stmt, clubId, partition, accountId, partition, true, partition.Time(), false)
 
 	// insert into account's club list
 	stmt, _ = clubMembersByAccountTable.Insert()

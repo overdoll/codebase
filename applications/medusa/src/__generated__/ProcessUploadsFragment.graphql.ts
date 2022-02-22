@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7139d6b4970f407f53b7ad852e6d9825>>
+ * @generated SignedSource<<0506dcb60aa193eb08c34a7230eefc78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,6 @@ export type ProcessUploadsFragment$data = {
   readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly urls: ReadonlyArray<{
-      readonly url: string;
-    }>;
   }>;
   readonly " $fragmentType": "ProcessUploadsFragment";
 };
@@ -52,30 +49,12 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
     }
@@ -85,6 +64,6 @@ return {
 };
 })();
 
-(node as any).hash = "aaf8633a0364568e9b846505fa42732b";
+(node as any).hash = "983d5e0896ebc2989e394cd0122eb215";
 
 export default node;

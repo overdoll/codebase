@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<88110157bd93c6618b4d29a2360bd9fd>>
- * @relayHash a76001715c4b61555aca19c995322cd8
+ * @generated SignedSource<<5164d236e07de1b67d15594a9f97f4d7>>
+ * @relayHash 7d4b153a453b25471a536c3588f00368
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a76001715c4b61555aca19c995322cd8
+// @relayRequestID 7d4b153a453b25471a536c3588f00368
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -345,11 +345,23 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
-                                "selections": (v12/*: any*/),
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": (v12/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v9/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -433,7 +445,7 @@ return {
     ]
   },
   "params": {
-    "id": "a76001715c4b61555aca19c995322cd8",
+    "id": "7d4b153a453b25471a536c3588f00368",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

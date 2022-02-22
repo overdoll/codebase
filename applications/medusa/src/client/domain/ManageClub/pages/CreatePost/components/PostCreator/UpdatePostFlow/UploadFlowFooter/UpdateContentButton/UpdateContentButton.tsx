@@ -19,9 +19,6 @@ const Fragment = graphql`
     id
     content {
       id
-      urls {
-        url
-      }
     }
   }
 `
@@ -33,11 +30,13 @@ const Mutation = graphql`
         id
         content {
           id
-          type
-          processed
-          urls {
-            url
-            mimeType
+          resource {
+            type
+            processed
+            urls {
+              url
+              mimeType
+            }
           }
         }
       }

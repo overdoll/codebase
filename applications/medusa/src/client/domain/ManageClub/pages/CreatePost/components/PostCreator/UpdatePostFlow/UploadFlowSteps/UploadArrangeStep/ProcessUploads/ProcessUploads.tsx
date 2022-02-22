@@ -23,9 +23,6 @@ const ProcessUploadsFragmentGQL = graphql`
     reference
     content {
       id
-      urls {
-        url
-      }
     }
   }
 `
@@ -38,11 +35,13 @@ const ProcessUploadsMutationGQL = graphql`
         reference
         content {
           id
-          type
-          processed
-          urls {
-            url
-            mimeType
+          resource {
+            type
+            processed
+            urls {
+              url
+              mimeType
+            }
           }
         }
       }

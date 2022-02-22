@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1bf24c8962257686f4c9043ae48141f2>>
- * @relayHash 6102d9dc63094c590c4bc90425c70c00
+ * @generated SignedSource<<4d0f8028b47b2f544e17837493e1c1b8>>
+ * @relayHash 84a1c2f5b854bf2fae2c8764743a4eef
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6102d9dc63094c590c4bc90425c70c00
+// @relayRequestID 84a1c2f5b854bf2fae2c8764743a4eef
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,9 @@ export type ClubPublicPageQuery$data = {
       readonly edges: ReadonlyArray<{
         readonly node: {
           readonly content: ReadonlyArray<{
-            readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+            readonly resource: {
+              readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+            };
           }>;
         };
       }>;
@@ -146,11 +148,23 @@ v7 = [
 v8 = {
   "alias": null,
   "args": null,
-  "concreteType": "Resource",
+  "concreteType": "PostContent",
   "kind": "LinkedField",
   "name": "content",
   "plural": true,
-  "selections": (v7/*: any*/),
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "resource",
+      "plural": false,
+      "selections": (v7/*: any*/),
+      "storageKey": null
+    },
+    (v6/*: any*/)
+  ],
   "storageKey": null
 },
 v9 = {
@@ -295,15 +309,26 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
                           {
+                            "alias": null,
                             "args": null,
-                            "kind": "FragmentSpread",
-                            "name": "ResourceItemFragment"
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "args": null,
+                                "kind": "FragmentSpread",
+                                "name": "ResourceItemFragment"
+                              }
+                            ],
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -570,7 +595,7 @@ return {
     ]
   },
   "params": {
-    "id": "6102d9dc63094c590c4bc90425c70c00",
+    "id": "84a1c2f5b854bf2fae2c8764743a4eef",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -579,6 +604,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c065a0bd8cadd2e758112d7519a41e4";
+(node as any).hash = "3401b139d35e1d28ac07b9963b670b54";
 
 export default node;

@@ -20,9 +20,11 @@ const Fragment = graphql`
     id
     reference
     content {
-      type
-      ...ImageSnippetFragment
-      ...ControlledVideoFragment
+      resource {
+        type
+        ...ImageSnippetFragment
+        ...ControlledVideoFragment
+      }
     }
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
@@ -60,9 +62,9 @@ export default function PostGalleryPublicSimple ({
             key={index}
           >
             <Flex h='72vh' align='center' justify='center'>
-              {item.type === 'IMAGE' &&
-                <ImageSnippet h='100%' query={item} />}
-              {item.type === 'VIDEO' &&
+              {item.resource.type === 'IMAGE' &&
+                <ImageSnippet h='100%' query={item.resource} />}
+              {item.resource.type === 'VIDEO' &&
                 <ControlledVideo
                   onPlay={(paused, target) => onVideoPlay(data?.reference, paused, target)}
                   onPause={(paused, target) => onVideoPlay(data?.reference, paused, target)}
@@ -71,7 +73,7 @@ export default function PostGalleryPublicSimple ({
                   isMuted={videoMuted}
                   onMute={changeVideoMuted}
                   onVolumeChange={changeVideoVolume}
-                  query={item}
+                  query={item.resource}
                 />}
             </Flex>
           </SwiperSlide>)}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ed6c3cae82773cf7c30c72886d1a6a58>>
- * @relayHash 061c65fbad775a3073747af0773c402e
+ * @generated SignedSource<<e3d5e523a6217cd6669e9a592134f226>>
+ * @relayHash 8276bd1a95b64240dc787ffb51094161
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 061c65fbad775a3073747af0773c402e
+// @relayRequestID 8276bd1a95b64240dc787ffb51094161
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -296,11 +296,23 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
-                        "selections": (v10/*: any*/),
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": (v10/*: any*/),
+                            "storageKey": null
+                          },
+                          (v9/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -469,7 +481,7 @@ return {
     ]
   },
   "params": {
-    "id": "061c65fbad775a3073747af0773c402e",
+    "id": "8276bd1a95b64240dc787ffb51094161",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

@@ -28,13 +28,13 @@ func createApplication(ctx context.Context) app.Application {
 
 	awsSession := bootstrap.InitializeAWSSession()
 
-	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_GROUP_PRIVATE_KEY"))
+	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
 
 	if err != nil {
 		panic(err)
 	}
 
-	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_GROUP_ID"), resourcesRsa)
+	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
 
 	resourceRepo := adapters.NewResourceCassandraS3Repository(s, awsSession, resourcesSigner)
 

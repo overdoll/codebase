@@ -18,10 +18,13 @@ const ArrangeUploadsFragmentGQL = graphql`
     id
     content {
       id
-      urls {
-        url
+      resource {
+        id
+        urls {
+          url
+        }
+        ...DraggableContentFragment
       }
-      ...DraggableContentFragment
     }
   }
 `
@@ -33,12 +36,14 @@ const ArrangeUploadsMutationGQL = graphql`
         id
         reference
         content {
-          id
-          type
-          processed
-          urls {
-            url
-            mimeType
+          resource {
+            id
+            type
+            processed
+            urls {
+              url
+              mimeType
+            }
           }
         }
       }
@@ -157,7 +162,7 @@ export default function ArrangeUploads ({
                 removeDisabled={displayData.length < 2}
                 key={index}
                 index={index}
-                query={item}
+                query={item.resource}
                 onRemove={onRemoveFile}
                 h={getHeight()}
               />

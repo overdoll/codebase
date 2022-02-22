@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8c7e4f2689a206f55364b3320e7c2bee>>
- * @relayHash 20957d7224cb258d8c11825cd663b1b1
+ * @generated SignedSource<<b1d6dbdc4a9e8b2901202e0086baa397>>
+ * @relayHash 7113e8d8a854e7428bd79e9cfdfd70ed
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 20957d7224cb258d8c11825cd663b1b1
+// @relayRequestID 7113e8d8a854e7428bd79e9cfdfd70ed
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -263,11 +263,23 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "concreteType": "Resource",
+                                    "concreteType": "PostContent",
                                     "kind": "LinkedField",
                                     "name": "content",
                                     "plural": true,
-                                    "selections": (v6/*: any*/),
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "Resource",
+                                        "kind": "LinkedField",
+                                        "name": "resource",
+                                        "plural": false,
+                                        "selections": (v6/*: any*/),
+                                        "storageKey": null
+                                      },
+                                      (v5/*: any*/)
+                                    ],
                                     "storageKey": null
                                   },
                                   (v5/*: any*/)
@@ -347,7 +359,7 @@ return {
     ]
   },
   "params": {
-    "id": "20957d7224cb258d8c11825cd663b1b1",
+    "id": "7113e8d8a854e7428bd79e9cfdfd70ed",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

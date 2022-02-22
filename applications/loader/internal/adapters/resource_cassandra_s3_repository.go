@@ -87,7 +87,7 @@ func unmarshalResourceFromDatabase(resourcesSigner *sign.URLSigner, a *session.S
 
 	for _, mime := range i.MimeTypes {
 
-		key := "/" + i.ResourceId
+		key := "/" + i.ItemId
 
 		extension := ""
 
@@ -98,7 +98,7 @@ func unmarshalResourceFromDatabase(resourcesSigner *sign.URLSigner, a *session.S
 		}
 
 		if i.Processed {
-			key = "/" + i.ResourceId + "/" + i.ProcessedId + extension
+			key = "/" + i.ItemId + "/" + i.ProcessedId + extension
 		}
 
 		var url string
@@ -106,7 +106,7 @@ func unmarshalResourceFromDatabase(resourcesSigner *sign.URLSigner, a *session.S
 		if i.IsPrivate {
 
 			if i.Processed {
-				signedURL, err := resourcesSigner.Sign(bucket+key, time.Now().Add(15*time.Minute))
+				signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
 
 				if err != nil {
 					return nil, err

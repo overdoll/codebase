@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ee8f7847b2e41771eea5add5d161c6eb>>
- * @relayHash 1bda8b6b0e0cfa63bdd32fe25338fd14
+ * @generated SignedSource<<9f22a7a5a6d6f7f8065ad301026c64e0>>
+ * @relayHash 63145c951928a7793991091f9f78179c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1bda8b6b0e0cfa63bdd32fe25338fd14
+// @relayRequestID 63145c951928a7793991091f9f78179c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -262,11 +262,23 @@ return {
                                       {
                                         "alias": null,
                                         "args": null,
-                                        "concreteType": "Resource",
+                                        "concreteType": "PostContent",
                                         "kind": "LinkedField",
                                         "name": "content",
                                         "plural": true,
-                                        "selections": (v8/*: any*/),
+                                        "selections": [
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "concreteType": "Resource",
+                                            "kind": "LinkedField",
+                                            "name": "resource",
+                                            "plural": false,
+                                            "selections": (v8/*: any*/),
+                                            "storageKey": null
+                                          },
+                                          (v7/*: any*/)
+                                        ],
                                         "storageKey": null
                                       },
                                       (v7/*: any*/)
@@ -343,7 +355,7 @@ return {
     ]
   },
   "params": {
-    "id": "1bda8b6b0e0cfa63bdd32fe25338fd14",
+    "id": "63145c951928a7793991091f9f78179c",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",
