@@ -6,9 +6,8 @@ import (
 
 type Activities struct {
 	rr resource.Repository
-	fr resource.FileRepository
 }
 
-func NewActivitiesHandler(rr resource.Repository, fr resource.FileRepository) *Activities {
-	return &Activities{rr: rr, fr: fr}
+func NewActivitiesHandler(rr resource.Repository) *Activities {
+	return &Activities{rr: rr}
 }

@@ -22,3 +22,6 @@ sh setup/stella.sh
 
 sh cleanup/sting.sh
 sh setup/sting.sh
+
+sh cleanup/hades.sh
+sh setup/hades.sh

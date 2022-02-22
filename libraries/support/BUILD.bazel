@@ -17,6 +17,7 @@ go_library(
         "debug.go",
         "gin.go",
         "ip.go",
+        "rsa.go",
     ],
     importpath = "overdoll/libraries/support",
     visibility = ["//visibility:public"],

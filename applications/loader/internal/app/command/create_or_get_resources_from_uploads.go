@@ -15,12 +15,11 @@ type CreateOrGetResourcesFromUploads struct {
 
 type CreateOrGetResourcesFromUploadsHandler struct {
 	rr    resource.Repository
-	fr    resource.FileRepository
 	event event.Repository
 }
 
-func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, fr resource.FileRepository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
-	return CreateOrGetResourcesFromUploadsHandler{rr: rr, fr: fr, event: event}
+func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
+	return CreateOrGetResourcesFromUploadsHandler{rr: rr, event: event}
 }
 
 func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd CreateOrGetResourcesFromUploads) ([]*resource.Resource, error) {
@@ -63,14 +62,9 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 	// found at least 1 resource that was not created
 	if len(idsNotFound) > 0 {
 		// get the resources from our remote source - grabbing information like file info
-		newResources, err = h.fr.GetAndCreateResources(ctx, cmd.ItemId, idsNotFound, cmd.IsPrivate)
+		newResources, err = h.rr.GetAndCreateResources(ctx, cmd.ItemId, idsNotFound, cmd.IsPrivate)
 
 		if err != nil {
-			return nil, err
-		}
-
-		// now, we add a database entry to be used later
-		if err := h.rr.CreateResources(ctx, newResources); err != nil {
 			return nil, err
 		}
 	}

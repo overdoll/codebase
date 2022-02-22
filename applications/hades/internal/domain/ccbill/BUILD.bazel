@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ccbill",
+    srcs = [
+        "ccbill.go",
+        "ccbill_payment.go",
+        "charge_by_previous_club_supporter_payment_url.go",
+        "flexforms_club_supporter_payment_link.go",
+        "repository.go",
+        "subscription_status.go",
+        "subscription_status_value.go",
+        "support.go",
+        "void_or_refund.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/domain/ccbill",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/proto:v1_go_proto",
+        "//libraries/principal",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@org_golang_x_crypto//nacl/secretbox",
+    ],
+)

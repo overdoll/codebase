@@ -13,6 +13,8 @@ go_library(
         "//applications/loader/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/support",
+        "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
     ],
 )
 

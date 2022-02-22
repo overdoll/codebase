@@ -9,6 +9,7 @@ go_library(
         "account_club_memberships_operator.go",
         "account_clubs_count.go",
         "account_clubs_limit.go",
+        "account_supported_clubs.go",
         "can_account_become_club_supporter.go",
         "can_account_create_post_under_club.go",
         "can_account_view_post_under_club.go",

@@ -21,6 +21,7 @@ go_library(
     deps = [
         "//applications/hades/internal/app/workflows/activities",
         "//applications/hades/proto:v1_go_proto",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",
     ],

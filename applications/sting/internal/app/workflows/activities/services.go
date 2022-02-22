@@ -13,6 +13,6 @@ type StellaService interface {
 }
 
 type LoaderService interface {
-	CreateOrGetResourcesFromUploads(context.Context, string, []string) ([]string, error)
+	CreateOrGetResourcesFromUploads(context.Context, string, []string, bool) ([]string, error)
 	DeleteResources(context.Context, string, []string) error
 }

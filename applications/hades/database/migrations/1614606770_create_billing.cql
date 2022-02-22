@@ -67,6 +67,17 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     primary key ( (account_id, bucket), id )
 );
 
+CREATE TABLE IF NOT EXISTS account_transaction_history_files
+(
+    account_id      text,
+    bucket          int,
+    id              text,
+
+    invoice_file_id text,
+
+    primary key ( (account_id, bucket), id )
+);
+
 CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 (
     ccbill_subscription_id       text,

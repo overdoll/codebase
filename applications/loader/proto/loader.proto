@@ -6,7 +6,7 @@ message Resource {
   string id = 1;
   string itemId = 2;
   bool processed = 3;
-  string processed_id = 4;
+  string processedId = 4;
 }
 
 message DeleteResourcesRequest {

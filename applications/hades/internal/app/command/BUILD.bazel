@@ -3,14 +3,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "become_club_supporter_with_account_saved_payment_method.go",
+        "cancel_account_club_supporter_subscription.go",
+        "delete_account_saved_payment_method.go",
         "generate_ccbill_club_supporter_payment_link.go",
         "process_ccbill_webhook.go",
         "services.go",
+        "void_or_refund_account_club_supporter_subscription.go",
     ],
     importpath = "overdoll/applications/hades/internal/app/command",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/event",
         "//libraries/principal",
     ],

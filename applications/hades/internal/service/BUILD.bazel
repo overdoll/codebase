@@ -13,6 +13,7 @@ go_library(
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/command",
         "//applications/hades/internal/app/query",
+        "//applications/hades/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/principal",

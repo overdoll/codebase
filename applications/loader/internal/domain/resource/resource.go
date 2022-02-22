@@ -33,7 +33,7 @@ var extensionsMap = map[string]string{
 	"image/webp": ".webp",
 }
 
-func extensionByType(tp string) (string, error) {
+func ExtensionByType(tp string) (string, error) {
 	return extensionsMap[tp], nil
 }
 
@@ -55,6 +55,9 @@ type Resource struct {
 	processed   bool
 	processedId string
 
+	urls              []*Url
+	videoThumbnailUrl *Url
+
 	isPrivate bool
 
 	videoThumbnail         string
@@ -70,7 +73,7 @@ type Resource struct {
 	resourceType Type
 }
 
-func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error) {
+func NewResource(itemId, id, mimeType string, urls []*Url, isPrivate bool) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType Type
@@ -92,16 +95,18 @@ func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error)
 	}
 
 	return &Resource{
-		id:            id,
-		itemId:        itemId,
-		mimeTypes:     []string{mimeType},
-		sizes:         []int{},
-		resourceType:  rType,
-		isPrivate:     isPrivate,
-		processed:     false,
-		height:        0,
-		width:         0,
-		videoDuration: 0,
+		id:                id,
+		itemId:            itemId,
+		mimeTypes:         []string{mimeType},
+		sizes:             []int{},
+		resourceType:      rType,
+		isPrivate:         isPrivate,
+		processed:         false,
+		height:            0,
+		width:             0,
+		videoDuration:     0,
+		urls:              urls,
+		videoThumbnailUrl: nil,
 	}, nil
 }
 
@@ -273,15 +278,6 @@ func (r *Resource) IsPrivate() bool {
 	return r.isPrivate
 }
 
-func (r *Resource) Url() string {
-
-	if r.processed {
-		return "/" + r.itemId + "/" + r.processedId
-	}
-
-	return "/" + r.id
-}
-
 func (r *Resource) MimeTypes() []string {
 	return r.mimeTypes
 }
@@ -333,49 +329,14 @@ func (r *Resource) VideoThumbnail() string {
 }
 
 func (r *Resource) VideoThumbnailFullUrl() *Url {
-
-	if r.processed {
-		format, _ := extensionByType(r.videoThumbnailMimeType)
-		return &Url{
-			fullUrl:  os.Getenv("RESOURCES_URL") + "/" + r.itemId + "/" + r.videoThumbnail + format,
-			mimeType: r.videoThumbnailMimeType,
-		}
-	}
-
-	return nil
+	return r.videoThumbnailUrl
 }
 
 func (r *Resource) FullUrls() []*Url {
-
-	var generatedContent []*Url
-
-	for _, m := range r.mimeTypes {
-
-		extension := ""
-
-		format, err := extensionByType(m)
-
-		if err == nil && r.processed {
-			extension = format
-		}
-
-		domain := os.Getenv("UPLOADS_URL")
-
-		if r.processed {
-			domain = os.Getenv("RESOURCES_URL")
-		}
-
-		// generate the proper content url
-		generatedContent = append(generatedContent, &Url{
-			fullUrl:  domain + r.Url() + extension,
-			mimeType: m,
-		})
-	}
-
-	return generatedContent
+	return r.urls
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
@@ -392,5 +353,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		mimeTypes:              mimeTypes,
 		resourceType:           typ,
 		processed:              processed,
+		urls:                   urls,
+		videoThumbnailUrl:      videoThumbnailUrl,
 	}
 }

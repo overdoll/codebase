@@ -24,10 +24,10 @@ func (h *Activities) ProcessResources(ctx context.Context, itemId string, resour
 	}
 
 	// process resources
-	if err := h.fr.UploadProcessedResources(ctx, resourcesNotProcessed); err != nil {
+	if err := h.rr.UploadProcessedResources(ctx, resourcesNotProcessed); err != nil {
 		return err
 	}
 
 	// update database entries for resources
-	return h.rr.UpdateResources(ctx, resourcesNotProcessed)
+	return nil
 }

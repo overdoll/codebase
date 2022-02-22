@@ -14,8 +14,8 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 
 	for _, url := range res.FullUrls() {
 		urls = append(urls, &ResourceURL{
-			URL:      graphql.URI(url.GetFullUrl()),
-			MimeType: url.GetMimeType(),
+			URL:      graphql.URI(url.FullUrl()),
+			MimeType: url.MimeType(),
 		})
 	}
 
@@ -31,8 +31,8 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 
 		if url != nil {
 			videoUrl = &ResourceURL{
-				URL:      graphql.URI(url.GetFullUrl()),
-				MimeType: url.GetMimeType(),
+				URL:      graphql.URI(url.FullUrl()),
+				MimeType: url.MimeType(),
 			}
 		}
 

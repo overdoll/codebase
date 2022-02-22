@@ -5,10 +5,17 @@ type Url struct {
 	mimeType string
 }
 
-func (r *Url) GetFullUrl() string {
+func (r *Url) FullUrl() string {
 	return r.fullUrl
 }
 
-func (r *Url) GetMimeType() string {
+func (r *Url) MimeType() string {
 	return r.mimeType
+}
+
+func UnmarshalUrlFromDatabase(fullUrl, mimeType string) *Url {
+	return &Url{
+		fullUrl:  fullUrl,
+		mimeType: mimeType,
+	}
 }

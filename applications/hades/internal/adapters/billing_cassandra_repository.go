@@ -212,6 +212,27 @@ type ccbillSubscriptionDetails struct {
 	IdempotencyKey string `db:"idempotency_key"`
 }
 
+var accountTransactionHistoryFilesTable = table.New(table.Metadata{
+	Name: "account_transaction_history_files",
+	Columns: []string{
+		"account_id",
+		"bucket",
+		"id",
+
+		"invoice_file_id",
+	},
+	PartKey: []string{"account_id", "bucket"},
+	SortKey: []string{"id"},
+})
+
+type accountTransactionHistoryFiles struct {
+	AccountId string `db:"account_id"`
+	Bucket    int    `db:"bucket"`
+	Id        string `db:"id"`
+
+	InvoiceFileId string `db:"string"`
+}
+
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
 
 	u, err := json.Marshal(&paymentMethod{

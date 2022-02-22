@@ -3,10 +3,20 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
+        "account_club_supporter_subscriptions.go",
+        "account_saved_payment_methods.go",
+        "account_transaction_history.go",
+        "ccbill_subscription_details.go",
         "principal_by_id.go",
+        "prorated_refund_amount_for_account_club_subscription.go",
         "services.go",
     ],
     importpath = "overdoll/applications/hades/internal/app/query",
     visibility = ["//applications/hades:__subpackages__"],
-    deps = ["//libraries/principal"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/ccbill",
+        "//libraries/paging",
+        "//libraries/principal",
+    ],
 )

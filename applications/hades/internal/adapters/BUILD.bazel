@@ -4,6 +4,7 @@ go_library(
     name = "adapters",
     srcs = [
         "billing_cassandra_repository.go",
+        "ccbill_http_repository.go",
         "eva_grpc.go",
         "event_temporal_repository.go",
         "stella_grpc.go",
@@ -14,6 +15,7 @@ go_library(
         "//applications/eva/proto:v1_go_proto",
         "//applications/hades/internal/app/workflows",
         "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/ccbill",
         "//applications/stella/proto:v1_go_proto",
         "//libraries/crypt",
         "//libraries/paging",
@@ -24,5 +26,6 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
 )

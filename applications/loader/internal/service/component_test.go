@@ -111,9 +111,7 @@ func startService() bool {
 
 	application, _ := service.NewApplication(context.Background())
 
-	client := clients.NewTemporalClient(context.Background())
-
-	srv := ports.NewHttpServer(&application, client)
+	srv := ports.NewHttpServer(&application)
 
 	go bootstrap.InitializeHttpServer(LoaderHttpAddr, srv, func() {})
 
@@ -123,7 +121,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application, client)
+	s := ports.NewGrpcServer(&application)
 
 	go bootstrap.InitializeGRPCServer(LoaderGrpcAddr, func(server *grpc.Server) {
 		loader.RegisterLoaderServer(server, s)

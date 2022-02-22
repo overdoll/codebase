@@ -15,7 +15,7 @@ type ParleyService interface {
 }
 
 type LoaderService interface {
-	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error)
+	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error)
 	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
 	AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error)
 }

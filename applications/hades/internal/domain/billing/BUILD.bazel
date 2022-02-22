@@ -3,17 +3,17 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "billing",
     srcs = [
-        "account_club_support.go",
+        "account_club_supporter_subscription.go",
         "account_transaction_history.go",
         "account_transaction_history_filters.go",
         "address.go",
         "card.go",
         "card_type.go",
-        "ccbill_club_supporter_payment_link.go",
-        "ccbill_payment_link.go",
+        "ccbill_subscription_details.go",
         "contact.go",
         "currency.go",
         "payment_method.go",
+        "refund_amount.go",
         "repository.go",
         "saved_payment_method.go",
         "support_status.go",
@@ -22,10 +22,8 @@ go_library(
     importpath = "overdoll/applications/hades/internal/domain/billing",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
-        "//applications/hades/proto:v1_go_proto",
         "//libraries/paging",
         "//libraries/principal",
-        "@com_github_golang_protobuf//proto:go_default_library",
-        "@org_golang_x_crypto//nacl/secretbox",
+        "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

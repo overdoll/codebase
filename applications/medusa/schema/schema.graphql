@@ -136,34 +136,16 @@ type Account implements Node {
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
     """
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
 
     """Returns the first _n_ elements from the list."""
     first: Int
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = NEW
-
-    """Search by a post state."""
-    state: PostState = REVIEW
   ): PostConnection!
 
   """
@@ -238,6 +220,9 @@ type Account implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """
@@ -514,6 +499,9 @@ type Audience implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """A url-friendly ID. Should be used when searching."""
@@ -678,6 +666,9 @@ type Category implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """A url-friendly ID. Should be used when searching"""
@@ -757,6 +748,9 @@ type Character implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """The series linked to this character."""
@@ -884,6 +878,9 @@ type Club implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """An internal reference, uniquely identifying the club."""
@@ -1782,6 +1779,9 @@ type Mutation {
   """Update a post in draft status - characters"""
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
 
+  """Update a post content - whether or not it is supporter only"""
+  updatePostContentIsSupporterOnly(input: UpdatePostContentIsSupporterOnlyInput!): UpdatePostContentIsSupporterOnlyPayload
+
   """
   Update a post in draft status - update post content order - need to send exact same IDs
   """
@@ -1860,7 +1860,7 @@ type Post implements Node {
   club: Club!
 
   """Content belonging to this post"""
-  content: [Resource!]!
+  content: [PostContent!]!
 
   """The contributor who contributed this post"""
   contributor: Account!
@@ -1906,7 +1906,7 @@ type Post implements Node {
     last: Int
   ): PostReportConnection!
 
-  """The state of the post"""
+  """The state of the post."""
   state: PostState!
 
   """Suggested posts for this post."""
@@ -1925,6 +1925,9 @@ type Post implements Node {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostConnection!
+
+  """The supporter-only status."""
+  supporterOnlyStatus: SupporterOnlyStatus!
 
   """Whether or not the viewer liked this post."""
   viewerLiked: PostLike
@@ -1985,6 +1988,21 @@ type PostAuditLogEdge {
 type PostConnection {
   edges: [PostEdge!]!
   pageInfo: PageInfo!
+}
+
+"""Represents content for a post."""
+type PostContent {
+  """The ID of this content."""
+  id: ID!
+
+  """Whether or not this content is supporter only."""
+  isSupporterOnly: Boolean!
+
+  """The resource belonging to this content."""
+  resource: Resource!
+
+  """Whether or not the viewer is able to see this content."""
+  viewerCanViewSupporterOnlyContent: Boolean!
 }
 
 type PostEdge {
@@ -2293,6 +2311,9 @@ type Query {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """Posts feed. The default."""
@@ -2657,6 +2678,9 @@ type Series implements Node {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection!
 
   """A url-friendly ID. Should be used when searching"""
@@ -2713,6 +2737,19 @@ type SubmitPostPayload {
 
   """The post after being submitted"""
   post: Post
+}
+
+enum SupporterOnlyStatus {
+  """All of the content is supporter-only."""
+  FULL
+
+  """None of the content requires supporting to view."""
+  NONE
+
+  """
+  Some of the content requires supporting to view, at least 1 content piece is free.
+  """
+  PARTIAL
 }
 
 """Suspend the club."""
@@ -3074,6 +3111,24 @@ type UpdatePostCharactersPayload {
 
 """Payload for updating a post"""
 type UpdatePostClubPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post content is supporter only."""
+input UpdatePostContentIsSupporterOnlyInput {
+  """Content IDs to update"""
+  contentIds: [ID!]!
+
+  """The post to update"""
+  id: ID!
+
+  """The change to make"""
+  isSupporterOnly: Boolean!
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentIsSupporterOnlyPayload {
   """The post after the update"""
   post: Post
 }

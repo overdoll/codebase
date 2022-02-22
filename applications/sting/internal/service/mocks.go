@@ -57,7 +57,7 @@ func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, cl
 
 type LoaderServiceMock struct{}
 
-func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
+func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error) {
 	return resourceIds, nil
 }
 

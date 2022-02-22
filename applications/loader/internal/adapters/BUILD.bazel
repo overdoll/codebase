@@ -4,8 +4,7 @@ go_library(
     name = "adapters",
     srcs = [
         "event_temporal_repository.go",
-        "resource_cassandra_repository.go",
-        "resource_s3_file_repository.go",
+        "resource_cassandra_s3_repository.go",
     ],
     importpath = "overdoll/applications/loader/internal/adapters",
     visibility = ["//applications/loader:__subpackages__"],
@@ -15,6 +14,7 @@ go_library(
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/session",
+        "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@com_github_aws_aws_sdk_go//service/s3",
         "@com_github_aws_aws_sdk_go//service/s3/s3manager",
         "@com_github_gocql_gocql//:gocql",
