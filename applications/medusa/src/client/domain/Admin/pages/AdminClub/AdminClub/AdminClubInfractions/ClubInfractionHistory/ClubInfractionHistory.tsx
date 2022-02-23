@@ -2,10 +2,11 @@ import { graphql } from 'react-relay/hooks'
 import { ClubInfractionHistoryFragment$key } from '@//:artifacts/ClubInfractionHistoryFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import {
+  TableHeaderBackground,
+  TableHeaderText,
   TableRow,
   TableRowBackground,
-  TableRowColumnText,
-  TableRowHeaderText
+  TableRowColumnText
 } from '@//:modules/content/ThemeComponents/TableRow/TableRow'
 import { usePaginationFragment } from 'react-relay'
 import { SessionsPaginationQuery } from '@//:artifacts/SessionsPaginationQuery.graphql'
@@ -60,25 +61,25 @@ export default function ClubInfractionHistory ({ query }: Props): JSX.Element {
       condition={data.infractionHistory.edges.length < 1}
     >
       <Stack spacing={1}>
-        <TableRowBackground>
+        <TableHeaderBackground>
           <TableRow columns={8}>
-            <TableRowHeaderText column={2}>
+            <TableHeaderText column={2}>
               <Trans>
                 Issued
               </Trans>
-            </TableRowHeaderText>
-            <TableRowHeaderText column={4}>
+            </TableHeaderText>
+            <TableHeaderText column={4}>
               <Trans>
                 Rule
               </Trans>
-            </TableRowHeaderText>
-            <TableRowHeaderText column={2}>
+            </TableHeaderText>
+            <TableHeaderText column={2}>
               <Trans>
                 Duration
               </Trans>
-            </TableRowHeaderText>
+            </TableHeaderText>
           </TableRow>
-        </TableRowBackground>
+        </TableHeaderBackground>
         <Stack spacing={2}>
           {data.infractionHistory.edges.map((item, index) => (
             <TableRowBackground key={index}>

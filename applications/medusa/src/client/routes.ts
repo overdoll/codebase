@@ -459,14 +459,14 @@ const routes: Route[] = [
             path: '/moderation/queue',
             component: loadable(async () =>
               await import(
-                './domain/Moderation/Queue/Queue'
+                './domain/Moderation/pages/Queue/Queue'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Moderation/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Moderation/pages/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -489,14 +489,14 @@ const routes: Route[] = [
             path: '/moderation/history',
             component: loadable(async () =>
               await import(
-                './domain/Moderation/History/History'
+                './domain/Moderation/pages/History/History'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Moderation/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Moderation/pages/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -510,6 +510,86 @@ const routes: Route[] = [
                   variables: {
                     from: new Date(new Date().setDate(new Date().getDate() - 7)),
                     to: new Date()
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/moderation/reports',
+            component: loadable(async () =>
+              await import(
+                './domain/Moderation/pages/Reports/Reports'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/pages/Reports/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
+          },
+          {
+            path: '/moderation/post/:reference',
+            component: loadable(async () =>
+              await import(
+                './domain/Moderation/pages/ModerationPost/RootModerationPost'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/pages/ModerationPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            prepare: ({
+              params
+            }) => {
+              const Query = require('@//:artifacts/ModerationPostQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
                   },
                   options: {
                     fetchPolicy: 'store-or-network'

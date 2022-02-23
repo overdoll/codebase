@@ -18,7 +18,7 @@ interface Tags {
 
 type Abilities = ['create' | 'moderate', InferSubjects<Post> | InferSubjects<Club>] |
 ['manage', InferSubjects<Account> | InferSubjects<Club>] |
-['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club>]
+['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post>]
 
 export type AppAbility = Ability<Abilities>
 export const App = Ability as AbilityClass<AppAbility>

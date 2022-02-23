@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:124
+msgid "(Optional) Custom Duration"
+msgstr ""
+
 #: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:38
 msgid "1 month"
 msgstr ""
@@ -57,6 +61,10 @@ msgstr ""
 
 #: src/client/domain/Admin/validation/GenericTagId.ts:12
 msgid "A selection is required"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:44
+msgid "Active"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:45
@@ -221,6 +229,10 @@ msgstr ""
 msgid "Create Series"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:77
+msgid "Duration"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:95
 msgid "Duration of Lock"
 msgstr ""
@@ -308,8 +320,21 @@ msgstr ""
 msgid "Error updating series title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:37
+msgid "Infractions"
+msgstr ""
+
 #: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:14
-msgid "Instant"
+#~ msgid "Instant"
+#~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:48
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
+msgid "Issue Infraction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:67
+msgid "Issued"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
@@ -336,6 +361,10 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:60
+msgid "No infractions found"
+msgstr ""
+
 #: src/client/domain/Admin/Admin.tsx:21
 msgid "Platform Admin"
 msgstr ""
@@ -360,6 +389,10 @@ msgstr ""
 msgid "Purge"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:61
+msgid "Remove Suspension"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:70
 msgid "Revoke Moderator"
@@ -368,6 +401,11 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:70
 msgid "Revoke Staff"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:72
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
+msgid "Rule"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
@@ -432,8 +470,16 @@ msgstr ""
 msgid "Search for an audience"
 msgstr ""
 
+#: src/client/domain/Admin/components/SelectRuleButton/SelectRuleButton.tsx:76
+msgid "Select Rule"
+msgstr ""
+
 #: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:85
 msgid "Select Series"
+msgstr ""
+
+#: src/client/domain/Admin/components/SelectRuleButton/SelectRuleButton.tsx:91
+msgid "Select a rule"
 msgstr ""
 
 #: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:100
@@ -499,6 +545,10 @@ msgstr ""
 msgid "Successfully assigned staff role"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:88
+msgid "Successfully issued infraction to club"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:71
 msgid "Successfully locked account until {0}"
 msgstr ""
@@ -509,6 +559,14 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:49
 msgid "Successfully revoked staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:71
+msgid "Successfully suspended club"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubUnSuspendButton/AdminClubUnSuspendButton.tsx:51
+msgid "Successfully un-suspended club"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:50
@@ -533,6 +591,19 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
 msgid "Successfully updated series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:58
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
+msgid "Suspend Club"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:40
+msgid "Suspended"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:95
+msgid "Suspension Duration"
 msgstr ""
 
 #: src/client/domain/Admin/validation/GenericDate.ts:14
@@ -583,6 +654,10 @@ msgstr ""
 msgid "There was an error assigning the staff role"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:94
+msgid "There was an error issuing an infraction"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:77
 msgid "There was an error locking the account"
 msgstr ""
@@ -593,6 +668,14 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:55
 msgid "There was an error revoking the staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:77
+msgid "There was an error suspending the club"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubUnSuspendButton/AdminClubUnSuspendButton.tsx:57
+msgid "There was an error un-suspending club"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:56
@@ -617,6 +700,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:86
 msgid "There was an error updating the series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubUnSuspendButton/AdminClubUnSuspendButton.tsx:72
+msgid "Un-Suspend Club"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:55
@@ -645,6 +732,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:43
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:43
 msgid "View Translations"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:14
+msgid "Warning (none)"
 msgstr ""
 
 #: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:16

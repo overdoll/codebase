@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Heading, Text } from '@chakra-ui/react'
+import { Flex, Grid, GridItem, Text } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 interface TableRowBackgroundProps {
@@ -18,6 +18,14 @@ interface TableRowColumnProps {
 export function TableRowBackground ({ children }: TableRowBackgroundProps): JSX.Element {
   return (
     <Flex align='center' h={8} bg='gray.800' borderRadius='base' p={1}>
+      {children}
+    </Flex>
+  )
+}
+
+export function TableHeaderBackground ({ children }: TableRowBackgroundProps): JSX.Element {
+  return (
+    <Flex align='center' h={8} borderRadius='base' p={1}>
       {children}
     </Flex>
   )
@@ -58,14 +66,14 @@ export function TableRowColumnText ({
   )
 }
 
-export function TableRowHeaderText ({
+export function TableHeaderText ({
   children,
   column = 1
 }: TableRowColumnProps): JSX.Element {
   return (
     <GridItem colSpan={column}>
-      <Heading
-        color='gray.00'
+      <Text
+        color='gray.200'
         textAlign='left'
         whiteSpace='nowrap'
         textOverflow='ellipsis'
@@ -73,7 +81,7 @@ export function TableRowHeaderText ({
         fontSize='sm'
       >
         {children}
-      </Heading>
+      </Text>
     </GridItem>
   )
 }

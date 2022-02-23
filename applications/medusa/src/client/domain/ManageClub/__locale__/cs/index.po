@@ -37,6 +37,10 @@ msgstr ""
 msgid "Add, arrange, or remove the files you're uploading."
 msgstr ""
 
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubMenu/ClubMenu.tsx:27
+msgid "Admin"
+msgstr ""
+
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
 msgid "Alias"
 msgstr ""
@@ -185,7 +189,7 @@ msgstr ""
 
 #: src/client/domain/ManageClub/RootManageClub.tsx:97
 #: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:43
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:152
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:157
 msgid "Members"
 msgstr ""
 

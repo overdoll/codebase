@@ -1,19 +1,21 @@
 import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
-import { t } from '@lingui/macro'
-import { NavigationMenuHorizontal } from '@//:assets/icons/navigation'
+import { t, Trans } from '@lingui/macro'
+import { LoginKeys, NavigationMenuHorizontal } from '@//:assets/icons/navigation'
 import { graphql } from 'react-relay'
 import { PostMenuFragment$key } from '@//:artifacts/PostMenuFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
 import { Icon } from '../../../../PageLayout'
+import { MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
+import Can from '../../../../../authorization/Can'
 
 interface Props {
-  query: PostMenuFragment$key | null
+  query: PostMenuFragment$key
   size?: string
 }
 
 const Fragment = graphql`
   fragment PostMenuFragment on Post {
-    id
+    reference @required(action: THROW)
   }
 `
 
@@ -64,7 +66,17 @@ export default function PostMenu ({
         }
       />
       <MenuList minW='300px' boxShadow='outline'>
-        <></>
+        <Can I='admin' a='Post'>
+          <MenuLinkItem
+            to={`/moderation/post/${data.reference}`}
+            text={(
+              <Trans>
+                Moderate
+              </Trans>)}
+            colorScheme='purple'
+            icon={LoginKeys}
+          />
+        </Can>
       </MenuList>
     </Menu>
   )

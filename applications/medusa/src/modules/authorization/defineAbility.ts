@@ -24,6 +24,7 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
     if (data.isStaff) {
       can('admin', 'Tags')
       can('admin', 'Account')
+      can('admin', 'Post')
     }
   }
 

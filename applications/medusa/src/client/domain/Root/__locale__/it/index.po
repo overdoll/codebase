@@ -168,6 +168,10 @@ msgstr ""
 #~ msgid "Menu"
 #~ msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostMenu.tsx:73
+msgid "Moderate"
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenu.tsx:25
 msgid "My Clubs"
 msgstr ""
@@ -233,8 +237,8 @@ msgid "Open"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostMenu.tsx:54
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:48
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostMenu.tsx:56
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:46
 msgid "Open Menu"
 msgstr ""
 
@@ -442,6 +446,7 @@ msgid "overdoll"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonClub/DropdownMenuButtonClub.tsx:56
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:75
 msgid "{0}"
 msgstr ""
 

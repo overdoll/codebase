@@ -73,12 +73,20 @@ export default {
       include: ['src/client/domain/Moderation/Moderation.tsx']
     },
     {
-      path: 'src/client/domain/Moderation/History/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/History']
+      path: 'src/client/domain/Moderation/pages/History/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/History']
     },
     {
-      path: 'src/client/domain/Moderation/Queue/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/Queue']
+      path: 'src/client/domain/Moderation/pages/Queue/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/Queue']
+    },
+    {
+      path: 'src/client/domain/Moderation/pages/Reports/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/Reports']
+    },
+    {
+      path: 'src/client/domain/Moderation/pages/ModerationPost/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/ModerationPost']
     },
     {
       path: 'src/client/domain/PublicPost/__locale__/{locale}/index',
