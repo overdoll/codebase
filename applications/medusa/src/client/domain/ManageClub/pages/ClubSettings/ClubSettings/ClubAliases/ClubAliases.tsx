@@ -12,7 +12,7 @@ import { Trans } from '@lingui/macro'
 import AddClubSlugAlias from './AddClubSlugAlias/AddClubSlugAlias'
 import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import ManageClubSlugAliases from './ManageClubSlugAliases/ManageClubSlugAliases'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {

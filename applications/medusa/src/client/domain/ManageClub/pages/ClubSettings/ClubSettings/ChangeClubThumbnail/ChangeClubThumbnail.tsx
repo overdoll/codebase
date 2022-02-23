@@ -9,7 +9,7 @@ import {
   ResourceIcon
 } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeClubThumbnailForm from './ChangeClubThumbnailForm/ChangeClubThumbnailForm'
 
 interface Props {

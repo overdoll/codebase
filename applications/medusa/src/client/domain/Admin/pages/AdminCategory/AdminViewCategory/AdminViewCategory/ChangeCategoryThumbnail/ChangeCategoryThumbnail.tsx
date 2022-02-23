@@ -3,7 +3,7 @@ import { ChangeCategoryThumbnailFragment$key } from '@//:artifacts/ChangeCategor
 import { Flex, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeCategoryThumbnailForm from './ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm'
 
 interface Props {

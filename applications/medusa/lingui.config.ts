@@ -187,6 +187,14 @@ export default {
     {
       path: 'src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/{locale}/index',
       include: ['src/client/domain/Admin/pages/AdminSeries/AdminViewSeries']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAccount/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccount']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminClub/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminClub']
     }
   ],
   format: 'po',

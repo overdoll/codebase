@@ -544,7 +544,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Tags')) {
+            if (ability.can('admin', 'Tags') || ability.can('admin', 'Account') || ability.can('admin', 'Club')) {
               return true
             }
             history.push('/join')
@@ -562,6 +562,20 @@ const routes: Route[] = [
                   )
                 ),
                 then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
               }
             ],
             component: loadable(async () =>
@@ -595,6 +609,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -612,6 +640,20 @@ const routes: Route[] = [
                   )
                 ),
                 then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
               }
             ],
             exact: true,
@@ -648,6 +690,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries'
@@ -679,6 +735,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -696,6 +766,20 @@ const routes: Route[] = [
                   )
                 ),
                 then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
               }
             ],
             exact: true,
@@ -732,6 +816,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter'
@@ -763,6 +861,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -780,6 +892,20 @@ const routes: Route[] = [
                   )
                 ),
                 then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
               }
             ],
             exact: true,
@@ -817,6 +943,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience'
@@ -848,6 +988,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
@@ -865,6 +1019,20 @@ const routes: Route[] = [
                   )
                 ),
                 then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
               }
             ],
             exact: true,
@@ -901,6 +1069,20 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule'
@@ -932,12 +1114,122 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
             exact: true,
             component: loadable(async () =>
               await import(
                 './domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules'
               )
             )
+          },
+          {
+            path: '/admin/account/:username',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccount/RootAdminAccount'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    username: params.username
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/club/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Club')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminClub/RootAdminClub'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminClubQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -1375,7 +1667,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('create', 'Post')) {
+            if (ability.can('create', 'Club')) {
               return true
             }
             history.push('/')
@@ -1393,6 +1685,20 @@ const routes: Route[] = [
               )
             ),
             then: loadMessages
+          }
+        ],
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'Club')) {
+              return true
+            }
+            history.push('/join')
+            return false
           }
         ],
         component: loadable(async () =>

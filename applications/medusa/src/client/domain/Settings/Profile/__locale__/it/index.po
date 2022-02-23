@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:79
+#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:75
 msgid "A confirmation email was sent to {0}. Check your inbox/spam!"
 msgstr ""
 
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Add Email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:106
+#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:92
 msgid "Add an email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:198
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:185
 msgid "Are you sure you'd like to change your username to"
 msgstr ""
 
@@ -37,11 +37,11 @@ msgstr ""
 msgid "Change Username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:187
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:174
 msgid "Changing your to a different one username will break any links that include your current username."
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:176
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:163
 msgid "Confirm Username Change"
 msgstr ""
 
@@ -53,20 +53,20 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:116
+#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:98
 msgid "Enter a new email address"
 msgstr ""
 
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:132
 #: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:138
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:148
 msgid "Enter a new username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:210
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:197
 msgid "Go back"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:192
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:179
 msgid "In addition, you won't be able to change your username for 30 days after confirming."
 msgstr ""
 
@@ -90,16 +90,16 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:127
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:159
+#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:106
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:145
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:85
+#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:81
 msgid "There was an error adding the email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:122
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:121
 msgid "There was an error changing your username"
 msgstr ""
 
@@ -124,15 +124,15 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:116
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:115
 msgid "Username changed successfully"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:221
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/ChangeUsernameForm/ChangeUsernameForm.tsx:208
 msgid "Yes, change"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootEmails/Emails/AddEmailForm/AddEmailForm.tsx:99
+#: src/client/domain/Settings/Profile/RootEmails/Emails/Emails.tsx:139
 msgid "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another."
 msgstr ""
 

@@ -13,12 +13,60 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:38
+msgid "1 month"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:46
+msgid "1 year"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:18
+msgid "12 hours"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:34
+msgid "2 weeks"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:22
+msgid "24 hours"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:26
+msgid "3 days"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:42
+msgid "3 months"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:30
+msgid "7 days"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericDate.ts:12
+#: src/client/domain/Admin/validation/GenericDate.ts:13
+msgid "A date selection is required"
+msgstr ""
+
 #: src/client/domain/Admin/validation/GenericFile.ts:12
+#: src/client/domain/Admin/validation/GenericFile.ts:13
 msgid "A file upload is required"
 msgstr ""
 
 #: src/client/domain/Admin/validation/GenericTagId.ts:12
 msgid "A selection is required"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:45
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:70
+msgid "Assign Moderator"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:45
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaffButton/AdminAssignStaffButton.tsx:70
+msgid "Assign Staff"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:133
@@ -46,6 +94,10 @@ msgstr ""
 msgid "Audience {0} was created successfully"
 msgstr ""
 
+#: src/client/domain/Admin/Admin.tsx:83
+msgid "Audiences"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:127
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:126
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
@@ -55,6 +107,10 @@ msgstr ""
 
 #: src/client/domain/Admin/components/AdminBackButton/AdminBackButton.tsx:23
 msgid "Back to search"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:64
+msgid "Categories"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:127
@@ -77,7 +133,7 @@ msgstr ""
 msgid "Category {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:130
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:133
 msgid "Causes an infraction"
 msgstr ""
 
@@ -131,34 +187,42 @@ msgstr ""
 msgid "Character {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:60
+#: src/client/domain/Admin/Admin.tsx:27
+msgid "Characters"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:90
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:159
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience.tsx:30
 msgid "Create Audience"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:48
+#: src/client/domain/Admin/Admin.tsx:72
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory.tsx:30
 msgid "Create Category"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:22
+#: src/client/domain/Admin/Admin.tsx:34
 #: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/AdminCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:156
 #: src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter.tsx:30
 msgid "Create Character"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:72
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:138
+#: src/client/domain/Admin/Admin.tsx:108
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:141
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule.tsx:30
 msgid "Create Rule"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:35
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
+#: src/client/domain/Admin/Admin.tsx:53
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:148
 #: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries.tsx:30
 msgid "Create Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:95
+msgid "Duration of Lock"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:132
@@ -174,7 +238,7 @@ msgstr ""
 msgid "Enter a character slug"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:119
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:121
 msgid "Enter a description for the rule"
 msgstr ""
 
@@ -190,11 +254,11 @@ msgstr ""
 msgid "Enter a rule title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:132
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:138
 msgid "Enter a series slug"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:118
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:124
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:118
 msgid "Enter a series title"
 msgstr ""
@@ -224,7 +288,7 @@ msgstr ""
 msgid "Error creating rule {0}"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:98
 msgid "Error creating series {0}"
 msgstr ""
 
@@ -244,6 +308,10 @@ msgstr ""
 msgid "Error updating series title"
 msgstr ""
 
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:14
+msgid "Instant"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
@@ -251,11 +319,24 @@ msgstr ""
 msgid "Locale"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:59
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:108
+msgid "Lock Account"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:40
+msgid "Locked"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:30
+msgid "Moderator"
+msgstr ""
+
 #: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:27
 msgid "No"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:14
+#: src/client/domain/Admin/Admin.tsx:21
 msgid "Platform Admin"
 msgstr ""
 
@@ -275,11 +356,25 @@ msgstr ""
 msgid "Please enter a title"
 msgstr ""
 
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:50
+msgid "Purge"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:41
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:70
+msgid "Revoke Moderator"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:41
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:70
+msgid "Revoke Staff"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
 msgid "Rule Description"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:126
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:129
 msgid "Rule Infraction"
 msgstr ""
 
@@ -291,26 +386,30 @@ msgstr ""
 msgid "Rule {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:66
+#: src/client/domain/Admin/Admin.tsx:101
+msgid "Rules"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:96
 #: src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences.tsx:32
 msgid "Search Audiences"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:54
+#: src/client/domain/Admin/Admin.tsx:78
 #: src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories.tsx:32
 msgid "Search Categories"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:28
+#: src/client/domain/Admin/Admin.tsx:40
 msgid "Search Characters"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:78
+#: src/client/domain/Admin/Admin.tsx:114
 #: src/client/domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules.tsx:23
 msgid "Search Rules"
 msgstr ""
 
-#: src/client/domain/Admin/Admin.tsx:41
+#: src/client/domain/Admin/Admin.tsx:59
 #: src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter.tsx:31
 #: src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries.tsx:32
 msgid "Search Series"
@@ -324,7 +423,7 @@ msgstr ""
 msgid "Search for a character"
 msgstr ""
 
-#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:111
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:113
 #: src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries.tsx:38
 msgid "Search for a series"
 msgstr ""
@@ -333,19 +432,27 @@ msgstr ""
 msgid "Search for an audience"
 msgstr ""
 
-#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:83
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:85
 msgid "Select Series"
 msgstr ""
 
-#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:98
+#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:100
 msgid "Select a series"
+msgstr ""
+
+#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:56
+msgid "Select duration"
 msgstr ""
 
 #: src/client/domain/Admin/validation/GenericTagId.ts:11
 msgid "Selection cannot be empty"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:127
+#: src/client/domain/Admin/Admin.tsx:45
+msgid "Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:133
 msgid "Series Slug"
 msgstr ""
 
@@ -354,13 +461,17 @@ msgstr ""
 msgid "Series Thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:113
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:119
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:32
 msgid "Series Title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
 msgid "Series {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:30
+msgid "Staff"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:151
@@ -378,6 +489,30 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
 msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:49
+msgid "Successfully assigned moderator role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaffButton/AdminAssignStaffButton.tsx:49
+msgid "Successfully assigned staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:71
+msgid "Successfully locked account until {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:49
+msgid "Successfully revoked moderator role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:49
+msgid "Successfully revoked staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:50
+msgid "Successfully unlocked account"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:82
@@ -398,6 +533,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
 msgid "Successfully updated series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/validation/GenericDate.ts:14
+msgid "The date selected is invalid"
 msgstr ""
 
 #: src/client/domain/Admin/validation/GenericTagDescription.ts:15
@@ -436,6 +575,30 @@ msgstr ""
 msgid "The title must be at least 3 characters"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:55
+msgid "There was an error assigning the moderator role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaffButton/AdminAssignStaffButton.tsx:55
+msgid "There was an error assigning the staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:77
+msgid "There was an error locking the account"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:55
+msgid "There was an error revoking the moderator role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:55
+msgid "There was an error revoking the staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:56
+msgid "There was an error unlocking the account"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:88
 msgid "There was an error updating audience standard"
 msgstr ""
@@ -454,6 +617,11 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:86
 msgid "There was an error updating the series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:55
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:71
+msgid "Unlock Account"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:88

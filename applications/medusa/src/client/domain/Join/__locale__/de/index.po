@@ -41,7 +41,7 @@ msgstr ""
 #~ msgid "Click on the link you received in your email to continue"
 #~ msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:162
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:144
 msgid "Code"
 msgstr ""
 
@@ -49,11 +49,11 @@ msgstr ""
 msgid "Confirm Cancel Join"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:86
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:70
 msgid "Continue"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:63
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:51
 msgid "Email"
 msgstr ""
 
@@ -61,15 +61,15 @@ msgstr ""
 msgid "Enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:69
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:55
 msgid "Enter a username"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:72
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:57
 msgid "Enter an email"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:129
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:126
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgstr ""
 msgid "Please wait while we log you in..."
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:81
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:65
 msgid "Register"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:185
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:158
 msgid "Submit Code"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgstr ""
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:104
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:103
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "There was an issue with registration."
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:60
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:50
 msgid "Username"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Welcome back!"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:93
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:92
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:138
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:135
 msgid "You can find this in the same app you used to set up two-factor authentication"
 msgstr ""
 

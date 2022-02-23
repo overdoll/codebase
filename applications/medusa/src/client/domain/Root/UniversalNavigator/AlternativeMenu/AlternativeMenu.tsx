@@ -77,7 +77,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         <Can I='manage' a='Account'>
           <DropdownMenuButtonProfile queryRef={data} />
         </Can>
-        <Can I='manage' a='Tags'>
+        <Can I='admin' a='Tags'>
           <HorizontalNavigationDropdownMenu.Button
             to='/admin'
             colorScheme='purple'

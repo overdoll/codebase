@@ -17,7 +17,7 @@ msgstr ""
 msgid "My Clubs"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:66
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:67
 msgid "No clubs found"
 msgstr ""
 
@@ -25,6 +25,6 @@ msgstr ""
 msgid "Popular Clubs"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:27
+#: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:29
 msgid "Search for a club by name"
 msgstr ""

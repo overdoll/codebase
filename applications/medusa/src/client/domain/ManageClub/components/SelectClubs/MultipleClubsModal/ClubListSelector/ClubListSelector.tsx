@@ -65,6 +65,7 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
   const history = useHistory()
 
   const onChange = (id): void => {
+    if (id == null) return
     const newPath = generatePath('/club/:slug/:entity', {
       slug: id,
       entity: params.entity
@@ -80,8 +81,10 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
       [params.slug as string]: {}
     },
     max: 1,
-    onChoice: (id) => onChange(id)
+    onChange: (choices) => onChange(Object.keys(choices)[0])
   })
+
+  console.log('re-render')
 
   return (
     <EmptyBoundary

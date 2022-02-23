@@ -13,31 +13,31 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:148
 #: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries.tsx:30
 msgid "Create Series"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:132
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:138
 msgid "Enter a series slug"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:118
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:124
 msgid "Enter a series title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:98
 msgid "Error creating series {0}"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:127
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:133
 msgid "Series Slug"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:113
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:119
 msgid "Series Title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
 msgid "Series {0} was created successfully"
 msgstr ""

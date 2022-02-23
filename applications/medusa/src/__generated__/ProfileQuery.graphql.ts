@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d3f50231ce0233884ae704c58c2d1e88>>
- * @relayHash 981e731224211b846846b46ca64e7b11
+ * @generated SignedSource<<c24ccdb44fb1f646938c5c74aee59459>>
+ * @relayHash 20602922f4b0a9df335b36d89a8f4a6a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 981e731224211b846846b46ca64e7b11
+// @relayRequestID 20602922f4b0a9df335b36d89a8f4a6a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,6 +23,7 @@ export type ProfileQuery$data = {
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment">;
   } | null;
 };
 export type ProfileQueryResponse = ProfileQuery$data;
@@ -91,6 +92,11 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ProfileMenuFragment"
           }
         ],
         "storageKey": null
@@ -165,7 +171,7 @@ return {
     ]
   },
   "params": {
-    "id": "981e731224211b846846b46ca64e7b11",
+    "id": "20602922f4b0a9df335b36d89a8f4a6a",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",
@@ -174,6 +180,6 @@ return {
 };
 })();
 
-(node as any).hash = "91bfc273d715f29c7c87fd2f9611478e";
+(node as any).hash = "99d2c624dd26865ea635bc1de377971e";
 
 export default node;

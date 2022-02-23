@@ -11,7 +11,7 @@ import Button from '@//:modules/form/Button/Button'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: PreloadedQuery<EmailsQuery>

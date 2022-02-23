@@ -6,7 +6,7 @@ import {
   UseDisclosureReturn
 } from '@chakra-ui/react'
 import { createContext, ReactNode, useContext } from 'react'
-import Button from '@//:modules/form/Button/Button'
+import Button from '../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
 
 type CollapseOptions = UseDisclosureProps

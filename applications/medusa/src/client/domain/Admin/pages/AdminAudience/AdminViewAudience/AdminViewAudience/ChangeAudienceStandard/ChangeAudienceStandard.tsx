@@ -4,7 +4,7 @@ import { Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import BooleanHeader from '../../../../../components/BooleanHeader/BooleanHeader'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeAudienceStandardForm from './ChangeAudienceStandardForm/ChangeAudienceStandardForm'
 
 interface Props {

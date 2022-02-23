@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:126
+#: src/client/domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:112
 msgid "Activate"
 msgstr ""
 

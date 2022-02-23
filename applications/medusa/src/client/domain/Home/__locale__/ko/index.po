@@ -13,14 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Home/Home/Home.tsx:119
+#: src/client/domain/Home/Home/Home.tsx:120
 msgid "Set Up Your Profile"
 msgstr ""
 
-#: src/client/domain/Home/Home/Home.tsx:140
+#: src/client/domain/Home/Home/Home.tsx:141
 msgid "Set up profile"
 msgstr ""
 
-#: src/client/domain/Home/Home/Home.tsx:126
+#: src/client/domain/Home/Home/Home.tsx:127
 msgid "Welcome to overdoll! We're so glad to have you here. On our platform, we strive to make sure you're served content you want to see. Take a few minutes to set up your curation profile to let us know what you like?"
 msgstr ""

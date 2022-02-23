@@ -3,7 +3,7 @@ import { ChangeSeriesThumbnailFragment$key } from '@//:artifacts/ChangeSeriesThu
 import { Flex, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeSeriesThumbnailForm from './ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm'
 
 interface Props {

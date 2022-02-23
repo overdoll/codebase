@@ -3,7 +3,7 @@ import { ChangeClubNameFragment$key } from '@//:artifacts/ChangeClubNameFragment
 import { Text } from '@chakra-ui/react'
 import { ListSpacer, PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeClubNameForm from './ChangeClubNameForm/ChangeClubNameForm'
 
 interface Props {

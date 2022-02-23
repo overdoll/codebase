@@ -1,6 +1,5 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
-import ClubListSelector from './MultipleClubsModal/ClubListSelector/ClubListSelector'
 import { Flex, Heading } from '@chakra-ui/react'
 import ClubPreview from '../ClubPreview/ClubPreview'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'

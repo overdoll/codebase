@@ -29,6 +29,10 @@ msgstr ""
 msgid "Banned for {remainingTime}"
 msgstr ""
 
+#: src/client/components/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:23
+msgid "Best"
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:76
 msgid "Changing to your preferred language..."
 msgstr ""
@@ -37,7 +41,7 @@ msgstr ""
 msgid "Clear Search"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:58
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:71
 msgid "Close"
 msgstr ""
 
@@ -93,6 +97,10 @@ msgstr ""
 msgid "Error {0}"
 msgstr ""
 
+#: src/client/components/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:31
+msgid "Fresh"
+msgstr ""
+
 #: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:13
 msgid "Go Back"
 msgstr ""
@@ -119,7 +127,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:118
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:100
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
@@ -132,15 +140,15 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCategoriesGeneral/SearchCategoriesGeneral.tsx:97
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchCategories/GeneralSearchCategories.tsx:81
 msgid "Load More Categories"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchCharactersGeneral/SearchCharactersGeneral.tsx:99
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchCharacters/GeneralSearchCharacters.tsx:87
 msgid "Load More Characters"
 msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SearchSeriesGeneral/SearchSeriesGeneral.tsx:95
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchSeries/GeneralSearchSeries.tsx:79
 msgid "Load More Series"
 msgstr ""
 
@@ -169,8 +177,8 @@ msgid "My Profile"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:91
-msgid "New"
-msgstr ""
+#~ msgid "New"
+#~ msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:21
 msgid "Next"
@@ -184,15 +192,23 @@ msgstr ""
 msgid "No categories were found{0}"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:15
+msgid "No categories, characters, or series were found{0}"
+msgstr ""
+
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:15
 msgid "No characters were found{0}"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:136
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:15
+msgid "No clubs were found{0}"
+msgstr ""
+
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:132
 msgid "No more content available"
 msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:77
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
 msgid "No posts found"
 msgstr ""
 
@@ -209,16 +225,21 @@ msgid "No series were found{0}"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:111
-msgid "Nothing was found"
-msgstr ""
+#~ msgid "Nothing was found"
+#~ msgstr ""
 
-#: src/client/components/Collapse/Collapse.tsx:57
+#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:57
 msgid "Open"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostMenu.tsx:54
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:48
 msgid "Open Menu"
+msgstr ""
+
+#: src/client/components/PostsSearch/components/PostSearchButton/PostSearchButton.tsx:26
+msgid "Open Search"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:86
@@ -270,15 +291,16 @@ msgstr ""
 msgid "Reveal Spoiler"
 msgstr ""
 
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:85
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
 msgid "Save"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:74
-msgid "Save ({0})"
-msgstr ""
+#~ msgid "Save ({0})"
+#~ msgstr ""
 
-#: src/client/components/FloatingGeneralSearchButton/FloatingGeneralSearchButton.tsx:142
+#: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:64
 msgid "Search for characters, categories, or series"
 msgstr ""
 
@@ -334,7 +356,7 @@ msgstr ""
 msgid "The name must be at least 3 characters"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:89
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
 msgid "There was an error unlocking your account"
 msgstr ""
 
@@ -364,10 +386,10 @@ msgid "This recovery code is invalid"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:86
-msgid "Top"
-msgstr ""
+#~ msgid "Top"
+#~ msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:135
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:110
 msgid "Unlock Account"
 msgstr ""
 
@@ -395,7 +417,7 @@ msgstr ""
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:54
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:55
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
@@ -403,7 +425,7 @@ msgstr ""
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
-#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:83
+#: src/client/domain/Root/LockedAccountBanner/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:78
 msgid "Your account has been unlocked"
 msgstr ""
 

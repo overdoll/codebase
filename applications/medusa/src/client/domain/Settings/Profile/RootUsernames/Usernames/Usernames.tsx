@@ -9,7 +9,7 @@ import { formatDistanceStrict, isPast } from 'date-fns'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery {

@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import ChangeSeriesTitleForm from './ChangeSeriesTitleForm/ChangeSeriesTitleForm'
 import TagHeader from '../../../../../components/TagHeader/TagHeader'
 import TranslationSnippet from '../../../../../components/TranslationSnippet/TranslationSnippet'
-import { CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import { CollapseBody, CollapseButton } from '../../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: ChangeSeriesTitleFragment$key

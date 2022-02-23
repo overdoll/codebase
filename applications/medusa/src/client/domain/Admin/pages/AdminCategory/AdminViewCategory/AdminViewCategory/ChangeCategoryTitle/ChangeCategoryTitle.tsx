@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import ChangeCategoryTitleForm from './ChangeCategoryTitleForm/ChangeCategoryTitleForm'
 import TagHeader from '../../../../../components/TagHeader/TagHeader'
 import TranslationSnippet from '../../../../../components/TranslationSnippet/TranslationSnippet'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../components/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: ChangeCategoryTitleFragment$key

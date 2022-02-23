@@ -12,6 +12,7 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
 
     if (!data.isLocked) {
       can('create', 'Post')
+      can('manage', 'Club')
     }
 
     if (data.isModerator) {
@@ -21,7 +22,8 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
     }
 
     if (data.isStaff) {
-      can('manage', 'Tags')
+      can('admin', 'Tags')
+      can('admin', 'Account')
     }
   }
 
