@@ -337,6 +337,14 @@ def go_repositories():
         version = "v0.0.0-20200323201526-dd97f9abfb48",
     )
     go_repository(
+        name = "com_github_disintegration_gift",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/disintegration/gift",
+        sum = "h1:Y005a1X4Z7Uc+0gLpSAsKhWi4qLtsdEcMIbbdvdZ6pc=",
+        version = "v1.2.1",
+    )
+
+    go_repository(
         name = "com_github_disintegration_imaging",
         build_file_proto_mode = "disable",
         importpath = "github.com/disintegration/imaging",
@@ -942,6 +950,14 @@ def go_repositories():
         version = "v1.2.0",
     )
     go_repository(
+        name = "com_github_jung_kurt_gofpdf",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/jung-kurt/gofpdf",
+        sum = "h1:jgbatWHfRlPYiK85qgevsZTHviWXKwB1TTiKdz5PtRc=",
+        version = "v1.16.2",
+    )
+
+    go_repository(
         name = "com_github_kevinmbeaulieu_eq_go",
         build_file_proto_mode = "disable",
         importpath = "github.com/kevinmbeaulieu/eq-go",
@@ -1300,6 +1316,13 @@ def go_repositories():
         sum = "h1:aetoXYr0Tv7xRU/V4B4IZJ2QcbtMUFoNb3ORp7TzIK4=",
         version = "v1.6.0",
     )
+    go_repository(
+        name = "com_github_phpdave11_gofpdi",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/phpdave11/gofpdi",
+        sum = "h1:k2oy4yhkQopCK+qW8KjCla0iU2RpDow+QUDmH9DDt44=",
+        version = "v1.0.7",
+    )
 
     go_repository(
         name = "com_github_pierrec_lz4",
@@ -1426,6 +1449,14 @@ def go_repositories():
         sum = "h1:JIOH55/0cWyOuilr9/qlrm0BSXldqnqwMsf35Ld67mk=",
         version = "v2.1.0",
     )
+    go_repository(
+        name = "com_github_ruudk_golang_pdf417",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/ruudk/golang-pdf417",
+        sum = "h1:nlG4Wa5+minh3S9LVFtNoY+GVRiudA2e3EVfcCi3RCA=",
+        version = "v0.0.0-20181029194003-1af4ab5afa58",
+    )
+
     go_repository(
         name = "com_github_ryanuber_columnize",
         build_file_proto_mode = "disable",

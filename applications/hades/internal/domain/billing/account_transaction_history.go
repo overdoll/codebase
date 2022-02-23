@@ -273,6 +273,10 @@ func (c *AccountTransactionHistory) CCBillReason() *string {
 	return c.ccbillReason
 }
 
+func (c *AccountTransactionHistory) CanView(requester *principal.Principal) error {
+	return requester.BelongsToAccount(c.accountId)
+}
+
 func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, supportedClubId *string, paymentMethod *PaymentMethod, amount *float64, currency *string, isRecurring *bool, billingFailureNextRetryDate, billedAtDate, nextBillingDate *time.Time, ccbillSubscriptionId string, ccbillTransactionId, ccbillErrorText, ccbillErrorCode, ccbillReason *string) *AccountTransactionHistory {
 	tr, _ := TransactionFromString(transaction)
 

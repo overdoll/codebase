@@ -26,9 +26,17 @@ type Repository interface {
 	GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*SavedPaymentMethod, error)
 	UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *SavedPaymentMethod) error) (*SavedPaymentMethod, error)
 
+	GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransactionHistory, error)
 	CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *AccountTransactionHistory) error
+	GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransactionHistory, error)
 
 	GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	CreateCCBillSubscriptionDetailsOperator(ctx context.Context, subscription *CCBillSubscriptionDetails) error
 	UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *CCBillSubscriptionDetails) error) (*CCBillSubscriptionDetails, error)
+}
+
+type FileRepository interface {
+	GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
+	CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
+	UpdateClubSupporterReceiptWithNewFile(ctx context.Context, builder *ClubSupporterReceiptBuilder) error
 }

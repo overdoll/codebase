@@ -55,10 +55,13 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	client := clients.NewTemporalClient(ctx)
 
+	awsSession := bootstrap.InitializeAWSSession()
+
 	ccbillClient := &http.Client{}
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session)
+	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 
 	return app.Application{
@@ -69,6 +72,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, ccbillRepo, stella),
+		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella),
 	}
 }

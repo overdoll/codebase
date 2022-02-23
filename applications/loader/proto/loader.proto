@@ -2,11 +2,24 @@ syntax = "proto3";
 
 package applications.grpc.loader.v1;
 
+message Filters {
+  optional PixelateFilter pixelate = 1;
+}
+
+message PixelateFilter {
+  int64 size = 1;
+}
+
 message Resource {
   string id = 1;
   string itemId = 2;
   bool processed = 3;
   string processedId = 4;
+}
+
+message ResourceIdentifier {
+  string id = 1;
+  string itemId = 2;
 }
 
 message DeleteResourcesRequest {
@@ -17,6 +30,20 @@ message DeleteResourcesRequest {
 message GetResourcesRequest {
   string itemId = 1;
   repeated string resourceIds = 2;
+}
+
+message AppliedResources {
+  ResourceIdentifier oldResource = 1;
+  ResourceIdentifier newResource = 2;
+}
+
+message CopyResourcesAndApplyFilterRequest {
+  repeated ResourceIdentifier resources = 1;
+  Filters filters = 2;
+}
+
+message CopyResourcesAndApplyFilterResponse {
+  repeated AppliedResources resources = 1;
 }
 
 message CreateOrGetResourcesFromUploadsRequest {
@@ -39,4 +66,5 @@ service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
   rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
   rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
+  rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
 }

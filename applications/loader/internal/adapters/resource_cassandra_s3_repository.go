@@ -103,33 +103,37 @@ func unmarshalResourceFromDatabase(resourcesSigner *sign.URLSigner, a *session.S
 
 		var url string
 
-		if i.IsPrivate {
+		if i.IsPrivate && i.Processed {
 
-			if i.Processed {
-				signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
+			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
 
-				if err != nil {
-					return nil, err
-				}
-
-				url = signedURL
-			} else {
-
-				req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
-					Bucket: aws.String(bucket),
-					Key:    aws.String(key),
-				})
-
-				urlStr, err := req.Presign(15 * time.Minute)
-
-				if err != nil {
-					return nil, err
-				}
-
-				url = urlStr
+			if err != nil {
+				return nil, err
 			}
 
-		} else {
+			url = signedURL
+
+			if i.Processed {
+
+			} else {
+
+			}
+
+		} else if !i.IsPrivate && !i.Processed {
+
+			req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(key),
+			})
+
+			urlStr, err := req.Presign(15 * time.Minute)
+
+			if err != nil {
+				return nil, err
+			}
+
+			url = urlStr
+		} else if !i.IsPrivate && i.Processed {
 
 			domain := os.Getenv("UPLOADS_URL")
 
@@ -381,24 +385,15 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 
 		fileType := resp.Metadata["Filetype"]
 
-		var url string
+		req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
+			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
+			Key:    aws.String("/" + uploadId),
+		})
 
-		if isPrivate {
-			req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
-				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-				Key:    aws.String("/" + uploadId),
-			})
+		urlStr, err := req.Presign(15 * time.Minute)
 
-			urlStr, err := req.Presign(15 * time.Minute)
-
-			if err != nil {
-				return nil, err
-			}
-
-			url = urlStr
-
-		} else {
-			url = os.Getenv("UPLOADS_URL") + "/" + uploadId
+		if err != nil {
+			return nil, err
 		}
 
 		newResource, err := resource.NewResource(
@@ -407,7 +402,7 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 			*fileType,
 			[]*resource.Url{
 				resource.UnmarshalUrlFromDatabase(
-					url,
+					urlStr,
 					*fileType,
 				),
 			},

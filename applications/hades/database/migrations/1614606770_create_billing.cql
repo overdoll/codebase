@@ -64,16 +64,38 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     ccbill_subscription_id     text,
     ccbill_transaction_id      text,
 
-    primary key ( (account_id, bucket), id )
+    primary key ( id )
 );
 
-CREATE TABLE IF NOT EXISTS account_transaction_history_files
+CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
 (
-    account_id      text,
-    bucket          int,
-    id              text,
+    account_id                 text,
+    bucket                     int,
+    id                         text,
 
-    invoice_file_id text,
+    timestamp                  timestamp,
+
+    transaction_type           text,
+
+    supported_club_id          text,
+
+    encrypted_payment_method   text,
+
+    amount                     float,
+    currency                   text,
+
+    is_recurring               boolean,
+
+    billing_failure_retry_date timestamp,
+
+    billed_at_date             timestamp,
+    next_billing_date          timestamp,
+
+    ccbill_error_text          text,
+    ccbill_error_code          text,
+    ccbill_reason              text,
+    ccbill_subscription_id     text,
+    ccbill_transaction_id      text,
 
     primary key ( (account_id, bucket), id )
 );
@@ -104,4 +126,14 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
     idempotency_key              text,
 
     primary key ( ccbill_subscription_id )
+);
+
+CREATE TABLE IF NOT EXISTS receipt_files
+(
+    id                   text,
+
+    file_path            text,
+    temporal_workflow_id text,
+
+    primary key ( id )
 );

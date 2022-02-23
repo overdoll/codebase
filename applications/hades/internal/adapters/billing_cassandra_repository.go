@@ -99,8 +99,8 @@ type accountClubSupporterSubscription struct {
 	UpdatedAt              time.Time  `db:"updated_at"`
 }
 
-var accountTransactionHistoryTable = table.New(table.Metadata{
-	Name: "account_transaction_history",
+var accountTransactionHistoryByAccountTable = table.New(table.Metadata{
+	Name: "account_transaction_history_by_account",
 	Columns: []string{
 		"account_id",
 		"bucket",
@@ -132,6 +132,42 @@ var accountTransactionHistoryTable = table.New(table.Metadata{
 	},
 	PartKey: []string{"account_id", "bucket"},
 	SortKey: []string{"id"},
+})
+
+var accountTransactionHistoryTable = table.New(table.Metadata{
+	Name: "account_transaction_history",
+	Columns: []string{
+		"id",
+
+		"account_id",
+		"bucket",
+
+		"timestamp",
+
+		"transaction_type",
+
+		"supporting_club_id",
+
+		"amount",
+		"currency",
+
+		"is_recurring",
+
+		"billing_failure_retry_date",
+
+		"billed_at_date",
+		"next_billing_date",
+
+		"encrypted_payment_method",
+
+		"ccbill_error_text",
+		"ccbill_error_code",
+		"ccbill_reason",
+		"ccbill_subscription_id",
+		"ccbill_transaction_id",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
 })
 
 type accountTransactionHistory struct {
@@ -210,27 +246,6 @@ type ccbillSubscriptionDetails struct {
 	AccountingCurrency       string  `db:"accounting_currency"`
 
 	IdempotencyKey string `db:"idempotency_key"`
-}
-
-var accountTransactionHistoryFilesTable = table.New(table.Metadata{
-	Name: "account_transaction_history_files",
-	Columns: []string{
-		"account_id",
-		"bucket",
-		"id",
-
-		"invoice_file_id",
-	},
-	PartKey: []string{"account_id", "bucket"},
-	SortKey: []string{"id"},
-})
-
-type accountTransactionHistoryFiles struct {
-	AccountId string `db:"account_id"`
-	Bucket    int    `db:"bucket"`
-	Id        string `db:"id"`
-
-	InvoiceFileId string `db:"string"`
 }
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
@@ -751,6 +766,67 @@ func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptions(ctx con
 	return accountSupport, nil
 }
 
+func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*billing.AccountTransactionHistory, error) {
+
+	var transaction accountTransactionHistory
+
+	if err := r.session.
+		Query(accountTransactionHistoryTable.Get()).
+		BindStruct(&accountTransactionHistory{
+			Id: transactionHistoryId,
+		}).
+		Get(&transaction); err != nil {
+		return nil, err
+	}
+
+	var paymentMethod *billing.PaymentMethod
+
+	if transaction.EncryptedPaymentMethod != nil {
+		decrypt, err := decryptPaymentMethod(*transaction.EncryptedPaymentMethod)
+
+		if err != nil {
+			return nil, err
+		}
+
+		paymentMethod = decrypt
+	}
+
+	return billing.UnmarshalAccountTransactionHistoryFromDatabase(
+		transaction.AccountId,
+		transaction.Id,
+		transaction.Timestamp,
+		transaction.TransactionType,
+		transaction.SupportedClubId,
+		paymentMethod,
+		transaction.Amount,
+		transaction.Currency,
+		transaction.IsRecurring,
+		transaction.BillingFailureRetryDate,
+		transaction.BilledAtDate,
+		transaction.NextBillingDate,
+		transaction.CCBillSubscriptionId,
+		transaction.CCBillTransactionId,
+		transaction.CCBillErrorText,
+		transaction.CCBillErrorCode,
+		transaction.CCBillReason,
+	), nil
+}
+
+func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*billing.AccountTransactionHistory, error) {
+
+	transaction, err := r.GetAccountTransactionHistoryByIdOperator(ctx, transactionHistoryId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := transaction.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return transaction, nil
+}
+
 func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
 
 	var encrypted *string
@@ -773,29 +849,76 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		currency = &cr
 	}
 
-	if err := r.session.
-		Query(accountTransactionHistoryTable.Insert()).
-		BindStruct(&accountTransactionHistory{
-			AccountId:               accountHistory.AccountId(),
-			Bucket:                  0,
-			Id:                      accountHistory.Id(),
-			TransactionType:         accountHistory.Transaction().String(),
-			SupportedClubId:         accountHistory.SupportedClubId(),
-			EncryptedPaymentMethod:  encrypted,
-			Amount:                  accountHistory.Amount(),
-			Currency:                currency,
-			Timestamp:               accountHistory.Timestamp(),
-			IsRecurring:             accountHistory.IsRecurring(),
-			BillingFailureRetryDate: accountHistory.BillingFailureNextRetryDate(),
-			BilledAtDate:            accountHistory.BilledAtDate(),
-			NextBillingDate:         accountHistory.NextBillingDate(),
-			CCBillErrorText:         accountHistory.CCBillErrorText(),
-			CCBillErrorCode:         accountHistory.CCBillErrorCode(),
-			CCBillReason:            accountHistory.CCBillReason(),
-			CCBillSubscriptionId:    accountHistory.CCBillSubscriptionId(),
-			CCBillTransactionId:     accountHistory.CCBillTransactionId(),
-		}).
-		ExecRelease(); err != nil {
+	transactionHistory := &accountTransactionHistory{
+		AccountId:               accountHistory.AccountId(),
+		Bucket:                  0,
+		Id:                      accountHistory.Id(),
+		TransactionType:         accountHistory.Transaction().String(),
+		SupportedClubId:         accountHistory.SupportedClubId(),
+		EncryptedPaymentMethod:  encrypted,
+		Amount:                  accountHistory.Amount(),
+		Currency:                currency,
+		Timestamp:               accountHistory.Timestamp(),
+		IsRecurring:             accountHistory.IsRecurring(),
+		BillingFailureRetryDate: accountHistory.BillingFailureNextRetryDate(),
+		BilledAtDate:            accountHistory.BilledAtDate(),
+		NextBillingDate:         accountHistory.NextBillingDate(),
+		CCBillErrorText:         accountHistory.CCBillErrorText(),
+		CCBillErrorCode:         accountHistory.CCBillErrorCode(),
+		CCBillReason:            accountHistory.CCBillReason(),
+		CCBillSubscriptionId:    accountHistory.CCBillSubscriptionId(),
+		CCBillTransactionId:     accountHistory.CCBillTransactionId(),
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := accountTransactionHistoryTable.Insert()
+	batch.Query(stmt,
+		transactionHistory.Id,
+		transactionHistory.AccountId,
+		transactionHistory.Bucket,
+		transactionHistory.Timestamp,
+		transactionHistory.TransactionType,
+		transactionHistory.SupportedClubId,
+		transactionHistory.Amount,
+		transactionHistory.Currency,
+		transactionHistory.IsRecurring,
+		transactionHistory.BillingFailureRetryDate,
+		transactionHistory.BilledAtDate,
+		transactionHistory.NextBillingDate,
+		transactionHistory.EncryptedPaymentMethod,
+		transactionHistory.CCBillErrorText,
+		transactionHistory.CCBillErrorCode,
+		transactionHistory.CCBillReason,
+		transactionHistory.CCBillSubscriptionId,
+		transactionHistory.CCBillTransactionId,
+	)
+
+	stmt, _ = accountTransactionHistoryByAccountTable.Insert()
+
+	batch.Query(stmt,
+		transactionHistory.AccountId,
+		transactionHistory.Bucket,
+		transactionHistory.Id,
+		transactionHistory.Timestamp,
+		transactionHistory.TransactionType,
+		transactionHistory.SupportedClubId,
+		transactionHistory.Amount,
+		transactionHistory.Currency,
+		transactionHistory.IsRecurring,
+		transactionHistory.BillingFailureRetryDate,
+		transactionHistory.BilledAtDate,
+		transactionHistory.NextBillingDate,
+		transactionHistory.EncryptedPaymentMethod,
+		transactionHistory.CCBillErrorText,
+		transactionHistory.CCBillErrorCode,
+		transactionHistory.CCBillReason,
+		transactionHistory.CCBillSubscriptionId,
+		transactionHistory.CCBillTransactionId,
+	)
+
+	// execute batch.
+	if err := r.session.ExecuteBatch(batch); err != nil {
 		return err
 	}
 
@@ -810,7 +933,7 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 
 	var accountTransactions []*accountTransactionHistory
 
-	builder := accountTransactionHistoryTable.SelectBuilder()
+	builder := accountTransactionHistoryByAccountTable.SelectBuilder()
 
 	if cursor != nil {
 		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
