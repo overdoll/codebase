@@ -32,7 +32,7 @@ message GetResourcesRequest {
   repeated string resourceIds = 2;
 }
 
-message AppliedResources {
+message FilteredResources {
   ResourceIdentifier oldResource = 1;
   ResourceIdentifier newResource = 2;
 }
@@ -40,10 +40,11 @@ message AppliedResources {
 message CopyResourcesAndApplyFilterRequest {
   repeated ResourceIdentifier resources = 1;
   Filters filters = 2;
+  bool private = 3;
 }
 
 message CopyResourcesAndApplyFilterResponse {
-  repeated AppliedResources resources = 1;
+  repeated FilteredResources resources = 1;
 }
 
 message CreateOrGetResourcesFromUploadsRequest {

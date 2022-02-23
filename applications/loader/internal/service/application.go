@@ -45,10 +45,10 @@ func createApplication(ctx context.Context) app.Application {
 			TusComposer:                        command.NewTusComposerHandler(resourceRepo),
 			DeleteResources:                    command.NewDeleteResourcesHandler(eventRepo),
 			NewCreateOrGetResourcesFromUploads: command.NewCreateOrGetResourcesFromUploadsHandler(resourceRepo, eventRepo),
+			CopyResourcesAndApplyFilters:       command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			ResourceById:   query.NewResourceByIdHandler(resourceRepo),
-			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),
+			ResourcesByIdsWithUrls: query.NewResourcesByIdsWithUrlsHandler(resourceRepo),
 		},
 		Activities: activities.NewActivitiesHandler(resourceRepo),
 	}

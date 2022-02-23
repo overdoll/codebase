@@ -16,6 +16,7 @@ go_library(
         "create_reactivated_club_subscription_account_transaction_record.go",
         "create_refund_club_subscription_account_transaction_record.go",
         "create_void_club_subscription_account_transaction_record.go",
+        "generate_club_supporter_receipt_from_account_transaction_history.go",
         "get_ccbill_subscription_details.go",
         "mark_account_club_support_cancelled.go",
         "mark_account_club_support_reactivated.go",

@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -68,8 +69,26 @@ type ResourceCassandraS3Repository struct {
 func NewResourceCassandraS3Repository(session gocqlx.Session, aws *session.Session, resourcesSigner *sign.URLSigner) ResourceCassandraS3Repository {
 	return ResourceCassandraS3Repository{session: session, aws: aws, resourcesSigner: resourcesSigner}
 }
+func unmarshalResourceFromDatabase(i resources) (*resource.Resource, error) {
+	return resource.UnmarshalResourceFromDatabase(
+		i.ItemId,
+		i.ResourceId,
+		i.Type,
+		i.IsPrivate,
+		i.MimeTypes,
+		i.Processed,
+		i.ProcessedId,
+		i.VideoDuration,
+		i.VideoThumbnail,
+		i.VideoThumbnailMimeType,
+		i.Width,
+		i.Height,
+		nil,
+		nil,
+	), nil
+}
 
-func unmarshalResourceFromDatabase(resourcesSigner *sign.URLSigner, a *session.Session, i resources) (*resource.Resource, error) {
+func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner, a *session.Session, i resources) (*resource.Resource, error) {
 
 	s3Client := s3.New(a)
 
@@ -247,8 +266,29 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 	// execute batch.
 	return r.session.ExecuteBatch(batch)
 }
+func (r ResourceCassandraS3Repository) GetResourcesByIdsWithUrls(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
+	b, err := r.getResourcesByIds(ctx, itemId, resourceIds)
 
-func (r ResourceCassandraS3Repository) GetResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
+	if err != nil {
+		return nil, err
+	}
+
+	var resourcesResult []*resource.Resource
+
+	for _, i := range b {
+		result, err := unmarshalResourceFromDatabaseWithSignedUrls(r.resourcesSigner, r.aws, i)
+
+		if err != nil {
+			return nil, err
+		}
+
+		resourcesResult = append(resourcesResult, result)
+	}
+
+	return resourcesResult, nil
+}
+
+func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]resources, error) {
 
 	var b []resources
 
@@ -263,29 +303,45 @@ func (r ResourceCassandraS3Repository) GetResourcesByIds(ctx context.Context, it
 		return nil, fmt.Errorf("failed to get resources by ids: %v", err)
 	}
 
-	var resourcesResult []*resource.Resource
+	var final []resources
 
 	for _, i := range b {
 
 		for _, target := range resourceIds {
 			if target == i.ResourceId {
-
-				result, err := unmarshalResourceFromDatabase(r.resourcesSigner, r.aws, i)
-
-				if err != nil {
-					return nil, err
-				}
-
-				resourcesResult = append(resourcesResult, result)
+				final = append(final, i)
 				break
 			}
 		}
 	}
 
+	return final, nil
+}
+
+func (r ResourceCassandraS3Repository) GetResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
+
+	b, err := r.getResourcesByIds(ctx, itemId, resourceIds)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var resourcesResult []*resource.Resource
+
+	for _, i := range b {
+		result, err := unmarshalResourceFromDatabase(i)
+
+		if err != nil {
+			return nil, err
+		}
+
+		resourcesResult = append(resourcesResult, result)
+	}
+
 	return resourcesResult, nil
 }
 
-func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, itemId string, resourceId string) (*resource.Resource, error) {
+func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, itemId string, resourceId string) (*resources, error) {
 
 	var i resources
 
@@ -302,7 +358,18 @@ func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, item
 		return nil, fmt.Errorf("failed to get resource by id: %v", err)
 	}
 
-	return unmarshalResourceFromDatabase(r.resourcesSigner, r.aws, i)
+	return &i, nil
+}
+
+func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, itemId string, resourceId string) (*resource.Resource, error) {
+
+	i, err := r.getResourceById(ctx, itemId, resourceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return unmarshalResourceFromDatabase(*i)
 }
 
 func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res []*resource.Resource) error {
@@ -331,20 +398,38 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 	s3Client := s3.New(r.aws)
 
-	for _, res := range resources {
+	for _, target := range resources {
 
-		if !res.IsProcessed() {
-			continue
+		bucket := os.Getenv("UPLOADS_BUCKET")
+
+		if target.IsProcessed() {
+			bucket = os.Getenv("RESOURCES_BUCKET")
+
+			if target.IsPrivate() {
+				bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+			}
 		}
 
-		// delete object
-		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
-			Bucket: aws.String(os.Getenv("RESOURCES_BUCKET")),
-			Key:    aws.String("/" + res.ItemId() + "/" + res.ID()),
-		})
+		for _, mime := range target.MimeTypes() {
 
-		if err != nil {
-			return fmt.Errorf("unable to delete file %v", err)
+			fileId := "/" + target.ID()
+
+			if target.IsProcessed() {
+
+				format, _ := resource.ExtensionByType(mime)
+
+				fileId = "/" + target.ItemId() + "/" + target.ProcessedId() + format
+			}
+
+			// delete object
+			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(fileId),
+			})
+
+			if err != nil {
+				return fmt.Errorf("unable to delete file %v", err)
+			}
 		}
 	}
 
@@ -384,28 +469,10 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 		// create a new resource - our url + the content type that came back from S3
 
 		fileType := resp.Metadata["Filetype"]
-
-		req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
-			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-			Key:    aws.String("/" + uploadId),
-		})
-
-		urlStr, err := req.Presign(15 * time.Minute)
-
-		if err != nil {
-			return nil, err
-		}
-
 		newResource, err := resource.NewResource(
 			itemId,
 			uploadId,
 			*fileType,
-			[]*resource.Url{
-				resource.UnmarshalUrlFromDatabase(
-					urlStr,
-					*fileType,
-				),
-			},
 			isPrivate,
 		)
 
@@ -423,96 +490,159 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 	return resources, nil
 }
 
-// UploadProcessedResources - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
-// expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
-// it was uploaded through TUS
-func (r ResourceCassandraS3Repository) UploadProcessedResources(ctx context.Context, resources []*resource.Resource) error {
+func (r ResourceCassandraS3Repository) DownloadVideoThumbnailForResource(ctx context.Context, target *resource.Resource) (*os.File, error) {
+
+	format, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
+	fileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + format
+
+	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
+}
+
+func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, target *resource.Resource) (*os.File, error) {
+	fileId := strings.Split(target.ID(), "+")[0]
+
+	if target.IsProcessed() {
+		format, _ := resource.ExtensionByType(target.LastMimeType())
+		fileId = "/" + target.ItemId() + "/" + target.ProcessedId() + format
+	}
+
+	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
+}
+
+func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fileId string, isProcessed, isPrivate bool) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
-	s3Client := s3.New(r.aws)
 
-	for _, target := range resources {
+	file, err := os.Create(fileId)
 
-		// if target is processed, skip for now
-		if target.IsProcessed() {
-			continue
-		}
+	if err != nil {
+		return nil, fmt.Errorf("failed to create file: %v", err)
+	}
 
-		fileId := strings.Split(target.ID(), "+")[0]
+	bucket := os.Getenv("UPLOADS_BUCKET")
 
-		file, err := os.Create(fileId)
+	if isProcessed {
+		bucket = os.Getenv("RESOURCES_BUCKET")
 
-		if err != nil {
-			return fmt.Errorf("failed to create file: %v", err)
-		}
-
-		// Download our file from the private bucket
-		_, err = downloader.Download(file,
-			&s3.GetObjectInput{
-				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-				Key:    aws.String(fileId),
-			},
-		)
-
-		if err != nil {
-			return fmt.Errorf("failed to download file: %v", err)
-		}
-
-		// process resource, by passing a prefix (where the file should be going) and the file that needs to be processed
-		targetsToMove, err := target.ProcessResource(file)
-
-		if err != nil {
-			return fmt.Errorf("failed to process resource: %v", err)
-		}
-
-		// go through each new file from the filesystem (contained by resource) and upload to s3
-		for _, moveTarget := range targetsToMove {
-
-			file, err := os.Open(moveTarget.OsFileLocation())
-
-			if err != nil {
-				return err
-			}
-
-			fileInfo, _ := file.Stat()
-			var size = fileInfo.Size()
-			buffer := make([]byte, size)
-			file.Read(buffer)
-
-			bucket := os.Getenv("RESOURCES_BUCKET")
-
-			if target.IsPrivate() {
-				bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
-			}
-
-			// new file that was created
-			_, err = s3Client.PutObject(&s3.PutObjectInput{
-				Bucket:        aws.String(bucket),
-				Key:           aws.String(moveTarget.RemoteUrlTarget()),
-				Body:          bytes.NewReader(buffer),
-				ContentLength: aws.Int64(size),
-				ContentType:   aws.String(http.DetectContentType(buffer)),
-			})
-
-			if err != nil {
-				return fmt.Errorf("failed to put file: %v", err)
-			}
-
-			// wait until file is available in private bucket
-
-			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
-				Bucket: aws.String(bucket),
-				Key:    aws.String(moveTarget.RemoteUrlTarget()),
-			}); err != nil {
-				return fmt.Errorf("failed to wait for file: %v", err)
-			}
-
-			// clean up file at the end to free up resources
-			_ = file.Close()
-			_ = os.Remove(moveTarget.OsFileLocation())
+		if isPrivate {
+			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
 		}
 	}
 
-	if err := r.updateResources(ctx, resources); err != nil {
+	// Download our file from the private bucket
+	_, err = downloader.Download(file,
+		&s3.GetObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(fileId),
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to download file: %v", err)
+	}
+
+	return file, nil
+}
+
+func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Context, file *os.File, target *resource.Resource) error {
+	s3Client := s3.New(r.aws)
+
+	fileInfo, _ := file.Stat()
+	var size = fileInfo.Size()
+	buffer := make([]byte, size)
+	file.Read(buffer)
+
+	bucket := os.Getenv("RESOURCES_BUCKET")
+
+	if target.IsPrivate() {
+		bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+	}
+
+	url := "/" + target.ItemId() + "/" + target.ProcessedId() + filepath.Ext(fileInfo.Name())
+
+	// new file that was created
+	if _, err := s3Client.PutObject(&s3.PutObjectInput{
+		Bucket:        aws.String(bucket),
+		Key:           aws.String(url),
+		Body:          bytes.NewReader(buffer),
+		ContentLength: aws.Int64(size),
+		ContentType:   aws.String(http.DetectContentType(buffer)),
+	}); err != nil {
+		return fmt.Errorf("failed to put file: %v", err)
+	}
+
+	// wait until file is available in private bucket
+
+	if err := s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(url),
+	}); err != nil {
+		return fmt.Errorf("failed to wait for file: %v", err)
+	}
+
+	// clean up file at the end to free up resources
+	_ = file.Close()
+
+	if err := r.createResources(ctx, []*resource.Resource{target}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UploadProcessedResource - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
+// expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
+// it was uploaded through TUS
+func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Context, moveTarget []*resource.Move, target *resource.Resource) error {
+	s3Client := s3.New(r.aws)
+
+	// go through each new file from the filesystem (contained by resource) and upload to s3
+	for _, moveTarget := range moveTarget {
+
+		file, err := os.Open(moveTarget.OsFileLocation())
+
+		if err != nil {
+			return err
+		}
+
+		fileInfo, _ := file.Stat()
+		var size = fileInfo.Size()
+		buffer := make([]byte, size)
+		file.Read(buffer)
+
+		bucket := os.Getenv("RESOURCES_BUCKET")
+
+		if target.IsPrivate() {
+			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+		}
+
+		// new file that was created
+		_, err = s3Client.PutObject(&s3.PutObjectInput{
+			Bucket:        aws.String(bucket),
+			Key:           aws.String(moveTarget.RemoteUrlTarget()),
+			Body:          bytes.NewReader(buffer),
+			ContentLength: aws.Int64(size),
+			ContentType:   aws.String(http.DetectContentType(buffer)),
+		})
+
+		if err != nil {
+			return fmt.Errorf("failed to put file: %v", err)
+		}
+
+		// wait until file is available in private bucket
+
+		if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(moveTarget.RemoteUrlTarget()),
+		}); err != nil {
+			return fmt.Errorf("failed to wait for file: %v", err)
+		}
+
+		// clean up file at the end to free up resources
+		_ = file.Close()
+		_ = os.Remove(moveTarget.OsFileLocation())
+	}
+
+	if err := r.updateResources(ctx, []*resource.Resource{target}); err != nil {
 		return err
 	}
 

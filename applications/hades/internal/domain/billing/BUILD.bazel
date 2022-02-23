@@ -10,6 +10,9 @@ go_library(
         "card.go",
         "card_type.go",
         "ccbill_subscription_details.go",
+        "club_support_receipt_pdf.go",
+        "club_supporter_receipt.go",
+        "club_supporter_receipt_builder.go",
         "contact.go",
         "currency.go",
         "payment_method.go",
@@ -24,6 +27,7 @@ go_library(
     deps = [
         "//libraries/paging",
         "//libraries/principal",
+        "@com_github_jung_kurt_gofpdf//:gofpdf",
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

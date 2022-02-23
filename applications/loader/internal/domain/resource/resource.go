@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
+	"github.com/segmentio/ksuid"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"image"
 	_ "image/png"
@@ -73,7 +74,23 @@ type Resource struct {
 	resourceType Type
 }
 
-func NewResource(itemId, id, mimeType string, urls []*Url, isPrivate bool) (*Resource, error) {
+func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int) (*Resource, error) {
+	id := ksuid.New().String()
+	return &Resource{
+		id:           id,
+		itemId:       itemId,
+		processedId:  id,
+		mimeTypes:    []string{mimeType},
+		sizes:        []int{},
+		resourceType: Image,
+		isPrivate:    isPrivate,
+		processed:    true,
+		height:       height,
+		width:        width,
+	}, nil
+}
+
+func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType Type
@@ -95,18 +112,16 @@ func NewResource(itemId, id, mimeType string, urls []*Url, isPrivate bool) (*Res
 	}
 
 	return &Resource{
-		id:                id,
-		itemId:            itemId,
-		mimeTypes:         []string{mimeType},
-		sizes:             []int{},
-		resourceType:      rType,
-		isPrivate:         isPrivate,
-		processed:         false,
-		height:            0,
-		width:             0,
-		videoDuration:     0,
-		urls:              urls,
-		videoThumbnailUrl: nil,
+		id:            id,
+		itemId:        itemId,
+		mimeTypes:     []string{mimeType},
+		sizes:         []int{},
+		resourceType:  rType,
+		isPrivate:     isPrivate,
+		processed:     false,
+		height:        0,
+		width:         0,
+		videoDuration: 0,
 	}, nil
 }
 
@@ -280,6 +295,10 @@ func (r *Resource) IsPrivate() bool {
 
 func (r *Resource) MimeTypes() []string {
 	return r.mimeTypes
+}
+
+func (r *Resource) LastMimeType() string {
+	return r.mimeTypes[len(r.mimeTypes)-1]
 }
 
 func (r *Resource) MakeImage() error {

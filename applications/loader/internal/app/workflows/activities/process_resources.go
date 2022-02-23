@@ -2,6 +2,8 @@ package activities
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
@@ -23,9 +25,30 @@ func (h *Activities) ProcessResources(ctx context.Context, itemId string, resour
 		}
 	}
 
-	// process resources
-	if err := h.rr.UploadProcessedResources(ctx, resourcesNotProcessed); err != nil {
-		return err
+	for _, target := range resourcesNotProcessed {
+
+		// first, we need to download the resource
+		file, err := h.rr.DownloadResource(ctx, target)
+
+		if err != nil {
+			return err
+		}
+
+		// process resource, get result of targets that need to be uploaded
+		targetsToMove, err := target.ProcessResource(file)
+
+		if err != nil {
+			return fmt.Errorf("failed to process resource: %v", err)
+		}
+
+		// upload the new resource
+		if err := h.rr.UploadProcessedResource(ctx, targetsToMove, target); err != nil {
+			return err
+		}
+
+		// cleanup file
+		_ = file.Close()
+		_ = os.Remove(file.Name())
 	}
 
 	// update database entries for resources

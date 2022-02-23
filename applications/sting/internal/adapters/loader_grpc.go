@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/applications/sting/internal/domain/post"
 )
 
 type LoaderGrpc struct {
@@ -22,6 +23,36 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	}
 
 	return md.AllResourceIds, nil
+}
+
+func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
+
+	var toApply []*loader.ResourceIdentifier
+
+	for _, r := range resourceIds {
+		toApply = append(toApply, &loader.ResourceIdentifier{
+			Id:     r,
+			ItemId: itemId,
+		})
+	}
+
+	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
+		Resources: toApply,
+		Filters:   &loader.Filters{Pixelate: &loader.PixelateFilter{Size: int64(pixelate)}},
+		Private:   private,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var res []*post.NewContent
+
+	for _, r := range md.Resources {
+		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, r.NewResource.Id))
+	}
+
+	return res, nil
 }
 
 func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {

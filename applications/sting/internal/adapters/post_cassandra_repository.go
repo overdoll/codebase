@@ -388,6 +388,39 @@ func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requ
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
 }
 
+func (r PostsCassandraRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+
+	currentPost, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(postTable.Update(
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids",
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update post: %v", err)
+	}
+
+	return currentPost, nil
+}
+
 func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	pst, err := r.GetPostByIdOperator(ctx, id)

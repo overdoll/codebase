@@ -53,7 +53,7 @@ func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResou
 
 func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRequest) (*loader.GetResourcesResponse, error) {
 
-	allResources, err := s.app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
+	allResources, err := s.app.Queries.ResourcesByIdsWithUrls.Handle(ctx, query.ResourcesByIdsWithUrls{
 		ItemIds:     []string{request.ItemId},
 		ResourceIds: request.ResourceIds,
 	})
@@ -74,4 +74,53 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 	}
 
 	return &loader.GetResourcesResponse{Resources: responseResources}, nil
+}
+
+func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
+
+	data := command.CopyResourcesAndApplyFilters{
+		ResourcePairs: []struct {
+			ItemId     string
+			ResourceId string
+		}{},
+		Filters:   struct{ Pixelate *struct{ Size int } }{},
+		IsPrivate: request.Private,
+	}
+
+	for i, r := range request.Resources {
+		data.ResourcePairs[i] = struct {
+			ItemId     string
+			ResourceId string
+		}{
+			ItemId:     r.ItemId,
+			ResourceId: r.Id,
+		}
+	}
+
+	if request.Filters.Pixelate != nil {
+		data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+	}
+
+	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var filtered []*loader.FilteredResources
+
+	for _, r := range filteredResources {
+		filtered = append(filtered, &loader.FilteredResources{
+			OldResource: &loader.ResourceIdentifier{
+				Id:     r.OldResource().ID(),
+				ItemId: r.OldResource().ItemId(),
+			},
+			NewResource: &loader.ResourceIdentifier{
+				Id:     r.NewResource().ID(),
+				ItemId: r.NewResource().ItemId(),
+			},
+		})
+	}
+
+	return &loader.CopyResourcesAndApplyFilterResponse{Resources: filtered}, nil
 }

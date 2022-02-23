@@ -16,9 +16,9 @@ type Commands struct {
 	TusComposer                        command.TusComposerHandler
 	NewCreateOrGetResourcesFromUploads command.CreateOrGetResourcesFromUploadsHandler
 	DeleteResources                    command.DeleteResourcesHandler
+	CopyResourcesAndApplyFilters       command.CopyResourcesAndApplyFiltersHandler
 }
 
 type Queries struct {
-	ResourceById   query.ResourceByIdHandler
-	ResourcesByIds query.ResourcesByIdsHandler
+	ResourcesByIdsWithUrls query.ResourcesByIdsWithUrlsHandler
 }

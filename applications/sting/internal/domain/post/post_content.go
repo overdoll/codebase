@@ -41,6 +41,11 @@ func (m *Content) ResourceIdHidden() string {
 	return m.resourceIdHidden
 }
 
+func (m *Content) UpdateResourceIdHidden(id string) error {
+	m.resourceIdHidden = id
+	return nil
+}
+
 func (m *Content) IsSupporterOnly() bool {
 	return m.isSupporterOnly
 }
