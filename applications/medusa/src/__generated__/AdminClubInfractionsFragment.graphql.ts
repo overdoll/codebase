@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ecc32e8af0f74a3de740f612820928d>>
+ * @generated SignedSource<<20778fc1de7f4ee9b62c410b8f503334>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,9 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AdminClubInfractionsFragment$data = {
   readonly suspension: {
-    readonly expires: any;
+    readonly __typename: string;
   } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubInfractionHistoryFragment" | "IssueClubInfractionFormFragment" | "SuspendClubFormFragment">;
   readonly " $fragmentType": "AdminClubInfractionsFragment";
 };
 export type AdminClubInfractionsFragment = AdminClubInfractionsFragment$data;
@@ -29,6 +30,21 @@ const node: ReaderFragment = {
   "name": "AdminClubInfractionsFragment",
   "selections": [
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubInfractionHistoryFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "IssueClubInfractionFormFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "SuspendClubFormFragment"
+    },
+    {
       "alias": null,
       "args": null,
       "concreteType": "ClubSuspension",
@@ -40,7 +56,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "expires",
+          "name": "__typename",
           "storageKey": null
         }
       ],
@@ -51,6 +67,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "257f1f137d87dbf3d51673a02c8f3915";
+(node as any).hash = "968f8d44962fcef7a79e315a624e94a7";
 
 export default node;

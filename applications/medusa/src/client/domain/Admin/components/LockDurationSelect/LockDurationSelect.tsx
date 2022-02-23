@@ -11,7 +11,7 @@ export default function LockDurationSelect (): JSX.Element {
 
   const durations = [
     {
-      title: i18n._(t`Instant`),
+      title: i18n._(t`Warning (none)`),
       value: new Date()
     },
     {

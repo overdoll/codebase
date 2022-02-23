@@ -43,9 +43,7 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
   const queryData = usePreloadedQuery<SessionsSettingsQuery>(
     SessionsSettingsQueryGQL,
     props.query
-  )
-
-  const {
+  )`const {
     data,
     loadNext,
     hasNext,
@@ -53,7 +51,7 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
   } = usePaginationFragment<SessionsPaginationQuery, any>(
     SessionsGQL,
     queryData?.viewer
-  )
+  )`
 
   const sessions = data.sessions.edges
 

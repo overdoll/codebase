@@ -17,6 +17,10 @@ export default function ChoiceRemovableTags ({
     removeValue(id)
   }
 
+  if (Object.keys(values).length < 1) {
+    return <></>
+  }
+
   return (
     <HStackScroll spacing={1}>
       {Object.keys(values).map((item, index) => (

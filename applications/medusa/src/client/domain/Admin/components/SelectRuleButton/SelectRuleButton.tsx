@@ -8,21 +8,19 @@ import {
   ModalOverlay,
   Stack
 } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Suspense } from 'react'
-import { useLingui } from '@lingui/react'
-import SearchInput from '../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import SkeletonStack from '../../../../../modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary
   from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import SelectSeriesSearch from './SelectSeriesSearch/SelectSeriesSearch'
 import { useChoice } from '../../../../../modules/content/HookedComponents/Choice'
 import ChoiceRemovableTags
   from '../../../../../modules/content/HookedComponents/Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
 import useSearch from '../../../../../modules/content/HookedComponents/Search/hooks/useSearch'
+import SelectRuleList from './SelectRuleList/SelectRuleList'
 
 interface Props extends HTMLChakraProps<any> {
   onChange: (id: string) => void
@@ -30,14 +28,10 @@ interface Props extends HTMLChakraProps<any> {
 }
 
 interface ChoiceProps {
-  tagTitle: string
-}
-
-interface SearchProps {
   title: string
 }
 
-export default function SelectSeriesButton ({
+export default function SelectRuleButton ({
   onChange,
   isInvalid,
   ...rest
@@ -49,10 +43,9 @@ export default function SelectSeriesButton ({
   } = useHistoryDisclosure()
 
   const {
-    register: registerSearch,
     loadQuery,
     searchArguments
-  } = useSearch<SearchProps>({})
+  } = useSearch<{}>({})
 
   const {
     values,
@@ -65,8 +58,6 @@ export default function SelectSeriesButton ({
       onClose()
     }
   })
-
-  const { i18n } = useLingui()
 
   return (
     <>
@@ -83,7 +74,7 @@ export default function SelectSeriesButton ({
           {...rest}
         >
           <Trans>
-            Select Series
+            Select Rule
           </Trans>
         </Button>
       </Stack>
@@ -98,7 +89,7 @@ export default function SelectSeriesButton ({
         <ModalContent>
           <ModalHeader>
             <Trans>
-              Select a series
+              Select a rule
             </Trans>
           </ModalHeader>
           <ModalCloseButton
@@ -106,21 +97,14 @@ export default function SelectSeriesButton ({
             as={CloseButton}
           />
           <ModalBody>
-            <Stack spacing={4}>
-              <SearchInput
-                {...registerSearch('title', 'change')}
-                variant='outline'
-                placeholder={i18n._(t`Search for a series`)}
-              />
-              <QueryErrorBoundary loadQuery={loadQuery}>
-                <Suspense fallback={<SkeletonStack />}>
-                  <SelectSeriesSearch
-                    searchArguments={searchArguments}
-                    register={register}
-                  />
-                </Suspense>
-              </QueryErrorBoundary>
-            </Stack>
+            <QueryErrorBoundary loadQuery={loadQuery}>
+              <Suspense fallback={<SkeletonStack />}>
+                <SelectRuleList
+                  searchArguments={searchArguments}
+                  register={register}
+                />
+              </Suspense>
+            </QueryErrorBoundary>
           </ModalBody>
         </ModalContent>
       </Modal>
