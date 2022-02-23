@@ -19,6 +19,7 @@ import type { ClubPublicPageNewPostsFragment$key } from '@//:artifacts/ClubPubli
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import ClubMenu from './ClubMenu/ClubMenu'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -53,6 +54,7 @@ const Query = graphql`
       ...JoinClubButtonClubFragment
       ...ClubPublicPageNewPostsFragment
       ...ClubPublicPageTopPostsFragment
+      ...ClubMenuFragment
     }
     viewer {
       ...JoinClubButtonViewerFragment
@@ -62,7 +64,7 @@ const Query = graphql`
 
 const TopPostsFragment = graphql`
   fragment ClubPublicPageTopPostsFragment on Club {
-    topPosts: posts(first: 5, sortBy: TOP) {
+    topPosts: posts(first: 10, sortBy: TOP) {
       ...PostsHorizontalPreviewFragment
     }
   }
@@ -70,7 +72,7 @@ const TopPostsFragment = graphql`
 
 const NewPostsFragment = graphql`
   fragment ClubPublicPageNewPostsFragment on Club {
-    newPosts: posts(first: 5, sortBy: NEW) {
+    newPosts: posts(first: 10, sortBy: NEW) {
       ...PostsHorizontalPreviewFragment
     }
   }
@@ -140,11 +142,14 @@ export default function ClubPublicPage (props: Props): JSX.Element {
             <LargeClubHeader query={queryData?.club} />
           </TileOverlay>
         </Box>
-        <JoinClubButton
-          w='100%'
-          clubQuery={queryData?.club}
-          viewerQuery={queryData?.viewer}
-        />
+        <HStack spacing={3}>
+          <JoinClubButton
+            w='100%'
+            clubQuery={queryData?.club}
+            viewerQuery={queryData?.viewer}
+          />
+          <ClubMenu query={queryData?.club} />
+        </HStack>
       </Stack>
       <Stack align='center' spacing={2}>
         <StatisticNumber

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4fc4f4d59e0d2933915d70541750c710>>
+ * @generated SignedSource<<a7da9b8b6e419f3bba4a53d496bdb1fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "first",
-          "value": 5
+          "value": 10
         },
         {
           "kind": "Literal",
@@ -53,13 +53,13 @@ const node: ReaderFragment = {
           "name": "PostsHorizontalPreviewFragment"
         }
       ],
-      "storageKey": "posts(first:5,sortBy:\"NEW\")"
+      "storageKey": "posts(first:10,sortBy:\"NEW\")"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "8e1b03dfd746af6b027ee835c041f959";
+(node as any).hash = "0f6bcb63d458a9f08af91844e4d310f9";
 
 export default node;

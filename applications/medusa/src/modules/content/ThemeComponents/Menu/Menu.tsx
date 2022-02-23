@@ -41,10 +41,8 @@ export function Menu ({
     <Box>
       <ChakraMenu autoSelect={false}>
         <MenuButton
-          bg='transparent'
           borderRadius='xl'
-          h={10}
-          w={10}
+          size='lg'
           aria-label={i18n._(t`Open Menu`)}
           as={IconButton}
           icon={
@@ -53,7 +51,7 @@ export function Menu ({
               icon={NavigationMenuHorizontal}
               w={10}
               h={10}
-              fill='gray.200'
+              fill='gray.100'
             />
           }
         />

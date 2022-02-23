@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1bf24c8962257686f4c9043ae48141f2>>
- * @relayHash 6102d9dc63094c590c4bc90425c70c00
+ * @generated SignedSource<<c1c8b7c1ff9e34b7a7e44e8bc7501951>>
+ * @relayHash e08aecdec77bed8ec1badfd8a6b2144a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6102d9dc63094c590c4bc90425c70c00
+// @relayRequestID e08aecdec77bed8ec1badfd8a6b2144a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -41,7 +41,7 @@ export type ClubPublicPageQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment" | "ClubMenuFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
@@ -156,7 +156,7 @@ v8 = {
 v9 = {
   "kind": "Literal",
   "name": "first",
-  "value": 5
+  "value": 10
 },
 v10 = [
   {
@@ -336,6 +336,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPublicPageTopPostsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubMenuFragment"
           }
         ],
         "storageKey": null
@@ -519,7 +524,7 @@ return {
             "name": "posts",
             "plural": false,
             "selections": (v10/*: any*/),
-            "storageKey": "posts(first:5,sortBy:\"NEW\")"
+            "storageKey": "posts(first:10,sortBy:\"NEW\")"
           },
           {
             "alias": "topPosts",
@@ -536,7 +541,7 @@ return {
             "name": "posts",
             "plural": false,
             "selections": (v10/*: any*/),
-            "storageKey": "posts(first:5,sortBy:\"TOP\")"
+            "storageKey": "posts(first:10,sortBy:\"TOP\")"
           }
         ],
         "storageKey": null
@@ -570,7 +575,7 @@ return {
     ]
   },
   "params": {
-    "id": "6102d9dc63094c590c4bc90425c70c00",
+    "id": "e08aecdec77bed8ec1badfd8a6b2144a",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -579,6 +584,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c065a0bd8cadd2e758112d7519a41e4";
+(node as any).hash = "de3d9d568e13bc8002cc262d069dc028";
 
 export default node;

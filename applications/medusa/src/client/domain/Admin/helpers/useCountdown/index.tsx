@@ -13,6 +13,8 @@ export default function useCountdown (time: number | Date | null): UseCountdownR
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
 
+  const timeIsNull = time == null
+
   const formattedTime = time != null ? new Date(time) : new Date()
 
   const calculateRemainingTime = (): Duration => {
@@ -38,7 +40,7 @@ export default function useCountdown (time: number | Date | null): UseCountdownR
 
   return {
     countdown: duration,
-    hasPassed,
+    hasPassed: (!timeIsNull ? hasPassed : timeIsNull),
     remaining: remainingTime
   }
 }

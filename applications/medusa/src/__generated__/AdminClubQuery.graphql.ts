@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c07c763feb54f52697117b54e93d5418>>
- * @relayHash 37b0f8afe8d156b4acbaf3aea5a898d2
+ * @generated SignedSource<<a278308c491873e03737191185c3eed3>>
+ * @relayHash 05b6582c093a9d2645c3c90a894d6e8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 37b0f8afe8d156b4acbaf3aea5a898d2
+// @relayRequestID 05b6582c093a9d2645c3c90a894d6e8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,10 +20,7 @@ export type AdminClubQueryVariables = AdminClubQuery$variables;
 export type AdminClubQuery$data = {
   readonly club: {
     readonly __typename: string;
-    readonly name: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "AdminClubStatusFragment" | "AdminClubInfractionsFragment">;
   } | null;
 };
 export type AdminClubQueryResponse = AdminClubQuery$data;
@@ -58,13 +55,6 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 };
@@ -84,22 +74,20 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
           {
-            "alias": null,
             "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "thumbnail",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ResourceIconFragment"
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "LargeClubHeaderFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AdminClubStatusFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AdminClubInfractionsFragment"
           }
         ],
         "storageKey": null
@@ -123,7 +111,13 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -164,18 +158,36 @@ return {
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "37b0f8afe8d156b4acbaf3aea5a898d2",
+    "id": "05b6582c093a9d2645c3c90a894d6e8d",
     "metadata": {},
     "name": "AdminClubQuery",
     "operationKind": "query",
@@ -184,6 +196,6 @@ return {
 };
 })();
 
-(node as any).hash = "ee774be91a91727a61c26a83a65f36d2";
+(node as any).hash = "45640ba7fef2e0e42d8d9c178fe5e0b3";
 
 export default node;
