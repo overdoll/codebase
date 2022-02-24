@@ -12,7 +12,7 @@ import { PostOrderButton } from '../../../../../../components/PostsSearch'
 import PostSearchButton from '../../../../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
 import PageFixedHeader from '../../../../../../components/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper
-  from '../../../../../../components/PageSectionScroller/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+  from '../../../../../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import { Flex } from '@chakra-ui/react'
 import FixedHeaderWrapper from '../../../../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 

@@ -16,7 +16,7 @@ interface Tags {
   kind: 'Tags'
 }
 
-type Abilities = ['create' | 'moderate', InferSubjects<Post> | InferSubjects<Club>] |
+type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
 ['manage', InferSubjects<Account> | InferSubjects<Club>] |
 ['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post>]
 
@@ -27,4 +27,5 @@ export interface Authenticated {
   isModerator: boolean
   isLocked: boolean
   isStaff: boolean
+  clubs: string[]
 }

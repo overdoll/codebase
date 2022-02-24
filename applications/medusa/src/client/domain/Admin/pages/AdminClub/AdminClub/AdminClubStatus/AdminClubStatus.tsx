@@ -4,7 +4,7 @@ import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import useCountdown from '../../../../helpers/useCountdown'
+import useCountdown from '../../../../../../../modules/hooks/useCountdown'
 import AdminClubUnSuspendButton from './AdminClubUnSuspendButton/AdminClubUnSuspendButton'
 
 interface Props {

@@ -6,6 +6,8 @@ import { useFragment } from 'react-relay/hooks'
 import { Menu, MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../authorization/Can'
 import PostReportButton from './PostReportButton/PostReportButton'
+import { useContext } from 'react'
+import { AbilityContext } from '../../../../../authorization/AbilityContext'
 
 interface Props {
   query: PostMenuFragment$key
@@ -36,8 +38,13 @@ export default function PostMenu ({
 
   const buttonSize = getButtonSize()
 
+  const ability = useContext(AbilityContext)
+
+  const isDisabled = ability.cannot('interact', 'Post')
+
   return (
     <Menu
+      isDisabled={isDisabled}
       size={size}
       bg='transparent'
       h={buttonSize}

@@ -10,9 +10,10 @@ import useGeneralSearchArguments from '../../components/PostsSearch/helpers/useG
 import { PostOrderButton, PostSearchButton } from '../../components/PostsSearch'
 import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper
-  from '../../components/PageSectionScroller/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+  from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import FixedHeaderWrapper from '../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import { Flex } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
+import LockedAccountTrigger from '../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 
 interface Props {
   prepared: {
@@ -35,7 +36,10 @@ export default function RootSearch (props: Props): JSX.Element {
         <FixedHeaderWrapper>
           <Flex justify='space-between'>
             <PostOrderButton />
-            <PostSearchButton routeTo='/search' />
+            <HStack spacing={2}>
+              <LockedAccountTrigger />
+              <PostSearchButton routeTo='/search' />
+            </HStack>
           </Flex>
         </FixedHeaderWrapper>
       </PageFixedHeader>

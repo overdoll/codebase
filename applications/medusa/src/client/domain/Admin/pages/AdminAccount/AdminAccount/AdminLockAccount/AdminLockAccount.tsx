@@ -5,7 +5,7 @@ import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modul
 import { Trans } from '@lingui/macro'
 import BooleanHeader from '../../../../components/BooleanHeader/BooleanHeader'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
-import useCountdown from '../../../../helpers/useCountdown'
+import useCountdown from '../../../../../../../modules/hooks/useCountdown'
 import AdminLockAccountForm from './AdminLockAccountForm/AdminLockAccountForm'
 import AdminUnlockAccountForm from './AdminUnlockAccountForm/AdminUnlockAccountForm'
 

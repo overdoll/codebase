@@ -1943,7 +1943,21 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('create', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
           },
           {
             path: '/club/:slug/:entity(create-post)',
@@ -1979,7 +1993,21 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('create', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
           }
         ]
       },

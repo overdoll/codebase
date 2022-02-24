@@ -10,17 +10,13 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react'
-import CommunityGuidelines from '../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
+import CommunityGuidelines from '../../ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from 'date-fns'
 import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
-import { useEffect, useState } from 'react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { useLingui } from '@lingui/react'
-import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { useCountdown } from '@//:modules/hooks'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -31,7 +27,7 @@ interface Props {
 const LockedAccountModalGQL = graphql`
   fragment LockedAccountModalFragment on Account {
     ...UnlockAccountFormFragment
-    lock {
+    lock @required(action: THROW) {
       expires
     }
   }
@@ -44,39 +40,11 @@ export default function LockedAccountModal ({
 }: Props): JSX.Element | null {
   const data = useFragment(LockedAccountModalGQL, queryRef)
 
-  // TODO add avatar in "jail" in both here and the menu?
-
-  const { i18n } = useLingui()
-  const locale = dateFnsLocaleFromI18n(i18n)
-
-  // const reasons = {
-  //   POST_INFRACTION: i18n._(t`The contents of a post you uploaded are not allowed on our platform.`)
-  // }
-
-  const expires = new Date(data?.lock?.expires as Date)
-
-  const calculateRemainingTime = (): Duration => {
-    return intervalToDuration({
-      start: expires,
-      end: new Date()
-    })
-  }
-
-  const [timer, setTimer] = useState(calculateRemainingTime())
-
-  const canBeUnlocked = isPast(expires)
-
-  const remainingTime = formatDistanceStrict(expires, new Date(), { locale })
-
-  const duration = formatDuration(timer, { locale })
-
-  useEffect(() => {
-    const timerObject = setTimeout(() => {
-      setTimer(calculateRemainingTime())
-    }, 1000)
-
-    return () => clearTimeout(timerObject)
-  })
+  const {
+    countdown,
+    hasPassed,
+    remaining
+  } = useCountdown(data.lock?.expires)
 
   return (
     <Modal
@@ -97,9 +65,9 @@ export default function LockedAccountModal ({
               fontSize='4xl'
               color='gray.00'
             >
-              {canBeUnlocked
+              {hasPassed
                 ? <Trans>Account Locked</Trans>
-                : <Trans>Banned for {remainingTime}</Trans>}
+                : <Trans>Banned for {remaining}</Trans>}
             </Heading>
             <Text mb={2}>
               <Trans>
@@ -107,21 +75,6 @@ export default function LockedAccountModal ({
                 the bans will become longer.
               </Trans>
             </Text>
-            <Text>
-              <Trans>
-                Here's the reason...
-              </Trans>
-            </Text>
-            <Alert
-              mt={4}
-              mb={4}
-              status='warning'
-            >
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>No reason was found</Trans>
-              </AlertDescription>
-            </Alert>
             <Box>
               <Text>
                 <Trans>
@@ -131,7 +84,7 @@ export default function LockedAccountModal ({
               <CommunityGuidelines />
             </Box>
             <Text>
-              {canBeUnlocked
+              {hasPassed
                 ? (
                   <Trans>
                     You may unlock your account after agreeing to the community guidelines.
@@ -143,13 +96,13 @@ export default function LockedAccountModal ({
                   </Trans>
                   )}
             </Text>
-            {canBeUnlocked
+            {hasPassed
               ? <UnlockAccountForm queryRef={data} />
               : (
                 <SmallBackgroundBox bg='green.50'>
                   <Text textAlign='center' color='green.500'>
                     <Trans>
-                      {duration}
+                      {countdown}
                     </Trans>
                   </Text>
                 </SmallBackgroundBox>

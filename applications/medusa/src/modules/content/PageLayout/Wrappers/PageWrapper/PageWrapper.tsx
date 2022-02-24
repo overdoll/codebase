@@ -3,20 +3,18 @@ import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
-  fillPage?: boolean
 }
 
 export default function PageWrapper ({
-  children,
-  fillPage = false
+  children
 }: Props): JSX.Element {
   return (
-    <Center mt={12}>
+    <Center mt={6}>
       <Box
-        w={fillPage ? ['full', 'lg'] : ['full', 'sm', 'md', 'lg']}
+        w={['full', 'sm', 'md', 'lg']}
         pl={[1, 0]}
         pr={[1, 0]}
-        mb={fillPage ? 0 : 6}
+        mb={6}
         h='100%'
       >
         {children}

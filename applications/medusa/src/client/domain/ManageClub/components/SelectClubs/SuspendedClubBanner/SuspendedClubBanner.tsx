@@ -1,30 +1,27 @@
 import { Box, Flex } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
-import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
+import { SuspendedClubBannerFragment$key } from '@//:artifacts/SuspendedClubBannerFragment.graphql'
 import { useHistoryDisclosure } from '@//:modules/hooks'
-import LockedAccountModal from './LockedAccountModal/LockedAccountModal'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import SuspendedClubModal from './SuspendedClubModal/SuspendedClubModal'
 
 interface Props {
-  queryRef: LockedAccountBannerFragment$key | null
+  query: SuspendedClubBannerFragment$key
 }
 
-const LockedAccountBannerGQL = graphql`
-  fragment LockedAccountBannerFragment on Account {
-    lock {
+const Fragment = graphql`
+  fragment SuspendedClubBannerFragment on Club {
+    suspension {
       __typename
     }
-    ...LockedAccountModalFragment
-    lock {
-      __typename
-    }
+    ...SuspendedClubModalFragment
   }
 `
 
-export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element | null {
-  const data = useFragment(LockedAccountBannerGQL, queryRef)
+export default function SuspendedClubBanner ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
 
   const {
     isOpen,
@@ -32,10 +29,10 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
     onClose
   } = useHistoryDisclosure()
 
-  if (data?.lock == null) return null
+  if (data?.suspension == null) return <></>
 
   return (
-    <Box zIndex='docked' h={12} top={0} color='gray.900'>
+    <Box>
       <Alert
         borderRadius='none'
         border='none'
@@ -50,7 +47,7 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                Your account is currently locked
+                Club is currently locked and access is limited.
               </Trans>
             </AlertDescription>
           </Flex>
@@ -61,14 +58,10 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
             onClick={onToggle}
           >
             <Trans>
-              View Details
+              Details
             </Trans>
           </Button>
-          <LockedAccountModal
-            queryRef={data}
-            isOpen={isOpen}
-            onClose={onClose}
-          />
+          <SuspendedClubModal query={data} isOpen={isOpen} onClose={onClose} />
         </Flex>
       </Alert>
     </Box>

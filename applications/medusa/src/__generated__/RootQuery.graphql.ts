@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0151810f68424387215cc8d3f22747ea>>
- * @relayHash 6f502e2db75a94c63a502d025e203b9e
+ * @generated SignedSource<<69ffa134da8f3dd6c7228491df663b1f>>
+ * @relayHash 068fc19acf4998a4da6aff2906dcd9a9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6f502e2db75a94c63a502d025e203b9e
+// @relayRequestID 068fc19acf4998a4da6aff2906dcd9a9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -49,6 +49,13 @@ var v0 = {
   "storageKey": null
 },
 v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -149,6 +156,53 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "ClubConnection",
+            "kind": "LinkedField",
+            "name": "clubs",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ClubSlugAlias",
+                        "kind": "LinkedField",
+                        "name": "slugAliases",
+                        "plural": true,
+                        "selections": [
+                          (v1/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "username",
             "storageKey": null
@@ -193,12 +247,12 @@ return {
                 ],
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
           (v0/*: any*/),
-          (v1/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       },
@@ -206,7 +260,7 @@ return {
     ]
   },
   "params": {
-    "id": "6f502e2db75a94c63a502d025e203b9e",
+    "id": "068fc19acf4998a4da6aff2906dcd9a9",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

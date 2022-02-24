@@ -19,7 +19,7 @@ export default function RuleTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Box borderRadius='inherit' px={4} py={3} bg='gray.800'>
+    <Box px={4} py={3} bg='gray.900' borderRadius='inherit'>
       <Text
         fontSize='lg'
         color='gray.00'
@@ -30,5 +30,6 @@ export default function RuleTileOverlay ({
         {data.description}
       </Text>
     </Box>
+
   )
 }

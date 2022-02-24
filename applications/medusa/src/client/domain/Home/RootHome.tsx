@@ -7,7 +7,7 @@ import HomeQuery from '@//:artifacts/HomeQuery.graphql'
 import Home from './Home/Home'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import PageInfiniteScrollWrapper
-  from '../../components/PageSectionScroller/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+  from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 
 interface Props {
   prepared: {

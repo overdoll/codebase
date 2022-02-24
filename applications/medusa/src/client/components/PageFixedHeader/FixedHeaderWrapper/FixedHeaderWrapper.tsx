@@ -12,6 +12,7 @@ export default function FixedHeaderWrapper ({
   return (
     <Center w='100%'>
       <Box
+        p={1}
         w={['full', 'lg']}
       >
         {children}

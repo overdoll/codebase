@@ -1,7 +1,7 @@
 import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { useLingui } from '@lingui/react'
-import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import { dateFnsLocaleFromI18n } from '../../locale'
 
 interface UseCountdownReturnProps {
   countdown: string

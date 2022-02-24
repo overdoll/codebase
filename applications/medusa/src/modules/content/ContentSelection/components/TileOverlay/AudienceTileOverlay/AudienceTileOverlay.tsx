@@ -29,7 +29,7 @@ export default function AudienceTileOverlay ({
         <ResourceItem
           query={data.thumbnail}
         />
-    }
+      }
     >
       <Text
         fontSize='lg'

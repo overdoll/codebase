@@ -4,7 +4,8 @@ import { Box, Flex, Tab, TabList, Tabs } from '@chakra-ui/react'
 import SwiperCore from 'swiper'
 import { useUpdateEffect } from 'usehooks-ts'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import PageInfiniteScrollWrapper from './PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+import PageInfiniteScrollWrapper from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+import PageFilledWrapper from '@//:modules/content/PageLayout/Wrappers/PageFilledWrapper/PageFilledWrapper'
 
 interface Props {
   children: ReactNode
@@ -113,18 +114,18 @@ export default function PageSectionScroller ({
                   </PageInfiniteScrollWrapper>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <PageWrapper>
+                  <PageFilledWrapper>
                     {children}
-                  </PageWrapper>
+                  </PageFilledWrapper>
                 </SwiperSlide>
               </>
               )
             : (
               <>
                 <SwiperSlide>
-                  <PageWrapper>
+                  <PageFilledWrapper>
                     {children}
-                  </PageWrapper>
+                  </PageFilledWrapper>
                 </SwiperSlide>
                 <SwiperSlide>
                   <PageInfiniteScrollWrapper>

@@ -18,6 +18,7 @@ import { Box, Skeleton } from '@chakra-ui/react'
 import Redirect from '@//:modules/routing/Redirect'
 import { useParams } from '@//:modules/routing/useParams'
 import generatePath from '@//:modules/routing/generatePath'
+import Can from '@//:modules/authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -64,57 +65,65 @@ export default function RootManageClub (props: Props): JSX.Element {
           </Box>
         }
       >
-        <VerticalNavigation.Button
-          to={`${basePath}/create-post`}
-          exact
-          buttonType='primary'
-          colorScheme='teal'
-          title={
-            <Trans>Create a Post</Trans>
-          }
-          icon={ContentBrushPen}
-        />
-        <VerticalNavigation.Button
-          to={`${basePath}/home`}
-          exact
-          title={
-            <Trans>Home</Trans>
-          }
-          icon={BirdHouse}
-        />
-        <VerticalNavigation.Button
-          to={`${basePath}/posts`}
-          exact
-          title={
-            <Trans>Posts</Trans>
-          }
-          icon={FileMultiple}
-        />
-        <VerticalNavigation.Button
-          to={`${basePath}/members`}
-          exact
-          title={
-            <Trans>Members</Trans>
-          }
-          icon={UserHuman}
-        />
-        <VerticalNavigation.Button
-          to={`${basePath}/settings`}
-          exact
-          title={
-            <Trans>Settings</Trans>
-          }
-          icon={SettingCog}
-        />
-        <VerticalNavigation.Button
-          to={clubPage}
-          isExternal
-          exact
-          title={
-            <Trans>Club Page</Trans>
-          }
-          icon={SettingHammer}
-        />
+        <Can I='create' a='Post'>
+          <VerticalNavigation.Button
+            to={`${basePath}/create-post`}
+            exact
+            buttonType='primary'
+            colorScheme='teal'
+            title={
+              <Trans>Create a Post</Trans>
+            }
+            icon={ContentBrushPen}
+          />
+        </Can>
+        <Can I='manage' a='Club'>
+          <VerticalNavigation.Button
+            to={`${basePath}/home`}
+            exact
+            title={
+              <Trans>Home</Trans>
+            }
+            icon={BirdHouse}
+          />
+        </Can>
+        <Can I='create' a='Post'>
+          <VerticalNavigation.Button
+            to={`${basePath}/posts`}
+            exact
+            title={
+              <Trans>Posts</Trans>
+            }
+            icon={FileMultiple}
+          />
+        </Can>
+        <Can I='manage' a='Club'>
+          <VerticalNavigation.Button
+            to={`${basePath}/members`}
+            exact
+            title={
+              <Trans>Members</Trans>
+            }
+            icon={UserHuman}
+          />
+          <VerticalNavigation.Button
+            to={`${basePath}/settings`}
+            exact
+            title={
+              <Trans>Settings</Trans>
+            }
+            icon={SettingCog}
+          />
+          <VerticalNavigation.Button
+            to={clubPage}
+            isExternal
+            exact
+            title={
+              <Trans>Club Page</Trans>
+            }
+            icon={SettingHammer}
+          />
+        </Can>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {location.pathname === basePath ? <Redirect to={`${basePath}/home`} /> : props.children}
