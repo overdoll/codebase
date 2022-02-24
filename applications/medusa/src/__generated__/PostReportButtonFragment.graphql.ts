@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e9d3233dd2e169532ec104ff47223c49>>
+ * @generated SignedSource<<623102f3a237b604601c92c4d33137a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,21 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostMenuFragment$data = {
+export type PostReportButtonFragment$data = {
   readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostReportButtonFragment">;
-  readonly " $fragmentType": "PostMenuFragment";
+  readonly " $fragmentType": "PostReportButtonFragment";
 };
-export type PostMenuFragment = PostMenuFragment$data;
-export type PostMenuFragment$key = {
-  readonly " $data"?: PostMenuFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PostMenuFragment">;
+export type PostReportButtonFragment = PostReportButtonFragment$data;
+export type PostReportButtonFragment$key = {
+  readonly " $data"?: PostReportButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostReportButtonFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostMenuFragment",
+  "name": "PostReportButtonFragment",
   "selections": [
     {
       "kind": "RequiredField",
@@ -38,17 +37,12 @@ const node: ReaderFragment = {
       },
       "action": "THROW",
       "path": "reference"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostReportButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "91e22d0976d1c8273beb28c1bdbdb5b2";
+(node as any).hash = "52355114c22ce19ecdc39a4df1658d98";
 
 export default node;

@@ -1,12 +1,11 @@
-import { Box, IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
-import { LoginKeys, NavigationMenuHorizontal } from '@//:assets/icons/navigation'
+import { Trans } from '@lingui/macro'
+import { LoginKeys } from '@//:assets/icons/navigation'
 import { graphql } from 'react-relay'
 import { PostMenuFragment$key } from '@//:artifacts/PostMenuFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { Icon } from '../../../../PageLayout'
-import { MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
+import { Menu, MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../authorization/Can'
+import PostReportButton from './PostReportButton/PostReportButton'
 
 interface Props {
   query: PostMenuFragment$key
@@ -16,6 +15,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostMenuFragment on Post {
     reference @required(action: THROW)
+    ...PostReportButtonFragment
   }
 `
 
@@ -24,15 +24,6 @@ export default function PostMenu ({
   size = 'md'
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const getIconSize = (): number => {
-    switch (size) {
-      case 'sm':
-        return 6
-      default:
-        return 8
-    }
-  }
 
   const getButtonSize = (): number => {
     switch (size) {
@@ -43,44 +34,27 @@ export default function PostMenu ({
     }
   }
 
-  const iconSize = getIconSize()
   const buttonSize = getButtonSize()
 
   return (
-    <Box>
-      <Menu autoSelect={false}>
-        <MenuButton
-          size={size}
-          bg='transparent'
-          borderRadius='xl'
-          h={buttonSize}
-          w={buttonSize}
-          aria-label={t`Open Menu`}
-          as={IconButton}
-          icon={
-            <Icon
-              p={1}
-              icon={NavigationMenuHorizontal}
-              w={iconSize}
-              fill='gray.200'
-              h={iconSize}
-            />
-          }
+    <Menu
+      size={size}
+      bg='transparent'
+      h={buttonSize}
+      w={buttonSize}
+    >
+      <Can I='admin' a='Post'>
+        <MenuLinkItem
+          to={`/moderation/post/${data.reference}`}
+          text={(
+            <Trans>
+              Moderate
+            </Trans>)}
+          colorScheme='purple'
+          icon={LoginKeys}
         />
-        <MenuList minW='300px' boxShadow='outline'>
-          <Can I='admin' a='Post'>
-            <MenuLinkItem
-              to={`/moderation/post/${data.reference}`}
-              text={(
-                <Trans>
-                  Moderate
-                </Trans>)}
-              colorScheme='purple'
-              icon={LoginKeys}
-            />
-          </Can>
-        </MenuList>
-      </Menu>
-    </Box>
+      </Can>
+      <PostReportButton query={data} />
+    </Menu>
   )
 }

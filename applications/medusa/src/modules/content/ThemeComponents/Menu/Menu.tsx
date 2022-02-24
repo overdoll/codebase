@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonProps,
   HStack,
   IconButton,
   Menu as ChakraMenu,
@@ -16,7 +17,7 @@ import { FunctionComponent, ReactNode } from 'react'
 import { Link } from '../../../routing'
 import { useLingui } from '@lingui/react'
 
-interface MenuProps {
+interface MenuProps extends ButtonProps {
   children: ReactNode
 }
 
@@ -33,7 +34,8 @@ interface MenuLinkItemProps extends MenuItemProps {
 }
 
 export function Menu ({
-  children
+  children,
+  ...rest
 }: MenuProps): JSX.Element {
   const { i18n } = useLingui()
 
@@ -45,17 +47,18 @@ export function Menu ({
           size='lg'
           aria-label={i18n._(t`Open Menu`)}
           as={IconButton}
+          {...rest}
           icon={
             <Icon
               p={2}
               icon={NavigationMenuHorizontal}
               w={10}
               h={10}
-              fill='gray.100'
+              fill='gray.200'
             />
           }
         />
-        <MenuList minW='300px' boxShadow='outline'>
+        <MenuList minW='230px' boxShadow='outline'>
           {children}
         </MenuList>
       </ChakraMenu>
@@ -76,8 +79,8 @@ export function MenuItem ({
     if (isLoading === true) {
       return (
         <Spinner
-          w={6}
-          h={6}
+          w={4}
+          h={4}
           color={color}
         />
       )
@@ -88,8 +91,8 @@ export function MenuItem ({
         pointerEvents='none'
         icon={icon}
         fill={color}
-        w={6}
-        h={6}
+        w={4}
+        h={4}
       />
     )
   }
@@ -100,7 +103,7 @@ export function MenuItem ({
         <IconComponent />
         <Text
           color={color}
-          fontSize='xl'
+          fontSize='lg'
         >
           {text}
         </Text>
