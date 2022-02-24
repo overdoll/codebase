@@ -42,6 +42,7 @@ func addDatalinkCredentialsToRequest(req *http.Request) {
 	q.Add("usingSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
 	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
 	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
+	q.Add("returnXML", "1")
 }
 
 func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbillSubscriptionId string) (*ccbill.SubscriptionStatus, error) {
@@ -205,7 +206,55 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	return nil
 }
 
-func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) error {
-	//TODO implement me
-	panic("implement me")
+type chargeByPreviousResult struct {
+	XMLName        xml.Name `xml:"results"`
+	Approved       int      `xml:"approved"`
+	SubscriptionId string   `xml:"subscriptionId"`
+	DenialId       string   `xml:"denialId"`
+	DeclineCode    int      `xml:"declineCode"`
+	DeclineText    string   `xml:"declineText"`
+}
+
+func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) (*ccbill.TransactionDetails, error) {
+
+	url, err := chargeByPrevious.GenerateUrl()
+
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := r.client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var body []byte
+	if _, err := resp.Body.Read(body); err != nil {
+		return nil, err
+	}
+
+	var result response
+
+	if err := xml.Unmarshal(body, &result); err != nil {
+		return nil, err
+	}
+
+	if result.Results != 1 {
+		return nil, fmt.Errorf("failed to charge by previous transaction id: %s", result.Results)
+	}
+
+	var realResult chargeByPreviousResult
+
+	if err := xml.Unmarshal(body, &realResult); err != nil {
+		return nil, err
+	}
+
+	return ccbill.UnmarshalTransactionDetailsFromDatabase(chargeByPrevious.CCBillSubscriptionId(), chargeByPrevious.ClubId(), realResult.Approved == 1, realResult.DeclineCode, realResult.DeclineText), nil
 }

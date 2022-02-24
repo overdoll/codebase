@@ -33,7 +33,7 @@ type PostModified struct {
 		Id string
 	}
 	Categories []CategoryModified
-	Content    []types.Resource
+	Content    []types.PostContent
 }
 
 type Post struct {
@@ -81,6 +81,12 @@ type UpdatePostContentOrder struct {
 	UpdatePostContentOrder *struct {
 		Post *PostModified
 	} `graphql:"updatePostContentOrder(input: $input)"`
+}
+
+type UpdatePostContentIsSupporterOnly struct {
+	UpdatePostContentIsSupporterOnly *struct {
+		Post *PostModified
+	} `graphql:"updatePostContentIsSupporterOnly(input: $input)"`
 }
 
 type RemovePostContent struct {
@@ -189,6 +195,12 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.Len(t, addPostContent.AddPostContent.Post.Content, 2, "should have 2 content")
 
+	require.False(t, addPostContent.AddPostContent.Post.Content[0].IsSupporterOnly, "should not be supporter only content #1")
+	require.False(t, addPostContent.AddPostContent.Post.Content[1].IsSupporterOnly, "should not be supporter only content #2")
+
+	require.True(t, addPostContent.AddPostContent.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+	require.True(t, addPostContent.AddPostContent.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+
 	// quickly reverse the list
 	var reversedContentIds []relay.ID
 
@@ -215,6 +227,25 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[1].ID)
 
 	require.Equal(t, reversedContentIds, newContentIds, "list should still be reversed")
+
+	var updatePostContentIsSupporterOnly UpdatePostContentIsSupporterOnly
+
+	// update order
+	err = client.Mutate(context.Background(), &updatePostContentIsSupporterOnly, map[string]interface{}{
+		"input": types.UpdatePostContentIsSupporterOnlyInput{
+			ID:              relay.ID(newPostId),
+			ContentIds:      reversedContentIds,
+			IsSupporterOnly: true,
+		},
+	})
+
+	require.NoError(t, err, "no error updating supporter only content")
+
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].IsSupporterOnly, "should be supporter only content #1")
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].IsSupporterOnly, "should be supporter only content #2")
+
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
 
 	var removePostContent RemovePostContent
 

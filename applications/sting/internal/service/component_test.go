@@ -96,12 +96,12 @@ func newFakeAccount(t *testing.T) string {
 func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
 
-	adapter := adapters.NewPostsCassandraRepository(session)
+	adapter := adapters.NewPostsCassandraRepository(session, service.StellaServiceMock{})
 	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
 	es := bootstrap.InitializeElasticSearchSession()
-	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session)
+	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session, service.StellaServiceMock{})
 	err = adapterEs.IndexPost(context.Background(), pst)
 	require.NoError(t, err)
 
@@ -167,9 +167,7 @@ func startService() bool {
 
 	application, _ := service.NewComponentTestApplication(context.Background())
 
-	client := clients.NewTemporalClient(context.Background())
-
-	srv := ports.NewHttpServer(&application, client)
+	srv := ports.NewHttpServer(&application)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
@@ -179,7 +177,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application, client)
+	s := ports.NewGrpcServer(&application)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)

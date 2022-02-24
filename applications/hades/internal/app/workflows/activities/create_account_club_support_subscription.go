@@ -32,9 +32,9 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 	}
 
 	// save payment details for later
-	if request.SavePaymentDetails {
+	if request.SavePaymentDetails && request.Currency == "USD" {
 
-		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(request.AccountId, request.CCBillSubscriptionId, ccbillSubscription.PaymentMethod())
+		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(request.AccountId, request.CCBillSubscriptionId, ccbillSubscription.PaymentMethod(), request.Currency)
 
 		if err != nil {
 			return err

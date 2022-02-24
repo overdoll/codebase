@@ -41,6 +41,8 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 
 		"encrypted_payment_method",
 
+		"currency",
+
 		"ccbill_subscription_id",
 
 		"updated_at",
@@ -50,14 +52,12 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 })
 
 type accountSavedPaymentMethod struct {
-	AccountId string `db:"account_id"`
-	Id        string `db:"id"`
-
-	EncryptedPaymentMethod string `db:"encrypted_payment_method"`
-
-	CCBillSubscriptionId string `db:"ccbill_subscription_id"`
-
-	UpdatedAt time.Time `db:"updated_at"`
+	AccountId              string    `db:"account_id"`
+	Id                     string    `db:"id"`
+	EncryptedPaymentMethod string    `db:"encrypted_payment_method"`
+	Currency               string    `db:"currency"`
+	CCBillSubscriptionId   string    `db:"ccbill_subscription_id"`
+	UpdatedAt              time.Time `db:"updated_at"`
 }
 
 var accountClubSupporterSubscriptionsTable = table.New(table.Metadata{
@@ -359,6 +359,7 @@ func marshalAccountSavedPaymentMethodToDatabase(savedPaymentMethod *billing.Save
 		AccountId:              savedPaymentMethod.AccountId(),
 		Id:                     savedPaymentMethod.Id(),
 		EncryptedPaymentMethod: encrypted,
+		Currency:               savedPaymentMethod.Currency().String(),
 		CCBillSubscriptionId:   savedPaymentMethod.CCBillSubscriptionId(),
 		UpdatedAt:              savedPaymentMethod.UpdatedAt(),
 	}, nil
@@ -443,12 +444,27 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethods(ctx context.Co
 			return nil, err
 		}
 
-		savedMethod := billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt)
+		savedMethod := billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt, savedPay.Currency)
 		savedMethod.Node = paging.NewNode(savedPay.Id)
 		savedPayments = append(savedPayments, savedMethod)
 	}
 
 	return savedPayments, nil
+}
+
+func (r BillingCassandraRepository) GetAccountSavedPaymentMethodById(ctx context.Context, requester *principal.Principal, accountId, id string) (*billing.SavedPaymentMethod, error) {
+
+	paymentMethod, err := r.GetAccountSavedPaymentMethodByIdOperator(ctx, accountId, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := paymentMethod.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return paymentMethod, nil
 }
 
 func (r BillingCassandraRepository) GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*billing.SavedPaymentMethod, error) {
@@ -468,7 +484,7 @@ func (r BillingCassandraRepository) GetAccountSavedPaymentMethodByIdOperator(ctx
 		return nil, err
 	}
 
-	return billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt), nil
+	return billing.UnmarshalSavedPaymentMethodFromDatabase(savedPay.AccountId, savedPay.Id, savedPay.CCBillSubscriptionId, decrypt, savedPay.UpdatedAt, savedPay.Currency), nil
 }
 
 func (r BillingCassandraRepository) UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *billing.SavedPaymentMethod) error) (*billing.SavedPaymentMethod, error) {
@@ -661,6 +677,21 @@ func (r BillingCassandraRepository) UpdateAccountClubSupporterSubscriptionStatus
 
 func (r BillingCassandraRepository) UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, accountId, clubId, id, updateFn, []string{"encrypted_payment_method"})
+}
+
+func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
+
+	subscription, err := r.HasExistingAccountClubSupporterSubscriptionOperator(ctx, accountId, clubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := subscription.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return subscription, nil
 }
 
 func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
@@ -1102,5 +1133,4 @@ func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsById(ctx context
 	}
 
 	return ccbillSubscription, nil
-
 }

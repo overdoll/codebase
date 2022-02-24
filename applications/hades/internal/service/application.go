@@ -61,12 +61,13 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session)
+	pricingRepo := adapters.NewBillingPricingRepository(session)
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 
 	return app.Application{
 		Commands: app.Commands{
-			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, stella),
+			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),
 			ProcessCCBillWebhook:                   command.NewProcessCCBillWebhookHandler(eventRepo),
 		},
 		Queries: app.Queries{

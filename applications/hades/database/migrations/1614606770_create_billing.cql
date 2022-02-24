@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
     account_id               text,
     id                       text,
 
+    currency                 text,
+
     encrypted_payment_method text,
 
     updated_at               timestamp,

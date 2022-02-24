@@ -15,6 +15,7 @@ message Resource {
   string itemId = 2;
   bool processed = 3;
   string processedId = 4;
+  bool private = 5;
 }
 
 message ResourceIdentifier {

@@ -132,12 +132,6 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 
 			url = signedURL
 
-			if i.Processed {
-
-			} else {
-
-			}
-
 		} else if !i.IsPrivate && !i.Processed {
 
 			req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{

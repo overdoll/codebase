@@ -57,4 +57,5 @@ type Queries struct {
 	IsAccountMultiFactorTOTPEnabled             query.IsAccountMultiFactorTOTPEnabledHandler
 	AreAccountMultiFactorRecoveryCodesGenerated query.AreAccountMultiFactorRecoveryCodesGeneratedHandler
 	ViewAuthenticationToken                     query.ViewAuthenticationTokenHandler
+	LocationFromIp                              query.LocationFromIpHandler
 }

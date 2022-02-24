@@ -5,6 +5,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -56,6 +57,11 @@ func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, cl
 }
 
 type LoaderServiceMock struct{}
+
+func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
+	//TODO implement me
+	panic("implement me")
+}
 
 func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error) {
 	return resourceIds, nil

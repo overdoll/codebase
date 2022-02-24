@@ -5,6 +5,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/hades/internal/adapters"
+	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -32,6 +33,11 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 	}
 
 	return prin, nil
+}
+
+func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*location.Location, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 type StellaServiceMock struct{}

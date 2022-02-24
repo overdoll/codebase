@@ -11,8 +11,7 @@ require (
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/compose-spec/godotenv v1.3.0 // indirect
-	github.com/disintegration/gift v1.2.1 // indirect
+	github.com/disintegration/gift v1.2.1
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/frankban/quicktest v1.13.0 // indirect
 	github.com/gin-gonic/gin v1.7.2
@@ -27,7 +26,7 @@ require (
 	github.com/h2non/filetype v1.1.1
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
-	github.com/jung-kurt/gofpdf v1.16.2 // indirect
+	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/olivere/elastic/v7 v7.0.26

@@ -262,6 +262,7 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, club
 		for _, v := range newSlugs {
 			if v == s {
 				found = true
+				break
 			}
 		}
 

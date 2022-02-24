@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/status"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
+	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	eva "overdoll/applications/eva/proto"
@@ -98,4 +99,22 @@ func (s Server) RevokeSession(ctx context.Context, request *eva.SessionRequest) 
 	}
 
 	return &empty.Empty{}, nil
+}
+
+func (s *Server) GetLocationFromIp(ctx context.Context, request *eva.GetLocationFromIpRequest) (*eva.Location, error) {
+
+	loc, err := s.app.Queries.LocationFromIp.Handle(ctx, query.LocationFromIp{IP: request.Ip})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &eva.Location{
+		City:        loc.City(),
+		Country:     loc.Country(),
+		PostalCode:  loc.PostalCode(),
+		Subdivision: loc.Subdivision(),
+		Latitude:    loc.Latitude(),
+		Longitude:   loc.Longitude(),
+	}, nil
 }

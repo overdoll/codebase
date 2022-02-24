@@ -17,6 +17,9 @@ type PostReport implements Node @key(fields: "id") {
 
   """The rule that was cited for this report."""
   rule: Rule! @goField(forceResolver: true)
+
+  """The post linked to this report."""
+  post: Post!
 }
 
 """Edge of the post report"""

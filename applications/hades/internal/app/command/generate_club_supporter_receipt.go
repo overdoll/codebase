@@ -6,21 +6,21 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type GenerateClubSupporterReceipt struct {
+type GenerateClubSupporterReceiptFromAccountTransactionHistory struct {
 	Principal                   *principal.Principal
 	AccountTransactionHistoryId string
 }
 
-type GenerateClubSupporterReceiptHandler struct {
+type GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler struct {
 	br billing.Repository
 	fr billing.FileRepository
 }
 
-func NewGenerateClubSupporterReceiptHandler(br billing.Repository, fr billing.FileRepository) GenerateClubSupporterReceiptHandler {
-	return GenerateClubSupporterReceiptHandler{br: br, fr: fr}
+func NewGenerateClubSupporterReceiptFromAccountTransactionHistory(br billing.Repository, fr billing.FileRepository) GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler {
+	return GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler{br: br, fr: fr}
 }
 
-func (h GenerateClubSupporterReceiptHandler) Handle(ctx context.Context, cmd GenerateClubSupporterReceipt) (*billing.ClubSupporterReceipt, error) {
+func (h GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler) Handle(ctx context.Context, cmd GenerateClubSupporterReceiptFromAccountTransactionHistory) (*billing.ClubSupporterReceipt, error) {
 
 	transactionHistory, err := h.br.GetAccountTransactionHistoryById(ctx, cmd.Principal, cmd.AccountTransactionHistoryId)
 

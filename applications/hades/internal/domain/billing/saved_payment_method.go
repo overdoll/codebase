@@ -14,8 +14,10 @@ var (
 type SavedPaymentMethod struct {
 	*paging.Node
 
-	accountId     string
-	id            string
+	accountId string
+	id        string
+	currency  Currency
+
 	paymentMethod *PaymentMethod
 
 	updatedAt time.Time
@@ -23,10 +25,12 @@ type SavedPaymentMethod struct {
 	ccbillSubscriptionId string
 }
 
-func NewSavedPaymentMethodFromCCBill(accountId, ccbillSubscriptionId string, paymentMethod *PaymentMethod) (*SavedPaymentMethod, error) {
+func NewSavedPaymentMethodFromCCBill(accountId, ccbillSubscriptionId string, paymentMethod *PaymentMethod, currency string) (*SavedPaymentMethod, error) {
+	cr, _ := CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   ccbillSubscriptionId,
+		currency:             cr,
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		updatedAt:            time.Now(),
@@ -57,19 +61,30 @@ func (c *SavedPaymentMethod) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
+func (c *SavedPaymentMethod) Currency() Currency {
+	return c.currency
+}
+
 func (c *SavedPaymentMethod) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
 	c.paymentMethod = paymentMethod
+	c.updatedAt = time.Now()
 	return nil
+}
+
+func (c *SavedPaymentMethod) CanView(requester *principal.Principal) error {
+	return requester.BelongsToAccount(c.accountId)
 }
 
 func (c *SavedPaymentMethod) CanDelete(requester *principal.Principal) error {
 	return requester.BelongsToAccount(c.accountId)
 }
 
-func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time) *SavedPaymentMethod {
+func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time, currency string) *SavedPaymentMethod {
+	cr, _ := CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   id,
+		currency:             cr,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		paymentMethod:        paymentMethod,
 		updatedAt:            updatedAt,

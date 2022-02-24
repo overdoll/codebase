@@ -112,6 +112,9 @@ func MarshalPostReportToGraphQL(ctx context.Context, result *report.PostReport) 
 		Rule: &Rule{
 			ID: relay.NewID(Rule{}, result.RuleId()),
 		},
+		Post: &Post{
+			ID: relay.NewID(Post{}, result.PostID()),
+		},
 	}
 }
 
@@ -308,6 +311,7 @@ func MarshalRuleToGraphQL(ctx context.Context, result *rule.Rule) *Rule {
 
 	return &Rule{
 		ID:                      relay.NewID(Rule{}, result.ID()),
+		Reference:               result.ID(),
 		Title:                   result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		TitleTranslations:       titleTranslations,
 		Description:             result.Description().Translate(passport.FromContext(ctx).Language(), result.ID()),

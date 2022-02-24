@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"os"
+	"overdoll/applications/hades/internal/domain/billing"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/principal"
 	"strconv"
@@ -13,13 +14,18 @@ type FlexFormsClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
+
+	amount   float64
+	currency int
 }
 
-func NewFlexFormsClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool) (*FlexFormsClubSupporterPaymentLink, error) {
+func NewFlexFormsClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool, price *billing.Price) (*FlexFormsClubSupporterPaymentLink, error) {
 	return &FlexFormsClubSupporterPaymentLink{
 		savePaymentDetails: savePaymentDetails,
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
+		amount:             price.Amount(),
+		currency:           currencyStringToCCBillCode[price.Currency().String()],
 	}, nil
 }
 
@@ -35,14 +41,14 @@ func (c *FlexFormsClubSupporterPaymentLink) GeneratePaymentLink() (string, error
 
 	ccbillSubAccountNumber := os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER")
 
-	billInitialPrice := strconv.FormatFloat(ccbillInitialPrice, 'f', 2, 64)
+	billInitialPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
 	billInitialPeriod := strconv.Itoa(ccbillInitialPeriod)
 
-	billRecurringPrice := strconv.FormatFloat(ccbillRecurringPrice, 'f', 2, 64)
+	billRecurringPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
 	billRecurringPeriod := strconv.Itoa(ccbillRecurringPeriod)
 	billNumberRebills := strconv.Itoa(ccbillNumRebills)
 
-	billCurrencyCode := strconv.Itoa(ccbillCurrencyCode)
+	billCurrencyCode := strconv.Itoa(c.currency)
 
 	ccbillFormDigestBuilder := md5.New()
 	ccbillFormDigestBuilder.Write([]byte(billInitialPrice))

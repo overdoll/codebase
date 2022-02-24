@@ -1,5 +1,209 @@
+union Ac
+
+
+type AccountSavedPaymentMethod  {
+  """An ID to uniquely identify this payment method."""
+  id: ID!
+
+  """The account linked to this saved payment method."""
+  account: Account!
+
+  """The payment method."""
+  paymentMethod: PaymentMethod!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this payment method was last updated."""
+  updatedAt: Time!
+}
+
+
+"""
+The ccbill subscription details.
+
+When this object is present, this means that it can only be updated through CCBill support. https://support.ccbill.com/
+
+For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
+"""
+type CCBillSubscription {
+  paymentMethod: String!
+  ccbillSubscriptionId: String!
+  email: String!
+}
+
+type AccountSavedPaymentMethod  {
+  """An ID to uniquely identify this payment method."""
+  id: ID!
+
+  """The account linked to this saved payment method."""
+  account: Account!
+
+  """The payment method."""
+  paymentMethod: PaymentMethod!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this payment method was last updated."""
+  updatedAt: Time!
+}
+
+"""An account club supporter subscription."""
+type AccountClubSupporterSubscription {
+  """An ID to uniquely identify this subscription."""
+  id: ID!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """The status of this subscription."""
+  status: AccountClubSupporterSubscriptionStatus!
+
+  """When the account first became a supporter."""
+  supporterSince: Time!
+
+  """The last billing date for this subscription."""
+  lastBillingDate: Time!
+
+  """The next billing date for this subscription."""
+  nextBillingDate: Time!
+
+  """When this subscription was cancelled."""
+  cancelledAt: Time
+
+  """The billing amount."""
+  billingAmount: Float!
+
+  """The currency."""
+  billingCurrency: Currency!
+
+  """The payment method linked to this subscription."""
+  paymentMethod: PaymentMethod!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this subscription was last updated."""
+  updatedAt: Time!
+}
+
+enum AccountClubSupporterSubscriptionStatus {
+  ACTIVE
+  CANCELLED
+}
+
+enum CardType {
+  VISA
+  MASTERCARD
+  DISCOVER
+  JCB
+  AMEX
+  OTHER
+}
+
+"""Represents a billing address."""
+type BillingAddress {
+  AddressLine1: String!
+  City: String!
+  State: String!
+  Country: String!
+  PostalCode: String!
+}
+
+"""Represents a billing contact."""
+type BillingContact {
+  FirstName: String!
+  LastName: String!
+  Email: String!
+  PhoneNumber: String!
+}
+
+"""Represents a card."""
+type Card {
+  """Last 4 digits of the card."""
+  last4: String!
+
+  """The expiration date."""
+  expiration: String!
+
+  """The type of card."""
+  type: CardType!
+}
+
+"""A payment method."""
+type PaymentMethod {
+  """Card linked to this payment method."""
+  card: Card!
+
+  """Billing address of this card."""
+  billingAddress: BillingAddress
+
+  """Billing contact of this card."""
+  billingContact: BillingContact
+}
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
+
+enum CCBillDeclineError {
+  GENERAL_SYSTEM_ERROR
+  TRANSACTION_DECLINED
+  TRANSACTION_DENIED_OR_REFUSED_BY_BANK
+  CARD_EXPIRED
+  INSUFFICIENT_FUNDS
+  RATE_LIMIT_ERROR
+  TRANSACTION_APPROVAL_REQUIRED
+}
+
 type CCBillPaymentLink {
   link: String!
+}
+
+"""Edge of the account club supporter subscriptions"""
+type AccountClubSupporterSubscriptionEdge {
+  node: AccountClubSupporterSubscription!
+  cursor: String!
+}
+
+"""Connection of the account club supporter subscription"""
+type AccountClubSupporterSubscriptionConnection {
+  edges: [AccountClubSupporterSubscriptionEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the account saved payment method"""
+type AccountSavedPaymentMethodEdge {
+  node: AccountSavedPaymentMethod!
+  cursor: String!
+}
+
+"""Connection of the account saved payment method"""
+type AccountSavedPaymentMethodConnection {
+  edges: [AccountClubSupporterSubscriptionEdge!]!
+  pageInfo: PageInfo!
+}
+
+
+"""Payload for a new club supporter"""
+type BecomeClubSupporterWithAccountSavedPaymentMethodPayload {
+  """The club that was supported."""
+  club: Club!
+
+  """Whether or not the transaction was approved."""
+  approved: Boolean!
+
+  """The error from CCBill, if there is one."""
+  ccbillDeclineError: CCBillDeclineError
 }
 
 """Generate ccbill club supporter payment link."""
@@ -7,8 +211,78 @@ input GenerateCCBillClubSupporterPaymentLinkInput {
   """The chosen club ID."""
   clubId: ID!
 
+  """The chosen currency."""
+  currency: Currency!
+
   """Whether or not we want to save the payment details for later."""
   savePaymentDetailsForLater: Boolean!
+}
+
+"""Become club supporter with saved payment method."""
+input BecomeClubSupporterWithAccountSavedPaymentMethodInput {
+  """The chosen club ID."""
+  clubId: ID!
+
+  """The chosen currency."""
+  currency: Currency!
+
+  """The chosen saved payment method."""
+  savedPaymentMethodId: ID!
+}
+
+"""Delete an account saved payment method input."""
+input DeleteAccountSavedPaymentMethodInput {
+  """The chosen saved payment method id."""
+  savedPaymentMethodId: ID!
+}
+
+"""Payload for deleting an account saved payment method."""
+type DeleteAccountSavedPaymentMethodPayload {
+  """The deleted saved payment method."""
+  deletedAccountSavedPaymentMethodId: ID!
+}
+
+"""Cancel account club supporter subscription input."""
+input CancelAccountClubSupporterSubscriptionInput {
+  """The chosen club supporter subscription id."""
+  clubSupporterSubscriptionId: ID!
+}
+
+"""Void or refund account club supporter subscription."""
+input VoidOrRefundAccountClubSupporterSubscriptionInput {
+  """The id of the subscription."""
+  clubSupporterSubscriptionId: ID!
+
+  """The amount to refund."""
+  amount: Float!
+}
+
+"""Generate club supporter receipt input."""
+input GenerateClubSupporterReceiptFromAccountTransactionHistoryInput {
+  """The id of the transaction history."""
+  transactionHistoryId: ID!
+}
+
+"""Payload for generating the receipt."""
+type GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload {
+  """The link to the receipt."""
+  link: URI
+}
+
+enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
+  INVALID_AMOUNT
+}
+
+"""Payload for voiding or refunding account club supporter subscription."""
+type VoidOrRefundAccountClubSupporterSubscriptionPayload {
+  """Validation for voiding or refunding the subscription."""
+  validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
+}
+
+"""Payload for cancelling the account club supporter."""
+type CancelAccountClubSupporterSubscriptionPayload {
+  """The new subscription."""
+  clubSupporterSubscription: AccountClubSupporterSubscription
 }
 
 """Payload for a new ccbill payment link"""
@@ -17,9 +291,80 @@ type GenerateCCBillClubSupporterPaymentLinkPayload {
   ccbillPaymentLink: CCBillPaymentLink
 }
 
+extend type Account {
+  """Club supporter subscriptions linked to this account."""
+  clubSupporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountClubSupporterSubscriptionConnection!
+
+  """Saved payment methods linked to this account."""
+  savedPaymentMethods(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSavedPaymentMethodConnection!
+}
+
 extend type Mutation {
   """
   Generate a CCBill payment link to become a club supporter
   """
   generateCCBillClubSupporterPaymentLink(input: GenerateCCBillClubSupporterPaymentLinkInput!): GenerateCCBillClubSupporterPaymentLinkPayload
+
+  """
+  Become a club supporter using a saved payment method
+  """
+  becomeClubSupporterWithAccountSavedPaymentMethod(input: BecomeClubSupporterWithAccountSavedPaymentMethodInput!): BecomeClubSupporterWithAccountSavedPaymentMethodPayload
+
+  """
+  Cancel a club supporter subscription
+  """
+  cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload
+
+  """
+  Delete an account saved payment method
+  """
+  deleteAccountSavedPaymentMethod(input: DeleteAccountSavedPaymentMethodInput!): DeleteAccountSavedPaymentMethodPayload
+
+  """
+  Generate the receipt from the account transaction history
+
+  Note: can only be generated on "NEW" and "INVOICE" transactions.
+  """
+  generateClubSupporterReceiptFromAccountTransactionHistory(input: GenerateClubSupporterReceiptFromAccountTransactionHistoryInput!): GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload
+
+  """
+  Void or refund an account club supporter subscription.
+
+  Will void if the subscription is still processing, or issue a refund for the specified amount.
+
+  Staff+ only.
+  """
+  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
+}
+
+extend type Query {
+
 }

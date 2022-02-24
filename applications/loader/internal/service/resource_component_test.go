@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
+	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"os"
@@ -10,8 +11,10 @@ import (
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/support"
 	"strings"
 	"testing"
+	"time"
 )
 
 type Resources struct {
@@ -26,7 +29,78 @@ func convertResourceIdToRelayId(itemId, resourceId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Resource{}, itemId, resourceId))))
 }
 
-func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
+func TestUploadResourcesAndProcessPrivate(t *testing.T) {
+	// create an item ID to associate the resources with
+	itemId := ksuid.New().String()
+
+	tusClient := getTusClient(t)
+	// upload some files
+	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
+
+	grpcClient := getGrpcClient(t)
+
+	// start processing of files by calling grpc endpoint
+	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
+		ItemId:      itemId,
+		ResourceIds: []string{imageFileId},
+		Private:     true,
+	})
+
+	require.NoError(t, err, "no error creating new resources from uploads")
+
+	// process resources
+	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ProcessResources)
+
+	env.ExecuteWorkflow(workflows.ProcessResources, itemId, res.AllResourceIds)
+	require.True(t, env.IsWorkflowCompleted(), "processed resources")
+	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
+
+	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
+		ItemId:      itemId,
+		ResourceIds: res.AllResourceIds,
+	})
+
+	require.NoError(t, err, "no error getting resources")
+
+	require.True(t, resourceResults.Resources[0].Private, "should be private")
+
+	client := getGraphqlClient(t)
+
+	var newResources Resources
+
+	resourceEntities := []_Any{
+		{
+			"__typename": "Resource",
+			"id":         convertResourceIdToRelayId(itemId, res.AllResourceIds[0]),
+		},
+	}
+
+	// query our resources through graphql
+	err = client.Query(context.Background(), &newResources, map[string]interface{}{
+		"representations": resourceEntities,
+	})
+
+	require.NoError(t, err, "no error grabbing entities")
+
+	imageResource := resourceResults.Resources[0]
+
+	// check results
+	require.Len(t, newResources.Entities, 1, "should have found all graphql entities")
+
+	// manually sign our url and confirm it matches
+	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
+	require.NoError(t, err, "no error creating RSA key")
+
+	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
+	signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", time.Now().Add(15*time.Minute))
+	require.NoError(t, err, "no error signing url")
+
+	// validate signed url is equal to our above signed url
+	require.Equal(t, signedURL, string(newResources.Entities[0].Resource.Urls[0].URL))
+}
+
+func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	t.Parallel()
 
 	// create an item ID to associate the resources with
@@ -43,6 +117,7 @@ func TestUploadResourcesAndProcessAndDelete(t *testing.T) {
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
 		ResourceIds: []string{imageFileId, videoFileId},
+		Private:     false,
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")

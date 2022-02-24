@@ -70,6 +70,7 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 			ItemId:      resource.ItemId(),
 			Processed:   resource.IsProcessed(),
 			ProcessedId: resource.ProcessedId(),
+			Private:     resource.IsPrivate(),
 		})
 	}
 

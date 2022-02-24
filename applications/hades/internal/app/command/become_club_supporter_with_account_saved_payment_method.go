@@ -5,64 +5,83 @@ import (
 	"errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
 
 type BecomeClubSupporterWithAccountSavedPaymentMethod struct {
 	Principal                   *principal.Principal
+	Passport                    *passport.Passport
+	Currency                    string
 	ClubId                      string
 	AccountSavedPaymentMethodId string
 }
 
 type BecomeClubSupporterWithAccountSavedPaymentMethodHandler struct {
 	br     billing.Repository
+	pr     billing.PricingRepository
 	cr     ccbill.Repository
 	stella StellaService
+	eva    EvaService
 }
 
-func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, cr ccbill.Repository, stella StellaService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
-	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, cr: cr, stella: stella}
+func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StellaService, eva EvaService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
+	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella, eva: eva}
 }
 
-func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) error {
+func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*ccbill.TransactionDetails, error) {
 
 	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !allowed {
-		return errors.New("cannot generate a link - club not accessible")
+		return nil, errors.New("cannot generate a link - club not accessible")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
-	subscription, err := h.br.HasExistingAccountClubSupporterSubscriptionOperator(ctx, cmd.Principal.AccountId(), cmd.ClubId)
+	subscription, err := h.br.HasExistingAccountClubSupporterSubscription(ctx, cmd.Principal, cmd.Principal.AccountId(), cmd.ClubId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if subscription != nil {
-		return errors.New("existing subscription found")
+		return nil, errors.New("existing subscription found")
 	}
 
 	savedPaymentMethod, err := h.br.GetAccountSavedPaymentMethodByIdOperator(ctx, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, cmd.ClubId, savedPaymentMethod.CCBillSubscriptionId())
+	curr, err := billing.CurrencyFromString(cmd.Currency)
 
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	price, err := h.pr.GetClubSupporterPricingForCurrency(ctx, curr, cmd.ClubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, cmd.ClubId, savedPaymentMethod.CCBillSubscriptionId(), price)
+
+	if err != nil {
+		return nil, err
 	}
 
 	// charge by previous transaction
-	if err := h.cr.ChargeByPreviousTransactionId(ctx, paymentUrl); err != nil {
-		return err
+	ccbillTransaction, err := h.cr.ChargeByPreviousTransactionId(ctx, paymentUrl)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	return ccbillTransaction, nil
 }
