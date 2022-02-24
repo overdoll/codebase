@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<99ed5992c18226d28f3e168fe1ff0e12>>
- * @relayHash 143fca0b864e232366970873ee14a9ad
+ * @generated SignedSource<<9f2f66d405506b281591e437dcdadddd>>
+ * @relayHash 73ed8baf12da091db239089e52724a16
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 143fca0b864e232366970873ee14a9ad
+// @relayRequestID 73ed8baf12da091db239089e52724a16
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -63,10 +63,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -82,13 +89,7 @@ v5 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "url",
-        "storageKey": null
-      },
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -99,7 +100,19 @@ v5 = [
     ],
     "storageKey": null
   },
-  (v4/*: any*/)
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "videoThumbnail",
+    "plural": false,
+    "selections": [
+      (v4/*: any*/)
+    ],
+    "storageKey": null
+  },
+  (v5/*: any*/)
 ];
 return {
   "fragment": {
@@ -185,10 +198,10 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
-              (v4/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -214,21 +227,21 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
-              (v4/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "143fca0b864e232366970873ee14a9ad",
+    "id": "73ed8baf12da091db239089e52724a16",
     "metadata": {},
     "name": "ModerationPostQuery",
     "operationKind": "query",

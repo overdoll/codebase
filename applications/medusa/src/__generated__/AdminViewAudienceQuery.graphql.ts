@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<adc94b242cb3dd39023e561847702c2f>>
- * @relayHash c4b0a72796f9c5925e4810f3f5ecfa0f
+ * @generated SignedSource<<5380f7886ed203a037f627581fc3b559>>
+ * @relayHash 8c0953701e0b4285b54e9e36430ff7c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c4b0a72796f9c5925e4810f3f5ecfa0f
+// @relayRequestID 8c0953701e0b4285b54e9e36430ff7c2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -48,6 +48,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -175,13 +182,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -189,6 +190,18 @@ return {
                     "name": "mimeType",
                     "storageKey": null
                   }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -209,7 +222,7 @@ return {
     ]
   },
   "params": {
-    "id": "c4b0a72796f9c5925e4810f3f5ecfa0f",
+    "id": "8c0953701e0b4285b54e9e36430ff7c2",
     "metadata": {},
     "name": "AdminViewAudienceQuery",
     "operationKind": "query",

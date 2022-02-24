@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8a29fcbb751db5eaf662d1452214285d>>
- * @relayHash 2e19ef4a2a846f44a5f6cc7698bfc988
+ * @generated SignedSource<<52943d7a27a74c969161ae316092a211>>
+ * @relayHash 681de73c68a865165b675655d8dbc1fc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2e19ef4a2a846f44a5f6cc7698bfc988
+// @relayRequestID 681de73c68a865165b675655d8dbc1fc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -99,18 +99,19 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    },
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -121,28 +122,40 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v8 = {
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -150,13 +163,14 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v8/*: any*/),
     (v7/*: any*/),
-    (v6/*: any*/),
+    (v9/*: any*/),
     (v5/*: any*/)
   ],
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -254,8 +268,9 @@ return {
                 "storageKey": null
               },
               (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/)
+              (v7/*: any*/),
+              (v8/*: any*/),
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -269,7 +284,7 @@ return {
             "plural": false,
             "selections": [
               (v5/*: any*/),
-              (v8/*: any*/)
+              (v10/*: any*/)
             ],
             "storageKey": null
           },
@@ -282,9 +297,9 @@ return {
             "plural": true,
             "selections": [
               (v5/*: any*/),
-              (v9/*: any*/),
-              (v8/*: any*/),
-              (v10/*: any*/)
+              (v11/*: any*/),
+              (v10/*: any*/),
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
@@ -297,8 +312,8 @@ return {
             "plural": true,
             "selections": [
               (v5/*: any*/),
+              (v13/*: any*/),
               (v11/*: any*/),
-              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -307,12 +322,12 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
+                  (v10/*: any*/),
                   (v5/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v10/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
@@ -324,9 +339,9 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
+              (v13/*: any*/),
               (v11/*: any*/),
-              (v9/*: any*/),
-              (v10/*: any*/),
+              (v12/*: any*/),
               (v5/*: any*/)
             ],
             "storageKey": null
@@ -351,7 +366,7 @@ return {
     ]
   },
   "params": {
-    "id": "2e19ef4a2a846f44a5f6cc7698bfc988",
+    "id": "681de73c68a865165b675655d8dbc1fc",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

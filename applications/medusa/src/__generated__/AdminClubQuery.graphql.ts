@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<005d4b27d4266385f6b907e7aa4ab82e>>
- * @relayHash 2af501fe92f31aceb9c718ae3e40cc15
+ * @generated SignedSource<<707b88522945f918a219824a31b7b759>>
+ * @relayHash 9a1c804d859eba53680a81ec1f845fce
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2af501fe92f31aceb9c718ae3e40cc15
+// @relayRequestID 9a1c804d859eba53680a81ec1f845fce
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -55,10 +55,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -148,13 +155,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -165,7 +166,19 @@ return {
                 ],
                 "storageKey": null
               },
-              (v3/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -188,10 +201,10 @@ return {
             ],
             "storageKey": null
           },
-          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "concreteType": "ClubInfractionHistoryConnection",
             "kind": "LinkedField",
             "name": "infractionHistory",
@@ -213,7 +226,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -243,7 +256,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -291,7 +304,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubInfractionHistory_infractionHistory",
@@ -304,7 +317,7 @@ return {
     ]
   },
   "params": {
-    "id": "2af501fe92f31aceb9c718ae3e40cc15",
+    "id": "9a1c804d859eba53680a81ec1f845fce",
     "metadata": {},
     "name": "AdminClubQuery",
     "operationKind": "query",

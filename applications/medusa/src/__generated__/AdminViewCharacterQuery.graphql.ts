@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3a542ef412c13e607e168b27ff27de28>>
- * @relayHash 644d32f33cf0211e73373708498db2b7
+ * @generated SignedSource<<bdb928ee8421d94e9e6bb1d9964a4bdd>>
+ * @relayHash 6fe711037a0a88c2b76fa6ee6dc5d41c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 644d32f33cf0211e73373708498db2b7
+// @relayRequestID 6fe711037a0a88c2b76fa6ee6dc5d41c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -64,6 +64,13 @@ v4 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -180,13 +187,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -194,6 +195,18 @@ return {
                     "name": "mimeType",
                     "storageKey": null
                   }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -207,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "644d32f33cf0211e73373708498db2b7",
+    "id": "6fe711037a0a88c2b76fa6ee6dc5d41c",
     "metadata": {},
     "name": "AdminViewCharacterQuery",
     "operationKind": "query",

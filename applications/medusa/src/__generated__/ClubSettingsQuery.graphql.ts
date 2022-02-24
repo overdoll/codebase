@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2f57b566ef0b9e763183ace7b6250ce0>>
- * @relayHash a4c0bc9071f91a3c373f8ab1a04e51f4
+ * @generated SignedSource<<0fa5f04a38100b785107e04cdc97d3f4>>
+ * @relayHash 44633be9ef8f78a1630bdaaa993ba316
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a4c0bc9071f91a3c373f8ab1a04e51f4
+// @relayRequestID 44633be9ef8f78a1630bdaaa993ba316
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -55,6 +55,13 @@ v3 = {
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -171,13 +178,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -185,6 +186,18 @@ return {
                     "name": "mimeType",
                     "storageKey": null
                   }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -198,7 +211,7 @@ return {
     ]
   },
   "params": {
-    "id": "a4c0bc9071f91a3c373f8ab1a04e51f4",
+    "id": "44633be9ef8f78a1630bdaaa993ba316",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

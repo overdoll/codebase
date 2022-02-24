@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d58827493ed4ffe9f7d5776bf2f11505>>
- * @relayHash b3ad40b72d04ea841e10b659a3d46b38
+ * @generated SignedSource<<9e967b7bec19364ca7f9835fccbd30a1>>
+ * @relayHash 22e108b80f9084d600e2b625edc6e058
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3ad40b72d04ea841e10b659a3d46b38
+// @relayRequestID 22e108b80f9084d600e2b625edc6e058
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -63,6 +63,13 @@ v3 = {
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -163,13 +170,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -180,7 +181,19 @@ return {
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -202,7 +215,7 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -223,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "id": "b3ad40b72d04ea841e10b659a3d46b38",
+    "id": "22e108b80f9084d600e2b625edc6e058",
     "metadata": {},
     "name": "AdminAccountQuery",
     "operationKind": "query",

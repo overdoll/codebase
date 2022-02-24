@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c24ccdb44fb1f646938c5c74aee59459>>
- * @relayHash 20602922f4b0a9df335b36d89a8f4a6a
+ * @generated SignedSource<<5b8ced8c76932f923ac1c27908b061a6>>
+ * @relayHash 67aaeff3b44ab0d804da7ce2aef04525
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 20602922f4b0a9df335b36d89a8f4a6a
+// @relayRequestID 67aaeff3b44ab0d804da7ce2aef04525
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -55,6 +55,13 @@ v2 = {
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -143,13 +150,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -160,18 +161,30 @@ return {
                 ],
                 "storageKey": null
               },
-              (v3/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "20602922f4b0a9df335b36d89a8f4a6a",
+    "id": "67aaeff3b44ab0d804da7ce2aef04525",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",

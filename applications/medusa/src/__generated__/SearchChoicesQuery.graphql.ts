@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<626a561e07a1d6f488345bb512403fc0>>
- * @relayHash c44a7a926409660211c53e9dcb44d504
+ * @generated SignedSource<<9b21b2b36a6b417cd5f3e5c5e00ca375>>
+ * @relayHash 44a1ac2a9870934e053ecc3d53b063e0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c44a7a926409660211c53e9dcb44d504
+// @relayRequestID 44a1ac2a9870934e053ecc3d53b063e0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -168,6 +168,13 @@ v14 = [
 v15 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v16 = {
+  "alias": null,
+  "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
@@ -188,13 +195,7 @@ v15 = {
       "name": "urls",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
+        (v15/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -205,25 +206,37 @@ v15 = {
       ],
       "storageKey": null
     },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ResourceUrl",
+      "kind": "LinkedField",
+      "name": "videoThumbnail",
+      "plural": false,
+      "selections": [
+        (v15/*: any*/)
+      ],
+      "storageKey": null
+    },
     (v8/*: any*/)
   ],
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
   "storageKey": null
 },
 v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cursor",
+  "name": "__typename",
   "storageKey": null
 },
 v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -248,7 +261,7 @@ v18 = {
   ],
   "storageKey": null
 },
-v19 = [
+v20 = [
   "title",
   "slugs"
 ];
@@ -435,23 +448,23 @@ return {
                   (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
-                  (v15/*: any*/),
-                  (v16/*: any*/)
+                  (v16/*: any*/),
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/)
+              (v18/*: any*/)
             ],
             "storageKey": null
           },
-          (v18/*: any*/)
+          (v19/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
         "args": (v7/*: any*/),
-        "filters": (v19/*: any*/),
+        "filters": (v20/*: any*/),
         "handle": "connection",
         "key": "GeneralSearchCategories_categories",
         "kind": "LinkedHandle",
@@ -498,16 +511,16 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v15/*: any*/),
-                  (v16/*: any*/)
+                  (v16/*: any*/),
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/)
+              (v18/*: any*/)
             ],
             "storageKey": null
           },
-          (v18/*: any*/)
+          (v19/*: any*/)
         ],
         "storageKey": null
       },
@@ -551,23 +564,23 @@ return {
                   (v8/*: any*/),
                   (v10/*: any*/),
                   (v9/*: any*/),
-                  (v15/*: any*/),
-                  (v16/*: any*/)
+                  (v16/*: any*/),
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/)
+              (v18/*: any*/)
             ],
             "storageKey": null
           },
-          (v18/*: any*/)
+          (v19/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
         "args": (v14/*: any*/),
-        "filters": (v19/*: any*/),
+        "filters": (v20/*: any*/),
         "handle": "connection",
         "key": "GeneralSearchSeries_series",
         "kind": "LinkedHandle",
@@ -576,7 +589,7 @@ return {
     ]
   },
   "params": {
-    "id": "c44a7a926409660211c53e9dcb44d504",
+    "id": "44a1ac2a9870934e053ecc3d53b063e0",
     "metadata": {},
     "name": "SearchChoicesQuery",
     "operationKind": "query",

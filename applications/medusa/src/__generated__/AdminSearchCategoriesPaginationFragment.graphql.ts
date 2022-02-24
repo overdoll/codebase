@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4e980aae5a2510cf92b2f82bf048f576>>
- * @relayHash 8ea1e298171f59ac83b644de3af4b4ed
+ * @generated SignedSource<<5797873f15a4f03ad4781daf52353c63>>
+ * @relayHash fe54aa35ffdbeaea07de3920b28e479d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8ea1e298171f59ac83b644de3af4b4ed
+// @relayRequestID fe54aa35ffdbeaea07de3920b28e479d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -66,6 +66,13 @@ v3 = [
   }
 ],
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -158,13 +165,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "url",
-                            "storageKey": null
-                          },
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -175,11 +176,23 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v4/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ResourceUrl",
+                        "kind": "LinkedField",
+                        "name": "videoThumbnail",
+                        "plural": false,
+                        "selections": [
+                          (v4/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -242,7 +255,7 @@ return {
     ]
   },
   "params": {
-    "id": "8ea1e298171f59ac83b644de3af4b4ed",
+    "id": "fe54aa35ffdbeaea07de3920b28e479d",
     "metadata": {},
     "name": "AdminSearchCategoriesPaginationFragment",
     "operationKind": "query",
