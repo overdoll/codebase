@@ -43,7 +43,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
   return (
     <>
       <RenderOnDesktop>
-        <Can not I='manage' a='Account'>
+        <Can not I='configure' a='Account'>
           <HorizontalNavigation.Button
             to='/join'
             icon={LoginKeys}
@@ -54,7 +54,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
-        <Can I='manage' a='Account'>
+        <Can I='configure' a='Account'>
           <QuickAccessButtonProfile queryRef={data} />
         </Can>
       </RenderOnDesktop>
@@ -62,7 +62,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         label={i18n._(t`Dropdown Menu`)}
         icon={PageControllerSettings}
       >
-        <Can not I='manage' a='Account'>
+        <Can not I='configure' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
             to='/join'
             icon={LoginKeys}
@@ -74,7 +74,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
-        <Can I='manage' a='Account'>
+        <Can I='configure' a='Account'>
           <DropdownMenuButtonProfile queryRef={data} />
         </Can>
         <Can I='admin' a='Tags'>
@@ -101,7 +101,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
-        <Can I='manage' a='Account'>
+        <Can I='configure' a='Account'>
           <Suspense fallback={
             <SkeletonDropdownMenuButton />
           }
@@ -129,7 +129,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             </Trans>
           }
         />
-        <Can I='manage' a='Account'>
+        <Can I='configure' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
             to='/logout'
             color='orange.300'

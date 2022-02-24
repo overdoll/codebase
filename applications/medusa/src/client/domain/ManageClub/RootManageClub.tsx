@@ -77,7 +77,7 @@ export default function RootManageClub (props: Props): JSX.Element {
             icon={ContentBrushPen}
           />
         </Can>
-        <Can I='manage' a='Club'>
+        <Can I='configure' a='Club'>
           <VerticalNavigation.Button
             to={`${basePath}/home`}
             exact
@@ -97,7 +97,7 @@ export default function RootManageClub (props: Props): JSX.Element {
             icon={FileMultiple}
           />
         </Can>
-        <Can I='manage' a='Club'>
+        <Can I='configure' a='Club'>
           <VerticalNavigation.Button
             to={`${basePath}/members`}
             exact

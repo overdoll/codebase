@@ -306,7 +306,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.cannot('manage', 'Account')) {
+            if (ability.cannot('configure', 'Account')) {
               history.push('/')
               return false
             }
