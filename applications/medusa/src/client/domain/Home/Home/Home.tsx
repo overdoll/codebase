@@ -5,6 +5,7 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFlash } from '@//:modules/flash'
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,6 +23,7 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import PostSearchButton from '../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
 import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
+import FixedHeaderWrapper from '../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -91,8 +93,12 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <>
-      <PageFixedHeader justify='flex-end'>
-        <PostSearchButton routeTo='/search' />
+      <PageFixedHeader>
+        <FixedHeaderWrapper>
+          <Flex justify='flex-end'>
+            <PostSearchButton routeTo='/search' />
+          </Flex>
+        </FixedHeaderWrapper>
       </PageFixedHeader>
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll

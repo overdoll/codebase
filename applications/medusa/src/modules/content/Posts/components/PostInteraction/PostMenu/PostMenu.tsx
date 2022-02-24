@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
+import { Box, IconButton, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { LoginKeys, NavigationMenuHorizontal } from '@//:assets/icons/navigation'
 import { graphql } from 'react-relay'
@@ -34,12 +34,12 @@ export default function PostMenu ({
     }
   }
 
-  const getButtonSize = (): string => {
+  const getButtonSize = (): number => {
     switch (size) {
       case 'sm':
-        return '32px'
+        return 5
       default:
-        return '40px'
+        return 12
     }
   }
 
@@ -47,37 +47,40 @@ export default function PostMenu ({
   const buttonSize = getButtonSize()
 
   return (
-    <Menu autoSelect={false}>
-      <MenuButton
-        bg='transparent'
-        borderRadius='xl'
-        h={buttonSize}
-        w={buttonSize}
-        aria-label={t`Open Menu`}
-        as={IconButton}
-        icon={
-          <Icon
-            p={1}
-            icon={NavigationMenuHorizontal}
-            w={iconSize}
-            fill='gray.200'
-            h={iconSize}
-          />
-        }
-      />
-      <MenuList minW='300px' boxShadow='outline'>
-        <Can I='admin' a='Post'>
-          <MenuLinkItem
-            to={`/moderation/post/${data.reference}`}
-            text={(
-              <Trans>
-                Moderate
-              </Trans>)}
-            colorScheme='purple'
-            icon={LoginKeys}
-          />
-        </Can>
-      </MenuList>
-    </Menu>
+    <Box>
+      <Menu autoSelect={false}>
+        <MenuButton
+          size={size}
+          bg='transparent'
+          borderRadius='xl'
+          h={buttonSize}
+          w={buttonSize}
+          aria-label={t`Open Menu`}
+          as={IconButton}
+          icon={
+            <Icon
+              p={1}
+              icon={NavigationMenuHorizontal}
+              w={iconSize}
+              fill='gray.200'
+              h={iconSize}
+            />
+          }
+        />
+        <MenuList minW='300px' boxShadow='outline'>
+          <Can I='admin' a='Post'>
+            <MenuLinkItem
+              to={`/moderation/post/${data.reference}`}
+              text={(
+                <Trans>
+                  Moderate
+                </Trans>)}
+              colorScheme='purple'
+              icon={LoginKeys}
+            />
+          </Can>
+        </MenuList>
+      </Menu>
+    </Box>
   )
 }

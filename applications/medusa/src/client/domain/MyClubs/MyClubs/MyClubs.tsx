@@ -4,8 +4,6 @@ import { graphql } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
 import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
-import PageSectionChildrenWrapper
-  from '../../../components/PageSectionScroller/PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 import SearchSuggestedClubs from './SearchSuggestedClubs/SearchSuggestedClubs'
 
 interface Props {
@@ -31,9 +29,7 @@ export default function MyClubs (props: Props): JSX.Element {
 
   if (queryData.viewer == null || queryData?.viewer?.clubMembershipsCount < 1) {
     return (
-      <PageSectionChildrenWrapper>
-        <SearchSuggestedClubs />
-      </PageSectionChildrenWrapper>
+      <SearchSuggestedClubs />
     )
   }
 

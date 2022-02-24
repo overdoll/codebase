@@ -5,8 +5,9 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import type { HomeQuery as HomeQueryType } from '@//:artifacts/HomeQuery.graphql'
 import HomeQuery from '@//:artifacts/HomeQuery.graphql'
 import Home from './Home/Home'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import PageInfiniteScrollWrapper
+  from '../../components/PageSectionScroller/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 
 interface Props {
   prepared: {
@@ -17,19 +18,19 @@ interface Props {
 export default function RootHome (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader(
     HomeQuery,
-    props.prepared.query,
+    props.prepared.query
   )
 
   return (
     <>
       <Helmet title='home' />
-      <PageWrapper fillPage>
+      <PageInfiniteScrollWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>
             <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageInfiniteScrollWrapper>
     </>
   )
 }

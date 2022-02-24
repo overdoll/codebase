@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c57f1e997d0ee017687dfc9b0c8d090>>
+ * @generated SignedSource<<5302558c1a2b9a26acf9c5b04a925ff6>>
  * @relayHash 603a1b39ccb6d0854152f69f3493b21a
  * @lightSyntaxTransform
  * @nogrep
@@ -24,7 +24,7 @@ export type PublicPostQuery$data = {
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostViewerFragment" | "PostsInfiniteScrollViewerFragment">;
-  } | null;
+  };
 };
 export type PublicPostQueryResponse = PublicPostQuery$data;
 export type PublicPostQuery = {
@@ -270,25 +270,30 @@ return {
         "storageKey": null
       },
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "FullDetailedPostViewerFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "PostsInfiniteScrollViewerFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "RequiredField",
+        "field": {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "viewer",
+          "plural": false,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "FullDetailedPostViewerFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "PostsInfiniteScrollViewerFragment"
+            }
+          ],
+          "storageKey": null
+        },
+        "action": "THROW",
+        "path": "viewer"
       }
     ],
     "type": "Query",
@@ -441,6 +446,6 @@ return {
 };
 })();
 
-(node as any).hash = "a1251e4967f8c5085eba24a19bab6c87";
+(node as any).hash = "e8bddf6416e358d370fcd3c013dbbeda";
 
 export default node;

@@ -22,7 +22,6 @@ export default function PageFixedHeader ({
       bg='dimmers.100'
       zIndex='docked'
       position='fixed'
-      justify='space-between'
       {...rest}
     >
       {children}
