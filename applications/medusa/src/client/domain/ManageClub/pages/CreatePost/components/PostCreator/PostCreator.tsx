@@ -6,6 +6,7 @@ import getIdFromUppyUrl from '../../hooks/getIdFromUppyUrl/getIdFromUppyUrl'
 import { UppyContext } from '../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import ClubSuspended from '../ClubSuspended/ClubSuspended'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -20,6 +21,9 @@ const Query = graphql`
     club (slug: $slug) {
       __typename
       ...PostStateClubFragment
+      suspension {
+        expires
+      }
     }
   }
 `
@@ -100,6 +104,10 @@ export default function PostCreator ({ query }: Props): JSX.Element {
       })
     })
   }, [uppy])
+
+  if (data?.club != null && data.club?.suspension != null) {
+    return <ClubSuspended />
+  }
 
   return (
     <PostState postQuery={data.post} clubQuery={data.club} />

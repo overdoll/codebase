@@ -6,7 +6,6 @@ import type { MyClubsQuery as MyClubsQueryType } from '@//:artifacts/MyClubsQuer
 import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   prepared: {
@@ -23,13 +22,11 @@ export default function RootHome (props: Props): JSX.Element {
   return (
     <>
       <Helmet title='my clubs' />
-      <PageWrapper fillPage>
-        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonPost />}>
-            <MyClubs query={queryRef as PreloadedQuery<MyClubsQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
+      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+        <Suspense fallback={<SkeletonPost />}>
+          <MyClubs query={queryRef as PreloadedQuery<MyClubsQueryType>} />
+        </Suspense>
+      </QueryErrorBoundary>
     </>
   )
 }

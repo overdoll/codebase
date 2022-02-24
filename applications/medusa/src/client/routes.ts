@@ -158,7 +158,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
 
@@ -193,7 +193,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               history.push('/')
               return false
             }
@@ -253,7 +253,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               history.push('/')
               return false
             }
@@ -1338,7 +1338,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -1538,7 +1538,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -1583,7 +1583,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -1628,7 +1628,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -1774,7 +1774,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Club')) {
+            if (ability.can('configure', 'Club')) {
               return true
             }
             history.push('/join')

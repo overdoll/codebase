@@ -15,6 +15,7 @@ export default function PageFilledWrapper ({
         pl={[1, 0]}
         pr={[1, 0]}
         h='100%'
+        mb={16}
       >
         {children}
       </Box>

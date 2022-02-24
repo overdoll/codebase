@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function PageInfiniteScrollWrapper ({
-  children
+  children,
 }: Props): JSX.Element {
   return (
     <Center>

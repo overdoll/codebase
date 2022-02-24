@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69ffa134da8f3dd6c7228491df663b1f>>
- * @relayHash 068fc19acf4998a4da6aff2906dcd9a9
+ * @generated SignedSource<<d24be48cbfd858672080243943cb5a81>>
+ * @relayHash 9d0747b4b6687e0f28d6cae315a162a5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 068fc19acf4998a4da6aff2906dcd9a9
+// @relayRequestID 9d0747b4b6687e0f28d6cae315a162a5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type RootQuery$variables = {};
 export type RootQueryVariables = RootQuery$variables;
 export type RootQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment">;
   } | null;
   readonly language: {
     readonly locale: string;
@@ -52,13 +52,6 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 };
@@ -86,11 +79,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "UniversalNavigatorFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -128,13 +116,6 @@ return {
                 "kind": "ScalarField",
                 "name": "__typename",
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -151,53 +132,6 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "isStaff",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubConnection",
-            "kind": "LinkedField",
-            "name": "clubs",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v1/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ClubSlugAlias",
-                        "kind": "LinkedField",
-                        "name": "slugAliases",
-                        "plural": true,
-                        "selections": [
-                          (v1/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
             "storageKey": null
           },
           {
@@ -247,12 +181,12 @@ return {
                 ],
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
           (v0/*: any*/),
-          (v2/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       },
@@ -260,7 +194,7 @@ return {
     ]
   },
   "params": {
-    "id": "068fc19acf4998a4da6aff2906dcd9a9",
+    "id": "9d0747b4b6687e0f28d6cae315a162a5",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -269,6 +203,6 @@ return {
 };
 })();
 
-(node as any).hash = "4a182eb0eb5dbeddf86cde10eadc74b2";
+(node as any).hash = "bda40d2084b2bd911210478cd6c0a3cb";
 
 export default node;

@@ -16,16 +16,6 @@ const AccountAuthorizerGQL = graphql`
     }
     isModerator
     isStaff
-    clubs {
-      edges {
-        node {
-          slug
-          slugAliases {
-            slug
-          }
-        }
-      }
-    }
   }
 `
 
@@ -35,21 +25,13 @@ export default function AccountAuthorizer ({
 }: Props): JSX.Element {
   const data = useFragment(AccountAuthorizerGQL, queryRef)
 
-  const canManageClubs = data?.clubs != null
-    ? [...data?.clubs.edges.map((item) => item.node.slug),
-        ...data?.clubs.edges.reduce((accum, item) => [...accum,
-          ...item.node.slugAliases
-        ], [])]
-    : []
-
   const ability = useMemo(() => defineAbility(
     (
       data != null
         ? {
             isModerator: data.isModerator,
             isStaff: data.isStaff,
-            isLocked: data.lock != null,
-            clubs: canManageClubs as string[]
+            isLocked: data.lock != null
           }
         : null
     )), [data])

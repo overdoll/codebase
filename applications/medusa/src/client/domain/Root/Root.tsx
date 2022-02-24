@@ -3,7 +3,6 @@ import type { PreloadedQuery } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
-import LockedAccountBanner from '../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
@@ -21,7 +20,6 @@ const RootQueryGQL = graphql`
     viewer {
       ...AccountAuthorizerFragment
       ...UniversalNavigatorFragment
-      ...LockedAccountBannerFragment
     }
     language {
       locale
@@ -44,7 +42,6 @@ export default function Root (props: Props): JSX.Element {
       <AccountAuthorizer queryRef={data.viewer}>
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
-          <LockedAccountBanner queryRef={data.viewer} />
           {props.children}
         </PageContents>
         <NoScript />

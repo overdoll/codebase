@@ -6,8 +6,6 @@ import { useFragment } from 'react-relay/hooks'
 import { Menu, MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../authorization/Can'
 import PostReportButton from './PostReportButton/PostReportButton'
-import { useContext } from 'react'
-import { AbilityContext } from '../../../../../authorization/AbilityContext'
 
 interface Props {
   query: PostMenuFragment$key
@@ -38,30 +36,29 @@ export default function PostMenu ({
 
   const buttonSize = getButtonSize()
 
-  const ability = useContext(AbilityContext)
-
-  const isDisabled = ability.cannot('interact', 'Post')
-
   return (
-    <Menu
-      isDisabled={isDisabled}
-      size={size}
-      bg='transparent'
-      h={buttonSize}
-      w={buttonSize}
-    >
-      <Can I='admin' a='Post'>
-        <MenuLinkItem
-          to={`/moderation/post/${data.reference}`}
-          text={(
-            <Trans>
-              Moderate
-            </Trans>)}
-          colorScheme='purple'
-          icon={LoginKeys}
-        />
-      </Can>
-      <PostReportButton query={data} />
-    </Menu>
+    <Can I='interact' a='Post'>
+      {allowed => (
+        <Menu
+          isDisabled={allowed === false}
+          size={size}
+          bg='transparent'
+          h={buttonSize}
+          w={buttonSize}
+        >
+          <Can I='admin' a='Post'>
+            <MenuLinkItem
+              to={`/moderation/post/${data.reference}`}
+              text={(
+                <Trans>
+                  Moderate
+                </Trans>)}
+              colorScheme='purple'
+              icon={LoginKeys}
+            />
+          </Can>
+          <PostReportButton query={data} />
+        </Menu>)}
+    </Can>
   )
 }

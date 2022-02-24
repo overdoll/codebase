@@ -4,20 +4,16 @@ import { AbilityBuilder } from '@casl/ability'
 const defineAbility = (data: Authenticated | null): AppAbility => {
   const {
     can,
-    cannot,
     build
   } = new AbilityBuilder(App)
 
-  if (data != null) {
-    can('manage', 'Account')
+  can('interact', ['Club', 'Post'])
 
-    if (data.clubs.length > 0) {
-      can('manage', 'Club')
-    }
+  if (data != null) {
+    can('configure', ['Account', 'Club'])
 
     if (!data.isLocked) {
-      can('create', 'Club')
-      can('create', 'Post')
+      can('create', ['Club', 'Post'])
     }
 
     if (data.isModerator) {
@@ -28,9 +24,7 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
 
     if (data.isStaff) {
       if (!data.isLocked) {
-        can('admin', 'Tags')
-        can('admin', 'Account')
-        can('admin', 'Post')
+        can('admin', ['Tags', 'Club', 'Account', 'Post'])
       }
     }
   }

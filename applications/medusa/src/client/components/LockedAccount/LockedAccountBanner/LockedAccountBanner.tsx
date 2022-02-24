@@ -1,27 +1,25 @@
 import { Box, Flex } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
-import { graphql, useFragment } from 'react-relay/hooks'
-import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import LockedAccountModal from '../LockedAccountModal/LockedAccountModal'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { LockedAccountBannerQuery } from '@//:artifacts/LockedAccountBannerQuery.graphql'
 
-interface Props {
-  queryRef: LockedAccountBannerFragment$key | null
-}
-
-const LockedAccountBannerGQL = graphql`
-  fragment LockedAccountBannerFragment on Account {
-    lock {
-      __typename
+const Query = graphql`
+  query LockedAccountBannerQuery {
+    viewer {
+      lock {
+        __typename
+      }
+      ...LockedAccountModalFragment
     }
-    ...LockedAccountModalFragment
   }
 `
 
-export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element | null {
-  const data = useFragment(LockedAccountBannerGQL, queryRef)
+export default function LockedAccountBanner (): JSX.Element | null {
+  const queryData = useLazyLoadQuery<LockedAccountBannerQuery>(Query, {})
 
   const {
     isOpen,
@@ -29,7 +27,7 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
     onClose
   } = useHistoryDisclosure()
 
-  if (data?.lock == null) return null
+  if (queryData?.viewer?.lock == null) return null
 
   return (
     <Box zIndex='docked' h={12} top={0} color='gray.900'>
@@ -62,7 +60,7 @@ export default function LockedAccountBanner ({ queryRef }: Props): JSX.Element |
             </Trans>
           </Button>
           <LockedAccountModal
-            queryRef={data}
+            queryRef={queryData.viewer}
             isOpen={isOpen}
             onClose={onClose}
           />

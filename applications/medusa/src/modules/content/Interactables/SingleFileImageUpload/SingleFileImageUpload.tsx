@@ -1,14 +1,13 @@
 import UppyInstance from './hooks/uppy/Uppy'
 import type { Uppy, UppyFile } from '@uppy/core'
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Progress, Skeleton, Stack } from '@chakra-ui/react'
+import { Flex, Progress, Stack } from '@chakra-ui/react'
 import { Icon, LargeBackgroundBox } from '../../PageLayout'
 import FilePicker from '../../../../client/domain/ManageClub/pages/CreatePost/components/FilePicker/FilePicker'
 import DragOverFileInput
   from '../../../../client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput'
 import { FileUpload, RemoveCross } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-import SuspenseImage from '../../../operations/SuspenseImage'
 import CloseButton from '../../ThemeComponents/CloseButton/CloseButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Button from '../../../form/Button/Button'
@@ -119,14 +118,13 @@ export default function SingleFileImageUpload ({
   if (response != null) {
     return (
       <Stack w='100%' spacing={2}>
-        <SuspenseImage h={16} w={16} src={fileUrl} fallback={<Skeleton />} />
         <Button
           colorScheme={isInvalid ? 'orange' : 'gray'}
           leftIcon={(<Icon
             w={4}
             h={4}
             icon={RemoveCross}
-            fill='inherit'
+            fill={isInvalid ? 'orange.900' : 'gray.100'}
                      />)}
           onClick={removeUpload}
           size={size}

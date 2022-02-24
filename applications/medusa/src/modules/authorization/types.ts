@@ -17,7 +17,7 @@ interface Tags {
 }
 
 type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
-['manage', InferSubjects<Account> | InferSubjects<Club>] |
+['configure', InferSubjects<Account> | InferSubjects<Club>] |
 ['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post>]
 
 export type AppAbility = Ability<Abilities>
@@ -27,5 +27,4 @@ export interface Authenticated {
   isModerator: boolean
   isLocked: boolean
   isStaff: boolean
-  clubs: string[]
 }

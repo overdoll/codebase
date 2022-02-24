@@ -5,6 +5,7 @@ import { Trans } from '@lingui/macro'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
 import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
 import SearchSuggestedClubs from './SearchSuggestedClubs/SearchSuggestedClubs'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>
@@ -29,7 +30,9 @@ export default function MyClubs (props: Props): JSX.Element {
 
   if (queryData.viewer == null || queryData?.viewer?.clubMembershipsCount < 1) {
     return (
-      <SearchSuggestedClubs />
+      <PageWrapper>
+        <SearchSuggestedClubs />
+      </PageWrapper>
     )
   }
 
