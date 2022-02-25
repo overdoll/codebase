@@ -152,7 +152,7 @@ msgstr ""
 msgid "Last Login"
 msgstr ""
 
-#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionsSettings.tsx:81
+#: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionsSettings.tsx:83
 msgid "Load More"
 msgstr ""
 

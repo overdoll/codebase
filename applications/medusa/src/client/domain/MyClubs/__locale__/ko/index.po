@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:48
+#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:47
 msgid "My Clubs"
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 msgid "No clubs found"
 msgstr ""
 
-#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:44
+#: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:43
 msgid "Popular Clubs"
 msgstr ""
 

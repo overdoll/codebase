@@ -49,6 +49,10 @@ msgstr ""
 #~ msgid "Back"
 #~ msgstr ""
 
+#: src/client/domain/ManageClub/pages/CreatePost/components/ClubSuspended/ClubSuspended.tsx:11
+msgid "Club Suspended"
+msgstr ""
+
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:77
 msgid "Creating your post..."
 msgstr ""
@@ -288,6 +292,10 @@ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:105
 msgid "Yes, exit"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/ClubSuspended/ClubSuspended.tsx:16
+msgid "You cannot post until your club is no longer suspended"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:72
