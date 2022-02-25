@@ -4,6 +4,7 @@ go_library(
     name = "mutations",
     srcs = [
         "billing.go",
+        "cancellation.go",
         "resolvers.go",
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/mutations",
@@ -11,7 +12,9 @@ go_library(
     deps = [
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/command",
+        "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/ports/graphql/types",
+        "//libraries/graphql",
         "//libraries/passport",
         "//libraries/principal",
     ],

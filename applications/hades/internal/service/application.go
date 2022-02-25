@@ -68,6 +68,8 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	return app.Application{
 		Commands: app.Commands{
+			GenerateCCBillFlexFormsPaymentLink:                        command.NewGenerateCCBillFlexFormsPaymentLink(),
+			ParseCCBillFlexFormsResponseAndGenerateTemplate:           command.NewParseCCBillFlexFormsResponseAndGenerateTemplate(),
 			GenerateCCBillClubSupporterPaymentLink:                    command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),
 			ProcessCCBillWebhook:                                      command.NewProcessCCBillWebhookHandler(eventRepo),
 			GenerateProratedRefundAmountForAccountClubSubscription:    command.NewGenerateProratedRefundAmountForAccountClubSubscriptionHandler(billingRepo),

@@ -2,8 +2,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "entities",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "cancellation.go",
+        "resolvers.go",
+    ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/entities",
     visibility = ["//applications/hades:__subpackages__"],
-    deps = ["//applications/hades/internal/app"],
+    deps = [
+        "//applications/hades/internal/app",
+        "//applications/hades/internal/app/query",
+        "//applications/hades/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
+    ],
 )

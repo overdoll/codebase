@@ -8,5 +8,11 @@ go_library(
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/types",
     visibility = ["//applications/hades:__subpackages__"],
-    deps = ["//libraries/graphql/relay"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/cancellation",
+        "//libraries/graphql",
+        "//libraries/graphql/relay",
+        "//libraries/paging",
+    ],
 )

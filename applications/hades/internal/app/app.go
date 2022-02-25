@@ -13,7 +13,10 @@ type Application struct {
 }
 
 type Commands struct {
-	GenerateCCBillClubSupporterPaymentLink                    command.GenerateCCBillClubSupportPaymentLinkHandler
+	GenerateCCBillClubSupporterPaymentLink          command.GenerateCCBillClubSupportPaymentLinkHandler
+	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
+	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
+
 	ProcessCCBillWebhook                                      command.ProcessCCBillWebhookHandler
 	GenerateProratedRefundAmountForAccountClubSubscription    command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
 	BecomeClubSupporterWithAccountSavedPaymentMethod          command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler

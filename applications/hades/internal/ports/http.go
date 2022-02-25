@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"overdoll/applications/hades/internal/app"
-	"overdoll/applications/hades/internal/ports/ccbill_webhook"
+	"overdoll/applications/hades/internal/ports/ccbill"
 	gen "overdoll/applications/hades/internal/ports/graphql"
 
 	"overdoll/libraries/graphql"
@@ -40,7 +40,9 @@ func NewHttpServer(app *app.Application) http.Handler {
 		})),
 	)
 
-	rtr.POST("/api/ccbill-webhook", ccbill_webhook.CCBillWebhook(app))
+	rtr.POST("/api/ccbill/webhook", ccbill.Webhook(app))
+	rtr.GET("/api/ccbill/payment-flow", ccbill.PaymentFlow(app))
+	rtr.GET("/api/ccbill/payment-flow/callback", ccbill.PaymentFlowCallback(app))
 
 	return rtr
 }

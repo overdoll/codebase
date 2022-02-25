@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package applications.grpc.hades.v1;
 
+import "google/protobuf/timestamp.proto";
+
+
 // generated messages used to communicate with CCBill and our system
 message CCBillClubSupporter {
   string clubId = 1;
@@ -15,10 +18,22 @@ message AccountInitiator {
 // any extra details in the header
 message HeaderConfiguration {
   bool savePaymentDetails = 1;
+  google.protobuf.Timestamp createdAt = 2;
+}
+
+message CCBillFlexFormsDetails {
+  string initialPrice = 1;
+  string initialPeriod = 2;
+  string recurringPrice = 3;
+  string recurringPeriod = 4;
+  string numRebills = 5;
+  string currencyCode = 6;
+  string digest = 7;
 }
 
 message CCBillPayment {
   HeaderConfiguration headerConfiguration = 1;
   CCBillClubSupporter ccbillClubSupporter = 2;
-  AccountInitiator accountInitiator = 3;
+  CCBillFlexFormsDetails ccbillFlexFormsDetails = 3;
+  AccountInitiator accountInitiator = 4;
 }

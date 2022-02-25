@@ -1,4 +1,4 @@
-package ccbill_webhook
+package ccbill
 
 import (
 	"bytes"
@@ -30,19 +30,19 @@ var (
 	ipRangeFifthTwo = net.ParseIP("192.168.255.255")
 )
 
-func CCBillWebhook(app *app.Application) gin.HandlerFunc {
+func Webhook(app *app.Application) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var buf bytes.Buffer
 		tee := io.TeeReader(c.Request.Body, &buf)
 		body, _ := ioutil.ReadAll(tee)
 		fmt.Println(string(body))
-		c.JSON(http.StatusOK, map[string]string{"message": "invalid ip header"})
+		c.JSON(http.StatusOK, nil)
 		return
 
 		trial := net.ParseIP(support.GetIPFromRequest(c.Request))
 		if trial.To4() == nil {
-			c.JSON(http.StatusBadRequest, map[string]string{"message": "invalid ip header"})
+			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
 
@@ -63,13 +63,13 @@ func CCBillWebhook(app *app.Application) gin.HandlerFunc {
 				EventType: c.Request.URL.Query()["eventType"][0],
 			}); err != nil {
 				fmt.Println(err)
-				c.JSON(http.StatusBadRequest, map[string]string{"message": "error processing webhook"})
+				c.JSON(http.StatusBadRequest, nil)
 				return
 			}
 
-			c.JSON(http.StatusOK, map[string]string{"message": "success"})
+			c.JSON(http.StatusOK, nil)
 		}
 
-		c.JSON(http.StatusBadRequest, map[string]string{"message": "invalid ip"})
+		c.JSON(http.StatusBadRequest, nil)
 	}
 }

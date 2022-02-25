@@ -543,7 +543,7 @@ type GenerateCCBillClubSupporterPaymentLinkInput struct {
 // Payload for a new ccbill payment link
 type GenerateCCBillClubSupporterPaymentLinkPayload struct {
 	// The payment link to use.
-	PaymentLink string `json:"paymentLink"`
+	PaymentLink *graphql1.URI `json:"paymentLink"`
 }
 
 // Generate club supporter receipt input.

@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "activities.go",
         "add_like_to_post.go",
+        "create_pixelated_resources_for_supporter_only_content.go",
         "discard_post.go",
         "index_post.go",
         "publish_post.go",

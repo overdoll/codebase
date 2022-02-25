@@ -2895,7 +2895,7 @@ type ExtendAccountClubSupporterSubscriptionPayload {
 """Payload for a new ccbill payment link"""
 type GenerateCCBillClubSupporterPaymentLinkPayload {
   """The payment link to use."""
-  paymentLink: String!
+  paymentLink: URI
 }
 
 extend type Account {
@@ -9900,14 +9900,11 @@ func (ec *executionContext) _GenerateCCBillClubSupporterPaymentLinkPayload_payme
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*graphql1.URI)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload_link(ctx context.Context, field graphql.CollectedField, obj *types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload) (ret graphql.Marshaler) {
@@ -15629,9 +15626,6 @@ func (ec *executionContext) _GenerateCCBillClubSupporterPaymentLinkPayload(ctx c
 
 			out.Values[i] = innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

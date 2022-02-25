@@ -16,6 +16,7 @@ go_library(
         "post_feed.go",
         "post_filters.go",
         "post_like.go",
+        "post_new_content.go",
         "post_state.go",
         "post_supporter_only_status.go",
         "repository.go",

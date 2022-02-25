@@ -30,14 +30,16 @@ func (r *MutationResolver) GenerateCCBillClubSupporterPaymentLink(ctx context.Co
 		return nil, err
 	}
 
-	link, err := pst.GeneratePaymentLink()
+	link, err := pst.GenerateLink()
 
 	if err != nil {
 		return nil, err
 	}
 
+	url := graphql.URI(*link)
+
 	return &types.GenerateCCBillClubSupporterPaymentLinkPayload{
-		PaymentLink: link,
+		PaymentLink: &url,
 	}, nil
 }
 

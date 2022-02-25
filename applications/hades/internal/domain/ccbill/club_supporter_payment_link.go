@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-type FlexFormsClubSupporterPaymentLink struct {
+type ClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
@@ -19,8 +19,8 @@ type FlexFormsClubSupporterPaymentLink struct {
 	currency int
 }
 
-func NewFlexFormsClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool, price *billing.Price) (*FlexFormsClubSupporterPaymentLink, error) {
-	return &FlexFormsClubSupporterPaymentLink{
+func NewClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool, price *billing.Price) (*ClubSupporterPaymentLink, error) {
+	return &ClubSupporterPaymentLink{
 		savePaymentDetails: savePaymentDetails,
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
@@ -29,17 +29,29 @@ func NewFlexFormsClubSupporterPaymentLink(requester *principal.Principal, clubId
 	}, nil
 }
 
-func (c *FlexFormsClubSupporterPaymentLink) ClubId() string {
+func (c *ClubSupporterPaymentLink) ClubId() string {
 	return c.clubId
 }
 
-func (c *FlexFormsClubSupporterPaymentLink) AccountId() string {
+func (c *ClubSupporterPaymentLink) AccountId() string {
 	return c.accountId
 }
 
-func (c *FlexFormsClubSupporterPaymentLink) GeneratePaymentLink() (string, error) {
+func (c *ClubSupporterPaymentLink) GenerateLink() (*string, error) {
 
-	ccbillSubAccountNumber := os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER")
+	encryptedToken, err := c.generateEncryptedPaymentToken()
+
+	if err != nil {
+		return nil, err
+	}
+
+	url := os.Getenv("APP_URL") + "/api/ccbill/payment-flow?token=" + *encryptedToken
+
+	return &url, nil
+}
+
+// GenerateEncryptedPaymentToken - basically lock down the price at generation time
+func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, error) {
 
 	billInitialPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
 	billInitialPeriod := strconv.Itoa(ccbillInitialPeriod)
@@ -64,7 +76,7 @@ func (c *FlexFormsClubSupporterPaymentLink) GeneratePaymentLink() (string, error
 
 	ccbillFormDigest := hex.EncodeToString(ccbillFormDigestBuilder.Sum(nil)[:])
 
-	paymentLink := &hades.CCBillPayment{
+	paymentToken := &hades.CCBillPayment{
 		HeaderConfiguration: &hades.HeaderConfiguration{SavePaymentDetails: c.savePaymentDetails},
 		CcbillClubSupporter: &hades.CCBillClubSupporter{
 			ClubId: c.clubId,
@@ -72,24 +84,23 @@ func (c *FlexFormsClubSupporterPaymentLink) GeneratePaymentLink() (string, error
 		AccountInitiator: &hades.AccountInitiator{
 			AccountId: c.accountId,
 		},
+		CcbillFlexFormsDetails: &hades.CCBillFlexFormsDetails{
+			InitialPrice:    billInitialPrice,
+			InitialPeriod:   billInitialPeriod,
+			RecurringPrice:  billRecurringPrice,
+			RecurringPeriod: billRecurringPeriod,
+			NumRebills:      billNumberRebills,
+			CurrencyCode:    billCurrencyCode,
+			Digest:          ccbillFormDigest,
+		},
 	}
 
 	// create an encrypted ccbill payment link that will be passed to other services
-	encrypted, err := encryptCCBillPayment(paymentLink)
+	encrypted, err := encryptCCBillPayment(paymentToken)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	url := os.Getenv("CCBILL_FLEXFORMS_URL") + "?clientSubacc=" + ccbillSubAccountNumber +
-		"&initialPrice=" + billInitialPrice +
-		"&initialPeriod=" + billInitialPeriod +
-		"&recurringPrice=" + billRecurringPrice +
-		"&recurringPeriod=" + billRecurringPeriod +
-		"&numRebills=" + billNumberRebills +
-		"&currencyCode=" + billCurrencyCode +
-		"&formDigest=" + ccbillFormDigest +
-		"&overdollLocker=" + *encrypted
-
-	return url, nil
+	return encrypted, nil
 }

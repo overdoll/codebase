@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "copy_resources_and_apply_filters.go",
         "create_or_get_resources_from_uploads.go",
         "delete_resources.go",
         "tus_composer.go",

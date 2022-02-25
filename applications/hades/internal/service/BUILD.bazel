@@ -16,6 +16,7 @@ go_library(
         "//applications/hades/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/location",
         "//libraries/principal",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",

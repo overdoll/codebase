@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cancellation",
+    srcs = [
+        "reason.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/domain/cancellation",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//libraries/localization",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/uuid",
+        "@com_github_go_playground_validator_v10//:validator",
+    ],
+)

@@ -1,22 +1,18 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "queries",
+    name = "resolvers",
     srcs = [
-        "billing.go",
-        "cancellation.go",
-        "resolvers.go",
+        "account.go",
+        "account_club_supporter_subscription.go",
+        "club.go",
     ],
-    importpath = "overdoll/applications/hades/internal/ports/graphql/queries",
+    importpath = "overdoll/applications/hades/internal/ports/graphql/resolvers",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/query",
-        "//applications/hades/internal/domain/billing",
-        "//applications/hades/internal/domain/cancellation",
-        "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/ports/graphql/types",
-        "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",
