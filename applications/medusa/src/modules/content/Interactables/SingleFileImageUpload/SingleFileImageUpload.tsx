@@ -100,7 +100,7 @@ export default function SingleFileImageUpload ({
               w={4}
               h={4}
               icon={FileUpload}
-              fill='inherit'
+              fill={isInvalid ? 'orange.900' : 'gray.100'}
                        />)}
             size={size}
             w='100%'
