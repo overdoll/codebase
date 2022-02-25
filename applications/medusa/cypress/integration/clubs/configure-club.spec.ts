@@ -54,6 +54,7 @@ describe('Club - Configure', () => {
     // add new logo
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Club Thumbnail/iu }).should('not.be.disabled').click({ force: true }))
     cy.findByText(/Drag and drop or/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
+    cy.findByText(/Remove upload/iu).should('exist')
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
     cy.findByText(/updated your club thumbnail/iu).should('be.visible')
   })
