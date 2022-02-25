@@ -4,12 +4,17 @@ import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import type { ClubPublicPostsQuery as ClubPublicPostsQueryType } from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import ClubPublicPostsQuery from '@//:artifacts/ClubPublicPostsQuery.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 import { useParams } from '@//:modules/routing'
-import useSearchButtonQueryArguments
-  from '../../../../../../components/FloatingGeneralSearchButton/helpers/useSearchButtonQueryArguments'
+import useGeneralSearchArguments from '../../../../../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import { PostOrderButton } from '../../../../../../components/PostsSearch'
+import PostSearchButton from '../../../../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../../../../components/PageFixedHeader/PageFixedHeader'
+import PageInfiniteScrollWrapper
+  from '../../../../../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+import { Flex } from '@chakra-ui/react'
+import FixedHeaderWrapper from '../../../../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 
 interface Props {
   prepared: {
@@ -25,21 +30,33 @@ export default function RootClubPublicPosts (props: Props): JSX.Element {
 
   const match = useParams()
 
-  const loadQueryWithParams = useSearchButtonQueryArguments({
-    queryLoader: loadQuery,
-    extraParams: { slug: match.slug as string }
-  })
+  useGeneralSearchArguments((params) => loadQuery({
+    ...params,
+    slug: match.slug as string
+  }))
 
   return (
     <>
       <Helmet title='club posts' />
-      <PageWrapper fillPage>
-        <QueryErrorBoundary loadQuery={loadQueryWithParams}>
+      <PageFixedHeader>
+        <FixedHeaderWrapper>
+          <Flex justify='space-between'>
+            <PostOrderButton />
+            <PostSearchButton routeTo={`/${match.slug as string}/posts`} />
+          </Flex>
+        </FixedHeaderWrapper>
+      </PageFixedHeader>
+      <PageInfiniteScrollWrapper>
+        <QueryErrorBoundary loadQuery={() => loadQuery({
+          sortBy: 'TOP',
+          slug: match.slug as string
+        })}
+        >
           <Suspense fallback={<SkeletonPost />}>
             <ClubPublicPosts query={queryRef as PreloadedQuery<ClubPublicPostsQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageInfiniteScrollWrapper>
     </>
   )
 }

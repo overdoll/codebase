@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:59
+#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:61
 msgid "A recovery code can only contain numbers and letters"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:58
+#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:60
 msgid "A recovery code must be 8 characters long"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:101
+#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:102
 msgid "A recovery code was successfully used up to log you in"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 #~ msgid "Click on the link you received in your email to continue"
 #~ msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:163
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:144
 msgid "Code"
 msgstr ""
 
@@ -49,11 +49,11 @@ msgstr ""
 msgid "Confirm Cancel Join"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:86
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:70
 msgid "Continue"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:63
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:51
 msgid "Email"
 msgstr ""
 
@@ -61,15 +61,15 @@ msgstr ""
 msgid "Enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:69
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:55
 msgid "Enter a username"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:72
+#: src/client/domain/Join/pages/Join/JoinForm/JoinForm.tsx:57
 msgid "Enter an email"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:130
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:126
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -89,19 +89,19 @@ msgstr ""
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:112
+#: src/client/domain/Join/pages/Grant/Grant.tsx:110
 msgid "Logging in"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:57
+#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:59
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:120
+#: src/client/domain/Join/pages/Grant/Grant.tsx:118
 msgid "Please wait while we log you in..."
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:81
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:65
 msgid "Register"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:186
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:158
 msgid "Submit Code"
 msgstr ""
 
@@ -117,27 +117,27 @@ msgstr ""
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:85
+#: src/client/domain/Join/pages/Grant/Grant.tsx:84
 msgid "There was an error logging you in"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:113
+#: src/client/domain/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:114
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:104
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:103
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/Join.tsx:96
+#: src/client/domain/Join/pages/Join/Join.tsx:97
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/Register.tsx:94
+#: src/client/domain/Join/pages/Register/Register.tsx:95
 msgid "There was an issue with registration."
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:60
+#: src/client/domain/Join/pages/Register/RegisterForm/RegisterForm.tsx:50
 msgid "Username"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/Register.tsx:87
+#: src/client/domain/Join/pages/Register/Register.tsx:88
 msgid "Welcome to overdoll!"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:139
+#: src/client/domain/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:135
 msgid "You can find this in the same app you used to set up two-factor authentication"
 msgstr ""
 

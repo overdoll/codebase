@@ -3,6 +3,7 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
+import { decodeRouterArguments } from './components/PostsSearch'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -157,7 +158,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
 
@@ -192,7 +193,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               history.push('/')
               return false
             }
@@ -252,7 +253,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               history.push('/')
               return false
             }
@@ -305,7 +306,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.cannot('manage', 'Account')) {
+            if (ability.cannot('configure', 'Account')) {
               history.push('/')
               return false
             }
@@ -381,10 +382,7 @@ const routes: Route[] = [
             query: {
               query: Query,
               variables: {
-                sortBy: query.get('sort') ?? 'TOP',
-                categorySlugs: query.get('categories'),
-                seriesSlugs: query.get('series'),
-                characterSlugs: query.get('characters')
+                ...decodeRouterArguments(query)
               },
               options: {
                 fetchPolicy: 'store-or-network'
@@ -461,14 +459,14 @@ const routes: Route[] = [
             path: '/moderation/queue',
             component: loadable(async () =>
               await import(
-                './domain/Moderation/Queue/Queue'
+                './domain/Moderation/pages/Queue/Queue'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Moderation/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Moderation/pages/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -491,14 +489,14 @@ const routes: Route[] = [
             path: '/moderation/history',
             component: loadable(async () =>
               await import(
-                './domain/Moderation/History/History'
+                './domain/Moderation/pages/History/History'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Moderation/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Moderation/pages/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -512,6 +510,799 @@ const routes: Route[] = [
                   variables: {
                     from: new Date(new Date().setDate(new Date().getDate() - 7)),
                     to: new Date()
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/moderation/reports',
+            component: loadable(async () =>
+              await import(
+                './domain/Moderation/pages/Reports/Reports'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/pages/Reports/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
+          },
+          {
+            path: '/moderation/post/:reference',
+            component: loadable(async () =>
+              await import(
+                './domain/Moderation/pages/ModerationPost/RootModerationPost'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Moderation/pages/ModerationPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            prepare: ({
+              params
+            }) => {
+              const Query = require('@//:artifacts/ModerationPostQuery.graphql')
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        path: '/admin',
+        dependencies: [
+          {
+            resource: loadable(async (environment) =>
+              await import(
+                `./domain/Admin/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+              )
+            ),
+            then: loadMessages
+          }
+        ],
+        component: loadable(async () =>
+          await import(
+            './domain/Admin/Admin'
+          )
+        ),
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('admin', 'Tags') || ability.can('admin', 'Account') || ability.can('admin', 'Club')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/admin/category/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminCreateCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCategoryQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/category/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminSearchCategories/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories'
+              )
+            )
+          },
+          {
+            path: '/admin/category/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCategory/AdminViewCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCategory/AdminViewCategory/RootAdminViewCategory'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCategoryQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/series/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateSeriesQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/series/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminSearchSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries'
+              )
+            )
+          },
+          {
+            path: '/admin/series/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminSeries/AdminViewSeries/RootAdminViewSeries'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewSeriesQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/character/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminCreateCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCharacterQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/character/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminSearchCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter'
+              )
+            )
+          },
+          {
+            path: '/admin/character/search/:slug/:seriesSlug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCharacter/AdminViewCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCharacter/AdminViewCharacter/RootAdminViewCharacter'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCharacterQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug,
+                    seriesSlug: params.seriesSlug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/audience/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminCreateAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateAudienceQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/audience/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminSearchAudiences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences'
+              )
+            )
+          },
+          {
+            path: '/admin/audience/search/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAudience/AdminViewAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAudience/AdminViewAudience/RootAdminViewAudience'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewAudienceQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/rule/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminRules/AdminCreateRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateRuleQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/rule/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminRules/AdminSearchRules/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules'
+              )
+            )
+          },
+          {
+            path: '/admin/account/:username',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccount/RootAdminAccount'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    username: params.username
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/club/:slug',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Club')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminClub/RootAdminClub'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminClubQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    slug: params.slug
                   },
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -547,7 +1338,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -747,7 +1538,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -792,7 +1583,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -837,7 +1628,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'Account')) {
+            if (ability.can('configure', 'Account')) {
               return true
             }
             history.push('/join')
@@ -882,7 +1673,7 @@ const routes: Route[] = [
         }
       },
       {
-        path: '/a/:username',
+        path: '/m/:username',
         exact: true,
         dependencies: [
           {
@@ -956,7 +1747,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('create', 'Post')) {
+            if (ability.can('create', 'Club')) {
               return true
             }
             history.push('/')
@@ -974,6 +1765,20 @@ const routes: Route[] = [
               )
             ),
             then: loadMessages
+          }
+        ],
+        middleware: [
+          ({
+            environment,
+            history
+          }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('configure', 'Club')) {
+              return true
+            }
+            history.push('/join')
+            return false
           }
         ],
         component: loadable(async () =>
@@ -1138,7 +1943,21 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('create', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
           },
           {
             path: '/club/:slug/:entity(create-post)',
@@ -1174,7 +1993,21 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('create', 'Post')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ]
           }
         ]
       },

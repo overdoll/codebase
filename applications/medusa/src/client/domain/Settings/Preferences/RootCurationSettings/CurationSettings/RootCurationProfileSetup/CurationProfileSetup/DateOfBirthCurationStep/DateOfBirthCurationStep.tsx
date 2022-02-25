@@ -1,45 +1,25 @@
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { DateOfBirthCurationStepFragment$key } from '@//:artifacts/DateOfBirthCurationStepFragment.graphql'
 import { Box, HStack, Input, InputGroup, Stack, useNumberInput } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 import { AddPlus, SubtractMinus } from '@//:assets/icons/interface'
 import differenceInYears from 'date-fns/differenceInYears'
-import { useContext } from 'react'
-import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import subYears from 'date-fns/subYears'
 import { Icon, PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
-interface Props {
-  query: DateOfBirthCurationStepFragment$key | null
-}
-
-const Fragment = graphql`
-  fragment DateOfBirthCurationStepFragment on CurationProfile {
-    dateOfBirth {
-      dateOfBirth
-    }
-  }
-`
-
-export default function DateOfBirthCurationStep ({ query }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
-  const dispatch = useContext(DispatchContext)
-  const state = useContext(StateContext)
-
-  const defaultValue = state.dateOfBirth.value != null
-    ? differenceInYears(new Date(), new Date(state.dateOfBirth.value))
-    : data?.dateOfBirth?.dateOfBirth != null
-      ? differenceInYears(new Date(), new Date(data?.dateOfBirth?.dateOfBirth as Date))
-      : undefined
+export default function DateOfBirthCurationStep (): JSX.Element {
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const onChange = (valueAsNumber): void => {
     const subYearsFromValue = subYears(new Date(), valueAsNumber)
     dispatch({
       type: 'dateOfBirth',
-      value: valueAsNumber === '' ? null : subYearsFromValue
+      value: valueAsNumber === '' ? null : subYearsFromValue,
+      transform: 'SET'
     })
   }
 
@@ -50,7 +30,9 @@ export default function DateOfBirthCurationStep ({ query }: Props): JSX.Element 
   } =
     useNumberInput({
       step: 1,
-      defaultValue: defaultValue,
+      defaultValue: state.dateOfBirth != null
+        ? differenceInYears(new Date(), new Date(state.dateOfBirth))
+        : undefined,
       min: 18,
       max: 99,
       onChange: onChange,

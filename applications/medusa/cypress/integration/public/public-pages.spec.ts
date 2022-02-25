@@ -18,7 +18,7 @@ describe('Visit Public Pages', () => {
   })
 
   it('go to a profile', () => {
-    cy.visit(`/a/${username}`)
+    cy.visit(`/m/${username}`)
     cy.findByText(username).should('exist')
   })
 

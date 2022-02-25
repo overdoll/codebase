@@ -48,10 +48,14 @@ describe('Club - Configure', () => {
     cy.get('button[aria-label="Open Menu"]').click()
     cy.findByText(/Remove Alias/iu).should('be.visible').click()
     cy.findByText(/clubName/iu).should('not.exist')
+    cy.findByRole('button', { name: /Add Club Link Alias/iu }).click()
+    cy.findByPlaceholderText(/Enter a new club link/).should('not.be.visible')
 
     // add new logo
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Club Thumbnail/iu }).should('not.be.disabled').click({ force: true }))
     cy.findByText(/Drag and drop or/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
+    cy.findByText(/Remove upload/iu).should('exist')
+    cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
     cy.findByText(/updated your club thumbnail/iu).should('be.visible')
   })
 

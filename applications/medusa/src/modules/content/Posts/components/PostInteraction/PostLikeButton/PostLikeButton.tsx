@@ -7,6 +7,8 @@ import { useMutation } from 'react-relay/hooks'
 import { ClickableBox, Icon } from '../../../../PageLayout'
 import { Flex, Heading } from '@chakra-ui/react'
 import { abbreviateNumber } from '../../../../../support'
+import { useContext } from 'react'
+import { AbilityContext } from '../../../../../authorization/AbilityContext'
 
 interface Props {
   query: PostLikeButtonFragment$key | null
@@ -123,10 +125,14 @@ export default function PostLikeButton ({
   const iconSize = getIconSize()
   const fontSize = getFontSize()
 
+  const ability = useContext(AbilityContext)
+
+  const isDisabled = ability.cannot('interact', 'Post')
+
   if (data?.viewerLiked != null) {
     return (
       <Flex align='center'>
-        <ClickableBox mr={1} bg='transparent' borderRadius='xl' onClick={onUndoLike} p={1}>
+        <ClickableBox isDisabled={isDisabled} mr={1} bg='transparent' borderRadius='xl' onClick={onUndoLike} p={1}>
           <Icon icon={HeartFull} fill='primary.400' h={iconSize} w={iconSize} />
         </ClickableBox>
         <Heading color='primary.400' fontSize={fontSize}>
@@ -138,7 +144,7 @@ export default function PostLikeButton ({
 
   return (
     <Flex align='center'>
-      <ClickableBox mr={1} bg='transparent' borderRadius='xl' onClick={onLikePost} p={1}>
+      <ClickableBox isDisabled={isDisabled} mr={1} bg='transparent' borderRadius='xl' onClick={onLikePost} p={1}>
         <Icon icon={HeartOutline} fill='gray.200' h={iconSize} w={iconSize} />
       </ClickableBox>
       <Heading color='gray.200' fontSize={fontSize}>

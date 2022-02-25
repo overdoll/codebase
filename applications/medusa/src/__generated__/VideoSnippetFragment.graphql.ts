@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efcd3faa0840acd2a5cb8154ff5cfe12>>
+ * @generated SignedSource<<9e2da4294280dac0ab10dddeab15dc96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type VideoSnippetFragment$data = {
-  readonly urls: ReadonlyArray<{
+  readonly videoThumbnail: {
     readonly url: string;
-    readonly mimeType: string;
-  }>;
+  } | null;
   readonly " $fragmentType": "VideoSnippetFragment";
 };
 export type VideoSnippetFragment = VideoSnippetFragment$data;
@@ -34,21 +33,14 @@ const node: ReaderFragment = {
       "args": null,
       "concreteType": "ResourceUrl",
       "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
+      "name": "videoThumbnail",
+      "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
           "name": "url",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "mimeType",
           "storageKey": null
         }
       ],
@@ -59,6 +51,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f06fc0d78c395c187860ec35dbc60445";
+(node as any).hash = "44910205c617e3743c77026ad205f34e";
 
 export default node;

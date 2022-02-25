@@ -1,22 +1,31 @@
-import { FormControl, FormLabel, InputLeftAddon, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
+import { InputLeftAddon, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { CreateClubFormMutation } from '@//:artifacts/CreateClubFormMutation.graphql'
 import { useHistory } from '@//:modules/routing'
-import { useEffect } from 'react'
-import urlSlug from 'url-slug'
 import generatePath from '@//:modules/routing/generatePath'
 import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import useSlugSubscribe from '../../../../../Admin/helpers/useSlugSubscribe'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  InputHelperText,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
+
 interface Props extends ConnectionProp {
   isDisabled: boolean
 }
@@ -27,8 +36,8 @@ interface ClubValues {
 }
 
 const Mutation = graphql`
-  mutation CreateClubFormMutation($name: String!, $slug: String!, $connections: [ID!]!) {
-    createClub(input: {name: $name, slug: $slug}) {
+  mutation CreateClubFormMutation($input: CreateClubInput!, $connections: [ID!]!) {
+    createClub(input: $input) {
       club @appendNode(connections: $connections, edgeTypeName: "createClubPrimaryEdge") {
         id
         slug
@@ -61,28 +70,22 @@ export default function CreateClubForm ({
     slug: ClubSlug()
   })
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    setError,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<ClubValues>({
+  const methods = useForm<ClubValues>({
     resolver: joiResolver(
       schema
     )
   })
 
+  const {
+    setError
+  } = methods
+
   const onSubmit = (formValues): void => {
     createClub({
       variables: {
-        slug: formValues.slug,
-        name: formValues.name,
+        input: {
+          ...formValues
+        },
         connections: [connectionId]
       },
       onCompleted (data) {
@@ -118,77 +121,66 @@ export default function CreateClubForm ({
     })
   }
 
-  const successName = isDirty && (errors.name == null) && isSubmitted
-
-  const successSlug = isDirty && (errors.slug == null) && isSubmitted
-
-  // We watch the name of the club and set that as the slug
-  useEffect(() => {
-    const subscription = watch((value, {
-      name
-    }) => {
-      if (name === 'name') {
-        setValue('slug', urlSlug(value.name))
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+  useSlugSubscribe({
+    from: 'name',
+    ...methods
+  })
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={6}>
-        <FormControl isInvalid={errors.name != null}>
-          <FormLabel>
+        <FormInput size='lg' id='name'>
+          <InputHeader>
             <Trans>
               Your Club Name
             </Trans>
-          </FormLabel>
-          <StyledInput
-            size='lg'
-            register={register('name')}
-            success={successName}
-            error={errors.name != null}
-            errorMessage={errors?.name?.message}
-            placeholder={i18n._(t`The best name you can come up with`)}
-            helperText={i18n._(t`This is the name everyone will see`)}
-          />
-        </FormControl>
-        <FormControl isInvalid={errors.slug != null}>
-          <FormLabel>
+          </InputHeader>
+          <InputBody>
+            <TextInput placeholder={i18n._(t`The best name you can come up with`)} />
+            <InputFeedback />
+          </InputBody>
+          <InputFooter>
+            <InputHelperText>
+              <Trans>
+                This is the name everyone will see
+              </Trans>
+            </InputHelperText>
+          </InputFooter>
+        </FormInput>
+        <FormInput size='md' id='slug'>
+          <InputHeader>
             <Trans>
               Your Unique Club Link
             </Trans>
-          </FormLabel>
-          <StyledInput
-            inputLeftAddon={
-              <InputLeftAddon>
-                <Trans>
-                  overdoll.com/
-                </Trans>
-              </InputLeftAddon>
-            }
-            size='md'
-            register={register('slug')}
-            success={successSlug}
-            error={errors.slug != null}
-            errorMessage={errors?.slug?.message}
-            placeholder={i18n._(t`A unique link`)}
-            helperText={i18n._(t`This is the unique link everyone will use to see your club`)}
-          />
-        </FormControl>
-        <Button
-          isDisabled={errors.name != null || errors.slug != null || isDisabled}
-          isLoading={isCreatingClub}
-          type='submit'
+          </InputHeader>
+          <InputBody>
+            <InputLeftAddon>
+              <Trans>
+                overdoll.com/
+              </Trans>
+            </InputLeftAddon>
+            <TextInput placeholder={i18n._(t`A unique link`)} />
+            <InputFeedback />
+          </InputBody>
+          <InputFooter>
+            <InputHelperText>
+              <Trans>
+                This is the unique link everyone will use to see your club
+              </Trans>
+            </InputHelperText>
+          </InputFooter>
+        </FormInput>
+        <FormSubmitButton
           w='100%'
           size='lg'
-          colorScheme={errors.name != null || errors.slug != null ? 'gray' : 'teal'}
+          isLoading={isCreatingClub}
+          colorScheme='teal'
         >
           <Trans>
             Create Club
           </Trans>
-        </Button>
+        </FormSubmitButton>
       </Stack>
-    </form>
+    </Form>
   )
 }

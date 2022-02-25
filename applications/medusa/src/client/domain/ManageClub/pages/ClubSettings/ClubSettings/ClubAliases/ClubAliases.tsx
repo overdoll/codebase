@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubAliasesFragment$key } from '@//:artifacts/ClubAliasesFragment.graphql'
-import { Badge, Collapse, Flex, useDisclosure } from '@chakra-ui/react'
+import { Badge, Flex } from '@chakra-ui/react'
 import {
   ListSpacer,
   PageSectionDescription,
@@ -9,13 +9,14 @@ import {
   SmallBackgroundBox
 } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import Button from '@//:modules/form/Button/Button'
 import AddClubSlugAlias from './AddClubSlugAlias/AddClubSlugAlias'
 import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import ManageClubSlugAliases from './ManageClubSlugAliases/ManageClubSlugAliases'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
-  query: ClubAliasesFragment$key | null
+  query: ClubAliasesFragment$key
 }
 
 const Fragment = graphql`
@@ -23,6 +24,7 @@ const Fragment = graphql`
     slug
     ...AddClubSlugAliasFragment
     ...ManageClubSlugAliasesFragment
+    slugAliasesLimit
     slugAliases {
       __id
       slug
@@ -33,14 +35,11 @@ const Fragment = graphql`
 export default function ClubAliases ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
-
-  const clubLink = `overdoll.com/${data?.slug as string}`
+  const clubLink = `overdoll.com/${data?.slug}`
 
   const aliasesExist = data?.slugAliases != null ? data.slugAliases?.length > 0 : false
+
+  const disableSlugAdd = data?.slugAliases.length === data?.slugAliasesLimit
 
   return (
     <>
@@ -74,18 +73,25 @@ export default function ClubAliases ({ query }: Props): JSX.Element {
           </Flex>
         </SmallBackgroundBox>
         {aliasesExist && <ManageClubSlugAliases query={data} />}
-        <Button
-          variant='solid'
-          colorScheme='gray'
-          onClick={onToggle}
-          size='sm'
-        >
-          <Trans>
-            Add Club Link Alias
-          </Trans>
-        </Button>
-        <Collapse in={isOpen} animateOpacity>
-          <AddClubSlugAlias query={data} />
+        <Collapse>
+          <CollapseButton>
+            <Trans>
+              Add Club Link Alias
+            </Trans>
+          </CollapseButton>
+          <CollapseBody>
+            {disableSlugAdd && (
+              <Alert mb={2} status='warning'>
+                <AlertIcon />
+                <AlertDescription fontSize='sm'>
+                  <Trans>
+                    You have added the maximum amount of aliases. You'll have to remove at least one alias to be
+                    able to add another.
+                  </Trans>
+                </AlertDescription>
+              </Alert>)}
+            <AddClubSlugAlias isDisabled={disableSlugAdd} query={data} />
+          </CollapseBody>
         </Collapse>
       </ListSpacer>
     </>

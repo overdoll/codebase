@@ -13,7 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:152
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubMenu/ClubMenu.tsx:29
+msgid "Admin"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:157
 msgid "Members"
 msgstr ""
 
@@ -21,6 +25,6 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:70
 msgid "See All"
 msgstr ""

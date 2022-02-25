@@ -9,6 +9,7 @@ import ClubPublicPageQuery, {
 import { useParams } from '@//:modules/routing/useParams'
 import ClubPublicPage from './ClubPublicPage/ClubPublicPage'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import LockedAccountBanner from '../../../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 
 interface Props {
   prepared: {
@@ -26,6 +27,7 @@ export default function RootClubPublicPage (props: Props): JSX.Element {
 
   return (
     <>
+      <LockedAccountBanner />
       <Helmet title='club' />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>

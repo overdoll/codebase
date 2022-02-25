@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1273551a6d24549a8f67eb611db7adcc>>
- * @relayHash 2691930cf470e487a3900088c53d85d8
+ * @generated SignedSource<<b9577e95d1fadd7cfcd49b4cf796e431>>
+ * @relayHash 3025dddf16066f205f6fb516e9fb342e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2691930cf470e487a3900088c53d85d8
+// @relayRequestID 3025dddf16066f205f6fb516e9fb342e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AddClubSlugAliasValidation = "SLUG_TAKEN" | "%future added value";
-export type AddClubSlugAliasMutation$variables = {
+export type AddClubSlugAliasInput = {
   id: string;
   slug: string;
+};
+export type AddClubSlugAliasMutation$variables = {
+  input: AddClubSlugAliasInput;
 };
 export type AddClubSlugAliasMutationVariables = AddClubSlugAliasMutation$variables;
 export type AddClubSlugAliasMutation$data = {
@@ -42,12 +45,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "id"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "slug"
+    "name": "input"
   }
 ],
 v1 = {
@@ -62,20 +60,9 @@ v2 = [
     "alias": null,
     "args": [
       {
-        "fields": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "id"
-          },
-          {
-            "kind": "Variable",
-            "name": "slug",
-            "variableName": "slug"
-          }
-        ],
-        "kind": "ObjectValue",
-        "name": "input"
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
       }
     ],
     "concreteType": "AddClubSlugAliasPayload",
@@ -155,7 +142,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "2691930cf470e487a3900088c53d85d8",
+    "id": "3025dddf16066f205f6fb516e9fb342e",
     "metadata": {},
     "name": "AddClubSlugAliasMutation",
     "operationKind": "mutation",
@@ -164,6 +151,6 @@ return {
 };
 })();
 
-(node as any).hash = "751e4d7eab2795bf2de0b93b4949109e";
+(node as any).hash = "bdf816acbd34d813cfc990ecaa452ee7";
 
 export default node;

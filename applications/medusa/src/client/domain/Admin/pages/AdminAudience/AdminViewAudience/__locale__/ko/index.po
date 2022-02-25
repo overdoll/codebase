@@ -1,0 +1,91 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-02-17 14:53-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandard.tsx:28
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:106
+msgid "Audience Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:104
+msgid "Audience Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:32
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:112
+msgid "Audience Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:127
+msgid "BCP 47 Locale Code"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:57
+msgid "Change Audience Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandard.tsx:37
+msgid "Change Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:40
+msgid "Change Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:117
+msgid "Enter an audience title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:94
+msgid "Error updating audience title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
+msgid "Locale"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:110
+msgid "Standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:118
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:82
+msgid "Successfully updated audience standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:80
+msgid "Successfully updated audience thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:88
+msgid "There was an error updating audience standard"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:86
+msgid "There was an error updating the audience thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:88
+msgid "Updated audience title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:43
+msgid "View Translations"
+msgstr ""

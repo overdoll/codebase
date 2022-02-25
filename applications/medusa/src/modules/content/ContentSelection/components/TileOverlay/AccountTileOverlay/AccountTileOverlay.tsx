@@ -25,7 +25,7 @@ export default function AccountTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={
+    <TileOverlay backdrop={
       <ResourceItem query={null} />
     }
     >

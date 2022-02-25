@@ -8,8 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Box,
-  FormControl,
-  FormLabel,
   HStack,
   Stack,
   Text
@@ -19,7 +17,6 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
@@ -28,6 +25,15 @@ import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFooter,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface UsernameValues {
   username: string
@@ -54,29 +60,6 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
     UsernameMutationGQL
   )
 
-  const schema = Joi.object({
-    username: Username()
-  })
-
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<UsernameValues>({
-    resolver: joiResolver(
-      schema
-    )
-  })
-
-  const notify = useToast()
-
-  const { i18n } = useLingui()
-
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null)
 
   const {
@@ -86,6 +69,22 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
   } = useHistoryDisclosure()
 
   const cancelButtonRef = useRef(null)
+
+  const schema = Joi.object({
+    username: Username()
+  })
+
+  const methods = useForm<UsernameValues>({
+    resolver: joiResolver(
+      schema
+    )
+  })
+
+  const { setError } = methods
+
+  const notify = useToast()
+
+  const { i18n } = useLingui()
 
   const onDataConfirmed = (formData): void => {
     setSelectedUsername(formData.username)
@@ -125,44 +124,32 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
     })
   }
 
-  const success = isDirty && (errors.username == null) && isSubmitted
-
   return (
     <>
-      <form noValidate onSubmit={handleSubmit(onDataConfirmed)}>
-        <FormControl
-          isInvalid={errors.username != null}
-          id='username'
-        >
-          <FormLabel fontSize='sm'>
+      <Form {...methods} onSubmit={onDataConfirmed}>
+        <FormInput size='sm' id='username'>
+          <InputHeader>
             <Trans>
               Enter a new username
             </Trans>
-          </FormLabel>
+          </InputHeader>
           <HStack align='flex-start'>
-            <StyledInput
+            <InputBody>
+              <TextInput placeholder={i18n._(t`Enter a new username`)} />
+            </InputBody>
+            <FormSubmitButton
               size='sm'
-              register={register('username')}
-              success={success}
-              error={errors.username != null}
-              placeholder={i18n._(t`Enter a new username`)}
-              errorMessage={errors?.username?.message}
-            />
-            <Button
-              size='sm'
-              variant='solid'
-              colorScheme='gray'
-              type='submit'
-              isDisabled={errors.username != null || isDisabled}
+              isDisabled={isDisabled}
               isLoading={isChangingUsername}
             >
               <Trans>
                 Submit
               </Trans>
-            </Button>
+            </FormSubmitButton>
           </HStack>
-        </FormControl>
-      </form>
+          <InputFooter />
+        </FormInput>
+      </Form>
       <AlertDialog
         preserveScrollBarGap
         isCentered

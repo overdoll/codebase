@@ -29,7 +29,7 @@ export default function StatisticNumber ({
   const currentColor = colorScheme == null ? randomColor : colorScheme
 
   return (
-    <TileOverlay background={<Box bg='gray.800' h={150} />}>
+    <TileOverlay backdrop={<Box bg='gray.800' h={150} />}>
       <Flex direction='column' align='center'>
         <HStack spacing={3}>
           {icon != null && <Icon icon={icon} w={5} h={5} fill='gray.00' />}

@@ -1,17 +1,23 @@
 import { graphql, useMutation } from 'react-relay/hooks'
-import { FormControl, FormLabel, HStack } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'
-import Button from '@//:modules/form/Button/Button'
 import { ConnectionProp } from '@//:types/components'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface EmailValues {
   email: string
@@ -21,7 +27,7 @@ interface Props extends ConnectionProp {
   isDisabled: boolean
 }
 
-const AddEmailMutationGQL = graphql`
+const Mutation = graphql`
   mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
     addAccountEmail(input: $input) {
       accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
@@ -37,46 +43,36 @@ export default function AddEmailForm ({
   connectionId,
   isDisabled
 }: Props): JSX.Element {
+  const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
+    Mutation
+  )
+
   const schema = Joi.object({
     email: Email()
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<EmailValues>({
+  const methods = useForm<EmailValues>({
     resolver: joiResolver(
       schema
     )
   })
 
-  const success = isDirty && (errors.email == null) && isSubmitted
-
-  const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
-    AddEmailMutationGQL
-  )
-
   const { i18n } = useLingui()
 
   const notify = useToast()
 
-  const onAddEmail = (data): void => {
+  const onSubmit = (formValues): void => {
     addEmail({
       variables: {
         input: {
-          email: data.email
+          ...formValues
         },
         connections: [connectionId]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t`A confirmation email was sent to ${data.email}. Check your inbox/spam!`
+          title: t`A confirmation email was sent to ${formValues.email}. Check your inbox/spam!`
         })
       },
       onError () {
@@ -90,46 +86,29 @@ export default function AddEmailForm ({
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit(onAddEmail)}>
-      <FormControl isInvalid={errors.email != null} id='email'>
-        {isDisabled &&
-          <Alert mb={2} status='warning'>
-            <AlertIcon />
-            <AlertDescription fontSize='sm'>
-              <Trans>
-                You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be
-                able to add another.
-              </Trans>
-            </AlertDescription>
-          </Alert>}
-        <FormLabel fontSize='sm'>
+    <Form {...methods} onSubmit={onSubmit}>
+      <FormInput size='sm' id='email'>
+        <InputHeader>
           <Trans>
             Add an email
           </Trans>
-        </FormLabel>
+        </InputHeader>
         <HStack align='flex-start'>
-          <StyledInput
+          <InputBody>
+            <TextInput placeholder={i18n._(t`Enter a new email address`)} />
+            <InputFeedback />
+          </InputBody>
+          <FormSubmitButton
             size='sm'
-            register={register('email')}
-            success={success}
-            error={errors.email != null}
-            placeholder={i18n._(t`Enter a new email address`)}
-            errorMessage={errors?.email?.message}
-          />
-          <Button
-            size='sm'
-            variant='solid'
-            type='submit'
-            colorScheme='gray'
-            disabled={(errors.email != null) || isDisabled}
             isLoading={isAddingEmail}
+            isDisabled={isDisabled}
           >
             <Trans>
               Submit
             </Trans>
-          </Button>
+          </FormSubmitButton>
         </HStack>
-      </FormControl>
-    </form>
+      </FormInput>
+    </Form>
   )
 }

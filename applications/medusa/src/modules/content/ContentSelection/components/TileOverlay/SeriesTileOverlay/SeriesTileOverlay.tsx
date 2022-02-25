@@ -26,9 +26,9 @@ export default function SeriesTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={<ResourceItem
+    <TileOverlay backdrop={<ResourceItem
       query={data.thumbnail}
-                             />}
+                           />}
     >
       <Stack spacing={1}>
         <Icon w={4} h={4} icon={SeriesIdentifier} fill='gray.00' />

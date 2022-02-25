@@ -1,12 +1,11 @@
 import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { useContext } from 'react'
-import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
 import { HStack } from '@chakra-ui/react'
 import type { CurationAudienceNextButtonFragment$key } from '@//:artifacts/CurationAudienceNextButtonFragment.graphql'
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   nextStep: () => void
@@ -47,23 +46,22 @@ export default function CurationAudienceNextButton ({
 
   const [updateAudience, isUpdatingAudience] = useMutation(Mutation)
 
-  const state = useContext(StateContext)
-
-  const dispatch = useContext(DispatchContext)
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const notify = useToast()
 
   const currentAudienceIds = data?.audiences.map((item) => item.id) ?? []
 
-  const saveCondition = Object.keys(state.audience.value).length > 0 &&
-    compareTwoArrays(Object.keys(state.audience.value), currentAudienceIds) === false
-
-  console.log('rerender')
+  const saveCondition = Object.keys(state.audience).length > 0 &&
+    compareTwoArrays(Object.keys(state.audience), currentAudienceIds) === false
 
   const onUpdateAudience = (): void => {
     updateAudience({
       variables: {
-        audienceIds: Object.keys(state.audience.value),
+        audienceIds: Object.keys(state.audience),
         skipped: false
       },
       onCompleted () {
@@ -87,7 +85,8 @@ export default function CurationAudienceNextButton ({
       onCompleted () {
         dispatch({
           type: 'audience',
-          value: {}
+          value: {},
+          transform: 'SET'
         })
         notify({
           status: 'info',

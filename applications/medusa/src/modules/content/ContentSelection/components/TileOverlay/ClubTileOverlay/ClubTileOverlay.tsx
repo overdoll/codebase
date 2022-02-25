@@ -33,11 +33,11 @@ export default function ClubTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay background={
+    <TileOverlay backdrop={
       <ResourceItem h='100%' query={data.posts?.edges[0]?.node?.content[0]} />
     }
     >
-      <Stack w='100%' spacing={4} h='100%' align='center' justify='center'>
+      <Stack w='100%' spacing={4} align='center' justify='center'>
         <Stack w='100%' align='center' justify='center' spacing={2}>
           <ResourceIcon h={12} w={12} query={data.thumbnail} />
           <Heading textAlign='center' color='gray.00' fontSize='md'>

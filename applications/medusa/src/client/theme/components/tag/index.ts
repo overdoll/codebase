@@ -23,6 +23,7 @@ const baseStyleCloseButton: SystemStyleObject = {
   transitionProperty: 'common',
   transitionDuration: 'normal',
   borderRadius: 'full',
+  flexShrink: 0,
   marginStart: '0.375rem',
   marginEnd: '-1',
   _disabled: {

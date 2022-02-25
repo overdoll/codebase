@@ -1,13 +1,13 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubMembersQuery } from '@//:artifacts/ClubMembersQuery.graphql'
-import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
+import { GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
 import { Text } from '@chakra-ui/react'
-import { Link } from '@//:modules/routing'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import AccountTileOverlay
   from '../../../../../../modules/content/ContentSelection/components/TileOverlay/AccountTileOverlay/AccountTileOverlay'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -76,13 +76,9 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
     <GridWrap justify='flex-start'>
       {data.members.edges.map((item, index) =>
         <GridTile key={index}>
-          <Link to={`/a/${item.node.account.username as string}`}>
-            {({ isPending }) => (
-              <ClickableTile isPending={isPending}>
-                <AccountTileOverlay query={item.node.account} />
-              </ClickableTile>
-            )}
-          </Link>
+          <LinkTile to={`/m/${item.node.account.username as string}`}>
+            <AccountTileOverlay query={item.node.account} />
+          </LinkTile>
         </GridTile>
       )}
       <LoadMoreGridTile
